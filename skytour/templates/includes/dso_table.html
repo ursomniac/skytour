@@ -1,0 +1,41 @@
+
+<table width="100%" id="{{ table_id }}">
+<thead>
+    <tr class="table-header">
+        <th>Name</th>
+        {% if not hide_type %}<th>Type</th>{% endif %}
+        {% if not hide_constellation %}<th>Constellation</th>{% endif %}
+        <th>R.A.</th>
+        <th>Dec.</th>
+        <th>Mag.</th>
+        <th>Ang. Size</th>
+        {% if not hide_priority %}
+        <th> Priority</th>
+        {% endif %}
+    </tr>
+</thead>
+<tbody>
+{% for dso in dso_list %}
+    <tr>
+        <td>
+            <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
+            {% if dso.nickname %} - {{ dso.nickname }}{% endif %}
+        </td>
+        {% if not hide_type %}<td><a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new">{{ dso.object_type.name }}</a></td>{% endif %}
+        {% if not hide_constellation %}
+        <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>
+        {% endif %}
+        <td>{{ dso.ra_text }}</td>
+        <td>{{ dso.dec_text }}</td>
+        <td>{{ dso.magnitude }}</td>
+        <td>{{ dso.angular_size }}</td>
+        {% if not hide_priority %}
+        <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.priority }}</a></td>
+        {% endif %}
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% include 'includes/sortable_table.html' %}
+<br/>

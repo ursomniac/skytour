@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block content %}
+
+<!-- main -->
+{# header section #}
+<h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+
+<table>
+    <tr>
+        <th>Object</th>
+        <th>Other Catalog</th>
+        <th>Name</th>
+        <th>&alpha; (2000)</th>
+        <th>&delta; (2000)</th>
+        <th>Type</th>
+        <th>Mag</th>
+        <th>Size/Sep</th>
+    </tr>
+    
+    {% for cat_object in catalog_objects %}
+    {% with cat_object.dso as thing %}
+    <tr>
+        <td align="right"><a href="{% url 'dso-detail' thing.pk %}">{{ cat_object.in_catalog }}</a></td>
+        <td>{% if thing.catalog != object %}{{ thing.shown_name }}{% endif %}</td>
+        <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
+        <td>{{ thing.ra_text }}</td>
+        <td>{{ thing.dec_text }}</td>
+        <td>{{ thing.object_type }}</td>
+        <td>{{ thing.magnitude }}</td>
+        <td>{{ thing.angular_size }}</td>
+    </tr>
+    {% endwith %}
+    {% endfor %}
+
+</table>
+{% endblock content %}

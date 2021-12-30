@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<H1>HR {{ object.hr_id }} {% if object.name %} = {{ object.name }}{% endif %}</H1>
+<h2>Other Catalogs</h2>
+<ul>
+    <li>HD: {{ object.hd_id }}</li>
+    <li>SAO: {{ object.sao_id }}</li>
+    <li>BD/DM: {{ object.bd_id }}</li>
+    <li>FK5: {{ object.fk5_id }}</li>
+</ul>
+
+<h2>Metadata</h2>
+<ul>
+    <li>&alpha;: {{ object.ra }}</li>
+    <li>&delta;: {{ object.dec }}</li>
+    <li>V: {{ object.magnitude }}</li>
+    <li>B-V: {{ object.b_v }}   U-B: {{ object.u_b }}   R-I: {{ object.r_i }}</li>
+    <li>Spectral Type: {{ object.spectral_type }}</li>
+</ul>
+{% endblock %}

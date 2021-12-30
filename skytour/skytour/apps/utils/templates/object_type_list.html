@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Object Type List</h1>
+
+<table width="50%">
+    <tr class="table-header">
+        <th>Name</th>
+        <th>Count</th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td><a href="{% url 'object-type-detail' obj.slug %}">{{ obj.name }}</a></td>
+        <td style="text-align: right">{{ obj.dso_count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Things we don't want in the repo
+media/
+BACKUP_*
+hip_main.dat
+*.bsp
+
 # C extensions
 *.so
 

@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load skytour_filters %}
+{% block content %}
+<style>
+    .plan td {
+        vertical-align: top;
+        padding: 1em;
+    }
+    table .inner {
+      border: 0;
+      padding: 0 0;
+    }
+    table .inner td {
+      border: 0; padding: 0 0; vertical-align: top;
+    }
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+
+summary {
+  display: flex;
+  cursor: pointer;
+  background-color: #666;
+  color: #fff;
+  padding: 4px 10px;
+  margin: 0px 10px 20px 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+</style>
+
+{{ context }}
+
+<h1>Plan Observations</h1>
+<div class="plan_form">
+    {% if form %}
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+
+{% if has_plan %}
+  <h2>Observing Plan</h2>
+
+  <table class="plan">
+      <tr>
+          <th>Session</th>
+          <th>Almanac</th>
+      </tr>
+      <tr>
+          <td>
+              Start: {{ plan.utdt|date:"D Y M d  H:i"}} UT<br/>
+              End: {{ plan.utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
+              Julian Date: {{ plan.julian_date|floatformat:5 }}
+          </td>
+          <td>
+              Twilight Ends: {{ plan.twilight_end|date:"D Y M d H:i" }} UT <br/>
+              Twilight Begins: {{ plan.twilight_begin|date:"D Y M d H:i" }} UT
+          </td>
+      </tr>
+  </table>
+
+  <h2>Moon</h2>
+  <table>
+    <tr>
+    <td>
+      <ul>
+      <li>&alpha;: {{ plan.moon.ra }}</li>
+      <li>&delta;: {{ plan.moon.dec }}</li>
+      <li>Distance:
+          {{ plan.moon.dist_au|floatformat:5 }} AU <br/>
+          {{ plan.moon.dist_km|floatformat:0 }} km <br/>
+          {{ plan.moon.dist_mi }} mi
+      </li>
+      <br/>
+      <li>Angular Size: {{ plan.moon.angular_size|to_dms }}</li>
+      <br/>
+        <li>Angle: {{ plan.moon.phase.angle|to_dms }}</li>
+        <li>Phase: {{ plan.moon.phase.phase }}</li>
+        <li>Age: {{ plan.moon.phase.days_since_new_moon|floatformat:2 }} days</li>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Planets</h2>
+
+  {% for planet in plan.planets %}
+  {% if planet.start.is_up or planet.end.is_up %}
+  <h3>{{ planet.name }}</h3>
+  <table>
+    <tr>
+      <th>Observe</th>
+      <th>Distance</th>
+      <th>Start</th>
+      <th>End</th>
+    </tr>
+    <tr>
+      <td>
+        &alpha;: {{ planet.ra }}<br/>
+        &delta;: {{ planet.dec }}<br/><br/>
+        Mag: {{ planet.physical.apparent_mag|floatformat:2 }}<br>
+        Ang Size: {{ planet.angular_size|floatformat:2 }}<br/>
+        Illum.: {{ planet.illum_fraction|floatformat:1 }} %</br>
+        Phase Angle: {{ planet.phase_angle }}
+      </td>
+      <td>
+        AU: {{ planet.dist_au }}<br/>
+        km: {{ planet.dist_km }}<br/>
+        mi: {{ planet.dist_mi }}<br/>
+        Light Time: {{ planet.light_time }}
+      </td>
+      <td>
+        Az: {{ planet.start.azimuth }}<br/>
+        Alt: {{ planet.start.altitude }}<br/>
+      </td>
+      <td>
+        Az: {{ planet.end.azimuth }}<br/>
+        Alt: {{ planet.end.altitude }}<br/>
+      </td>
+    </tr>
+  </table>
+  <div class="images">
+    <table>
+      <tr>
+        <td width="50%"><img src="{{ planet.view_image }}"/></td>
+        <td width="50%"><img src="{{ planet.finder_chart }}"/></td>
+      </tr>
+    </table>
+  </div>
+  <hr/>
+  {% endif %}
+  {% empty %}
+  No planets visible.
+  {% endfor %}
+  
+  <h2>Targets</h2>
+  <details>
+    <summary>
+      <h3>Highest Priority ({{ plan.targets.highest|length }} DSOs)</h3>
+      <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=plan.targets.highest table_id='highest-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+      <h3>High Priority ({{ plan.targets.high|length }} DSOs)</h3>
+      <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=plan.targets.high table_id='high-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+    <h3>Medium Priority ({{ plan.targets.medium|length }} DSOs)</h3>
+    <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=plan.targets.medium table_id='medium-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+    <h3>Low Priority ({{ plan.targets.low|length }} DSOs)</h3>
+    <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=plan.targets.low table_id='low-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,528 @@
+- model: utils.constellation
+  pk: 1
+  fields:
+    abbreviation: AND
+    name: Andromeda
+    genitive: Andromedae
+- model: utils.constellation
+  pk: 2
+  fields:
+    abbreviation: ANT
+    name: Antlia
+    genitive: Antliae
+- model: utils.constellation
+  pk: 3
+  fields:
+    abbreviation: APS
+    name: Apus
+    genitive: Apodis
+- model: utils.constellation
+  pk: 4
+  fields:
+    abbreviation: AQR
+    name: Aquarius
+    genitive: Aquarii
+- model: utils.constellation
+  pk: 5
+  fields:
+    abbreviation: AQL
+    name: Aquila
+    genitive: Aquilae
+- model: utils.constellation
+  pk: 6
+  fields:
+    abbreviation: ARA
+    name: Ara
+    genitive: Arae
+- model: utils.constellation
+  pk: 7
+  fields:
+    abbreviation: ARI
+    name: Aries
+    genitive: Arietis
+- model: utils.constellation
+  pk: 8
+  fields:
+    abbreviation: AUR
+    name: Auriga
+    genitive: Aurigae
+- model: utils.constellation
+  pk: 9
+  fields:
+    abbreviation: BOO
+    name: Boötes
+    genitive: Boötis
+- model: utils.constellation
+  pk: 10
+  fields:
+    abbreviation: CAE
+    name: Caelum
+    genitive: Caeli
+- model: utils.constellation
+  pk: 11
+  fields:
+    abbreviation: CAM
+    name: Camelopardalis
+    genitive: Camelopardalis
+- model: utils.constellation
+  pk: 12
+  fields:
+    abbreviation: CNC
+    name: Cancer
+    genitive: Cancri
+- model: utils.constellation
+  pk: 13
+  fields:
+    abbreviation: CVN
+    name: Canes Venatici
+    genitive: Canum Venaticorum
+- model: utils.constellation
+  pk: 14
+  fields:
+    abbreviation: CMA
+    name: Canis Major
+    genitive: Canis Majoris
+- model: utils.constellation
+  pk: 15
+  fields:
+    abbreviation: CMI
+    name: Canis Minor
+    genitive: Canis Minoris
+- model: utils.constellation
+  pk: 16
+  fields:
+    abbreviation: CAP
+    name: Capriornus
+    genitive: Capricorni
+- model: utils.constellation
+  pk: 17
+  fields:
+    abbreviation: CAR
+    name: Carina
+    genitive: Carinae
+- model: utils.constellation
+  pk: 18
+  fields:
+    abbreviation: CAS
+    name: Cassiopeia
+    genitive: Cassiopeiae
+- model: utils.constellation
+  pk: 19
+  fields:
+    abbreviation: CEN
+    name: Centaurus
+    genitive: Centauri
+- model: utils.constellation
+  pk: 20
+  fields:
+    abbreviation: CEP
+    name: Cepheus
+    genitive: Cephei
+- model: utils.constellation
+  pk: 21
+  fields:
+    abbreviation: CET
+    name: Cetus
+    genitive: Ceti
+- model: utils.constellation
+  pk: 22
+  fields:
+    abbreviation: CHA
+    name: Chamaeleon
+    genitive: Chamaeleontis
+- model: utils.constellation
+  pk: 23
+  fields:
+    abbreviation: CIR
+    name: Circinis
+    genitive: Circini
+- model: utils.constellation
+  pk: 24
+  fields:
+    abbreviation: COL
+    name: Columba
+    genitive: Columbae
+- model: utils.constellation
+  pk: 25
+  fields:
+    abbreviation: COM
+    name: Coma Berenices
+    genitive: Comae Berenices
+- model: utils.constellation
+  pk: 26
+  fields:
+    abbreviation: CRA
+    name: Corona Australis
+    genitive: Coronae Australis
+- model: utils.constellation
+  pk: 27
+  fields:
+    abbreviation: CRB
+    name: Corona Borealis
+    genitive: Coronae Borealis
+- model: utils.constellation
+  pk: 28
+  fields:
+    abbreviation: CRV
+    name: Corvus
+    genitive: Corvi
+- model: utils.constellation
+  pk: 29
+  fields:
+    abbreviation: CRT
+    name: Crater
+    genitive: Crateris
+- model: utils.constellation
+  pk: 30
+  fields:
+    abbreviation: CRU
+    name: Crux
+    genitive: Crucis
+- model: utils.constellation
+  pk: 31
+  fields:
+    abbreviation: CYG
+    name: Cygnus
+    genitive: Cygni
+- model: utils.constellation
+  pk: 32
+  fields:
+    abbreviation: DEL
+    name: Delphinus
+    genitive: Delphini
+- model: utils.constellation
+  pk: 33
+  fields:
+    abbreviation: DOR
+    name: Dorado
+    genitive: Doradus
+- model: utils.constellation
+  pk: 34
+  fields:
+    abbreviation: DRA
+    name: Draco
+    genitive: Draconis
+- model: utils.constellation
+  pk: 35
+  fields:
+    abbreviation: EQU
+    name: Equuleus
+    genitive: Equulei
+- model: utils.constellation
+  pk: 36
+  fields:
+    abbreviation: ERI
+    name: Eridanus
+    genitive: Eridani
+- model: utils.constellation
+  pk: 37
+  fields:
+    abbreviation: FOR
+    name: Fornax
+    genitive: Fornacis
+- model: utils.constellation
+  pk: 38
+  fields:
+    abbreviation: GEM
+    name: Gemini
+    genitive: Geminorum
+- model: utils.constellation
+  pk: 39
+  fields:
+    abbreviation: GRU
+    name: Grus
+    genitive: Gruis
+- model: utils.constellation
+  pk: 40
+  fields:
+    abbreviation: HER
+    name: Hercules
+    genitive: Herculis
+- model: utils.constellation
+  pk: 41
+  fields:
+    abbreviation: HOR
+    name: Horologium
+    genitive: Horologii
+- model: utils.constellation
+  pk: 42
+  fields:
+    abbreviation: HYA
+    name: Hydra
+    genitive: Hydrae
+- model: utils.constellation
+  pk: 43
+  fields:
+    abbreviation: HYI
+    name: Hydrus
+    genitive: Hydri
+- model: utils.constellation
+  pk: 44
+  fields:
+    abbreviation: IND
+    name: Indus
+    genitive: Indi
+- model: utils.constellation
+  pk: 45
+  fields:
+    abbreviation: LAC
+    name: Lacerta
+    genitive: Lacertae
+- model: utils.constellation
+  pk: 46
+  fields:
+    abbreviation: LEO
+    name: Leo
+    genitive: Leonis
+- model: utils.constellation
+  pk: 47
+  fields:
+    abbreviation: LMI
+    name: Leo Minor
+    genitive: Leonis Minoris
+- model: utils.constellation
+  pk: 48
+  fields:
+    abbreviation: LEP
+    name: Lepus
+    genitive: Leporis
+- model: utils.constellation
+  pk: 49
+  fields:
+    abbreviation: LIB
+    name: Libra
+    genitive: Librae
+- model: utils.constellation
+  pk: 50
+  fields:
+    abbreviation: LUP
+    name: Lupus
+    genitive: Lupi
+- model: utils.constellation
+  pk: 51
+  fields:
+    abbreviation: LYN
+    name: Lynx
+    genitive: Lyncis
+- model: utils.constellation
+  pk: 52
+  fields:
+    abbreviation: LYR
+    name: Lyra
+    genitive: Lyrae
+- model: utils.constellation
+  pk: 53
+  fields:
+    abbreviation: MEN
+    name: Mensa
+    genitive: Mensae
+- model: utils.constellation
+  pk: 54
+  fields:
+    abbreviation: MIC
+    name: Microscopium
+    genitive: Microscopii
+- model: utils.constellation
+  pk: 55
+  fields:
+    abbreviation: MON
+    name: Monoceros
+    genitive: Monocerotis
+- model: utils.constellation
+  pk: 56
+  fields:
+    abbreviation: MUS
+    name: Musca
+    genitive: Muscae
+- model: utils.constellation
+  pk: 57
+  fields:
+    abbreviation: NOR
+    name: Norma
+    genitive: Normae
+- model: utils.constellation
+  pk: 58
+  fields:
+    abbreviation: OCT
+    name: Octans
+    genitive: Octantis
+- model: utils.constellation
+  pk: 59
+  fields:
+    abbreviation: OPH
+    name: Ophiuchus
+    genitive: Ophiuchi
+- model: utils.constellation
+  pk: 60
+  fields:
+    abbreviation: ORI
+    name: Orion
+    genitive: Orionis
+- model: utils.constellation
+  pk: 61
+  fields:
+    abbreviation: PAV
+    name: Pavo
+    genitive: Pavonis
+- model: utils.constellation
+  pk: 62
+  fields:
+    abbreviation: PEG
+    name: Pegasus
+    genitive: Pegasi
+- model: utils.constellation
+  pk: 63
+  fields:
+    abbreviation: PER
+    name: Perseus
+    genitive: Persei
+- model: utils.constellation
+  pk: 64
+  fields:
+    abbreviation: PHE
+    name: Phoenix
+    genitive: Phoenicis
+- model: utils.constellation
+  pk: 65
+  fields:
+    abbreviation: PIC
+    name: Pictor
+    genitive: Pictoris
+- model: utils.constellation
+  pk: 66
+  fields:
+    abbreviation: PSC
+    name: Pisces
+    genitive: Piscium
+- model: utils.constellation
+  pk: 67
+  fields:
+    abbreviation: PSA
+    name: Piscis Austrinus
+    genitive: Piscis Austrini
+- model: utils.constellation
+  pk: 68
+  fields:
+    abbreviation: PUP
+    name: Puppis
+    genitive: Puppis
+- model: utils.constellation
+  pk: 69
+  fields:
+    abbreviation: PYX
+    name: Pyxis
+    genitive: Pyxidis
+- model: utils.constellation
+  pk: 70
+  fields:
+    abbreviation: RET
+    name: Reticulum
+    genitive: Reticuli
+- model: utils.constellation
+  pk: 71
+  fields:
+    abbreviation: SGE
+    name: Sagitta
+    genitive: Sagittae
+- model: utils.constellation
+  pk: 72
+  fields:
+    abbreviation: SGR
+    name: Sagittarius
+    genitive: Sagittarii
+- model: utils.constellation
+  pk: 73
+  fields:
+    abbreviation: SCO
+    name: Scorpius
+    genitive: Scorpii
+- model: utils.constellation
+  pk: 74
+  fields:
+    abbreviation: SCL
+    name: Sculptor
+    genitive: Sculptoris
+- model: utils.constellation
+  pk: 75
+  fields:
+    abbreviation: SCT
+    name: Scutum
+    genitive: Scuti
+- model: utils.constellation
+  pk: 76
+  fields:
+    abbreviation: SER
+    name: Serpens
+    genitive: Serpentis
+- model: utils.constellation
+  pk: 77
+  fields:
+    abbreviation: SEX
+    name: Sextans
+    genitive: Sextantis
+- model: utils.constellation
+  pk: 78
+  fields:
+    abbreviation: TAU
+    name: Taurus
+    genitive: Tauri
+- model: utils.constellation
+  pk: 79
+  fields:
+    abbreviation: TEL
+    name: Telescopium
+    genitive: Telescopii
+- model: utils.constellation
+  pk: 80
+  fields:
+    abbreviation: TRI
+    name: Triangulum
+    genitive: Triangulii
+- model: utils.constellation
+  pk: 81
+  fields:
+    abbreviation: TRA
+    name: Triangulum Australe
+    genitive: Triangulii Australis
+- model: utils.constellation
+  pk: 82
+  fields:
+    abbreviation: TUC
+    name: Tucana
+    genitive: Tucanae
+- model: utils.constellation
+  pk: 83
+  fields:
+    abbreviation: UMA
+    name: Ursa Major
+    genitive: Ursae Majoris
+- model: utils.constellation
+  pk: 84
+  fields:
+    abbreviation: UMI
+    name: Ursa Minor
+    genitive: Ursae Minoris
+- model: utils.constellation
+  pk: 85
+  fields:
+    abbreviation: VEL
+    name: Vela
+    genitive: Velorum
+- model: utils.constellation
+  pk: 86
+  fields:
+    abbreviation: VIR
+    name: Virgo
+    genitive: Virginis
+- model: utils.constellation
+  pk: 87
+  fields:
+    abbreviation: VOL
+    name: Volans
+    genitive: Volantis
+- model: utils.constellation
+  pk: 88
+  fields:
+    abbreviation: VUL
+    name: Vulpecula
+    genitive: Vulpeculae

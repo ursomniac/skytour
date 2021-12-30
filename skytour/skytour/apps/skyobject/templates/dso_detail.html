@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+	h1 { font-weight: bold; font-size: 250%; color: #fff; }
+	td { vertical-align: top }
+	td.object_name { vertical-align: middle; padding-left: 20px; }
+	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
+	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
+	td.dso_image { padding: 0; width: 25%; }
+	td.coordinates { font-size: 150%; padding-bottom: 10px; }
+	table.info_box { border: 2px solid black }
+	tr.bottom { height: 150px; }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<table border="0">
+<!-- main -->
+{# header section #}
+<tr>
+	<td colspan=2 class="object_header">
+		<table width="100%" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
+			<tr>
+				<td width=80% class="object_name">
+					<h1>
+						{{ object.shown_name }}
+						{% if object.nickname %}
+						&nbsp;&mdash;&nbsp;
+						{{ object.nickname }}
+						{% endif %}
+					</h1>
+
+				</td>
+				<td width=20% class="description" rowspan=2>
+					{{ object.object_type }}
+					<br>in<br>
+					<b>{{ object.constellation.abbreviation }}</b>
+					{% if object.priority %}
+					<br><br/>
+					<b>Priority:&nbsp;
+						{{ object.priority }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><td class="aliases">{{ object.alias_list }}</td></tr>
+		</table>
+	</td>
+</tr>
+
+<tr>
+	<td id="finder" width=50%>
+		<h3>DSO Finder Chart:</h3>
+		{% if object.dso_finder_chart %}
+		<img src="{{ object.dso_finder_chart.url }}" width=100%>
+		{% else %}
+		<br>(No finder chart.)
+		{% endif %}
+	</td>
+
+	<td id="field_view" width=50%>
+		<h3>Field View:</h3>
+		{% if object.field_view %}
+		<img src="{{ object.field_view.url }}" width=100%>
+		{% else %}
+		<br>(No field view.)
+		{% endif %}
+	</td>
+</tr>
+
+<tr>
+	<td id="metadata" colspan=2>
+		<h3>Information:</h3>
+		<table width=100% class="info_box">
+			<tr>
+				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}</td>
+				<td class="coordinates">&delta; (2000): {{ object.dec_text }}</td>
+			</tr>
+			<tr>
+				<td>V: {{ object.magnitude }}</td>
+				<td>Ang. Size: {{ object.angular_size }}</td>
+			</tr>
+			<tr>
+				<td>Surf. Bri: {{ object.surface_brightness }}</td>
+				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
+			<tr></tr>
+		</table>
+	</td>
+</tr>
+
+<tr class="bottom">
+	<td id="object_notes" valign="top" width=50% rowspan=2>
+		<h3>Notes</h3>
+		{{ object.notes|linebreaks }}
+	</td>
+	<td>
+		<table><tr>
+		<td class="dso_image">
+			{% if object.images.all.0 %}
+			<img src="{{ object.images.all.0.image.url }}" width=100%>
+			{% endif %}
+		</td>
+		<td class="dso_image">
+			{% if object.images.all.1 %}
+			<img src="{{ object.images.all.1.image.url }}" width=100%>
+			{% endif %}
+		</td>
+		</tr></table>
+	</td>
+</tr>
+<tr class="bottom">
+	<td>
+		<table><tr>
+		<td class="dso_image">
+			{% if object.images.all.2 %}
+			<img src="{{ object.images.all.2.image.url }}" width=100%>
+			{% endif %}
+		</td>
+		<td class="dso_image">
+			{% if object.images.all.3 %}
+			<img src="{{ object.images.all.3.image.url }}" width=100%>
+			{% endif %}
+		</td>
+		</tr></table>
+	</td>
+</tr>
+</table>
+
+{% endblock content %}

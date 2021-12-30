@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Bright Star Catalog</h1>
+
+<table id="bright-star">
+<thead>
+    <tr>
+        <th>HR</th>
+        <th>HD</th>
+        <th>Name</th>
+        <th>R.A.</th>
+        <th>Dec.</th>
+        <th>Mag.</th>
+    </tr>
+</thead>
+<tbody>
+    {% for star in object_list %}
+    <tr>
+        <td><a href="{% url 'star-detail' star.hr_id %}">{{ star.hr_id }}</a>a</td>
+        <td>{{ star.hd_id }}</td>
+        <td>{{ star.name }}</td>
+        <td>{{ star.ra }}</td>
+        <td>{{ star.ded }}</td>
+        <td>{{ star.magnitude }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock %}

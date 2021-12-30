@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Constellation List</h1>
+<table class="half-width" id="{{ table_id }}">
+<thead>
+    <tr class="table-header">
+        <th width="55%">Name</th>
+        <th width="25%">Abbr.</th>
+        <th width="20%">DSO Count</th>
+    </tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+    <tr>
+        <td><a href="{% url 'constellation-detail' obj.slug %}">{{ obj.name }}</a></td>
+        <td style="text-align: center">{{ obj.slug }}</td>
+        <td style="text-align: right; padding-right: 20px">{{ obj.dso_count }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% include 'includes/sortable_table.html' %}
+{% endblock %}

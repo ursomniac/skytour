@@ -1,0 +1,219 @@
+import numpy as np
+import datetime
+import pytz
+from django.db import models
+from django.utils.html import mark_safe
+from django.utils.translation import gettext as _
+from matplotlib import pyplot as plt
+from matplotlib.collections import LineCollection
+from skyfield.api import Star, load
+from skyfield.data import hipparcos, mpc, stellarium
+from skyfield.projections import build_stereographic_projection
+from .utils import create_shown_name
+from .vocabs import DISTANCE_UNIT_CHOICES
+from ..meeus.coord import get_alt_az
+from ..stars.models import BrightStar
+from ..utils.models import (
+    Coordinates,
+    ObjectImage,
+    FieldView,
+    Constellation,
+    ObservingLog,
+    ObjectType, 
+)
+
+PRIORITY_CHOICES = [
+    ('Highest', 'Highest'),
+    ('High', 'High'),
+    ('Medium', 'Medium'),
+    ('Low', 'Low')
+]
+
+class DSO(Coordinates, FieldView):
+    """
+    Basically everything we want:
+        Name and Aliases
+            - botn are in the Object Alias abstract class:
+                the primary name is in this model, the other
+                is in a FK to this model from DSOAlias.
+        Images
+        Field View (https://astronomy.tools/calculators/field_of_view/)
+    """
+    catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
+    id_in_catalog = models.CharField (
+        _('ID'),
+        max_length = 24
+    )
+    shown_name = models.CharField (
+        _('Shown Name'),
+        max_length = 100,
+        null = True, blank = True
+    )
+    nickname = models.CharField(
+        _('Nickname'),
+        max_length = 200,
+        null = True, blank = True
+    )
+    constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
+    
+    object_type = models.ForeignKey(ObjectType, on_delete=models.PROTECT)
+    magnitude = models.FloatField (
+        _('Mag.'),
+        null = True, blank = True
+    )
+    angular_size = models.CharField (
+        _('Angular Size'),
+        max_length = 50,
+        null = True, blank = True,
+        help_text = 'single or double dimension, e.g., 8\' by 12\''
+    )
+    surface_brightness = models.FloatField (
+        _('Surface Brightness'),
+        null = True, blank = True
+    )
+    contrast_index = models.FloatField (
+        _('Contrast Index'),
+        null = True, blank = True
+    )
+    distance = models.FloatField (
+        _('Distance'),
+        null = True, blank = True,
+    )
+    distance_units = models.CharField (
+        _('Distance Unit'),
+        max_length = 10,
+        choices = DISTANCE_UNIT_CHOICES,
+        null = True, blank = True
+    )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
+    )
+
+    finder_chart = models.ImageField (
+        _('Finder Chart'),
+        upload_to = 'finder_chart/',
+        null = True, blank = True
+    )
+
+    dso_finder_chart = models.ImageField (
+        _('DSO Finder Chart'),
+        upload_to = 'dso_finder_chart',
+        null = True, blank = True
+    )
+
+    priority = models.CharField (
+        _('Priority'),
+        max_length = 20,
+        choices = PRIORITY_CHOICES,
+        null = True, blank = True
+    )
+
+    @property
+    def alias_list(self):
+        aliases = []
+        for alias in self.aliases.all():
+            aliases.append(alias.shown_name)
+        return ', '.join(aliases)
+
+    @property
+    def skyfield_object(self):
+        return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+
+    def finder_chart_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.finder_chart.url)
+
+    def dso_finder_chart_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart.url)
+
+    def has_observations(self):
+        return self.observations.count() > 0
+    has_observations.boolean = True
+    has_observations.short_description = 'Obs.?'
+
+    def alt_az(self, location, utdt):
+        return get_alt_az(utdt, location.latitude, location.longitude, self.ra, self.dec)
+
+    def object_is_up(self, location, utdt, min_alt=0.):
+        az, alt = self.alt_az(location, utdt)
+        if alt > min_alt:
+            return True
+        return False
+
+    def get_absolute_url(self):
+        return '/dso/{}'.format(self.pk)
+
+    @property
+    def priority_color(self):
+        colors = {
+            'High': '#CC0000',
+            'Medium': '#CCCCCC',
+            'Low': '#666666'
+        }
+        if self.priority in colors.keys():
+            return colors[self.priority]
+        return '#FFFFFF'
+
+    def save(self, *args, **kwargs):
+        self.ra = self.ra_float # get from property
+        self.dec = self.dec_float # get from property
+        self.ra_text = self.format_ra # get from property
+        self.dec_text = self.format_dec # get from property
+        self.shown_name = create_shown_name(self)
+        # Generate a DSO finder chart if one doesn't exist
+        # Except you can't - it crashes everything, UNLESS
+        # you run the code in it's own thread.  Why?  Who knows?
+        super(DSO, self).save(*args, **kwargs)
+        
+    class Meta:
+        verbose_name = 'Deep Sky Object'
+        verbose_name_plural = 'DSOs'
+        ordering = ['ra', 'dec']
+
+    def __str__(self):
+        return self.shown_name
+
+class DSOAlias(models.Model):
+    object = models.ForeignKey(DSO, 
+        on_delete=models.CASCADE,
+        related_name='aliases'
+    )
+    catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
+    id_in_catalog = models.CharField (
+        _('ID'),
+        max_length = 24
+    )
+    shown_name = models.CharField (
+        _('Shown Name'),
+        max_length = 100,
+        null = True, blank = True
+    )
+    class Meta:
+        verbose_name = 'Alias'
+        verbose_name_plural = 'Aliases'
+
+    def __str__(self):
+        return self.shown_name
+
+    def save(self, *args, **kwargs):
+        self.shown_name = create_shown_name(self)
+        super(DSOAlias, self).save(*args, **kwargs)
+
+class DSOImage(ObjectImage):
+    object = models.ForeignKey(DSO,
+        on_delete = models.CASCADE,
+        related_name = 'images'
+    )
+    class Meta:
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
+
+class DSOObservation(ObservingLog):
+    object = models.ForeignKey(DSO,
+        on_delete = models.CASCADE,
+        related_name = 'observations'
+    )
+    class Meta:
+        verbose_name = 'Observation'
+        verbose_name_plural = 'Observations'
+

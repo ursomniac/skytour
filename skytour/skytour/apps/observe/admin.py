@@ -1,0 +1,64 @@
+from django.contrib import admin
+from .models import ObservingLocation, LocationImage
+
+class LocationImageInline(admin.StackedInline):
+    model = LocationImage
+    extra = 1
+    readonly_fields = ['image_tag']
+    fieldsets = (
+        (None, {
+            'fields': [
+                'image_tag',
+                ('image', 'direction'), 
+                'description',
+            ]
+        }),
+    )
+
+class ObservingLocationAdmin(admin.ModelAdmin):
+    model = ObservingLocation
+    inlines = [LocationImageInline]
+    list_display = ['pk',  'status', 'travel_distance', 'city', 'state', 'street_address', 'latitude', 'longitude', 'bortle', 'brightness']
+    readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag']
+    search_fields = ['name', 'city']
+    list_filter = ['status', 'state']
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('status', 'primary_user'), 
+                ('name'),
+                ('street_address',), 
+                ('city', 'state'),
+                ('travel_distance', 'travel_time')
+            ]
+        }),
+        ('Geospatial', {
+            'fields': [
+                ('latitude', 'longitude', 'elevation')
+            ]
+        }),
+        ('Sky Brightness', {
+            'fields': [
+                ('bortle', 'sqm'),
+                ('brightness', 'artificial_brightness', 'ratio'),
+            ]
+        }),
+        ('Maps', {
+            'fields': [
+                ('map_image', 'map_tag'),
+                ('earth_image', 'earth_tag'),
+                ('bortle_image', 'bortle_tag')
+            ]
+        }),
+        ('Site Issues', {
+            'fields': [
+                ('parking', 'is_flat'),
+                'description',
+                'light_sources',
+                'horizon_blockage'
+            ]
+        })
+    )
+
+admin.site.register(ObservingLocation, ObservingLocationAdmin)
+
