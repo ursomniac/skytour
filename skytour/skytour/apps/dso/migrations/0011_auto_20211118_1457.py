@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('skyobject', '0010_auto_20211118_1059'),
+        ('dso', '0010_auto_20211118_1059'),
     ]
 
     operations = [

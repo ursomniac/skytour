@@ -10,7 +10,7 @@ from skyfield.api import Star, load
 from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
 from skytour.apps.stars.models import BrightStar
-from skytour.apps.skyobject.models import DSO
+from skytour.apps.dso.models import DSO
 
 def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
     ts = load.timescale()

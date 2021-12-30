@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('skyobject', '0009_dso_distance_units'),
+        ('dso', '0009_dso_distance_units'),
     ]
 
     operations = [

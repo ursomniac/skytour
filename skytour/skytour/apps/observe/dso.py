@@ -1,5 +1,5 @@
 from skyfield.api import JulianDate 
-from ..skyobject.models import DSO
+from ..dso.models import DSO
 
 def assemble_dso_list(context=None):
 

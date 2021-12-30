@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('skyobject', '0005_alter_dsoobservation_options'),
+        ('dso', '0005_alter_dsoobservation_options'),
     ]
 
     operations = [

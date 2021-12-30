@@ -1,8 +1,7 @@
 from collections import Counter
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from ..skyobject.models import PRIORITY_CHOICES
-from .models import DSO
+from .models import DSO, PRIORITY_CHOICES
 
 class DSODetailView(DetailView):
     model = DSO 

@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('utils', '0005_alter_objecttype_options'),
-        ('skyobject', '0006_auto_20211118_0222'),
+        ('dso', '0006_auto_20211118_0222'),
     ]
 
     operations = [

@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 ('ut_date', models.DateField(help_text='UT Date', verbose_name='Date of Obs')),
                 ('ut_time', models.TimeField(help_text='UT Time', verbose_name='Time of Obs')),
                 ('notes', models.TextField(blank=True, null=True, verbose_name='Notes')),
-                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='observations', to='skyobject.dso')),
+                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='observations', to='dso.dso')),
             ],
             options={
                 'abstract': False,
@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('image', models.ImageField(upload_to='object_image/', verbose_name='Image')),
                 ('notes', models.TextField(blank=True, null=True, verbose_name='Notes')),
-                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='skyobject.dso')),
+                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='dso.dso')),
             ],
             options={
                 'abstract': False,
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('id_in_catalog', models.CharField(max_length=24, verbose_name='ID')),
                 ('catalog', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='utils.catalog')),
-                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aliases', to='skyobject.dso')),
+                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aliases', to='dso.dso')),
             ],
         ),
         migrations.CreateModel(
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('id_in_catalog', models.CharField(max_length=24, verbose_name='ID')),
                 ('catalog', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='utils.catalog')),
-                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aliases', to='skyobject.doublestar')),
+                ('object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aliases', to='dso.doublestar')),
             ],
         ),
     ]

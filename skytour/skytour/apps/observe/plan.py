@@ -4,7 +4,7 @@ from skyfield import almanac
 from skyfield.api import wgs84, load
 from ..meeus.almanac import get_julian_date, get_t_epoch, to_sex
 from ..meeus.moon import simple_lunar_phase 
-from ..skyobject.models import DSO
+from ..dso.models import DSO
 from ..solar_system.plot import create_planet_image
 from ..solar_system.utils import get_all_planets, is_planet_up, get_sun, get_moon, get_angular_size
 from ..solar_system.vocabs import DIAMETERS

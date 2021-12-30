@@ -23,11 +23,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog/', include('skytour.apps.utils.urls_catalog')),
     path('constellation/', include('skytour.apps.utils.urls_constellation')),
-    path('dso/', include('skytour.apps.skyobject.urls_dso')),
+    path('dso/', include('skytour.apps.dso.urls_dso')),
     path('object_type/', include('skytour.apps.utils.urls_object_type')),
     path('observing_location/', include('skytour.apps.observe.urls')),
     path('plan/', include('skytour.apps.observe.urls_plan')),
-    path('priority/', include('skytour.apps.skyobject.urls_priority')),
+    path('priority/', include('skytour.apps.dso.urls_priority')),
     path('stars/', include('skytour.apps.stars.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import Constellation, Catalog, ObjectType
-from ..skyobject.models import DSO, DSOAlias
+from ..dso.models import DSO, DSOAlias
 
 def try_int(x):
     try:

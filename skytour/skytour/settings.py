@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'colorfield',
     
+    'skytour.apps.dso',
     'skytour.apps.meeus',
     'skytour.apps.observe',
     'skytour.apps.site',
-    'skytour.apps.skyobject',
     'skytour.apps.solar_system',
     'skytour.apps.stars',
     'skytour.apps.utils',
