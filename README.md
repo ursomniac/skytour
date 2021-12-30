@@ -1,0 +1,2 @@
+# skytour
+Plan observations
