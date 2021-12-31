@@ -11,7 +11,7 @@ from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
-from ..meeus.coord import get_alt_az
+from ..utils.transform import get_alt_az
 from ..stars.models import BrightStar
 from ..utils.models import (
     Coordinates,

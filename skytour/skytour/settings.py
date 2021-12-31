@@ -29,7 +29,6 @@ SITE_ID = 1
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,7 +44,7 @@ INSTALLED_APPS = [
     'colorfield',
     
     'skytour.apps.dso',
-    'skytour.apps.meeus',
+    #'skytour.apps.meeus',
     'skytour.apps.observe',
     'skytour.apps.site',
     'skytour.apps.solar_system',

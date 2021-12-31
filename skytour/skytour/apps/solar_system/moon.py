@@ -1,0 +1,103 @@
+
+import math
+from skyfield.api import load
+from skyfield.almanac import (
+    phase_angle as get_phase_angle, 
+    fraction_illuminated,
+    moon_phase
+)
+from ..observe.almanac import get_object_rise_set
+from ..observe.time import get_julian_date
+from ..utils.compile import observe_to_values
+from .utils import get_angular_size, get_plotting_phase_angle, get_phase_description
+
+MOON_PHASES = [
+    'NEW MOON', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL MOON', 
+    'WANING GIBBOUS', 'LAST QUARTER', 'WANING CRESCENT', 'NEW MOON'
+]
+
+def simple_lunar_phase(jd):
+    lunar_period = 29.530588853
+    lunations = (jd - 2451550.1) / lunar_period
+    percent = lunations - int(lunations)
+    phase_angle = percent * 360.
+    delta_t = phase_angle * lunar_period / 360.
+    moon_day = int(delta_t + 0.5)
+    phase = get_phase_description(phase_angle)
+
+    return {
+        'angle': phase_angle, 
+        'day': moon_day, 
+        'phase': phase, 
+        'days_since_new_moon': delta_t
+    }
+
+def get_moon(utdt, location=None, sun=None, eph=None, apparent=False):
+    ts = load.timescale()
+    t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
+
+    if not eph:
+        eph = load('de421.bsp')
+    earth = eph['Earth']
+
+    # Get Moon position
+    moon = earth.at(t).observe(eph['Moon'])
+    (xmlat, xmlon, xmdist) = moon.ecliptic_latlon()
+    moon_lat = xmlat.radians
+    moon_lon = xmlon.radians
+
+    almanac = get_object_rise_set(utdt, eph, eph['Moon'], location=location) if location else None
+
+    # Get Sun position
+    if not sun:
+        sun = earth.at(t).observe(eph['Sun'])
+    else:
+        sun = sun['target']
+
+    (xslat, xslon, xsdist) = sun.ecliptic_latlon()
+    sun_lon = xslon.radians
+    sun_lat = xslat.radians
+
+    # psi = geocentric elongation
+    psi = math.acos(math.cos(moon_lat) * math.cos(moon_lon - sun_lon))
+
+    # i = phase angle
+    i = get_phase_angle(eph, 'moon', t).degrees.item() # degrees
+    # k = illuminated fraction of the Moon's disk
+    k = fraction_illuminated(eph, 'moon', t).item() # float
+
+    # chi = position angle of the moon's bright limb
+    chi = moon_phase(eph, t).degrees.item() # degrees
+
+    # magnitude
+    """
+    Empirically, I get 
+        x = log10(k)
+        m = -1.146_606*x**2 -5.760_663*x -11.983_484
+    """
+    x = math.log10(k)
+    mag = -1.1466_606*x**2 - 5.760_663*x - 11.983_484
+
+    # angular size
+    ang_size = get_angular_size(6378.14, xmdist.km, units='degrees') # diameter in degrees for the Moon
+
+    # Lunar Phase description
+    phase = simple_lunar_phase(get_julian_date(utdt))
+    plotting_phase_angle = get_plotting_phase_angle(moon, sun)
+
+    return {
+        'target': moon,
+        'coords': observe_to_values(moon),
+        'observe': {
+            'illum_fraction': k,
+            'apparent_mag': mag,
+            'angular_diameter': ang_size,
+            'phase_angle': i,
+            'phase': phase,
+            'plotting_phase_angle': plotting_phase_angle,
+            'position_angle': chi,
+            'elongation': math.degrees(psi)
+        },
+        'almanac': almanac
+    }
+

@@ -15,11 +15,10 @@ from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium #, mpc
 from skyfield.projections import build_stereographic_projection
 
-from ..meeus.almanac import get_t_epoch, get_julian_date
+from ..observe.time import get_t_epoch, get_julian_date
 from ..stars.models import BrightStar
 from .saturn import saturn_ring
-from .utils import get_solar_system_object
-from .vocabs import EPHEMERIS
+from .planets import get_solar_system_object
 
 matplotlib.use('Agg')
 def create_planet_image(
@@ -42,7 +41,7 @@ def create_planet_image(
     fig, ax = plt.subplots(figsize=[6,6])
 
     # Center
-    projection = build_stereographic_projection(planet['observe'])
+    projection = build_stereographic_projection(planet['target'])
     ang_size = planet['physical']['angular_diameter'] # arcsec
     ang_size_radians = math.radians(ang_size/3600.)
     if debug:
@@ -91,7 +90,7 @@ def create_planet_image(
                 ha='right'
             )
         # Don't plot the planet - just a symbol.  This is for finder charts.
-        (planet_ra, planet_dec, planet_dist) = planet['observe'].radec()
+        (planet_ra, planet_dec, planet_dist) = planet['target'].radec()
         object_x, object_y = projection(earth.at(t).observe(Star(ra_hours=planet_ra.hours, dec_degrees=planet_dec.degrees)))
         object_scatter = ax.scatter(
             [object_x], [object_y], 
@@ -114,13 +113,13 @@ def create_planet_image(
             moon_pos_list = {'x': [], 'y': [], 'label': [], 'd': [], 'o': []}
             # Get RA/Dec for each
 
-            dist_to_planet = planet['observe'].distance().au
+            dist_to_planet = planet['target'].distance().au
             max_sep = 0.
             for moon in planet['moons']:
-                (moon_ra, moon_dec, moon_dist) = moon['observe'].radec()
+                (moon_ra, moon_dec, moon_dist) = moon['target'].radec()
                 x, y = projection(earth.at(t).observe(Star(ra_hours=moon_ra.hours, dec_degrees=moon_dec.degrees)))
                 d = moon_dist.au
-                sep = moon['observe'].separation_from(planet['observe']).radians
+                sep = moon['target'].separation_from(planet['target']).radians
                 if debug:
                     print("{}: X: {:.3f} Y: {:.3f} SEP: {:.3f} ANG: {:.3f} ∆d: {:.3f}".format(
                         moon['name'], x*1e5, y*1e5, sep*1e5, 1e5*ang_size_radians/2., 1e5*(dist_to_planet - d))
@@ -159,7 +158,7 @@ def create_planet_image(
 
 
         if name == 'Saturn':
-            rings = saturn_ring(t0, planet['observe'])
+            rings = saturn_ring(t0, planet['target'])
             a = math.radians(rings['major'] / 3600.)
             b = math.radians(rings['minor'] / 3600.)
             #print ("a: ", a, "b: ", b)

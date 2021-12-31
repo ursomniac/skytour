@@ -85,19 +85,21 @@ summary::-webkit-details-marker {
     <tr>
     <td>
       <ul>
-      <li>&alpha;: {{ plan.moon.ra }}</li>
-      <li>&delta;: {{ plan.moon.dec }}</li>
+      <li>&alpha;: {{ plan.moon.coords.ra_str }}</li>
+      <li>&delta;: {{ plan.moon.coords.dec_str }}</li>
       <li>Distance:
-          {{ plan.moon.dist_au|floatformat:5 }} AU <br/>
-          {{ plan.moon.dist_km|floatformat:0 }} km <br/>
-          {{ plan.moon.dist_mi }} mi
+          <ul>
+          <li>{{ plan.moon.coords.distance.au|floatformat:5 }} AU</li>
+          <li>{{ plan.moon.coords.distance.km|floatformat:0 }} km </li>
+          <li>{{ plan.moon.coords.distance.mi|floatformat:0 }} mi</li>
+          </ul>
       </li>
       <br/>
-      <li>Angular Size: {{ plan.moon.angular_size|to_dms }}</li>
+      <li>Angular Size: {{ plan.moon.observe.angular_diameter|to_dms }}</li>
       <br/>
-        <li>Angle: {{ plan.moon.phase.angle|to_dms }}</li>
-        <li>Phase: {{ plan.moon.phase.phase }}</li>
-        <li>Age: {{ plan.moon.phase.days_since_new_moon|floatformat:2 }} days</li>
+        <li>Phase Angle: {{ plan.moon.observe.phase_angle|to_dms }}</li>
+        <li>Phase: {{ plan.moon.observe.phase.phase }}</li>
+        <li>Age: {{ plan.moon.observe.phase.days_since_new_moon|floatformat:2 }} days</li>
       </td>
     </tr>
   </table>

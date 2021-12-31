@@ -1,50 +1,53 @@
-DIAMETERS = {
-    'Mercury':   4_879,
-    'Venus':    12_104,
-    'Mars':      6_792,
-    'Jupiter': 142_984,
-    'Saturn':  120_536,
-    'Uranus':   51_118,
-    'Neptune':  49_526,
-    'Moon':      3_476
-}
 
-
-EPHEMERIS  = {
+PLANET_DICT  = {
     'Mercury': {
-        'p': 'Mercury Barycenter', 
-        'l': None,
-        's': None
+        'target': 'Mercury Barycenter', 
+        'load': None,
+        'moon_list': None,
+        'diameter': 4_879,
+        'mag_au': -0.42
     },
     'Venus': {
-        'p': 'Venus Barycenter', 
-        'l': None,
-        's': None
+        'target': 'Venus Barycenter', 
+        'load': None,
+        'moon_list': None,
+        'diameter': 12_104,
+        'mag_au': -4.40,
     },
     'Mars': {
-        'p': 'Mars Barycenter', 
-        'l': 'mar_excerpt.bsp',
-        's': ['Phobos', 'Deimos']
+        'target': 'Mars Barycenter', 
+        'load': 'mar_excerpt.bsp',
+        'moon_list': ['Phobos', 'Deimos'],
+        'diameter': 6_792,
+        'mag_au': -1.52,
     },
     'Jupiter': {
-        'p': 'Jupiter Barycenter', 
-        'l': 'jup_excerpt.bsp',
-        's': ['Io', 'Europa', 'Ganymede', 'Callisto']
+        'target': 'Jupiter Barycenter', 
+        'load': 'jup_excerpt.bsp',
+        'moon_list': ['Io', 'Europa', 'Ganymede', 'Callisto'],
+        'diameter': 142_984,
+        'mag_au': -9.40,
     },
     'Saturn': {
-        'p': 'Saturn Barycenter', 
-        'l': 'sat_excerpt.bsp',
-        's': ['Mimas', 'Enceladus', 'Tethys', 'Dione', 'Rhea', 'Titan', 'Iapetus']
+        'target': 'Saturn Barycenter', 
+        'load': 'sat_excerpt.bsp',
+        'moon_list': ['Mimas', 'Enceladus', 'Tethys', 'Dione', 'Rhea', 'Titan', 'Iapetus'],
+        'diameter': 120_536,
+        'mag_au': -8.88
     },
     'Uranus': {
-        'p': 'Uranus Barycenter',
-        'l': 'ura_excerpt.bsp',
-        's': ['Oberon', 'Titania']
+        'target': 'Uranus Barycenter',
+        'load': 'ura_excerpt.bsp',
+        'moon_list': ['Oberon', 'Titania'],
+        'diameter': 51_118,
+        'mag_au': -7.19
     },
     'Neptune': {
-        'p': 'Neptune Barycenter',
-        'l': 'nep_excerpt.bsp',
-        's': ['Triton'] 
+        'target': 'Neptune Barycenter',
+        'load': 'nep_excerpt.bsp',
+        'moon_list': ['Triton'],
+        'diameter': 49_526,
+        'mag_au': -6.87
     }
 }
 

@@ -1,12 +1,9 @@
 import datetime as dt
 import math
-from re import X
-from pytz import timezone
 from skyfield import almanac
-from skyfield.api import wgs84, load
-from ..meeus.almanac import get_gast, get_gmst0, to_sex
-from ..solar_system.utils import get_solar_system_object
-from .models import ObservingLocation
+from ..solar_system.planets import get_solar_system_object
+from ..utils.format import to_sex
+from .time import get_0h, estimate_delta_t, get_gmst0
 
 def get_astronomical_twilight(times, events, value):
     """
@@ -25,7 +22,7 @@ def dark_time(d, debug=False):
     Given a dict of metadata, get the begin/end of twilight
     """
     f = almanac.dark_twilight_day(d['eph'], d['wgs'])
-    today = get_t0(d)
+    today = get_0h(d['utdt'])
     end_at, begin_at = get_almanac_times(today, d['ts'], f)
     if debug:
         print ("F: ", f)
@@ -33,70 +30,6 @@ def dark_time(d, debug=False):
         print ("End at: ", end_at)
         print ("Begin at: ", begin_at)
     return end_at, begin_at
-
-def estimate_delta_t(utdt):
-    """
-    Using https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
-    """
-    year = utdt.year + (utdt.month - 0.5) / 12.
-    #   NASA polynomials
-    if year >= 2150.:
-        t = (year - 1820)/100.
-        dt = -20 + 32 * t**2
-    elif year >= 2050 and year < 2150:
-        dt = -20 + 32 * ((year - 1820)/100.)**2 - 0.5628 * (2150-year)
-    elif year >= 2005 and year <= 2050:
-        t = (year - 2000)
-        dt = 62.92 + 0.32217*t + 5.589e-3*t**2
-    elif year >=1986 and year < 2005:
-        t = (year - 2000)
-        dt = 63.86 + 0.3345*t - 0.060374*t**2 + 1.7275e-3*t**3 + 6.51814e-4*t**4 + 2.373599e-5*t**5
-    elif year >= 1961 and year < 1986:
-        t = (year - 1975)
-        dt = 45.45 + 1.067*t - t**2/260 - t**3/718
-    elif year >= 1941 and year < 1961:
-        t = (year - 1950)
-        dt = 29.07 - 0.407*t - t**2/233. + t**3/2547.
-    elif year >= 1920 and year < 1941:
-        t = (year - 1920)
-        dt = 21.20 + 0.84493*t - 0.0761*t**2 + 2.0936e-3*t**3
-    elif year >= 1900 and year < 1920:
-        t = (year - 1900)
-        dt = -2.79 + 1.494119*t - 0.0598939*t**2 + 0.0061966*t**3 - 1.97e-4*t**4
-    elif year >= 1860 and year < 1900:
-        t = (year - 1860)
-        dt = 7.62 + 0.5737*t - 0.251754*t**2 + 0.01680668*t**3 - 4.473624*t**4 + t**5/233174
-    elif year >= 1800 and year < 1860:
-        t = (year - 1800)
-        dt = 13.72 - 0.332447*t + 6.8612e-3*t**2 + 4.1116e-3*t**3 - 3.7436e-4*t**4 + 1.21272e-5*t**5 \
-            -1.699e-7*t**6 + 8.75e-10*t**7
-    elif year >= 1700 and year < 1800:
-        t = (year - 1700)
-        dt = 8.83 + 0.1603*t - 5.9285e-3*t**2 + 1.3336e-4*t**3 - t**4/1_174_000
-    elif year >= 1600 and year < 1700:
-        t = (year - 1600)
-        dt = 120 - 0.9808*t - 0.01532*t**2 + t**3/7129
-    elif year >= 500 and year < 1600:
-        t = (year-1000)/100.
-        dt = 1574.2 - 556.01*t + 71.23472*t**2 + 0.319781*t**3 - 0.8503463*t**4 \
-            - 5.050998e-3*t**5 + 8.3572073e-3*t**6
-    elif year >= -500 and year < 500:
-        t = year/100.
-        dt = 10583.6 - 1014.41*t + 33.78311*t**2 - 5.952053*t**3 - 0.1798452*t**4 \
-            + 0.022174192*t**5 + 9.0316521e-3*t**6
-    elif year < -500:
-        t = (year - 1820)/100.
-        dt = -20 + 32*t**2
-    else: # we shouldn't get here
-        dt = 0.
-    return dt
-
-def get_t0(d, time=dt.time(0,0,0)):
-    """
-    Get local midnight adjusted for time zone.
-    """
-    zone = timezone(d['time_zone'])
-    return zone.localize(dt.datetime.combine(d['date'], time))
 
 def get_almanac_times(today, ts, f):
     """
@@ -209,7 +142,7 @@ def iterate_on_m(m_list, obs,  delta_t, gast0, lat_rad, lon_deg, h0):
     # return the new list of m's and the ∆m values
     return new_m_list, delta_m_list
 
-def get_object_rise_set(utdt0, object_name, location, debug=True):
+def get_object_rise_set(utdt0, object_name, location, debug=False):
     """
     From Meeus, 2nd Ed. p. 102
     This is only good to a few minutes.
@@ -236,6 +169,7 @@ def get_object_rise_set(utdt0, object_name, location, debug=True):
 
     # Get the UTDT for the day before and the day after - this is for interpolation later on.
     utdt_list = [utdt - dt.timedelta(1), utdt, utdt + dt.timedelta(1)]
+    
     # Get the object's position for each of the time utdt values
     obs_list = construct_obs_list(utdt_list, object_name)
     
@@ -250,9 +184,9 @@ def get_object_rise_set(utdt0, object_name, location, debug=True):
     t2 = math.cos(lat_rad) * math.cos(dec_rad)
     cos_ha0 = t1 / t2
     if cos_ha0 > 1.:
-        return {'rise': None, 'set': None, 'flag': "Moon always above horizon"}
+        return {'rise': None, 'set': None, 'flag': "Always above horizon"}
     elif cos_ha0 < -1.:
-        return {'rise': None, 'set': None, 'flag': "Moon never above horizon"}
+        return {'rise': None, 'set': None, 'flag': "Never above horizon"}
     ha0 = math.degrees(math.acos(cos_ha0))
     #print("cos HA0", cos_ha0, "HA0: ", ha0)
 

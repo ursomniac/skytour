@@ -1,19 +1,13 @@
 from datetime import datetime
 from django import forms
 from .models import ObservingLocation
+from .time import TIME_ZONES
 
 YES_NO = [
     ('Yes', 'Yes'),
     ('No', 'No')
 ]
 
-TIME_ZONES = [
-    ('US/Eastern', 'US/Eastern'),
-    ('Universal Time', 'Universal Time'),
-    ('US/Pacific', 'US/Pacific'),
-    ('US/Mountain', 'US/Mountain'),
-    ('US/Central', 'US/Central')
-]
 class ObservingPlanForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='20:00') # Keep? or use the astro system?

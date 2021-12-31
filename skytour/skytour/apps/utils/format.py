@@ -1,0 +1,25 @@
+SEX_FORMAT = {
+    'hours': "{}{:02d}h {:02d}m {:06.3f}s",
+    'hms': "{}{:02d}:{:02d}:{:02d}",
+    "hmsf": "{}{:02d}:{:02d}:{:06.3f}",
+    'degrees': "{:1s}{:3d}° {:02d}\' {:06.3f}\"", # SHOULD be -360 to 360
+    'deg_text': "{:1s}{:3d}d {:02d}m {:06.3f}s",
+    "ra": "{}{:02d}h{:02d}m{:06.3f}s", # ra SHOULD be positive, < 24
+    "dec": "{:1s}{:02d}°{:02d}\'{:06.3f}\"" # dec SHOULD be -90 to 90.
+}
+
+def to_sex(value, format='hours'):
+    x = abs(value)
+    if format in ["hours", "hms", "hmsf", "ra"]:
+        sign = '' if value > 0 else '-'
+    else:
+        sign = '+' if value > 0 else '-'
+    h = int(x)
+    x -= h
+    x *= 60.
+    m = int(x)
+    s = (x-m) * 60
+    if format == 'hms':
+        s = int(s)
+
+    return SEX_FORMAT[format].format(sign, h, m, s)

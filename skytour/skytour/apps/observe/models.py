@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from .time import TIME_ZONES
 #from colorfield.fields import ColorField
 
 STATE_CHOICES = [
@@ -81,6 +82,12 @@ class ObservingLocation(models.Model):
     elevation = models.FloatField (
         _('Elevation'),
         help_text = 'meters'
+    )
+    time_zone = models.CharField (
+        _('Time Zone'),
+        max_length=20,
+        choices = TIME_ZONES,
+        default='US/Eastern'
     )
     travel_distance = models.FloatField (
         _('Dist.'),
