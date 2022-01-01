@@ -1,0 +1,46 @@
+{% load skytour_filters humanize %}
+<style>
+    table .inner { border: 0; padding: 0 0; }
+    td { border: 0; padding: 0 1em; vertical-align: top !important; }
+</style>
+<table>
+    <tr>
+        <th>Location</th>
+        <th>Observe</th>
+        <th>Almanac</th>
+        <th>Telescope View</th>
+    </tr>
+    <tr>
+        <td width="20%" style="vertical-align:top;">
+            <h5>Coordinates</h5>
+            &alpha;: {{ object.coords.ra_str }}<br/>
+            &delta;: {{ object.coords.dec_str }}
+            <h5>Distance</h5>
+            AU: {{ object.coords.distance.au|stringformat:'0.3f' }}<br/>
+            km: {{ object.coords.distance.km|stringformat:'0.1f'|intcomma }}<br/>
+            mi: {{ object.coords.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
+            Light Time: {{ object.coords.distance.light_time }}
+        </td>
+        <td width="20%" style="vertical-align:top;">
+            Mag: {{ object.observe.apparent_mag|floatformat:2 }}<br>
+            Ang Size: {{ object.observe.angular_diameter_str }}<br/>
+            Illum.: {{ object.observe.illum_fraction|floatformat:1 }} %</br>
+            Phase Angle: {{ object.observe.phase_angle_str }}<br/>
+            Elongation: <br/>
+        </td>
+        <td width="20%" style="vertical-align:top;">
+            {% for event in object.almanac %}
+            <br/>{{ event.type }}: {{ event.local|date:"D Y M d  h:i"}} local
+            {% endfor %}
+            <h5>Start</h5>
+            Az: {{ object.session.start.azimuth|to_dms }}<br/>
+            Alt: {{ object.session.start.altitude|to_dms }}<br/>
+            Up: {{ object.session.start.is_up }}
+            <h5>End</h5>
+            Az: {{ object.session.end.azimuth|to_dms }}<br/>
+            Alt: {{ object.session.end.altitude|to_dms }}<br/>
+            Up: {{ object.session.end.is_up }}
+        </td>
+        <td width="40%" style="vertical-align:top;"><img src="{{ object.view_image }}"/></td>
+    </tr>
+  </table>

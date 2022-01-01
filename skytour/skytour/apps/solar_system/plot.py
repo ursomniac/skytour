@@ -4,27 +4,22 @@ import io
 import math
 import matplotlib
 import numpy as np
-import pytz
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.collections import LineCollection
 from matplotlib.patches import Wedge, Ellipse
-
-from skyfield.api import Star, load
-from skyfield.data import hipparcos, stellarium #, mpc
+from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
 
 from ..observe.time import get_t_epoch, get_julian_date
-from ..stars.models import BrightStar
-from .saturn import saturn_ring
+from ..plotting.map import *
 from .planets import get_solar_system_object
 
 matplotlib.use('Agg')
 def create_planet_image(
-        name, # name
         planet, # dict from get_solar_system_object()
         utdt, # UTDT 
+        other_planets = None,
         fov=None, # force the FOV of the image
         mag_limit=8.5, # faintest stars on plot
         figsize=None, # size of plot
@@ -32,205 +27,85 @@ def create_planet_image(
         show_axes=False,
         debug=False
     ):
+    name = planet['name']
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     eph = load('de421.bsp')
     earth = eph['earth']
     t0 = get_t_epoch(get_julian_date(utdt))
-
+    
     fig, ax = plt.subplots(figsize=[6,6])
 
     # Center
     projection = build_stereographic_projection(planet['target'])
-    ang_size = planet['physical']['angular_diameter'] # arcsec
+    ang_size = planet['observe']['angular_diameter'] # arcsec
     ang_size_radians = math.radians(ang_size/3600.)
-    if debug:
-        print("ANG SIZE: ", ang_size, "RADIANS: ", ang_size_radians)
-
-
 
     if finder_chart:
-    # Constellations
-        url = ('https://raw.githubusercontent.com/Stellarium/stellarium/master'
-        '/skycultures/western_SnT/constellationship.fab')
-        with load.open(url) as f:
-            constellations = stellarium.parse_constellations(f)
-        edges = [edge for name, edges in constellations for edge in edges]
-        edges_star1 = [star1 for star1, star2 in edges]
-        edges_star2 = [star2 for star1, star2 in edges]
+        ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
+        ax = map_constellation_lines(ax, stars)
+        bsc_star_annotations = map_bsc_labels(earth, t, projection)
 
-        # Hipparcos
-        with load.open(hipparcos.URL) as f:
-            stars = hipparcos.load_dataframe(f)
-        # Compute the X,Y coordinates of stars on the plot
-        star_positions = earth.at(t).observe(Star.from_dataframe(stars))
-        stars['x'], stars['y'] = projection(star_positions)
-        bright_stars = (stars.magnitude <= mag_limit)
-        magnitude = stars['magnitude'][bright_stars]
-        marker_size = (0.5 + mag_limit - magnitude) **2.0
-        ##### background stars
-        scatter = ax.scatter(
-            stars['x'][bright_stars], stars['y'][bright_stars], 
-            s=marker_size, color='k'
-        )
-
-        ##### BSC
-        bsc_stars = BrightStar.objects.filter(name__isnull=False)
-        bsc_list = {'x': [], 'y': [], 'label': []}
-        for bsc in bsc_stars:
-            x, y = projection(earth.at(t).observe(bsc.skyfield_object))
-            bsc_list['x'].append(x)
-            bsc_list['y'].append(y)
-            bsc_list['label'].append(bsc.plot_label)
-        for x, y, z in zip(bsc_list['x'], bsc_list['y'], bsc_list['label']):
+        for x, y, z in bsc_star_annotations:
             plt.annotate(
                 z, (x, y), 
                 textcoords='offset points',
                 xytext=(-5, -5),
                 ha='right'
             )
+
         # Don't plot the planet - just a symbol.  This is for finder charts.
         (planet_ra, planet_dec, planet_dist) = planet['target'].radec()
-        object_x, object_y = projection(earth.at(t).observe(Star(ra_hours=planet_ra.hours, dec_degrees=planet_dec.degrees)))
-        object_scatter = ax.scatter(
-            [object_x], [object_y], 
-            s=[90.], c=['#900'], 
-            marker='+'
-        )
-            # Add an eyepiece circle, 32mm = 0.0038 radians
-        eyepiece = plt.Circle((0, 0), 0.0038, color='b', fill=False)
-        ax.add_patch(eyepiece)
+        ax = map_target(ax, planet_ra, planet_dec, projection, earth, t, '+')
 
-        # assemble constellation lines
-        xy1 = stars[['x', 'y']].loc[edges_star1].values
-        xy2 = stars[['x', 'y']].loc[edges_star2].values
-        lines_xy = np.rollaxis(np.array([xy1, xy2]), 1)
-        ##### constellation lines
-        ax.add_collection(LineCollection(lines_xy, colors='#00f2'))
+        # Add an eyepiece circle, 32mm = 0.0038 radians
+        ax = map_eyepiece(ax)
+
+        # Add DSOs
+        ax, xxx, yyy, other_dsos = map_dsos(ax, earth, t, projection)
+        for x, y, z in zip(xxx, yyy, other_dsos['label']):
+            plt.annotate(
+                z, (x, y), 
+                textcoords='offset points',
+                xytext=(5, 5),
+                ha='left'
+            )
+
+        # Add planets
+        if other_planets:
+            px, py, pm = map_planets(name, other_planets, earth, t, projection)
+            for x, y, z in zip(px, py, pm):
+                plt.annotate(
+                    z, (x, y),
+                    textcoords='offset points',
+                    xytext=(0,0),
+                    ha='center',
+                    color='red',
+                    fontsize=20
+                )
+
+    # put up a telescopic view of the planet with moons
     else:
         # Add moons
-        if planet['moons']:
-            moon_pos_list = {'x': [], 'y': [], 'label': [], 'd': [], 'o': []}
-            # Get RA/Dec for each
-
-            dist_to_planet = planet['target'].distance().au
-            max_sep = 0.
-            for moon in planet['moons']:
-                (moon_ra, moon_dec, moon_dist) = moon['target'].radec()
-                x, y = projection(earth.at(t).observe(Star(ra_hours=moon_ra.hours, dec_degrees=moon_dec.degrees)))
-                d = moon_dist.au
-                sep = moon['target'].separation_from(planet['target']).radians
-                if debug:
-                    print("{}: X: {:.3f} Y: {:.3f} SEP: {:.3f} ANG: {:.3f} ∆d: {:.3f}".format(
-                        moon['name'], x*1e5, y*1e5, sep*1e5, 1e5*ang_size_radians/2., 1e5*(dist_to_planet - d))
-                    )
-                dd = math.sqrt(x*x + y*y)
-                if dd < ang_size_radians/2.:
-                #if sep < ang_size_radians/2. and d > dist_to_planet:
-                    if debug:
-                        print ("Removing: ", moon['name'])
-                    continue  # oops - I'm behind the planet
-                if sep > max_sep:
-                    max_sep = sep
-
-                # Continue    
-                moon_pos_list['x'].append(x)
-                moon_pos_list['y'].append(y)
-                moon_pos_list['d'].append(d)
-                l = moon['name'][0] # First initial
-                if moon['name'] == 'Tethys':
-                    l = 'Te'
-                elif moon['name'] == 'Titan':
-                    l = 'Ti'
-                moon_pos_list['label'].append(l)
-                if d < dist_to_planet:
-                    moon_pos_list['o'].append(-20)
-                else:
-                    moon_pos_list['o'].append(10)
-
-            moon_scatter = ax.scatter(moon_pos_list['x'], moon_pos_list['y'], color='b', marker='+')
-
+        if 'moons' in planet.keys():
+            ax, moon_pos_list, max_sep = map_moons(ax, planet, earth, t, projection, ang_size_radians)
             for x, y, z, o in zip(moon_pos_list['x'], moon_pos_list['y'], moon_pos_list['label'], moon_pos_list['o']):
                 plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
-
         else: # no moons, set max_sep to 3*ang_size
             max_sep = 3 * ang_size_radians
 
-
         if name == 'Saturn':
-            rings = saturn_ring(t0, planet['target'])
-            a = math.radians(rings['major'] / 3600.)
-            b = math.radians(rings['minor'] / 3600.)
-            #print ("a: ", a, "b: ", b)
-            re1 = Ellipse((0,0), a, b, fill=False)
-            ax.add_patch(re1)
-            re2 = Ellipse((0,0), a*.665, b*.665, fill=False)
-            ax.add_patch(re2)
-
+            ax = map_saturn_rings(ax, planet, t0)
         if name in ['Mercury', 'Venus']:
-            c1 = None
-            e1 = None
-            w1 = None
-            w2 = None
+            ax = map_phased_planet(ax, planet, ang_size_radians)
 
-            phase_angle = planet['physical']['plotting_phase'] # in degrees
-            major_axis = ang_size_radians  # radius of planet
-            minor_axis = abs(math.cos(math.radians(planet['physical']['phase_angle'])) * ang_size_radians)
-            #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
-            # Circumstances:
-            #    phase:  0, 360:  minor  = 1.  New Moon        (left: black, right: black, half-ellipse: n/a really)
-            if abs(phase_angle) < 1.: # New Moon
-                c1 = plt.Circle((0,0), ang_size_radians/2., color='k') # black disk
-            #    phase:   0- 90:  minor  > 0.  Waxing Crescent (left: black, right: white, half-ellipse: black)
-            elif phase_angle < 179:
-                w1 = Wedge((0,0), major_axis/2., -90., 90., fc='white', edgecolor='black')
-                w2 = Wedge((0,0), major_axis/2., 90., 270., fc='black', edgecolor='black')
-                if phase_angle <= 89. : # Waxing Crescent
-                    e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
-            #                90:  minor  = 0.  First Quarter   (left: black, right: white, half-ellipse: n/a really)
-            #            90-180:  minor  < 0.  Waxing Gibbous  (left: black, right: white, half-ellipse: white)
-                elif phase_angle <= 179 and phase_angle >= 91.:
-                    e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
-            #               180:  minor = -1.  Full Moon       (left: white, right: white, half-ellipse: n/a really)
-  
-            elif phase_angle < 181.: 
-                c1 = plt.Circle((0,0), ang_size_radians/2., color='w') # white disk
-            #           180-270:  minor  < 0.  Waning Gibbous  (left: white, right: black, half-ellipse: white)
-            else:
-                w1 = Wedge((0,0), major_axis/2., -90., 90., fc='black', edgecolor='black')
-                w2 = Wedge((0,0), major_axis/2., 90., 270., fc='white', edgecolor='black')
-                if phase_angle <= 269.: # waning gibbous
-                    e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
-            #               270:  minor  = 0.  Last Quarter    (left: white, right: black, half-ellipse: n/a really)
-            #           270-360:  minor  > 0.  Waning Crescent (left: white, right: black, half-ellipse: black)
-                if phase_angle >= 271 and phase_angle < 359.:
-                    e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black') 
- 
-            # put in the wedges
-            if w1: 
-                ax.add_artist(w1)
-            if w2:
-                ax.add_artist(w2)
-            # on top of that, the ellipse
-            if e1:
-                ax.add_patch(e1)
-            # or the circle
-            if c1:
-                ax.add_patch(c1)
-            # and for consistency, the red circle...
-            circle2 = plt.Circle((0,0), ang_size_radians/2., color='r', fill=False)
-            ax.add_patch(circle2)
         else: # just a regular disk!
-            circle1 = plt.Circle((0,0), ang_size_radians/2., color='w')
-            ax.add_patch(circle1)
-            circle2 = plt.Circle((0,0), ang_size_radians/2., color='r', fill=False)
-            ax.add_patch(circle2)
-
+            ax = map_whole_planet(ax, ang_size_radians)
 
     # Plot scaling
     if not fov: # set FOV if not supplied
         if finder_chart:
-            fov = 8.
+            fov = 8. if planet['name'] in ['Uranus', 'Neptune'] else 20.
         else:
             # set FOV to slightly more than the greatest moon distance
             # if no moons, then against the angular size of the planet
@@ -250,10 +125,10 @@ def create_planet_image(
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
 
-    if fov > 60.: # more than 1 degree
-        fov_str = "{:.1f}°".format(fov/60.)
+    if fov > 1: # more than 1 degree
+        fov_str = "{:.1f}°".format(fov)
     else:
-        fov_str = "{:.1f}\'".format(fov)
+        fov_str = "{:.1f}\'".format(fov*60.)
 
     chart_type = 'Finder Chart' if not finder_chart else 'View'
     title = "{} {}  FOV = {}".format(name, chart_type, fov_str)

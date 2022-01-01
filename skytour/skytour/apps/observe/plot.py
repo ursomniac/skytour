@@ -1,6 +1,9 @@
 
-from ..utils.plot import create_plot
+from ..plotting.scatter import create_plot
 
+"""
+This is the code to make the two scatter plots on the ObservingLocationList view
+"""
 STATUS_COLOR = {
 	'Active': '#0C0',
 	'Possible': '#0FF',

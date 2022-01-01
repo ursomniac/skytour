@@ -155,6 +155,8 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
         fn = 'dso_chart_{}.png'.format(dso.pk)
         fig.savefig('media/dso_charts/{}'.format(fn), bbox_inches='tight')
 
+    plt.cla()
+    plt.close(fig)
     return fn
 
 class Command(BaseCommand):
@@ -168,5 +170,5 @@ class Command(BaseCommand):
             print("Creating Finder Chart for {}: {}".format(dso.pk, dso.shown_name))
             fn = create_dso_finder_chart(dso)
             dso.dso_finder_chart = 'dso_charts/{}'.format(fn)
-            print ("\tFN: ", fn)
+            #print ("\tFN: ", fn)
             dso.save()

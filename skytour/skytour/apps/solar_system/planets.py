@@ -1,38 +1,45 @@
 import math
 from matplotlib.pyplot import get
-from skyfield.api import load
+from skyfield.api import load 
 from skyfield.almanac import (
     phase_angle as get_phase_angle, 
     fraction_illuminated,
-    moon_phase
 )
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set
+from ..observe.local import get_observing_situation
 from ..utils.compile import observe_to_values
-from ..utils.transform import get_alt_az
-#from .saturn import saturn_ring
-from .utils import get_angular_size, get_plotting_phase_angle
-from .vocabs import PLANET_DICT
+from ..utils.format import to_sex
+from .utils import get_constellation
 
-def get_solar_system_object(utdt, name, location=None):
+#from .saturn import saturn_ring
+from .models import Planet
+from .utils import get_angular_size, get_plotting_phase_angle
+from .vocabs import PLANETS
+
+def get_solar_system_object(utdt, name, utdt_end=None, location=None):
     ts = load.timescale()
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
     eph = load('de421.bsp')
     earth = eph['earth']
 
-    if name not in PLANET_DICT.keys():
+    planet = Planet.objects.filter(name=name).first()
+    if not planet:
         return None
 
-    pdict = PLANET_DICT[name]
-    target = pdict['target']
-    obs = earth.at(t).observe(target)
+    obs = earth.at(t).observe(eph[planet.target])
+    (obs_ra, obs_dec, obs_distance) = obs.radec()
+    constellation = get_constellation(obs_ra.hours.item(), obs_dec.degrees.item())
     sun = earth.at(t).observe(eph['sun'])
 
+    almanac = get_object_rise_set(utdt, eph, eph[planet.target], location) if location else None
+    session = get_observing_situation(obs, utdt, utdt_end, location) if utdt_end and location else None
+
     # Get things from almanac
-    k = fraction_illuminated(eph, target, t).item() # float
-    i = get_phase_angle(eph, target, t).item() # degrees
+    k = fraction_illuminated(eph, planet.target, t).item() # float
+    i = get_phase_angle(eph, planet.target, t).degrees.item() # degrees
     ang_size = get_angular_size(
-        pdict['diameter'], 
+        planet.diameter, 
         obs.radec()[2].km
     ) # diameter in arcsec
     plotting_phase_angle = get_plotting_phase_angle(obs, sun)
@@ -44,11 +51,11 @@ def get_solar_system_object(utdt, name, location=None):
         mag = None
 
     # deal with moons
-    moon_list = pdict['moon_list']
+    moon_list = planet.moon_list
     moon_obs = []
     if moon_list:
         # we have moons!
-        moonsys = load(pdict['load'])
+        moonsys = load(planet.load)
         earth_s = moonsys['earth']
         for moon in moon_list:
             mdict = {}
@@ -59,32 +66,30 @@ def get_solar_system_object(utdt, name, location=None):
     else:
         moon_obs = None
 
-    almanac = get_object_rise_set(utdt, eph, target, location) if location else None
-
     return {
+        'name': name,
         'target': obs,
         'coords': observe_to_values(obs),
         'observe': {
-            'illum_fraction': k,
+            'constellation': constellation,
+            'illum_fraction': k * 100.,  # percent
             'apparent_mag': mag,
             'angular_diameter': ang_size,
+            'angular_diameter_str': to_sex(ang_size/60., format='degrees'),
             'phase_angle': i,
+            'phase_angle_str': to_sex(i, format="degrees"),
             'plotting_phase_angle':  plotting_phase_angle
             # elongation
             # position_angle
         },
         'almanac': almanac,
+        'session': session,
         'moons': moon_obs
     }
 
-def is_planet_up(utdt, location, ra, dec, min_alt=0.):
-    az, alt = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
-    up = alt > min_alt
-    return az, alt, up
-
-def get_all_planets(utdt, location=None):
+def get_all_planets(utdt, utdt_end=None, location=None):
     planet_dict = {}
-    for name in PLANET_DICT.keys():
-        planet = get_solar_system_object(utdt, name, location=location)
+    for name in PLANETS:
+        planet = get_solar_system_object(utdt, name, utdt_end=utdt_end, location=location)
         planet_dict[name] = planet
     return planet_dict

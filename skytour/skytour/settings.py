@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'colorfield',
     
     'skytour.apps.dso',
-    #'skytour.apps.meeus',
+    'skytour.apps.plotting',
     'skytour.apps.observe',
     'skytour.apps.site',
     'skytour.apps.solar_system',

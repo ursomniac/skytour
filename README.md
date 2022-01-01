@@ -10,12 +10,12 @@ Plan observations using a database of DSOs.
 * Create telescopic view of the planet (with moons bright enough to be observed).
 
 ## Refactor the PlanView
-* Clean up datetime stuff
-    * Fix UTDT and timezone offset
-    * Update ObservingLocation model to have local time zone
+* DONE: Clean up datetime stuff
+    * DONE: Fix UTDT and timezone offset
+    * DONE: Update ObservingLocation model to have local time zone
     * Deal with DST (somehow)
-* Get Sun and Moon coordinates up front
-* Create better structure for stored data
+* DONE: Get Sun and Moon coordinates up front
+* DONE: Create better structure for stored data
 
 New Flow:
 1. Get Sun and Moon
@@ -42,11 +42,12 @@ One overall things:
     * create methods for conversion
 
 * Magnitude 
-    * Should handle Moon and planets, and ???
-* Angular Size (fix and refactor)
+    * DONE: Should handle Moon and planets, and ???
+* DONE: Angular Size (fix and refactor)
 
 ## Debug phase stuff
-* Test and confirm the data are right 
+* DONE? Test and confirm the data are right 
+    * I moved everything to routines within SkyField
 
 ## Create PDF view/creation for:
 * DSOs

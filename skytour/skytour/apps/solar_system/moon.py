@@ -7,9 +7,11 @@ from skyfield.almanac import (
     moon_phase
 )
 from ..observe.almanac import get_object_rise_set
+from ..observe.local import get_observing_situation
 from ..observe.time import get_julian_date
 from ..utils.compile import observe_to_values
-from .utils import get_angular_size, get_plotting_phase_angle, get_phase_description
+from ..utils.format import to_sex
+from .utils import get_angular_size, get_plotting_phase_angle, get_phase_description, get_constellation
 
 MOON_PHASES = [
     'NEW MOON', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL MOON', 
@@ -32,7 +34,7 @@ def simple_lunar_phase(jd):
         'days_since_new_moon': delta_t
     }
 
-def get_moon(utdt, location=None, sun=None, eph=None, apparent=False):
+def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=False):
     ts = load.timescale()
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
 
@@ -45,8 +47,11 @@ def get_moon(utdt, location=None, sun=None, eph=None, apparent=False):
     (xmlat, xmlon, xmdist) = moon.ecliptic_latlon()
     moon_lat = xmlat.radians
     moon_lon = xmlon.radians
-
+    (moon_ra, moon_dec, moon_dist) = moon.radec()
+    constellation = get_constellation(moon_ra.hours.item(), moon_dec.degrees.item())
     almanac = get_object_rise_set(utdt, eph, eph['Moon'], location=location) if location else None
+    # creates session
+    session = get_observing_situation(moon, utdt, utdt_end, location) if utdt_end and location else None
 
     # Get Sun position
     if not sun:
@@ -56,7 +61,6 @@ def get_moon(utdt, location=None, sun=None, eph=None, apparent=False):
 
     (xslat, xslon, xsdist) = sun.ecliptic_latlon()
     sun_lon = xslon.radians
-    sun_lat = xslat.radians
 
     # psi = geocentric elongation
     psi = math.acos(math.cos(moon_lat) * math.cos(moon_lon - sun_lon))
@@ -86,18 +90,22 @@ def get_moon(utdt, location=None, sun=None, eph=None, apparent=False):
     plotting_phase_angle = get_plotting_phase_angle(moon, sun)
 
     return {
+        'name': 'Moon',
         'target': moon,
         'coords': observe_to_values(moon),
         'observe': {
-            'illum_fraction': k,
+            'constellation': constellation,
+            'illum_fraction': k * 100.,  # percent
             'apparent_mag': mag,
             'angular_diameter': ang_size,
+            'angular_diameter_str': to_sex(ang_size, format='degrees'),
             'phase_angle': i,
             'phase': phase,
             'plotting_phase_angle': plotting_phase_angle,
             'position_angle': chi,
             'elongation': math.degrees(psi)
         },
-        'almanac': almanac
+        'almanac': almanac,
+        'session': session
     }
 

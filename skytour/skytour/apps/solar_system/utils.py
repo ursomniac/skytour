@@ -1,4 +1,9 @@
 import math
+from skyfield.api import (
+    position_of_radec, 
+    load_constellation_map,
+    load_constellation_names
+)
 
 def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'Mars'
     #print ("DIAMETER: ", diameter, 'DISTANCE: ', distance)
@@ -30,3 +35,9 @@ def get_plotting_phase_angle(target, sun):
     _, slon, _ = sun.apparent().ecliptic_latlon('date')
     angle = mlon.degrees - slon.degrees
     return angle
+
+def get_constellation(ra, dec):
+    constellation_at = load_constellation_map()
+    d = dict(load_constellation_names())
+    abbr = constellation_at(position_of_radec(ra, dec))
+    return dict(name = d[abbr], abbr = abbr)

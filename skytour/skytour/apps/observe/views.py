@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from .models import ObservingLocation
 from .forms import ObservingPlanForm
 from .plan import get_plan
-from .plot_utils import make_location_plot
+from .plot import make_location_plot
 
 class ObservingLocationListView(ListView):
     model = ObservingLocation

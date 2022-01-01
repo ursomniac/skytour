@@ -4,11 +4,11 @@ from skyfield.api import wgs84, load
 from ..dso.models import DSO
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
-from ..solar_system.planets import get_all_planets, is_planet_up
+from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import get_sun
+from ..solar_system.vocabs import PLANETS
 from ..utils.format import to_sex
-from .old_almanac import dark_time
-from .local import get_observing_situation
+from .almanac import dark_time
 from .models import ObservingLocation
 from .time import get_julian_date, local_time_to_utdt, get_local_datetime, get_t_epoch
 
@@ -50,61 +50,39 @@ def get_plan(form, debug=False):
     sun = get_sun(utdt_start, location=location, eph=context['eph']) # this should be a dict too.
 
     ### Moon
-    moon = get_moon(utdt_start, location=location, sun=sun) # dict of stuff
+    moon = get_moon(utdt_start, utdt_end=utdt_end, location=location, sun=sun) # dict of stuff
+    moon['view_image'] = create_planet_image(moon, utdt=utdt_start)
     # update the dict with local observing situation
-    moon = get_observing_situation(moon, utdt_start, utdt_end, location) # altaz, etc.
     context['moon'] = moon
 
     ### Planets
-    planet_data_dict = get_all_planets(utdt_start, location=location)
+    planet_data_dict = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
 
-    ccc = False
-    if ccc:
     # OK - which planets are up in the observing window?
-        planets = []
-        for planet, data in planet_data_dict.items():
-            coord = data['target'].radec()
-            ra = coord[0].hours
-            dec = coord[1].degrees
-            distance = coord[2]
-
-            pdict = {}
-            #pdict['name'] = planet.title()
-            #pdict['ra'] = to_sex(ra, format='ra')
-            #pdict['dec'] = to_sex(dec, format='dec')
-            #pdict['dist_au'] = "{:.4f} AU".format(distance.au)
-            #pdict['dist_km'] = "{:,.2f} km".format(distance.km)
-            #pdict['dist_mi'] = "{:,.2f} mi".format(distance.km/1.609)
-            #light_time = data['target'].light_time.item()
-            #pdict['light_time'] = to_sex(light_time * 24., format='hms') # hours
-            #pdict['angular_size'] = get_angular_size(DIAMETERS[planet.title()], distance.km)
-            #pdict['illum_fraction'] = data['physical']['illum_fraction'] * 100.
-            #pdict['phase_angle'] = to_sex(data['physical']['phase_angle'], format='degrees')
-
-
-            for k, v in [('start', utdt_start), ('end', utdt_end)]:
-                pdict[k] = {}
-                az, alt, is_up = is_planet_up(v, location, ra, dec, min_alt=0.)
-                pdict[k]['azimuth'] = to_sex(az, format='degrees')
-                pdict[k]['altitude'] = to_sex(alt, format='dec')
-                pdict[k]['is_up'] = is_up
-
-            # Plots
-            pdict['view_image'] = create_planet_image(planet, data, utdt=utdt_start)
-            if pdict['name'] in ['Uranus', 'Neptune']:
-                pdict['finder_chart'] = create_planet_image(planet, data, utdt=utdt_start, finder_chart=True)
-            else:
-                pdict['finder_chart'] = create_planet_image(
-                    planet, 
-                    data, 
-                    utdt=utdt_start,
-                    fov=20,
-                    mag_limit=6.5,
-                    finder_chart=True
-                )
-
-            planets.append(pdict)
-    context['planets'] = []
+    planets = []
+    for k in PLANETS:
+        pd = planet_data_dict[k]
+        pd['name'] = k
+        pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
+        #if k in ['Uranus', 'Neptune']:
+        #    pd['finder_chart'] = create_planet_image(
+        #        pd, 
+        #        utdt=utdt_start, 
+        #        other_planets=planet_data_dict, 
+        #        fov=8,
+        #        finder_chart=True
+        #    )
+        #else:
+        #    pd['finder_chart'] = create_planet_image(
+        #        pd, 
+        #        utdt=utdt_start, 
+        #        other_planets=planet_data_dict, 
+        #        fov=20, 
+        #        mag_limit=6.5, 
+        #        finder_chart=True
+        #    )
+        planets.append(pd)
+    context['planets'] = planets
 
     ### DSO List
     targets = {}
@@ -123,4 +101,3 @@ def get_plan(form, debug=False):
     context['targets'] = targets
 
     return context # everything in {{ plan."things" }}
-

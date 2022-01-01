@@ -7,19 +7,25 @@ def dict_value(value, arg):
 
 @register.filter(name='to_hms')
 def to_hms(d):
-    x = d % 24.
-    h = int(x)
-    x = (x - h) * 60.
-    m = int(x)
-    s = (x - m) * 60.
-    return "{:02d}h {:02d}m {:6.3f}s".format(h, m, s)
+    try:
+        x = d % 24.
+        h = int(x)
+        x = (x - h) * 60.
+        m = int(x)
+        s = (x - m) * 60.
+        return "{:02d}h {:02d}m {:6.3f}s".format(h, m, s)
+    except:
+        return None
 
 @register.filter(name='to_dms')
 def to_dms(d):
-    x = abs(d)
-    h = int(x)
-    x = (x - h) * 60.
-    m = int(x)
-    s = (x - m) * 60.
-    sign = '-' if d < 0 else '+'
-    return "{}{:3d}° {:02d}\' {:6.3f}\"".format(sign, h, m, s)
+    try:
+        x = abs(d)
+        h = int(x)
+        x = (x - h) * 60.
+        m = int(x)
+        s = (x - m) * 60.
+        sign = '-' if d < 0 else '+'
+        return "{}{:3d}° {:02d}\' {:6.3f}\"".format(sign, h, m, s)
+    except:
+        return None

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load skytour_filters %}
+{% load skytour_filters humanize %}
 {% block content %}
 <style>
     .plan td {
@@ -10,8 +10,8 @@
       border: 0;
       padding: 0 0;
     }
-    table .inner td {
-      border: 0; padding: 0 0; vertical-align: top;
+    td {
+      border: 0; padding: 0 1em; vertical-align: top !important;
     }
 details {
   user-select: none;
@@ -41,8 +41,6 @@ summary::-webkit-details-marker {
   display: none;
 }
 </style>
-
-{{ context }}
 
 <h1>Plan Observations</h1>
 <div class="plan_form">
@@ -81,78 +79,19 @@ summary::-webkit-details-marker {
   </table>
 
   <h2>Moon</h2>
-  <table>
-    <tr>
-    <td>
-      <ul>
-      <li>&alpha;: {{ plan.moon.coords.ra_str }}</li>
-      <li>&delta;: {{ plan.moon.coords.dec_str }}</li>
-      <li>Distance:
-          <ul>
-          <li>{{ plan.moon.coords.distance.au|floatformat:5 }} AU</li>
-          <li>{{ plan.moon.coords.distance.km|floatformat:0 }} km </li>
-          <li>{{ plan.moon.coords.distance.mi|floatformat:0 }} mi</li>
-          </ul>
-      </li>
-      <br/>
-      <li>Angular Size: {{ plan.moon.observe.angular_diameter|to_dms }}</li>
-      <br/>
-        <li>Phase Angle: {{ plan.moon.observe.phase_angle|to_dms }}</li>
-        <li>Phase: {{ plan.moon.observe.phase.phase }}</li>
-        <li>Age: {{ plan.moon.observe.phase.days_since_new_moon|floatformat:2 }} days</li>
-      </td>
-    </tr>
-  </table>
+  {% with plan.moon as object %}
+  {% include 'includes/solar_system_object.html' %}
+  {% endwith %}
 
   <h2>Planets</h2>
-
   {% for planet in plan.planets %}
-  {% if planet.start.is_up or planet.end.is_up %}
-  <h3>{{ planet.name }}</h3>
-  <table>
-    <tr>
-      <th>Observe</th>
-      <th>Distance</th>
-      <th>Start</th>
-      <th>End</th>
-    </tr>
-    <tr>
-      <td>
-        &alpha;: {{ planet.ra }}<br/>
-        &delta;: {{ planet.dec }}<br/><br/>
-        Mag: {{ planet.physical.apparent_mag|floatformat:2 }}<br>
-        Ang Size: {{ planet.angular_size|floatformat:2 }}<br/>
-        Illum.: {{ planet.illum_fraction|floatformat:1 }} %</br>
-        Phase Angle: {{ planet.phase_angle }}
-      </td>
-      <td>
-        AU: {{ planet.dist_au }}<br/>
-        km: {{ planet.dist_km }}<br/>
-        mi: {{ planet.dist_mi }}<br/>
-        Light Time: {{ planet.light_time }}
-      </td>
-      <td>
-        Az: {{ planet.start.azimuth }}<br/>
-        Alt: {{ planet.start.altitude }}<br/>
-      </td>
-      <td>
-        Az: {{ planet.end.azimuth }}<br/>
-        Alt: {{ planet.end.altitude }}<br/>
-      </td>
-    </tr>
-  </table>
-  <div class="images">
-    <table>
-      <tr>
-        <td width="50%"><img src="{{ planet.view_image }}"/></td>
-        <td width="50%"><img src="{{ planet.finder_chart }}"/></td>
-      </tr>
-    </table>
-  </div>
-  <hr/>
-  {% endif %}
+    <h3>{{ planet.name }} - in {{ planet.observe.constellation.name }}</h3>
+    {% with planet as object %}
+    {% include 'includes/solar_system_object.html' %}
+    {% endwith %}
+    <hr/>
   {% empty %}
-  No planets visible.
+  <p>No planets visible.</p>
   {% endfor %}
   
   <h2>Targets</h2>
