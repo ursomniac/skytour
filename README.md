@@ -18,26 +18,29 @@ Plan observations using a database of DSOs.
 * DONE: Create better structure for stored data
 
 New Flow:
-1. Get Sun and Moon
-2. Get planets
-    1. Check if planets are "up" in the window of observations
+1. DONE: Get Sun and Moon
+2. DONE: Get planets
+    1. DONE: Check if planets are "up" in the window of observations
 3. Send core info to template 
     1. Add links for MoonView ???
     2. And links for PlanetView
-    3. Separate out DSO lists?
+    3. DONE: Separate out DSO lists?
         1. Move DSO finder chart creation to the DSOView
-        2 Remove all the plots from /media ?
+        2. Remove all the plots from /media ?
 
 ### Refactor plotting
-* Move Hipparcos to its own method
-* Move BSC to its own method
-* Move Constellation lines to its own method
-* Move planet moon locations to its own method
-* Move phase plot to its own method
+* DONE: Move Hipparcos to its own method
+* DONE: Move BSC to its own method
+* DONE: Move Constellation lines to its own method
+* DONE: Move planet moon locations to its own method
+* DONE: Move phase plot to its own method
+* move annotation from plt to ax
+    * move annotation code into the above methods.
+* Update BSC plot to have points as an option to the BSC method
+* All-sky view at start/end.
 
 ### Other new methods
-
-One overall things:
+Overall things:
     * figure out which units everything should be in
     * create methods for conversion
 
@@ -46,8 +49,8 @@ One overall things:
 * DONE: Angular Size (fix and refactor)
 
 ## Debug phase stuff
-* DONE? Test and confirm the data are right 
-    * I moved everything to routines within SkyField
+* DONE: Test and confirm the data are right 
+    * DONE: I moved everything to routines within SkyField
 
 ## Create PDF view/creation for:
 * DSOs
@@ -65,3 +68,7 @@ One overall things:
 * Think about other solar system stuff
     * Asteroids
     * Comets
+
+## Environment
+* Create ability to set "dark mode" on server startup.
+    * Change global style/CSS to support this.
