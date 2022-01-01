@@ -126,6 +126,7 @@ def map_phased_planet(ax, planet, ang_size_radians):
     w2 = None
 
     phase_angle = planet['observe']['plotting_phase_angle'] % 360. # in degrees
+    print ("PLOTTING PHASE ANGLE: ", phase_angle)
     major_axis = ang_size_radians  # radius of planet
     minor_axis = abs(math.cos(math.radians(planet['observe']['phase_angle'])) * ang_size_radians)
     #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
@@ -142,17 +143,17 @@ def map_phased_planet(ax, planet, ang_size_radians):
     #                90:  minor  = 0.  First Quarter   (left: black, right: white, half-ellipse: n/a really)
     #            90-180:  minor  < 0.  Waxing Gibbous  (left: black, right: white, half-ellipse: white)
         elif phase_angle <= 178 and phase_angle >= 92.:
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
+            e1 = Ellipse((0,0), minor_axis, major_axis, fc='white', edgecolor='white')
     #               180:  minor = -1.  Full Moon       (left: white, right: white, half-ellipse: n/a really)
 
     elif phase_angle < 182.: 
         c1 = plt.Circle((0,0), ang_size_radians/2., color='w') # white disk
     #           180-270:  minor  < 0.  Waning Gibbous  (left: white, right: black, half-ellipse: white)
-    else:
+    else: # angle between 182 and 358
         w1 = Wedge((0,0), major_axis/2., -90., 90., fc='black', edgecolor='black')
         w2 = Wedge((0,0), major_axis/2., 90., 270., fc='white', edgecolor='black')
         if phase_angle <= 268.: # waning gibbous
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
+            e1 = Ellipse((0,0), minor_axis, major_axis, fc='white', edgecolor='white')
     #               270:  minor  = 0.  Last Quarter    (left: white, right: black, half-ellipse: n/a really)
     #           270-360:  minor  > 0.  Waning Crescent (left: white, right: black, half-ellipse: black)
         if phase_angle >= 272 and phase_angle < 358.:

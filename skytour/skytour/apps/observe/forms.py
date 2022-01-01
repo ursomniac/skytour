@@ -7,6 +7,10 @@ YES_NO = [
     ('Yes', 'Yes'),
     ('No', 'No')
 ]
+PLANET_CHOICES = [
+    ('visible', 'Only Above the Horizon'),
+    ('all', 'All Planets')
+]
 
 class ObservingPlanForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
@@ -19,4 +23,6 @@ class ObservingPlanForm(forms.Form):
     horizon_range = forms.FloatField(initial=3.5)
     session_length = forms.FloatField(initial=3)
     time_zone = forms.ChoiceField(choices=TIME_ZONES, initial='US/Eastern')
+    show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial='visible')
     dst = forms.ChoiceField(choices=YES_NO, initial='No')
+

@@ -79,16 +79,24 @@ summary::-webkit-details-marker {
   </table>
 
   <h2>Moon</h2>
+  {% if show_moon %}
   {% with plan.moon as object %}
   {% include 'includes/solar_system_object.html' %}
   {% endwith %}
+  {% else %}
+  Moon is not up.
+  {% endif %}
 
   <h2>Planets</h2>
   {% for planet in plan.planets %}
     <h3>{{ planet.name }} - in {{ planet.observe.constellation.name }}</h3>
+    {% if planet.show_planet %}
     {% with planet as object %}
     {% include 'includes/solar_system_object.html' %}
     {% endwith %}
+    {% else %}
+    Planet is not up.
+    {% endif %}
     <hr/>
   {% empty %}
   <p>No planets visible.</p>

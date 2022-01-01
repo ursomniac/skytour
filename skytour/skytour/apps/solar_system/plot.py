@@ -38,8 +38,12 @@ def create_planet_image(
 
     # Center
     projection = build_stereographic_projection(planet['target'])
-    ang_size = planet['observe']['angular_diameter'] # arcsec
-    ang_size_radians = math.radians(ang_size/3600.)
+    if name != 'Moon':
+        ang_size = planet['observe']['angular_diameter'] # arcsec
+        ang_size_radians = math.radians(ang_size/3600.)
+    else:
+        ang_size = planet['observe']['angular_diameter'] # degrees!
+        ang_size_radians = math.radians(ang_size)
 
     if finder_chart:
         ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
@@ -93,13 +97,16 @@ def create_planet_image(
                 plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
         else: # no moons, set max_sep to 3*ang_size
             max_sep = 3 * ang_size_radians
-
+        if debug:
+            print("ANG: ",ang_size_radians," rad, ", ang_size_radians * 180 / np.pi, " deg")
+            print ("MAX SEP: ", max_sep)
         if name == 'Saturn':
             ax = map_saturn_rings(ax, planet, t0)
-        if name in ['Mercury', 'Venus']:
+        if name in ['Moon', 'Mercury', 'Venus']:
             ax = map_phased_planet(ax, planet, ang_size_radians)
 
         else: # just a regular disk!
+            print(name, " got here - mapping whole planet")
             ax = map_whole_planet(ax, ang_size_radians)
 
     # Plot scaling
@@ -120,17 +127,19 @@ def create_planet_image(
 
     angle = np.pi - fov / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
+    foo = 2. * limit * 180. / np.pi
+    #print("NAME: ", name, "FOV: ", fov, "ANGLE: ", angle, "LIMIT: ", limit, "FOO: ", foo)
     ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
 
-    if fov > 1: # more than 1 degree
-        fov_str = "{:.1f}°".format(fov)
+    if foo > 1.5: # more than 1 degree
+        fov_str = "{:.1f}°".format(foo)
     else:
-        fov_str = "{:.1f}\'".format(fov*60.)
+        fov_str = "{:.1f}\'".format(foo*60.)
 
-    chart_type = 'Finder Chart' if not finder_chart else 'View'
+    chart_type = 'Finder Chart' if finder_chart else 'View'
     title = "{} {}  FOV = {}".format(name, chart_type, fov_str)
     ax.set_title(title)
 

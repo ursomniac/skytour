@@ -22,15 +22,25 @@
             Light Time: {{ object.coords.distance.light_time }}
         </td>
         <td width="20%" style="vertical-align:top;">
+            <h5>Apparent</h5>
             Mag: {{ object.observe.apparent_mag|floatformat:2 }}<br>
             Ang Size: {{ object.observe.angular_diameter_str }}<br/>
-            Illum.: {{ object.observe.illum_fraction|floatformat:1 }} %</br>
+            <h5>Projection</h5>
+            {% if object.observe.phase.phase %}
+            Phase: {{ object.observe.phase.phase }}<br/>
+            Phase Angle: {{ object.observe.phase.angle|to_dms }}<br/>
+            Day: {{ object.observe.phase.days_since_new_moon|to_dhms }}<br/>
+            {% else %}
             Phase Angle: {{ object.observe.phase_angle_str }}<br/>
+            {% endif %}
+            Illum.: {{ object.observe.illum_fraction|floatformat:1 }} %</br>
+
             Elongation: <br/>
         </td>
         <td width="20%" style="vertical-align:top;">
+            <h5>Rise/Set Events</h5>
             {% for event in object.almanac %}
-            <br/>{{ event.type }}: {{ event.local|date:"D Y M d  h:i"}} local
+            {{ event.type }}: {{ event.local|date:"D Y M d  h:i"}} local<br/>
             {% endfor %}
             <h5>Start</h5>
             Az: {{ object.session.start.azimuth|to_dms }}<br/>
@@ -40,6 +50,7 @@
             Az: {{ object.session.end.azimuth|to_dms }}<br/>
             Alt: {{ object.session.end.altitude|to_dms }}<br/>
             Up: {{ object.session.end.is_up }}
+            <br/>
         </td>
         <td width="40%" style="vertical-align:top;"><img src="{{ object.view_image }}"/></td>
     </tr>

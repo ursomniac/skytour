@@ -29,3 +29,16 @@ def to_dms(d):
         return "{}{:3d}° {:02d}\' {:6.3f}\"".format(sign, h, m, s)
     except:
         return None
+
+@register.filter(name='to_dhms')
+def to_dhms(x):
+    try:
+        d = int(x)
+        hms = (x - d) * 24.
+        h = int(hms)
+        hms = (hms - h) * 60.
+        m = int(hms)
+        s = (hms - m) * 60.
+        return "{}d {:02d}h {:02d}m {:0.2f}s".format(d, h, m, s)
+    except:
+        return None

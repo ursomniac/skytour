@@ -75,7 +75,7 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
             'illum_fraction': k * 100.,  # percent
             'apparent_mag': mag,
             'angular_diameter': ang_size,
-            'angular_diameter_str': to_sex(ang_size/60., format='degrees'),
+            'angular_diameter_str': to_sex(ang_size/3600., format='degrees'),
             'phase_angle': i,
             'phase_angle_str': to_sex(i, format="degrees"),
             'plotting_phase_angle':  plotting_phase_angle

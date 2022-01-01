@@ -54,6 +54,8 @@ def get_plan(form, debug=False):
     moon['view_image'] = create_planet_image(moon, utdt=utdt_start)
     # update the dict with local observing situation
     context['moon'] = moon
+    context['show_moon'] = moon['session']['start']['is_up'] or moon['session']['end']['is_up'] or context['show_planets']
+
 
     ### Planets
     planet_data_dict = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
@@ -62,8 +64,11 @@ def get_plan(form, debug=False):
     planets = []
     for k in PLANETS:
         pd = planet_data_dict[k]
-        pd['name'] = k
-        pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
+        go = False
+        go = True if context['show_planets'] == 'all' or pd['session']['start']['is_up'] or pd['session']['end']['is_up'] else False
+        pd['show_planet'] = go
+        if go:
+            pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
         #if k in ['Uranus', 'Neptune']:
         #    pd['finder_chart'] = create_planet_image(
         #        pd, 
