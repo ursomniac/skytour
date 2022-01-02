@@ -6,6 +6,7 @@ __pycache__/
 # Things we don't want in the repo
 media/
 BACKUP_*
+IGNORE
 hip_main.dat
 *.bsp
 
