@@ -23,3 +23,6 @@ def to_sex(value, format='hours'):
         s = int(s)
 
     return SEX_FORMAT[format].format(sign, h, m, s)
+
+def make_querystring(d):
+    pass

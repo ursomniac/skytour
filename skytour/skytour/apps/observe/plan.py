@@ -1,6 +1,7 @@
 import datetime
 import pytz
 from skyfield.api import wgs84, load
+from urllib.parse import urlencode
 from ..dso.models import DSO
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
@@ -33,8 +34,17 @@ def get_plan(form, debug=False):
     t = context['t'] = get_t_epoch(context['julian_date'])
 
     # Observing Location
+    context['location'] = location
     context['latitude'] = location.latitude   # degrees
     context['longitude'] = location.longitude # degrees, positive East (ugh)
+
+    # Create querystring for planet lookup, etc.
+    obs_params = dict(
+        utdt_start = utdt_start,
+        utdt_end = utdt_end,
+        location = location.pk
+    )
+    context['query_params'] = urlencode(obs_params)
 
     # Preliminaries
     context['ts'] = load.timescale()
@@ -104,5 +114,4 @@ def get_plan(form, debug=False):
             else:
                 targets[priority] = [dso]
     context['targets'] = targets
-
     return context # everything in {{ plan."things" }}

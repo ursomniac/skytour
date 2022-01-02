@@ -41,8 +41,8 @@ New Flow:
 
 ### Other new methods
 Overall things:
-    * figure out which units everything should be in
-    * create methods for conversion
+* figure out which units everything should be in
+* create methods for conversion
 
 * Magnitude 
     * DONE: Should handle Moon and planets, and ???

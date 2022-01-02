@@ -48,15 +48,7 @@ def create_planet_image(
     if finder_chart:
         ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
         ax = map_constellation_lines(ax, stars)
-        bsc_star_annotations = map_bsc_labels(earth, t, projection)
-
-        for x, y, z in bsc_star_annotations:
-            plt.annotate(
-                z, (x, y), 
-                textcoords='offset points',
-                xytext=(-5, -5),
-                ha='right'
-            )
+        ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True)
 
         # Don't plot the planet - just a symbol.  This is for finder charts.
         (planet_ra, planet_dec, planet_dist) = planet['target'].radec()
@@ -65,28 +57,12 @@ def create_planet_image(
         # Add an eyepiece circle, 32mm = 0.0038 radians
         ax = map_eyepiece(ax)
 
-        # Add DSOs
-        ax, xxx, yyy, other_dsos = map_dsos(ax, earth, t, projection)
-        for x, y, z in zip(xxx, yyy, other_dsos['label']):
-            plt.annotate(
-                z, (x, y), 
-                textcoords='offset points',
-                xytext=(5, 5),
-                ha='left'
-            )
-
-        # Add planets
+        # Add planet symbols
         if other_planets:
-            px, py, pm = map_planets(name, other_planets, earth, t, projection)
-            for x, y, z in zip(px, py, pm):
-                plt.annotate(
-                    z, (x, y),
-                    textcoords='offset points',
-                    xytext=(0,0),
-                    ha='center',
-                    color='red',
-                    fontsize=20
-                )
+            ax = map_planets(ax, name, other_planets, earth, t, projection)
+
+        # Add DSOs
+        ax = map_dsos(ax, earth, t, projection)
 
     # put up a telescopic view of the planet with moons
     else:
@@ -106,7 +82,6 @@ def create_planet_image(
             ax = map_phased_planet(ax, planet, ang_size_radians)
 
         else: # just a regular disk!
-            print(name, " got here - mapping whole planet")
             ax = map_whole_planet(ax, ang_size_radians)
 
     # Plot scaling
@@ -127,14 +102,15 @@ def create_planet_image(
 
     angle = np.pi - fov / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
-    foo = 2. * limit * 180. / np.pi
-    #print("NAME: ", name, "FOV: ", fov, "ANGLE: ", angle, "LIMIT: ", limit, "FOO: ", foo)
+    foo = 4. * limit * 180. / np.pi
+    print("NAME: ", name, "FOV: ", fov, "ANGLE: ", angle, "LIMIT: ", limit, "FOO: ", foo)
     ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
 
-    if foo > 1.5: # more than 1 degree
+    # TODO: Test this because I think it's off by x2
+    if foo > 1.5: # more than 1 degree  
         fov_str = "{:.1f}°".format(foo)
     else:
         fov_str = "{:.1f}\'".format(foo*60.)
@@ -150,17 +126,10 @@ def create_planet_image(
     pngImageB64String = 'data:image/png;base64,'
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
 
+    # close things
     plt.cla()
     plt.close(fig)
     return pngImageB64String
-    # Save
-    #if finder_chart:
-    #    fn = 'test_{}_finder.png'.format(name.title())
-    #else:
-    #    fn = 'test_{}.png'.format(name.title())
-    #fig.savefig(fn, bbox_inches='tight')
-    #return fn
-
 
 ### TESTING
 def ptest(name, utdt=None, fov=None, figsize=None, finder_chart=False, show_axes=False):

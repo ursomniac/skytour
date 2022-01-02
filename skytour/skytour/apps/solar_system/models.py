@@ -6,6 +6,10 @@ class Planet(models.Model):
         _('Name'),
         max_length = 20,
     )
+    slug = models.SlugField (
+        _('Slug'),
+        null=True, blank=True
+    )
     load = models.CharField (
         _('BSP File Name'),
         max_length = 20,
@@ -15,13 +19,17 @@ class Planet(models.Model):
         _('Diameter'),
         help_text = 'Kilometers'
     )
+    semi_major_axis = models.FloatField (
+        _('Semi-Major Axis'),
+        null = True, blank = True,
+        help_text = 'au'
+    )
     moon_names = models.CharField (
         _('Moon Names'),
         max_length = 100,
         null=True, blank=True,
         help_text = 'List of moons that might be observable; separate with commas'
     )
-
     @property
     def target(self):
         return "{} Barycenter".format(self.name)
@@ -37,6 +45,9 @@ class Planet(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['semi_major_axis']
 
 """
 Moons:

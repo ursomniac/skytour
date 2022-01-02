@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block content %}
+Date: {{ utdt_start }}  Location: {{ location }}
+<table>
+    <thead>
+        <tr>
+            <th>Planet</th>
+            <th>&alpha;</th>
+            <th>&delta;</th>
+            <th>Mag</th>
+            <th>Constellation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k, v in pdict.items %}
+        <tr>
+            <td><a href="{% url 'planet-detail' k|lower %}">{{ k }}</a></td>
+            <td>{{ v.coords.ra_str }}</td>
+            <td>{{ v.coords.dec_str }}</td>
+            <td>{{ v.observe.apparent_mag|floatformat:2 }}/td>
+            <td>{{ v.observe.constellation.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

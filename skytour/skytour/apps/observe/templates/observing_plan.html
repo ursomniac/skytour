@@ -2,17 +2,21 @@
 {% load skytour_filters humanize %}
 {% block content %}
 <style>
-    .plan td {
-        vertical-align: top;
-        padding: 1em;
-    }
-    table .inner {
-      border: 0;
-      padding: 0 0;
-    }
-    td {
-      border: 0; padding: 0 1em; vertical-align: top !important;
-    }
+.plan td {
+    vertical-align: top;
+    padding: 1em;
+}
+table .inner {
+  border: 0;
+  padding: 0 0;
+}
+td {
+  border: 0; padding: 0 1em;
+}
+
+.td-center td {
+  vertical-align: middle;
+}
 details {
   user-select: none;
 }
@@ -89,18 +93,29 @@ summary::-webkit-details-marker {
 
   <h2>Planets</h2>
   {% for planet in plan.planets %}
-    <h3>{{ planet.name }} - in {{ planet.observe.constellation.name }}</h3>
-    {% if planet.show_planet %}
-    {% with planet as object %}
-    {% include 'includes/solar_system_object.html' %}
-    {% endwith %}
-    {% else %}
-    Planet is not up.
-    {% endif %}
-    <hr/>
-  {% empty %}
-  <p>No planets visible.</p>
-  {% endfor %}
+  <table class="td-center">
+    <tr>
+      <td width="30%"><h3>{{ planet.name }}</h3></td>
+      <td width="30%" style="text-align: center; vertical-align: middle !important;">
+        in {{ planet.observe.constellation.name }}
+        {% if not planet.show_planet %}
+        <br/><b><span style="color: #900;">NOT VISIBLE</span></b>
+        {% else %}
+        <br/><b><span style="color: #090;">VISIBLE</span></b>
+        {% endif %}
+      </td>
+      <td style="text-align: right; vertical-align: middle !important;">
+        <a href="{% url 'planet-detail' planet.slug %}?{{ plan.query_params }}">Detail View</a>
+      </td>
+    </tr>
+  </table>
+    
+  {% if planet.show_planet %}
+  {% with planet as object %}
+  {% include 'includes/solar_system_object.html' %}
+  {% endwith %}
+  {% endif %}
+{% endfor %}
   
   <h2>Targets</h2>
   <details>

@@ -68,6 +68,7 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
 
     return {
         'name': name,
+        'slug': planet.slug,
         'target': obs,
         'coords': observe_to_values(obs),
         'observe': {

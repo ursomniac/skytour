@@ -9,6 +9,7 @@ def get_sun(utdt, location=None, eph=None):
     earth = eph['Earth']
     sun = eph['Sun']
     
+    almanac = None
     if location:
         almanac = get_object_rise_set(utdt, eph, sun, location)
     

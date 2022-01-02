@@ -46,15 +46,35 @@ def map_hipparcos(ax, earth, t, mag_limit, projection):
     )
     return ax, stars
 
-def map_bsc_labels(earth, t, projection):
+def map_bright_stars(ax, earth, t, projection, mag_limit=None, points=True, annotations=True):
     bsc_stars = BrightStar.objects.filter(name__isnull=False)
-    bsc_list = {'x': [], 'y': [], 'label': []}
+    if mag_limit:
+        bsc_stars = bsc_stars.exclude(magnitude__gte=mag_limit)
+    bsc_list = {'x': [], 'y': [], 'label': [], 'size': []}
     for bsc in bsc_stars:
         x, y = projection(earth.at(t).observe(bsc.skyfield_object))
         bsc_list['x'].append(x)
         bsc_list['y'].append(y)
         bsc_list['label'].append(bsc.plot_label)
-    return zip(bsc_list['x'], bsc_list['y'], bsc_list['label'])
+        if mag_limit is None:
+            mag_limit = 7.
+        bsc_list['size'].append((0.5 + mag_limit - bsc.magnitude) **2)
+
+    if points:
+        scatter = ax.scatter(
+            bsc_list['x'], bsc_list['y'],
+            s=bsc_list['size'], color='k'
+        )
+    if annotations:
+        for x, y, z in zip(bsc_list['x'], bsc_list['y'], bsc_list['label']):
+            ax.annotate(
+                z, xy=(x, y), 
+                textcoords='offset points',
+                xytext=(-5, -5),
+                horizontalalignment='right',
+                annotation_clip = True
+            )
+    return ax
 
 def map_target(ax, ra, dec, projection, earth, t, symbol):
     object_x, object_y = projection(earth.at(t).observe(
@@ -126,7 +146,6 @@ def map_phased_planet(ax, planet, ang_size_radians):
     w2 = None
 
     phase_angle = planet['observe']['plotting_phase_angle'] % 360. # in degrees
-    print ("PLOTTING PHASE ANGLE: ", phase_angle)
     major_axis = ang_size_radians  # radius of planet
     minor_axis = abs(math.cos(math.radians(planet['observe']['phase_angle'])) * ang_size_radians)
     #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
@@ -193,10 +212,22 @@ def map_saturn_rings(ax, planet, t0):
     ax.add_patch(re2)
     return ax
 
-def map_dsos(ax, earth, t, projection, dso=None):
+def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, color='black', alpha=1):
     other_dso_records = DSO.objects.all()
+
+    # Filter the set
+    if mag_limit:
+        other_dso_records = other_dso_records.exclude(magnitude__gte=mag_limit)
     if dso:
-        other_dso_records = other_dso_records.exclude(dso.pk)
+        other_dso_records = other_dso_records.exclude(pk = dso.pk)
+
+    if priority <= 3:
+        other_dso_records = other_dso_records.exclude(priority='Low')
+    if priority <= 2:
+        other_dso_records = other_dso_records.exclude(priority='Medium')
+    if priority <= 1:
+        other_dso_records = other_dso_records.exclude(priority='High')
+
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
     for other in other_dso_records:
         x, y = projection(earth.at(t).observe(other.skyfield_object))
@@ -214,11 +245,21 @@ def map_dsos(ax, earth, t, projection, dso=None):
         ax.scatter(
             xxx[mask], yyy[mask],
             s=90., edgecolor='g', facecolors='none',
-            marker=um
+            marker=um, alpha=alpha
         )
-    return ax, xxx, yyy, other_dsos
+    for x, y, z in zip(xxx, yyy, other_dsos['label']):
+        ax.annotate(
+            z, xy=(x,y),
+            xytext=(5, 5),
+            textcoords='offset points',
+            horizontalalignment='left',
+            annotation_clip = True,
+            color=color
+        )
+    return ax
 
-def map_planets(this_planet, planets, earth, t, projection):
+
+def map_planets(ax, this_planet, planets, earth, t, projection):
     d = {'x': [], 'y': [], 'marker': []}
     planet_labels = []
     for k,v in planets.items():
@@ -233,4 +274,34 @@ def map_planets(this_planet, planets, earth, t, projection):
     xxx = np.array(d['x'])
     yyy = np.array(d['y'])
     mmm = np.array(d['marker'])
-    return xxx, yyy, mmm
+    for x, y, z in zip(xxx, yyy, mmm):
+        ax.annotate (
+            z, xy=(x, y),
+            textcoords='offset points',
+            xytext=(0,0),
+            horizontalalignment='center',
+            color='fuchsia',
+            fontsize=20
+        )
+    return ax
+
+def map_sun_moon(ax, name, obj, earth, t, projection, color='silver'):
+    ra, dec, dist = obj['target'].radec()
+    x, y = projection(
+        earth.at(t).observe(
+            Star(
+                ra_hours=ra.hours.item(), 
+                dec_degrees=dec.degrees.item()
+            )
+        )
+    )
+    m = UNICODE[name]
+    ax.annotate(
+        m, xy=(x,y),
+        textcoords='offset points',
+        xytext=(0,0),
+        horizontalalignment='center',
+        color=color,
+        fontsize=20
+    )
+    return ax

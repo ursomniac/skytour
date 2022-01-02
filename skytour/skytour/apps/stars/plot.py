@@ -1,0 +1,78 @@
+import base64
+import io
+import numpy as np
+
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from skyfield.api import load, Star
+from skyfield.projections import build_stereographic_projection
+
+from ..observe.time import get_t_epoch, get_julian_date, get_last
+from ..plotting.map import *
+from ..solar_system.moon import get_moon
+from ..solar_system.planets import get_all_planets
+from ..solar_system.sun import  get_sun
+
+def get_skymap(utdt, location):
+    ts = load.timescale()
+    t = ts.from_datetime(utdt)
+    eph = load('de421.bsp')
+    earth = eph['earth']
+    t0 = get_t_epoch(get_julian_date(utdt))
+    last = get_last(utdt, location.longitude)
+    zenith = earth.at(t).observe(Star(ra_hours=last, dec_degrees=location.latitude))
+    fig, ax = plt.subplots(figsize=[12,12])
+
+    # center
+    projection = build_stereographic_projection(zenith)
+
+    # stars and constellation lines
+    ax, stars = map_hipparcos(ax, earth, t, 5.0, projection)
+    ax = map_constellation_lines(ax, stars)
+    ax = map_bright_stars(
+        ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True
+    )
+    # Sun
+    sun = get_sun(utdt, eph=eph) 
+    ax = map_sun_moon(ax, 'Sun', sun, earth, t, projection, color='red')
+    # Moon
+    moon = get_moon(utdt, sun=sun, eph=eph)
+    ax = map_sun_moon(ax, 'Moon', moon, earth, t, projection, color='red')
+   
+    # planets
+    planets = get_all_planets(utdt, location=location)
+    ax = map_planets(ax, None, planets, earth, t, projection)
+    # DSOs
+    ax = map_dsos(ax, earth, t, projection, 
+        mag_limit=6.0, 
+        alpha=0.7, 
+        priority=2,
+        color='grey'
+    )
+
+    horizon = plt.Circle((0,0), 1., color='b', fill=False)
+    ax.add_patch(horizon)
+
+    fov = 180.
+    angle = np.pi - fov / 360. * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+
+    # set title
+    ax.set_title("{}".format(utdt.strftime("%Y-%m-%d %Hh UT")))
+
+    # Render and close
+        # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # close things
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String

@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<table>
+    <tr>
+        <td>
+            <h1>SkyMap</h1> 
+            Date: {{ utdt|date:"D Y M d  h:i"}} UT</br>
+            Location: {{ location.latitude }} Longitude: {{ location.longitude }}
+        </td>
+        <td>
+            <form method="GET">
+            {{ form.as_p }}
+            <input type="submit" value="Submit"/>
+            </form>
+            <small>Express date/time in UT.</small><br/>
+        </td>
+    </tr>
+</table>
+
+<img src="{{ skymap }}">
+
+{% comment %}
 <h1>Bright Star Catalog</h1>
 
 <table id="bright-star">
@@ -26,4 +47,5 @@
     {% endfor %}
 </tbody>
 </table>
+{% endcomment %}
 {% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load skytour_filters humanize %}
+
+{% block styles %}
+<style>
+    td { border: 0; padding: 0 1em; vertical-align: top !important; }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<table>
+    <tr>
+        <td>
+            <h1> {{ planet.name }}</h1> 
+            in {{ planet.observe.constellation.name }}
+        </td>
+        <td>
+            <form method="GET">
+            {{ form.as_p }}
+            <input type="submit" value="Submit"/>
+            </form>
+            <small>Express date/time in UT.</small><br/>
+        </td>
+    </tr>
+</table>
+<br/>
+
+<table>
+    <tr>
+        <th>Session</th>
+        <th>Location</th>
+        <th>Observe</th>
+        <th>Almanac</th>
+    </tr>
+    <tr>
+        <td width="25%"  style="vertical-align:top;">
+            <h4>Date and Time</h4>
+            UT Start: {{ utdt_start|date:"D Y-M-d h:i" }}<br/>
+            UT End:&nbsp; {{ utdt_end|date:"D Y-M-d h:i" }}<br/>
+            Julian Date: {{ julian_date|floatformat:4 }}
+
+            <h4>Location</h4>
+            {{ location.name }}<br/>
+            {{ location.street_address }}<br>
+            {{ location.city }}, {{ location.state }}<br/>
+            Longitude: {{ location.longitude|to_dms }}<br/>
+            Latitude: {{ location.latitude|to_dms }}<br/>
+
+            <h4>Sky Brightness</h4>
+            SQM: {{ location.sqm|floatformat:2 }} mag/arcsec<sup>2</sup><br/>
+            Brightness: {{ location.brightness|floatformat:2 }} µcd/m<sup>2</sup><br/>
+            Bortle: {{ location.bortle }}
+            <br/>
+            USM: {{ location.u}}
+        </td>
+        <td width="25%" style="vertical-align:top;">
+            <h4>Coordinates</h4>
+            &alpha;:&nbsp;&nbsp;{{ planet.coords.ra_str }}<br/>
+            &delta;: {{ planet.coords.dec_str }}
+            <h4>Distance</h4>
+            AU: {{ planet.coords.distance.au|stringformat:'0.3f' }}<br/>
+            km: {{ planet.coords.distance.km|stringformat:'0.1f'|intcomma }}<br/>
+            mi: {{ planet.coords.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
+            Light Time: {{ planet.coords.distance.light_time }}
+        </td>
+        <td width="25%" style="vertical-align:top;">
+            <h4>Apparent</h4>
+            Mag: {{ planet.observe.apparent_mag|floatformat:2 }}<br>
+            Ang Size: {{ planet.observe.angular_diameter_str }}<br/>
+            <h4>Projection</h4>
+            {% if planet.observe.phase.phase %}
+            Phase: {{ planet.observe.phase.phase }}<br/>
+            Phase Angle: {{ planet.observe.phase.angle|to_dms }}<br/>
+            Day: {{ planet.observe.phase.days_since_new_moon|to_dhms }}<br/>
+            {% else %}
+            Phase Angle: {{ planet.observe.phase_angle_str }}<br/>
+            {% endif %}
+            Illum.: {{ planet.observe.illum_fraction|floatformat:1 }} %</br>
+
+            Elongation: <br/>
+        </td>
+        <td width="25%" style="vertical-align:top;">
+            <h4>Rise/Set Events</h4>
+            {% for event in planet.almanac %}
+            {{ event.type }}: {{ event.local|date:"D Y M d  h:i"}} local<br/>
+            {% endfor %}
+            <h4>Start</h4>
+            Az: {{ planet.session.start.azimuth|to_dms }}<br/>
+            Alt: {{ planet.session.start.altitude|to_dms }}<br/>
+            Up: {{ planet.session.start.is_up }}
+            <h4>End</h4>
+            Az: {{ planet.session.end.azimuth|to_dms }}<br/>
+            Alt: {{ planet.session.end.altitude|to_dms }}<br/>
+            Up: {{ planet.session.end.is_up }}
+            <br/>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="50%" colspan=2>
+            <img src="{{ finder_chart }}">
+        </td>
+        <td width="50%" colspan=2>
+            <img src="{{ view_image }}">
+        </td>
+    </tr>
+{% endblock content %}
