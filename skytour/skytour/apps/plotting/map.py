@@ -90,7 +90,7 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     ax.add_patch(eyepiece)
     return ax
 
-def map_eyepiece(ax):
+def map_eyepiece(ax, diam=0.0038):
     eyepiece = plt.Circle((0,0), 0.0038, color='b', fill=False)
     return ax
 
@@ -140,55 +140,71 @@ def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
     return ax, moon_pos_list, max_sep
 
 def map_phased_planet(ax, planet, ang_size_radians):
-    c1 = None
-    e1 = None
-    w1 = None
-    w2 = None
+    cir1 = None
+    ell1 = None
+    wed1 = None
+    wed2 = None
 
+    ###
+    ### For inferior planets the Ellipse is the reverse color than for the Moon.
+    ###
     phase_angle = planet['observe']['plotting_phase_angle'] % 360. # in degrees
     major_axis = ang_size_radians  # radius of planet
     minor_axis = abs(math.cos(math.radians(planet['observe']['phase_angle'])) * ang_size_radians)
+
+    is_moon = planet['name'] == 'Moon'
+    if is_moon:
+        c0 = 'black'
+        c1 = 'white'
+        k0 = 'k'
+        k1 = 'w'
+    else:
+        c1 = 'black'
+        c0 = 'white'
+        k0 = 'w'
+        k1 = 'k'
     #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
     # Circumstances:
     #    phase:  0, 360:  minor  = 1.  New Moon        (left: black, right: black, half-ellipse: n/a really)
     if abs(phase_angle) < 2.: # New Moon
-        c1 = plt.Circle((0,0), ang_size_radians/2., color='k') # black disk
+        cir1 = plt.Circle((0,0), ang_size_radians/2., color='k') # black disk
     #    phase:   0- 90:  minor  > 0.  Waxing Crescent (left: black, right: white, half-ellipse: black)
     elif phase_angle < 178:
-        w1 = Wedge((0,0), major_axis/2., -90., 90., fc='white', edgecolor='black')
-        w2 = Wedge((0,0), major_axis/2., 90., 270., fc='black', edgecolor='black')
+        wed1 = Wedge((0,0), major_axis/2., -90., 90., fc='white', edgecolor='black')
+        wed2 = Wedge((0,0), major_axis/2., 90., 270., fc='black', edgecolor='black')
         if phase_angle <= 88. : # Waxing Crescent
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black')
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor='black')
     #                90:  minor  = 0.  First Quarter   (left: black, right: white, half-ellipse: n/a really)
     #            90-180:  minor  < 0.  Waxing Gibbous  (left: black, right: white, half-ellipse: white)
         elif phase_angle <= 178 and phase_angle >= 92.:
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='white', edgecolor='white')
+            # AH - but this is different for the Moon and inferior planets!
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor='white')
     #               180:  minor = -1.  Full Moon       (left: white, right: white, half-ellipse: n/a really)
 
     elif phase_angle < 182.: 
-        c1 = plt.Circle((0,0), ang_size_radians/2., color='w') # white disk
+        cir1 = plt.Circle((0,0), ang_size_radians/2., color='w') # white disk
     #           180-270:  minor  < 0.  Waning Gibbous  (left: white, right: black, half-ellipse: white)
     else: # angle between 182 and 358
-        w1 = Wedge((0,0), major_axis/2., -90., 90., fc='black', edgecolor='black')
-        w2 = Wedge((0,0), major_axis/2., 90., 270., fc='white', edgecolor='black')
+        wed1 = Wedge((0,0), major_axis/2., -90., 90., fc='black', edgecolor='black')
+        wed2 = Wedge((0,0), major_axis/2., 90., 270., fc='white', edgecolor='black')
         if phase_angle <= 268.: # waning gibbous
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='white', edgecolor='white')
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor='white')
     #               270:  minor  = 0.  Last Quarter    (left: white, right: black, half-ellipse: n/a really)
     #           270-360:  minor  > 0.  Waning Crescent (left: white, right: black, half-ellipse: black)
         if phase_angle >= 272 and phase_angle < 358.:
-            e1 = Ellipse((0,0), minor_axis, major_axis, fc='black', edgecolor='black') 
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor='black') 
 
     # put in the wedges
-    if w1: 
-        ax.add_artist(w1)
-    if w2:
-        ax.add_artist(w2)
+    if wed1: 
+        ax.add_artist(wed1)
+    if wed2:
+        ax.add_artist(wed2)
     # on top of that, the ellipse
-    if e1:
-        ax.add_patch(e1)
+    if ell1:
+        ax.add_patch(ell1)
     # or the circle
-    if c1:
-        ax.add_patch(c1)
+    if cir1:
+        ax.add_patch(cir1)
     # and for consistency, the red circle...
     circle2 = plt.Circle((0,0), ang_size_radians/2., color='r', fill=False)
     ax.add_patch(circle2)

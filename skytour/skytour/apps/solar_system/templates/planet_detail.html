@@ -76,8 +76,8 @@
             Phase Angle: {{ planet.observe.phase_angle_str }}<br/>
             {% endif %}
             Illum.: {{ planet.observe.illum_fraction|floatformat:1 }} %</br>
-
-            Elongation: <br/>
+            Elongation: {{ planet.observe.elongation|to_dms }}<br/>
+            Plotting Phase: {{ planet.observe.plotting_phase_angle|floatformat:2 }}
         </td>
         <td width="25%" style="vertical-align:top;">
             <h4>Rise/Set Events</h4>

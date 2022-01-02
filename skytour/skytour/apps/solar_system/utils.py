@@ -30,9 +30,18 @@ def get_phase_description(phase_angle): # degrees
     phase = PHASES[int((phase_angle + 22.5) / 45.)]
     return phase
 
-def get_plotting_phase_angle(target, sun):
-    _, mlon, _ = target.apparent().ecliptic_latlon('date')
-    _, slon, _ = sun.apparent().ecliptic_latlon('date')
+def get_plotting_phase_angle(name, phase, elongation):
+    if name in ['Mercury', 'Venus']:
+        return 360. - phase if elongation < 0. else phase
+    return phase
+
+def get_elongation(target, sun):
+    """
+    This fails for inferior planets.
+    Here you have to know which side of the Sun the planet is on.
+    """
+    _, mlon, tdist = target.apparent().ecliptic_latlon('date')
+    _, slon, sdist = sun.apparent().ecliptic_latlon('date')
     angle = mlon.degrees - slon.degrees
     return angle
 

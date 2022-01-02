@@ -21,8 +21,10 @@ Date: {{ utdt_start }}  Location: {{ location }}
             <td><a href="{% url 'planet-detail' k|lower %}">{{ k }}</a></td>
             <td>{{ v.coords.ra_str }}</td>
             <td>{{ v.coords.dec_str }}</td>
-            <td>{{ v.observe.apparent_mag|floatformat:2 }}/td>
-            <td>{{ v.observe.constellation.name }}</td>
+            <td>{{ v.observe.apparent_mag|floatformat:2 }}</td>
+            <td>
+                <a href="{% url 'constellation-detail' v.observe.constellation.abbr|upper %}">{{ v.observe.constellation.name }}</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
