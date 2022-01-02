@@ -66,7 +66,6 @@ def get_plan(form, debug=False):
     context['moon'] = moon
     context['show_moon'] = moon['session']['start']['is_up'] or moon['session']['end']['is_up'] or context['show_planets']
 
-
     ### Planets
     planet_data_dict = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
 
@@ -79,23 +78,6 @@ def get_plan(form, debug=False):
         pd['show_planet'] = go
         if go:
             pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
-        #if k in ['Uranus', 'Neptune']:
-        #    pd['finder_chart'] = create_planet_image(
-        #        pd, 
-        #        utdt=utdt_start, 
-        #        other_planets=planet_data_dict, 
-        #        fov=8,
-        #        finder_chart=True
-        #    )
-        #else:
-        #    pd['finder_chart'] = create_planet_image(
-        #        pd, 
-        #        utdt=utdt_start, 
-        #        other_planets=planet_data_dict, 
-        #        fov=20, 
-        #        mag_limit=6.5, 
-        #        finder_chart=True
-        #    )
         planets.append(pd)
     context['planets'] = planets
 

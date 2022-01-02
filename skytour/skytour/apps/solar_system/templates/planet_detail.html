@@ -4,22 +4,35 @@
 {% block styles %}
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
+    body { line-height: 1.2; }
+    button { width: 10em; }
 </style>
 {% endblock styles %}
 
 {% block content %}
 <table>
     <tr>
-        <td>
+        <td width="25%">
             <h1> {{ planet.name }}</h1> 
             in {{ planet.observe.constellation.name }}
         </td>
-        <td>
+        <td width="50%">
             <form method="GET">
             {{ form.as_p }}
             <input type="submit" value="Submit"/>
             </form>
             <small>Express date/time in UT.</small><br/>
+        </td>
+        <td>
+            <h2>Solar System</h2>
+            <a href="{% url 'planet-detail' 'mercury' %}?{{ query_params }}">  <button>Mercury</button></a>
+            <a href="{% url 'planet-detail' 'saturn' %}?{{ query_params }}">   <button>Saturn</button></a><br>
+            <a href="{% url 'planet-detail' 'venus' %}?{{ query_params }}">    <button>Venus</button></a>
+            <a href="{% url 'planet-detail' 'uranus' %}?{{ query_params }}">   <button>Uranus</button></a><br>
+            <a href="{% url 'planet-detail' 'mars' %}?{{ query_params }}">     <button>Mars</button></a>
+            <a href="{% url 'planet-detail' 'neptune' %}?{{ query_params }}">  <button>Neptune</button></a><br>
+            <a href="{% url 'planet-detail' 'jupiter' %}?{{ query_params }}">  <button>Jupiter</button></a>
+            <a href="{% url 'moon-detail' %}?{{ query_params }}">              <button>Moon</button></a>
         </td>
     </tr>
 </table>
@@ -35,8 +48,8 @@
     <tr>
         <td width="25%"  style="vertical-align:top;">
             <h4>Date and Time</h4>
-            UT Start: {{ utdt_start|date:"D Y-M-d h:i" }}<br/>
-            UT End:&nbsp; {{ utdt_end|date:"D Y-M-d h:i" }}<br/>
+            UT Start: {{ utdt_start|date:"D Y-M-d H:i" }}<br/>
+            UT End:&nbsp; {{ utdt_end|date:"D Y-M-d H:i" }}<br/>
             Julian Date: {{ julian_date|floatformat:4 }}
 
             <h4>Location</h4>
@@ -51,7 +64,6 @@
             Brightness: {{ location.brightness|floatformat:2 }} µcd/m<sup>2</sup><br/>
             Bortle: {{ location.bortle }}
             <br/>
-            USM: {{ location.u}}
         </td>
         <td width="25%" style="vertical-align:top;">
             <h4>Coordinates</h4>
@@ -82,7 +94,7 @@
         <td width="25%" style="vertical-align:top;">
             <h4>Rise/Set Events</h4>
             {% for event in planet.almanac %}
-            {{ event.type }}: {{ event.local|date:"D Y M d  h:i"}} local<br/>
+            {{ event.type }}: {{ event.local|date:"D Y M d  H:i"}} local<br/>
             {% endfor %}
             <h4>Start</h4>
             Az: {{ planet.session.start.azimuth|to_dms }}<br/>

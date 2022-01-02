@@ -112,7 +112,10 @@ def create_planet_image(
 
     angle = np.pi - fov / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
-    foo = 4. * limit * 180. / np.pi  # WHY doubled twice?
+    # This is an unresolved WTF bug --- I don't know why the math gets weird here.
+    foo = 2. * limit * 180. / np.pi 
+    if finder_chart:
+        foo *= 2.
     if debug:
         print("NAME: ", name, "FOV: ", fov, "ANGLE: ", angle, "LIMIT: ", limit, "FOO: ", foo)
     
@@ -129,8 +132,6 @@ def create_planet_image(
 
     chart_type = 'Finder Chart' if finder_chart else 'View'
     title = "{} {}  FOV = {}".format(name, chart_type, fov_str)
-    if name in ['Moon', 'Mercury', 'Venus']:
-        title += ", Plot Angle: {}°".format(int(planet['observe']['plotting_phase_angle']))
     ax.set_title(title)
 
     # Convert to a PNG image

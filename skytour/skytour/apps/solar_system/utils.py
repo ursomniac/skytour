@@ -14,14 +14,6 @@ def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'M
         return theta / 3600.
     return theta
 
-def old_get_plotting_phase_angle(phase_angle, target, sun):
-    obj_lon = target.ecliptic_latlon()[1].degrees
-    sun_lon = sun.ecliptic_latlon()[1].degrees
-    dl = obj_lon - sun_lon
-    if dl > 180.:
-        dl = dl - 360.
-    plotting_phase = 360 - phase_angle if dl < 0. else phase_angle
-
 PHASES = [
     'NEW', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL', 
     'WANING GIBBOUS', 'LAST QUARTER', 'WANING CRESCENT', 'NEW'

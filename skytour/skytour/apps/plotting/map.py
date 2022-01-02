@@ -173,12 +173,12 @@ def map_phased_planet(ax, planet, ang_size_radians):
         wed1 = Wedge((0,0), major_axis/2., -90., 90., fc='white', edgecolor='black')
         wed2 = Wedge((0,0), major_axis/2., 90., 270., fc='black', edgecolor='black')
         if phase_angle <= 88. : # Waxing Crescent
-            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor='black')
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor=c0)
     #                90:  minor  = 0.  First Quarter   (left: black, right: white, half-ellipse: n/a really)
     #            90-180:  minor  < 0.  Waxing Gibbous  (left: black, right: white, half-ellipse: white)
         elif phase_angle <= 178 and phase_angle >= 92.:
             # AH - but this is different for the Moon and inferior planets!
-            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor='white')
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor=c1)
     #               180:  minor = -1.  Full Moon       (left: white, right: white, half-ellipse: n/a really)
 
     elif phase_angle < 182.: 
@@ -188,11 +188,11 @@ def map_phased_planet(ax, planet, ang_size_radians):
         wed1 = Wedge((0,0), major_axis/2., -90., 90., fc='black', edgecolor='black')
         wed2 = Wedge((0,0), major_axis/2., 90., 270., fc='white', edgecolor='black')
         if phase_angle <= 268.: # waning gibbous
-            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor='white')
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c1, edgecolor=c1)
     #               270:  minor  = 0.  Last Quarter    (left: white, right: black, half-ellipse: n/a really)
     #           270-360:  minor  > 0.  Waning Crescent (left: white, right: black, half-ellipse: black)
         if phase_angle >= 272 and phase_angle < 358.:
-            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor='black') 
+            ell1 = Ellipse((0,0), minor_axis, major_axis, fc=c0, edgecolor=c0) 
 
     # put in the wedges
     if wed1: 

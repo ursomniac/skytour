@@ -62,13 +62,15 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     (xslat, xslon, xsdist) = sun.ecliptic_latlon()
     sun_lon = xslon.radians
 
-    # psi = geocentric elongation
-    psi = math.acos(math.cos(moon_lat) * math.cos(moon_lon - sun_lon))
+    # Lunar Phase description
+    phase = simple_lunar_phase(get_julian_date(utdt))
 
     # i = phase angle
     i = get_phase_angle(eph, 'moon', t).degrees.item() # degrees
     elongation = get_elongation(moon, sun)
-    plotting_phase_angle = get_plotting_phase_angle('Moon', i, elongation)
+    x_plotting_phase_angle = get_plotting_phase_angle('Moon', i, elongation)
+    # Use something different for the Moon than for inferior planets.
+    plotting_phase_angle = phase['angle']
 
     # k = illuminated fraction of the Moon's disk
     k = fraction_illuminated(eph, 'moon', t).item() # float
@@ -87,10 +89,9 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
 
     # angular size
     # TODO: THIS GIVES THE WRONG ANSWER
-    ang_size = get_angular_size(6378.14, xmdist.km, units='degrees') # diameter in degrees for the Moon
+    ang_size = get_angular_size(3474.8, xmdist.km, units='degrees') # diameter in degrees for the Moon
 
-    # Lunar Phase description
-    phase = simple_lunar_phase(get_julian_date(utdt))
+
 
     return {
         'name': 'Moon',
