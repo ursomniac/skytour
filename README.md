@@ -1,5 +1,7 @@
 # SkyTour
-Plan observations using a database of DSOs.
+Plan observations using a database of DSOs using Django.
+
+This makes HEAVY use of the [SkyField](https://github.com/skyfielders/python-skyfield) package (saving a lot of time)!
 
 #### Disclaimer
 To be honest I've only written this for my use;  I'm not planning on advertising it or making it "battle ready" for widespread use.   That being said, I will try to help out with things, and interested in suggestions for improvement, bearing in mind this is "side" project.
