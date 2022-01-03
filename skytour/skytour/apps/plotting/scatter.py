@@ -13,6 +13,9 @@ def create_plot(
         xpad = 0., ypad= 0.02, 
 		subplot = (1,1,1)
 	):
+    """
+    Given data, make a scatter plot.
+    """
     
 	# Create a new figure
     fig = Figure()

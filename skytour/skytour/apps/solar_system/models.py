@@ -50,7 +50,10 @@ class Planet(models.Model):
         ordering = ['semi_major_axis']
 
 """
-Moons:
+SOMEHOW I want to add in moon metadata, like apparent magnitude which DOES
+vary depending on Earth-planet distance, and also in the case of Iapetus.
+
+Moons: 
     Ph  vga = 0.07, r = 13.0 x 11.4 x 9.1
     De  vga = 0.08, r = 7.8 x 6.0 x 5.1
 

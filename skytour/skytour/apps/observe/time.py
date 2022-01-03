@@ -5,6 +5,8 @@ import pytz
 from ..utils.format import to_sex
 from .astro import get_nutation, get_obliquity
 
+# TODO: Change this to a model?  For just me it's not particularly necessary
+# since I'm not likely to be moving around THAT much...
 TIME_ZONES = (
     ('UTC', 'UTC'),
     ('US/Eastern', 'US/Eastern'),

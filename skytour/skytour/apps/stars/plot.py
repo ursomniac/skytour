@@ -14,13 +14,22 @@ from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
 def get_skymap(utdt, location):
+    """
+    Create a full map of the sky for a given UTDT and location.
+    """
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     eph = load('de421.bsp')
     earth = eph['earth']
     t0 = get_t_epoch(get_julian_date(utdt))
     last = get_last(utdt, location.longitude)
+
+    # At a given UTDT/latitude, the zenith point x, y is:
+    #   x = the local sidereal time
+    #   y = the location latitude
     zenith = earth.at(t).observe(Star(ra_hours=last, dec_degrees=location.latitude))
+
+    # Start the plot
     fig, ax = plt.subplots(figsize=[12,12])
 
     # center
@@ -32,7 +41,7 @@ def get_skymap(utdt, location):
     ax = map_bright_stars(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True
     )
-    # Sun
+    # Sun - only matters if the plot is during the day
     sun = get_sun(utdt, eph=eph) 
     ax = map_sun_moon(ax, 'Sun', sun, earth, t, projection, color='red')
     # Moon
@@ -42,7 +51,10 @@ def get_skymap(utdt, location):
     # planets
     planets = get_all_planets(utdt, location=location)
     ax = map_planets(ax, None, planets, earth, t, projection)
+
     # DSOs
+    # Only show highest and high priority objects (2)
+    # Limiting magnitude of 6.
     ax = map_dsos(ax, earth, t, projection, 
         mag_limit=6.0, 
         alpha=0.7, 
@@ -50,6 +62,7 @@ def get_skymap(utdt, location):
         color='grey'
     )
 
+    # Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)
 
@@ -65,13 +78,12 @@ def get_skymap(utdt, location):
     ax.set_title("{}".format(utdt.strftime("%Y-%m-%d %Hh UT")))
 
     # Render and close
-        # Convert to a PNG image
+    # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
     # Encode PNG to Base64 string
     pngImageB64String = 'data:image/png;base64,'
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
-
     # close things
     plt.cla()
     plt.close(fig)

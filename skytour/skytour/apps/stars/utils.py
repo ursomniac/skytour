@@ -1,6 +1,8 @@
 import re
 def create_star_name(obj):
-
+    """
+    Generate a label from it's Bayer/Flamsteed designation.
+    """
     if obj.bayer:
         return "{} {}".format(obj.bayer, obj.constellation)
     elif obj.flamsteed:
@@ -20,6 +22,8 @@ GREEK = {
 def parse_designation(str):
     """
     E.g. Bet, Bet2, etc.
+    Make the number a superscript.
+    Return the LaTeX representation.
     """
     match = re.match(r"([A-z]+)([1-9]*)", str)
     if match:

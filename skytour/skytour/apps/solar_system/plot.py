@@ -28,6 +28,13 @@ def create_planet_image(
         show_axes=False, # mostly for debugging
         debug=False # print stuff to the console
     ):
+    """
+    Create the images involving planets:
+        - finder chart (useful for Uranus and Neptune, and possibly Mercury)
+        - telescope view:
+            - phased for inferior planets
+            - whole with moon locations for superior planets
+    """
     name = planet['name']
 
     # Set up Skyfield
@@ -147,6 +154,7 @@ def create_planet_image(
     return pngImageB64String
 
 ### TESTING
+# This just exists as an easy way to get to the image and planet metadata.
 def ptest(name, utdt=None, fov=None, figsize=None, finder_chart=False, show_axes=False):
     if not utdt:
         utdt = datetime.datetime.now(datetime.timezone.utc)

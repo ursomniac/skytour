@@ -9,6 +9,10 @@ SEX_FORMAT = {
 }
 
 def to_sex(value, format='hours'):
+    """
+    Turn a floating point value (hours or degrees), and return 
+    a text representation e.g,.  12h 30m 34.23s
+    """
     x = abs(value)
     if format in ["hours", "hms", "hmsf", "ra"]:
         sign = '' if value > 0 else '-'
@@ -23,6 +27,3 @@ def to_sex(value, format='hours'):
         s = int(s)
 
     return SEX_FORMAT[format].format(sign, h, m, s)
-
-def make_querystring(d):
-    pass

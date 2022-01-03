@@ -1,5 +1,9 @@
 
 def create_shown_name(obj):
+    """
+    This takes the main name, or if there's a Bayer/Flamsteed designation, 
+    assemble a string from that.
+    """
     things = []
     if obj.catalog.name in ['Bayer', 'Flamsteed']:
             try:

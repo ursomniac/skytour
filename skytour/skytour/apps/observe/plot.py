@@ -24,6 +24,9 @@ def make_location_plot(
     ypad = 0.02,
     grid = True,
 ):
+    """
+    This is an attempt to make it easy to make scatter plots...
+    """
 
     brightness = []
     travel = []

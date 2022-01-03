@@ -1,5 +1,8 @@
 import math
 
+### TODO: replace these with Skyfield calls, since I think there are them now.
+# But I spent so much time typing these in!   :-)
+
 COEFF_D = [ # 63 terms
      0, -2,  0,  0,  0,  0, -2,  0,  0, -2, -2, -2,  0,  2,  0,  2,  0,  0, -2,  0, 
      2,  0,  0, -2,  0, -2,  0,  0,  2, -2,  0, -2,  0,  0,  2,  2,  0, -2,  0,  2,

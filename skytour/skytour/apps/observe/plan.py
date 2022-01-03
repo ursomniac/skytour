@@ -15,6 +15,19 @@ from .time import get_julian_date, local_time_to_utdt, get_local_datetime, get_t
 
 
 def get_plan(form, debug=False):
+    """
+    This creates an observing plan for a UTDT and location.
+         - get meta information from the form
+         - generate the planet dicts
+            - if a planet will be above the horizon within the session, show
+                the telescope view with moons or phase
+        - generate a list of DSOs organized by priority
+
+    TODO: further refine against "never observed" and "previously observed".
+    TODO: Might a numerical scale that incorporates priority and history be better, e.g.:
+        Scale = N(Priority) - x * log (# obs) ??? so that you're not always given a list
+        with M31 at the top...
+    """
     # Sort out the form's date and time and time_zone fields
     if debug:
         context = {}

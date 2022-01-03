@@ -42,7 +42,12 @@ def get_almanac_times(today, ts, f):
     times, events = find_discrete(t1, t2, f)
     begin_at = get_astronomical_twilight(times, events, 1)
     return end_at, begin_at
+
+
 def get_object_rise_set(utdt, eph, target, location):
+    """
+    Get Rise/Set times for an target from a given location.
+    """
     ts = load.timescale()
     loc = wgs84.latlon(location.latitude, location.longitude)
     ut1 = utdt + datetime.timedelta(days=1)

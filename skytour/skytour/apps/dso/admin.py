@@ -103,6 +103,10 @@ class DSOAdmin(admin.ModelAdmin):
     list_dec.short_description = 'Dec.'
 
     def get_form(self, request, obj=None, **kwargs):
+        """
+        This just removes some of the widgets in the admin because you'll never
+        add a new constellation, etc.
+        """
         form = super(DSOAdmin, self).get_form(request, obj, **kwargs)
         field = form.base_fields['constellation']
         field.widget.can_add_related = False

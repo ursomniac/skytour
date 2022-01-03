@@ -12,6 +12,9 @@ def try_int(x):
         return x
 
 class ConstellationListView(ListView):
+    """
+    Generate list of constellations with metadata.
+    """
     model = Constellation
     template_name = 'constellation_list.html'
 
@@ -24,6 +27,9 @@ class ConstellationListView(ListView):
         return context
 
 class ConstellationDetailView(DetailView):
+    """
+    Return a list of DSOs in the constellation.
+    """
     model = Constellation 
     template_name = 'constellation_detail.html'
 
@@ -36,6 +42,11 @@ class ConstellationDetailView(DetailView):
         return context
 
 class CatalogDetailView(DetailView):
+    """
+    Show all DSOs for a catalog.   Includes references where the catalog entry is 
+    an alias, e.g., NGC 7654 will show up for M 52.
+    Not a good idea for the NGC catalog.
+    """
     model = Catalog
     template_name = 'catalog_detail.html'
 
@@ -69,6 +80,9 @@ class CatalogDetailView(DetailView):
         return context
 
 class ObjectTypeListView(ListView):
+    """
+    Generate metadata for a given Object Type.
+    """
     model = ObjectType
     template_name = 'object_type_list.html'
 
@@ -79,6 +93,9 @@ class ObjectTypeListView(ListView):
         return context
 
 class ObjectTypeDetailView(DetailView):
+    """
+    Return the DSO list for a given Object Type.
+    """
     model = ObjectType
     template_name = 'object_type_detail.html'
 

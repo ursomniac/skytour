@@ -13,6 +13,11 @@ PLANET_CHOICES = [
 ]
 
 class ObservingPlanForm(forms.Form):
+    """
+    The form to generate an observing plan,
+
+    It is evolving.
+    """
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='20:00') # Keep? or use the astro system?
     location = forms.ModelChoiceField(

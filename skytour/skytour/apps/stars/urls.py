@@ -5,6 +5,6 @@ from .views import (
 )
 
 urlpatterns = (
-    path('', BrightStarListView.as_view(), name='star-list'),
+    path('', BrightStarListView.as_view(), name='skymap-detail'),
     path('<int:pk>', BrightStarDetailView.as_view(), name='star-detail'),
 )

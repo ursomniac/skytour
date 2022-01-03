@@ -3,6 +3,11 @@ from ..observe.time import get_last
 from .format import to_sex
 
 def get_alt_az(utdt, latitude, longitude, ra, dec, from_south=False, debug=False):
+    """
+    Return Altitude and Azimuth.
+
+    Returns either measured from the South, or from the North (like a compass heading)
+    """
     last = get_last(utdt, longitude)
     xha = math.radians((last - ra) * 15.)
     xlat = math.radians(latitude)

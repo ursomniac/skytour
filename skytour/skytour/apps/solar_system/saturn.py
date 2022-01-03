@@ -2,7 +2,7 @@ import math
 
 def saturn_ring(t, saturn, return_dict=True):
     """
-    Given the obs object for Saturn
+    Given the obs object for Saturn, get ring information.
     """
     # Saturn's position (provided)
     geo_lat, geo_lon, geo_dist = saturn.ecliptic_latlon()

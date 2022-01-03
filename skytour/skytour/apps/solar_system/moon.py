@@ -19,6 +19,9 @@ MOON_PHASES = [
 ]
 
 def simple_lunar_phase(jd):
+    """
+    This just does a quick-and-dirty estimate of the Moon's phase given the date.
+    """
     lunar_period = 29.530588853
     lunations = (jd - 2451550.1) / lunar_period
     percent = lunations - int(lunations)
@@ -35,6 +38,13 @@ def simple_lunar_phase(jd):
     }
 
 def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=False):
+    """
+    Create the observation dictionary for the Moon at a given UTDT.
+
+    Sending sun and eph is just there as a way to slightly minimize work.
+
+    TODO: Should we DEFAULT to apparent coordinates?
+    """
     ts = load.timescale()
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
 
@@ -90,8 +100,6 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     # angular size
     # TODO: THIS GIVES THE WRONG ANSWER
     ang_size = get_angular_size(3474.8, xmdist.km, units='degrees') # diameter in degrees for the Moon
-
-
 
     return {
         'name': 'Moon',

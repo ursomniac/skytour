@@ -1,5 +1,9 @@
 from .models import BrightStar
 
+"""
+This just exists to load the BrightStar table from a text dump of the BSC file.
+Once it's in the database, this is no longer necessary.
+"""
 def tr(line, col, length, type):
     start = col-1
     end = col-1+length

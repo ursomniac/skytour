@@ -118,20 +118,35 @@ class DSO(Coordinates, FieldView):
 
     @property
     def skyfield_object(self):
+        """
+        This is handy when pointing at this DSO
+        """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
 
     def finder_chart_tag(self):
+        """
+        This makes the uploaded finder chart appear on the Admin page.
+        TODO: Probably eliminate this and the field, since we generate out own...
+        """
         return mark_safe(u'<img src="%s" width=500>' % self.finder_chart.url)
 
     def dso_finder_chart_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart.url)
 
     def has_observations(self):
+        """
+        TODO: Do we want to do it this way?   Or create an "observe" apps, since
+            we want to observe more than just DSOs...   Probably.
+        """
         return self.observations.count() > 0
     has_observations.boolean = True
     has_observations.short_description = 'Obs.?'
 
     def alt_az(self, location, utdt):
+        """
+        Get my Alt/Az at a given UTDT.
+        TODO: Do we use this anywhere?
+        """
         return get_alt_az(utdt, location.latitude, location.longitude, self.ra, self.dec)
 
     def object_is_up(self, location, utdt, min_alt=0.):
@@ -163,6 +178,7 @@ class DSO(Coordinates, FieldView):
         # Generate a DSO finder chart if one doesn't exist
         # Except you can't - it crashes everything, UNLESS
         # you run the code in it's own thread.  Why?  Who knows?
+        # UPDATE: 2 Jan 2022 --- this might actually work now.
         super(DSO, self).save(*args, **kwargs)
         
     class Meta:
@@ -174,6 +190,18 @@ class DSO(Coordinates, FieldView):
         return self.shown_name
 
 class DSOAlias(models.Model):
+    """
+    This has all of the aliases for a DSO.
+    There's a slight precedence in catalogs:
+        - Messier
+        - Caldwell
+        - NGC
+        - IC
+        - Herschel 400
+    so that M 52 = NGC 7654 = Cr 455 = Mel 243.
+    Several search functions check aliases, so you SHOULD always reach the
+    desired object.
+    """
     object = models.ForeignKey(DSO, 
         on_delete=models.CASCADE,
         related_name='aliases'
@@ -200,6 +228,9 @@ class DSOAlias(models.Model):
         super(DSOAlias, self).save(*args, **kwargs)
 
 class DSOImage(ObjectImage):
+    """
+    M:1 between uploaded images and a DSO
+    """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,
         related_name = 'images'
@@ -209,6 +240,11 @@ class DSOImage(ObjectImage):
         verbose_name_plural = 'Images'
 
 class DSOObservation(ObservingLog):
+    """
+    M:1 between observation records and DSOs.
+    TODO: probably move this to its own app and have a
+    generic foreign key instead.
+    """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,
         related_name = 'observations'

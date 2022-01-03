@@ -32,6 +32,9 @@ class Catalog(models.Model):
         return self.abbreviation
 
 class FieldView(models.Model):
+    """
+    This is a model for the FOV map.
+    """
     field_view = models.ImageField (
         _('Field View'),
         upload_to = 'field_view/',
@@ -45,6 +48,9 @@ class FieldView(models.Model):
         abstract = True
 
 class ObjectType(models.Model):
+    """
+    DSO Object Types
+    """
     name = models.CharField(
         _('Name'),
         max_length = 200
@@ -71,6 +77,9 @@ class ObjectType(models.Model):
         ordering = ['name']
 
 class Constellation(models.Model):
+    """
+    CV of the constellations.
+    """
     name = models.CharField(
         _('Name'),
         max_length = 80

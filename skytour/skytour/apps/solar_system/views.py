@@ -132,3 +132,14 @@ class MoonDetailView(TemplateView):
         )
         context['form'] = ShowPlanetForm(initial=initial)
         return context
+
+class PlanetTrack(DetailView):
+    """
+    TBD: create a map showing the motion of a planet (or other object)
+    against the background stars.
+
+    See: https://rhodesmill.org/skyfield/example-plots.html for an 
+    example with Venus
+    """
+    model = Planet
+

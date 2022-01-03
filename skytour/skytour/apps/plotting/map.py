@@ -11,9 +11,19 @@ from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
 
-matplotlib.use('Agg')
+matplotlib.use('Agg') # This gets around some of Matplotlib's oddities
+
+"""
+Each of the methods create a piece of a map.
+Each takes the matplotlib.Axes object instance (ax), does some operation,
+and returns it "back" to whatever is assembling the plot.
+"""
 
 def map_constellation_lines(ax, stars):
+    """
+    This requires that the map_hipparcos() method run first, since it
+    gets the list of stars FROM the return of that method.
+    """
     url = ('https://raw.githubusercontent.com/Stellarium/stellarium/master'
         '/skycultures/western_SnT/constellationship.fab')
     with load.open(url) as f:
@@ -31,6 +41,13 @@ def map_constellation_lines(ax, stars):
     return ax
 
 def map_hipparcos(ax, earth, t, mag_limit, projection):
+    """
+    Put down sized points for stars.
+    While this DOES pre-filter by mag_limit it does NOT filter
+    by proximity to the center of the map and its scale!
+
+    TODO: generate some timing tests.
+    """
     with load.open(hipparcos.URL) as f:
         stars = hipparcos.load_dataframe(f)
     # Compute the X,Y coordinates of stars on the plot
@@ -47,6 +64,13 @@ def map_hipparcos(ax, earth, t, mag_limit, projection):
     return ax, stars
 
 def map_bright_stars(ax, earth, t, projection, mag_limit=None, points=True, annotations=True):
+    """
+    Use the Bright Star Catalog to annotate bright stars (since that information is
+    not in the Hipparcos data file).
+
+    This COULD be used to also make star plots, I suppose, but I just use 
+    map_hipparcos with a mag_limit close to naked-eye limit...
+    """
     bsc_stars = BrightStar.objects.filter(name__isnull=False)
     if mag_limit:
         bsc_stars = bsc_stars.exclude(magnitude__gte=mag_limit)
@@ -77,6 +101,10 @@ def map_bright_stars(ax, earth, t, projection, mag_limit=None, points=True, anno
     return ax
 
 def map_target(ax, ra, dec, projection, earth, t, symbol):
+    """
+    This just puts a symbol on the map.
+    For finding charts, I use this.
+    """
     object_x, object_y = projection(earth.at(t).observe(
         Star(ra_hours=ra.hours, dec_degrees=dec.degrees))
     )
@@ -91,10 +119,28 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     return ax
 
 def map_eyepiece(ax, diam=0.0038):
+    """
+    TODO: Do we need this since map_target seems to do it?
+    """
     eyepiece = plt.Circle((0,0), 0.0038, color='b', fill=False)
     return ax
 
 def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
+    """
+    Given the RA/Dec for the moons in a system, plot them against a rendering of
+    the planet's angular diameter (and in the case of Saturn the projection of
+    the rings).
+
+    This just does the moons.   It puts a plus at the position, and an annotation
+    for which moon it is (usually from the first letter, but Te/Ti in the case of
+    Saturn's Tethys and Titan).
+
+    NOTE:  the position of the annotation conveys information!
+        - If it's above the moon, the moon is "behind" the planet in its orbit.
+        - If it's below the moon, the moon is "in front of" the planet in its orbit.
+    Moons that are eclipsed by the planet (behind and with a distance < the angular
+    semi-diameter of the planet) are not shown.
+    """
     moon_pos_list = {'x': [], 'y': [], 'label': [], 'd': [], 'o': []}
 
     dist_to_planet = planet['target'].distance().au
@@ -128,18 +174,49 @@ def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
             elif moon['name'] == 'Titan':
                 l = 'Ti'
             moon_pos_list['label'].append(l)
-            if d < dist_to_planet:
+            if d < dist_to_planet:  # I'm in front of the planet
                 moon_pos_list['o'].append(-20)
-            else:
+            else: # I'm behind the planet!
                 moon_pos_list['o'].append(10)
 
         moon_scatter = ax.scatter(moon_pos_list['x'], moon_pos_list['y'], color='b', marker='+')
     except:
-        pass
-    
+        pass # bail -- oops.
     return ax, moon_pos_list, max_sep
 
 def map_phased_planet(ax, planet, ang_size_radians):
+    """
+    This is for planets with a disk that shows phases.
+    Oh - yeah - and the Moon.  :-)
+
+    How this works:  I'm cheating a little.  :-)   Given SOME measure of where the limb
+    is on the disk of the object (or where it is in its orbit), generate:
+        - two semi-hemispheres (the left and right sides):
+            - if you look at a FQ or LQ moon, you have a dark side and a bright side.
+        - a central ellipse that is the projection of the limb angle on the disk.
+    SO - what this means is that you can get away with figuring out "is each piece
+    bright or dark" for "left", "right" and the "ellipse" --- using the Moon as 
+    an example:
+        - New moon: left = right = dark and there's no ellipse
+        - Wax. Cr.: left is dark, right is light, ellipse is dark
+        - FQ: left is dark, right is bright, no ellipse
+        - Wax. Gi.: left is dark, right is bright, ellipse is bright
+        - Full (you can see where this is going)
+        - Wan. Gi.: left is bright, right is (now) dark, and ellipse is bright.
+        - ... and so on.
+
+    Inferior planets don't have the same definitions.  If we define the phase_in_the_orbit
+    to be 0 at superior conjunction, 180 at inferior conjunction, 90 at greatest W elongation
+    and 270 at E, you can generate a SIMILAR logic, but mostly the ellipse color is 
+    reversed from the Moon.
+
+    At least that's what several hours of trial and error finally got me to think. :-)
+    """
+    ### OK SO, the phase angle's meaning is COMPLETELY DIFFERENT from the Moon
+    # and inferior planets, and that makes sense IF you think about it, but it's
+    # a PITA to get around without a lot of mental angle flipping, etc.
+    # Basically, what ends up happening is that if you use what works for the Moon,
+
     cir1 = None
     ell1 = None
     wed1 = None
@@ -211,6 +288,10 @@ def map_phased_planet(ax, planet, ang_size_radians):
     return ax
 
 def map_whole_planet(ax, ang_size_radians):
+    """
+    For superior planets (esp. Mars) we COULD generate a phased image.
+    But for now, we won't.
+    """
     circle1 = plt.Circle((0,0), ang_size_radians/2., color='w')
     ax.add_patch(circle1)
     circle2 = plt.Circle((0,0), ang_size_radians/2., color='r', fill=False)
@@ -218,6 +299,16 @@ def map_whole_planet(ax, ang_size_radians):
     return ax
 
 def map_saturn_rings(ax, planet, t0):
+    """
+    Given the tilt of the rings as seen from Earth, superimpose them on the disk.
+        - 0.665 is the fractional radius of the inner edge of the inner ring.
+    You'll immediately notice that I'm just putting down two ellipses and the 
+    disk atop it.   Sue me.  :-)
+
+    TODO: make this more realistic
+        - use arcs to simulate the 3-dness of things
+        - test against the vector of the pole of Saturn's rotation...
+    """
     rings = saturn_ring(t0, planet['target'])
     a = math.radians(rings['major'] / 3600.)
     b = math.radians(rings['minor'] / 3600.)
@@ -229,6 +320,11 @@ def map_saturn_rings(ax, planet, t0):
     return ax
 
 def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, color='black', alpha=1):
+    """
+    Like the star mapping methods above, put down symbols for DSOs.
+
+    TODO: Vary the symbol size by the size of the DSO!
+    """
     other_dso_records = DSO.objects.all()
 
     # Filter the set
@@ -276,6 +372,10 @@ def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, col
 
 
 def map_planets(ax, this_planet, planets, earth, t, projection):
+    """
+    Sometimes, planets sneak into the finder charts, esp. close conjunctions!
+    So, let's put in the other planets too.
+    """
     d = {'x': [], 'y': [], 'marker': []}
     planet_labels = []
     for k,v in planets.items():
@@ -302,6 +402,11 @@ def map_planets(ax, this_planet, planets, earth, t, projection):
     return ax
 
 def map_sun_moon(ax, name, obj, earth, t, projection, color='silver'):
+    """
+    Put in the Sun and Moon Unicode symbols on the map.
+
+    TODO: replace the Moon's unicode with a scaled Moon phase.
+    """
     ra, dec, dist = obj['target'].radec()
     x, y = projection(
         earth.at(t).observe(
