@@ -1,71 +1,110 @@
 
-# Checklist of changes to be made:
+# TODO
 
-## Make PlanetView
-* DONE: Get planet coordinates, etc.
-* DONE: Create finding chart
-    * Add DSOs
-* DONE: Create telescopic view of the planet (with moons bright enough to be observed).
+In no particular order.
 
-## Refactor the PlanView
-* DONE: Clean up datetime stuff
-    * DONE: Fix UTDT and timezone offset
-    * DONE: Update ObservingLocation model to have local time zone
-    * Deal with DST (somehow)
-* DONE: Get Sun and Moon coordinates up front
-* DONE: Create better structure for stored data
+## Find a better way to customize; remove hard-coded things.
 
-New Flow:
-1. DONE: Get Sun and Moon
-2. DONE: Get planets
-    1. DONE: Check if planets are "up" in the window of observations
-3. DONE: Send core info to template 
-    1. DONE: And links for PlanetView
-    2. DONE: Separate out DSO lists?
-        1. Move DSO finder chart creation to the DSOView
-        2. Remove all the plots from /media ?
+1. Select the "Preferred" Observing Location; use it for defaults
+2. State tuple should be customizable 
+3. Ditto time zones (although here I could just add all of them...)
 
-### Refactor plotting
-* DONE: Move Hipparcos to its own method
-* DONE: Move BSC to its own method
-* DONE: Move Constellation lines to its own method
-* DONE: Move planet moon locations to its own method
-* DONE: Move phase plot to its own method
-* DONE: move annotation from plt to ax
-    * DONE: move annotation code into the above methods.
-* Update BSC plot to have points as an option to the BSC method
-* All-sky view at start/end.
+## Run-time environment
 
-### Other new methods
-Overall things:
-* figure out which units everything should be in
-* create methods for conversion
+1. Create a way to have "dark mode" at startup.
+    * Figure out the CSS to do this.
 
-* Magnitude 
-    * DONE: Should handle Moon and planets, and ???
-* DONE: Angular Size (fix and refactor)
+## Front-End / Static
 
-## Debug phase stuff
-* DONE: Test and confirm the data are right 
-    * DONE: I moved everything to routines within SkyField
+1. Better CSS, less stuff crammed in templates
 
-## Create PDF view/creation for:
-* DSOs
-* ObservingLocation
-* Observation?  
-    * This would just be a printable form.
-    * Fill in things like ObservingLocation metadata, date, etc.
-    * At some point add in metadata for photography...
-* Planets
-* Overview
-    * Somehow figure out a subset of DSOs
-        * maybe have PlotView create a second form to select DSOs to add to the Overview?
-        * short-hand observing form?  (which things in the list did get observed?)
+## Coordinates
+I've been very sloppy about which coordinate set is being used.
 
-* Think about other solar system stuff
-    * Asteroids
-    * Comets
+I THINK that's why e.g., RA/Dec values between this app and Stellarium differ a bit.   I SUSPECT that for
+solar system objects I should be using APPARENT coords.
 
-## Environment
-* Create ability to set "dark mode" on server startup.
-    * Change global style/CSS to support this.
+1. Research this more and refactor if necessary.
+
+## Finalize Skyfield integration
+
+There are still a few places where I'm using my own code instead of the routines in SkyField:
+
+* alt/az transformation
+* nutation and obliquity
+* ∆T (although I like my method :-) ).
+* others?
+
+## DSO charts
+
+Right now the only way to add a finder chart is to run a management command after adding the records.
+Worse, it iterates through the whole list!
+
+1. See if we can put this BACK into the save() for the DSO model.
+2. Do this. :-)
+
+## New Features
+
+### SkyTrack 
+This would make the plots showing an object's movement across the sky.
+
+See the example at https://rhodesmill.org/skyfield/example-plots.html for starters.
+
+### Jupiter Moons
+
+I'm sure there's a way to  calculate/predict events:
+
+* disk shadows
+* occultations
+
+### Jupiter features
+
+I'm sure there's a way to tell when the GRS is in view.
+
+### Saturn
+
+I cheat on displaying the rings.   I need to do better.
+
+### Orrery view?
+
+1. Inner Solar System
+2. Whole Solar System
+3. Planet System (so you can see when a moon is behind the planet)
+ 
+This will also be useful if/when comets, etc. get introduced?
+
+### Comets and other MPC items.
+TBD.
+
+### SkyView
+
+1. Meteor shower radiants (and a model with dates, etc.)
+2. MPC-derived things (comets, etc.)
+
+### Milky Way contours... 
+I'll bet that data exists somewhere!
+
+### Almanac
+
+To be honest it might be better just to hand-add these to the Admin, and then have the home page display a calendar.
+
+### Home Page Improvements
+
+1. Calendar
+    1. with Moon phase
+
+### PDF
+
+Originally this software was just going to make lots of PDFs.
+
+* Location PDF - to be used on site when evaluating a TBD site.
+* DSO PDF - might be handier in a binder than needing a laptop in the field.
+* Planet PDF - ditto
+* SkyMap PDF - ditto
+
+### Observation Log
+
+Right now there's a FK table to DSO, but that's not the right way to do this.
+
+(Plus we might observe other things than DSOs!)
+
