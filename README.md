@@ -22,7 +22,8 @@ There are definitely places where things should be less hard-coded.  I'll try to
     1. In there, `pipenv --three`.  This creates your virtual environment.
 3. Clone this repo.
     1. `pipenv sync` - this will install everything you need.
-4. Download the JPL ephemeris files into the directory with manage.py.
+4.  `pipenv shell` to enter a shell in your environment.
+5. Download the JPL ephemeris files into the directory with manage.py.
     1. Follow the instructions at https://rhodesmill.org/skyfield/planets.html
     2. You'll want the  `de421.bsp` file for certain.
     3. You'll want excerpts for the planetary system for the moons:
