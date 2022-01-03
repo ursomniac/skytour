@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'colorfield',
     
     'skytour.apps.dso',
+    'skytour.apps.misc',
     'skytour.apps.plotting',
     'skytour.apps.observe',
     'skytour.apps.site',
