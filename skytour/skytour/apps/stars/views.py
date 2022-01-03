@@ -22,18 +22,30 @@ class BrightStarListView(ListView):
             utdt = parse_to_datetime(xdate+' '+xtime).replace(tzinfo=pytz.utc)
             loc_pk = params['location']
             location = ObservingLocation.objects.get(pk=loc_pk)
+            priority = int(params['priority'])
+            mag_limit = params['mag_limit']
             initial = {
                 'date': params['date'],
                 'time': params['time'],
-                'location': params['location']
+                'location': params['location'],
+                'priority': params['priority'],
+                'mag_limit': params['mag_limit']
             }
         else:
             utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
             location = ObservingLocation.objects.get(pk=43)
-            initial = {}
+            mag_limit = 6.0
+            priority = 2
+            initial = dict(
+                date = utdt.strftime("%Y-%M-%d"),
+                time = utdt.strftime('%H-%i'),
+                location = location,
+                priority = 'Highest/High/Medium',
+                mag_limit = 6.0
+            )
         context['utdt'] = utdt
         context['location'] = location
-        context['skymap'] = get_skymap(utdt, location)
+        context['skymap'] = get_skymap(utdt, location, mag_limit=mag_limit, priority=priority)
         context['form'] = SkyMapForm(initial=initial)
         return context
 

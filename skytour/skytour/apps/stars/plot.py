@@ -13,7 +13,7 @@ from ..solar_system.moon import get_moon
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
-def get_skymap(utdt, location):
+def get_skymap(utdt, location, mag_limit=6, priority=2):
     """
     Create a full map of the sky for a given UTDT and location.
     """
@@ -36,7 +36,7 @@ def get_skymap(utdt, location):
     projection = build_stereographic_projection(zenith)
 
     # stars and constellation lines
-    ax, stars = map_hipparcos(ax, earth, t, 5.0, projection)
+    ax, stars = map_hipparcos(ax, earth, t, 5.5, projection)
     ax = map_constellation_lines(ax, stars)
     ax = map_bright_stars(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True
@@ -56,9 +56,9 @@ def get_skymap(utdt, location):
     # Only show highest and high priority objects (2)
     # Limiting magnitude of 6.
     ax = map_dsos(ax, earth, t, projection, 
-        mag_limit=6.0, 
+        mag_limit=mag_limit, 
         alpha=0.7, 
-        priority=2,
+        priority=priority,
         color='grey'
     )
 
