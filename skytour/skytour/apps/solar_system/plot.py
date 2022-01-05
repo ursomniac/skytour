@@ -25,6 +25,7 @@ def create_planet_image(
         mag_limit=8.5, # faintest stars on plot
         figsize=None, # size of plot
         finder_chart=False, # Am I making a eyepiece view or finder chart?
+        flipped = False, # for SCT there's a flip in RA
         show_axes=False, # mostly for debugging
         debug=False # print stuff to the console
     ):
@@ -126,7 +127,10 @@ def create_planet_image(
     if debug:
         print("NAME: ", name, "FOV: ", fov, "ANGLE: ", angle, "LIMIT: ", limit, "FOO: ", foo)
     
-    ax.set_xlim(-limit, limit)
+    if flipped:
+        ax.set_xlim(limit, -limit)
+    else:
+        ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
@@ -139,6 +143,8 @@ def create_planet_image(
 
     chart_type = 'Finder Chart' if finder_chart else 'View'
     title = "{} {}  FOV = {}".format(name, chart_type, fov_str)
+    if flipped:
+        title += " (flipped)"
     ax.set_title(title)
 
     # Convert to a PNG image
