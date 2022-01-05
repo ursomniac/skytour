@@ -70,7 +70,8 @@ class PlanetDetailView(DetailView):
         planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
         pdict = context['planet'] = planets[obj.name]
         pdict['name'] = obj.name
-        context['view_image'] = create_planet_image(pdict, utdt=utdt_start)
+        flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+        context['view_image'] = create_planet_image(pdict, utdt=utdt_start, flipped=flipped)
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
         context['finder_chart'] = create_planet_image(

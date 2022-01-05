@@ -18,7 +18,8 @@ class LocationImageInline(admin.StackedInline):
 class ObservingLocationAdmin(admin.ModelAdmin):
     model = ObservingLocation
     inlines = [LocationImageInline]
-    list_display = ['pk',  'status', 'travel_distance', 'city', 'state', 'street_address', 'latitude', 'longitude', 'bortle', 'brightness']
+    
+    list_display = ['pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 'latitude', 'longitude', 'bortle', 'brightness']
     readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag']
     search_fields = ['name', 'city']
     list_filter = ['status', 'state']
@@ -28,7 +29,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
                 ('status', 'primary_user'), 
                 ('name'),
                 ('street_address',), 
-                ('city', 'state'),
+                ('city', 'state', 'time_zone'),
                 ('travel_distance', 'travel_time')
             ]
         }),
@@ -59,6 +60,11 @@ class ObservingLocationAdmin(admin.ModelAdmin):
             ]
         })
     )
+
+    def get_state(self, obj):
+        return obj.state.slug
+    get_state.admin_order_field = 'state'
+    get_state.short_description = 'State'
 
 admin.site.register(ObservingLocation, ObservingLocationAdmin)
 

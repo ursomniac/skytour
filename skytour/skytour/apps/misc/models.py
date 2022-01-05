@@ -1,3 +1,6 @@
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -50,6 +53,17 @@ class EventType(models.Model):
         _('Slug'),
         unique=True
     )
+    icon = models.CharField (
+        _('Icon'),
+        max_length = 10,
+        default = 'x'
+    )
+
+    def __str__(self):
+        return "{}: {}".format(self.name, self.icon)
+
+    class Meta:
+        ordering = ['slug']
 
 class Calendar(models.Model):
     """
@@ -64,7 +78,7 @@ class Calendar(models.Model):
         null = True, blank=True,
         help_text = 'Times are assumed to be UT'
     )
-    event = models.CharField(
+    title = models.CharField(
         _('Event'),
         max_length = 100
     )
@@ -72,8 +86,43 @@ class Calendar(models.Model):
         _('Description'),
         null = True, blank=True
     )
-    type = models.ForeignKey (
+    event_type = models.ForeignKey (
         EventType,
         null = True, blank=True,
         on_delete = models.CASCADE
+    )
+    involves = models.ManyToManyField (
+        'CalendarEventReference',
+    )
+
+    @property
+    def reference_list(self):
+        return ', '.join(self.calendareventreference_set.values_list('reference', flat=True))
+
+    def __str__(self):
+        icon = '' if not self.event_type else self.event_type.icon
+        my_time = '' if not self.time else self.time
+        return "{} {}: {} {}".format(self.date, my_time, icon, self.title)
+
+    class Meta:
+        verbose_name = 'Calendar Entry'
+        verbose_name_plural = 'Calendar Items'
+        ordering = (['-date', '-time'])
+
+REFERENCE_MODEL_CHOICES = [
+    ('Planet', 'Planet'),
+    ('DSO', 'DSO'),
+]
+class CalendarEventReference(models.Model):
+    calendar_event = models.ForeignKey(Calendar, on_delete=models.CASCADE)
+    reference_type = models.CharField(
+        _('Reference Model'),
+        choices = REFERENCE_MODEL_CHOICES,
+        max_length = 40,
+        null = True, blank = True
+    )
+    reference = models.CharField (
+        _('Reference'),
+        max_length = 100,
+        help_text = 'e.g., Jupiter, Io, NGC 7654, Moon, Sun'
     )
