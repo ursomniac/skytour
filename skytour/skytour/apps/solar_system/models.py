@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from djangoyearlessdate.models import YearlessDateField
+from skyfield.api import Star
 
 class Planet(models.Model):
     name = models.CharField (
@@ -75,3 +77,65 @@ Moons:
 
     Tr  vga = 0.72, r = 1353.4
 """
+
+
+
+class MeteorShower(models.Model):
+
+    name = models.CharField(
+        _('Name'),
+        max_length = 50
+    )
+    slug = models.SlugField(
+        _('Slug')
+    )
+    start_date = YearlessDateField (
+        _('Start Date')
+    )
+    end_date = YearlessDateField (
+        _('End Date')
+    )
+    peak_date = YearlessDateField (
+        _('Peak Date')
+    )
+    radiant_ra = models.FloatField (
+        _('Radiant RA')
+    )
+    radiant_dec = models.FloatField (
+        _('Radiant Dec.')
+    )
+    longitude = models.FloatField (
+        _('Celestial Longitude')
+    )
+    speed = models.PositiveIntegerField (
+        _('Avg. Speed'),
+        null = True, blank = True,
+        help_text = 'km/s'
+    )
+    zhr = models.PositiveIntegerField (
+        _('ZHR'),
+        null = True, blank = True
+    )
+    parent_body = models.CharField (
+        _('Parent Body'),
+        max_length = 100,
+        blank=True, null=True
+    )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return "{}: {} ({})".format(
+            self.peak_date,  
+            self.name,
+            self.parent_body
+        )
+
+    @property
+    def skyfield_object(self):
+        """
+        This is handy when pointing at this DSO
+        """
+        return Star(ra_hours=self.radiant_ra, dec_degrees=self.radiant_dec)

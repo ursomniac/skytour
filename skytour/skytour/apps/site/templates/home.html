@@ -3,11 +3,63 @@
 {% block content %}
 <h1>Skytour</h1>
 
-<h2>Plan Observations</h2>
+<table width="100%" class="indented navbar">
+    <tr>
+        <td><a href="{% url 'skymap-detail' %}">Generate SkyMap</a></td>
+        <td><a href="{% url 'observing-plan' %}">Plan Observations</a></td>
+    </tr>
+</table>
 
-<button><a href="{% url 'observing-plan' %}">Plan Observations</a></button>
+<h2>Today</h2>
 
-<h2>SkyMap</h2>
-<button><a href="{% url 'skymap-detail' %}">Generate Map</a></button>
+UTDT: {{ utdt }}<br/>
 
+<h3>Meteor Showers</h3>
+
+{% if meteor_showers %}
+<table width="100%">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Start</th>
+        <th>Peak</th>
+        <th>End</th>
+        <th>ZHR</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for shower in meteor_showers %}
+    <tr>
+        <td>{{ shower.name }}</td>
+        <td>{{ shower.start_date }}</td>
+        <td>{{ shower.peak_date }}</td>
+        <td>{{ shower.end_date }}</td>
+        <td>{{ shower.zhr }}</td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+{% else %}
+None active.
+{% endif %}
+
+<h3>Planets Close Together</h3>
+
+{% if adjacent_planets %}
+<table width="100%">
+    <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th><th>Constellation</th></tr></thead>
+    <tbody>
+        {% for pair in adjacent_planets %}
+        <tr>
+            <td>{{ pair.planet1.name }}</td>
+            <td>{{ pair.planet2.name }}</td>
+            <td>{{ pair.separation|floatformat:1 }}°</td>
+            <td>{{ pair.planet1.observe.constellation.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+None near each other (10°).
+{% endif %}
 {% endblock %}

@@ -37,8 +37,8 @@ class BrightStarListView(ListView):
             mag_limit = 6.0
             priority = 2
             initial = dict(
-                date = utdt.strftime("%Y-%M-%d"),
-                time = utdt.strftime('%H-%i'),
+                date = utdt.strftime("%Y-%m-%d"),
+                time = utdt.strftime('%H:%M'),
                 location = location,
                 priority = 'Highest/High/Medium',
                 mag_limit = 6.0

@@ -43,10 +43,10 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
     )
     # Sun - only matters if the plot is during the day
     sun = get_sun(utdt, eph=eph) 
-    ax = map_sun_moon(ax, 'Sun', sun, earth, t, projection, color='red')
+    ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
     # Moon
     moon = get_moon(utdt, sun=sun, eph=eph)
-    ax = map_sun_moon(ax, 'Moon', moon, earth, t, projection, color='red')
+    ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
    
     # planets
     planets = get_all_planets(utdt, location=location)
@@ -61,6 +61,8 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
         priority=priority,
         color='grey'
     )
+    # Meteor Showers if active
+    ax = map_meteor_showers(ax, utdt, earth, t, projection, size=250, color='#ffaa00')
 
     # Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
