@@ -65,6 +65,7 @@ def get_object_rise_set(utdt, eph, target, location):
             event_type = 'Rise'
         jd = zt.tt.item()
         ut = zt.utc_datetime()
+        # ERROR: This gives UT time still!
         local = zt.astimezone(pytz.timezone(location.time_zone.name))
 
         events.append(dict(

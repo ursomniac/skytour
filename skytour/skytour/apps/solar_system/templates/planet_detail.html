@@ -90,11 +90,19 @@
             Illum.: {{ planet.observe.illum_fraction|floatformat:1 }} %</br>
             Elongation: {{ planet.observe.elongation|to_dms }}<br/>
             Plotting Phase: {{ planet.observe.plotting_phase_angle|floatformat:2 }}
+            
+            {% if planet.close_to|length > 0 %}
+            <h4>Nearby Planets</h4>
+            {% for encounter in planet.close_to %}
+                Close to {{ encounter.0 }}: {{ encounter.1|floatformat:1 }}°<br/>
+            {% endfor %}
+            {% endif %}
         </td>
         <td width="25%" style="vertical-align:top;">
             <h4>Rise/Set Events</h4>
             {% for event in planet.almanac %}
-            {{ event.type }}: {{ event.local|date:"D Y M d  H:i"}} local<br/>
+            {{ event.type }}:<br/> 
+            &nbsp;&nbsp;{{ event.ut|date:"D Y M d H:i"}} UT<br/>
             {% endfor %}
             <h4>Start</h4>
             Az: {{ planet.session.start.azimuth|to_dms }}<br/>

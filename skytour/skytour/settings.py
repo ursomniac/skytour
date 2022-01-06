@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'admin_auto_filters',
     'colorfield',
+    'djangoyearlessdate',
     
     'skytour.apps.dso',
     'skytour.apps.misc',

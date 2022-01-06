@@ -10,7 +10,6 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
-
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
 from .planets import get_solar_system_object
@@ -22,6 +21,7 @@ def create_planet_image(
         utdt, # UTDT 
         other_planets = None, # show other planets on finder chart
         fov=None, # force the FOV of the image
+        min_sep = None,
         mag_limit=8.5, # faintest stars on plot
         figsize=None, # size of plot
         finder_chart=False, # Am I making a eyepiece view or finder chart?
@@ -89,6 +89,8 @@ def create_planet_image(
                 plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
         else: # no moons, set max_sep to 3*ang_size of the planet.
             max_sep = 3 * ang_size_radians
+        if min_sep and max_sep < min_sep:
+            max_sep = min_sep
 
         # If Saturn, add rings
         # TODO: deal with having the ring in front of the planet and then behind it.
@@ -100,6 +102,10 @@ def create_planet_image(
             ax = map_phased_planet(ax, planet, ang_size_radians)
         else: # just a regular disk for superior planets
             ax = map_whole_planet(ax, ang_size_radians)
+
+    # Add planet symbols (Unicode)
+    if other_planets:
+        ax = map_planets(ax, name, other_planets, earth, t, projection)
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.
@@ -145,6 +151,105 @@ def create_planet_image(
     title = "{} {}  FOV = {}".format(name, chart_type, fov_str)
     if flipped:
         title += " (flipped)"
+    ax.set_title(title)
+
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # close things
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String
+
+def plot_ecliptic_positions(planets):
+    r = [0., ]
+    theta = [0., ]
+    label = ['Sun', ]
+    colors = ['y', 'grey', 'orange', 'blue', 'red', 'pink', 'brown', 'lime', 'cyan']
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='polar')
+    for d in planets:
+        r.append(d['distance'])
+        theta.append(d['longitude'])
+        label.append(d['name'])
+
+    ax.set_xticks = (np.arange(0, 2.*math.pi, math.pi/12.))
+    ax.set_ylim(0, 40)
+    ax.set_rscale('symlog')
+    c = ax.scatter(theta, r, s=40, c=colors)
+
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    # close things
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String
+
+def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=5, mag_limit=5.5, dsos=True, fov=10):
+    """
+    Planet is from the Planet model
+    utdt is the MIDPOINT date.
+    """
+    ts = load.timescale()
+    eph = load('de421.bsp')
+    earth = eph['earth']
+    eph_planet = eph[planet.target]
+    t = ts.from_datetime(utdt)
+    #t0 = get_t_epoch(get_julian_date(utdt))
+    projection_midpoint = earth.at(t).observe(eph_planet)
+    fig, ax = plt.subplots(figsize=[8,8])
+    projection = build_stereographic_projection(projection_midpoint)
+    # Build the observation points
+    d_planet = dict(x = [], y = [], label = [])
+    i = 0
+    for dt in range(offset_before, offset_after, step_days):
+        this_utdt = utdt + datetime.timedelta(days=dt)
+        tt = ts.from_datetime(this_utdt)
+        z = earth.at(tt).observe(eph_planet)
+        ra, dec, distance = z.radec()
+
+        xx, yy = projection(earth.at(tt).observe(Star(ra_hours=ra.hours, dec_degrees=dec.degrees)))
+        d_planet['x'].append(xx)
+        d_planet['y'].append(yy)
+        lll = "{}/{:2d}".format(this_utdt.month, this_utdt.day) if i%4 == 0 else ''
+        d_planet['label'].append(lll)
+        i += 1
+    print (d_planet['label'])
+    w = ax.scatter(d_planet['x'], d_planet['y'], s=90., c='#900', marker='+', alpha=0.7)
+    for x, y, l in zip(d_planet['x'], d_planet['y'], d_planet['label']):
+        ax.annotate(
+            l, xy=(x, y), 
+            textcoords='offset points',
+            xytext=(5, 5),
+            horizontalalignment='left',
+            color='orange'
+        )
+    
+    # Add stars from Hipparcos, constellation lines (from Stellarium),
+    #   and Bayer/Flamsteed designations from the BSC
+    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
+    ax = map_constellation_lines(ax, stars)
+    ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit)
+    # Add DSOs
+    if dsos:
+        ax = map_dsos(ax, earth, t, projection)
+    
+    angle = np.pi - fov / 360.0 * np.pi
+    limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+
+    title = "Track for {}".format(planet.name)
     ax.set_title(title)
 
     # Convert to a PNG image

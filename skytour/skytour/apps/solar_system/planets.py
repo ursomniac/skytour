@@ -1,3 +1,4 @@
+import datetime, pytz
 from matplotlib.pyplot import get
 from skyfield.api import load 
 from skyfield.almanac import (
@@ -105,17 +106,71 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
             'plotting_phase_angle':  plotting_phase_angle,
             'elongation': elongation
         },
+        'close_to': [], # will fill in downstream
         'almanac': almanac,
         'session': session,
         'moons': moon_obs
     }
 
-def get_all_planets(utdt, utdt_end=None, location=None):
-    """
-    Get a list of all the planet dicts for a given UTDT.
-    """
+def get_planet_dict(utdt, utdt_end=None, location=None):
     planet_dict = {}
     for name in PLANETS:
         planet = get_solar_system_object(utdt, name, utdt_end=utdt_end, location=location)
         planet_dict[name] = planet
     return planet_dict
+
+def get_all_planets(utdt, utdt_end=None, location=None):
+    """
+    Get a list of all the planet dicts for a given UTDT.
+    """
+    planet_dict = get_planet_dict(utdt, utdt_end=utdt_end, location=location)
+    adjacent_planets = get_adjacent_planets(planet_dict)
+    for p1, p2, sep in adjacent_planets:
+        planet_dict[p1]['close_to'].append(tuple([p2, sep]))
+        planet_dict[p2]['close_to'].append(tuple([p1, sep]))
+    return planet_dict
+
+def get_adjacent_planets(planets=None, min_sep=10., utdt=None):
+    """
+    How close are planets to each other?
+    Return a tuple of (planet1, planet2, separation) if separated by < min_sep.
+    """
+    if not planets:
+        planets = get_planet_dict(utdt)
+    close_by = []
+    for planet in PLANETS:
+        rest = PLANETS[PLANETS.index(planet)+1:]
+        for other_planet in rest:
+            p1t = planets[planet]['target']
+            p2t = planets[other_planet]['target']
+            sep = p1t.separation_from(p2t).degrees.item()
+            if sep <= min_sep:
+                t = (planet, other_planet, sep)
+                close_by.append(t)
+    return close_by
+
+def get_ecliptic_positions(utdt=None):
+    if utdt is None:
+        utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    all_planets = PLANETS
+    all_planets.insert(2, 'Earth')
+    # start
+    ts = load.timescale()
+    t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
+    eph = load('de421.bsp')
+    sun = eph['sun']
+    points = []
+    for planet in all_planets:
+        loc = planet.upper() + ' BARYCENTER'
+        coords = sun.at(t).observe(eph[loc])
+        latitude, longitude, distance = coords.ecliptic_latlon()
+        d = dict(
+            name=planet,
+            longitude=longitude.degrees.item(),
+            latitude=latitude.degrees.item(),
+            distance=distance.au.item()
+        )
+        points.append(d)
+    return points
+
+    

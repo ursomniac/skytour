@@ -1,3 +1,4 @@
+import datetime
 import math
 import matplotlib
 import numpy as np
@@ -7,6 +8,7 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
+from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
@@ -401,7 +403,7 @@ def map_planets(ax, this_planet, planets, earth, t, projection):
         )
     return ax
 
-def map_sun_moon(ax, name, obj, earth, t, projection, color='silver'):
+def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
     """
     Put in the Sun and Moon Unicode symbols on the map.
 
@@ -425,4 +427,35 @@ def map_sun_moon(ax, name, obj, earth, t, projection, color='silver'):
         color=color,
         fontsize=20
     )
+    return ax
+
+def map_meteor_showers(ax, utdt, earth, t, projection, color='c', marker='x', size=150, alpha=1.0):
+    """
+    Show meteor showers on the map with a big cyan X.
+    """    
+    active = get_meteor_showers(utdt=utdt)
+    if len(active) == 0: # Nothing to do!
+        return ax
+
+    d = {'x': [], 'y': [], 'label': [], 'marker': []}
+    for a in active:
+        x, y = projection(earth.at(t).observe(a.skyfield_object))
+        d['x'].append(x)
+        d['y'].append(y)
+        d['label'].append(a.name)
+
+    scatter = ax.scatter(
+        d['x'], d['y'], 
+        s=size, c=color, 
+        marker=marker, alpha=alpha
+    )
+    #for x, y, z in zip(xxx, yyy, other_dsos['label']):
+    #    ax.annotate(
+    #        z, xy=(x,y),
+    #        xytext=(5, 5),
+    #        textcoords='offset points',
+    #        horizontalalignment='left',
+    #        annotation_clip = True,
+    #        color=color
+    #    )
     return ax
