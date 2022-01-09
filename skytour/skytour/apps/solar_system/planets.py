@@ -11,6 +11,8 @@ from ..observe.local import get_observing_situation
 from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 
+from .jupiter import get_jupiter_physical_ephem, get_red_spot
+from .mars import get_mars_physical_ephem
 from .models import Planet
 from .utils import get_angular_size, get_plotting_phase_angle, get_elongation
 from .utils import get_constellation
@@ -90,6 +92,13 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
     else: # No moons
         moon_obs = None
 
+    # Special things for planets:
+    physical = None
+    if name == 'Jupiter':
+        physical = get_jupiter_physical_ephem(utdt)
+    elif name == 'Mars':
+        physical = get_mars_physical_ephem(utdt)
+
     return {
         'name': name,
         'slug': planet.slug,
@@ -106,6 +115,7 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
             'plotting_phase_angle':  plotting_phase_angle,
             'elongation': elongation
         },
+        'physical': physical,
         'close_to': [], # will fill in downstream
         'almanac': almanac,
         'session': session,

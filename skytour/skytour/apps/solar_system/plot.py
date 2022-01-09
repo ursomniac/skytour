@@ -264,15 +264,68 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     plt.close(fig)
     return pngImageB64String
 
-### TESTING
-# This just exists as an easy way to get to the image and planet metadata.
-def ptest(name, utdt=None, fov=None, figsize=None, finder_chart=False, show_axes=False):
-    if not utdt:
-        utdt = datetime.datetime.now(datetime.timezone.utc)
-    if not figsize:
-        figsize = [5,5]
-    planet = get_solar_system_object(utdt, name)
+def get_planet_map(planet, physical):
+    #print("Physical: ", physical)
+    try:
+        angle = physical['omega']
+        d_e = physical['d_e']
+        if planet.name == 'Jupiter':
+            features = physical['features']
+            delta_longitude = 0.
+            for f in features:
+                if f['name'] == 'Great Red Spot':
+                    delta_longitude = f['longitude']
+            #delta_longitude = physical['red_spot']['delta_longitude']
+    except:
+        print ("returning None")
+        return None, None, None
 
-    #print("PLANET: ", planet)
-    image = create_planet_image(name, planet, utdt, fov=fov, mag_limit=9., figsize=figsize, finder_chart=finder_chart, show_axes=show_axes)
-    return planet
+    plt.rcParams['figure.figsize'] = [10, 5]
+    plt.rcParams['figure.autolayout'] = True
+    im = plt.imread(planet.planet_map.file)
+    fig, ax = plt.subplots()
+    if planet.name == 'Jupiter':
+        im = ax.imshow(im, extent=[180, -180, -90, 90])
+        # OK here's the tricky bit:
+        # on the image, the GRS is at x = 170, which corresponds to
+        #   9° + 0.05719° * (utdt - datetime(2022, 1, 1)); i.e., # days since the beginning of the year.
+        do = angle - delta_longitude
+        px = do if angle <= 180 else do - 360.
+        py = -d_e
+    elif planet.name == 'Mars':
+        im = ax.imshow(im, extent=[360, 0, -90, 90])
+        px = angle + 360 if angle < 0 else angle
+        py = -d_e
+    ax.plot([int(px)], [int(py)], 'wP')
+
+    # Plot feature locations:
+    ppx = []
+    ppy = []
+    for feature in physical['features']:
+        fpx = None
+        fpy = None
+        if feature['name'] == 'Great Red Spot':
+            continue # dont' plot over the GRS - it's obvious on the map
+        if planet.name == 'Mars':
+            fpx = 360. - feature['longitude']
+            fpy = feature['latitude']
+        elif planet.name == 'Jupiter': 
+            # Not sure if this is right... but there aren't any other features to test with
+            do = feature['longitude'] - delta_longitude
+            fpx = do if feature['longitude'] <= 180 else do - 360.
+            fpy = feature['latitude']
+        if fpx and fpy:
+            ppx.append(fpx)
+            ppy.append(fpy)
+    ax.plot(ppx, ppy, 'yx')
+
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    # close things
+    plt.cla()
+    plt.close(fig)
+    return px, py, pngImageB64String

@@ -32,6 +32,12 @@ class Planet(models.Model):
         null=True, blank=True,
         help_text = 'List of moons that might be observable; separate with commas'
     )
+
+    planet_map = models.ImageField(
+        _('Planet Map'),
+        null=True, blank=True,
+        upload_to='planet_maps'
+    )
     @property
     def target(self):
         return "{} Barycenter".format(self.name)
@@ -44,6 +50,9 @@ class Planet(models.Model):
         for m in self.moon_names.split(','):
             mlist.append(m.strip())
         return mlist
+
+    def get_absolute_url(self):
+        return '/planet/{}'.format(self.slug)
 
     def __str__(self):
         return self.name

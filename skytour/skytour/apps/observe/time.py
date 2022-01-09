@@ -27,7 +27,7 @@ def get_utdt(utdt=None):
     Take a non-TZ aware datetime and return an aware one.
     """
     if not utdt:
-        utdt = datetime.datetime.now()
+        utdt = datetime.datetime.utcnow()
     return utdt.replace(tzinfo=pytz.utc)
 
 def utdt_to_local_time(utdt, timezone_name='US/Eastern'):
