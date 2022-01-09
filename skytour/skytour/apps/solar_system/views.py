@@ -12,7 +12,7 @@ from .forms import ShowPlanetForm, ObservationDateForm
 from .models import Planet
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
-from .plot import create_planet_image, plot_ecliptic_positions, plot_track
+from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
 
 
 class PlanetListView(ListView):
@@ -103,6 +103,9 @@ class PlanetDetailView(DetailView):
             finder_chart=True, 
             other_planets=planets
         )
+        if obj.planet_map is not None: # Mars, Jupiter
+            px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
+            context['xy'] = dict(px=px, py=py)
         context['form'] = ShowPlanetForm(initial=initial)
         return context
 

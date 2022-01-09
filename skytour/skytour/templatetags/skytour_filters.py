@@ -17,6 +17,23 @@ def to_hms(d):
     except:
         return None
 
+@register.filter(name='dt_hms')
+def dt_hms(d):
+    """
+    Allow negative times
+    """
+    try:
+        sign = '+' if d > 0. else '-'
+        x = abs(d)
+        h = int(x)
+        x = (x-h) * 60.
+        m = int(x)
+        s = (x-m) * 60.
+        return "{}{:02d}h {:02d}m {:6.3f}s".format(sign, h, m, s)
+    except:
+        return None
+
+
 @register.filter(name='to_dms')
 def to_dms(d):
     try:
