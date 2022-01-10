@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Planet, MeteorShower
+from .models import Planet, MeteorShower, Asteroid
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
@@ -26,3 +26,4 @@ class PlanetAdmin(admin.ModelAdmin):
 
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
+admin.site.register(Asteroid)

@@ -9,6 +9,7 @@ media/
 BACKUP_*
 IGNORE
 hip_main.dat
+MPCORB.DAT*
 *.bsp
 
 # C extensions

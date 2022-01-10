@@ -126,3 +126,15 @@ class CalendarEventReference(models.Model):
         max_length = 100,
         help_text = 'e.g., Jupiter, Io, NGC 7654, Moon, Sun'
     )
+
+class Website(models.Model):
+    name = models.CharField (
+        _('Name'),
+        max_length = 200
+    )
+    url = models.URLField (
+        _('URL')
+    )
+
+    class Meta:
+        ordering = ['name']

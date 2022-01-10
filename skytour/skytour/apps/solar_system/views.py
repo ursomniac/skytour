@@ -9,7 +9,7 @@ from django.views.generic.list import ListView
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
 from .forms import ShowPlanetForm, ObservationDateForm
-from .models import Planet
+from .models import Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
@@ -157,6 +157,8 @@ class MoonDetailView(TemplateView):
         )
         context['form'] = ShowPlanetForm(initial=initial)
         return context
+
+### These are still in development.
 
 class PlanetTrackView(DetailView):
     """

@@ -6,8 +6,8 @@ In no particular order.
 ## Find a better way to customize; remove hard-coded things.
 
 1. Select the "Preferred" Observing Location; use it for defaults
-2. State tuple should be customizable 
-3. Ditto time zones (although here I could just add all of them...)
+2. DONE: ~~State tuple should be customizable~~ 
+3. DONW: ~~Ditto time zones (although here I could just add all of them...)~~
 
 ## Run-time environment
 
@@ -59,7 +59,7 @@ I'm sure there's a way to  calculate/predict events:
 
 ### Jupiter features
 
-I'm sure there's a way to tell when the GRS is in view.
+DONE: ~~I'm sure there's a way to tell when the GRS is in view.~~
 
 ### Saturn
 
@@ -74,18 +74,17 @@ I cheat on displaying the rings.   I need to do better.
 This will also be useful if/when comets, etc. get introduced?
 
 ### Comets and other MPC items.
-TBD.
+1. MPC-derived things (comets, etc.)
 
 ### SkyView
 
-1. Meteor shower radiants (and a model with dates, etc.)
-2. MPC-derived things (comets, etc.)
+1. DONE: ~~Meteor shower radiants (and a model with dates, etc.)~~
+
 
 ### Milky Way contours... 
 I'll bet that data exists somewhere!
 
 ### Almanac
-
 To be honest it might be better just to hand-add these to the Admin, and then have the home page display a calendar.
 
 ### Home Page Improvements

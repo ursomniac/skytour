@@ -1,7 +1,9 @@
+import math
 from django.db import models
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
+from .abstract import OrbitalElements
 
 class Planet(models.Model):
     name = models.CharField (
@@ -148,3 +150,73 @@ class MeteorShower(models.Model):
         This is handy when pointing at this DSO
         """
         return Star(ra_hours=self.radiant_ra, dec_degrees=self.radiant_dec)
+
+class Asteroid(models.Model):
+    """
+    Orbital elements are in the brightest_asteroids.txt file.
+    Skyfield loads them and uses them from there.
+    """
+    name = models.CharField (
+        _('Name'),
+        max_length = 50
+    )
+    number = models.PositiveIntegerField (
+        _('Number')
+    )
+    diameter = models.CharField (
+        _('Diameter'),
+        max_length = 50,
+        null = True, blank = True,
+        help_text = '# or # x # or # x # x #'
+    )
+    year_of_discovery = models.PositiveIntegerField (
+        _('Year of Discovery'),
+        null = True, blank = True
+    )
+    image = models.ImageField (
+        _('Image'),
+        null = True, blank = True,
+        upload_to = 'asteroid_images'
+    )
+    classification = models.CharField (
+        _('Classification'),
+        max_length = 10,
+        null = True, blank = True
+    )
+    description = models.TextField (
+        _('Description'),
+        null = True, blank = True
+    )
+
+    ### Magnitude
+    h = models.FloatField (
+        _('H'),
+        help_text = 'absolute magnitude'
+    )
+    g = models.FloatField (
+        _('G'),
+        help_text = 'slope parameter'
+    )
+
+    @property
+    def mpc_lookup_designation(self):
+        return "({}) {}".format(self.pk, self.name)
+        
+    @property
+    def mean_diameter(self):
+        axes = self.diameter.split('x')
+        sum = 0.
+        for axis in axes:
+            x = float(axis.strip())
+            sum += x
+        return sum / len(axes)
+
+    @property
+    def orbital_period(self):
+        return math.sqrt(self.semi_major_axis**3)
+
+    def __str__(self):
+        return "{}: {}".format(self.pk, self.name)
+
+    class Meta:
+        ordering = ['number']
