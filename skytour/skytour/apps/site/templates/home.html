@@ -47,14 +47,13 @@ None active.
 
 {% if adjacent_planets %}
 <table width="100%">
-    <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th><th>Constellation</th></tr></thead>
+    <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th></tr></thead>
     <tbody>
         {% for pair in adjacent_planets %}
         <tr>
-            <td>{{ pair.planet1.name }}</td>
-            <td>{{ pair.planet2.name }}</td>
-            <td>{{ pair.separation|floatformat:1 }}°</td>
-            <td>{{ pair.planet1.observe.constellation.name }}</td>
+            <td>{{ pair.0 }}</td>
+            <td>{{ pair.1 }}</td>
+            <td>{{ pair.2|floatformat:1 }}°</td>
         </tr>
         {% endfor %}
     </tbody>

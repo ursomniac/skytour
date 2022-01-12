@@ -11,6 +11,9 @@ def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'M
     """
     Skinny triangle formula.  Diameter/Distance.
     """
+    if diameter is None or distance is None:
+        return None
+        
     #print ("DIAMETER: ", diameter, 'DISTANCE: ', distance)
     theta = math.degrees(math.asin(diameter/distance)) * 3600. # arcsec
     if units == 'arcmin':

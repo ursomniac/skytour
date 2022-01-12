@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block content %}
+<h2>Observable Asteroids</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td><a href="{% url 'asteroid-detail' object.slug %}">{{ object.number }}</a></td>
+            <td><a href="{% url 'asteroid-detail' object.slug %}">{{ object.name }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

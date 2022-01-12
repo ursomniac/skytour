@@ -1,0 +1,13 @@
+{% load skytour_filters humanize %}
+<h4>Location</h4>
+{{ location.name }}<br/>
+{{ location.street_address }}<br>
+{{ location.city }}, {{ location.state }}<br/>
+Longitude: {{ location.longitude|to_dms }}<br/>
+Latitude: {{ location.latitude|to_dms }}<br/>
+
+<h4>Sky Brightness</h4>
+SQM: {{ location.sqm|floatformat:2 }} mag/arcsec<sup>2</sup><br/>
+Brightness: {{ location.brightness|floatformat:3 }} µcd/m<sup>2</sup><br/>
+Bortle: {{ location.bortle }}
+<br/>

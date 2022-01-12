@@ -140,7 +140,7 @@ def get_all_planets(utdt, utdt_end=None, location=None):
         planet_dict[p2]['close_to'].append(tuple([p1, sep]))
     return planet_dict
 
-def get_adjacent_planets(planets=None, min_sep=10., utdt=None):
+def get_adjacent_planets(planets=None, utdt=None, min_sep=10.):
     """
     How close are planets to each other?
     Return a tuple of (planet1, planet2, separation) if separated by < min_sep.

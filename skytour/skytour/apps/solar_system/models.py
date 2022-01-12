@@ -160,6 +160,9 @@ class Asteroid(models.Model):
         _('Name'),
         max_length = 50
     )
+    slug = models.SlugField (
+        _('Slug')
+    )
     number = models.PositiveIntegerField (
         _('Number')
     )
@@ -215,8 +218,11 @@ class Asteroid(models.Model):
     def orbital_period(self):
         return math.sqrt(self.semi_major_axis**3)
 
+    def get_absolute_url(self):
+        return '/asteroid/{}'.format(self.slug)
+
     def __str__(self):
-        return "{}: {}".format(self.pk, self.name)
+        return "{}: {}".format(self.number, self.name)
 
     class Meta:
         ordering = ['number']

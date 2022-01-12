@@ -24,6 +24,10 @@ class PlanetAdmin(admin.ModelAdmin):
     list_display_links = ['pk', 'name']
     readonly_fields = ['moon_list',]
 
+class AsteroidAdmin(admin.ModelAdmin):
+    model = Asteroid
+    list_display = ['number', 'name', 'diameter', 'h', 'g']
+
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
-admin.site.register(Asteroid)
+admin.site.register(Asteroid, AsteroidAdmin)
