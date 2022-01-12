@@ -12,7 +12,6 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        utdt = datetime.datetime(2022, 4, 5, 0, 0).replace(tzinfo=pytz.utc)
         context['utdt'] = utdt
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)
         planets = get_all_planets(utdt)

@@ -1,14 +1,19 @@
+import datetime, pytz
 import math
 from skyfield.api import (
     position_of_radec, 
     load_constellation_map,
     load_constellation_names
 )
+from ..observe.time import get_julian_date
 
 def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'Mars'
     """
     Skinny triangle formula.  Diameter/Distance.
     """
+    if diameter is None or distance is None:
+        return None
+        
     #print ("DIAMETER: ", diameter, 'DISTANCE: ', distance)
     theta = math.degrees(math.asin(diameter/distance)) * 3600. # arcsec
     if units == 'arcmin':
@@ -53,3 +58,4 @@ def get_constellation(ra, dec):
     d = dict(load_constellation_names())
     abbr = constellation_at(position_of_radec(ra, dec))
     return dict(name = d[abbr], abbr = abbr)
+

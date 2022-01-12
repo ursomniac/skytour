@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('skytour.apps.site.urls')),
     path('admin/', admin.site.urls),
+    path('asteroid/', include('skytour.apps.solar_system.urls_asteroid')),
     path('catalog/', include('skytour.apps.utils.urls_catalog')),
     path('constellation/', include('skytour.apps.utils.urls_constellation')),
     path('dso/', include('skytour.apps.dso.urls_dso')),

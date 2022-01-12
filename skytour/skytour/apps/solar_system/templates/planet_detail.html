@@ -40,92 +40,46 @@
 <br/>
 
 <table>
+    <thead>
     <tr>
         <th>Session</th>
         <th>Location</th>
         <th>Observe</th>
         <th>Almanac</th>
     </tr>
+    </thead>
+    <tbody>
     <tr>
         <td width="25%"  style="vertical-align:top;">
-            <h4>Date and Time</h4>
-            UT Start: {{ utdt_start|date:"D Y-M-d H:i" }}<br/>
-            UT End:&nbsp; {{ utdt_end|date:"D Y-M-d H:i" }}<br/>
-            Julian Date: {{ julian_date|floatformat:4 }}
-
-            <h4>Location</h4>
-            {{ location.name }}<br/>
-            {{ location.street_address }}<br>
-            {{ location.city }}, {{ location.state }}<br/>
-            Longitude: {{ location.longitude|to_dms }}<br/>
-            Latitude: {{ location.latitude|to_dms }}<br/>
-
-            <h4>Sky Brightness</h4>
-            SQM: {{ location.sqm|floatformat:2 }} mag/arcsec<sup>2</sup><br/>
-            Brightness: {{ location.brightness|floatformat:2 }} µcd/m<sup>2</sup><br/>
-            Bortle: {{ location.bortle }}
-            <br/>
+            {% include 'inc_date_time.html' %}
+            {% include 'inc_location.html' %}
         </td>
         <td width="25%" style="vertical-align:top;">
-            <h4>Coordinates</h4>
-            &alpha;:&nbsp;&nbsp;{{ planet.coords.ra_str }}<br/>
-            &delta;: {{ planet.coords.dec_str }}
-            <h4>Distance</h4>
-            AU: {{ planet.coords.distance.au|stringformat:'0.3f' }}<br/>
-            km: {{ planet.coords.distance.km|stringformat:'0.1f'|intcomma }}<br/>
-            mi: {{ planet.coords.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
-            Light Time: {{ planet.coords.distance.light_time }}
-            <h4>Projection</h4>
-            {% if planet.observe.phase.phase %}
-            Phase: {{ planet.observe.phase.phase }}<br/>
-            Phase Angle: {{ planet.observe.phase.angle|to_dms }}<br/>
-            Day: {{ planet.observe.phase.days_since_new_moon|to_dhms }}<br/>
-            {% else %}
-            Phase Angle: {{ planet.observe.phase_angle_str }}<br/>
-            {% endif %}
-            Illum.: {{ planet.observe.illum_fraction|floatformat:1 }} %</br>
-            Elongation: {{ planet.observe.elongation|to_dms }}<br/>
-            Plotting Phase: {{ planet.observe.plotting_phase_angle|floatformat:2 }}
+            {% with planet as obj %}
+            {% include 'inc_coordinates.html' %}
+            {% endwith %}
         </td>
         <td width="25%" style="vertical-align:top;">
-            <h4>Apparent</h4>
-            Mag: {{ planet.observe.apparent_mag|floatformat:2 }}<br>
-            Ang Size: {{ planet.observe.angular_diameter_str }}<br/>            
-            {% if planet.close_to|length > 0 %}
+            {% with planet as obj %}
+            {% include 'inc_apparent.html' %}
+            {% endwith %}
+
+            {% if obj.close_to|length > 0 %}
             <h4>Nearby Planets</h4>
             {% for encounter in planet.close_to %}
                 Close to {{ encounter.0 }}: {{ encounter.1|floatformat:1 }}°<br/>
             {% endfor %}
             {% endif %}
+
             {% if planet.physical %}
-                <h4>Physical</h4>
-                {% if planet.name == 'Jupiter' %}
-                &omega;<sub>1</sub>: {{ planet.physical.omega_1|to_dms }}<br>
-                &omega;<sub>2</sub>: {{ planet.physical.omega_2|to_dms }}<br/>
-                &lambda;: {{ planet.physical.longitude|to_dms }}<br/>
-                D<sub>S</sub>: {{ planet.physical.d_s|floatformat:3 }}°<br>
-                D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}°<br>
-                {% elif planet.name == 'Mars' %}
-                &omega;: {{ planet.physical.omega|to_dms }}<br/>
-                D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}
-                {% endif %}
+            {% include 'inc_physical.html' %}
             {% endif %}
         </td>
+
         <td width="25%" style="vertical-align:top;">
-            <h4>Rise/Set Events</h4>
-            {% for event in planet.almanac %}
-            {{ event.type }}:<br/> 
-            &nbsp;&nbsp;{{ event.ut|date:"D Y M d H:i"}} UT<br/>
-            {% endfor %}
-            <h4>Start</h4>
-            Az: {{ planet.session.start.azimuth|to_dms }}<br/>
-            Alt: {{ planet.session.start.altitude|to_dms }}<br/>
-            Up: {{ planet.session.start.is_up }}
-            <h4>End</h4>
-            Az: {{ planet.session.end.azimuth|to_dms }}<br/>
-            Alt: {{ planet.session.end.altitude|to_dms }}<br/>
-            Up: {{ planet.session.end.is_up }}
-            <br/>
+        {% with planet as obj %}
+        {% include 'inc_rise_set.html' %}
+        {% endwith %}
         </td>
     </tr>
     <tr>
@@ -147,6 +101,7 @@
             <img src="{{ planet_map }}" style="margin:auto;">
         </td>
     </tr>
+    
     {% if planet.physical.features %}
     <tr>
         <td width="100%" colspan=4>
@@ -176,5 +131,6 @@
         </td>
     </tr>
     {% endif %}
+    </tbody>
 </table>
 {% endblock content %}

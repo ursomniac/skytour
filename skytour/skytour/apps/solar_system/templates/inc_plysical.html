@@ -1,0 +1,12 @@
+{% load skytour_filters humanize %}
+<h4>Physical</h4>
+{% if planet.name == 'Jupiter' %}
+&omega;<sub>1</sub>: {{ planet.physical.omega_1|to_dms }}<br>
+&omega;<sub>2</sub>: {{ planet.physical.omega_2|to_dms }}<br/>
+&lambda;: {{ planet.physical.longitude|to_dms }}<br/>
+D<sub>S</sub>: {{ planet.physical.d_s|floatformat:3 }}°<br>
+D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}°<br>
+{% elif planet.name == 'Mars' %}
+&omega;: {{ planet.physical.omega|to_dms }}<br/>
+D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}
+{% endif %}
