@@ -35,11 +35,11 @@ def _process_form(params):
         utdt_end = utdt_start + datetime.timedelta(hours=3)
         loc_pk = 43
         initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H:%M"), 'location': loc_pk}
-        obs_params = dict(
-            utdt_start = utdt_start,
-            utdt_end = utdt_end,
-            location = loc_pk
-        )
+    obs_params = dict(
+        utdt_start = utdt_start,
+        utdt_end = utdt_end,
+        location = loc_pk
+    )
     return obs_params, initial, urlencode(obs_params)
 
 
@@ -70,7 +70,7 @@ class PlanetDetailView(DetailView):
         context['utdt_start'] = utdt_start = obs_params['utdt_start']
         context['utdt_end'] = utdt_end = obs_params['utdt_end']
         context['julian_date'] = get_julian_date(utdt_start)
-        context['location'] = location = ObservingLocation.objects.get(pk=obs_params['loc_pk'])
+        context['location'] = location = ObservingLocation.objects.get(pk=obs_params['location'])
         planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
         pdict = context['planet'] = planets[obj.name]
         pdict['name'] = obj.name
@@ -137,9 +137,10 @@ class MoonDetailView(TemplateView):
                 loc_pk = params['location'][0]
             else:
                 loc_pk = 43
-            initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H-%M"), 'location': loc_pk}
+            initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H:%M"), 'location': loc_pk}
 
         # put it all together
+        context['is_moon'] = True
         context['utdt_start'] = utdt_start
         context['utdt_end'] = utdt_end
         context['julian_date'] = get_julian_date(utdt_start)

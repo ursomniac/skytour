@@ -86,7 +86,7 @@ def get_jupiter_physical_ephem(utdt, debug=False):
         d_s = ds,
         d_e = de
     )
-    jupiter['features'] = get_jupiter_features(utdt, jupiter, debug=True)
+    jupiter['features'] = get_jupiter_features(utdt, jupiter, debug=False)
     return jupiter
 
 def get_jupiter_features(utdt, jupiter, debug=False):

@@ -20,7 +20,11 @@
             <form method="GET">
             {{ form.as_p }}
             <input type="submit" value="Submit"/>
+            {% if is_moon %}
+            <button><a href="{% url 'moon-detail' %}">Now</a></button>
+            {% else %}
             <button><a href="{% url 'planet-detail' planet.slug %}">Now</a></button>
+            {% endif %}
             </form>
             <small>Express date/time in UT.</small><br/>
         </td>

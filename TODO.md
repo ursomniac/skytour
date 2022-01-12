@@ -6,6 +6,7 @@ In no particular order.
 ## Find a better way to customize; remove hard-coded things.
 
 1. Select the "Preferred" Observing Location; use it for defaults
+     1. This would be best done using Django sessions.
 2. DONE: ~~State tuple should be customizable~~ 
 3. DONW: ~~Ditto time zones (although here I could just add all of them...)~~
 
@@ -91,6 +92,7 @@ To be honest it might be better just to hand-add these to the Admin, and then ha
 
 1. Calendar
     1. with Moon phase
+2. Add bright asteroids.
 
 ### PDF
 
@@ -107,3 +109,28 @@ Right now there's a FK table to DSO, but that's not the right way to do this.
 
 (Plus we might observe other things than DSOs!)
 
+1. Separate the ObservingLog out of DSO
+2. Create/check the model
+    1. Location
+    2. UTDT
+    3. ??? How to do drawings?   I suppose that can be ex-post-facto.
+    4. Sort out descriptions so as to create useful metadata
+    5. Also observing conditions/transparency/etc.
+        1. For this we might want some kind of "weather" interface to get temperature/humidity/etc. info
+        2. This could be another model for ObservingSession
+3. Make some kind of GFK to the observing instance
+4. Visual (eyepiece) vs. Image (camera)
+    1. For the latter need to figure out metadata
+        1. Exposure
+        2. Filters
+        3. Etc.
+
+
+## Performance
+
+It's realll slow.
+
+1. Get time() stats?
+2. Run all of the earth.at(t).observve(target) calls up front?
+3. At the very least, survey how MANY calls like this get made for a request.
+4. If there's a way to pass global information from one method/view to another (with **kwargs?) then have a form for setting UTDT/location and use that.
