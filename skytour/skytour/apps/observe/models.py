@@ -1,3 +1,4 @@
+import datetime, pytz
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -230,3 +231,18 @@ class LocationImage(models.Model):
 
     def image_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
+
+"""
+
+class ObservingSession(models.Model):
+    utdt_start = models.DateTimeField (
+        _('UTDT Start'),
+        default=datetime.datetime.nowutc
+    )
+    location = models.ForeignKey (
+        'ObservingLocation'
+    )
+
+    def __str__(self):
+        return "{}: {}".format(self.utdt_start, self.location)
+"""
