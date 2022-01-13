@@ -1,0 +1,59 @@
+from django.views.generic.edit import FormView
+from ..observe.models import ObservingLocation
+from .forms import ObservingSessionForm
+from .plan import get_plan
+from .utils import get_initial_from_cookie
+
+class ObservingSessionView(FormView):
+    form_class = ObservingSessionForm
+    template_name = 'observing_session.html'
+    success_url = '/session/plan'  
+
+    def get_initial(self):
+        initial = super().get_initial()
+        up = self.request.session['user_preferences']
+        #print("UP: ", up)
+        #print("INITIAL: ", initial)
+        if up:
+            initial = get_initial_from_cookie(up)
+        return initial
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        return self.form_invalid(form, **kwargs)
+
+    def form_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['has_plan'] = True
+        d = context['plan'] = get_plan(form)
+        # Set cookies here?
+        self.request.session['user_preferences'] = dict(
+            utdt_start=d['utdt_start'].isoformat(),
+            utdt_end=d['utdt_end'].isoformat(),
+            location = d['location'].pk,
+            t = d['t'],
+            dec_limit = d['dec_limit'],
+            mag_limit = d['mag_limit'],
+            hour_angle_range = d['hour_angle_range'],
+            session_length = d['session_length'],
+            show_planets = d['show_planets']
+        )
+        return self.render_to_response(context)
+            
+    def form_invalid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        context['has_plan'] = False
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingSessionView, self).get_context_data(**kwargs)
+        return context

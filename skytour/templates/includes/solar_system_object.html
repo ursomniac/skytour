@@ -3,12 +3,15 @@
     table .inner { border: 0; padding: 0 0; }
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
 </style>
+
 <table>
     <tr>
         <th>Location</th>
         <th>Observe</th>
         <th>Almanac</th>
+        {% comment %}
         <th>Telescope View</th>
+        {% endcomment %}
     </tr>
     <tr>
         <td width="20%" style="vertical-align:top;">
@@ -52,6 +55,8 @@
             Up: {{ object.session.end.is_up }}
             <br/>
         </td>
+        {% comment %}
         <td width="40%" style="vertical-align:top;"><img src="{{ object.view_image }}"/></td>
+        {% endcomment %}
     </tr>
   </table>

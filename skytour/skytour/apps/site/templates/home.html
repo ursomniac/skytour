@@ -6,13 +6,13 @@
 <table width="100%" class="indented navbar">
     <tr>
         <td><a href="{% url 'skymap-detail' %}">Generate SkyMap</a></td>
-        <td><a href="{% url 'observing-plan' %}">Plan Observations</a></td>
+        <td><a href="{% url 'observing-session' %}">Set Observing Session</a></td>
     </tr>
 </table>
 
 <h2>Today</h2>
 
-UTDT: {{ utdt }}<br/>
+USER PREFERENCES: {{ user_preferences }}
 
 <h3>Meteor Showers</h3>
 

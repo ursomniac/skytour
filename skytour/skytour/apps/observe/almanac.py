@@ -21,7 +21,7 @@ def dark_time(d, debug=False):
     Given a dict of metadata, get the begin/end of twilight
     """
     f = dark_twilight_day(d['eph'], d['wgs'])
-    today = get_0h(d['utdt'])
+    today = get_0h(d['utdt_start'])
     end_at, begin_at = get_almanac_times(today, d['ts'], f)
     if debug:
         print ("F: ", f)

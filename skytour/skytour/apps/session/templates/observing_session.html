@@ -61,6 +61,8 @@ summary::-webkit-details-marker {
     {% endif %}
 </div>
 
+UP: {{ user_preferences }}
+
 {% if has_plan %}
   <h2>Observing Plan</h2>
 
@@ -71,7 +73,7 @@ summary::-webkit-details-marker {
       </tr>
       <tr>
           <td>
-              Start: {{ plan.utdt|date:"D Y M d  H:i"}} UT<br/>
+              Start: {{ plan.utdt_start|date:"D Y M d  H:i"}} UT<br/>
               End: {{ plan.utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
               Julian Date: {{ plan.julian_date|floatformat:5 }}
           </td>
@@ -109,51 +111,52 @@ summary::-webkit-details-marker {
       </td>
     </tr>
   </table>
-    
+  
   {% if planet.show_planet %}
   {% with planet as object %}
   {% include 'includes/solar_system_object.html' %}
   {% endwith %}
   {% endif %}
+
 {% endfor %}
   
   <h2>Targets</h2>
   <details>
     <summary>
-      <h3>Highest Priority ({{ plan.targets.highest|length }} DSOs)</h3>
+      <h3>Highest Priority ({{ plan.dso_targets.highest|length }} DSOs)</h3>
       <span class="icon">👇</span>
     </summary>
-    {% with dso_list=plan.targets.highest table_id='highest-dsos' %}
+    {% with dso_list=plan.dso_targets.highest table_id='highest-dsos' %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}
   </details>
 
   <details>
     <summary>
-      <h3>High Priority ({{ plan.targets.high|length }} DSOs)</h3>
+      <h3>High Priority ({{ plan.dso_targets.high|length }} DSOs)</h3>
       <span class="icon">👇</span>
     </summary>
-    {% with dso_list=plan.targets.high table_id='high-dsos' %}
+    {% with dso_list=plan.dso_targets.high table_id='high-dsos' %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}
   </details>
 
   <details>
     <summary>
-    <h3>Medium Priority ({{ plan.targets.medium|length }} DSOs)</h3>
+    <h3>Medium Priority ({{ plan.dso_targets.medium|length }} DSOs)</h3>
     <span class="icon">👇</span>
     </summary>
-    {% with dso_list=plan.targets.medium table_id='medium-dsos' %}
+    {% with dso_list=plan.dso_targets.medium table_id='medium-dsos' %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}
   </details>
 
   <details>
     <summary>
-    <h3>Low Priority ({{ plan.targets.low|length }} DSOs)</h3>
+    <h3>Low Priority ({{ plan.dso_targets.low|length }} DSOs)</h3>
     <span class="icon">👇</span>
     </summary>
-    {% with dso_list=plan.targets.low table_id='low-dsos' %}
+    {% with dso_list=plan.dso_targets.low table_id='low-dsos' %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}
   </details>

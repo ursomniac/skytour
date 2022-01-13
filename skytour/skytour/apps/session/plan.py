@@ -9,9 +9,9 @@ from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import get_sun
 from ..solar_system.vocabs import PLANETS
 from ..utils.format import to_sex
-from .almanac import dark_time
-from .models import ObservingLocation
-from .time import get_julian_date, local_time_to_utdt, get_local_datetime, get_t_epoch
+from ..observe.almanac import dark_time
+from ..observe.models import ObservingLocation
+from ..observe.time import get_julian_date, get_t_epoch
 
 
 def get_plan(form, debug=False):
@@ -22,25 +22,22 @@ def get_plan(form, debug=False):
             - if a planet will be above the horizon within the session, show
                 the telescope view with moons or phase
         - generate a list of DSOs organized by priority
-
-    TODO: further refine against "never observed" and "previously observed".
-    TODO: Might a numerical scale that incorporates priority and history be better, e.g.:
-        Scale = N(Priority) - x * log (# obs) ??? so that you're not always given a list
-        with M31 at the top...
     """
     # Sort out the form's date and time and time_zone fields
     if debug:
         context = {}
         location = context['location']= ObservingLocation.objects.get(pk=43)
-        utdt_start = context['utdt'] = datetime.datetime(2021, 12, 23, 1, 0, 0, tzinfo=pytz.utc)
+        utdt_start = context['utdt_start'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         session_length = datetime.timedelta(hours=4)
+        context['show_planets'] = 'all'
+        context['dec_limit'] = 20.
+        context['mag_limit'] = 12.0
     else:
         context = form.cleaned_data
         location = ObservingLocation.objects.get(pk=context['location'].pk)
         ### Preliminaries
         # This might or might not be a local time.
-        local_time = get_local_datetime(context['date'], context['time'], context['time_zone'])
-        utdt_start = context['utdt'] = local_time_to_utdt(local_time)
+        utdt_start = context['utdt_start'] = datetime.datetime.combine(context['date'], context['time']).replace(tzinfo=pytz.utc)
         session_length = datetime.timedelta(hours=context['session_length'])
     utdt_end = context['utdt_end'] = utdt_start + session_length
     context['julian_date'] = get_julian_date(utdt_start)
@@ -86,11 +83,12 @@ def get_plan(form, debug=False):
     planets = []
     for k in PLANETS:
         pd = planet_data_dict[k]
+        # RAD 12 Jan 2022 - don't get planet images to save time
         go = False
         go = True if context['show_planets'] == 'all' or pd['session']['start']['is_up'] or pd['session']['end']['is_up'] else False
         pd['show_planet'] = go
-        if go:
-            pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
+        #if go:
+        #    pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
         planets.append(pd)
     context['planets'] = planets
 
@@ -101,12 +99,12 @@ def get_plan(form, debug=False):
         magnitude__lt=context['mag_limit']
     ).order_by('ra')
     for dso in all_dsos:
-        if dso.object_is_up(location, context['utdt'], min_alt=20.) \
+        if dso.object_is_up(location, context['utdt_start'], min_alt=20.) \
                 or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
             priority = dso.priority.lower()
             if priority in targets.keys():
                 targets[priority].append(dso)
             else:
                 targets[priority] = [dso]
-    context['targets'] = targets
+    context['dso_targets'] = targets
     return context # everything in {{ plan."things" }}
