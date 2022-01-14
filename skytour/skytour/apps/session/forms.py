@@ -3,6 +3,10 @@ from django import forms
 from ..observe.models import ObservingLocation
 from .vocabs import PLANET_CHOICES
 
+YES_NO = [
+    ('Yes', 'Yes'),
+    ('No', 'No')
+]
 class ObservingSessionForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='20:00') # Keep? or use the astro system?
@@ -14,3 +18,4 @@ class ObservingSessionForm(forms.Form):
     hour_angle_range = forms.FloatField(initial=3.5)
     session_length = forms.FloatField(initial=3)
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial='visible')
+    set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')

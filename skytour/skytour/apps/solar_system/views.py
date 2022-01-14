@@ -55,7 +55,7 @@ class PlanetDetailView(DetailView):
         utdt_end = obs_params['utdt_end']
         up = self.request.session['user_preferences']
         #print ("UP: ", up)
-        if up:
+        if up: # override initial from the cookie
             initial = get_initial_from_cookie(up)
             utdt_start = datetime.datetime.combine(initial['date'], initial['time']).replace(tzinfo=pytz.utc)
             utdt_end = utdt_start + datetime.timedelta(hours=initial['session_length'])
@@ -103,6 +103,7 @@ class PlanetDetailView(DetailView):
             finder_chart=True, 
             other_planets=planets
         )
+        context['planet_map'] = None
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)

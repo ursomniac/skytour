@@ -61,9 +61,14 @@ summary::-webkit-details-marker {
     {% endif %}
 </div>
 
-UP: {{ user_preferences }}
-
 {% if has_plan %}
+<table><tr>
+  <td>Jump to:</td>
+  <td><a href="#moon">Moon</a></td>
+    <td><a href="#planets">Planets</a></td>
+    <td><a href="#asteroids">Asteroids</a></td>
+    <td><a href="#dso">DSO</a></td>
+</tr></table>
   <h2>Observing Plan</h2>
 
   <table class="plan">
@@ -84,43 +89,34 @@ UP: {{ user_preferences }}
       </tr>
   </table>
 
-  <h2>Moon</h2>
-  {% if show_moon %}
-  {% with plan.moon as object %}
-  {% include 'includes/solar_system_object.html' %}
-  {% endwith %}
-  {% else %}
-  Moon is not up.
+<a name="moon"></a>
+  {% with object=plan.moon object_type='moon' show_object=plan.show_moon %}{% include 'inc_object_header.html' %}{% endwith %}
+  {% if plan.show_moon %}
+  {% with plan.moon as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
   {% endif %}
 
+<a name="planets"></a>
   <h2>Planets</h2>
   {% for planet in plan.planets %}
-  <table class="td-center">
-    <tr>
-      <td width="30%"><h3>{{ planet.name }}</h3></td>
-      <td width="30%" style="text-align: center; vertical-align: middle !important;">
-        in {{ planet.observe.constellation.name }}
-        {% if not planet.show_planet %}
-        <br/><b><span style="color: #900;">NOT VISIBLE</span></b>
-        {% else %}
-        <br/><b><span style="color: #090;">VISIBLE</span></b>
-        {% endif %}
-      </td>
-      <td style="text-align: right; vertical-align: middle !important;">
-        <a href="{% url 'planet-detail' planet.slug %}?{{ plan.query_params }}">Detail View</a>
-      </td>
-    </tr>
-  </table>
-  
-  {% if planet.show_planet %}
-  {% with planet as object %}
-  {% include 'includes/solar_system_object.html' %}
-  {% endwith %}
-  {% endif %}
+    {% with object=planet object_type='planet' show_object=planet.show_planet %}{% include 'inc_object_header.html' %}{% endwith %}
+    {% if planet.show_planet %}
+      {% with planet as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+    {% endif %}
+    <br>
+  {% endfor %}
 
-{% endfor %}
-  
-  <h2>Targets</h2>
+<a name="asteroids"></a>
+  <h2>Bright Asteroids</h2>
+  {% for key, asteroid in plan.asteroids.items %}
+    {% with object=asteroid object_type='asteroid' show_object=asteroid.show_asteroid %}{% include 'inc_object_header.html' %}{% endwith %}
+    {% if asteroid.show_asteroid %}
+      {% with asteroid as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+    {% endif %}
+    <br>
+  {% endfor %}
+
+<a name="dso"></a>
+  <h2>DSO Targets</h2>
   <details>
     <summary>
       <h3>Highest Priority ({{ plan.dso_targets.highest|length }} DSOs)</h3>

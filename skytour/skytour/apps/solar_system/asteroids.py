@@ -83,12 +83,12 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
       earth_sun_distance  = rr
    )
 
-def get_all_asteroids(utdt, mag_limit=10., debug=False):
+def get_all_asteroids(utdt, mag_limit=10., utdt_end=None, location=None, debug=False):
    asteroids = Asteroid.objects.all()
    asteroid_dict = {}
    for a in asteroids:
       try:
-         this_asteroid = get_asteroid(utdt, a)
+         this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location)
       except:
          continue # skip
       mag = this_asteroid['observe']['apparent_mag'] 

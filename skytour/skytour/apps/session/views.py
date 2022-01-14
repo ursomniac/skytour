@@ -1,9 +1,12 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic.edit import FormView
 from ..observe.models import ObservingLocation
 from .forms import ObservingSessionForm
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
+@method_decorator(cache_page(0), name='dispatch')
 class ObservingSessionView(FormView):
     form_class = ObservingSessionForm
     template_name = 'observing_session.html'
@@ -12,8 +15,6 @@ class ObservingSessionView(FormView):
     def get_initial(self):
         initial = super().get_initial()
         up = self.request.session['user_preferences']
-        #print("UP: ", up)
-        #print("INITIAL: ", initial)
         if up:
             initial = get_initial_from_cookie(up)
         return initial
@@ -34,7 +35,7 @@ class ObservingSessionView(FormView):
         context = self.get_context_data(**kwargs)
         context['has_plan'] = True
         d = context['plan'] = get_plan(form)
-        # Set cookies here?
+        # Set cookies
         self.request.session['user_preferences'] = dict(
             utdt_start=d['utdt_start'].isoformat(),
             utdt_end=d['utdt_end'].isoformat(),
@@ -56,4 +57,6 @@ class ObservingSessionView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionView, self).get_context_data(**kwargs)
+        # Reset the form here?
+
         return context

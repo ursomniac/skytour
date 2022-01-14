@@ -3,15 +3,16 @@ import pytz
 from skyfield.api import wgs84, load
 from urllib.parse import urlencode
 from ..dso.models import DSO
+from ..observe.almanac import dark_time
+from ..observe.models import ObservingLocation
+from ..observe.time import get_julian_date, get_t_epoch
+from ..solar_system.asteroids import get_all_asteroids
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import get_sun
 from ..solar_system.vocabs import PLANETS
 from ..utils.format import to_sex
-from ..observe.almanac import dark_time
-from ..observe.models import ObservingLocation
-from ..observe.time import get_julian_date, get_t_epoch
 
 
 def get_plan(form, debug=False):
@@ -36,8 +37,10 @@ def get_plan(form, debug=False):
         context = form.cleaned_data
         location = ObservingLocation.objects.get(pk=context['location'].pk)
         ### Preliminaries
-        # This might or might not be a local time.
-        utdt_start = context['utdt_start'] = datetime.datetime.combine(context['date'], context['time']).replace(tzinfo=pytz.utc)
+        if context['set_to_now'] == 'Yes':
+            utdt_start = context['utdt_start'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        else:
+            utdt_start = context['utdt_start'] = datetime.datetime.combine(context['date'], context['time']).replace(tzinfo=pytz.utc)
         session_length = datetime.timedelta(hours=context['session_length'])
     utdt_end = context['utdt_end'] = utdt_start + session_length
     context['julian_date'] = get_julian_date(utdt_start)
@@ -84,13 +87,19 @@ def get_plan(form, debug=False):
     for k in PLANETS:
         pd = planet_data_dict[k]
         # RAD 12 Jan 2022 - don't get planet images to save time
-        go = False
         go = True if context['show_planets'] == 'all' or pd['session']['start']['is_up'] or pd['session']['end']['is_up'] else False
         pd['show_planet'] = go
         #if go:
         #    pd['view_image'] = create_planet_image(pd, utdt=utdt_start)
         planets.append(pd)
     context['planets'] = planets
+
+    ### Asteroids
+    asteroids = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+    for k, v in asteroids.items():
+        go = True if v['session']['start']['is_up'] or v['session']['end']['is_up'] else False
+        asteroids[k]['show_asteroid'] = go
+    context['asteroids'] = asteroids
 
     ### DSO List
     targets = {}
