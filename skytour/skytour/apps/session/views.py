@@ -6,17 +6,15 @@ from .forms import ObservingSessionForm
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
-@method_decorator(cache_page(0), name='dispatch')
+#@method_decorator(cache_page(0), name='dispatch')
 class ObservingSessionView(FormView):
     form_class = ObservingSessionForm
     template_name = 'observing_session.html'
     success_url = '/session/plan'  
 
     def get_initial(self):
-        initial = super().get_initial()
-        up = self.request.session['user_preferences']
-        if up:
-            initial = get_initial_from_cookie(up)
+        initial = super().get_initial() # needed since we override?
+        initial = get_initial_from_cookie(self.request, initial)
         return initial
 
     def get(self, request, *args, **kwargs):

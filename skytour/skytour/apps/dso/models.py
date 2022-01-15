@@ -1,18 +1,10 @@
-import numpy as np
-import datetime
-import pytz
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
-from matplotlib import pyplot as plt
-from matplotlib.collections import LineCollection
-from skyfield.api import Star, load
-from skyfield.data import hipparcos, mpc, stellarium
-from skyfield.projections import build_stereographic_projection
+from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..utils.transform import get_alt_az
-from ..stars.models import BrightStar
 from ..utils.models import (
     Coordinates,
     ObjectImage,
@@ -238,6 +230,7 @@ class DSOImage(ObjectImage):
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
+
 
 class DSOObservation(ObservingLog):
     """

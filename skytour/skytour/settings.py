@@ -83,7 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'skytour.context_processors.get_global_items',
+                #'skytour.context_processors.get_global_items',
             ],
             'libraries': {
                 'skytour_filters': 'skytour.templatetags.skytour_filters',

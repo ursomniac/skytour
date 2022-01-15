@@ -1,7 +1,5 @@
-import datetime
-import pytz
+import datetime, pytz
 from skyfield.api import wgs84, load
-from urllib.parse import urlencode
 from ..dso.models import DSO
 from ..observe.almanac import dark_time
 from ..observe.models import ObservingLocation
@@ -12,8 +10,6 @@ from ..solar_system.plot import create_planet_image
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import get_sun
 from ..solar_system.vocabs import PLANETS
-from ..utils.format import to_sex
-
 
 def get_plan(form, debug=False):
     """
@@ -50,14 +46,6 @@ def get_plan(form, debug=False):
     context['location'] = location
     context['latitude'] = location.latitude   # degrees
     context['longitude'] = location.longitude # degrees, positive East (ugh)
-
-    # Create querystring for planet lookup, etc.
-    obs_params = dict(
-        utdt_start = utdt_start,
-        utdt_end = utdt_end,
-        location = location.pk
-    )
-    context['query_params'] = urlencode(obs_params)
 
     # Preliminaries
     context['ts'] = load.timescale()
