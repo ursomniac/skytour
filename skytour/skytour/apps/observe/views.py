@@ -14,7 +14,7 @@ class ObservingLocationListView(ListView):
         locations = ObservingLocation.objects.filter(travel_distance__lte=60)
         context['sqm_plot'] = make_location_plot(locations, 'sqm')
         context['brightness_plot'] = make_location_plot(locations, 'bright')
-        context['table_id'] = 'observing_table'
+        context['table_id'] = 'location_table'
         return context
 
 class ObservingLocationDetailView(DetailView):

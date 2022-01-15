@@ -1,29 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
 {{ year|date:"Y" }} Events
-
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Time UT</th>
-            <th>Type</th>
-            <th>Event</th>
-            <th>Objects</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for obj in object_list %}
-        <tr>
-            <td>{{ obj.date|date:"F j" }}</td>
-            <td>{{ obj.time|date:"H:i" }}</td>
-            <td>{{ obj.event_type }}</td>
-            <td>{{ obj.title }}</td>
-            <td>{{ obj.reference_list }}</td>
-        </tr>
-        {% endfor %}      
-    </tbody>
-</table>
-
-
+{% include 'inc_calendar_table.html' %}
 {% endblock %}

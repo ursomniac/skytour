@@ -16,6 +16,11 @@ class StateRegion(models.Model):
         _('Slug'),
         help_text = 'Put the abbreviation here.'
     )
+    marker = models.CharField (
+        _('Marker for Plot'),
+        max_length = 5,
+        default = 'o'
+    )
 
     def __str__(self):
         return self.name

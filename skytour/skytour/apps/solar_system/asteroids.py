@@ -85,7 +85,7 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
 
 def get_all_asteroids(utdt, mag_limit=10., utdt_end=None, location=None, debug=False):
    asteroids = Asteroid.objects.all()
-   asteroid_dict = {}
+   asteroid_list = []
    for a in asteroids:
       try:
          this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location)
@@ -93,11 +93,11 @@ def get_all_asteroids(utdt, mag_limit=10., utdt_end=None, location=None, debug=F
          continue # skip
       mag = this_asteroid['observe']['apparent_mag'] 
       if mag <= mag_limit:
-         asteroid_dict[a.slug] = this_asteroid
+         asteroid_list.append(this_asteroid)
       else:
          if debug:
             print ("{} is too faint {}".format(a, mag))
-   return asteroid_dict
+   return asteroid_list
       
 
 """

@@ -3,7 +3,15 @@
 {% block content %}
 <h1>Skytour</h1>
 
-<h2>Today</h2>
+<h2>Today: {{ utdt|date:"Y-M-d"}}</h2>
+
+{% if upcoming_events %}
+    {% with object_list=upcoming_events %}
+    {% include 'inc_calendar_table.html' %}
+    {% endwith %}
+{% else %}
+No upcoming events.
+{% endif %}
 
 <h3>Meteor Showers</h3>
 

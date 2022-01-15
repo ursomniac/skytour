@@ -1,3 +1,4 @@
+import datetime, pytz
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.edit import FormView
@@ -55,6 +56,5 @@ class ObservingSessionView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionView, self).get_context_data(**kwargs)
-        # Reset the form here?
-
+        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context

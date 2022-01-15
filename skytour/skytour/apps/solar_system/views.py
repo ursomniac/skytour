@@ -5,7 +5,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie
 
-from .asteroids import get_asteroid
+from .asteroids import get_asteroid, get_all_asteroids
 from .models import Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
@@ -108,6 +108,12 @@ class AsteroidListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AsteroidListView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+        # Replace after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+        context['asteroid_list'] = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
         return context
 
 class AsteroidDetailView(DetailView):

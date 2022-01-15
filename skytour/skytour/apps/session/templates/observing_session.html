@@ -47,6 +47,7 @@ summary::-webkit-details-marker {
 </style>
 
 <h1>Plan Observations</h1>
+<h2>Current UT: {{ now|date:"D Y-M-d H:i" }}</h2>
 <div class="plan_form">
     {% if form %}
     <form method="post">
@@ -108,7 +109,7 @@ summary::-webkit-details-marker {
 
 <a name="asteroids"></a>
   <h2>Bright Asteroids</h2>
-  {% for key, asteroid in plan.asteroids.items %}
+  {% for key, asteroid in plan.asteroids %}
     {% with object=asteroid object_type='asteroid' show_object=asteroid.show_asteroid %}{% include 'inc_object_header.html' %}{% endwith %}
     {% if asteroid.show_asteroid %}
       {% with asteroid as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
