@@ -7,7 +7,7 @@ from ..observe.local import get_observing_situation
 from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 from .models import Asteroid
-from .utils import get_angular_size, get_constellation, get_elongation
+from .utils import get_angular_size, get_constellation
 
 def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
    ts = load.timescale()
@@ -97,6 +97,8 @@ def get_all_asteroids(utdt, mag_limit=10., utdt_end=None, location=None, debug=F
       else:
          if debug:
             print ("{} is too faint {}".format(a, mag))
+   ### IDEA:
+   # Why not put these IDs in a cookie to speed things up
    return asteroid_list
       
 

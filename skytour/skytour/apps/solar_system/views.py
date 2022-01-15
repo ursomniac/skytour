@@ -113,7 +113,14 @@ class AsteroidListView(ListView):
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
-        context['asteroid_list'] = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+        # Skip re-calculating the asteroid list if we can avoid it...
+        if 'visible_asteroids' in context.keys():
+            context['asteroid_list'] = [
+                get_asteroid(utdt_start, x, utdt_end=utdt_end, location=location) 
+                for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+            ]
+        else:
+            context['asteroid_list'] = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
         return context
 
 class AsteroidDetailView(DetailView):

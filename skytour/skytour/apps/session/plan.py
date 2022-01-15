@@ -84,9 +84,9 @@ def get_plan(form, debug=False):
 
     ### Asteroids
     asteroids = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
-    for v in asteroids.items():
+    for v in asteroids:
         go = True if v['session']['start']['is_up'] or v['session']['end']['is_up'] else False
-        asteroids[k]['show_asteroid'] = go
+        v['show_asteroid'] = go
     context['asteroids'] = asteroids
 
     ### DSO List

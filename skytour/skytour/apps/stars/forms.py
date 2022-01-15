@@ -8,14 +8,11 @@ PRIORITY_CHOICES = [
 ]
 
 class SkyMapForm(forms.Form):
-    date = forms.DateField(initial=datetime.now)
-    time = forms.TimeField(initial='01:00')
-    location = forms.ModelChoiceField(
-        queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
-    )
     priority = forms.ChoiceField(
         choices = PRIORITY_CHOICES,
         initial = 2
     )
     mag_limit = forms.FloatField(initial=6.0)
+    show_dso = forms.ChoiceField()
+    
 

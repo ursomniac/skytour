@@ -8,7 +8,9 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
+from ..solar_system.asteroids import get_asteroid
 from ..solar_system.meteors import get_meteor_showers
+from ..solar_system.models import Asteroid
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
@@ -400,6 +402,31 @@ def map_planets(ax, this_planet, planets, earth, t, projection):
             horizontalalignment='center',
             color='fuchsia',
             fontsize=20
+        )
+    return ax
+
+def map_asteroids(ax, asteroid_list, utdt, projection, size=60, color='maroon', marker='o', alpha=0.8):
+    asteroids = Asteroid.objects.filter(slug__in=asteroid_list)
+    adict = { 'x': [], 'y': [], 'label': []}
+    for a in asteroids:
+        d = get_asteroid(utdt, a)
+        x, y = projection(d['target'])
+        adict['x'].append(x)
+        adict['y'].append(y)
+        adict['label'].append(a.number)
+    scatter = ax.scatter(
+        adict['x'], adict['y'], 
+        s=size, c=color, 
+        marker=marker, alpha=alpha
+    )
+    for x, y, z in zip(adict['x'], adict['y'], adict['label']):
+        ax.annotate(
+            z, xy=(x,y),
+            textcoords='offset points',
+            xytext=(0,-3),
+            horizontalalignment='center',
+            color='white',
+            fontsize=6
         )
     return ax
 

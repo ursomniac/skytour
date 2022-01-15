@@ -13,10 +13,10 @@ from ..solar_system.moon import get_moon
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
-def get_skymap(utdt, location, mag_limit=6, priority=2):
+def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None):
     """
     Create a full map of the sky for a given UTDT and location.
-    """
+    """ 
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     eph = load('de421.bsp')
@@ -63,6 +63,10 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
     )
     # Meteor Showers if active
     ax = map_meteor_showers(ax, utdt, earth, t, projection, size=250, color='#ffaa00')
+
+    # Asteroids
+    if asteroid_list:
+        ax = map_asteroids(ax, asteroid_list, utdt, projection)
 
     # Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
