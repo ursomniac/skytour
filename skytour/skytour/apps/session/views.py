@@ -3,13 +3,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from ..observe.time import get_julian_date
+from .cookie import deal_with_cookie
 from .forms import ObservingSessionForm
-
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
 @method_decorator(cache_page(0), name='dispatch')
-class ObservingSessionView(FormView):
+class SetSessionCookieView(FormView):
     form_class = ObservingSessionForm
     template_name = 'observing_session.html'
     success_url = '/session/plan'  
@@ -33,24 +34,24 @@ class ObservingSessionView(FormView):
 
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['has_plan'] = True
-        d = context['plan'] = get_plan(form)
-        # An idea - cache the asteroids so that we don't have to go looking for them again.
-        asteroid_list = d.get('asteroids', None)
-        asteroid_slugs = [x['slug'] for x in asteroid_list]
-        # Set cookies
-        self.request.session['user_preferences'] = dict(
-            utdt_start=d['utdt_start'].isoformat(),
-            utdt_end=d['utdt_end'].isoformat(),
+
+        d = form.cleaned_data
+        utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
+        utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
+
+        # Set primary cookies
+        context['cookie'] = self.request.session['user_preferences'] = dict(
+            utdt_start=utdt_start.isoformat(),
+            utdt_end=utdt_end.isoformat(),
             location = d['location'].pk,
-            t = d['t'],
+            julian_date = get_julian_date(utdt_start),
             dec_limit = d['dec_limit'],
             mag_limit = d['mag_limit'],
             hour_angle_range = d['hour_angle_range'],
             session_length = d['session_length'],
             show_planets = d['show_planets'],
-            visible_asteroids = asteroid_slugs
         )
+        context['completed'] = True
         return self.render_to_response(context)
             
     def form_invalid(self, form, **kwargs):
@@ -60,7 +61,7 @@ class ObservingSessionView(FormView):
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
-        context = super(ObservingSessionView, self).get_context_data(**kwargs)
+        context = super(SetSessionCookieView, self).get_context_data(**kwargs)
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context
 
@@ -69,4 +70,15 @@ class ObservingPlanView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
+        
+        # Update context from the session cookie
+        context = deal_with_cookie(self.request, context)
+        # Update context from the plan generator
+        context = get_plan(context)
+
+        # Update the cookie with the asteroids since we know this here.
+        asteroid_list = context.get('asteroids', None)
+        asteroid_slugs = [x['slug'] for x in asteroid_list]
+        self.request.session['user_preferences']['visible_asteroids'] = asteroid_slugs
+        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context

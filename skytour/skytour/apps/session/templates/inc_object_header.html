@@ -18,11 +18,11 @@
       </td>
       <td style="text-align: right; vertical-align: middle !important;">
         {% if object_type == 'asteroid' %}
-        <a href="{% url 'asteroid-detail' object.slug %}">Detail View</a>
+        <a href="{% url 'asteroid-detail' object.slug %}"><button>Detail View</button></a>
         {% elif object_type == 'planet' %}
-        <a href="{% url 'planet-detail' object.slug %}">Detail View</a>
+        <a href="{% url 'planet-detail' object.slug %}"><button>Detail View</button></a>
         {% else %}
-        <a href="{% url 'moon-detail' %}">Detail View</a>
+        <a href="{% url 'moon-detail' %}"><button>Detail View</button></a>
         {% endif %}
       </td>
     </tr>

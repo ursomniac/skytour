@@ -56,107 +56,24 @@ summary::-webkit-details-marker {
             {{ form.as_table }}
         </table>
         <br><input type="submit" value="Submit"/>
-        <br><small>This can take up to a minute to run.</small>
     </form>
     {% else %}
     There is no form!
     {% endif %}
 </div>
 
-{% if has_plan %}
-<table><tr>
-  <td>Jump to:</td>
-  <td><a href="#moon">Moon</a></td>
-    <td><a href="#planets">Planets</a></td>
-    <td><a href="#asteroids">Asteroids</a></td>
-    <td><a href="#dso">DSO</a></td>
-</tr></table>
-  <h2>Observing Plan</h2>
-
-  <table class="plan">
-      <tr>
-          <th>Session</th>
-          <th>Almanac</th>
-      </tr>
-      <tr>
-          <td>
-              Start: {{ plan.utdt_start|date:"D Y M d  H:i"}} UT<br/>
-              End: {{ plan.utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
-              Julian Date: {{ plan.julian_date|floatformat:5 }}
-          </td>
-          <td>
-              Twilight Ends: {{ plan.twilight_end|date:"D Y M d H:i" }} UT <br/>
-              Twilight Begins: {{ plan.twilight_begin|date:"D Y M d H:i" }} UT
-          </td>
-      </tr>
-  </table>
-
-<a name="moon"></a>
-  {% with object=plan.moon object_type='moon' show_object=plan.show_moon %}{% include 'inc_object_header.html' %}{% endwith %}
-  {% if plan.show_moon %}
-  {% with plan.moon as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
-  {% endif %}
-
-<a name="planets"></a>
-  <h2>Planets</h2>
-  {% for planet in plan.planets %}
-    {% with object=planet object_type='planet' show_object=planet.show_planet %}{% include 'inc_object_header.html' %}{% endwith %}
-    {% if planet.show_planet %}
-      {% with planet as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
-    {% endif %}
-    <br>
-  {% endfor %}
-
-<a name="asteroids"></a>
-  <h2>Bright Asteroids</h2>
-  {% for asteroid in plan.asteroids %}
-    {% with object=asteroid object_type='asteroid' show_object=asteroid.show_asteroid %}{% include 'inc_object_header.html' %}{% endwith %}
-    {% if asteroid.show_asteroid %}
-      {% with asteroid as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
-    {% endif %}
-    <br>
-  {% endfor %}
-
-<a name="dso"></a>
-  <h2>DSO Targets</h2>
-  <details>
-    <summary>
-      <h3>Highest Priority ({{ plan.dso_targets.highest|length }} DSOs)</h3>
-      <span class="icon">👇</span>
-    </summary>
-    {% with dso_list=plan.dso_targets.highest table_id='highest-dsos' %}
-    {% include 'includes/dso_table.html' %}
-    {% endwith %}
-  </details>
-
-  <details>
-    <summary>
-      <h3>High Priority ({{ plan.dso_targets.high|length }} DSOs)</h3>
-      <span class="icon">👇</span>
-    </summary>
-    {% with dso_list=plan.dso_targets.high table_id='high-dsos' %}
-    {% include 'includes/dso_table.html' %}
-    {% endwith %}
-  </details>
-
-  <details>
-    <summary>
-    <h3>Medium Priority ({{ plan.dso_targets.medium|length }} DSOs)</h3>
-    <span class="icon">👇</span>
-    </summary>
-    {% with dso_list=plan.dso_targets.medium table_id='medium-dsos' %}
-    {% include 'includes/dso_table.html' %}
-    {% endwith %}
-  </details>
-
-  <details>
-    <summary>
-    <h3>Low Priority ({{ plan.dso_targets.low|length }} DSOs)</h3>
-    <span class="icon">👇</span>
-    </summary>
-    {% with dso_list=plan.dso_targets.low table_id='low-dsos' %}
-    {% include 'includes/dso_table.html' %}
-    {% endwith %}
-  </details>
+{% if completed %}
+<h2>Session Cookie Updated</h2>
+<table class='half-width'>
+  <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
+  <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
+  <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
+  <tr><td>Mag. Limit:</td><td>{{ cookie.mag_limit }}</td></tr>
+  <tr><td>HR Range:</td><td>{{ cookie.hour_angle_range }}</td></tr>
+  <tr><td>Session Length:</td><td>{{ cookie.session_length }}</td></tr>
+  <tr><td>Show Planets:</td><td>{{ cookie.show_planets }}</td></tr>
+  </tr>
+</table>
 {% endif %}
+
 {% endblock %}

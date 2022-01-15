@@ -1,8 +1,10 @@
 from django.urls import path
 from .views import (
-    ObservingSessionView,
+    ObservingPlanView,
+    SetSessionCookieView
 )
 
 urlpatterns = (
-    path('', ObservingSessionView.as_view(), name='observing-session'),
+    path('', SetSessionCookieView.as_view(), name='session-set'),
+    path('plan', ObservingPlanView.as_view(), name='observing-plan')
 )
