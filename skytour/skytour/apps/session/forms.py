@@ -20,4 +20,6 @@ class ObservingSessionForm(forms.Form):
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial='visible')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
     poll_asteroids = forms.ChoiceField(choices=YES_NO, initial='No')
+
+
     
