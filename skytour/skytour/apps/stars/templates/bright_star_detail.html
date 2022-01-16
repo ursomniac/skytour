@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}{{ object.name }}: Skytour{% endblock %}
 {% block content %}
 <H1>HR {{ object.hr_id }} {% if object.name %} = {{ object.name }}{% endif %}</H1>
 <h2>Other Catalogs</h2>

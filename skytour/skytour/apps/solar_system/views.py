@@ -58,15 +58,25 @@ class PlanetDetailView(DetailView):
                 utdt=utdt_start,  
                 flipped=flipped
             )
+            
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
+        other_asteroids = None
+        if 'visible_asteroids' in context.keys():
+            print ("ASTEROIDS: ", context['visible_asteroids'])
+            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
+        else:
+            print ("NO ASTEROIDS")
+            
         context['finder_chart'] = create_planet_image(
             pdict, 
             utdt=utdt_start, 
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
-            other_planets=planets
+            other_planets=planets,
+            other_asteroids=other_asteroids
         )
         context['planet_map'] = None
         if obj.planet_map is not None: # Mars, Jupiter
@@ -137,12 +147,20 @@ class AsteroidDetailView(DetailView):
         utdt_end = context['utdt_end']
         location = context['location']
         context['asteroid'] = data = get_asteroid(utdt_start, object, utdt_end=utdt_end, location=location)
+        other_planets = get_all_planets(utdt_start)
+        other_asteroids = None
+        if 'visible_asteroids' in context.keys():
+            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+            alist.exclude(object)
+            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
         fov = 10.
         #mag_limit = data['observe']['apparent_mag'] + 0.5
         mag_limit = 10
         context['finder_chart'] = create_planet_image(
             data, 
             utdt=utdt_start, 
+            other_asteroids=other_asteroids,
+            other_planets=other_planets,
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 

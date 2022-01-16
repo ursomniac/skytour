@@ -8,7 +8,7 @@
     button { width: 10em; }
 </style>
 {% endblock styles %}
-
+{% block title %}{{ planet.name }}: Skytour{% endblock %}
 {% block content %}
 <table>
     <tr>
@@ -94,11 +94,13 @@
         <td width="50%" colspan=2>
             <div style="padding-left: 20px; margin-top:0">
                 <img src="{{ view_image }}">
+                {% comment %}
                 <br>
                 <small><i>
                     ID above + = moon behind planet in orbit; 
                     ID below + = moon in front of planet in orbit
                 </i></small>
+                {% endcomment %}
             </div>
         </td>
     </tr>

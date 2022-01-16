@@ -443,13 +443,15 @@ def map_asteroids(ax, asteroid_list, utdt, projection, center=None, size=60, col
         marker=marker, alpha=alpha
     )
     for x, y, z in zip(adict['x'], adict['y'], adict['label']):
+        fsize = 6 if len(str(z)) <= 2 else 5
+        dy = -3 if len(str(z)) <=2 else -2
         ax.annotate(
             z, xy=(x,y),
             textcoords='offset points',
-            xytext=(0,-3),
+            xytext=(0,dy),
             horizontalalignment='center',
             color='white',
-            fontsize=6
+            fontsize=fsize
         )
     return ax, interesting
 

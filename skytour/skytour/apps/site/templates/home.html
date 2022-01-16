@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-
+{% block title %}Skytour: {{ utdt|date:"Y-M-d" }}
 {% block content %}
 <h1>Skytour</h1>
 
-<h2>Today: {{ utdt|date:"Y-M-d"}}</h2>
+<h2>Today: {{ utdt|date:"Y-M-d" }}</h2>
 
 {% if upcoming_events %}
     {% with object_list=upcoming_events %}

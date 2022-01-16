@@ -43,7 +43,7 @@
             
             {% if interesting.meteor_showers|length > 0 %}
             <h4>Meteor Showers</h4>
-                {% for shower in interesting.meteor_showers %}{{ shower.name }}{% endfor %}
+                {% for shower in interesting.meteor_showers %}{{ shower.name }}<br>{% endfor %}
             {% endif %}
             
         </td>
