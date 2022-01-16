@@ -56,7 +56,7 @@ def get_target_asteroids():
 
         # let beta = 0 which makes phi_1 and phi_2 = 1.
         mag = h + 5 * math.log10(tq * q)
-        if mag >= 11.:
+        if mag >= 12.:
             continue
       
 

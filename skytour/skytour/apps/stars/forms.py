@@ -14,5 +14,3 @@ class SkyMapForm(forms.Form):
     )
     mag_limit = forms.FloatField(initial=6.0)
     show_dso = forms.ChoiceField()
-    
-

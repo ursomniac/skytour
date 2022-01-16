@@ -3,9 +3,8 @@ from dateutil.parser import parse as parse_to_datetime
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie
-
-from .asteroids import get_asteroid, get_all_asteroids
+from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
+from .asteroids import get_asteroid, get_visible_asteroids
 from .models import Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
@@ -109,10 +108,12 @@ class AsteroidListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AsteroidListView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
+
         # Replace after testing
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
+
         # Skip re-calculating the asteroid list if we can avoid it...
         if 'visible_asteroids' in context.keys():
             context['asteroid_list'] = [
@@ -120,7 +121,8 @@ class AsteroidListView(ListView):
                 for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
             ]
         else:
-            context['asteroid_list'] = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+            context['asteroid_list'] = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+            slugs = update_cookie_with_asteroids(self.request, context['asteroid_list'])
         return context
 
 class AsteroidDetailView(DetailView):

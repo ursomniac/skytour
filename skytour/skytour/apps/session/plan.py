@@ -2,7 +2,7 @@ from skyfield.api import wgs84, load
 from ..dso.models import DSO
 from ..observe.almanac import dark_time
 from ..observe.time import get_julian_date, get_t_epoch
-from ..solar_system.asteroids import get_all_asteroids
+from ..solar_system.asteroids import get_visible_asteroids
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
 from ..solar_system.planets import get_all_planets
@@ -65,7 +65,7 @@ def get_plan(context, debug=False):
     context['planets'] = planets
 
     ### Asteroids
-    asteroids = get_all_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+    asteroids = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
     for v in asteroids:
         go = True if v['session']['start']['is_up'] or v['session']['end']['is_up'] else False
         v['show_asteroid'] = go

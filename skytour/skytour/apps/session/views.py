@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from ..observe.time import get_julian_date
-from .cookie import deal_with_cookie
+from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingSessionForm
 from .plan import get_plan
 from .utils import get_initial_from_cookie
@@ -36,7 +36,10 @@ class SetSessionCookieView(FormView):
         context = self.get_context_data(**kwargs)
 
         d = form.cleaned_data
-        utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
+        if d['set_to_now'] == 'Yes':
+            utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        else:
+            utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
         utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
 
         # Set primary cookies
@@ -65,6 +68,7 @@ class SetSessionCookieView(FormView):
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context
 
+@method_decorator(cache_page(0), name='dispatch')
 class ObservingPlanView(TemplateView):
     template_name = 'observing_plan.html'
 
@@ -77,8 +81,6 @@ class ObservingPlanView(TemplateView):
         context = get_plan(context)
 
         # Update the cookie with the asteroids since we know this here.
-        asteroid_list = context.get('asteroids', None)
-        asteroid_slugs = [x['slug'] for x in asteroid_list]
-        self.request.session['user_preferences']['visible_asteroids'] = asteroid_slugs
+        slugs = update_cookie_with_asteroids(self.request, context.get('asteroids', None))
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context

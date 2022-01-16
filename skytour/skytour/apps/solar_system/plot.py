@@ -73,10 +73,10 @@ def create_planet_image(
 
         # Add planet symbols (Unicode)
         if other_planets:
-            ax = map_planets(ax, name, other_planets, earth, t, projection)
+            ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
 
         # Add DSOs
-        ax = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection)
 
     # OR put up a telescopic view of the planet with moons, or phases
     else:
@@ -105,7 +105,7 @@ def create_planet_image(
 
     # Add planet symbols (Unicode)
     if other_planets:
-        ax = map_planets(ax, name, other_planets, earth, t, projection)
+        ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.
@@ -240,7 +240,7 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit)
     # Add DSOs
     if dsos:
-        ax = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection)
     
     angle = np.pi - fov / 360.0 * np.pi
     limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))

@@ -12,21 +12,20 @@
     <tr>
         <td width="25%">
             <h1> {{ object.name }}</h1> 
-            in {{ asteroid.observe.constellation.name }}
+            <h2> Currently in {{ asteroid.observe.constellation.name }}</h2>
+            Class: {{ object.classification }}<br>
+            Diameter: {{ object.diameter }} km<br>
+            Discovered: {{ object.year_of_discovery }}
         </td>
-        <td width="50%">
-            <form method="GET">
-            {{ form.as_p }}
-            <input type="submit" value="Submit"/>
-            <button><a href="{% url 'asteroid-detail' object.slug %}">Now</a></button>
-            </form>
-            <small>Express date/time in UT.</small><br/>
+        <td width="35%">
+            {% if object.image %}
+            <img src="{{ object.image.url }}">
+            {% else %}
+            (No image)
+            {% endif %}
         </td>
-        <td>
-        {% if FOO_object.description %}
-        <h3>Description</h3>
-        <p>{{ object.description }}</p>
-        {% endif %}
+        <td width="40%">
+            <p>{{ object.description }}</p>
         </td>
     </tr>
 </table>

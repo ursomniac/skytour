@@ -20,7 +20,8 @@ def get_cookie_defaults():
         hour_angle_range = 3.5, # TODO: Set this in the Admin!
         show_planets = 'visible', # TODO: Set this in the Admin!
         julian_date = julian_date,
-        t = t
+        t = t,
+        visible_asteroids = []
     )
     return cookie_dict
 
@@ -38,3 +39,15 @@ def deal_with_cookie(request, context):
     context['utdt_end'] = isoparse(cookie['utdt_end'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
     return context
+
+def update_cookie_with_asteroids(request, asteroid_list):
+    """ 
+    for some reason this runs but doesn't update the cookie .
+    TODO: fix this...
+    """
+    if len(asteroid_list) > 0:
+        asteroid_slugs = [x['slug'] for x in asteroid_list]
+        request.session['user_preferences']['visible_asteroids'] = asteroid_slugs
+        foo = request.session.get('user_preferences', None)
+        return asteroid_slugs
+    return None

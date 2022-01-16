@@ -83,8 +83,11 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
       earth_sun_distance  = rr
    )
 
-def get_all_asteroids(utdt, mag_limit=10., utdt_end=None, location=None, debug=False):
-   asteroids = Asteroid.objects.all()
+def get_visible_asteroids(utdt, mag_limit=10., cutoff=9., utdt_end=None, location=None, debug=False):
+   """
+   Cutoff is a winnowing of asteroids that NEVER get brighter than that.
+   """
+   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
    asteroid_list = []
    for a in asteroids:
       try:

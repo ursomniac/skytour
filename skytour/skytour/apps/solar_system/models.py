@@ -201,6 +201,11 @@ class Asteroid(models.Model):
         help_text = 'slope parameter'
     )
 
+    est_brightest = models.FloatField (
+        _('Estimated Brightest'),
+        null = True, blank = True
+    )
+
     @property
     def mpc_lookup_designation(self):
         return "({}) {}".format(self.pk, self.name)
