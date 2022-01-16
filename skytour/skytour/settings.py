@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'skytour.apps.observe',
     'skytour.apps.session',
     'skytour.apps.site',
+    'skytour.apps.site_parameter',
     'skytour.apps.solar_system',
     'skytour.apps.stars',
     'skytour.apps.utils',
