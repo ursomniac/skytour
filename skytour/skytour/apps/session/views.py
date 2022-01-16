@@ -4,6 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from ..observe.time import get_julian_date
+from ..solar_system.asteroids import get_visible_asteroids
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingSessionForm
 from .plan import get_plan
@@ -42,6 +43,10 @@ class SetSessionCookieView(FormView):
             utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
         utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
 
+        visible_asteroids = None
+        if d['poll_asteroids'] == 'Yes':
+            visible_asteroids = get_visible_asteroids(utdt_start)
+            
         # Set primary cookies
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start=utdt_start.isoformat(),
@@ -53,6 +58,7 @@ class SetSessionCookieView(FormView):
             hour_angle_range = d['hour_angle_range'],
             session_length = d['session_length'],
             show_planets = d['show_planets'],
+            visible_asteroids = None
         )
         context['completed'] = True
         return self.render_to_response(context)

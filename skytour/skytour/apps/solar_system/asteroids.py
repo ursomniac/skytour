@@ -100,8 +100,6 @@ def get_visible_asteroids(utdt, mag_limit=10., cutoff=9., utdt_end=None, locatio
       else:
          if debug:
             print ("{} is too faint {}".format(a, mag))
-   ### IDEA:
-   # Why not put these IDs in a cookie to speed things up
    return asteroid_list
       
 
