@@ -27,7 +27,7 @@
         {% endif %}
         <td>{{ dso.ra_text }}</td>
         <td>{{ dso.dec_text }}</td>
-        <td>{{ dso.magnitude }}</td>
+        <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.angular_size }}</td>
         {% if not hide_priority %}
         <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.priority }}</a></td>

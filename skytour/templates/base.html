@@ -22,10 +22,13 @@
 {% block content %}{% endblock content %}
 {% block footer  %}
 <footer>
-<p>
-© 2022 - Skepsis Interplanetary  
-<br> UP: {{ user_preferences }}
-</p>
+<div class="footer">
+	<br clear="all"/>
+	<p>
+	© 2022 - Skepsis Interplanetary
+	{% comment %}<br> UP: {{ user_preferences }}{% endcomment%}
+	</p>
+</div>
 </footer>
 {% endblock footer  %}
 <script>

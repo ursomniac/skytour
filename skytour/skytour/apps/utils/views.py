@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import Constellation, Catalog, ObjectType
 from ..dso.models import DSO, DSOAlias
+from ..stars.models import BrightStar
 
 def try_int(x):
     try:
@@ -39,6 +40,7 @@ class ConstellationDetailView(DetailView):
         context['dso_list'] = DSO.objects.filter(constellation=object)
         context['table_id'] = 'dso_table'
         context['hide_constellation'] = True
+        context['bright_stars'] = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
         return context
 
 class CatalogDetailView(DetailView):

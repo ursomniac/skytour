@@ -83,6 +83,16 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
       earth_sun_distance  = rr
    )
 
+def assemble_asteroid_list(utdt, slugs=None):
+   if not slugs:
+      return None
+   objects = Asteroid.objects.filter(slug__in=slugs)
+   alist = []
+   for o in objects:
+      a = get_asteroid(utdt, o)
+      alist.append(a)
+   return alist
+   
 def get_visible_asteroids(utdt, mag_limit=10., cutoff=9., utdt_end=None, location=None, debug=False):
    """
    Cutoff is a winnowing of asteroids that NEVER get brighter than that.

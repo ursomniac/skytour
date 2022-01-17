@@ -150,8 +150,7 @@ class AsteroidDetailView(DetailView):
         other_planets = get_all_planets(utdt_start)
         other_asteroids = None
         if 'visible_asteroids' in context.keys():
-            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
-            alist.exclude(object)
+            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
             other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
         fov = 10.
         #mag_limit = data['observe']['apparent_mag'] + 0.5

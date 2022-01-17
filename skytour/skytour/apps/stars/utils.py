@@ -16,7 +16,6 @@ GREEK = {
     'Nu': '\\nu', 'Omi': 'o', 'Xi': '\\xi', 'Pi': '\\pi', 
     'Rho': '\\rho', 'Sig': '\\sigma', 'Tau': '\\tau', 'Ups': '\\upsilon', 
     'Chi': '\\chi', 'Phi': '\\phi', 'Psi': '\\psi', 'Ome': '\\omega'
-
 }
 
 def parse_designation(str):
@@ -35,4 +34,3 @@ def parse_designation(str):
         return "${}$".format(x)
     else:
         return str
-    

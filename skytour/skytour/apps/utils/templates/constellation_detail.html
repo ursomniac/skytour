@@ -1,8 +1,53 @@
 {% extends "base.html" %}
+{% load skytour_filters humanize %}
 {% block title %}{{ object.name }}{% endblock %}
 {% block content %}
-<!-- main -->
-{# header section #}
+<style>
+    td { padding: 0 10px 0 10px; }
+    td.number { text-align: right; }
+</style>
 <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+<p><i>{{ object.genitive }}</i></p>
+<table>
+    <tr>
+        <td style="text-align:center;" width="80%">
+            <img src="/media/{{ object.map }}">
+            {% if object.other_map %}<img src="/media/{{ object.other_map }}">{% endif %}
+        </td>
+        <td>
+            {{ object.background|safe }}
+        </td>
+</table>
+<h2>DSOs</h2>
 {% include 'includes/dso_table.html' %}
+
+<h2>Bright Stars</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>HR</th>
+            <th>HD</th>
+            <th>&alpha;</th>
+            <th>&delta;</th>
+            <th>Mag</th>
+            <th>Spectral Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for star in bright_stars %}
+        <tr>
+            <td>{{ star.printable_name }}</td>
+            <td>{% if star.proper_name %}{{ star.proper_name }}{% endif %}</td>
+            <td class="number">{{ star.hr_id }}</td>
+            <td class="number">{{ star.hd_id }}</td>
+            <td>{{ star.ra|to_hms:1 }}</td>
+            <td>{{ star.dec|to_dms:0 }}</td>
+            <td>{{ star.magnitude|floatformat:2 }}</td>
+            <td>{{ star.spectral_type }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock content %}

@@ -6,6 +6,7 @@ class CatalogAdmin(admin.ModelAdmin):
 
 class ConstellationAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'abbreviation']
+    list_display_links = ['pk', 'name', 'abbreviation']
     search_fields = ['name', 'abbreviation']
 
 admin.site.register(Catalog, CatalogAdmin)

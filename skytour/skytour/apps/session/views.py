@@ -10,7 +10,7 @@ from .forms import ObservingSessionForm
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
-@method_decorator(cache_page(0), name='dispatch')
+#@method_decorator(cache_page(0), name='dispatch')
 class SetSessionCookieView(FormView):
     form_class = ObservingSessionForm
     template_name = 'observing_session.html'
@@ -45,8 +45,9 @@ class SetSessionCookieView(FormView):
 
         visible_asteroids = None
         if d['poll_asteroids'] == 'Yes':
-            visible_asteroids = get_visible_asteroids(utdt_start)
-            
+            asteroid_list = get_visible_asteroids(utdt_start)
+            visible_asteroids = [x['slug'] for x in asteroid_list]
+
         # Set primary cookies
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start=utdt_start.isoformat(),
@@ -58,7 +59,7 @@ class SetSessionCookieView(FormView):
             hour_angle_range = d['hour_angle_range'],
             session_length = d['session_length'],
             show_planets = d['show_planets'],
-            visible_asteroids = None
+            visible_asteroids = visible_asteroids
         )
         context['completed'] = True
         return self.render_to_response(context)

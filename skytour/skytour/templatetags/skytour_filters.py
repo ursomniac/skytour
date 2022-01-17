@@ -6,19 +6,20 @@ def dict_value(value, arg):
     return value.get(arg, None)
 
 @register.filter(name='to_hms')
-def to_hms(d):
+def to_hms(d, n=3):
     try:
         x = d % 24.
         h = int(x)
         x = (x - h) * 60.
         m = int(x)
         s = (x - m) * 60.
-        return "{:02d}h {:02d}m {:6.3f}s".format(h, m, s)
+        d = n + 3
+        return f"{h:02d}h {m:02d}m {s:0{d}.{n}f}s"
     except:
         return None
 
 @register.filter(name='dt_hms')
-def dt_hms(d):
+def dt_hms(d, n=3):
     """
     Allow negative times
     """
@@ -29,13 +30,14 @@ def dt_hms(d):
         x = (x-h) * 60.
         m = int(x)
         s = (x-m) * 60.
-        return "{}{:02d}h {:02d}m {:6.3f}s".format(sign, h, m, s)
+        w = n + 3
+        return f"{sign}{h:02d}h {m:02d}m {s:0{w}.{n}f}s"
     except:
         return None
 
 
 @register.filter(name='to_dms')
-def to_dms(d):
+def to_dms(d, n=3):
     try:
         x = abs(d)
         h = int(x)
@@ -43,7 +45,8 @@ def to_dms(d):
         m = int(x)
         s = (x - m) * 60.
         sign = '-' if d < 0 else '+'
-        return "{}{:3d}° {:02d}\' {:6.3f}\"".format(sign, h, m, s)
+        w = n + 3
+        return f"{sign}{h:3d}° {m:02d}\' {s:{w}.{n}f}\""
     except:
         return None
 
