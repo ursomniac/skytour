@@ -2,21 +2,30 @@
 
 {% block styles %}
 {% endblock styles %}
-
+{% block title %}Observable Asteroids: Skytour{% endblock %}
 {% block content %}
 <h2>Observable Asteroids</h2>
 <table>
     <thead>
         <tr>
-            <th>Number</th>
             <th>Name</th>
+            <th>Coordinates</th>
+            <th>Distance</th>
+            <th>Constellation</th>
+            <th>Magnitude</th>
         </tr>
     </thead>
     <tbody>
-        {% for object in object_list %}
+        {% for asteroid in asteroid_list %}
         <tr>
-            <td><a href="{% url 'asteroid-detail' object.slug %}">{{ object.number }}</a></td>
-            <td><a href="{% url 'asteroid-detail' object.slug %}">{{ object.name }}</a></td>
+            <td><a href="{% url 'asteroid-detail' asteroid.slug %}">{{ asteroid.name }}</a></td>
+            <td>
+                &alpha;: {{ asteroid.coords.ra_str }} &nbsp;
+                &delta;: {{ asteroid.coords.dec_str }}
+            </td>
+            <td>{{ asteroid.coords.distance.au|floatformat:2 }} AU</td>
+            <td>{{ asteroid.observe.constellation.name }}</td>
+            <td>{{ asteroid.observe.apparent_mag|floatformat:2 }}</td>
         </tr>
         {% endfor %}
     </tbody>

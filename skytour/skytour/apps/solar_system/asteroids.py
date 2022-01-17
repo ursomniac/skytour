@@ -7,7 +7,7 @@ from ..observe.local import get_observing_situation
 from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 from .models import Asteroid
-from .utils import get_angular_size, get_constellation, get_elongation
+from .utils import get_angular_size, get_constellation
 
 def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
    ts = load.timescale()
@@ -83,21 +83,34 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
       earth_sun_distance  = rr
    )
 
-def get_all_asteroids(utdt, mag_limit=10., debug=False):
-   asteroids = Asteroid.objects.all()
-   asteroid_dict = {}
+def assemble_asteroid_list(utdt, slugs=None):
+   if not slugs:
+      return None
+   objects = Asteroid.objects.filter(slug__in=slugs)
+   alist = []
+   for o in objects:
+      a = get_asteroid(utdt, o)
+      alist.append(a)
+   return alist
+   
+def get_visible_asteroids(utdt, mag_limit=10., cutoff=9., utdt_end=None, location=None, debug=False):
+   """
+   Cutoff is a winnowing of asteroids that NEVER get brighter than that.
+   """
+   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
+   asteroid_list = []
    for a in asteroids:
       try:
-         this_asteroid = get_asteroid(utdt, a)
+         this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location)
       except:
          continue # skip
       mag = this_asteroid['observe']['apparent_mag'] 
       if mag <= mag_limit:
-         asteroid_dict[a.slug] = this_asteroid
+         asteroid_list.append(this_asteroid)
       else:
          if debug:
             print ("{} is too faint {}".format(a, mag))
-   return asteroid_dict
+   return asteroid_list
       
 
 """

@@ -101,3 +101,54 @@ def load_bsc():
             star.notes = True
 
         star.save()
+
+def old_load_names():
+    with open('skytour/apps/stars/data/star_names.txt') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        if line[0] == '#':
+            continue # skip headers
+        if len(line) < 103:
+            continue # skip
+        hd = tr(line, 86, 6, 'int')
+        name = line[103:].title()
+        star = BrightStar.objects.filter(hd_id=hd).first()
+        if star:
+            star.proper_name = name
+            star.save()
+
+def load_names():
+    with open('skytour/apps/stars/data/star_names.tsv') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        star = None
+        if 'Bayer' in line:
+            continue # header
+        (star_id, constellation, other, name, explanation) = line.split('\t')[:5]
+        if len(star_id) == 0:
+            if 'HD' in other:
+                hd_id = other.split(' ')[1]
+                star = BrightStar.objects.filter(hd_id=int(hd_id)).first()
+                if not star:
+                    #print ("Can't find: HD: ", hd_id)
+                    continue # didn't find a match
+            else:
+                #print ("Skipping: ", other)
+                continue
+        else:
+            if not star_id[0].isdigit():  # Bayer
+                star = BrightStar.objects.filter(bayer=star_id, constellation=constellation).first()
+            else: # Flamsteed
+                star = BrightStar.objects.filter(flamsteed=star_id, constellation=constellation).first()
+        if not star:
+            #print("Can't find: ID:{} C:{}".format(star_id, constellation, other))
+            continue
+        # Have a star
+        star.proper_name = name
+        star.name_explanation = explanation
+        star.save()
+        
+            
+        

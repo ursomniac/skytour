@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'skytour.apps.misc',
     'skytour.apps.plotting',
     'skytour.apps.observe',
+    'skytour.apps.session',
     'skytour.apps.site',
+    'skytour.apps.site_parameter',
     'skytour.apps.solar_system',
     'skytour.apps.stars',
     'skytour.apps.utils',
@@ -82,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'skytour.context_processors.get_global_items',
             ],
             'libraries': {
                 'skytour_filters': 'skytour.templatetags.skytour_filters',
@@ -142,3 +145,5 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TIME_FORMAT = 'H:i'
+
+SESSION_COOKIE_AGE = 86400

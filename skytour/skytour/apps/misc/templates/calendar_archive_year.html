@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}{{ year|date:"Y" }} Events: Skytour{% endblock %}
+{% block content %}
+{{ year|date:"Y" }} Events
+{% include 'inc_calendar_table.html' %}
+{% endblock %}

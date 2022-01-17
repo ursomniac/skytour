@@ -194,6 +194,13 @@ class ObservingLocation(models.Model):
             return colors[self.status]
         return '#C69'
 
+    @property
+    def name_for_header(self):
+        x = "{}, {} {}".format(self.street_address, self.city, self.state)
+        if self.name:
+            x = "{}: ".format(self.name) + x
+        return x
+
     def get_absolute_url(self):
         return '/observing_location/{}'.format(self.pk)
 

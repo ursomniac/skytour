@@ -1,47 +1,14 @@
 import datetime, pytz
-import math
 from dateutil.parser import parse as parse_to_datetime
-from urllib.parse import urlencode
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, FormMixin
 from django.views.generic.list import ListView
-from ..observe.models import ObservingLocation
-from ..observe.time import get_julian_date
-from .asteroids import get_asteroid
-from .forms import ShowPlanetForm, ObservationDateForm
+from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
+from .asteroids import get_asteroid, get_visible_asteroids
 from .models import Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
-
-def _process_form(params):
-    initial = {}
-    if 'utdt_start' in params.keys(): # process the query string
-        if 'utdt_start' in params.keys():
-            utdt_start = parse_to_datetime(params['utdt_start']).replace(tzinfo=pytz.utc)
-        if 'utdt_end' in params.keys():
-            utdt_end = parse_to_datetime(params['utdt_end']).replace(tzinfo=pytz.utc)
-        if 'location' in params.keys():
-            loc_pk = params['location']
-        initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H:%M"), 'location': loc_pk}
-    elif 'date' in params.keys():  # Processing the form
-        utdt_start = parse_to_datetime(params['date'] + ' ' + params['time']).replace(tzinfo=pytz.utc)
-        utdt_end = utdt_start + datetime.timedelta(hours=3)
-        loc_pk = params['location']
-        initial = {'date': params['date'], 'time': params['time'], 'location': params['location']}
-    else:
-        utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        utdt_end = utdt_start + datetime.timedelta(hours=3)
-        loc_pk = 43
-        initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H:%M"), 'location': loc_pk}
-    obs_params = dict(
-        utdt_start = utdt_start,
-        utdt_end = utdt_end,
-        location = loc_pk
-    )
-    return obs_params, initial, urlencode(obs_params)
-
 
 class PlanetListView(ListView):
     model = Planet 
@@ -57,20 +24,15 @@ class PlanetListView(ListView):
 class PlanetDetailView(DetailView):
     model = Planet
     template_name = 'planet_detail.html'
-    form_class = ShowPlanetForm
-
 
     def get_context_data(self, **kwargs):
         context = super(PlanetDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
-        params = self.request.GET
-        obs_params, initial, context['query_params'] = _process_form(params)
-
-        # put it all together
-        context['utdt_start'] = utdt_start = obs_params['utdt_start']
-        context['utdt_end'] = utdt_end = obs_params['utdt_end']
-        context['julian_date'] = get_julian_date(utdt_start)
-        context['location'] = location = ObservingLocation.objects.get(pk=obs_params['location'])
+        context = deal_with_cookie(self.request, context) 
+        # Replace this after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
         planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
         pdict = context['planet'] = planets[obj.name]
         pdict['name'] = obj.name
@@ -96,20 +58,30 @@ class PlanetDetailView(DetailView):
                 utdt=utdt_start,  
                 flipped=flipped
             )
+            
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
+        other_asteroids = None
+        if 'visible_asteroids' in context.keys():
+            print ("ASTEROIDS: ", context['visible_asteroids'])
+            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
+        else:
+            print ("NO ASTEROIDS")
+            
         context['finder_chart'] = create_planet_image(
             pdict, 
             utdt=utdt_start, 
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
-            other_planets=planets
+            other_planets=planets,
+            other_asteroids=other_asteroids
         )
+        context['planet_map'] = None
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
-        context['form'] = ShowPlanetForm(initial=initial)
         return context
 
 class MoonDetailView(TemplateView):
@@ -117,34 +89,12 @@ class MoonDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MoonDetailView, self).get_context_data(**kwargs)
-        params = self.request.GET
-        if 'date' in params.keys():  # Processing the form
-            utdt_start = parse_to_datetime(params['date'] + ' ' + params['time']).replace(tzinfo=pytz.utc)
-            utdt_end = utdt_start + datetime.timedelta(hours=3)
-            loc_pk = params['location']
-            initial = {'date': params['date'], 'time': params['time'], 'location': params['location']}
-        else: # process the query string
-            if 'utdt_start' in params.keys():
-                utdt_start = parse_to_datetime(params['utdt_start'][0]).replace(tzinfo=pytz.utc)
-            else: 
-                utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-            if 'utdt_end' in params.keys():
-                utdt_end = parse_to_datetime(params['utdt_end'][0]).replace(tzinfo=pytz.utc)
-            else:
-                utdt_end = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-                utdt_end += datetime.timedelta(hours=3)
-            if 'location' in params.keys():
-                loc_pk = params['location'][0]
-            else:
-                loc_pk = 43
-            initial = {'date': utdt_start.strftime("%Y-%m-%d"), 'time': utdt_start.strftime("%H:%M"), 'location': loc_pk}
+        context = deal_with_cookie(self.request, context)
+        # Replace after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
 
-        # put it all together
-        context['is_moon'] = True
-        context['utdt_start'] = utdt_start
-        context['utdt_end'] = utdt_end
-        context['julian_date'] = get_julian_date(utdt_start)
-        context['location'] = location = ObservingLocation.objects.get(pk=loc_pk)
         planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
         pdict = context['planet'] = get_moon(utdt_start, utdt_end=utdt_end, location=location)
         pdict['name'] = 'Moon'
@@ -159,7 +109,6 @@ class MoonDetailView(TemplateView):
             finder_chart=True, 
             other_planets=planets
         )
-        context['form'] = ShowPlanetForm(initial=initial)
         return context
 
 class AsteroidListView(ListView):
@@ -168,6 +117,22 @@ class AsteroidListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AsteroidListView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+
+        # Replace after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+
+        # Skip re-calculating the asteroid list if we can avoid it...
+        if 'visible_asteroids' in context.keys():
+            context['asteroid_list'] = [
+                get_asteroid(utdt_start, x, utdt_end=utdt_end, location=location) 
+                for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+            ]
+        else:
+            context['asteroid_list'] = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+            slugs = update_cookie_with_asteroids(self.request, context['asteroid_list'])
         return context
 
 class AsteroidDetailView(DetailView):
@@ -177,25 +142,28 @@ class AsteroidDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
-        params = self.request.GET
-        obs_params, initial, context['query_params'] = _process_form(params)
-
-        context['utdt_start'] = utdt_start = obs_params['utdt_start']
-        context['utdt_end'] = utdt_end = obs_params['utdt_end']
-        context['julian_date'] = get_julian_date(utdt_start)
-        context['location'] = location = ObservingLocation.objects.get(pk=obs_params['location'])
+        context = deal_with_cookie(self.request, context)
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
         context['asteroid'] = data = get_asteroid(utdt_start, object, utdt_end=utdt_end, location=location)
+        other_planets = get_all_planets(utdt_start)
+        other_asteroids = None
+        if 'visible_asteroids' in context.keys():
+            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
+            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
         fov = 10.
         #mag_limit = data['observe']['apparent_mag'] + 0.5
         mag_limit = 10
         context['finder_chart'] = create_planet_image(
             data, 
             utdt=utdt_start, 
+            other_asteroids=other_asteroids,
+            other_planets=other_planets,
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
         )
-        context['form'] = ShowPlanetForm(initial=initial)
         return context
 
 ### These are still in development.
@@ -253,6 +221,5 @@ class OrreryView(TemplateView):
         context['planets'] = planets
         # Ugh this is from the Earth's perspective!  Oops!
         ### Use the distance, and ecliptic coordinates to plot the planets
-        context['form'] = ObservationDateForm(initial=initial)
         return context
 

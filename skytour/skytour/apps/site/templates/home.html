@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-
+{% block title %}Skytour: {{ utdt|date:"Y-M-d" }}{% endblock %}
 {% block content %}
 <h1>Skytour</h1>
 
-<table width="100%" class="indented navbar">
-    <tr>
-        <td><a href="{% url 'skymap-detail' %}">Generate SkyMap</a></td>
-        <td><a href="{% url 'observing-plan' %}">Plan Observations</a></td>
-    </tr>
-</table>
+<h2>Today: {{ utdt|date:"Y-M-d" }}</h2>
 
-<h2>Today</h2>
-
-UTDT: {{ utdt }}<br/>
+{% if upcoming_events %}
+    {% with object_list=upcoming_events %}
+    {% include 'inc_calendar_table.html' %}
+    {% endwith %}
+{% else %}
+No upcoming events.
+{% endif %}
 
 <h3>Meteor Showers</h3>
 

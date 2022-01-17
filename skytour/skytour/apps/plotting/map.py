@@ -8,10 +8,13 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
+from ..solar_system.asteroids import get_asteroid
 from ..solar_system.meteors import get_meteor_showers
+from ..solar_system.models import Asteroid
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
+from ..utils.astro import get_altitude
 
 matplotlib.use('Agg') # This gets around some of Matplotlib's oddities
 
@@ -321,7 +324,10 @@ def map_saturn_rings(ax, planet, t0):
     ax.add_patch(re2)
     return ax
 
-def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, color='black', alpha=1):
+def map_dsos(ax, earth, t, projection, 
+        center = None,
+        mag_limit=None, dso=None, priority=4, color='black', alpha=1
+    ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
 
@@ -343,7 +349,14 @@ def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, col
         other_dso_records = other_dso_records.exclude(priority='High')
 
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
+    interesting = []
     for other in other_dso_records:
+        if center:
+            sin_dist = get_altitude(center[0], center[1], other.ra, other.dec)
+            if sin_dist < 0:
+                continue
+            else:
+                interesting.append(other)
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)
         other_dsos['y'].append(y)
@@ -370,21 +383,28 @@ def map_dsos(ax, earth, t, projection, mag_limit=None, dso=None, priority=4, col
             annotation_clip = True,
             color=color
         )
-    return ax
+    return ax, interesting
 
 
-def map_planets(ax, this_planet, planets, earth, t, projection):
+def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
     """
     Sometimes, planets sneak into the finder charts, esp. close conjunctions!
     So, let's put in the other planets too.
     """
     d = {'x': [], 'y': [], 'marker': []}
     planet_labels = []
+    interesting = []
     for k,v in planets.items():
         if k == this_planet:
             continue
         ra = v['coords']['ra']
         dec = v['coords']['dec']
+        if center:
+            sin_dist = get_altitude(center[0], center[1], ra, dec)
+            if sin_dist < 0.: # skip the rest of processing.
+                continue
+            else:
+                interesting.append(v)
         x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         d['x'].append(x)
         d['y'].append(y)
@@ -401,7 +421,39 @@ def map_planets(ax, this_planet, planets, earth, t, projection):
             color='fuchsia',
             fontsize=20
         )
-    return ax
+    return ax, interesting
+
+def map_asteroids(ax, asteroid_list, utdt, projection, center=None, size=60, color='maroon', marker='o', alpha=0.8):
+    adict = { 'x': [], 'y': [], 'label': []}
+    interesting = []
+    for a in asteroid_list:
+        if center:
+            sin_dist = get_altitude(center[0], center[1], a['coords']['ra'], a['coords']['dec'])
+            if sin_dist < 0.:
+                continue # skip the rest of processing
+            else:
+                interesting.append(a)
+        x, y = projection(a['target'])
+        adict['x'].append(x)
+        adict['y'].append(y)
+        adict['label'].append(a['object'].number)
+    scatter = ax.scatter(
+        adict['x'], adict['y'], 
+        s=size, c=color, 
+        marker=marker, alpha=alpha
+    )
+    for x, y, z in zip(adict['x'], adict['y'], adict['label']):
+        fsize = 6 if len(str(z)) <= 2 else 5
+        dy = -3 if len(str(z)) <=2 else -2
+        ax.annotate(
+            z, xy=(x,y),
+            textcoords='offset points',
+            xytext=(0,dy),
+            horizontalalignment='center',
+            color='white',
+            fontsize=fsize
+        )
+    return ax, interesting
 
 def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
     """
@@ -429,16 +481,25 @@ def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
     )
     return ax
 
-def map_meteor_showers(ax, utdt, earth, t, projection, color='c', marker='x', size=150, alpha=1.0):
+def map_meteor_showers(ax, utdt, earth, t, projection, 
+        center=None,
+        color='c', marker='x', size=150, alpha=1.0):
     """
     Show meteor showers on the map with a big cyan X.
     """    
     active = get_meteor_showers(utdt=utdt)
     if len(active) == 0: # Nothing to do!
-        return ax
+        return ax, None
 
     d = {'x': [], 'y': [], 'label': [], 'marker': []}
+    interesting = []
     for a in active:
+        if center:
+            sin_dist = get_altitude(center[0], center[1], a.radiant_ra, a.radiant_dec)
+            if sin_dist < 0.:
+                continue
+            else:
+                interesting.append(a)
         x, y = projection(earth.at(t).observe(a.skyfield_object))
         d['x'].append(x)
         d['y'].append(y)
@@ -458,4 +519,4 @@ def map_meteor_showers(ax, utdt, earth, t, projection, color='c', marker='x', si
     #        annotation_clip = True,
     #        color=color
     #    )
-    return ax
+    return ax, interesting

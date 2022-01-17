@@ -11,7 +11,8 @@ class MeteorShowerAdmin(admin.ModelAdmin):
                 ('start_date', 'peak_date', 'end_date'),
                 ('radiant_ra', 'radiant_dec', 'longitude'),
                 ('speed', 'zhr', 'parent_body'),
-                'notes'
+                'notes',
+                'est_brightest'
             ]
         }),
     )
@@ -26,7 +27,8 @@ class PlanetAdmin(admin.ModelAdmin):
 
 class AsteroidAdmin(admin.ModelAdmin):
     model = Asteroid
-    list_display = ['number', 'name', 'diameter', 'h', 'g']
+    list_display = ['number', 'name', 'diameter', 'est_brightest', 'h']
+    list_display_links = ['number', 'name']
 
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)

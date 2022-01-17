@@ -20,7 +20,17 @@
 {% include 'includes/navbar.html' %}
 {% block header  %}{% endblock header  %}
 {% block content %}{% endblock content %}
-{% block footer  %}{% endblock footer  %}
+{% block footer  %}
+<footer>
+<div class="footer">
+	<br clear="all"/>
+	<p>
+	© 2022 - Skepsis Interplanetary
+	{% comment %}<br> UP: {{ user_preferences }}{% endcomment%}
+	</p>
+</div>
+</footer>
+{% endblock footer  %}
 <script>
 $( function() {
 	$( "#accordion" ).accordion({

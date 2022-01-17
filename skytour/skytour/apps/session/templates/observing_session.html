@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Set Date/Time: Skytour{% endblock %}
+{% block content %}
+<style>
+.plan td {
+    vertical-align: top;
+    padding: 1em;
+}
+table .inner {
+  border: 0;
+  padding: 0 0;
+}
+td {
+  border: 0; padding: 0 1em;
+}
+
+.td-center td {
+  vertical-align: middle;
+}
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+
+summary {
+  display: flex;
+  cursor: pointer;
+  background-color: #666;
+  color: #fff;
+  padding: 4px 10px;
+  margin: 0px 10px 20px 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+</style>
+
+<h1>Plan Observations</h1>
+<h2>Current UT: {{ now|date:"D Y-M-d H:i" }}</h2>
+<div class="plan_form">
+    {% if form %}
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+
+{% if completed %}
+<h2>Session Cookie Updated</h2>
+<table class='half-width'>
+  <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
+  <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
+  <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
+  <tr><td>Mag. Limit:</td><td>{{ cookie.mag_limit }}</td></tr>
+  <tr><td>HR Range:</td><td>{{ cookie.hour_angle_range }}</td></tr>
+  <tr><td>Session Length:</td><td>{{ cookie.session_length }}</td></tr>
+  <tr><td>Show Planets:</td><td>{{ cookie.show_planets }}</td></tr>
+  </tr>
+</table>
+{% endif %}
+  <br><br><br><br clear="all">
+  <hr>
+{% endblock %}

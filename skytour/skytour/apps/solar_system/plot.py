@@ -20,6 +20,7 @@ def create_planet_image(
         planet, # dict from get_solar_system_object() - can also be the Moon
         utdt, # UTDT 
         other_planets = None, # show other planets on finder chart
+        other_asteroids = None, # show other asteroids in finder chart
         fov=None, # force the FOV of the image
         min_sep = None,
         mag_limit=8.5, # faintest stars on plot
@@ -73,10 +74,10 @@ def create_planet_image(
 
         # Add planet symbols (Unicode)
         if other_planets:
-            ax = map_planets(ax, name, other_planets, earth, t, projection)
+            ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
 
         # Add DSOs
-        ax = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection)
 
     # OR put up a telescopic view of the planet with moons, or phases
     else:
@@ -105,7 +106,9 @@ def create_planet_image(
 
     # Add planet symbols (Unicode)
     if other_planets:
-        ax = map_planets(ax, name, other_planets, earth, t, projection)
+        ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
+    if other_asteroids:
+        ax, _ = map_asteroids(ax, other_asteroids, utdt, projection)
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.
@@ -138,6 +141,7 @@ def create_planet_image(
     else:
         ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
+
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
 
@@ -152,6 +156,8 @@ def create_planet_image(
     if flipped:
         title += " (flipped)"
     ax.set_title(title)
+    if not finder_chart:
+        plt.xlabel('ID above + = moon behind planet in orbit;\nID below + = moon in front of planet in orbit')
 
     # Convert to a PNG image
     pngImage = io.BytesIO()
@@ -240,7 +246,7 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit)
     # Add DSOs
     if dsos:
-        ax = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection)
     
     angle = np.pi - fov / 360.0 * np.pi
     limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))

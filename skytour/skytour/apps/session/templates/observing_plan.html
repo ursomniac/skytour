@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<style>
+.plan td {
+    vertical-align: top;
+    padding: 1em;
+}
+
+.td-center td {
+  vertical-align: middle;
+}
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+table.subnav { 
+	width: 80%; 
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #603; 
+}
+table.subnav td {
+	text-align: center; 
+	vertical-align: middle !important; 
+	padding: 5px !important;
+	border: 1px solid white !important; 
+}
+table.subnav td a {
+	color: #fff; 
+	font-weight: 800; 
+	text-decoration: none;
+}
+
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+
+summary {
+  display: flex;
+  cursor: pointer;
+  background-color: #666;
+  color: #fff;
+  padding: 4px 10px;
+  margin: 0px 10px 20px 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+td.normal {
+    background-color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    color: black;
+}
+</style>
+
+<h1>Plan Observations</h1>
+<h2>Current UT: {{ now|date:"D Y-M-d H:i" }}</h2>
+
+<table class="subnav">
+    <tr>
+    <td class="normal">Jump to:</td>
+    <td class="click"><a href="#moon">Moon</a></td>
+    <td class="click"><a href="#planets">Planets</a></td>
+    <td class="click"><a href="#asteroids">Asteroids</a></td>
+    <td class="click"><a href="#dso">DSO</a></td>
+    </tr>
+</table>
+
+  <h2>Observing Plan</h2>
+
+  <table class="plan">
+      <tr>
+          <th>Session</th>
+          <th>Almanac</th>
+      </tr>
+      <tr>
+          <td>
+              Start: {{ utdt_start|date:"D Y M d  H:i"}} UT<br/>
+              End: {{ utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
+              Julian Date: {{ julian_date|floatformat:5 }}
+          </td>
+          <td>
+              Twilight Ends: {{ twilight_end|date:"D Y M d H:i" }} UT <br/>
+              Twilight Begins: {{ twilight_begin|date:"D Y M d H:i" }} UT
+          </td>
+      </tr>
+  </table>
+
+<a name="moon"></a>
+  {% with object=moon object_type='moon' show_object=show_moon %}{% include 'inc_object_header.html' %}{% endwith %}
+  {% if show_moon %}
+  {% with moon as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+  {% endif %}
+
+<a name="planets"></a>
+  <h2>Planets</h2>
+  {% for planet in planets %}
+    {% with object=planet object_type='planet' show_object=planet.show_planet %}{% include 'inc_object_header.html' %}{% endwith %}
+    {% if planet.show_planet %}
+      {% with planet as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+    {% endif %}
+    <br>
+  {% endfor %}
+
+<a name="asteroids"></a>
+  <h2>Bright Asteroids</h2>
+  {% for asteroid in asteroids %}
+    {% with object=asteroid object_type='asteroid' show_object=asteroid.show_asteroid %}{% include 'inc_object_header.html' %}{% endwith %}
+    {% if asteroid.show_asteroid %}
+      {% with asteroid as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+    {% endif %}
+    <br>
+  {% endfor %}
+
+<a name="dso"></a>
+  <h2>DSO Targets</h2>
+  <details>
+    <summary>
+      <h3>Highest Priority ({{ dso_targets.highest|length }} DSOs)</h3>
+      <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=dso_targets.highest table_id='highest-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+      <h3>High Priority ({{ dso_targets.high|length }} DSOs)</h3>
+      <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=dso_targets.high table_id='high-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+    <h3>Medium Priority ({{ dso_targets.medium|length }} DSOs)</h3>
+    <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=dso_targets.medium table_id='medium-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+  <details>
+    <summary>
+    <h3>Low Priority ({{ dso_targets.low|length }} DSOs)</h3>
+    <span class="icon">👇</span>
+    </summary>
+    {% with dso_list=dso_targets.low table_id='low-dsos' %}
+    {% include 'includes/dso_table.html' %}
+    {% endwith %}
+  </details>
+
+{% endblock %}

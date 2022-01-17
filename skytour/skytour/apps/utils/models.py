@@ -97,6 +97,20 @@ class Constellation(models.Model):
         _('Genitive'),
         max_length = 80
     )
+    map = models.ImageField (
+        _('Map'),
+        upload_to = 'constellation_maps',
+        null=True, blank=True
+    ) 
+    other_map = models.ImageField ( # This ONLY exists because of Serpens
+        _('Map'),
+        upload_to = 'constellation_maps',
+        null=True, blank=True
+    )
+    background = models.TextField (
+        _('Background'),
+        null = True, blank = True
+    )
 
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)

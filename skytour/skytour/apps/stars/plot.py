@@ -13,10 +13,10 @@ from ..solar_system.moon import get_moon
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
-def get_skymap(utdt, location, mag_limit=6, priority=2):
+def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None):
     """
     Create a full map of the sky for a given UTDT and location.
-    """
+    """ 
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     eph = load('de421.bsp')
@@ -24,10 +24,13 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
     t0 = get_t_epoch(get_julian_date(utdt))
     last = get_last(utdt, location.longitude)
 
+    interesting = {}
     # At a given UTDT/latitude, the zenith point x, y is:
     #   x = the local sidereal time
     #   y = the location latitude
     zenith = earth.at(t).observe(Star(ra_hours=last, dec_degrees=location.latitude))
+    center_ra = last
+    center_dec = location.latitude
 
     # Start the plot
     fig, ax = plt.subplots(figsize=[12,12])
@@ -50,19 +53,24 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
    
     # planets
     planets = get_all_planets(utdt, location=location)
-    ax = map_planets(ax, None, planets, earth, t, projection)
+    ax, interesting['planets'] = map_planets(ax, None, planets, earth, t, projection, center=(center_ra, center_dec))
 
     # DSOs
     # Only show highest and high priority objects (2)
     # Limiting magnitude of 6.
-    ax = map_dsos(ax, earth, t, projection, 
+    ax, interesting['dsos'] = map_dsos(ax, earth, t, projection, 
+        center = (center_ra, center_dec),
         mag_limit=mag_limit, 
         alpha=0.7, 
         priority=priority,
         color='grey'
     )
     # Meteor Showers if active
-    ax = map_meteor_showers(ax, utdt, earth, t, projection, size=250, color='#ffaa00')
+    ax, interesting['meteor_showers'] = map_meteor_showers(ax, utdt, earth, t, projection, center=(center_ra, center_dec), size=250, color='#ffaa00')
+
+    # Asteroids
+    if asteroid_list:
+        ax, interesting['asteroids'] = map_asteroids(ax, asteroid_list, utdt, projection, center=(center_ra, center_dec))
 
     # Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
@@ -87,6 +95,7 @@ def get_skymap(utdt, location, mag_limit=6, priority=2):
     pngImageB64String = 'data:image/png;base64,'
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
     # close things
+    plt.tight_layout()
     plt.cla()
     plt.close(fig)
-    return pngImageB64String
+    return pngImageB64String, interesting

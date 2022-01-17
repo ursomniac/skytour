@@ -14,7 +14,6 @@ def get_meteor_showers(utdt=None):
         dstart = datetime.datetime(utdt.year, s.start_date.month, s.start_date.day)
         dend = datetime.datetime(utdt.year, s.end_date.month, s.end_date.day)
         if s.start_date.month == 12 and s.peak_date.month == 1: # quadrantids
-            print ("GOT HERE")
             if utdt.month == 12: # ends next year
                 dend = datetime.datetime(utdt.year+1, s.end_date.month, s.end_date.day)
             else: # started last year

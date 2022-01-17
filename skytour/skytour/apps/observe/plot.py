@@ -1,18 +1,16 @@
-
 from ..plotting.scatter import create_plot
 
 """
 This is the code to make the two scatter plots on the ObservingLocationList view
 """
 STATUS_COLOR = {
-	'Active': '#0C0',
+	'Active': '#090',
 	'Possible': '#0FF',
 	'Rejected': '#C00',
     'Provisional': '#099',
 	'TBD': '#CCC',
 	'Issues': '#FC0'
 }
-MARKER_MAP = {'NY': 'x', 'VT': 'v', 'MA': 'o'}
 
 def make_location_plot(
     obj_list, 
@@ -41,7 +39,7 @@ def make_location_plot(
         brightness.append(obj.brightness)
         distance.append(obj.travel_distance)
         colors.append(STATUS_COLOR[obj.status])
-        markers.append(MARKER_MAP[obj.state])
+        markers.append(obj.state.marker)
 
     if type == 'sqm':
         x = distance

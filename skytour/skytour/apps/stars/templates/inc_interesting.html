@@ -1,0 +1,16 @@
+
+<table>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td>
+                {% if url_type == 'dso-detail' %}
+                <a href="{% url url_type object.pk %}">{{ object.shown_name }}</a> {{ object.object_type }}
+                {% else %}
+                <a href="{% url url_type object.slug %}">{{ object.name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

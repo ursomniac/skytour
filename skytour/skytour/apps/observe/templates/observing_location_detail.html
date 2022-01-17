@@ -14,7 +14,7 @@
 	img.map_image { max-height: 400px; max-width: 400px; height: auto; width: auto;}
 </style>
 {% endblock styles %}
-
+{% block title %}Location: {{ object.street_address}} {{ object.city }}: Skytour{% endblock %}
 {% block content %}
 <table>
 <tr>

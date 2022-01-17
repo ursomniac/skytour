@@ -8,7 +8,7 @@
     button { width: 10em; }
 </style>
 {% endblock styles %}
-
+{% block title %}{{ planet.name }}: Skytour{% endblock %}
 {% block content %}
 <table>
     <tr>
@@ -17,8 +17,9 @@
             in {{ planet.observe.constellation.name }}
         </td>
         <td width="50%">
+            {% comment %}
             <form method="GET">
-            {{ form.as_p }}
+            {# form.as_p #}
             <input type="submit" value="Submit"/>
             {% if is_moon %}
             <button><a href="{% url 'moon-detail' %}">Now</a></button>
@@ -27,21 +28,21 @@
             {% endif %}
             </form>
             <small>Express date/time in UT.</small><br/>
+            {% endcomment %}
         </td>
         <td>
             <h2>Solar System</h2>
-            <a href="{% url 'planet-detail' 'mercury' %}?{{ query_params }}">  <button>Mercury</button></a>
-            <a href="{% url 'planet-detail' 'saturn' %}?{{ query_params }}">   <button>Saturn</button></a><br>
-            <a href="{% url 'planet-detail' 'venus' %}?{{ query_params }}">    <button>Venus</button></a>
-            <a href="{% url 'planet-detail' 'uranus' %}?{{ query_params }}">   <button>Uranus</button></a><br>
-            <a href="{% url 'planet-detail' 'mars' %}?{{ query_params }}">     <button>Mars</button></a>
-            <a href="{% url 'planet-detail' 'neptune' %}?{{ query_params }}">  <button>Neptune</button></a><br>
-            <a href="{% url 'planet-detail' 'jupiter' %}?{{ query_params }}">  <button>Jupiter</button></a>
-            <a href="{% url 'moon-detail' %}?{{ query_params }}">              <button>Moon</button></a>
+            <a href="{% url 'planet-detail' 'mercury' %}">  <button>Mercury</button></a>
+            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a><br>
+            <a href="{% url 'planet-detail' 'venus' %}">    <button>Venus</button></a>
+            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
+            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
+            <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
+            <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
+            <a href="{% url 'moon-detail' %}">              <button>Moon</button></a>
         </td>
     </tr>
 </table>
-<br/>
 
 <table>
     <thead>
@@ -91,20 +92,26 @@
             <img src="{{ finder_chart }}">
         </td>
         <td width="50%" colspan=2>
-            <img src="{{ view_image }}">
-            <br>
-            <div style="padding-left: 20px; margin-top:0"><small><i>
-                ID above + = moon behind planet in orbit; 
-                ID below + = moon in front of planet in orbit
-            </i></small></div>
+            <div style="padding-left: 20px; margin-top:0">
+                <img src="{{ view_image }}">
+                {% comment %}
+                <br>
+                <small><i>
+                    ID above + = moon behind planet in orbit; 
+                    ID below + = moon in front of planet in orbit
+                </i></small>
+                {% endcomment %}
+            </div>
         </td>
     </tr>
+    {% if planet_map %}
     <tr>
         <td width="100%" colspan=4>
             <h4>Map</h4>
             <img src="{{ planet_map }}" style="margin:auto;">
         </td>
     </tr>
+    {% endif %}
     
     {% if planet.physical.features %}
     <tr>

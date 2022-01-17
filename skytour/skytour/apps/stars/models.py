@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from numpy import True_
 from skyfield.api import Star
@@ -8,6 +9,7 @@ from ..utils.models import (
     Constellation
 ) 
 from .utils import create_star_name, parse_designation
+from .vocabs import ENTITY
 
 class DoubleStar(Coordinates):
     constellation = models.ForeignKey (Constellation, 
@@ -88,8 +90,10 @@ class BrightStar(Coordinates):
     d_mag = models.FloatField(_('d Mag (double)'), null=True, blank=True)
     ang_sep = models.FloatField(_('Ang. Sep.'), null=True, blank=True)
     notes = models.BooleanField(_('Notes'), default=False)
+
     name = models.CharField(_('Name'), max_length=40, null=True, blank=True )
-    
+    proper_name = models.CharField(_('Proper Name'), max_length=100, null=True, blank=True)
+    name_explanation = models.TextField(_('Name Explanation'), null=True, blank=True)
 
     @property
     def skyfield_object(self):
@@ -105,6 +109,23 @@ class BrightStar(Coordinates):
         # else it has a letter or a greek letter and possibly a number
         return parse_designation(first)
 
+    @property
+    def printable_name(self):
+        constellation = self.constellation
+        if self.bayer:
+            if self.bayer[-1].isdigit(): # there's a number
+                grk = self.bayer[:-1].rstrip()
+                num = self.bayer[-1]
+                name = ENTITY[grk] + "<sup>{}</sup>".format(num) + " {}".format(constellation)
+            else:
+                name = ENTITY[self.bayer] + " {}".format(constellation)
+
+        elif self.flamsteed:
+            name = "{} {}".format(self.flamsteed, constellation)
+        else:
+            name = "HD "+str(self.hd_id)
+        return mark_safe(name)
+
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
         self.dec = self.dec_float # get from property
@@ -112,3 +133,9 @@ class BrightStar(Coordinates):
         self.dec_text = self.format_dec # get from property
         self.name = create_star_name(self)
         super(BrightStar, self).save(*args, **kwargs)
+
+    def __str__(self):
+        name = self.printable_name
+        if self.proper_name:
+            name += " = {}".format(self.proper_name)
+        return mark_safe("HR {} = {}".format(self.hr_id, name))

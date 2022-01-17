@@ -1,5 +1,6 @@
 import datetime, pytz
 from django.views.generic.base import TemplateView
+from ..misc.utils import get_upcoming_calendar
 from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.planets import get_adjacent_planets, get_all_planets
 
@@ -16,4 +17,5 @@ class HomePageView(TemplateView):
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)
         planets = get_all_planets(utdt)
         context['adjacent_planets'] = get_adjacent_planets(planets)
+        context['upcoming_events'] = get_upcoming_calendar(utdt)
         return context

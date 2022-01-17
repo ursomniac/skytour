@@ -1,13 +1,39 @@
 <table width="100%" class="navbar">
     <tr>
-        <td><a href="{% url 'home' %}">Home</a></td>
-        <td><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
-        <td><a href="{% url 'observing-location-list' %}">Locations</a></td>
-        <td><a href="{% url 'constellation-list' %}">Constellations</a></td>
-        <td><a href="{% url 'object-type-list' %}">DSO Types</a></td>
-        <td><a href="{% url 'priority-list' %}">DSO Priority</a></td>
-        <td><a href="{% url 'planet-list' %}">Planets</a></td>
-        <td><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
-        <td><a href="/admin">Admin</a></td>
+        <td class="click"><a href="{% url 'home' %}">Home</a></td>
+        <td class="click"><a href="{% url 'observing-plan' %}">Plan</a></td>
+        <td class="click"><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
+        <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
+        <td class="click"><a href="/admin" target="_new">Admin</a></td>
+    </tr>
+    <tr>
+        <td class="click"><a href="{% url 'planet-list' %}">Planets</a></td>
+        <td class="click"><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
+        <td class="click"><a href="{% url 'constellation-list' %}">Constellations</a></td>
+        <td class="click"><a href="{% url 'object-type-list' %}">DSO Types</a></td>
+        <td class="click"><a href="{% url 'priority-list' %}">DSO Priority</a></td>
+
+    </tr>
+    <tr>
+        <td colspan="2">
+            <span style="color: #fff; font-weight: bold;">Date:</span>
+            <span style="color: #ff0;">{{ utdt_str }}</span>
+        </td>
+        <td colspan="1">
+            <span style="color: #fff; font-weight: bold;">Location:</span>
+            <span style="color: #ff0;">{{ location.name_for_header }}</span>
+        </td>
+        <td>
+            <small>
+                <span style="color: #fff;">Latitude: </span>
+                <span style="color: #ff0;">{{ location.latitude|floatformat:5 }}</span><br>
+                <span style="color: #fff;">Longitude: </span>
+                <span style="color: #ff0;">{{ location.longitude|floatformat:5 }}</span>
+            </small>
+        </td>
+        <td>
+            <a href="{% url 'session-set' %}"><button>Reset Session</button></a>
+        </td>
     </tr>
 </table>
+

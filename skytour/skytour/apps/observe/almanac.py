@@ -21,7 +21,7 @@ def dark_time(d, debug=False):
     Given a dict of metadata, get the begin/end of twilight
     """
     f = dark_twilight_day(d['eph'], d['wgs'])
-    today = get_0h(d['utdt'])
+    today = get_0h(d['utdt_start'])
     end_at, begin_at = get_almanac_times(today, d['ts'], f)
     if debug:
         print ("F: ", f)
@@ -65,14 +65,11 @@ def get_object_rise_set(utdt, eph, target, location):
             event_type = 'Rise'
         jd = zt.tt.item()
         ut = zt.utc_datetime()
-        # ERROR: This gives UT time still!
-        local = zt.astimezone(pytz.timezone(location.time_zone.name))
 
         events.append(dict(
             type = event_type, 
             jd = jd, 
             ut = ut,
-            local = local
         ))
     return events
     
