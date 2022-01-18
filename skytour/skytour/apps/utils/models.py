@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
 
 class Catalog(models.Model):
@@ -107,10 +108,16 @@ class Constellation(models.Model):
         upload_to = 'constellation_maps',
         null=True, blank=True
     )
-    background = models.TextField (
+    background = RichTextField (
         _('Background'),
         null = True, blank = True
     )
+    historical_image = models.ImageField (
+        _('Historical Map'),
+        upload_to = 'historical_constellation_maps',
+        null = True, blank = True
+    )
+
 
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)
