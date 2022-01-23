@@ -76,9 +76,9 @@ class DSOAdmin(admin.ModelAdmin):
         }),
         ('Attributes', {
             'fields': [
-                ('magnitude', 'angular_size'), 
+                ('magnitude', 'angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('distance', 'distance_units'),
-                ('surface_brightness', 'contrast_index'),
+                ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 'notes',
             ]
         }),

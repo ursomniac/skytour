@@ -102,6 +102,23 @@ class DSO(Coordinates, FieldView):
         null = True, blank = True
     )
 
+    # From Stellarium DSO model
+    orientation_angle = models.PositiveIntegerField (
+        _('Orientation Angle'),
+        null = True, blank = True,
+        help_text = 'Degrees'
+    )
+    major_axis_size = models.FloatField (
+        _('Size: Major Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
+    )
+    minor_axis_size = models.FloatField (
+        _('Size: Minor Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
+    )
+
     @property
     def alias_list(self):
         aliases = []
