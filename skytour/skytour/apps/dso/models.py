@@ -18,7 +18,8 @@ PRIORITY_CHOICES = [
     ('Highest', 'Highest'),
     ('High', 'High'),
     ('Medium', 'Medium'),
-    ('Low', 'Low')
+    ('Low', 'Low'),
+    ('None', 'None')
 ]
 
 class DSO(Coordinates, FieldView):

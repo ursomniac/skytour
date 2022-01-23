@@ -141,5 +141,8 @@ class Website(models.Model):
         _('URL')
     )
 
+    def __str__(self):
+        return self.name
+        
     class Meta:
         ordering = ['name']

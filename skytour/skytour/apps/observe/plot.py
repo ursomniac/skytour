@@ -7,7 +7,7 @@ STATUS_COLOR = {
 	'Active': '#090',
 	'Possible': '#0FF',
 	'Rejected': '#C00',
-    'Provisional': '#099',
+    'Provisional': '#009',
 	'TBD': '#CCC',
 	'Issues': '#FC0'
 }
