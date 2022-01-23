@@ -120,7 +120,7 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
         )
 
     # Add an eyepiece circle, 32mm = 0.0038 radians
-    circle1 = plt.Circle((0, 0), 0.0038, color='b', fill=False)
+    circle1 = plt.Circle((0, 0), 0.0036, color='b', fill=False)
     ax.add_patch(circle1)
 
     ### Finish up
