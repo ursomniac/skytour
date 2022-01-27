@@ -5,6 +5,7 @@ from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
+from .vocabs import MAP_SYMBOL_TYPES
 
 class Catalog(models.Model):
     """
@@ -67,8 +68,19 @@ class ObjectType(models.Model):
     # need icon field
     marker_type = models.CharField(
         _('Plot Marker Type'),
-        max_length = 1,
+        max_length = 10, # TODO: change this back to 1?
         default = 'x'
+    )
+    marker_color = models.CharField(
+        _('Marker Type Color'),
+        max_length = 7,
+        default = '#999'
+    )
+    map_symbol_type = models.CharField(
+        _('Map Symbol Type'),
+        choices = MAP_SYMBOL_TYPES,
+        max_length = 30,
+        default = 'marker'
     )
 
     def __str__(self):

@@ -47,6 +47,7 @@ class DSOAdmin(admin.ModelAdmin):
         'dec_text', 
         'magnitude',
         'constellation',
+        'major_axis_size',
         'priority',
         #'has_observations'
     ]

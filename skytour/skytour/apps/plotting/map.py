@@ -118,8 +118,8 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
         s=[90.], c=['#900'], 
         marker='+'
     )
-        # Add an eyepiece circle, 32mm = 0.0038 radians
-    eyepiece = plt.Circle((0, 0), 0.0038, color='b', fill=False)
+        # Add an eyepiece circle, 32mm = 0.0036 units
+    eyepiece = plt.Circle((0, 0), 0.0036, color='b', fill=False)
     ax.add_patch(eyepiece)
     return ax
 

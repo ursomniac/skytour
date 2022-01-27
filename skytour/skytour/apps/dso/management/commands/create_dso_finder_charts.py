@@ -1,16 +1,85 @@
 
 
+import math
 import numpy as np
 import datetime
 import pytz
 from django.core.management.base import BaseCommand
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
+from matplotlib import patches
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
 from skytour.apps.stars.models import BrightStar
 from skytour.apps.dso.models import DSO
+
+def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005):
+    oangle = dso.orientation_angle or 0
+    ft = dso.object_type.map_symbol_type
+    aminor = dso.minor_axis_size * 2.909e-4 # total width
+    amajor = dso.major_axis_size * 2.909e-4 # total length
+    if aminor == 0 and amajor != 0:
+        aminor = amajor
+    angle = 90 - oangle
+
+    if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
+        ft = 'marker'
+
+    #('marker', 'Marker'),                               # default - star like things, or unknown
+    #('ellipse', 'Ellipse'),                             # galaxies - maybe not irregular
+    #('open-circle', 'Open Circle'),                     # open clusters, associations
+    #('gray-circle', 'Gray Circle'),                     # globular clusters
+    #('circle-square', 'Circle in Square'),              # planetary nebulae
+    #('square', 'Open Square'),                          # Emission Nebulae
+    #('gray-square', 'Gray Square'),                     # Dark Nebulae
+    #('circle-gray-square', 'Circle in Gray Square')     # cluster w/ nebulosity
+    print (f'{ft}: X: {x:.3f} Y: {y:.3f}    A: {amajor:.4f}  B: {aminor:.4f}  O: {angle:3d}')
+    if ft == 'ellipse': # galaxies
+        color = '#63f' if 'barred' in dso.object_type.slug.lower() else '#f00'
+        e1 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=True, color=color)
+        e2 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=False, color='#999')
+        ax.add_patch(e1)
+        ax.add_patch(e2)
+    elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
+        color = '#999' if ft == 'gray-circle' else '#ff0'
+        c1 = patches.Circle((x, y), amajor/2., fill=True, color=color)
+        c2 = patches.Circle((x, y), amajor/2., fill=False, color='#000')
+        if ft == 'circle-plus':
+            ax.vlines(x, y-amajor/2, y+amajor/2, color='k')
+            ax.hlines(y, x-amajor/2, x+amajor/2, color='k')
+        ax.add_patch(c1)
+        ax.add_patch(c2)
+    elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square']: # UGH - the center point is the lower-left corner
+        # angle of the rectangle, rotated by the orientation angle + 180 degrees to get its opposite
+        theta = angle + math.degrees(math.atan2(aminor, amajor)) + 180.
+        r = math.sqrt(amajor*amajor + aminor*aminor)/2.
+        dx = r * math.cos(math.radians(theta))
+        dy = r * math.sin(math.radians(theta))
+        if ft in ['square', 'gray-square']:
+            color = '#0f0' if ft == 'square' else '#999'
+            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle)
+            r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='#000', angle=angle)
+            ax.add_patch(r1)
+            ax.add_patch(r2)
+        else:
+            color = '#0f0' if ft == 'circle-square' else '#999'
+            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle)
+            r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
+            c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff')
+            c2 = patches.Circle((x, y), aminor/2., fill=False, color='#000')
+            ax.add_patch(r1)
+            ax.add_patch(r2)
+            ax.add_patch(c1)
+            ax.add_patch(c2)
+    else: # marker
+        test = ax.scatter(
+            [x], [y],
+            s=[50.], c=['#00f'], facecolors='none',
+            marker = dso.object_type.marker_type,
+            #fillstyle = 'none'
+        )
+    return ax
 
 def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
     ts = load.timescale()
@@ -51,29 +120,31 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
 
     # Start Plot!
     fig, ax = plt.subplots(figsize=[8,8])
+    angle = np.pi - field_of_view_degrees / 360.0 * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
 
     ##### constellation lines
     ax.add_collection(LineCollection(lines_xy, colors='#00f2'))
 
-    ##### background stars
-    scatter = ax.scatter(
-        stars['x'][bright_stars], stars['y'][bright_stars], 
-        s=marker_size, color='k'
-    )
-
     ##### other dsos
-    other_dso_records = DSO.objects.exclude(pk = dso.pk)
+    other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
     for other in other_dso_records:
         x, y = projection(earth.at(t).observe(other.skyfield_object))
+        if abs(x) > limit or abs(y) > limit:
+            continue # not on the plot
         other_dsos['x'].append(x)
         other_dsos['y'].append(y)
         other_dsos['label'].append(other.shown_name)
         other_dsos['marker'].append(other.object_type.marker_type)
+        
+        ax = plot_dso(ax, x, y, other)
+
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     mmm = np.array(other_dsos['marker'])
     # This is tricky for the different markers:
+    """
     unique_markers = set(mmm)
     for um in unique_markers:
         mask = mmm == um
@@ -82,6 +153,7 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
             s=90., edgecolor='g', facecolors='none',
             marker=um
         )
+    """
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         plt.annotate(
             z, (x, y), 
@@ -92,15 +164,22 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
 
     ##### this object
     object_x, object_y = projection(center)
-    object_scatter = ax.scatter(
-        [object_x], [object_y], 
-        s=[90.], c=['#f00'], facecolors='none',
-        marker=dso.object_type.marker_type
-    )
+    ax = plot_dso(ax, object_x, object_y, dso)
+    #object_scatter = ax.scatter(
+    #    [object_x], [object_y], 
+    #    s=[90.], c=['#f00'], facecolors='none',
+    #    marker=dso.object_type.marker_type
+    #)    
     plt.annotate(
         dso.shown_name, (object_x, object_y), 
         textcoords='offset points', xytext=(5,5), 
-        ha='left', color='#f00'
+        ha='left', color='k', weight='bold'
+    )
+
+    ##### background stars
+    scatter = ax.scatter(
+        stars['x'][bright_stars], stars['y'][bright_stars], 
+        s=marker_size, color='k'
     )
 
     ##### BSC
@@ -119,15 +198,12 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
             ha='right'
         )
 
-    # Add an eyepiece circle, 32mm = 0.0038 radians
-    circle1 = plt.Circle((0, 0), 0.0036, color='b', fill=False)
+    # Add an eyepiece circle, 32mm = 0.0036 radians
+    circle1 = plt.Circle((0, 0), 0.0036, color='#999', fill=False)
     ax.add_patch(circle1)
 
     ### Finish up
-
     # scaling
-    angle = np.pi - field_of_view_degrees / 360.0 * np.pi
-    limit = np.sin(angle) / (1.0 - np.cos(angle))
     ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
     # axis labels
@@ -148,7 +224,8 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
     legend2 = ax.legend(*scatter.legend_elements(**kw), loc="upper left", title="Mag.")
 
     # SAVE IT!
-    fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
+    #fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
+    fn = 'test_{}.png'.format(dso.pk)
     try:
         fig.savefig('media/dso_charts/{}'.format(fn), bbox_inches='tight')
     except: # sometimes there's UTF-8 in the name
@@ -165,6 +242,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--dso_list', dest='dso_list', nargs='+', type=int)
         parser.add_argument('--all', dest='all', action='store_true')
+        parser.add_argument('--test', dest='test_run', action='store_true')
     
     def handle(self, *args, **options):
         """
