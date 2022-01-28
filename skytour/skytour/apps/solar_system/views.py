@@ -181,18 +181,33 @@ class PlanetTrackView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PlanetTrackView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
         planet = self.get_object()
-        params = self.request.GET
-        if 'utdt' not in params.keys():
-            utdt = datetime.datetime(2022, 4, 10, 0, 0).replace(tzinfo=pytz.utc)
-        context['utdt'] = utdt
 
-        #utdt, planet=None, offset_before=-60, offset_after=61, step_days=5, mag_limit=5.5, fov=20
         context['track_image'] = plot_track(
-            utdt, 
+            context['utdt_start'], 
             planet=planet, 
             offset_before = -10,
-            offset_after = 10,
+            offset_after = 20,
+            step_days = 1,
+            fov=30,
+            dsos=False
+        )
+        return context
+
+class AsteroidTrackView(DetailView):
+    model = Asteroid
+    template_name = 'planet_track.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AsteroidTrackView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+        asteroid = self.get_object()
+        context['track_image'] = plot_track(
+            context['utdt_start'], 
+            planet=asteroid, 
+            offset_before = -10,
+            offset_after = 20,
             step_days = 1,
             fov=30,
             dsos=False

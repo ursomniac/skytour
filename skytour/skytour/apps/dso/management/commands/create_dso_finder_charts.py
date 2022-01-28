@@ -14,7 +14,7 @@ from skyfield.projections import build_stereographic_projection
 from skytour.apps.stars.models import BrightStar
 from skytour.apps.dso.models import DSO
 
-def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005):
+def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005, alpha=1):
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
     aminor = dso.minor_axis_size * 2.909e-4 # total width
@@ -34,16 +34,16 @@ def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005):
     #('square', 'Open Square'),                          # Emission Nebulae
     #('gray-square', 'Gray Square'),                     # Dark Nebulae
     #('circle-gray-square', 'Circle in Gray Square')     # cluster w/ nebulosity
-    print (f'{ft}: X: {x:.3f} Y: {y:.3f}    A: {amajor:.4f}  B: {aminor:.4f}  O: {angle:3d}')
+    print (f'{ft}: X: {x:.3f} Y: {y:.3f}    A: {amajor:.4f}  B: {aminor:.4f}  O: {angle:3d} T: {alpha:.1f}')
     if ft == 'ellipse': # galaxies
         color = '#63f' if 'barred' in dso.object_type.slug.lower() else '#f00'
-        e1 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=True, color=color)
+        e1 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=True, color=color, alpha=alpha)
         e2 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=False, color='#999')
         ax.add_patch(e1)
         ax.add_patch(e2)
     elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
         color = '#999' if ft == 'gray-circle' else '#ff0'
-        c1 = patches.Circle((x, y), amajor/2., fill=True, color=color)
+        c1 = patches.Circle((x, y), amajor/2., fill=True, color=color, alpha=alpha)
         c2 = patches.Circle((x, y), amajor/2., fill=False, color='#000')
         if ft == 'circle-plus':
             ax.vlines(x, y-amajor/2, y+amajor/2, color='k')
@@ -58,13 +58,13 @@ def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005):
         dy = r * math.sin(math.radians(theta))
         if ft in ['square', 'gray-square']:
             color = '#0f0' if ft == 'square' else '#999'
-            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle)
+            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='#000', angle=angle)
             ax.add_patch(r1)
             ax.add_patch(r2)
         else:
             color = '#0f0' if ft == 'circle-square' else '#999'
-            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle)
+            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
             c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff')
             c2 = patches.Circle((x, y), aminor/2., fill=False, color='#000')
@@ -81,7 +81,7 @@ def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005):
         )
     return ax
 
-def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
+def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False, test=False):
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
     eph = load('de421.bsp')
@@ -123,6 +123,20 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
     angle = np.pi - field_of_view_degrees / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
 
+    ##### this object (on the bottom)
+    object_x, object_y = projection(center)
+    ax = plot_dso(ax, object_x, object_y, dso)
+    #object_scatter = ax.scatter(
+    #    [object_x], [object_y], 
+    #    s=[90.], c=['#f00'], facecolors='none',
+    #    marker=dso.object_type.marker_type
+    #)    
+    plt.annotate(
+        dso.shown_name, (object_x, object_y), 
+        textcoords='offset points', xytext=(5,5), 
+        ha='left', color='k', weight='bold'
+    )
+
     ##### constellation lines
     ax.add_collection(LineCollection(lines_xy, colors='#00f2'))
 
@@ -138,7 +152,7 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
         other_dsos['label'].append(other.shown_name)
         other_dsos['marker'].append(other.object_type.marker_type)
         
-        ax = plot_dso(ax, x, y, other)
+        ax = plot_dso(ax, x, y, other, alpha=0.7)
 
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
@@ -162,19 +176,6 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
             ha='left'
         )
 
-    ##### this object
-    object_x, object_y = projection(center)
-    ax = plot_dso(ax, object_x, object_y, dso)
-    #object_scatter = ax.scatter(
-    #    [object_x], [object_y], 
-    #    s=[90.], c=['#f00'], facecolors='none',
-    #    marker=dso.object_type.marker_type
-    #)    
-    plt.annotate(
-        dso.shown_name, (object_x, object_y), 
-        textcoords='offset points', xytext=(5,5), 
-        ha='left', color='k', weight='bold'
-    )
 
     ##### background stars
     scatter = ax.scatter(
@@ -224,8 +225,12 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False):
     legend2 = ax.legend(*scatter.legend_elements(**kw), loc="upper left", title="Mag.")
 
     # SAVE IT!
-    #fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
-    fn = 'test_{}.png'.format(dso.pk)
+    if test:
+
+        fn = 'test_{}.png'.format(dso.pk)
+    else:
+        fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
+
     try:
         fig.savefig('media/dso_charts/{}'.format(fn), bbox_inches='tight')
     except: # sometimes there's UTF-8 in the name
@@ -242,7 +247,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--dso_list', dest='dso_list', nargs='+', type=int)
         parser.add_argument('--all', dest='all', action='store_true')
-        parser.add_argument('--test', dest='test_run', action='store_true')
+        parser.add_argument('--test', action='store_true')
     
     def handle(self, *args, **options):
         """
@@ -277,7 +282,8 @@ class Command(BaseCommand):
             # Otherwise operate!
             print("Creating/Updating Finder Chart for {}: {}".format(dso.pk, dso.shown_name))
 
-            fn = create_dso_finder_chart(dso)
-            dso.dso_finder_chart = 'dso_charts/{}'.format(fn)
-            #print ("\tFN: ", fn)
-            dso.save()
+            fn = create_dso_finder_chart(dso, test=options['test'])
+            if not options['test']:
+                dso.dso_finder_chart = 'dso_charts/{}'.format(fn)
+                #print ("\tFN: ", fn)
+                dso.save()

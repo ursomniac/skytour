@@ -209,6 +209,7 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     earth = eph['earth']
     eph_planet = eph[planet.target]
     t = ts.from_datetime(utdt)
+    
     #t0 = get_t_epoch(get_julian_date(utdt))
     projection_midpoint = earth.at(t).observe(eph_planet)
     fig, ax = plt.subplots(figsize=[8,8])
