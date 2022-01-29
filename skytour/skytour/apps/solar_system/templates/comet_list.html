@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock styles %}
+{% block title %}Observable Comets: Skytour{% endblock %}
+{% block content %}
+<h2>Observable Comets</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Coordinates</th>
+            <th>Distance</th>
+            <th>Constellation</th>
+            <th>Magnitude</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comet in comet_list %}
+        <tr>
+            <td><a href="{% url 'comet-detail' comet.pk %}">{{ comet.name }}</a></td>
+            <td>
+                &alpha;: {{ comet.coords.ra_str }} &nbsp;
+                &delta;: {{ comet.coords.dec_str }}
+            </td>
+            <td>{{ comet.coords.distance.au|floatformat:2 }} AU</td>
+            <td>{{ comet.observe.constellation.name }}</td>
+            <td>{{ comet.observe.apparent_mag|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

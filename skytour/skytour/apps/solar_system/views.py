@@ -2,10 +2,13 @@ import datetime, pytz
 from dateutil.parser import parse as parse_to_datetime
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
 from .asteroids import get_asteroid, get_visible_asteroids
-from .models import Planet, Asteroid, MeteorShower
+from .comets import get_comet
+from .forms import TrackerForm
+from .models import Comet, Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
@@ -166,38 +169,129 @@ class AsteroidDetailView(DetailView):
         )
         return context
 
-### These are still in development.
-
-class PlanetTrackView(DetailView):
-    """
-    TBD: create a map showing the motion of a planet (or other object)
-    against the background stars.
-
-    See: https://rhodesmill.org/skyfield/example-plots.html for an 
-    example with Venus
-    """
-    model = Planet
-    template_name = 'planet_track.html'
+class CometListView(ListView):
+    model = Comet
+    template_name = 'comet_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(PlanetTrackView, self).get_context_data(**kwargs)
-        planet = self.get_object()
-        params = self.request.GET
-        if 'utdt' not in params.keys():
-            utdt = datetime.datetime(2022, 4, 10, 0, 0).replace(tzinfo=pytz.utc)
-        context['utdt'] = utdt
+        context = super(CometListView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
 
-        #utdt, planet=None, offset_before=-60, offset_after=61, step_days=5, mag_limit=5.5, fov=20
+        # Replace after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+        comets = Comet.objects.filter(status=1)
+        comet_list = []
+        for comet in comets:
+            comet_list.append(get_comet(utdt_start, comet, utdt_end=utdt_end, location=location))
+        context['comet_list'] = comet_list
+        return context
+
+class CometDetailView(DetailView):
+    model = Comet
+    template_name = 'comet_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CometDetailView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context = deal_with_cookie(self.request, context)
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+
+        context['comet'] = data = get_comet(utdt_start, object, utdt_end=utdt_end, location=location)
+        other_planets = get_all_planets(utdt_start)
+        other_asteroids = None
+        #if 'visible_asteroids' in context.keys():
+        #    alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
+        #    other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
+        fov = 10.
+        #mag_limit = data['observe']['apparent_mag'] + 0.5
+        mag_limit = 10
+        context['finder_chart'] = create_planet_image(
+            data, 
+            utdt=utdt_start, 
+            #other_asteroids=other_asteroids,
+            other_planets=other_planets,
+            fov=fov, 
+            mag_limit=mag_limit, 
+            finder_chart=True, 
+        )        
+        return context
+
+### These are still in development.
+class TrackerView(FormView):
+    """
+    Combine planet, asteroid, and comet tracking into a single view.
+    """
+    form_class = TrackerForm
+    template_name = 'tracker.html'
+    success_url = '/solar_system/track'
+
+    def get_form_kwargs(self):
+        kwargs = super(TrackerView, self).get_form_kwargs()
+        c = deal_with_cookie(self.request, {})
+        alist = c.get('visible_asteroids', None)
+        kwargs['asteroid_list'] = alist if alist is not None and len(alist) > 0 else None
+        return kwargs
+
+    def get_initial(self):
+        initial = super(TrackerView, self).get_initial()
+        c = deal_with_cookie(self.request, {})
+        start_date = c.get('utdt_start', datetime.datetime.utcnow())
+        end_date = start_date + datetime.timedelta(days=10)
+        initial['start_date'] = start_date
+        initial['end_date'] = end_date
+        return initial
+
+    def form_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        #context = deal_with_cookie(self.request, context)
+        #utdt = context['utdt_start']
+        d = form.cleaned_data
+        model_dict = {'planet': Planet, 'asteroid': Asteroid, 'comet': Comet}
+        object_type, slug = d['object'].split('--')
+        if object_type not in model_dict.keys():
+            context['issue'] = f'Object Type: {object_type} not found.'
+            return context
+
+        if object_type != 'comet':
+            object = model_dict[object_type].objects.filter(slug=slug).first()
+        else:
+            object = Comet.objects.get(pk=slug)
+
+        if not object:
+            context['issue'] = f'{object_type} Object {slug} not found.'
+            return context
+
+        offset_before = 0
+        offset_after = (d['end_date'] - d['start_date']).days
+        step_days = d['date_step'] or 1
+        step_labels = d['label_step'] or 5
+        mag_limit = d['mag_limit'] or 8.
+        fov = d['fov']
+    
+        x = d['start_date']
+        utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
+
         context['track_image'] = plot_track(
-            utdt, 
-            planet=planet, 
-            offset_before = -10,
-            offset_after = 10,
-            step_days = 1,
-            fov=30,
+            utdt,
+            object_type=object_type,
+            object=object, 
+            offset_before = offset_before,
+            offset_after = offset_after,
+            step_days = step_days,
+            step_label = step_labels,
+            mag_limit = mag_limit,
+            fov=fov,
             dsos=False
         )
-        return context
+        context['form'] = form
+        return self.render_to_response(context)
+
+class TrackerResultView(TemplateView):
+    template_name = 'tracker.html'
 
 class OrreryView(TemplateView):
     template_name = 'orrery_view.html'

@@ -9,16 +9,26 @@ from ..utils.format import to_sex
 from .models import Asteroid
 from .utils import get_angular_size, get_constellation
 
-def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
-   ts = load.timescale()
-   eph = load('de421.bsp')
-   sun, earth = eph['sun'], eph['earth']
-   t = ts.utc(utdt.year, month=utdt.month, day=utdt.day, hour=utdt.hour, minute=utdt.minute, second=utdt.second)
+def get_asteroid_target(asteroid, ts, sun):
    with load.open('bright_asteroids.txt') as f:
       mps = mpc.load_mpcorb_dataframe(f)
    mps = mps.set_index('designation', drop=False)
    row = mps.loc[asteroid.mpc_lookup_designation]
    target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
+   return target
+
+def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
+   ts = load.timescale()
+   eph = load('de421.bsp')
+   sun, earth = eph['sun'], eph['earth']
+   t = ts.utc(utdt.year, month=utdt.month, day=utdt.day, hour=utdt.hour, minute=utdt.minute, second=utdt.second)
+   #with load.open('bright_asteroids.txt') as f:
+   #   mps = mpc.load_mpcorb_dataframe(f)
+   #mps = mps.set_index('designation', drop=False)
+   #row = mps.loc[asteroid.mpc_lookup_designation]
+   #target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
+   target = get_asteroid_target(asteroid, ts, sun)
+   
    observe = earth.at(t).observe(target)
    # Get all the distances (earth-asteroid, earth-sun, sun-asteroid)
    # None of this is needed once there's a method for getting phase_angle.

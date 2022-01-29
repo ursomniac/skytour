@@ -13,7 +13,7 @@ from ..solar_system.moon import get_moon
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
-def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None):
+def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, include_comets=True):
     """
     Create a full map of the sky for a given UTDT and location.
     """ 
@@ -72,6 +72,10 @@ def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None):
     if asteroid_list:
         ax, interesting['asteroids'] = map_asteroids(ax, asteroid_list, utdt, projection, center=(center_ra, center_dec))
 
+    # comets
+    if include_comets:
+        ax, interesting['comets'] = map_comets(ax, utdt, earth, t, projection, center=(center_ra, center_dec))
+        
     # Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)

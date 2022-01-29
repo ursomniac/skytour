@@ -4,6 +4,7 @@ from .models import (
     EventType,
     StateRegion,
     TimeZone,
+    Website,
 )
 
 class CalendarEventReferenceInline(admin.TabularInline):
@@ -36,3 +37,4 @@ admin.site.register(Calendar, CalendarAdmin)
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(StateRegion)
 admin.site.register(TimeZone)
+admin.site.register(Website)

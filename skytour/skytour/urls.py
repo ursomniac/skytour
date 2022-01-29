@@ -21,9 +21,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('skytour.apps.site.urls')),
     path('admin/', admin.site.urls),
-    path('calendar/', include('skytour.apps.misc.urls')),
     path('asteroid/', include('skytour.apps.solar_system.urls_asteroid')),
+    path('calendar/', include('skytour.apps.misc.urls')),
     path('catalog/', include('skytour.apps.utils.urls_catalog')),
+    path('comet/', include('skytour.apps.solar_system.urls_comet')),
     path('constellation/', include('skytour.apps.utils.urls_constellation')),
     path('dso/', include('skytour.apps.dso.urls_dso')),
     path('object_type/', include('skytour.apps.utils.urls_object_type')),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('planet/', include('skytour.apps.solar_system.urls')),
     path('priority/', include('skytour.apps.dso.urls_priority')),
     path('session/', include('skytour.apps.session.urls')),
+    path('solar_system/', include('skytour.apps.solar_system.urls_features')),
     path('stars/', include('skytour.apps.stars.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -5,18 +5,25 @@
 <style>
     td { padding: 0 10px 0 10px; }
     td.number { text-align: right; }
+    img { display: block; }
 </style>
 <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
 <p><i>{{ object.genitive }}</i></p>
 <table>
     <tr>
-        <td style="text-align:center;" width="80%">
-            <img src="/media/{{ object.map }}">
-            {% if object.other_map %}<img src="/media/{{ object.other_map }}">{% endif %}
+        <td style="text-align:center; vertical-align: top;" width="70%">
+            <img src="/media/{{ object.map }}" style="width: 100%; display: block; ">
+            {% if object.other_map %}<img src="/media/{{ object.other_map }}" style="width: 100%; display: block;">{% endif %}
         </td>
-        <td>
+        <td style="vertical-align: bottom;">
+            <img src="/media/{{ object.historical_image }}" style="width: 100%; display: block;">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             {{ object.background|safe }}
         </td>
+    </tr>
 </table>
 <h2>DSOs</h2>
 {% include 'includes/dso_table.html' %}

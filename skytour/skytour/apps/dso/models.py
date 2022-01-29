@@ -18,7 +18,8 @@ PRIORITY_CHOICES = [
     ('Highest', 'Highest'),
     ('High', 'High'),
     ('Medium', 'Medium'),
-    ('Low', 'Low')
+    ('Low', 'Low'),
+    ('None', 'None')
 ]
 
 class DSO(Coordinates, FieldView):
@@ -99,6 +100,23 @@ class DSO(Coordinates, FieldView):
         max_length = 20,
         choices = PRIORITY_CHOICES,
         null = True, blank = True
+    )
+
+    # From Stellarium DSO model
+    orientation_angle = models.PositiveIntegerField (
+        _('Orientation Angle'),
+        null = True, blank = True,
+        help_text = 'Degrees'
+    )
+    major_axis_size = models.FloatField (
+        _('Size: Major Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
+    )
+    minor_axis_size = models.FloatField (
+        _('Size: Minor Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
     )
 
     @property

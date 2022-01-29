@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'colorfield',
     'djangoyearlessdate',
+    'ckeditor',
     
     'skytour.apps.dso',
     'skytour.apps.misc',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'skytour.apps.site_parameter',
     'skytour.apps.solar_system',
     'skytour.apps.stars',
+    'skytour.apps.tech',
     'skytour.apps.utils',
     'skytour.templatetags.skytour_filters',
     'skytour.test', # temporary

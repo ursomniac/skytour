@@ -33,7 +33,8 @@ class SkyView(TemplateView):
             location, 
             mag_limit=mag_limit, 
             priority=priority,
-            asteroid_list = asteroid_list
+            asteroid_list = asteroid_list,
+            include_comets = True
         )
         return context
 

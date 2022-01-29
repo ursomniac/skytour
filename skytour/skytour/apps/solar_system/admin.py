@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Planet, MeteorShower, Asteroid
+from .models import Planet, MeteorShower, Asteroid, Comet
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
@@ -30,6 +30,12 @@ class AsteroidAdmin(admin.ModelAdmin):
     list_display = ['number', 'name', 'diameter', 'est_brightest', 'h']
     list_display_links = ['number', 'name']
 
+class CometAdmin(admin.ModelAdmin):
+    model = Comet
+    list_display = ['pk', 'name', 'status']
+    list_display_links = ['pk', 'name']
+    
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
 admin.site.register(Asteroid, AsteroidAdmin)
+admin.site.register(Comet, CometAdmin)

@@ -10,6 +10,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
+from .asteroids import get_asteroid_target
+from .comets import get_comet_target
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
 from .planets import get_solar_system_object
@@ -48,10 +50,10 @@ def create_planet_image(
     
     if name != 'Moon':
         ang_size = planet['observe']['angular_diameter'] # arcsec
-        ang_size_radians = math.radians(ang_size/3600.)
+        ang_size_radians = math.radians(ang_size/3600.) if ang_size else 0.
     else:
         ang_size = planet['observe']['angular_diameter'] # degrees!
-        ang_size_radians = math.radians(ang_size)
+        ang_size_radians = math.radians(ang_size) if ang_size else 0.
 
     # Start making a plot
     fig, ax = plt.subplots(figsize=[6,6])
@@ -199,7 +201,19 @@ def plot_ecliptic_positions(planets):
     plt.close(fig)
     return pngImageB64String
 
-def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=5, mag_limit=5.5, dsos=True, fov=10):
+def plot_track(
+        utdt, 
+        object_type='planet', 
+        object=None, 
+        offset_before=-60, 
+        offset_after=61, 
+        step_days=5, 
+        step_label=5,
+        mag_limit=None, 
+        dsos=True, 
+        fov=None,
+        debug=False
+    ):
     """
     Planet is from the Planet model
     utdt is the MIDPOINT date.
@@ -207,40 +221,65 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     ts = load.timescale()
     eph = load('de421.bsp')
     earth = eph['earth']
-    eph_planet = eph[planet.target]
+    if object_type == 'planet':
+        target = eph[object.target]
+    elif object_type == 'asteroid':
+        sun = eph['sun']
+        target = get_asteroid_target(object, ts, sun)
+    elif object_type == 'comet':
+        sun = eph['sun']
+        target, _ = get_comet_target(object, ts, sun)
     t = ts.from_datetime(utdt)
-    #t0 = get_t_epoch(get_julian_date(utdt))
-    projection_midpoint = earth.at(t).observe(eph_planet)
+
+    first_projection = earth.at(t).observe(target)
     fig, ax = plt.subplots(figsize=[8,8])
-    projection = build_stereographic_projection(projection_midpoint)
+    projection = build_stereographic_projection(first_projection)
     # Build the observation points
     d_planet = dict(x = [], y = [], label = [])
     i = 0
+    min_x = 0
+    max_x = 0
+    min_y = 0
+    max_y = 0
     for dt in range(offset_before, offset_after, step_days):
         this_utdt = utdt + datetime.timedelta(days=dt)
         tt = ts.from_datetime(this_utdt)
-        z = earth.at(tt).observe(eph_planet)
+        z = earth.at(tt).observe(target)
         ra, dec, distance = z.radec()
 
         xx, yy = projection(earth.at(tt).observe(Star(ra_hours=ra.hours, dec_degrees=dec.degrees)))
+        min_x = xx if xx < min_x else min_x
+        max_x = xx if xx > max_x else max_x
+        min_y = yy if yy < min_y else min_y
+        max_y = yy if yy > max_y else max_y
+
         d_planet['x'].append(xx)
         d_planet['y'].append(yy)
-        lll = "{}/{:2d}".format(this_utdt.month, this_utdt.day) if i%4 == 0 else ''
+        lll = "{}/{:2d}".format(this_utdt.month, this_utdt.day) if i%step_label == 0 else ''
         d_planet['label'].append(lll)
         i += 1
-    print (d_planet['label'])
+    if debug:
+        print (d_planet['label'])
+    w = ax.plot(d_planet['x'], d_planet['y'], color='orange', marker=None)
     w = ax.scatter(d_planet['x'], d_planet['y'], s=90., c='#900', marker='+', alpha=0.7)
+
     for x, y, l in zip(d_planet['x'], d_planet['y'], d_planet['label']):
         ax.annotate(
             l, xy=(x, y), 
             textcoords='offset points',
-            xytext=(5, 5),
+            xytext=(3, 10),
             horizontalalignment='left',
             color='orange'
         )
     
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
+    if not mag_limit:
+        if object_type == 'planet' and object.slug not in ['uranus', 'neptune']:
+            mag_limit = 6.0
+        else:
+            mag_limit = 9.0
+
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
     ax = map_constellation_lines(ax, stars)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit)
@@ -248,14 +287,23 @@ def plot_track(utdt, planet=None, offset_before=-60, offset_after=61, step_days=
     if dsos:
         ax, _ = map_dsos(ax, earth, t, projection)
     
-    angle = np.pi - fov / 360.0 * np.pi
-    limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
-    ax.set_xlim(-limit, limit)
-    ax.set_ylim(-limit, limit)
-    ax.xaxis.set_visible(False)
-    ax.yaxis.set_visible(False)
+    if fov:
+        angle = np.pi - fov / 360.0 * np.pi
+        limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
+        avg_x = (min_x + max_x) / 2.
+        avg_y = (min_y + max_y) / 2.
+        ax.set_xlim(avg_x-limit, avg_x+limit)
+        ax.set_ylim(avg_y-limit, avg_y+limit)
+    else:
+        dx = (max_x - min_x) * 0.25
+        ax.set_xlim(min_x-dx, max_x+dx)
+        #ax.set_ylim(-dx*4, dx*4)
+        ax.set_ylim(min_y-dx, max_y+dx)
 
-    title = "Track for {}".format(planet.name)
+    ax.xaxis.set_visible(True)
+    ax.yaxis.set_visible(True)
+
+    title = "Track for {}".format(object.name)
     ax.set_title(title)
 
     # Convert to a PNG image

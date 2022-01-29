@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock styles %}
+{% block title %}Planet Tracker: Skytour{% endblock %}
+{% block content %}
+<h1>Tracker</h1>
+<table>
+    <tr>
+        <td width="50%" style="vertical-align: top">
+            {% if form %}
+            <form method="post">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <br><input type="submit" value="Submit"/>
+            </form>
+            {% else %}
+            There is no form!
+            {% endif %}
+        </td>
+        <td style="vertical-align: top">
+            {% if track_image %}
+            <img src="{{ track_image }}">
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endblock content %}

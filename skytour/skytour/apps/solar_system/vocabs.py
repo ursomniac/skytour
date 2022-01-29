@@ -13,3 +13,8 @@ UNICODE = {
     'Sun': '\u2609', 'Moon': '\u263D'
 
 }
+
+STATUS_CHOICES = [
+    (1, 'On'),
+    (0, 'Off')
+]

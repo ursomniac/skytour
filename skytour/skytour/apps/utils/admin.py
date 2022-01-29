@@ -9,6 +9,10 @@ class ConstellationAdmin(admin.ModelAdmin):
     list_display_links = ['pk', 'name', 'abbreviation']
     search_fields = ['name', 'abbreviation']
 
+class ObjectTypeAdmin(admin.ModelAdmin):
+    model = ObjectType
+    list_display = ['pk', 'name', 'marker_type', 'map_symbol_type', 'marker_color']
+
 admin.site.register(Catalog, CatalogAdmin)
 admin.site.register(Constellation, ConstellationAdmin)
-admin.site.register(ObjectType)
+admin.site.register(ObjectType, ObjectTypeAdmin)
