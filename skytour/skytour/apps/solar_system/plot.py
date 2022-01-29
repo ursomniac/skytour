@@ -11,6 +11,7 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
 from .asteroids import get_asteroid_target
+from .comets import get_comet_target
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
 from .planets import get_solar_system_object
@@ -49,10 +50,10 @@ def create_planet_image(
     
     if name != 'Moon':
         ang_size = planet['observe']['angular_diameter'] # arcsec
-        ang_size_radians = math.radians(ang_size/3600.)
+        ang_size_radians = math.radians(ang_size/3600.) if ang_size else 0.
     else:
         ang_size = planet['observe']['angular_diameter'] # degrees!
-        ang_size_radians = math.radians(ang_size)
+        ang_size_radians = math.radians(ang_size) if ang_size else 0.
 
     # Start making a plot
     fig, ax = plt.subplots(figsize=[6,6])
@@ -225,11 +226,14 @@ def plot_track(
     elif object_type == 'asteroid':
         sun = eph['sun']
         target = get_asteroid_target(object, ts, sun)
+    elif object_type == 'comet':
+        sun = eph['sun']
+        target, _ = get_comet_target(object, ts, sun)
     t = ts.from_datetime(utdt)
 
-    projection_midpoint = earth.at(t).observe(target)
+    first_projection = earth.at(t).observe(target)
     fig, ax = plt.subplots(figsize=[8,8])
-    projection = build_stereographic_projection(projection_midpoint)
+    projection = build_stereographic_projection(first_projection)
     # Build the observation points
     d_planet = dict(x = [], y = [], label = [])
     i = 0
@@ -293,7 +297,8 @@ def plot_track(
     else:
         dx = (max_x - min_x) * 0.25
         ax.set_xlim(min_x-dx, max_x+dx)
-        ax.set_ylim(-dx*4, dx*4)
+        #ax.set_ylim(-dx*4, dx*4)
+        ax.set_ylim(min_y-dx, max_y+dx)
 
     ax.xaxis.set_visible(True)
     ax.yaxis.set_visible(True)

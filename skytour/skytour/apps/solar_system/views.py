@@ -6,8 +6,9 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
 from .asteroids import get_asteroid, get_visible_asteroids
+from .comets import get_comet
 from .forms import TrackerForm
-from .models import Planet, Asteroid, MeteorShower
+from .models import Comet, Planet, Asteroid, MeteorShower
 from .moon import get_moon
 from .planets import get_all_planets, get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
@@ -168,6 +169,57 @@ class AsteroidDetailView(DetailView):
         )
         return context
 
+class CometListView(ListView):
+    model = Comet
+    template_name = 'comet_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CometListView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+
+        # Replace after testing
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+        comets = Comet.objects.filter(status=1)
+        comet_list = []
+        for comet in comets:
+            comet_list.append(get_comet(utdt_start, comet, utdt_end=utdt_end, location=location))
+        context['comet_list'] = comet_list
+        return context
+
+class CometDetailView(DetailView):
+    model = Comet
+    template_name = 'comet_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CometDetailView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context = deal_with_cookie(self.request, context)
+        utdt_start = context['utdt_start']
+        utdt_end = context['utdt_end']
+        location = context['location']
+
+        context['comet'] = data = get_comet(utdt_start, object, utdt_end=utdt_end, location=location)
+        other_planets = get_all_planets(utdt_start)
+        other_asteroids = None
+        #if 'visible_asteroids' in context.keys():
+        #    alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
+        #    other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
+        fov = 10.
+        #mag_limit = data['observe']['apparent_mag'] + 0.5
+        mag_limit = 10
+        context['finder_chart'] = create_planet_image(
+            data, 
+            utdt=utdt_start, 
+            #other_asteroids=other_asteroids,
+            other_planets=other_planets,
+            fov=fov, 
+            mag_limit=mag_limit, 
+            finder_chart=True, 
+        )        
+        return context
+
 ### These are still in development.
 class TrackerView(FormView):
     """
@@ -198,15 +250,19 @@ class TrackerView(FormView):
         #context = deal_with_cookie(self.request, context)
         #utdt = context['utdt_start']
         d = form.cleaned_data
-        model_dict = {'planet': Planet, 'asteroid': Asteroid}
+        model_dict = {'planet': Planet, 'asteroid': Asteroid, 'comet': Comet}
         object_type, slug = d['object'].split('--')
         if object_type not in model_dict.keys():
             context['issue'] = f'Object Type: {object_type} not found.'
             return context
 
-        object = model_dict[object_type].objects.filter(slug=slug).first()
+        if object_type != 'comet':
+            object = model_dict[object_type].objects.filter(slug=slug).first()
+        else:
+            object = Comet.objects.get(pk=slug)
+
         if not object:
-            context['issue'] = f'Object {slug} not found.'
+            context['issue'] = f'{object_type} Object {slug} not found.'
             return context
 
         offset_before = 0

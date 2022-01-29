@@ -3,7 +3,8 @@ from django.db import models
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
-from .abstract import OrbitalElements
+from .comets import get_comet_object
+from .vocabs import STATUS_CHOICES
 
 class Planet(models.Model):
     name = models.CharField (
@@ -231,3 +232,25 @@ class Asteroid(models.Model):
 
     class Meta:
         ordering = ['number']
+
+class Comet(models.Model):
+
+    name = models.CharField(
+        _('Name'),
+        max_length = 50
+    )
+    status = models.PositiveIntegerField (
+        _('Status'),
+        choices = STATUS_CHOICES,
+        default = 1
+    )
+
+    @property
+    def get_mpc_data(self):
+        return get_comet_object(self)
+        
+    def get_absolute_url(self):
+        return '/comet/{}'.format(self.pk)
+
+    def __str__(self):
+        return f"{self.pk}: {self.name}"

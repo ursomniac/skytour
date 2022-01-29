@@ -1,4 +1,3 @@
-import datetime
 import math
 import matplotlib
 import numpy as np
@@ -8,9 +7,9 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
-from ..solar_system.asteroids import get_asteroid
+from ..solar_system.comets import get_comet
 from ..solar_system.meteors import get_meteor_showers
-from ..solar_system.models import Asteroid
+from ..solar_system.models import Comet
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
@@ -510,13 +509,49 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
         s=size, c=color, 
         marker=marker, alpha=alpha
     )
-    #for x, y, z in zip(xxx, yyy, other_dsos['label']):
-    #    ax.annotate(
-    #        z, xy=(x,y),
-    #        xytext=(5, 5),
-    #        textcoords='offset points',
-    #        horizontalalignment='left',
-    #        annotation_clip = True,
-    #        color=color
-    #    )
+    return ax, interesting
+
+def map_comets(ax, utdt, earth, t, projection,
+        center = None,
+        color='#cc0', marker='h', size=60, alpha=1.0):
+
+    alpha_list = 'ABCDEFGH'
+    n = 0
+    comets = Comet.objects.filter(status=1)
+    d = {'x': [], 'y': [], 'label': [], 'marker': []}
+    interesting = []
+    for c in comets:
+        obs = get_comet(utdt, c)
+        ra = obs['coords']['ra']
+        dec = obs['coords']['dec']
+        if center:
+            sin_dist = get_altitude(center[0], center[1],ra, dec)
+            if sin_dist < 0.:
+                continue
+            interesting.append(c)
+        x, y = projection(earth.at(t).observe(
+            Star(ra_hours=ra,dec_degrees=dec)
+        ))
+        d['x'].append(x)
+        d['y'].append(y)
+        d['label'].append(alpha_list[n])
+        n += 1
+
+    scatter = ax.scatter(
+        d['x'], d['y'],
+        s=size, c=color,
+        marker=marker, alpha=alpha
+    )
+    for x, y, z in zip(d['x'], d['y'], d['label']):
+        fsize = 6
+        dy = -3
+        print ("X: ", x, "Y: ", y, "Z: ", z)
+        ax.annotate(
+            z, xy=(x,y),
+            textcoords='offset points',
+            xytext=(0,dy),
+            horizontalalignment='center',
+            color='black',
+            fontsize=fsize
+        )
     return ax, interesting

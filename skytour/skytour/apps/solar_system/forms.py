@@ -2,7 +2,7 @@ import datetime
 from django import forms
 
 from ..session.cookie import deal_with_cookie
-from .models import Asteroid, Planet
+from .models import Asteroid, Planet, Comet
 
 def date_plus_10():
     today = datetime.datetime.utcnow()
@@ -42,5 +42,7 @@ class TrackerForm(forms.Form):
         else:
             asteroids = Asteroid.objects.all()
         c += [('asteroid--'+a.slug, f"{a.number} {a.name}") for a in asteroids]
+        comets = Comet.objects.filter(status=1)
+        c += [('comet--'+ str(x.pk), x.name) for x in comets]
         self.fields['object'].choices = c
 

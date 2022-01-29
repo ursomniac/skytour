@@ -62,3 +62,8 @@ def to_dhms(x):
         return "{}d {:02d}h {:02d}m {:0.2f}s".format(d, h, m, s)
     except:
         return None
+
+@register.filter(name='letter_index')
+def letter_index(i):
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return letters[i % 26]

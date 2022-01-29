@@ -45,6 +45,11 @@
             <h4>Meteor Showers</h4>
                 {% for shower in interesting.meteor_showers %}{{ shower.name }}<br>{% endfor %}
             {% endif %}
+
+            {% if interesting.comets|length > 0 %}
+            <h4>Comets</h4>
+            {% with object_list=interesting.comets url_type='comet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
+            {% endif %}
             
         </td>
     </tr>

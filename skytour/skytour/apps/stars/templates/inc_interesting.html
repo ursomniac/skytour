@@ -1,4 +1,4 @@
-
+{% load skytour_filters %}
 <table>
     <tbody>
         {% for object in object_list %}
@@ -6,6 +6,8 @@
             <td>
                 {% if url_type == 'dso-detail' %}
                 <a href="{% url url_type object.pk %}">{{ object.shown_name }}</a> {{ object.object_type }}
+                {% elif url_type == 'comet-detail' %}
+                {{ forloop.counter0|letter_index }}: <a href="{% url url_type object.pk %}">{{ object.name }}</a>
                 {% else %}
                 <a href="{% url url_type object.slug %}">{{ object.name }}</a>
                 {% endif %}
