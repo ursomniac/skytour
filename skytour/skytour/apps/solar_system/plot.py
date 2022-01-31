@@ -269,7 +269,7 @@ def plot_track(
             textcoords='offset points',
             xytext=(3, 10),
             horizontalalignment='left',
-            color='orange'
+            color='maroon'
         )
     
     # Add stars from Hipparcos, constellation lines (from Stellarium),
