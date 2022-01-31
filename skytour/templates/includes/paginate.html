@@ -1,0 +1,32 @@
+{% if is_paginated %}
+<style>
+    .pagenav td { 
+        background-color: #600;
+        text-align: center;
+        color: #fff;
+    }
+</style>
+<div class="pagination">
+    <span class="page-links">
+        <table class="pagenav" style="width: 500px">
+            <tr>
+                <td style="width: 150px;">
+                {% if page_obj.has_previous %}
+                    <button><a href="?page={{ page_obj.previous_page_number }}">Previous Page</a></button>
+                {% endif %}
+                </td>
+                <td style="width: 200px;">
+                    <span class="page-current">
+                        <b>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</b>
+                    </span>
+                </td>
+                <td style="width: 150px;">
+                {% if page_obj.has_next %}
+                    <button><a href="?page={{ page_obj.next_page_number }}">Next Page</a></button>
+                {% endif %}
+                </td>
+            </tr>
+        </table>
+    </span>
+</div>
+{% endif %}
