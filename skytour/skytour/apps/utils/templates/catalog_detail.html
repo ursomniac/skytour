@@ -1,13 +1,30 @@
 {% extends "base.html" %}
-
+{% load skytour_filters %}
 {% block styles %}
 {% endblock styles %}
 {% block title %}{{ object.name }} Catalog: Skytour{% endblock %}
 {% block content %}
 <!-- main -->
 {# header section #}
-<h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+<table border="0">
+    <tr>
+        <td width="33%"><h1>{{ object.abbreviation }}: {{ object.name }}</h1></td>
+        <td>
+            <table>
+            <tr>
+            {% for cat in catalog_list %}
+            {% if forloop.counter0|divisibleby:3 %}<td>{% endif %}
+                <button style="margin: 5px;"><a href="{% url 'catalog-detail' cat.pk %}">{{ cat.name }}</a></button><br/>
+            {% if forloop.counter0|modulus:3 == 2 or forloop.last %}</td>{% endif %}
+            {% endfor %}
+            </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 
+
+{% include 'includes/paginate.html' %}
 <table>
     <tr>
         <th>Object</th>
@@ -18,12 +35,19 @@
         <th>Type</th>
         <th>Mag</th>
         <th>Size/Sep</th>
+        <th>Constellation</th>
     </tr>
     
-    {% for cat_object in catalog_objects %}
+    {% for cat_object in object_list %}
     {% with cat_object.dso as thing %}
     <tr>
-        <td align="right"><a href="{% url 'dso-detail' thing.pk %}">{{ cat_object.in_catalog }}</a></td>
+        <td style="text-align: right;">
+            <a href="{% url 'dso-detail' thing.pk %}">{{ cat_object.in_catalog|safe }}
+                {% if object.slug == 'bayer' or object.slug == 'flamsteed' %}
+                {{ thing.constellation.abbreviation }}
+                {% endif %}
+            </a>
+        </td>
         <td>{% if thing.catalog != object %}{{ thing.shown_name }}{% endif %}</td>
         <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
         <td>{{ thing.ra_text }}</td>
@@ -31,9 +55,11 @@
         <td>{{ thing.object_type }}</td>
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
+        <td>{{ thing.constellation.abbreviation }}</td>
     </tr>
     {% endwith %}
     {% endfor %}
-
 </table>
+{% include 'includes/paginate.html' %}
+{% include 'includes/sortable_table.html' %}
 {% endblock content %}

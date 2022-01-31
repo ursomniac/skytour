@@ -1,7 +1,9 @@
+import itertools
+from re import L
 from django.db.models import Count
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView, MultipleObjectMixin
 from .models import Constellation, Catalog, ObjectType
 from ..dso.models import DSO, DSOAlias
 from ..stars.models import BrightStar
@@ -10,7 +12,10 @@ def try_int(x):
     try:
         return int(x)
     except:
-        return x
+        foo = "".join(itertools.takewhile(str.isdigit, x)) # "55-57" returns 55, pizza returns 0 
+        if foo[0].isdigit:
+            return int(foo)
+        return 0
 
 class ConstellationListView(ListView):
     """
@@ -43,7 +48,11 @@ class ConstellationDetailView(DetailView):
         context['bright_stars'] = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
         return context
 
-class CatalogDetailView(DetailView):
+class CatalogListView(ListView):
+    model = Catalog
+    template_name = 'catalog_list.html'
+
+class CatalogDetailView(DetailView, MultipleObjectMixin):
     """
     Show all DSOs for a catalog.   Includes references where the catalog entry is 
     an alias, e.g., NGC 7654 will show up for M 52.
@@ -51,6 +60,7 @@ class CatalogDetailView(DetailView):
     """
     model = Catalog
     template_name = 'catalog_detail.html'
+    paginate_by = 40 
 
     def get_context_data(self, **kwargs):
         """
@@ -58,10 +68,14 @@ class CatalogDetailView(DetailView):
             a) only show primary ID entries
             b) Anything that's an alias too
         """
-        context = super(CatalogDetailView, self).get_context_data(**kwargs)
+        #context = super(CatalogDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
+        cat_list = Catalog.objects.all()
         primary_dsos = DSO.objects.filter(catalog=object)
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
+
+        if object.slug in ['messier', 'caldwell']: # Override pagination
+            self.paginate_by = None
 
         # OK - somehow merge these two.
         all_objects = []
@@ -77,8 +91,17 @@ class CatalogDetailView(DetailView):
             entry['in_catalog'] = o.aliases.filter(catalog = object).first().id_in_catalog
             entry['dso'] = o
             all_objects.append(entry)
-        all_objects_sort = sorted(all_objects, key=lambda d: try_int(d['in_catalog']))
-        context['catalog_objects'] = all_objects_sort
+        
+        try:
+            all_objects_sort = sorted(all_objects, key=lambda d: try_int(d['in_catalog']))
+        except:
+            all_objects_sort = sorted(all_objects, key=lambda d: str(d['in_catalog']))
+        context = super(CatalogDetailView, self).get_context_data(
+            object_list=all_objects_sort, 
+            **kwargs
+        )
+        context['catalog_list'] = cat_list
+        #context['object_list'] = all_objects_sort
         return context
 
 class ObjectTypeListView(ListView):

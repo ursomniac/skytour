@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'djangoyearlessdate',
     'ckeditor',
     
+    'skytour.apps.abstract',
     'skytour.apps.dso',
     'skytour.apps.misc',
     'skytour.apps.plotting',

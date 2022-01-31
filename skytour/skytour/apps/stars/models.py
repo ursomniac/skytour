@@ -4,10 +4,9 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from numpy import True_
 from skyfield.api import Star
-from ..utils.models import (
-    Coordinates, 
-    Constellation
-) 
+from ..abstract.models import Coordinates
+from ..utils.models import Constellation
+ 
 from .utils import create_star_name, parse_designation
 from .vocabs import ENTITY
 

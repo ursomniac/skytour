@@ -1,7 +1,14 @@
 from collections import Counter
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from .models import DSO, PRIORITY_CHOICES
+
+class DSOListView(ListView):
+    model = DSO
+    template_name = 'dso_list.html'
+    context_object_name = 'dso_list'
+    paginate_by = 100
 
 class DSODetailView(DetailView):
     model = DSO 
