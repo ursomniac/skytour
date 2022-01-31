@@ -4,15 +4,9 @@ from django.utils.translation import gettext as _
 from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
+from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog
 from ..utils.transform import get_alt_az
-from ..utils.models import (
-    Coordinates,
-    ObjectImage,
-    FieldView,
-    Constellation,
-    ObservingLog,
-    ObjectType, 
-)
+from ..utils.models import Constellation, ObjectType
 
 PRIORITY_CHOICES = [
     ('Highest', 'Highest'),

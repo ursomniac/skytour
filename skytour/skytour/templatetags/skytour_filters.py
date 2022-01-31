@@ -67,3 +67,7 @@ def to_dhms(x):
 def letter_index(i):
     letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     return letters[i % 26]
+
+@register.filter(name="modulus")
+def modulus(x, y):
+    return x % y

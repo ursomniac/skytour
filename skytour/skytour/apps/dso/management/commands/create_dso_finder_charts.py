@@ -17,14 +17,28 @@ from skytour.apps.dso.models import DSO
 def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005, alpha=1):
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
-    aminor = dso.minor_axis_size * 2.909e-4 # total width
-    amajor = dso.major_axis_size * 2.909e-4 # total length
-    if aminor == 0 and amajor != 0:
+    aminor = dso.minor_axis_size # total width
+    amajor = dso.major_axis_size # total length
+    print (f"AMAJOR: {amajor} AMINOR: {aminor}")
+    if aminor == 0:
         aminor = amajor
+
+    ratio = aminor / amajor
+
+    if amajor > 30.:
+        amajor = 30
+        aminor = ratio * amajor
+    if amajor < 3.:
+        amajor = 3
+        aminor = ratio * amajor
+    print (f"AMAJOR: {amajor} AMINOR: {aminor}")
+    amajor *= 2.909e-4
+    aminor *= 2.909e-4
+    # 2.909e-4
     angle = 90 - oangle
 
-    if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
-        ft = 'marker'
+    #if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
+    #    ft = 'marker'
 
     #('marker', 'Marker'),                               # default - star like things, or unknown
     #('ellipse', 'Ellipse'),                             # galaxies - maybe not irregular
@@ -64,6 +78,7 @@ def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005, alpha=1):
             ax.add_patch(r2)
         else:
             color = '#0f0' if ft == 'circle-square' else '#999'
+            print (f"MAJOR: {amajor} MINOR: {aminor}")
             r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
             c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff')
@@ -199,8 +214,9 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False, test=False):
             ha='right'
         )
 
-    # Add an eyepiece circle, 32mm = 0.0036 radians
-    circle1 = plt.Circle((0, 0), 0.0036, color='#999', fill=False)
+    # Add an eyepiece circle, 32mm = 0.0071 radians diameter
+    #circle1 = plt.Circle((0, 0), 0.00357, color='#999', fill=False)
+    circle1 = plt.Circle((0, 0), 49.214 * 2.909e-4 / 2., color='#999', fill=False)
     ax.add_patch(circle1)
 
     ### Finish up

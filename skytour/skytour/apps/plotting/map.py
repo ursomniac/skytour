@@ -117,16 +117,17 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
         s=[90.], c=['#900'], 
         marker='+'
     )
-        # Add an eyepiece circle, 32mm = 0.0036 units
-    eyepiece = plt.Circle((0, 0), 0.0036, color='b', fill=False)
+        # Add an eyepiece circle, 32mm = 0.00714 units (not 0.0036)
+    eyepiece = plt.Circle((0, 0), 0.00357, color='b', fill=False)
     ax.add_patch(eyepiece)
     return ax
 
-def map_eyepiece(ax, diam=0.0038):
+def map_eyepiece(ax, diam=0.00714):
     """
     TODO: Do we need this since map_target seems to do it?
+    Note: I had 0.0038 - I think it should be 0.00714
     """
-    eyepiece = plt.Circle((0,0), 0.0038, color='b', fill=False)
+    eyepiece = plt.Circle((0,0), 0.00357, color='b', fill=False)
     return ax
 
 def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
