@@ -4,9 +4,6 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 
-#from .utils import count_dsos
-
-
 class FieldView(models.Model):
     """
     This is a model for the FOV map.
@@ -157,13 +154,16 @@ class ObservingLog(models.Model):
         _('Time of Obs'),
         help_text = 'UT Time'
     )
+    # Seeing / Transparency / etc?
     # telescope
-    # Eyepiece
-    # Filters
+    # Eyepiece(s)
+    # Filter(s)
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
     )
+    # sketch?
+    # images? - either from the ZWO camera or say a phone?
 
     class Meta:
         abstract = True

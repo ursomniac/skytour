@@ -7,7 +7,7 @@ YES_NO = [
     ('Yes', 'Yes'),
     ('No', 'No')
 ]
-class ObservingSessionForm(forms.Form):
+class ObservingParametersForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='20:00') # Keep? or use the astro system?
     location = forms.ModelChoiceField(

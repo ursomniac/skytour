@@ -1,4 +1,5 @@
-import datetime, pytz
+import datetime
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
@@ -9,32 +10,27 @@ class ObservingSession(models.Model):
         _('UTDT Start'),
         default=datetime.datetime.utcnow
     )
+    utdt_end = models.DateTimeField (
+        _('UTDT End'),
+        null = True, blank = True
+    )
     location = models.ForeignKey (
         ObservingLocation,
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        limit_choices_to = {'status__in': ['Active', 'Provisional']}
     )
-    dec_limit = models.FloatField (
-        _('Dec Limit'),
-        default = -20.0
+    seeing = models.PositiveIntegerField (
+        _('Seeing'),
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ],
+        null = True, blank = True,
+        help_text = "1 (poor) to 5 (excellent)"
     )
-    mag_limit = models.FloatField (
-        _('Mag Limit'),
-        default = 12.0
-    )
-    hour_angle_range = models.FloatField (
-        _('Hour Angle Range'),
-        default = 3.5
-    )
-    session_length = models.FloatField (
-        _('Session Length'),
-        default = 3.0
-    )
-    show_planets = models.CharField (
-        _('Show Planets'),
-        max_length = 10,
-        choices = PLANET_CHOICES,
-        default = 'visible'
-    )
+
+    class Meta:
+        ordering = ['-utdt_start']
 
     def __str__(self):
         return "{}: {}".format(self.utdt_start, self.location)
