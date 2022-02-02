@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
+from ..abstract.models import ObservingLog
 from .comets import get_comet_object
 from .vocabs import STATUS_CHOICES
 
@@ -90,7 +91,19 @@ Moons:
     Tr  vga = 0.72, r = 1353.4
 """
 
-
+class PlanetObservation(ObservingLog):
+    """
+    M:1 between observation records and DSOs.
+    So a separate one of these for model?   That gets away from
+    dealing with GFKs...
+    """
+    object = models.ForeignKey(Planet,
+        on_delete = models.CASCADE,
+        related_name = 'observations'
+    )
+    class Meta:
+        verbose_name = 'Observation'
+        verbose_name_plural = 'Observations'
 
 class MeteorShower(models.Model):
 
@@ -233,6 +246,20 @@ class Asteroid(models.Model):
     class Meta:
         ordering = ['number']
 
+class AsteroidObservation(ObservingLog):
+    """
+    M:1 between observation records and DSOs.
+    So a separate one of these for model?   That gets away from
+    dealing with GFKs...
+    """
+    object = models.ForeignKey(Asteroid,
+        on_delete = models.CASCADE,
+        related_name = 'observations'
+    )
+    class Meta:
+        verbose_name = 'Observation'
+        verbose_name_plural = 'Observations'
+
 class Comet(models.Model):
 
     name = models.CharField(
@@ -254,3 +281,17 @@ class Comet(models.Model):
 
     def __str__(self):
         return f"{self.pk}: {self.name}"
+
+class CometObservation(ObservingLog):
+    """
+    M:1 between observation records and DSOs.
+    So a separate one of these for model?   That gets away from
+    dealing with GFKs...
+    """
+    object = models.ForeignKey(Comet,
+        on_delete = models.CASCADE,
+        related_name = 'observations'
+    )
+    class Meta:
+        verbose_name = 'Observation'
+        verbose_name_plural = 'Observations'

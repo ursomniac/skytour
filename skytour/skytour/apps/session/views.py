@@ -6,14 +6,14 @@ from django.views.generic.edit import FormView
 from ..observe.time import get_julian_date
 from ..solar_system.asteroids import get_visible_asteroids
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
-from .forms import ObservingSessionForm
+from .forms import ObservingParametersForm
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
 #@method_decorator(cache_page(0), name='dispatch')
 class SetSessionCookieView(FormView):
-    form_class = ObservingSessionForm
-    template_name = 'observing_session.html'
+    form_class = ObservingParametersForm
+    template_name = 'observing_parameters.html'
     success_url = '/session/plan'  
 
     def get_initial(self):

@@ -243,12 +243,11 @@ class DSOImage(ObjectImage):
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
 
-
 class DSOObservation(ObservingLog):
     """
     M:1 between observation records and DSOs.
-    TODO: probably move this to its own app and have a
-    generic foreign key instead.
+    So a separate one of these for model?   That gets away from
+    dealing with GFKs...
     """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,

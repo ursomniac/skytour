@@ -3,9 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
-
-#from .utils import count_dsos
-
+from ..tech.models import Telescope, Eyepiece
 
 class FieldView(models.Model):
     """
@@ -148,6 +146,13 @@ class ObjectImage(models.Model):
     class Meta:
         abstract = True
 
+SEEING_CHOICES = (
+    (5, 'Excellent: stable diffraction rings'),
+    (4, 'Good: light undulations across diffraction rings'),
+    (3, 'Fair: broken diffraction rings; central disk deformations'),
+    (2, 'Poor: (partly) missing diffraction rings; eddy streams in central disk'),
+    (1, 'Fail: boiling image; no sign of diffraction pattern')
+)
 class ObservingLog(models.Model):
     ut_date = models.DateField (
         _('Date of Obs'),
@@ -157,13 +162,33 @@ class ObservingLog(models.Model):
         _('Time of Obs'),
         help_text = 'UT Time'
     )
+    # Seeing / Transparency / etc?
+    seeing = models.PositiveIntegerField (
+        _('Seeing'),
+        choices = SEEING_CHOICES,
+        null = True, blank = True
+    )
+    sqm = models.FloatField (
+        _('SQM'),
+        null = True, blank = True
+    )
     # telescope
-    # Eyepiece
-    # Filters
+    telescope = models.ForeignKey (
+        _(Telescope),
+        default = 1,
+        on_delete = models.CASCADE
+    )
+    # Eyepiece(s)
+    eyepieces = models.ManyToManyField (
+        _(Eyepiece),
+    )
+    # Filter(s)
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
     )
+    # sketch?
+    # images? - either from the ZWO camera or say a phone?
 
     class Meta:
         abstract = True
