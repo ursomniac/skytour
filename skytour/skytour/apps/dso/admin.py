@@ -1,5 +1,6 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
+from ..abstract.admin import AbstractObservation
 from .models import DSO, DSOImage, DSOAlias, DSOObservation
 
 class ConstellationFilter(AutocompleteFilter):
@@ -8,34 +9,15 @@ class ConstellationFilter(AutocompleteFilter):
 
 class DSOImageAdmin(admin.StackedInline):
     model = DSOImage
-    extra = 1
-    readonly_fields = ['object_image_tag']
-    fieldsets = (
-        (None, {
-            'fields': [
-                ('image', 'object_image_tag'), 
-                ('amateur_image', 'order_in_list'),
-                'notes'
-            ]
-        }),
-    )
+    extra = 0
 
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias
     extra = 0
     fields = ['catalog', 'id_in_catalog']
 
-class DSOObservationAdmin(admin.StackedInline):
+class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation
-    extra = 0
-    fieldsets = (
-        (None, {
-            'fields': [
-                ('ut_date', 'ut_time'),
-                'notes'
-            ]
-        }),
-    )
 
 class DSOAdmin(admin.ModelAdmin):
     list_display = [
