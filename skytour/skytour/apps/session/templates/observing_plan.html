@@ -76,6 +76,7 @@ td.normal {
     <td class="click"><a href="#moon">Moon</a></td>
     <td class="click"><a href="#planets">Planets</a></td>
     <td class="click"><a href="#asteroids">Asteroids</a></td>
+    <td class="click"><a href="#comets">Comets</a></td>
     <td class="click"><a href="#dso">DSO</a></td>
     </tr>
 </table>
@@ -125,6 +126,20 @@ td.normal {
     {% endif %}
     <br>
   {% endfor %}
+
+<a name="comets"></a>
+  <h2>Comets</h2>
+  {% if comets %}
+  {% for comet in comets %}
+  {% with object=comet object_type='comet' show_object=comet.show_comet %}{% include 'inc_object_header.html' %}{% endwith %}
+  {% if comet.show_comet %}
+    {% with comet as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
+  {% endif %}
+  <br>
+  {% endfor %}
+  {% else %}
+  <p>No Comets</p>
+  {% endif %}
 
 <a name="dso"></a>
   <h2>DSO Targets</h2>
