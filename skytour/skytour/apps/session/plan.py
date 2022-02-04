@@ -3,6 +3,8 @@ from ..dso.models import DSO
 from ..observe.almanac import dark_time
 from ..observe.time import get_julian_date, get_t_epoch
 from ..solar_system.asteroids import get_visible_asteroids
+from ..solar_system.comets import get_comet
+from ..solar_system.models import Comet
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
 from ..solar_system.planets import get_all_planets
@@ -70,6 +72,16 @@ def get_plan(context, debug=False):
         go = True if v['session']['start']['is_up'] or v['session']['end']['is_up'] else False
         v['show_asteroid'] = go
     context['asteroids'] = asteroids
+
+    comets = Comet.objects.filter(status=1)
+    visible_comets = []
+    for c in comets:
+        comet = get_comet(utdt_start, c, utdt_end=utdt_end, location=location)
+        go = True if comet['session']['start']['is_up'] or comet['session']['end']['is_up'] else False
+        comet['show_comet'] = go
+        if go:
+            visible_comets.append(comet)
+    context['comets'] = visible_comets
 
     ### DSO List
     targets = {}

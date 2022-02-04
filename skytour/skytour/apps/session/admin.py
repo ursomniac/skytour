@@ -1,12 +1,34 @@
 from django.contrib import admin
-from .models import ObservingSession
+from .models import ObservingSession, ObservingCircumstances
 
+class ObservingCircumstancesInline(admin.StackedInline):
+    model = ObservingCircumstances
+    extra = 0
+    fieldsets = [
+        (None, {
+            'fields': [
+                ('session_stage', 'utdt'),
+                ('temperature', 'humidity', 'cloud_cover'),
+                ('seeing', 'sqm')
+            ]
+        }),
+    ]
 class ObservingSessionAdmin(admin.ModelAdmin):
     model = ObservingSession
+    fieldsets = (
+        (None, {
+            'fields': [
+                'ut_date',
+                'location',
+                'notes'
+            ]
+        }),
+    )
+    inlines = [ObservingCircumstancesInline]
 
-    #readonly_fields = ['seeing_table']
+admin.site.register(ObservingSession, ObservingSessionAdmin)
 
-    """
+"""
     <table>
     <tr><th>Value</th><th>Description</th><th>Arc Sec (8" aperture)</th></tr>
     <tr> <td>1</td> <td>Boiling image without any sign of diffraction</td>                        <td>&gt; 6.67"</td></tr>
@@ -14,9 +36,7 @@ class ObservingSessionAdmin(admin.ModelAdmin):
     <tr> <td>3</td> <td>Central disk deformations; broken diffraction rings</td>                  <td>~1.67 - 4.13"</td></tr>
     <tr> <td>4</td> <td>Light undulations across diffraction rings</td>                           <td>~0.67 - 1.67"</td></tr>
     <tr> <td>5</td> <td>Perfect diffraction pattern</td>                                          <td>&lt; 0.67"</tr>
-    """
-admin.site.register(ObservingSession, ObservingSessionAdmin)
-
+"""
 """
 Qualitative scale: http://www.handprint.com/ASTRO/seeing3.html, Bruce MacEvoy ©2016
 • The "Airy disk" is the evenly bright, round disk, bordered by a dark interval, at the center of an undistorted star image at high magnification (diagram, above).

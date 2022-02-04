@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..tech.models import Telescope, Eyepiece
+from .vocabs import SEEING_CHOICES
 
 class FieldView(models.Model):
     """
@@ -146,13 +147,7 @@ class ObjectImage(models.Model):
     class Meta:
         abstract = True
 
-SEEING_CHOICES = (
-    (5, 'Excellent: stable diffraction rings'),
-    (4, 'Good: light undulations across diffraction rings'),
-    (3, 'Fair: broken diffraction rings; central disk deformations'),
-    (2, 'Poor: (partly) missing diffraction rings; eddy streams in central disk'),
-    (1, 'Fail: boiling image; no sign of diffraction pattern')
-)
+
 class ObservingLog(models.Model):
     ut_date = models.DateField (
         _('Date of Obs'),
@@ -161,16 +156,6 @@ class ObservingLog(models.Model):
     ut_time = models.TimeField (
         _('Time of Obs'),
         help_text = 'UT Time'
-    )
-    # Seeing / Transparency / etc?
-    seeing = models.PositiveIntegerField (
-        _('Seeing'),
-        choices = SEEING_CHOICES,
-        null = True, blank = True
-    )
-    sqm = models.FloatField (
-        _('SQM'),
-        null = True, blank = True
     )
     # telescope
     telescope = models.ForeignKey (

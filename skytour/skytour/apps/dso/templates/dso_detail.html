@@ -3,7 +3,8 @@
 {% block styles %}
 <style>
 	h1 { font-weight: bold; font-size: 250%; color: #fff; }
-	td { vertical-align: top }
+	td { vertical-align: top;}
+	td.object_header { border: 0 !important; }
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
@@ -15,12 +16,12 @@
 {% endblock styles %}
 
 {% block content %}
-<table border="0">
+<table style="border: 0">
 <!-- main -->
 {# header section #}
 <tr>
 	<td colspan=2 class="object_header">
-		<table width="100%" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
+		<table width="100%" class="header" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
 			<tr>
 				<td width=80% class="object_name">
 					<h1>
@@ -94,7 +95,7 @@
 		{{ object.notes|linebreaks }}
 	</td>
 	<td>
-		<table><tr>
+		<table style="border: 0"><tr>
 		<td class="dso_image">
 			{% if object.images.all.0 %}
 			<img src="{{ object.images.all.0.image.url }}" width=100%>
@@ -110,7 +111,7 @@
 </tr>
 <tr class="bottom">
 	<td>
-		<table><tr>
+		<table style="border: 0"><tr>
 		<td class="dso_image">
 			{% if object.images.all.2 %}
 			<img src="{{ object.images.all.2.image.url }}" width=100%>
