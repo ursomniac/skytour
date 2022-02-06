@@ -101,7 +101,7 @@
 	<td>
 		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
 			<small>
-			<table>
+			{% if object.nearby_dsos|length > 0 %}<table>{% endif %}
 			{% for x in object.nearby_dsos %}
 			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
 				<td width="20%">
@@ -113,12 +113,12 @@
 			{% empty %}
 			None
 			{% endfor %}
-			</table>
+			{% if object.nearby_dsos|length > 0 %}</table>{% endif %}
 		</small>
 	</td>
 </tr>
 </table>
-
+<br>
 <table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=50% rowspan=2>
