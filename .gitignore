@@ -4,6 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+CometEls2.txt
+
 # Things we don't want in the repo
 media/
 BACKUP_*
