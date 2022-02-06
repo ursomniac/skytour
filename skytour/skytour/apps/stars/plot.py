@@ -13,7 +13,15 @@ from ..solar_system.moon import get_moon
 from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import  get_sun
 
-def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, include_comets=True):
+def get_skymap(
+        utdt, 
+        location, 
+        dso_mag_limit=6.0, 
+        star_mag_limit=5.5,
+        priority=2, 
+        asteroid_list=None, 
+        include_comets=False
+    ):
     """
     Create a full map of the sky for a given UTDT and location.
     """ 
@@ -39,7 +47,7 @@ def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, incl
     projection = build_stereographic_projection(zenith)
 
     # stars and constellation lines
-    ax, stars = map_hipparcos(ax, earth, t, 5.5, projection)
+    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection)
     ax = map_constellation_lines(ax, stars)
     ax = map_bright_stars(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True
@@ -60,7 +68,7 @@ def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, incl
     # Limiting magnitude of 6.
     ax, interesting['dsos'] = map_dsos(ax, earth, t, projection, 
         center = (center_ra, center_dec),
-        mag_limit=mag_limit, 
+        mag_limit=dso_mag_limit, 
         alpha=0.7, 
         priority=priority,
         color='grey'
@@ -102,4 +110,4 @@ def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, incl
     plt.tight_layout()
     plt.cla()
     plt.close(fig)
-    return pngImageB64String, interesting
+    return pngImageB64String, interesting, last

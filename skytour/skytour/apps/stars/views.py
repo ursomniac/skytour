@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 #from ..observe.models import ObservingLocation
 from ..session.cookie import deal_with_cookie
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.asteroids import assemble_asteroid_list
 
 from .forms import SkyMapForm
@@ -24,17 +25,18 @@ class SkyView(TemplateView):
         context = deal_with_cookie(self.request, context)
         utdt_start = context['utdt_start']
         location = context['location']
-        priority = 2 # Set this in Admin
-        mag_limit = 6. # Set this in Admin
+        priority = find_site_parameter(slug='skymap-dso-priority', default=1, param_type='positive')
+        dso_mag_limit = find_site_parameter(slug='skychart-magnitude-limit-dsos', default=10, param_type='float') 
+        star_mag_limit = find_site_parameter(slug='skymap-magnitude-limit-stars', default=5.5, param_type='float')
         asteroid_slugs = context.get('visible_asteroids', None)
         asteroid_list = assemble_asteroid_list(utdt_start, slugs=asteroid_slugs)
-        context['skymap'], context['interesting'] = get_skymap(
+        context['skymap'], context['interesting'], context['sidereal_time'] = get_skymap(
             utdt_start, 
             location, 
-            mag_limit=mag_limit, 
+            dso_mag_limit=dso_mag_limit, 
             priority=priority,
             asteroid_list = asteroid_list,
-            include_comets = True
+            include_comets = False
         )
         return context
 

@@ -239,13 +239,10 @@ def map_phased_planet(ax, planet, ang_size_radians):
     if is_moon:
         c0 = 'black'
         c1 = 'white'
-        k0 = 'k'
-        k1 = 'w'
     else:
         c1 = 'black'
         c0 = 'white'
-        k0 = 'w'
-        k1 = 'k'
+
     #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
     # Circumstances:
     #    phase:  0, 360:  minor  = 1.  New Moon        (left: black, right: black, half-ellipse: n/a really)
@@ -524,6 +521,8 @@ def map_comets(ax, utdt, earth, t, projection,
     interesting = []
     for c in comets:
         obs = get_comet(utdt, c)
+        #if obs is None:
+        #    continue
         ra = obs['coords']['ra']
         dec = obs['coords']['dec']
         if center:

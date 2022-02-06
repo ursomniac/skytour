@@ -1,19 +1,21 @@
 from .models import (
-    SiteParameterSwitch,
+    SiteParameterFloat,
     SiteParameterLink,
-    SiteParameterPositiveInteger,
     SiteParameterNumber,
+    SiteParameterPositiveInteger,
     SiteParameterString,
+    #SiteParameterSwitch,
     SiteParameterImage,
 )
 
 # This is just a dict of models with keys.
 PARAM_TYPES = {
+    'float': SiteParameterFloat,
     'link': SiteParameterLink,
-    'number': SiteParameterNumber, 
-    'text': SiteParameterString,
+    'number': SiteParameterNumber, # integer
     'positive': SiteParameterPositiveInteger,
     'string': SiteParameterString, 
+    'text': SiteParameterString,
     'image': SiteParameterImage
 }
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load skytour_filters %}
 {% block content %}
 <style>
     td.side { font-size: 80%; }
@@ -11,11 +12,16 @@
             <h1>SkyMap</h1> 
         </td>
         <td>
-            <form method="GET">
-            {{ form.as_p }}
-            <input type="submit" value="Submit"/>
-            </form>
-            <small>Express date/time in UT.</small><br/>
+            Date: {{ utdt_start|date:"Y-m-d H:i" }} UT<br>
+            Sidereal Time: {{ sidereal_time|to_hms }}
+        </td>
+        <td>
+            Location:  {{ location }}<br>
+            Latitude:  {{ location.latitude|to_dms }}<br> 
+            Longitude: {{ location.longitude|to_dms }}
+        </td>
+        <td>
+
         </td>
     </tr>
 </table>

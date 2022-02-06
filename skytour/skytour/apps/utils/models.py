@@ -77,6 +77,11 @@ class ObjectType(models.Model):
         max_length = 30,
         default = 'marker'
     )
+    code = models.CharField(
+        _('Abbr. Code'),
+        max_length = 4,
+        null = True, blank = True
+    )
 
     def __str__(self):
         return self.name

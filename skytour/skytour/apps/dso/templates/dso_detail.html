@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load skytour_filters %}
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
@@ -7,6 +8,7 @@
 	td.object_header { border: 0 !important; }
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description a { color: #ff0; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; width: 25%; }
 	td.coordinates { font-size: 150%; padding-bottom: 10px; }
@@ -36,7 +38,11 @@
 				<td width=20% class="description" rowspan=2>
 					{{ object.object_type }}
 					<br>in<br>
-					<b>{{ object.constellation.abbreviation }}</b>
+					<b>
+						<a href="{% url 'constellation-detail' object.constellation.abbreviation %}">
+							{{ object.constellation.abbreviation }}
+						</a>
+					</b>
 					{% if object.priority %}
 					<br><br/>
 					<b>Priority:&nbsp;
@@ -44,35 +50,17 @@
 					{% endif %}
 				</td>
 			</tr>
+			{% if object.alias_list %}
 			<tr><td class="aliases">{{ object.alias_list }}</td></tr>
+			{% endif %}
 		</table>
-	</td>
-</tr>
-
-<tr>
-	<td id="finder" width=50%>
-		<h3>DSO Finder Chart:</h3>
-		{% if object.dso_finder_chart %}
-		<img src="{{ object.dso_finder_chart.url }}" width=100%>
-		{% else %}
-		<br>(No finder chart.)
-		{% endif %}
-	</td>
-
-	<td id="field_view" width=50%>
-		<h3>Field View:</h3>
-		{% if object.field_view %}
-		<img src="{{ object.field_view.url }}" width=100%>
-		{% else %}
-		<br>(No field view.)
-		{% endif %}
 	</td>
 </tr>
 
 <tr>
 	<td id="metadata" colspan=2>
 		<h3>Information:</h3>
-		<table width=100% class="info_box">
+		<table width=100%>
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}</td>
 				<td class="coordinates">&delta; (2000): {{ object.dec_text }}</td>
@@ -89,6 +77,49 @@
 	</td>
 </tr>
 
+<tr>
+	<td id="finder" width=50%>
+		<h3>DSO Finder Chart:</h3>
+		{% if object.dso_finder_chart %}
+		<img src="{{ object.dso_finder_chart.url }}" width=100%>
+		{% else %}
+		<br>(No finder chart.)
+		{% endif %}
+	</td>
+	<td id="field_view" width=50%>
+		<h3>Field View:</h3>
+		{% if object.field_view %}
+		<img src="{{ object.field_view.url }}" width=100%>
+		{% else %}
+		<br>(No field view.)
+		{% endif %}
+	</td>
+</tr>
+</table>
+<table>
+<tr>
+	<td>
+		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
+			<small>
+			{% if object.nearby_dsos|length > 0 %}<table>{% endif %}
+			{% for x in object.nearby_dsos %}
+			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
+				<td width="20%">
+					<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
+					({{ x.object_type}}, 
+					<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>){% if not forloop.last %}, {% endif %}
+				</td>
+			{% if forloop.counter0|modulus:5 == 4  or forloop.last %}</tr>{% endif %}
+			{% empty %}
+			None
+			{% endfor %}
+			{% if object.nearby_dsos|length > 0 %}</table>{% endif %}
+		</small>
+	</td>
+</tr>
+</table>
+<br>
+<table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=50% rowspan=2>
 		<h3>Notes</h3>

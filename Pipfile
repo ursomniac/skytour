@@ -16,6 +16,7 @@ pandas = "*"
 django-yearlessdate = "*"
 ipython = "<8.0.0"
 django-ckeditor = "*"
+scipy = "*"
 
 [dev-packages]
 

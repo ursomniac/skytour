@@ -5,6 +5,7 @@ from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog
+from ..utils.angdist import get_neighbors
 from ..utils.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
 
@@ -15,6 +16,13 @@ PRIORITY_CHOICES = [
     ('Low', 'Low'),
     ('None', 'None')
 ]
+PRIORITY_COLORS = {
+    'Highest': '#f00',
+    'High': '#c90',
+    'Medium': '#090',
+    'Low': '#096',
+    'None': '#ccc'
+}
 
 class DSO(Coordinates, FieldView):
     """
@@ -127,6 +135,16 @@ class DSO(Coordinates, FieldView):
         """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
 
+    @property
+    def nearby_dsos(self):
+        return get_neighbors(self)
+
+    @property
+    def priority_color(self):
+        if self.priority:
+            return PRIORITY_COLORS[self.priority]
+        return '#666'
+
     def finder_chart_tag(self):
         """
         This makes the uploaded finder chart appear on the Admin page.
@@ -161,17 +179,6 @@ class DSO(Coordinates, FieldView):
 
     def get_absolute_url(self):
         return '/dso/{}'.format(self.pk)
-
-    @property
-    def priority_color(self):
-        colors = {
-            'High': '#CC0000',
-            'Medium': '#CCCCCC',
-            'Low': '#666666'
-        }
-        if self.priority in colors.keys():
-            return colors[self.priority]
-        return '#FFFFFF'
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property

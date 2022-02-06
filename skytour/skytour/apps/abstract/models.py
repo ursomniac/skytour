@@ -1,10 +1,10 @@
-from re import L, X
+import math
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..tech.models import Telescope, Eyepiece
-from .vocabs import SEEING_CHOICES
+from ..utils.transform import get_cartesian
 
 class FieldView(models.Model):
     """
@@ -117,6 +117,12 @@ class Coordinates(models.Model):
         return u"{}{:02d}° {:02d}\' {:05.2f}\"".format(
             self.dec_sign, self.dec_d, self.dec_m, self.dec_s
         )
+    
+    @property
+    def get_xyz(self):
+        return get_cartesian(self.ra_float, self.dec_float, ra_dec = True)
+ 
+
 
     class Meta:
         abstract = True
