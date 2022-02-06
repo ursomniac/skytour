@@ -7,6 +7,7 @@
 	td.object_header { border: 0 !important; }
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description a { color: #ff0; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; width: 25%; }
 	td.coordinates { font-size: 150%; padding-bottom: 10px; }
@@ -36,7 +37,11 @@
 				<td width=20% class="description" rowspan=2>
 					{{ object.object_type }}
 					<br>in<br>
-					<b>{{ object.constellation.abbreviation }}</b>
+					<b>
+						<a href="{% url 'constellation-detail' object.constellation.abbreviation %}">
+							{{ object.constellation.abbreviation }}
+						</a>
+					</b>
 					{% if object.priority %}
 					<br><br/>
 					<b>Priority:&nbsp;
@@ -44,7 +49,9 @@
 					{% endif %}
 				</td>
 			</tr>
+			{% if object.alias_list %}
 			<tr><td class="aliases">{{ object.alias_list }}</td></tr>
+			{% endif %}
 		</table>
 	</td>
 </tr>
@@ -57,6 +64,13 @@
 		{% else %}
 		<br>(No finder chart.)
 		{% endif %}
+		<h3>Nearby DSOs</h2>
+			{% for x in object.nearby_dsos %}
+			<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
+			{% if not forloop.last %}, {% endif %}
+			{% empty %}
+			None
+			{% endfor %}
 	</td>
 
 	<td id="field_view" width=50%>
@@ -72,7 +86,7 @@
 <tr>
 	<td id="metadata" colspan=2>
 		<h3>Information:</h3>
-		<table width=100% class="info_box">
+		<table width=100%>
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}</td>
 				<td class="coordinates">&delta; (2000): {{ object.dec_text }}</td>

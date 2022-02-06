@@ -524,6 +524,8 @@ def map_comets(ax, utdt, earth, t, projection,
     interesting = []
     for c in comets:
         obs = get_comet(utdt, c)
+        #if obs is None:
+        #    continue
         ra = obs['coords']['ra']
         dec = obs['coords']['dec']
         if center:

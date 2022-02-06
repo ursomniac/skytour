@@ -102,4 +102,4 @@ def get_skymap(utdt, location, mag_limit=6, priority=2, asteroid_list=None, incl
     plt.tight_layout()
     plt.cla()
     plt.close(fig)
-    return pngImageB64String, interesting
+    return pngImageB64String, interesting, last

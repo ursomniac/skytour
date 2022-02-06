@@ -28,7 +28,7 @@ class SkyView(TemplateView):
         mag_limit = 6. # Set this in Admin
         asteroid_slugs = context.get('visible_asteroids', None)
         asteroid_list = assemble_asteroid_list(utdt_start, slugs=asteroid_slugs)
-        context['skymap'], context['interesting'] = get_skymap(
+        context['skymap'], context['interesting'], context['sidereal_time'] = get_skymap(
             utdt_start, 
             location, 
             mag_limit=mag_limit, 

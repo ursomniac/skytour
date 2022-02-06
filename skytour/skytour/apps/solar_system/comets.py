@@ -34,6 +34,8 @@ def get_comet(utdt, comet, utdt_end=None, location=None):
     eph = load('de421.bsp')
     sun, earth = eph['sun'], eph['earth']
     target, row = get_comet_target(comet, ts, sun)
+    #if target is None or row is None:
+    #    return None
 
     # Earth to Comet
     obs = earth.at(t).observe(target)

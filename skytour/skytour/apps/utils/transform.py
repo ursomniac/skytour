@@ -29,3 +29,17 @@ def get_alt_az(utdt, latitude, longitude, ra, dec, from_south=False, debug=False
         azimuth %= 360.
         
     return azimuth, altitude
+
+def get_cartesian(longitude_or_ra, latitude_or_dec, ra_dec=True, radius=180.):
+    """
+    Default "unit" radius is 180 degrees
+    """
+    lat = math.radians(latitude_or_dec)
+    lon = math.radians(longitude_or_ra)
+    lon *= 15. if ra_dec else 1. # convert from hours if needed
+    # normally you'd use the radius of a sphere, e.g., Earth = 6371 km,
+    # but here we only care about angular distance, so use a unit sphere.
+    x = radius * math.cos(lat) * math.cos(lon)
+    y = radius * math.cos(lat) * math.sin(lon)
+    z = radius * math.sin(lat)
+    return (x, y, z)

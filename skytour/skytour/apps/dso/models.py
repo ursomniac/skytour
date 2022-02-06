@@ -5,6 +5,7 @@ from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog
+from ..utils.angdist import get_neighbors
 from ..utils.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
 
@@ -126,6 +127,10 @@ class DSO(Coordinates, FieldView):
         This is handy when pointing at this DSO
         """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+
+    @property
+    def nearby_dsos(self):
+        return get_neighbors(self)
 
     def finder_chart_tag(self):
         """
