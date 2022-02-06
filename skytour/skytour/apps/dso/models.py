@@ -16,6 +16,13 @@ PRIORITY_CHOICES = [
     ('Low', 'Low'),
     ('None', 'None')
 ]
+PRIORITY_COLORS = {
+    'Highest': '#f00',
+    'High': '#c90',
+    'Medium': '#090',
+    'Low': '#096',
+    'None': '#ccc'
+}
 
 class DSO(Coordinates, FieldView):
     """
@@ -132,6 +139,12 @@ class DSO(Coordinates, FieldView):
     def nearby_dsos(self):
         return get_neighbors(self)
 
+    @property
+    def priority_color(self):
+        if self.priority:
+            return PRIORITY_COLORS[self.priority]
+        return '#666'
+
     def finder_chart_tag(self):
         """
         This makes the uploaded finder chart appear on the Admin page.
@@ -166,17 +179,6 @@ class DSO(Coordinates, FieldView):
 
     def get_absolute_url(self):
         return '/dso/{}'.format(self.pk)
-
-    @property
-    def priority_color(self):
-        colors = {
-            'High': '#CC0000',
-            'Medium': '#CCCCCC',
-            'Low': '#666666'
-        }
-        if self.priority in colors.keys():
-            return colors[self.priority]
-        return '#FFFFFF'
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property

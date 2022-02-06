@@ -9,10 +9,10 @@ def chord_length(theta, r = 1, degrees=False):
 def get_neighbors(
         object, 
         fov=8., 
-        fudge=90,
+        fudge=120,
     ):
     """
-    For some reason the KDTree distances are 90 "off".
+    For some reason the KDTree distances are 90 "off" for a FOV of 8°.
     I'm GUESSING it has something to do with there being a unit sphere.
     There are other weirdnessed that I can't suss out the math:
         1. the ratio between arc length and chord length for theta < 180

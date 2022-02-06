@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load skytour_filters %}
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
@@ -57,33 +58,6 @@
 </tr>
 
 <tr>
-	<td id="finder" width=50%>
-		<h3>DSO Finder Chart:</h3>
-		{% if object.dso_finder_chart %}
-		<img src="{{ object.dso_finder_chart.url }}" width=100%>
-		{% else %}
-		<br>(No finder chart.)
-		{% endif %}
-		<h3>Nearby DSOs</h2>
-			{% for x in object.nearby_dsos %}
-			<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
-			{% if not forloop.last %}, {% endif %}
-			{% empty %}
-			None
-			{% endfor %}
-	</td>
-
-	<td id="field_view" width=50%>
-		<h3>Field View:</h3>
-		{% if object.field_view %}
-		<img src="{{ object.field_view.url }}" width=100%>
-		{% else %}
-		<br>(No field view.)
-		{% endif %}
-	</td>
-</tr>
-
-<tr>
 	<td id="metadata" colspan=2>
 		<h3>Information:</h3>
 		<table width=100%>
@@ -103,6 +77,49 @@
 	</td>
 </tr>
 
+<tr>
+	<td id="finder" width=50%>
+		<h3>DSO Finder Chart:</h3>
+		{% if object.dso_finder_chart %}
+		<img src="{{ object.dso_finder_chart.url }}" width=100%>
+		{% else %}
+		<br>(No finder chart.)
+		{% endif %}
+	</td>
+	<td id="field_view" width=50%>
+		<h3>Field View:</h3>
+		{% if object.field_view %}
+		<img src="{{ object.field_view.url }}" width=100%>
+		{% else %}
+		<br>(No field view.)
+		{% endif %}
+	</td>
+</tr>
+</table>
+<table>
+<tr>
+	<td>
+		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
+			<small>
+			<table>
+			{% for x in object.nearby_dsos %}
+			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
+				<td width="20%">
+					<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
+					({{ x.object_type}}, 
+					<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>){% if not forloop.last %}, {% endif %}
+				</td>
+			{% if forloop.counter0|modulus:5 == 4  or forloop.last %}</tr>{% endif %}
+			{% empty %}
+			None
+			{% endfor %}
+			</table>
+		</small>
+	</td>
+</tr>
+</table>
+
+<table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=50% rowspan=2>
 		<h3>Notes</h3>
