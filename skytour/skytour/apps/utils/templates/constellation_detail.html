@@ -36,10 +36,12 @@
     </tr>
 </table>
 <h2>DSOs</h2>
+{% with table_id='constellation_dso' %}
 {% include 'includes/dso_table.html' %}
+{% endwith %}
 
 <h2>Bright Stars</h2>
-<table>
+<table id="constellation_stars">
     <thead>
         <tr>
             <th>ID</th>
@@ -67,4 +69,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% with table_id='constellation_stars' %}
+{% include 'includes/sortable_table.html' %}
+{% endwith %}
 {% endblock content %}

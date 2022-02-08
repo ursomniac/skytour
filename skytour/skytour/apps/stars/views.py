@@ -36,7 +36,7 @@ class SkyView(TemplateView):
             dso_mag_limit=dso_mag_limit, 
             priority=priority,
             asteroid_list = asteroid_list,
-            include_comets = False
+            include_comets = True
         )
         return context
 
