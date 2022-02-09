@@ -1,30 +1,33 @@
+import datetime, pytz
 from itertools import chain
 from ..dso.models import DSOObservation
-# from .solar_system.models import PlanetObservation, AsteroidObservation, CometObservation
+from ..site_parameter.helpers import find_site_parameter
+from ..solar_system.models import PlanetObservation, AsteroidObservation, CometObservation
 
 def get_all_observations(ut_date): # or start/end date/time?
     """
-    This is a placeholder for when I have things to log.
-    I THINK this would combine all the different models under one list, 
-    for the case of "What did I observe the night of 15-Jun-2022?"
-
-    For logs of observations of a particular DSO or planet, etc., then
-    that's easily obtainable through the "observing_log.all()" call from
-    the DSO/Planet/etc.   
-
-    I suppose this could ALSO be useful for other filters, e.g., 
-    "what magnitudes did I look at on nights where the seeing was good",
-    but that sort of stuff will come later.
-
-    I'm expecting that how this will WORK is that I'll log things on paper,
-    then add it in through the admin ex post facto.
+    Get all observations from the DSO/Planet/Asteroid/Comet *Observation models
+    that fall within the realm of a ObservingSession date.
     """
-    dsos = DSOObservation.objects.filter(ut_date = ut_date)
-    planets, asteroids, comets = None # for now
-    # planets = PlanetObservation.objects.filter(ut_date = ut_date)
-    # asteroids = AsteroidObservation.objects.filter(ut_date = ut_date)
-    # comets = CometObservations.filter(ut_date = ut_date)
+    # Slice back a few hours to capture the changeover to 0h UT
+    # For me, that's -3 hours - it would be different for people in different locations
+    # So, create the ability to set that in SiteParameters
+    offset_ut = find_site_parameter('session_ut_offset', default=-3, param_type='float')
+    # Do the same for the length of the observing window
+    # This will get weird for extreme latitudes (esp., > ±62°)
+    nighttime_window = find_site_parameter('session_window_hours', default=14, param_type='positive')
+    # Get the datetime for the possible observing window:  for me
+    #   start = date 0H - 3 hours = 21:00 UT or 16:00 standard time (17:00 daylight)
+    #   end = start + 15 hours = 12:00 UT or 7:00 standard time  (8:00 daylight)
+    # I THINK this handles all the edge effects.
+    utdt_start = (datetime.datetime.combine(ut_date, datetime.time(0,0)) + datetime.timedelta(hours=offset_ut)).replace(tzinfo=pytz.utc)
+    utdt_end = (utdt_start + datetime.timedelta(hours=nighttime_window)).replace(tzinfo=pytz.utc)
+    # OK get all DSO/Planet/Asteroid/Comet observations that fall within the window.
+    dsos = DSOObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
+    planets = PlanetObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
+    asteroids = AsteroidObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
+    comets = CometObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     observation_list = sorted(
         chain(dsos, planets, comets, asteroids),
-        key=lambda obs: obs.ut_time)
+        key=lambda obs: obs.ut_datetime)
     return observation_list

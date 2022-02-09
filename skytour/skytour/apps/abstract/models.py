@@ -1,4 +1,4 @@
-import math
+import datetime
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
@@ -155,13 +155,10 @@ class ObjectImage(models.Model):
 
 
 class ObservingLog(models.Model):
-    ut_date = models.DateField (
-        _('Date of Obs'),
-        help_text = 'UT Date'
-    )
-    ut_time = models.TimeField (
-        _('Time of Obs'),
-        help_text = 'UT Time'
+    ut_datetime = models.DateTimeField (
+        _('UTDT of Obs.'),
+        default = datetime.datetime.utcnow,
+        help_text = 'Date/Time (UT)'
     )
     # telescope
     telescope = models.ForeignKey (

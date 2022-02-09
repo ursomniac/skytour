@@ -74,12 +74,14 @@
 				<td rowspan=2><h2>Information:</h2></td>
 				<td class="coordinates">Lat: {{ object.latitude }}</td>
 				<td class="coordinates">Long: {{ object.longitude }}</td>
-				<td>Elevation: {{ object.elevation }}</td>
+				<td>Elevation: {{ object.elevation }} m</td>
 			</tr>
 			<tr>
+
 				<td>Bortle: {{ object.bortle }}</td>
 				<td>SQM: {{ object.sqm }}</td>
 				<td>Brightness: {{ object.brightness }} {{ object.distance_units }}</td>
+				<td>Limiting Mag: {{ object.limiting_magnitude }}</td>
 			</tr>
 		</table>
 	</td>

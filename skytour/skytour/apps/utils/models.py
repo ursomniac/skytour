@@ -116,7 +116,7 @@ class Constellation(models.Model):
         null=True, blank=True
     ) 
     other_map = models.ImageField ( # This ONLY exists because of Serpens
-        _('Map'),
+        _('Other Map'),
         upload_to = 'constellation_maps',
         null=True, blank=True
     )
@@ -128,6 +128,10 @@ class Constellation(models.Model):
         _('Historical Map'),
         upload_to = 'historical_constellation_maps',
         null = True, blank = True
+    )
+    neighbors = models.ManyToManyField (
+        'self',
+        blank = True
     )
 
     def get_absolute_url(self):
