@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Sessions: Skytour{% endblock %}
+{% block content %}
+<h1>Observing Sessions</h1>
+
+<table>
+ <thead>
+    <tr>
+        <th>UT Date</th>
+        <th>Location</th>
+        <th>Seeing Range</th>
+        <th>SQM Range</th>
+        <th># Observations</th>
+    </tr>
+</thead>
+<tbody>
+    {% for session in object_list %}
+    <tr>
+        <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date }}</a></td>
+        <td>{{ session.location }}</td>
+        <td>TBD</td>
+        <td>TBD</td>
+        <td>TBD</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

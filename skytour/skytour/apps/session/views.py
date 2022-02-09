@@ -2,11 +2,14 @@ import datetime, pytz
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
 from ..observe.time import get_julian_date
 from ..solar_system.asteroids import get_visible_asteroids
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingParametersForm
+from .models import ObservingSession
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
@@ -90,4 +93,19 @@ class ObservingPlanView(TemplateView):
         # Update the cookie with the asteroids since we know this here.
         slugs = update_cookie_with_asteroids(self.request, context.get('asteroids', None))
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        return context
+
+class ObservingSessionListView(ListView):
+    model = ObservingSession
+    template_name = 'session_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingSessionListView, self).get_context_data(**kwargs)
+        return context
+
+class ObservingSessionDetailView(DetailView):
+    model = ObservingSession
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)
         return context

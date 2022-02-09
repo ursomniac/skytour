@@ -19,7 +19,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     model = ObservingLocation
     inlines = [LocationImageInline]
     
-    list_display = ['pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 'latitude', 'longitude', 'bortle', 'brightness']
+    list_display = ['pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 'latitude', 'longitude', 'bortle', 'sqm', 'brightness']
     readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag']
     search_fields = ['name', 'city']
     list_filter = ['status', 'state']

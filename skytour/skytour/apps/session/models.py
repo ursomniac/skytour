@@ -4,22 +4,46 @@ from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
 from ..utils.utils import get_limiting_magnitude
+from .chain import get_all_observations
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 class ObservingSession(models.Model):
+    """
+    This indexes for view on PK.   I did this instead of a DateView because 
+    there is a SMALL chance that you could have two separate sessions at
+    different locations.   That would REALLY complicate the url pattern.
+
+    Instead we can probably handle things in the Admin or ListView...
+    """
+    # This isn't unique, because there is a CHANCE that 
+    # you could go to one location and then go to another location.
     ut_date = models.DateField(
-        _('UT Date')
+        _('UT Date'),
     )
     location = models.ForeignKey (
         ObservingLocation,
         on_delete = models.CASCADE,
+        # TBD, etc. locations should be updated to Active/Provisional
+        # before we have a session there.
         limit_choices_to = {'status__in': ['Active', 'Provisional']}
     )
-
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
     )
+
+    # Get all of the Planet/OSD/etc. observations for this session
+    @property
+    def session_observations(self):
+        return get_all_observations(self.ut_date)
+
+    def __str__(self):
+        return f"{self.ut_date}: {self.location}"
+
+    class Meta:
+        # This mitigates the ">1 places on the same night issue"
+        ordering = ['-ut_date', '-pk'] 
+        unique_together = ['ut_date', 'location']
 
 
 class ObservingCircumstances(models.Model):
