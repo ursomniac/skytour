@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
+from ..utils.utils import get_limiting_magnitude
 from .time import TIME_ZONES
 #from colorfield.fields import ColorField
 
@@ -200,6 +201,10 @@ class ObservingLocation(models.Model):
         if self.name:
             x = "{}: ".format(self.name) + x
         return x
+
+    @property
+    def limiting_magnitude(self):
+        return get_limiting_magnitude(self.bortle)
 
     def get_absolute_url(self):
         return '/observing_location/{}'.format(self.pk)

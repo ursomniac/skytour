@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
+from ..utils.utils import get_limiting_magnitude
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 class ObservingSession(models.Model):
@@ -63,6 +64,33 @@ class ObservingCircumstances(models.Model):
         help_text = 'in %'
     )
 
+    @property
+    def brightness(self):
+        x = 8.033 - 0.4 * self.sqm
+        return 10**x
+
+    @property
+    def bortle(self):
+        sqm_ranges = [
+            (22.00, 23.00), # 1
+            (21.90, 21.99), # 2
+            (21.70, 21.89), # 3
+            (20.50, 21.69), # 4
+            (19.50, 20.49), # 5
+            (18.95, 19.49), # 6
+            (18.38, 18.94), # 7
+            (17.80, 18.38), # 8
+            (00.00, 17.79), # 9
+        ]
+        sqm = int(100.*(self.sqm + 0.005))/100. # round to 2 places
+        for b in range(9):
+            if sqm >= b[0] and sqm <= b[1]:
+                return b + 1
+        return None # shouldn't get here
+
+    @property
+    def limiting_magnitude(self):
+        return get_limiting_magnitude(self.bortle)
 
     class Meta:
         ordering = ['utdt']

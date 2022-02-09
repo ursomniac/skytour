@@ -511,7 +511,7 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
     return ax, interesting
 
 def map_comets(ax, utdt, earth, t, projection,
-        center = None,
+        center = None, comet_mag_limit = 12.0,
         color='#cc0', marker='h', size=60, alpha=1.0):
 
     alpha_list = 'ABCDEFGH'
@@ -521,6 +521,9 @@ def map_comets(ax, utdt, earth, t, projection,
     interesting = []
     for c in comets:
         obs = get_comet(utdt, c)
+        mag = obs['observe'].get('apparent_mag', 99)
+        if mag > comet_mag_limit:
+            continue # too faint - keep going
         #if obs is None:
         #    continue
         ra = obs['coords']['ra']
