@@ -8,6 +8,9 @@
         vertical-align: top !important;
     }
     table.boxed td h1, h3, h4 { margin: 5px 3px; }
+    table.internal {
+        border-style: none;
+    }
     table.internal td {
         border-style: none;
         vertical-align: top;
@@ -18,7 +21,6 @@
 {% endblock styles %}
 
 {% block content %}
-
 <table class="boxed">
     <tr>
         <td width="30%"%>
@@ -61,31 +63,39 @@
         </table>
     </td>
     <td width="20%">
-        <h4>Conditions/Equipment:</h4>
+        {% if target.object_type == 'Condition' %}
+        <h4>Conditions:</h4>
         <table class="internal">
-            {% if target.object_type == 'Condition' %}
             <tr><td>SQM:</td><td>{{ target.sqm }}</td></tr>
             <tr><td>Seeing:</td><td>{{ target.seeing }}</td></tr>
-            <tr><td>Temp:</td><td>{{ target.temperature }}°F</td></tr>
-            <tr><td>Humidity:</td><td>{{ target.humidity }}</td></tr>
             <tr><td>Cloud Cover:</td><td>{{ cloud_cover }}</td></tr>
-            {% else %}
+        {% else %}
+        <h4>Equipment:</h4>
+        <table class="internal">
             <tr><td>Telescope:</td><td>{{ target.telescope }}</td></tr>
             <tr><td>Eyepiece(s):</td><td>{{ target.eyepiece_list }}</td></tr>
-            <tr><td>Filter(s):</td><td>{{ target.filters }}</td></tr>
+            <tr><td>Filter(s):</td><td>{{ target.filter_list }}</td></tr>
             {% endif %}
         </table>
     </td>
 
-    <td>
+    <td width="20%">
         {% if target.object_type != 'Condition' %}
-
-        <h4>Position</h4>
+        <h4>Position:</h4>
         <table class="internal">
             <tr><td>Altitude:</td><td>{{ e.altitude|to_dms }}</td></tr>
             <tr><td>Azimuth:</td><td>{{ e.azimuth|to_dms }}</td></tr>
             <tr><td>Hour Angle:</td><td>{{ e.hour_angle|to_hms }}</td></tr>
             <tr><td>Airmass:</td><td>{{ e.sec_z|floatformat:3 }}</td></tr>
+        </table>
+        {% else %}
+        <h4>Weather:</h4>
+        <table class="internal">
+            <tr><td>Temp:</td><td>{{ target.temperature }}°F</td></tr>
+            <tr><td>Humidity:</td><td>{{ target.humidity }}%</td></tr>
+            <tr><td>Wind:</td><td>
+                {% if target.wind %}{{ target.wind }}{% endif %}
+            </td></tr>
         </table>
         {% endif %}
     </td>

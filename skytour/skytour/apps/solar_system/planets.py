@@ -1,9 +1,6 @@
 import datetime, pytz
 from skyfield.api import load 
-from skyfield.almanac import (
-    phase_angle as get_phase_angle, 
-    fraction_illuminated,
-)
+from skyfield.almanac import phase_angle as get_phase_angle, fraction_illuminated
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
@@ -87,7 +84,7 @@ def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
     # Special things for planets:
     physical = None
     if planet.name == 'Jupiter':
-        physical = get_jupiter_physical_ephem(utdt)
+        physical = get_jupiter_physical_ephem(utdt, planet)
     elif planet.name == 'Mars':
         physical = get_mars_physical_ephem(utdt, planet)
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Telescope, Eyepiece
+from .models import Telescope, Eyepiece, Filter
 
 class EyepieceAdmin(admin.ModelAdmin):
     model = Eyepiece
@@ -8,3 +8,4 @@ class EyepieceAdmin(admin.ModelAdmin):
 
 admin.site.register(Telescope)
 admin.site.register(Eyepiece, EyepieceAdmin)
+admin.site.register(Filter)

@@ -6,7 +6,7 @@ class AbstractObservation(admin.StackedInline):
     (None, {
         'fields': [
             ('ut_datetime', 'location'),
-            ('telescope', 'eyepieces'),
+            ('telescope', 'eyepieces', 'filters'),
             'notes',
         ]
     }),

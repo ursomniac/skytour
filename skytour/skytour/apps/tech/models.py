@@ -60,6 +60,11 @@ class Eyepiece(models.Model):
         default = 52,
         help_text = 'degrees'
     )
+    short_name = models.CharField (
+        _('Short Name'),
+        max_length = 10,
+        null = True, blank = True
+    )
     telescope = models.ForeignKey (Telescope, on_delete=models.SET_NULL, null=True, blank=True)
 
     @property
@@ -96,5 +101,74 @@ class Eyepiece(models.Model):
     class Meta:
         ordering = ['-focal_length']
 
+FILTER_TYPE_CHOICES = (
+    ('wide', 'Wide'),
+    ('narrow', 'Narrow')
+)
 
-# Need to add Filter class!
+class Filter(models.Model):
+    name = models.CharField (
+        _('Name'),
+        max_length = 40
+    )
+    short_name = models.CharField (
+        _('Short Name'),
+        max_length=10,
+        null = True, blank = True
+    )
+    filter_type = models.CharField (
+        _('Filter Type'),
+        max_length = 40,
+        choices = FILTER_TYPE_CHOICES
+    )
+    central_wavelength = models.FloatField (
+        null = True, blank = True,
+        help_text = 'in nm'
+    )
+    fwhm = models.FloatField (
+        _('FWHM'),
+        null = True, blank = True,
+        help_text = 'in nm'
+    )
+    dominant_wavelength = models.FloatField (
+        _('Dom. Wavelength'),
+        null = True, blank = True,
+        help_text = 'From Watten Specs, in nm'
+    )
+    transmission = models.FloatField (
+        _('Transmission'),
+        null = True, blank = True,
+        help_text = 'in %'
+    )
+    transmission_curve = models.ImageField (
+        _('Trans. Curve'),
+        upload_to = 'filter_specs',
+        null = True, blank = True
+    )
+    watten_curve = models.ImageField (
+        _('Watten Curve'),
+        upload_to = 'filter_specs',
+        null = True, blank = True
+    )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
+    )
+    tech_notes = models.TextField (
+        _('Tech Notes'),
+        null = True, blank = True,
+        help_text = 'From Watten specs'
+    )
+
+    def __str__(self):
+        x = f'{self.name} ({self.filter_type})'
+        if self.central_wavelength:
+            x += f': {self.central_wavelength }'
+            if self.fwhm:
+                x += f'± {self.fwhm/2.}'
+            x += ' nm'
+        return x
+
+    class Meta:
+        ordering = ['central_wavelength']
+

@@ -5,9 +5,8 @@ from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
-from ..tech.models import Telescope, Eyepiece
+from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.transform import get_cartesian
-#from .utils import get_metadata
 
 class FieldView(models.Model):
     """
@@ -168,9 +167,9 @@ class ObservingLog(models.Model):
         on_delete = models.CASCADE
     )
     # Eyepiece(s)
-    eyepieces = models.ManyToManyField (
-        _(Eyepiece),
-    )
+    eyepieces = models.ManyToManyField (Eyepiece)
+    # Filter(s)
+    filters = models.ManyToManyField (Filter)
     # Ugh you need location!
     location = models.ForeignKey (
         ObservingLocation,
@@ -186,12 +185,13 @@ class ObservingLog(models.Model):
 
     @property
     def eyepiece_list(self):
-        elist = []
-        for e in self.eyepieces.all():
-            x = f'{e.type} {e.focal_length}'
-            elist.append(x)
-        #print("ELIST: ", elist)
+        elist = [e.short_name for e in self.eyepieces.all()]
         return ', '.join(elist)
+
+    @property
+    def filter_list(self):
+        flist = [f.short_name for f in self.filters.all()]
+        return ', '.join(flist)
 
     class Meta:
         abstract = True

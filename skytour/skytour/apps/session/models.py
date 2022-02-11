@@ -91,6 +91,12 @@ class ObservingCircumstances(models.Model):
         null = True, blank=True,
         help_text = 'in %'
     )
+    wind = models.CharField (
+        _('Wind'),
+        max_length = 50,
+        null = True, blank = True,
+        help_text = 'Speed/Direction'
+    )
 
     url_path = None
     object_type = 'Condition'

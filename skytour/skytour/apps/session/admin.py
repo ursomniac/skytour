@@ -8,7 +8,8 @@ class ObservingCircumstancesInline(admin.StackedInline):
         (None, {
             'fields': [
                 ('session_stage', 'ut_datetime'),
-                ('temperature', 'humidity', 'cloud_cover'),
+                ('temperature', 'humidity'), 
+                ('cloud_cover', 'wind'),
                 ('seeing', 'sqm')
             ]
         }),
