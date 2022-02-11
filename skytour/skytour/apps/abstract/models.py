@@ -190,7 +190,7 @@ class ObservingLog(models.Model):
         for e in self.eyepieces.all():
             x = f'{e.type} {e.focal_length}'
             elist.append(x)
-        print("ELIST: ", elist)
+        #print("ELIST: ", elist)
         return ', '.join(elist)
 
     class Meta:
