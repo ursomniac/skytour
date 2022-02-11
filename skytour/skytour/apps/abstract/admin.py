@@ -5,7 +5,7 @@ class AbstractObservation(admin.StackedInline):
     fieldsets = (
     (None, {
         'fields': [
-            'ut_datetime',
+            ('ut_datetime', 'location'),
             ('telescope', 'eyepieces'),
             'notes',
         ]

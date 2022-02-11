@@ -4,7 +4,10 @@ from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
 from ..abstract.models import ObservingLog
-from .comets import get_comet_object
+from ..abstract.utils import get_metadata
+from .asteroids import get_asteroid
+from .comets import get_comet_object, get_comet
+from .planets import get_solar_system_object
 from .vocabs import STATUS_CHOICES
 
 class Planet(models.Model):
@@ -101,6 +104,17 @@ class PlanetObservation(ObservingLog):
         on_delete = models.CASCADE,
         related_name = 'observations'
     )
+    object_type = 'Planet'
+    url_path = 'planet-detail'
+
+    @property
+    def observation_metadata(self):
+        ephem = get_solar_system_object(self.ut_datetime, self.object, location=self.location)
+        return get_metadata(self, ephem=ephem)
+
+    def __str__(self):
+        return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
+
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
@@ -256,6 +270,17 @@ class AsteroidObservation(ObservingLog):
         on_delete = models.CASCADE,
         related_name = 'observations'
     )
+    object_type = 'Asteroid'
+    url_path = 'asteroid-detail'
+
+    @property
+    def observation_metadata(self):
+        ephem = get_asteroid(self.ut_datetime, self.object, location=self.location)
+        return get_metadata(self, ephem=ephem)
+
+    def __str__(self):
+        return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
+
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
@@ -292,6 +317,17 @@ class CometObservation(ObservingLog):
         on_delete = models.CASCADE,
         related_name = 'observations'
     )
+    object_type = 'Comet'
+    url_path = 'comet-detail'
+    
+    @property
+    def observation_metadata(self):
+        ephem = get_comet(self.ut_datetime, self.object, location=self.location)
+        return get_metadata(self, ephem=ephem)
+
+    def __str__(self):
+        return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
+
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'

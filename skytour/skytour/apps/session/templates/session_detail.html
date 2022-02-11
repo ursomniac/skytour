@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load skytour_filters %}
+{% block title %}Observing Session: {{ object.ut_date|date:"Y-m-d" }}: Skytour{% endblock title %}
+{% block styles %}
+<style>
+    table.boxed td {
+        border-style: 1px solid black;
+        vertical-align: top !important;
+    }
+    table.boxed td h1, h3, h4 { margin: 5px 3px; }
+    table.internal td {
+        border-style: none;
+        vertical-align: top;
+        padding: 2px 5px;
+
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+
+<table class="boxed">
+    <tr>
+        <td width="30%"%>
+            <h1>Observing Session:<br>{{ object.ut_date|date:"Y-m-d" }}</h1>
+            Location: {{ object.location.address }}<br/>
+            {{ object.location.city}}, {{ object.location.state }}<br/>
+            Latitude: {{ object.location.latitude|floatformat:5 }}<br/>
+            Longitude {{ object.location.longitude|floatformat:5 }}<br/>
+        </td>
+        <td style="vertical-align: top;">
+            <h4>Notes:</h4>
+            {{ object.notes }}
+        </td>
+    </tr>
+</table>
+
+<h2>Observations</h2>
+
+<table class="boxed">
+{% for target in object.session_observations %}
+{% with e=target.observation_metadata %}
+<tr>
+    <td width="20%">
+    {% if target.object_type == 'Condition' %}
+        <h3>Condition: {{ target.session_stage }}</h3>
+    {% elif target.object_type == 'DSO' %}
+        <h3>{{ target.object_type}}: {{ target.object.shown_name }}</h3>
+    {% else %}
+        <h3>{{ target.object_type}}: {{ target.object.name }}</h3>
+    {% endif %}
+        <table class="internal">
+            <tr><td>UT:</td><td>{{ target.ut_datetime|date:"Y-m-d h:i" }}</td></tr>
+            {% if target.object_type != 'Condition' %}
+            <tr><td>Julian Date:</td><td>{{ e.julian_date|floatformat:5 }}</td></tr>
+            <tr><td>Sidereal Time:</td><td>{{ e.sidereal_time|to_hms }}</td></tr>
+            {% else %}
+            <tr><td>Julian Date:</td><td>{{ target.julian_date|floatformat:5 }}</td></tr>
+            <tr><td>Sidereal Time:</td><td>{{ target.sidereal_time|to_hms }}</td></tr>
+            {% endif %}
+        </table>
+    </td>
+    <td width="20%">
+        <h4>Conditions/Equipment:</h4>
+        <table class="internal">
+            {% if target.object_type == 'Condition' %}
+            <tr><td>SQM:</td><td>{{ target.sqm }}</td></tr>
+            <tr><td>Seeing:</td><td>{{ target.seeing }}</td></tr>
+            <tr><td>Temp:</td><td>{{ target.temperature }}°F</td></tr>
+            <tr><td>Humidity:</td><td>{{ target.humidity }}</td></tr>
+            <tr><td>Cloud Cover:</td><td>{{ cloud_cover }}</td></tr>
+            {% else %}
+            <tr><td>Telescope:</td><td>{{ target.telescope }}</td></tr>
+            <tr><td>Eyepiece(s):</td><td>{{ target.eyepiece_list }}</td></tr>
+            <tr><td>Filter(s):</td><td>{{ target.filters }}</td></tr>
+            {% endif %}
+        </table>
+    </td>
+
+    <td>
+        {% if target.object_type != 'Condition' %}
+
+        <h4>Position</h4>
+        <table class="internal">
+            <tr><td>Altitude:</td><td>{{ e.altitude|to_dms }}</td></tr>
+            <tr><td>Azimuth:</td><td>{{ e.azimuth|to_dms }}</td></tr>
+            <tr><td>Hour Angle:</td><td>{{ e.hour_angle|to_hms }}</td></tr>
+            <tr><td>Airmass:</td><td>{{ e.sec_z|floatformat:3 }}</td></tr>
+        </table>
+        {% endif %}
+    </td>
+
+    <td>
+        <h4>Notes:</h4>
+        {{ target.notes|linebreaks }}
+    </td>
+</tr>
+{% endwith %}
+{% endfor %}
+</table>
+<br/><br/>
+{% endblock content %}

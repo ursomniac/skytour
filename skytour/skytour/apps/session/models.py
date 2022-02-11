@@ -1,8 +1,8 @@
 import datetime
-#from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
+from ..observe.time import get_last, get_julian_date
 from ..utils.utils import get_limiting_magnitude
 from .chain import get_all_observations
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
@@ -32,10 +32,14 @@ class ObservingSession(models.Model):
         null = True, blank = True
     )
 
+
+    def get_absolute_url(self):
+        return '/session/{}'.format(self.pk)
+
     # Get all of the Planet/OSD/etc. observations for this session
     @property
     def session_observations(self):
-        return get_all_observations(self.ut_date)
+        return get_all_observations(self.ut_date, self.observingcircumstances_set.all())
 
     def __str__(self):
         return f"{self.ut_date}: {self.location}"
@@ -52,7 +56,7 @@ class ObservingCircumstances(models.Model):
         ObservingSession,
         on_delete = models.CASCADE
     )
-    utdt = models.DateTimeField (
+    ut_datetime = models.DateTimeField (
         _('UTDT'),
         default=datetime.datetime.utcnow
     )
@@ -88,6 +92,9 @@ class ObservingCircumstances(models.Model):
         help_text = 'in %'
     )
 
+    url_path = None
+    object_type = 'Condition'
+
     @property
     def brightness(self):
         x = 8.033 - 0.4 * self.sqm
@@ -116,10 +123,18 @@ class ObservingCircumstances(models.Model):
     def limiting_magnitude(self):
         return get_limiting_magnitude(self.bortle)
 
+    @property
+    def julian_date(self):
+        return get_julian_date(self.ut_datetime)
+        
+    @property
+    def sidereal_time(self):
+        return get_last(self.ut_datetime, self.session.location.longitude)
+
     class Meta:
-        ordering = ['utdt']
+        ordering = ['ut_datetime']
         verbose_name = 'Conditions'
         verbose_name_plural = 'Observing Conditions'
 
     def __str__(self):
-        return "{}: {}".format(self.utdt, self.session_stage, self.session.location)
+        return "{}: {}".format(self.ut_datetime, self.session_stage, self.session.location)

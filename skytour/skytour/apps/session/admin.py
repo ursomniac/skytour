@@ -7,7 +7,7 @@ class ObservingCircumstancesInline(admin.StackedInline):
     fieldsets = [
         (None, {
             'fields': [
-                ('session_stage', 'utdt'),
+                ('session_stage', 'ut_datetime'),
                 ('temperature', 'humidity', 'cloud_cover'),
                 ('seeing', 'sqm')
             ]

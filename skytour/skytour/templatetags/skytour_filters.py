@@ -8,13 +8,14 @@ def dict_value(value, arg):
 @register.filter(name='to_hms')
 def to_hms(d, n=3):
     try:
-        x = d % 24.
+        sign = '-' if d < 0. else ''
+        x = abs(d) % 24
         h = int(x)
         x = (x - h) * 60.
         m = int(x)
         s = (x - m) * 60.
         d = n + 3
-        return f"{h:02d}h {m:02d}m {s:0{d}.{n}f}s"
+        return f"{sign}{h:02d}h {m:02d}m {s:0{d}.{n}f}s"
     except:
         return None
 

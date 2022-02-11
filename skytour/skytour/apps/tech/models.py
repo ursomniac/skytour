@@ -97,4 +97,4 @@ class Eyepiece(models.Model):
         ordering = ['-focal_length']
 
 
-    
+# Need to add Filter class!

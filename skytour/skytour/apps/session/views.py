@@ -6,7 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..observe.time import get_julian_date
-from ..solar_system.asteroids import get_visible_asteroids
+from ..solar_system.helpers import get_visible_asteroids
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingParametersForm
 from .models import ObservingSession
@@ -105,6 +105,7 @@ class ObservingSessionListView(ListView):
 
 class ObservingSessionDetailView(DetailView):
     model = ObservingSession
+    template_name = 'session_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)

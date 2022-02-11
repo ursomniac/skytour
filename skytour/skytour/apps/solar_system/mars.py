@@ -3,8 +3,6 @@ import math
 from skyfield.api import load
 from ..observe.astro import get_obliquity
 from ..observe.time import get_julian_date, estimate_delta_t
-from .earth import get_earth
-from .models import Planet
 
 def _cosd(d):
     return math.cos(math.radians(d))
@@ -14,16 +12,11 @@ def _tand(d):
     return math.tan(math.radians(d))
 
 
-def get_mars_physical_ephem(utdt, debug=False):
+def get_mars_physical_ephem(utdt, planet, debug=False):
     """
     Meeus, 2nd Ed., chapter 41
     All we need here is D_E and omega
     """
-    # The planet record
-    planet = Planet.objects.filter(name='Mars').first()
-    if not planet:
-        return None
-
     jd = get_julian_date(utdt)
     delta_t = estimate_delta_t(utdt)
     jde = jd + delta_t/86400.

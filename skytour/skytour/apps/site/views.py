@@ -2,7 +2,7 @@ import datetime, pytz
 from django.views.generic.base import TemplateView
 from ..misc.utils import get_upcoming_calendar
 from ..solar_system.meteors import get_meteor_showers
-from ..solar_system.planets import get_adjacent_planets, get_all_planets
+from ..solar_system.helpers import get_adjacent_planets, get_all_planets
 
 class HomePageView(TemplateView):
     """

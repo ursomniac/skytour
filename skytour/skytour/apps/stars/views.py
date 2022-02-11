@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 #from ..observe.models import ObservingLocation
 from ..session.cookie import deal_with_cookie
 from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.asteroids import assemble_asteroid_list
+from ..solar_system.helpers import assemble_asteroid_list
 
 from .forms import SkyMapForm
 from .models import BrightStar

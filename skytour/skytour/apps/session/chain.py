@@ -3,8 +3,9 @@ from itertools import chain
 from ..dso.models import DSOObservation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.models import PlanetObservation, AsteroidObservation, CometObservation
+#from .models import ObservingCircumstances
 
-def get_all_observations(ut_date): # or start/end date/time?
+def get_all_observations(ut_date, circumstances): # or start/end date/time?
     """
     Get all observations from the DSO/Planet/Asteroid/Comet *Observation models
     that fall within the realm of a ObservingSession date.
@@ -22,12 +23,14 @@ def get_all_observations(ut_date): # or start/end date/time?
     # I THINK this handles all the edge effects.
     utdt_start = (datetime.datetime.combine(ut_date, datetime.time(0,0)) + datetime.timedelta(hours=offset_ut)).replace(tzinfo=pytz.utc)
     utdt_end = (utdt_start + datetime.timedelta(hours=nighttime_window)).replace(tzinfo=pytz.utc)
+
     # OK get all DSO/Planet/Asteroid/Comet observations that fall within the window.
+    #conditions = ObservingCircumstances.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     dsos = DSOObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     planets = PlanetObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     asteroids = AsteroidObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     comets = CometObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     observation_list = sorted(
-        chain(dsos, planets, comets, asteroids),
+        chain(circumstances, dsos, planets, comets, asteroids),
         key=lambda obs: obs.ut_datetime)
     return observation_list

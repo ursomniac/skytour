@@ -23,6 +23,7 @@
 {# header section #}
 <tr>
 	<td colspan=2 class="object_header">
+		<a name="top"></a>
 		<table width="100%" class="header" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
 			<tr>
 				<td width=80% class="object_name">
@@ -36,7 +37,7 @@
 
 				</td>
 				<td width=20% class="description" rowspan=2>
-					{{ object.object_type }}
+					<a href="{% url 'object-type-detail' object.object_type.slug %}">{{ object.object_type }}</a>
 					<br>in<br>
 					<b>
 						<a href="{% url 'constellation-detail' object.constellation.abbreviation %}">
@@ -46,7 +47,7 @@
 					{% if object.priority %}
 					<br><br/>
 					<b>Priority:&nbsp;
-						{{ object.priority }}
+						<a href="{% url 'priority-detail' object.priority %}">{{ object.priority }}</a>
 					{% endif %}
 				</td>
 			</tr>
@@ -79,6 +80,7 @@
 
 <tr>
 	<td id="finder" width=50%>
+		<a name="charts"></a>
 		<h3>DSO Finder Chart:</h3>
 		{% if object.dso_finder_chart %}
 		<img src="{{ object.dso_finder_chart.url }}" width=100%>
@@ -99,6 +101,7 @@
 <table>
 <tr>
 	<td>
+		<a name="nearby_dsos"></a>
 		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
 			<small>
 			{% if object.nearby_dsos|length > 0 %}<table>{% endif %}
@@ -122,40 +125,49 @@
 <table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=50% rowspan=2>
+		<a name="notes"></a>
 		<h3>Notes</h3>
 		{{ object.notes|linebreaks }}
 	</td>
 	<td>
-		<table style="border: 0"><tr>
-		<td class="dso_image">
-			{% if object.images.all.0 %}
-			<img src="{{ object.images.all.0.image.url }}" width=100%>
-			{% endif %}
-		</td>
-		<td class="dso_image">
-			{% if object.images.all.1 %}
-			<img src="{{ object.images.all.1.image.url }}" width=100%>
-			{% endif %}
-		</td>
-		</tr></table>
+		<h3>Observations</h3>
+		{% if object.observations|length > 0 %}<ul>{% endif %}
+		{% for obs in object.observations.all %}
+		<li>{{ obs.ut_date }}</li>
+		{% empty %}
+		(No Observations - yet)
+		{% endfor %}
+		{% if object.observations|length > 0 %}</ul>{% endif %}
 	</td>
 </tr>
+</table>
+<table>
+<tr>
+	<td class="dso_image">
+		{% if object.images.all.0 %}
+		<img src="{{ object.images.all.0.image.url }}" width=100%>
+		{% endif %}
+	</td>
+	<td class="dso_image">
+		{% if object.images.all.1 %}
+		<img src="{{ object.images.all.1.image.url }}" width=100%>
+		{% endif %}
+	</td>
+</tr>
+{% if object.images.all.2 %}
 <tr class="bottom">
-	<td>
-		<table style="border: 0"><tr>
-		<td class="dso_image">
-			{% if object.images.all.2 %}
-			<img src="{{ object.images.all.2.image.url }}" width=100%>
-			{% endif %}
-		</td>
-		<td class="dso_image">
-			{% if object.images.all.3 %}
-			<img src="{{ object.images.all.3.image.url }}" width=100%>
-			{% endif %}
-		</td>
-		</tr></table>
+	<td class="dso_image">
+		{% if object.images.all.2 %}
+		<img src="{{ object.images.all.2.image.url }}" width=100%>
+		{% endif %}
+	</td>
+	<td class="dso_image">
+		{% if object.images.all.3 %}
+		<img src="{{ object.images.all.3.image.url }}" width=100%>
+		{% endif %}
 	</td>
 </tr>
+{% endif %}
 </table>
 
 {% endblock content %}

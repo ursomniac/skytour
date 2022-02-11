@@ -3,8 +3,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from ..observe.models import ObservingLocation
+from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece
 from ..utils.transform import get_cartesian
+#from .utils import get_metadata
 
 class FieldView(models.Model):
     """
@@ -121,8 +124,6 @@ class Coordinates(models.Model):
     @property
     def get_xyz(self):
         return get_cartesian(self.ra_float, self.dec_float, ra_dec = True)
- 
-
 
     class Meta:
         abstract = True
@@ -170,13 +171,27 @@ class ObservingLog(models.Model):
     eyepieces = models.ManyToManyField (
         _(Eyepiece),
     )
+    # Ugh you need location!
+    location = models.ForeignKey (
+        ObservingLocation,
+        default = find_site_parameter('default-location-id', default=43, param_type='positive'),
+        on_delete = models.CASCADE,
+        limit_choices_to = {'status__in': ['Active', 'Provisional']}
+    )
     # Filter(s)
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
     )
-    # sketch?
-    # images? - either from the ZWO camera or say a phone?
+
+    @property
+    def eyepiece_list(self):
+        elist = []
+        for e in self.eyepieces.all():
+            x = f'{e.type} {e.focal_length}'
+            elist.append(x)
+        print("ELIST: ", elist)
+        return ', '.join(elist)
 
     class Meta:
         abstract = True

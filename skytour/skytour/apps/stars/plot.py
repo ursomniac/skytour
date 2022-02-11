@@ -10,7 +10,7 @@ from skyfield.projections import build_stereographic_projection
 from ..observe.time import get_t_epoch, get_julian_date, get_last
 from ..plotting.map import *
 from ..solar_system.moon import get_moon
-from ..solar_system.planets import get_all_planets
+from ..solar_system.helpers import get_all_planets
 from ..solar_system.sun import  get_sun
 
 def get_skymap(

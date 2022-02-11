@@ -1,39 +1,15 @@
 from django.contrib import admin
+from ..abstract.admin import AbstractObservation
 from .models import Planet, MeteorShower, Asteroid, Comet, PlanetObservation, CometObservation, AsteroidObservation
 
-class AsteroidObservationAdmin(admin.StackedInline):
+class AsteroidObservationAdmin(AbstractObservation):
     model = AsteroidObservation
-    extra = 0
-    fieldsets = (
-        (None, {
-            'fields': [
-                ('ut_date', 'ut_time'),
-                'notes'
-            ]
-        }),
-    )
-class CometObservationAdmin(admin.StackedInline):
+
+class CometObservationAdmin(AbstractObservation):
     model = CometObservation
-    extra = 0
-    fieldsets = (
-        (None, {
-            'fields': [
-                ('ut_date', 'ut_time'),
-                'notes'
-            ]
-        }),
-    )
-class PlanetObservationAdmin(admin.StackedInline):
+
+class PlanetObservationAdmin(AbstractObservation):
     model = PlanetObservation
-    extra = 0
-    fieldsets = (
-        (None, {
-            'fields': [
-                ('ut_date', 'ut_time'),
-                'notes'
-            ]
-        }),
-    )
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower

@@ -1,5 +1,4 @@
 import datetime, pytz
-from matplotlib.pyplot import get
 from skyfield.api import load 
 from skyfield.almanac import (
     phase_angle as get_phase_angle, 
@@ -10,15 +9,13 @@ from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
 from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
-
-from .jupiter import get_jupiter_physical_ephem, get_red_spot
+from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
-from .models import Planet
 from .utils import get_angular_size, get_plotting_phase_angle, get_elongation
 from .utils import get_constellation
 from .vocabs import PLANETS
 
-def get_solar_system_object(utdt, name, utdt_end=None, location=None):
+def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
     """
     For a given UTDT get all the metadata for a planet of the given name.
 
@@ -37,11 +34,6 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
     eph = load('de421.bsp')
     earth = eph['earth']
-    
-    # The planet record
-    planet = Planet.objects.filter(name=name).first()
-    if not planet:
-        return None
 
     # Get the coordinates at time t from Earth
     obs = earth.at(t).observe(eph[planet.target])
@@ -63,7 +55,7 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
     elongation = get_elongation(obs, sun)
     # This generates an angle to use for plotting the planet's disk.
     # It (clumsily) handles the difference between inferior planets and the Moon.
-    plotting_phase_angle = get_plotting_phase_angle(name, i, elongation)
+    plotting_phase_angle = get_plotting_phase_angle(planet.name, i, elongation)
     # k = illuminated fraction of the Moon's disk
     k = fraction_illuminated(eph, planet.target, t).item() # float
 
@@ -94,13 +86,13 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
 
     # Special things for planets:
     physical = None
-    if name == 'Jupiter':
+    if planet.name == 'Jupiter':
         physical = get_jupiter_physical_ephem(utdt)
-    elif name == 'Mars':
-        physical = get_mars_physical_ephem(utdt)
+    elif planet.name == 'Mars':
+        physical = get_mars_physical_ephem(utdt, planet)
 
     return {
-        'name': name,
+        'name': planet.name,
         'slug': planet.slug,
         'target': obs,
         'coords': observe_to_values(obs),
@@ -122,42 +114,6 @@ def get_solar_system_object(utdt, name, utdt_end=None, location=None):
         'moons': moon_obs
     }
 
-def get_planet_dict(utdt, utdt_end=None, location=None):
-    planet_dict = {}
-    for name in PLANETS:
-        planet = get_solar_system_object(utdt, name, utdt_end=utdt_end, location=location)
-        planet_dict[name] = planet
-    return planet_dict
-
-def get_all_planets(utdt, utdt_end=None, location=None):
-    """
-    Get a list of all the planet dicts for a given UTDT.
-    """
-    planet_dict = get_planet_dict(utdt, utdt_end=utdt_end, location=location)
-    adjacent_planets = get_adjacent_planets(planet_dict)
-    for p1, p2, sep in adjacent_planets:
-        planet_dict[p1]['close_to'].append(tuple([p2, sep]))
-        planet_dict[p2]['close_to'].append(tuple([p1, sep]))
-    return planet_dict
-
-def get_adjacent_planets(planets=None, utdt=None, min_sep=10.):
-    """
-    How close are planets to each other?
-    Return a tuple of (planet1, planet2, separation) if separated by < min_sep.
-    """
-    if not planets:
-        planets = get_planet_dict(utdt)
-    close_by = []
-    for planet in PLANETS:
-        rest = PLANETS[PLANETS.index(planet)+1:]
-        for other_planet in rest:
-            p1t = planets[planet]['target']
-            p2t = planets[other_planet]['target']
-            sep = p1t.separation_from(p2t).degrees.item()
-            if sep <= min_sep:
-                t = (planet, other_planet, sep)
-                close_by.append(t)
-    return close_by
 
 def get_ecliptic_positions(utdt=None):
     if utdt is None:

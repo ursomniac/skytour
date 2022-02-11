@@ -1,9 +1,6 @@
-
 import datetime, pytz
 import math
-from skyfield.api import load
 from ..observe.time import get_julian_date, estimate_delta_t
-from .earth import get_earth
 
 sign = lambda a: 1 if a>0 else -1 if a<0 else 0
 
@@ -13,7 +10,7 @@ GRS:
 System II:  longitude = 9° (jan 2022), drifts 1.75°/month 
     best placed within 50m of transit time
 """
-def get_jupiter_physical_ephem(utdt, debug=False):
+def get_jupiter_physical_ephem(utdt, planet, debug=False):
     """
     This is a quick approximation.
     """

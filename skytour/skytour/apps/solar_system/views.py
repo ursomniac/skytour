@@ -5,12 +5,14 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
-from .asteroids import get_asteroid, get_visible_asteroids
+from .asteroids import get_asteroid
+from .helpers import get_visible_asteroids
 from .comets import get_comet
 from .forms import TrackerForm
-from .models import Comet, Planet, Asteroid, MeteorShower
+from .helpers import get_all_planets
+from .models import Comet, Planet, Asteroid
 from .moon import get_moon
-from .planets import get_all_planets, get_ecliptic_positions
+from .planets import get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
 
 class PlanetListView(ListView):

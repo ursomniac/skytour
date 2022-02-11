@@ -2,12 +2,12 @@ from skyfield.api import wgs84, load
 from ..dso.models import DSO
 from ..observe.almanac import dark_time
 from ..observe.time import get_julian_date, get_t_epoch
-from ..solar_system.asteroids import get_visible_asteroids
+from ..solar_system.helpers import get_visible_asteroids
 from ..solar_system.comets import get_comet
+from ..solar_system.helpers import get_all_planets
 from ..solar_system.models import Comet
 from ..solar_system.moon import get_moon
 from ..solar_system.plot import create_planet_image
-from ..solar_system.planets import get_all_planets
 from ..solar_system.sun import get_sun
 from ..solar_system.vocabs import PLANETS
 

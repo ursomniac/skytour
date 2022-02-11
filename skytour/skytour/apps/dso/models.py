@@ -5,6 +5,7 @@ from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog
+from ..abstract.utils import get_metadata
 from ..utils.angdist import get_neighbors
 from ..utils.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
@@ -260,6 +261,18 @@ class DSOObservation(ObservingLog):
         on_delete = models.CASCADE,
         related_name = 'observations'
     )
+
+    # these probably should be class parameters.
+    object_type = 'DSO'
+    url_path = 'dso-detail'
+
+    @property
+    def observation_metadata(self):
+        return get_metadata(self, ephem=None)
+        
+    def __str__(self):
+        return f"{self.ut_datetime}: {self.object_type}: {self.object.shown_name}"
+        
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'

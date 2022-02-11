@@ -14,7 +14,6 @@ from .asteroids import get_asteroid_target
 from .comets import get_comet_target
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
-from .planets import get_solar_system_object
 
 matplotlib.use('Agg') # this gets around the threading issues.
 
