@@ -17,18 +17,9 @@
             in {{ planet.observe.constellation.name }}
         </td>
         <td width="50%">
-            {% comment %}
-            <form method="GET">
-            {# form.as_p #}
-            <input type="submit" value="Submit"/>
-            {% if is_moon %}
-            <button><a href="{% url 'moon-detail' %}">Now</a></button>
-            {% else %}
-            <button><a href="{% url 'planet-detail' planet.slug %}">Now</a></button>
-            {% endif %}
-            </form>
-            <small>Express date/time in UT.</small><br/>
-            {% endcomment %}
+            <h2>Observations</h2>
+            # Observations: {{ planet.number_of_observations }}<br>
+            Last Observed: {{ planet.last_observed }}
         </td>
         <td>
             <h2>Solar System</h2>
@@ -40,6 +31,7 @@
             <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
             <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
             <a href="{% url 'moon-detail' %}">              <button>Moon</button></a>
+            <br>
         </td>
     </tr>
 </table>

@@ -12,6 +12,7 @@
         {% if not hide_priority %}
         <th> Priority</th>
         {% endif %}
+        <th># Observations</th>
     </tr>
 </thead>
 <tbody>
@@ -32,6 +33,7 @@
         {% if not hide_priority %}
         <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.priority }}</a></td>
         {% endif %}
+        <td>{{ dso.observations|length }}</td>
     </tr>
 {% endfor %}
 </tbody>

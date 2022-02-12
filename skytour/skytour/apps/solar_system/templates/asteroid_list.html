@@ -13,6 +13,8 @@
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
+            <th># Obs.</th>
+            <th>Last Observed</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +28,8 @@
             <td>{{ asteroid.coords.distance.au|floatformat:2 }} AU</td>
             <td>{{ asteroid.observe.constellation.name }}</td>
             <td>{{ asteroid.observe.apparent_mag|floatformat:2 }}</td>
+            <td>{{ asteroid.number_of_observations }}</td>
+            <td>{{ asteroid.last_observed }}</td>
         </tr>
         {% endfor %}
     </tbody>

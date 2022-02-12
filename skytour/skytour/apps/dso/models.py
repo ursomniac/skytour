@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from skyfield.api import Star
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
-from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog
+from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from ..utils.angdist import get_neighbors
 from ..utils.transform import get_alt_az
@@ -25,7 +25,7 @@ PRIORITY_COLORS = {
     'None': '#ccc'
 }
 
-class DSO(Coordinates, FieldView):
+class DSO(Coordinates, FieldView, ObservableObject):
     """
     Basically everything we want:
         Name and Aliases

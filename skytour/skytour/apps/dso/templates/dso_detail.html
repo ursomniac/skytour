@@ -3,9 +3,10 @@
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
+	table.lite { border-style: none; }
+	table.lite td { border-style: none;}
 	h1 { font-weight: bold; font-size: 250%; color: #fff; }
 	td { vertical-align: top;}
-	td.object_header { border: 0 !important; }
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
 	td.description a { color: #ff0; }
@@ -18,13 +19,14 @@
 {% endblock styles %}
 
 {% block content %}
-<table style="border: 0">
+<br>
+<table>
 <!-- main -->
 {# header section #}
 <tr>
-	<td colspan=2 class="object_header">
+	<td colspan=2 class="lite">
 		<a name="top"></a>
-		<table width="100%" class="header" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
+		<table width="100%" class="lite" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
 			<tr>
 				<td width=80% class="object_name">
 					<h1>
@@ -34,7 +36,6 @@
 						{{ object.nickname }}
 						{% endif %}
 					</h1>
-
 				</td>
 				<td width=20% class="description" rowspan=2>
 					<a href="{% url 'object-type-detail' object.object_type.slug %}">{{ object.object_type }}</a>
@@ -61,7 +62,7 @@
 <tr>
 	<td id="metadata" colspan=2>
 		<h3>Information:</h3>
-		<table width=100%>
+		<table width=100% class="lite">
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}</td>
 				<td class="coordinates">&delta; (2000): {{ object.dec_text }}</td>
@@ -104,7 +105,7 @@
 		<a name="nearby_dsos"></a>
 		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
 			<small>
-			{% if object.nearby_dsos|length > 0 %}<table>{% endif %}
+			{% if object.nearby_dsos|length > 0 %}<table class="lite">{% endif %}
 			{% for x in object.nearby_dsos %}
 			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
 				<td width="20%">
@@ -121,7 +122,6 @@
 	</td>
 </tr>
 </table>
-<br>
 <table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=50% rowspan=2>
@@ -130,18 +130,18 @@
 		{{ object.notes|linebreaks }}
 	</td>
 	<td>
-		<h3>Observations</h3>
-		{% if object.observations|length > 0 %}<ul>{% endif %}
+		<h3>Observations: {{ object.number_of_observations }}</h3>
+		{% if object.number_of_observations > 0 %}
+		<ul>
 		{% for obs in object.observations.all %}
-		<li>{{ obs.ut_date }}</li>
-		{% empty %}
-		(No Observations - yet)
+		<li>{{ obs.ut_datetime }}</li>
 		{% endfor %}
-		{% if object.observations|length > 0 %}</ul>{% endif %}
+		</ul>
+		{% endif %}
 	</td>
 </tr>
 </table>
-<table>
+<table class="lite">
 <tr>
 	<td class="dso_image">
 		{% if object.images.all.0 %}

@@ -66,27 +66,37 @@ NOTE: You *have* to use the slugs shown below, otherwise the code won't know whe
 
 |          Name            |            Slug              | Default | Notes | 
 | ------------------------ | :--------------------------- | ------: | ----: |
-| Asteroid Mag. Limit      | asteroid-magnitude-limit     |    10.0 |     1 |
-| Declination Limit        | declination-limit            |   -25.0 |  2, 3 | 
-| DSO Mag. Limit           | dso-magnitude-limit          |    12.0 |     4 |
-| Hour Angle Range         | hour-angle-range             |     3.5 |  5, 6 | 
+| Adj. Planets Separation  | adjacent-planets-separation  |    10.0 |     1 |
+| Asteroid Cutoff          | asteroid-cutoff              |    10.0 |     2 |
+| Asteroid Mag. Limit      | asteroid-magnitude-limit     |    10.0 |     3 |
+| Declination Limit        | declination-limit            |   -25.0 |     4 | 
+| DSO Mag. Limit           | dso-magnitude-limit          |    12.0 |     5 |
+| Hour Angle Range         | hour-angle-range             |     3.5 |     6 | 
 | Obs. Session Length      | observing-session-length     |     3.0 |     7 | 
-| Skymap Mag. Limit: DSOs  | skymap-magnitude-limit-dsos  |     9.2 |  8, 9 | 
-| Skymap Mag. Limit: Stars | skymap-magnitude-limit-stars |     5.5 |    10 |
+| Skymap Mag. Limit: DSOs  | skymap-magnitude-limit-dsos  |     9.2 |     8 | 
+| Skymap Mag. Limit: Stars | skymap-magnitude-limit-stars |     5.5 |     9 |
 
 
 ##### Notes
 
-1. The faintest asteroid when polling for "visible" asteroids
-2. The most-southern declination includes in observing plans
-3. TODO: somehow make this work for observers south of the equator!
-4. Faintest DSOs - can reset in the session cookie
-5. How far E/W an observing plan will pull DSOs
-6. Western extent at the beginning of the session; Eastern extent at the end of the session.
+1. How close together do planets get in the sky to be "interesting" (in degrees).  
+    * Note that they will both show up on finder charts for either planet.
+2. Only query asteroids that COULD get as bright as this (speeds up lookups).
+3. The faintest asteroid when polling for "visible" asteroids: 
+    * i.e., if too far away, it's too faint, and don't include.  
+    * This updates any dropdown for asteroids (i.e., only those that are currently brighter will show up), 
+    * also it controls what is shown on the Skymap.
+4. The most-southern declination includes in observing plans
+    * TODO: somehow make this work for observers south of the equator (so that it's a northern limit).
+5. Faintest DSOs shown on list of DSOs - can reset in the session cookie
+6. How far E/W an observing plan will list objects
+    * Western extent at the beginning of the session; 
+    * Eastern extent at the end of the session.
 7. Used to create DSO lists for an observing plan
-8. on the Skymap, how faint to show DSOs
-9. Only DSOs with a priority = 'highest' will be shown here.  You can change those priorities to highlight your favorite DSOs.
-10. Faintest stars to show on a SkyMap
+8. On the Skymap, how faint to show DSOs
+    * Note: Only DSOs with a priority = 'highest' will be shown here.  
+    * You can change priorities to highlight your favorite DSOs.
+9. Faintest stars to show on a SkyMap
 
 #### Positive Integers
 

@@ -19,7 +19,6 @@ This has the views for:
 
 (Note proximity of Venus to Mercury, and that Mercury is crossing in front of Messier 75.)   Of course it was cloudy.
 
-
 # How this is constructed:
 
 ## Models
@@ -47,9 +46,10 @@ Basically this is a first pass and I don't know what I want to do.
 
 ### Comets
 
-Still TBD;  I need to find a way to just get "the ones that matter now" instead of getting a large sample.
-PROBABLY what I'll do is NOT to use a source from the MPC, but just have the orbital elements be part of the 
-model, and let the user deal with it.
+The comet file is obtained from the MPC.
+
+HOWEVER, the Comet model contains only those comets we want to potentially observe (i.e., you have to 
+add them to the model).   The "status" field controls which comets are polled from the MPC file.
 
 ### Meteor Showers
 

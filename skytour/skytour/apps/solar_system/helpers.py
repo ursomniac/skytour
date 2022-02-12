@@ -14,11 +14,19 @@ def assemble_asteroid_list(utdt, slugs=None):
       alist.append(a)
    return alist
 
-def get_visible_asteroids(utdt, cutoff=9., utdt_end=None, location=None, debug=False):
+def get_visible_asteroids(utdt, utdt_end=None, location=None, debug=False):
    """
-   Cutoff is a winnowing of asteroids that NEVER get brighter than that.
+   utdt = when we're observing
+   utdt_end = when we're planning to stop observing, if not None then we return alt/az for
+      the entire session
+   location = ObservingLocation - used to get LAST/alt/az.
    """
+   # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
+   # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
+   # This is just to limit the queryset so that we're not calculating orbital elements for 
+   # hundreds of asteroids, when we'll only be interested in ~20 tops.
+   cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
    asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff) ### TODO: CLEAN THIS UP!
    asteroid_list = []
    for a in asteroids:
@@ -37,6 +45,7 @@ def get_visible_asteroids(utdt, cutoff=9., utdt_end=None, location=None, debug=F
 def get_all_planets(utdt, utdt_end=None, location=None):
     """
     Get a list of all the planet dicts for a given UTDT.
+    if utdt_end and location are given return alt/az/etc. information.
     """
     planet_dict = get_planet_dict(utdt, utdt_end=utdt_end, location=location)
     adjacent_planets = get_adjacent_planets(planet_dict)
@@ -45,11 +54,12 @@ def get_all_planets(utdt, utdt_end=None, location=None):
         planet_dict[p2]['close_to'].append(tuple([p1, sep]))
     return planet_dict
 
-def get_adjacent_planets(planets=None, utdt=None, min_sep=10.):
+def get_adjacent_planets(planets=None, utdt=None):
     """
     How close are planets to each other?
     Return a tuple of (planet1, planet2, separation) if separated by < min_sep.
     """
+    min_sep = find_site_parameter('adjacent-planets-separation', default=10., param_type='float')
     if not planets:
         planets = get_planet_dict(utdt)
     close_by = []

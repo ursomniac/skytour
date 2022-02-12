@@ -3,6 +3,7 @@
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
+    img.constrained { width: 100%; max-width: 500px; }
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
@@ -18,7 +19,7 @@
         </td>
         <td width="35%">
             {% if object.image %}
-            <img src="{{ object.image.url }}">
+            <img src="{{ object.image.url }}" class="constrained">
             {% endif %}
         </td>
         <td width="40%">

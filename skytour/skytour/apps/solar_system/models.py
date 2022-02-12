@@ -3,14 +3,14 @@ from django.db import models
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
-from ..abstract.models import ObservingLog
+from ..abstract.models import ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from .asteroids import get_asteroid
 from .comets import get_comet_object, get_comet
 from .planets import get_solar_system_object
 from .vocabs import STATUS_CHOICES
 
-class Planet(models.Model):
+class Planet(ObservableObject):
     name = models.CharField (
         _('Name'),
         max_length = 20,
@@ -179,7 +179,7 @@ class MeteorShower(models.Model):
         """
         return Star(ra_hours=self.radiant_ra, dec_degrees=self.radiant_dec)
 
-class Asteroid(models.Model):
+class Asteroid(ObservableObject):
     """
     Orbital elements are in the brightest_asteroids.txt file.
     Skyfield loads them and uses them from there.
@@ -285,7 +285,7 @@ class AsteroidObservation(ObservingLog):
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
 
-class Comet(models.Model):
+class Comet(ObservableObject):
 
     name = models.CharField(
         _('Name'),

@@ -69,11 +69,9 @@ class Eyepiece(models.Model):
 
     @property
     def magnification(self):
-        return self.telescope.focal_length / self.focal_length
-
-    @property
-    def mag_display(self):
-        return f'{self.magnification:5.1f}'
+        x = self.telescope.focal_length / self.focal_length
+        m = int(10.*(x + 0.05))/10.
+        return  m
 
     @property
     def field_of_view(self):
@@ -82,7 +80,7 @@ class Eyepiece(models.Model):
     @property
     def fov_display(self):
         fov = self.field_of_view
-        return f'{fov:6.3f}° = {fov*60.:7.3f}\''
+        return f'{fov:6.3f}° = {fov*60.:7.2f}\''
 
     @property 
     def map_circle_radius(self, map_fov):

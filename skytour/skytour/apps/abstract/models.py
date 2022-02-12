@@ -195,3 +195,19 @@ class ObservingLog(models.Model):
 
     class Meta:
         abstract = True
+
+class ObservableObject(models.Model):
+    @property
+    def last_observed(self):
+        obs = self.observations.order_by('-ut_datetime').first()
+        if obs is None:
+            return None
+        return obs.ut_datetime
+
+    @property
+    def number_of_observations(self):
+        x = self.observations.count()
+        return x
+
+    class Meta:
+        abstract=True
