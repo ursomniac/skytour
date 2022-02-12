@@ -54,5 +54,59 @@ For the image fields, I take screen grabs from the Light Pollution Map (`http://
 
 I've selected the subset of moons for each planet that I might hope to see with my Celestron SE 8.  You can edit those lists from the Planets section of the CMS (removing or adding by name in the comma-separated list).   The JPL files you downloaded have all of them.
 
+### Site Parameters
+
+There's a library of models under "Site Parameters".  Here you can set site-wide defaults:
+
+Each parameter is of a different type: float, positive integers, "regular" integers, images, strings, and links.  These are used elsewhere in the code, if the corresponding value is in the DB, then it will be used; otherwise there'll be a default (hardcoded) in the code.
+
+NOTE: You *have* to use the slugs shown below, otherwise the code won't know where to find them!
+
+#### Float
+
+| Name | Slug | Default | Notes | 
+| ---- | ---- | ----- |
+| Asteroid Mag. Limit | asteroid-magnitude-limit | 10.0 | The faintest asteroid when polling for "visible" asteroids |
+| Declination Limit | declination-limit | -25.0 | The most-southern declination includes in observing plans. (1) |
+| DSO Mag. Limit | dso-magnitude-limit | 12.0 | Faintest DSOs - can reset in the session cookie |
+| Hour Angle Range | hour-angle-range | 3.5 | How far E/W an observing plan will pull DSOs (2) |
+| Observing Session Length | observing-session-length | 3.0 | Used to create DSO lists for an observing plan |
+| Skymap Mag. Limit - DSOs | skymap-magnitude-limit-dsos | 9.2 | on the Skymap, how faint to show DSOs (3) |
+| Skymap Mag. Limit - Stars | skymap-magnitude-limit-stars | 5.5 | Faintest stars to show on a SkyMap |
+
+##### Notes
+
+1. TODO: somehow make this work for observers south of the equator!
+2. Western extent at the beginning of the session; Eastern extent at the end of the session.
+3. Only DSOs with a priority = 'highest' will be shown here.  You can change those priorities to highlight your favorite DSOs.
+
+#### Positive Integers
+
+| Name | Slug | Default | Notes | 
+| ---- | ---- | ----- |
+| Default Location ID | default-location-id | TBD | This is the ID/PK of the record in the ObservingLocation table of your "base" location. |
+| SkyMap DSO Priority | skymap-dso-priority |  1 | This sets how "deep" we plot DSOs on a skymap (1) }
+
+##### Notes
+
+1. The value 1 here means "highest priority" only;  using 2 would be "highest + high" and so on.
+
+#### Signed Integers
+
+None yet.
+
+#### Strings
+
+| Name | Slug | Default | Notes | 
+| ---- | ---- | ----- |
+| Poll Planets | poll-planets | 'visible' | When polling planets for an Observing Plan, include all of them or just the ones that will be above the horizon within the observing session window. |
+
+#### Images
+
+None yet.
+
+#### Links
+
+None yet.   This might be where some of the resources in the Website model go instead.
 
 

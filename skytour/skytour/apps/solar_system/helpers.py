@@ -1,3 +1,4 @@
+from ..site_parameter.helpers import find_site_parameter
 from .models import Asteroid, Planet
 from .asteroids import get_asteroid
 from .planets import get_solar_system_object
@@ -13,11 +14,12 @@ def assemble_asteroid_list(utdt, slugs=None):
       alist.append(a)
    return alist
 
-def get_visible_asteroids(utdt, mag_limit=10., cutoff=9., utdt_end=None, location=None, debug=False):
+def get_visible_asteroids(utdt, cutoff=9., utdt_end=None, location=None, debug=False):
    """
    Cutoff is a winnowing of asteroids that NEVER get brighter than that.
    """
-   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
+   mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
+   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff) ### TODO: CLEAN THIS UP!
    asteroid_list = []
    for a in asteroids:
       try:
