@@ -64,32 +64,42 @@ NOTE: You *have* to use the slugs shown below, otherwise the code won't know whe
 
 #### Float
 
-| Name | Slug | Default | Notes | 
-| ---- | ---- | ----- |
-| Asteroid Mag. Limit | asteroid-magnitude-limit | 10.0 | The faintest asteroid when polling for "visible" asteroids |
-| Declination Limit | declination-limit | -25.0 | The most-southern declination includes in observing plans. (1) |
-| DSO Mag. Limit | dso-magnitude-limit | 12.0 | Faintest DSOs - can reset in the session cookie |
-| Hour Angle Range | hour-angle-range | 3.5 | How far E/W an observing plan will pull DSOs (2) |
-| Observing Session Length | observing-session-length | 3.0 | Used to create DSO lists for an observing plan |
-| Skymap Mag. Limit - DSOs | skymap-magnitude-limit-dsos | 9.2 | on the Skymap, how faint to show DSOs (3) |
-| Skymap Mag. Limit - Stars | skymap-magnitude-limit-stars | 5.5 | Faintest stars to show on a SkyMap |
+|          Name            |            Slug              | Default | Notes | 
+| ------------------------ | :--------------------------- | ------: | ----: |
+| Asteroid Mag. Limit      | asteroid-magnitude-limit     |    10.0 |     1 |
+| Declination Limit        | declination-limit            |   -25.0 |  2, 3 | 
+| DSO Mag. Limit           | dso-magnitude-limit          |    12.0 |     4 |
+| Hour Angle Range         | hour-angle-range             |     3.5 |  5, 6 | 
+| Obs. Session Length      | observing-session-length     |     3.0 |     7 | 
+| Skymap Mag. Limit: DSOs  | skymap-magnitude-limit-dsos  |     9.2 |  8, 9 | 
+| Skymap Mag. Limit: Stars | skymap-magnitude-limit-stars |     5.5 |    10 |
+
 
 ##### Notes
 
-1. TODO: somehow make this work for observers south of the equator!
-2. Western extent at the beginning of the session; Eastern extent at the end of the session.
-3. Only DSOs with a priority = 'highest' will be shown here.  You can change those priorities to highlight your favorite DSOs.
+1. The faintest asteroid when polling for "visible" asteroids
+2. The most-southern declination includes in observing plans
+3. TODO: somehow make this work for observers south of the equator!
+4. Faintest DSOs - can reset in the session cookie
+5. How far E/W an observing plan will pull DSOs
+6. Western extent at the beginning of the session; Eastern extent at the end of the session.
+7. Used to create DSO lists for an observing plan
+8. on the Skymap, how faint to show DSOs
+9. Only DSOs with a priority = 'highest' will be shown here.  You can change those priorities to highlight your favorite DSOs.
+10. Faintest stars to show on a SkyMap
 
 #### Positive Integers
 
-| Name | Slug | Default | Notes | 
-| ---- | ---- | ----- |
-| Default Location ID | default-location-id | TBD | This is the ID/PK of the record in the ObservingLocation table of your "base" location. |
-| SkyMap DSO Priority | skymap-dso-priority |  1 | This sets how "deep" we plot DSOs on a skymap (1) }
+|        Name         |        Slug         | Default | Notes | 
+| :------------------ | :------------------ |   :-:   | ----: |
+| Default Location ID | default-location-id |   TBD   |     1 | 
+| SkyMap DSO Priority | skymap-dso-priority |    1    |  2, 3 | 
 
 ##### Notes
 
-1. The value 1 here means "highest priority" only;  using 2 would be "highest + high" and so on.
+1. This is the ID/PK of the record in the ObservingLocation table of your "base" location.
+2. This sets how "deep" we plot DSOs on a skymap
+3. The value 1 here means "highest priority" only;  using 2 would be "highest + high" and so on.
 
 #### Signed Integers
 
@@ -97,9 +107,13 @@ None yet.
 
 #### Strings
 
-| Name | Slug | Default | Notes | 
-| ---- | ---- | ----- |
-| Poll Planets | poll-planets | 'visible' | When polling planets for an Observing Plan, include all of them or just the ones that will be above the horizon within the observing session window. |
+|        Name         |        Slug         |  Default  | Notes | 
+| :------------------ | :------------------ |    :-:    | ----: |
+| Poll Planets        | poll-planets        | 'visible' |     1 | 
+
+##### Notes
+
+1. When polling planets for an Observing Plan, include all of them or just the ones that will be above the horizon within the observing session window.
 
 #### Images
 
