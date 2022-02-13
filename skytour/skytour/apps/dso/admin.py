@@ -1,6 +1,6 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
-from ..abstract.admin import AbstractObservation
+from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation
 
 class ConstellationFilter(AutocompleteFilter):
@@ -19,7 +19,7 @@ class DSOAliasAdmin(admin.TabularInline):
 class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation
 
-class DSOAdmin(admin.ModelAdmin):
+class DSOAdmin(ObservableObjectAdmin):
     list_display = [
         'pk', 
         'shown_name', 
@@ -93,15 +93,15 @@ class DSOAdmin(admin.ModelAdmin):
     def maj_axis(self, obj):
         return obj.major_axis_size
 
-    @admin.display(description='# Obs.')
-    def n_obs(self, obj):
-        return obj.number_of_observations
+    #@admin.display(description='# Obs.')
+    #def n_obs(self, obj):
+    #    return obj.number_of_observations
 
-    @admin.display(description='Date')
-    def obs_date(self, obj):
-        if obj.last_observed is not None:
-            return obj.last_observed.strftime("%Y-%m-%d")
-        return None
+    #@admin.display(description='Date')
+    #def obs_date(self, obj):
+    #    if obj.last_observed is not None:
+    #        return obj.last_observed.strftime("%Y-%m-%d")
+    #    return None
     
     def get_form(self, request, obj=None, **kwargs):
         """

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ..abstract.admin import AbstractObservation
+from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
 from .models import Planet, MeteorShower, Asteroid, Comet, PlanetObservation, CometObservation, AsteroidObservation
 
 class AsteroidObservationAdmin(AbstractObservation):
@@ -27,26 +27,26 @@ class MeteorShowerAdmin(admin.ModelAdmin):
         }),
     )
 
-class PlanetAdmin(admin.ModelAdmin):
+class PlanetAdmin(ObservableObjectAdmin):
     model = Planet
     list_display = [
-        'pk', 'name', 'diameter', 'load', 'moon_list'
+        'pk', 'name', 'diameter', 'load', 'moon_list', 'n_obs', 'obs_date'
     ]
     list_display_links = ['pk', 'name']
     readonly_fields = ['moon_list',]
     inlines = [PlanetObservationAdmin]
     save_on_top = True
 
-class AsteroidAdmin(admin.ModelAdmin):
+class AsteroidAdmin(ObservableObjectAdmin):
     model = Asteroid
-    list_display = ['number', 'name', 'diameter', 'est_brightest', 'h']
+    list_display = ['number', 'name', 'diameter', 'est_brightest', 'h', 'n_obs', 'obs_date']
     list_display_links = ['number', 'name']
     inlines = [AsteroidObservationAdmin]
     save_on_top = True
 
-class CometAdmin(admin.ModelAdmin):
+class CometAdmin(ObservableObjectAdmin):
     model = Comet
-    list_display = ['pk', 'name', 'status']
+    list_display = ['pk', 'name', 'status', 'n_obs', 'obs_date']
     list_display_links = ['pk', 'name']
     inlines = [CometObservationAdmin]
     save_on_top = True
