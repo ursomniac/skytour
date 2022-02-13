@@ -146,7 +146,6 @@ def create_planet_image(
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
 
-    # TODO: Test this because I think it's off by x2
     if foo > 1.2: # more than 1 degree -ish
         fov_str = "{:.1f}°".format(foo) # show degrees
     else:

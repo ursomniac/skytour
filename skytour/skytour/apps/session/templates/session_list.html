@@ -9,9 +9,9 @@
     <tr>
         <th>UT Date</th>
         <th>Location</th>
-        <th>Seeing Range</th>
-        <th>SQM Range</th>
-        <th># Observations</th>
+        <th>Seeing</th>
+        <th>SQM</th>
+        <th># Objects</th>
     </tr>
 </thead>
 <tbody>
@@ -19,9 +19,9 @@
     <tr>
         <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date }}</a></td>
         <td>{{ session.location }}</td>
-        <td>TBD</td>
-        <td>TBD</td>
-        <td>TBD</td>
+        <td>{{ session.seeing_range }}</td>
+        <td>{{ session.sqm_range }}</td>
+        <td>{{ session.number_objects_observed }}</td>
     </tr>
     {% endfor %}
 </tbody>

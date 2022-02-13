@@ -51,7 +51,6 @@ class DSO(Coordinates, FieldView, ObservableObject):
         null = True, blank = True
     )
     constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
-    
     object_type = models.ForeignKey(ObjectType, on_delete=models.PROTECT)
     magnitude = models.FloatField (
         _('Mag.'),
@@ -105,7 +104,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         null = True, blank = True
     )
 
-    # From Stellarium DSO model
+    # From Stellarium DSO model and SIMBAD
     orientation_angle = models.PositiveIntegerField (
         _('Orientation Angle'),
         null = True, blank = True,
@@ -149,30 +148,23 @@ class DSO(Coordinates, FieldView, ObservableObject):
     def finder_chart_tag(self):
         """
         This makes the uploaded finder chart appear on the Admin page.
-        TODO: Probably eliminate this and the field, since we generate out own...
         """
         return mark_safe(u'<img src="%s" width=500>' % self.finder_chart.url)
 
     def dso_finder_chart_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart.url)
 
-    def has_observations(self):
-        """
-        TODO: Do we want to do it this way?   Or create an "observe" apps, since
-            we want to observe more than just DSOs...   Probably.
-        """
-        return self.observations.count() > 0
-    has_observations.boolean = True
-    has_observations.short_description = 'Obs.?'
-
     def alt_az(self, location, utdt):
         """
         Get my Alt/Az at a given UTDT.
-        TODO: Do we use this anywhere?
         """
         return get_alt_az(utdt, location.latitude, location.longitude, self.ra, self.dec)
 
     def object_is_up(self, location, utdt, min_alt=0.):
+        """
+        This is still used when creating an observing plan.
+        Tests if a DSO is observable within a UTDT window.
+        """
         az, alt = self.alt_az(location, utdt)
         if alt > min_alt:
             return True

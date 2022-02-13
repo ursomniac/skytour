@@ -63,7 +63,7 @@ class ObjectType(models.Model):
     # need icon field
     marker_type = models.CharField(
         _('Plot Marker Type'),
-        max_length = 10, # TODO: change this back to 1?
+        max_length = 10,
         default = 'x'
     )
     marker_color = models.CharField(

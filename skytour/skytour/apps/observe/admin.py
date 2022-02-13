@@ -19,8 +19,12 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     model = ObservingLocation
     inlines = [LocationImageInline]
     
-    list_display = ['pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 'latitude', 'longitude', 'bortle', 'sqm', 'brightness']
-    readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag']
+    list_display = [
+        'pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 
+        'latitude', 'longitude', 'bortle', 'sqm', 'brightness',
+        'n_sessions', 'last_session'
+    ]
+    readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag', 'n_sessions', 'last_session']
     search_fields = ['name', 'city']
     list_filter = ['status', 'state']
     fieldsets = (
@@ -60,6 +64,10 @@ class ObservingLocationAdmin(admin.ModelAdmin):
             ]
         })
     )
+
+    def n_sessions(self, obj):
+        return obj.number_of_sessions
+    n_sessions.short_description = '# Sessions'
 
     def get_state(self, obj):
         return obj.state.slug

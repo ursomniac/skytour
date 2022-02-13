@@ -36,6 +36,8 @@
         <th>Mag</th>
         <th>Size/Sep</th>
         <th>Constellation</th>
+        <th># Obs.</th>
+        <th>Last Obs.</th>
     </tr>
     
     {% for cat_object in object_list %}
@@ -56,6 +58,8 @@
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.constellation.abbreviation }}</td>
+        <td>{{ thing.number_of_observations }}</td>
+        <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d h:i" }} UT{% endif %}</td>
     </tr>
     {% endwith %}
     {% endfor %}

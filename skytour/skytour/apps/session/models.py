@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
 from ..observe.time import get_last, get_julian_date
 from ..utils.utils import get_limiting_magnitude
-from .chain import get_all_observations
+from .chain import get_all_observations, get_all_objects
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 class ObservingSession(models.Model):
@@ -40,6 +40,40 @@ class ObservingSession(models.Model):
     @property
     def session_observations(self):
         return get_all_observations(self.ut_date, self.observingcircumstances_set.all())
+
+    @property
+    def number_objects_observed(self):
+        object_dict = get_all_objects(self.ut_date)
+        n = 0
+        for k, v in object_dict.items():
+            n += v.count()
+        return n
+
+    @property
+    def sqm_range(self):
+        conditions = self.observingcircumstances_set.all()
+        try:
+            sqm_min = conditions.aggregate(models.Min('sqm'))['sqm__min']
+            sqm_max = conditions.aggregate(models.Max('sqm'))['sqm__max']
+            if sqm_min == sqm_max:
+                return f'{sqm_min:.2f}'
+            else:
+                return f'{sqm_min:.2f} - {sqm_max:.2f}'
+        except:
+            return None
+
+    @property
+    def seeing_range(self):
+        try:
+            conditions = self.observingcircumstances_set.all()
+            see_min = conditions.aggregate(models.Min('seeing'))['seeing__min']
+            see_max = conditions.aggregate(models.Max('seeing'))['seeing__max']
+            if see_min == see_max:
+                return f'{see_min}'
+            else:
+                return f'{see_min} to {see_max}'
+        except:
+            return None
 
     def __str__(self):
         return f"{self.ut_date}: {self.location}"

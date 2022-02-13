@@ -219,6 +219,18 @@ class ObservingLocation(models.Model):
             self.pk, self.status, tag, self.city, self.state
         )
 
+    @property
+    def number_of_sessions(self):
+        x = self.observingsession_set.count()
+        return x
+
+    @property
+    def last_session(self):
+        x = self.observingsession_set.order_by('-ut_date').first()
+        if x:
+            return x.ut_date
+        return None
+
     class Meta:
         ordering = ['travel_distance']
 

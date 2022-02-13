@@ -10,6 +10,11 @@ class DSOListView(ListView):
     context_object_name = 'dso_list'
     paginate_by = 100
 
+    def get_context_data(self, **kwargs):
+        context = super(DSOListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'dso_list'
+        return context
+
 class DSODetailView(DetailView):
     model = DSO 
     template_name = 'dso_detail.html'

@@ -1,5 +1,4 @@
 ### These just abstract things for scatter plots.
-# TODO: refactor all of this
 
 def fix_axis(a, pad):
 	da = max(a) - min(a)

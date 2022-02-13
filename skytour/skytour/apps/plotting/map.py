@@ -315,30 +315,46 @@ def map_saturn_rings(ax, planet, t0):
     rings = saturn_ring(t0, planet['target'])
     a = math.radians(rings['major'] / 3600.)
     b = math.radians(rings['minor'] / 3600.)
-    #print ("a: ", a, "b: ", b)
+    
+    # Outer edge of the rings
     re1 = Ellipse((0,0), a, b, fill=False)
     ax.add_patch(re1)
+    # Inner edge of the rings
     re2 = Ellipse((0,0), a*.665, b*.665, fill=False)
     ax.add_patch(re2)
     return ax
 
 def map_dsos(ax, earth, t, projection, 
         center = None,
-        mag_limit=None, dso=None, priority=4, color='black', alpha=1
+        mag_limit=None, dso=None, priority=5, color='black', alpha=1
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
 
-    TODO: Vary the symbol size by the size of the DSO!
+    TODO: I THINK We want to ALWAYS send a center value, even when this is
+        called from create_planet_image or plot_track because then we ought
+        to be able to make things run faster.
     """
     other_dso_records = DSO.objects.all()
 
     # Filter the set
-    if mag_limit:
+    if mag_limit: # exclude faint objects off the top
         other_dso_records = other_dso_records.exclude(magnitude__gte=mag_limit)
-    if dso:
+    if dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
 
+    # Winnow the list:
+    # Priorities are Highest, High, Medium, Low, and None, ranked 1 to 5.
+    # Cull the list based on priority:
+    #   A. DSO Finder charts want everything shown, so the default priority is set
+    #       to something > 4 so that everything shows up.
+    #   B. Skymap, however, only wants the highest priority DSOs so as not to 
+    #       overwhelm the chart.
+    #   C. Other custom calls could have something in-between
+    #       TODO: Create this functionality!
+    #
+    if priority <= 4:
+        other_dso_records = other_dso_records.exclude(priority='None')
     if priority <= 3:
         other_dso_records = other_dso_records.exclude(priority='Low')
     if priority <= 2:
@@ -346,14 +362,16 @@ def map_dsos(ax, earth, t, projection,
     if priority <= 1:
         other_dso_records = other_dso_records.exclude(priority='High')
 
+    # Create the plotting dictionary
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
     interesting = []
+    # Loop through the culled DSO list, add to interesting.
     for other in other_dso_records:
-        if center:
+        if center: # how far away am I from the center?
             sin_dist = get_altitude(center[0], center[1], other.ra, other.dec)
-            if sin_dist < 0:
+            if sin_dist < 0: # if the sine of the distance angle is <0 we're below the horizon
                 continue
-            else:
+            else: # Oooh - I'm a contender
                 interesting.append(other)
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)
@@ -363,15 +381,19 @@ def map_dsos(ax, earth, t, projection,
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     mmm = np.array(other_dsos['marker'])
-    # This is tricky for the different markers:
-    unique_markers = set(mmm)
+    # On the Sky Map, we don't show the scaled DSO and custom markers, e.g., 
+    #   rotated ellipses for galaxies.
+    # Instead we just have some marker symbols.
+    # Matplotlib needs us to overlay each set of those marker symbols individually (sigh)
+    unique_markers = set(mmm) 
     for um in unique_markers:
-        mask = mmm == um
+        mask = mmm == um # note = then == !
         ax.scatter(
             xxx[mask], yyy[mask],
             s=90., edgecolor='g', facecolors='none',
             marker=um, alpha=alpha
         )
+    # Add labels
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),

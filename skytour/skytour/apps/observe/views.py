@@ -1,7 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import ObservingLocation
-#from .forms import ObservingPlanForm
 from .plot import make_location_plot
 
 class ObservingLocationListView(ListView):

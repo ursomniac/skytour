@@ -3,13 +3,8 @@ from itertools import chain
 from ..dso.models import DSOObservation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.models import PlanetObservation, AsteroidObservation, CometObservation
-#from .models import ObservingCircumstances
 
-def get_all_observations(ut_date, circumstances): # or start/end date/time?
-    """
-    Get all observations from the DSO/Planet/Asteroid/Comet *Observation models
-    that fall within the realm of a ObservingSession date.
-    """
+def get_ut_range(ut_date):
     # Slice back a few hours to capture the changeover to 0h UT
     # For me, that's -3 hours - it would be different for people in different locations
     # So, create the ability to set that in SiteParameters
@@ -23,14 +18,34 @@ def get_all_observations(ut_date, circumstances): # or start/end date/time?
     # I THINK this handles all the edge effects.
     utdt_start = (datetime.datetime.combine(ut_date, datetime.time(0,0)) + datetime.timedelta(hours=offset_ut)).replace(tzinfo=pytz.utc)
     utdt_end = (utdt_start + datetime.timedelta(hours=nighttime_window)).replace(tzinfo=pytz.utc)
+    return utdt_start, utdt_end
 
-    # OK get all DSO/Planet/Asteroid/Comet observations that fall within the window.
-    #conditions = ObservingCircumstances.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
+def get_object_dict(utdt_start, utdt_end):
+    # OK get all DSO/Planet/Asteroid/Comet observations that fall within the window provided (utdt_start to utdt_end)
     dsos = DSOObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     planets = PlanetObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     asteroids = AsteroidObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
     comets = CometObservation.objects.filter(ut_datetime__gte = utdt_start, ut_datetime__lte = utdt_end)
-    observation_list = sorted(
-        chain(circumstances, dsos, planets, comets, asteroids),
-        key=lambda obs: obs.ut_datetime)
+    return dict(dsos = dsos, planets=planets, asteroids=asteroids, comets=comets)
+
+def get_all_objects(ut_date):
+    # This is just to support the ObservingSession property
+    utdt_start, utdt_end = get_ut_range(ut_date)
+    object_dict = get_object_dict(utdt_start, utdt_end)
+    return object_dict
+
+def get_all_observations(ut_date, circumstances): # or start/end date/time?
+    """
+    Get all observations from the DSO/Planet/Asteroid/Comet *Observation models
+    that fall within the realm of a ObservingSession date.
+    """
+    object_list = get_all_objects(ut_date)
+    observation_list = sorted( chain(
+            circumstances, 
+            object_list['dsos'], 
+            object_list['planets'], 
+            object_list['comets'], 
+            object_list['asteroids']
+        ), key=lambda obs: obs.ut_datetime
+    )
     return observation_list

@@ -1,14 +1,18 @@
 <style>
-    .td-center td {
+    table.td_center td {
       vertical-align: middle;
       background-color: #ccc;
     }
+    table.td_center td.object_header {
+      text-align: center;
+      vertical-align: middle;
+    }
 </style>
 
-<table class="td-center">
+<table class="td_center">
     <tr>
-      <td width="33%"><h3>{{ object.name }}</h3></td>
-      <td width="33%" style="text-align: center; vertical-align: middle !important;">
+      <td width="30%"><h3>{{ object.name }}</h3></td>
+      <td width="30%" style="text-align: center; vertical-align: middle !important;">
         in {{ object.observe.constellation.name }}
         {% if not show_object %}
         <br/><b><span style="color: #900;">NOT VISIBLE</span></b>
@@ -16,7 +20,13 @@
         <br/><b><span style="color: #090;">VISIBLE</span></b>
         {% endif %}
       </td>
-      <td style="text-align: right; vertical-align: middle !important;">
+      <td width="30%" style="text-align: left; vertical-align: middle !important;">
+        {% if object_type != 'moon' %}
+        # Obs.: {{ object.object.number_of_observations }}<br/>
+        Last Observed: {{ object.object.last_observed }}<br/>
+        {% endif %}
+      </td>
+      <td style="text-align: center; vertical-align: middle !important;">
         {% if object_type == 'asteroid' %}
         <a href="{% url 'asteroid-detail' object.slug %}"><button>Detail View</button></a>
         {% elif object_type == 'planet' %}

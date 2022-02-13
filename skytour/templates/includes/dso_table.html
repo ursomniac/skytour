@@ -12,7 +12,8 @@
         {% if not hide_priority %}
         <th> Priority</th>
         {% endif %}
-        <th># Observations</th>
+        <th># Obs.</th>
+        <th>Last Obs.</th>
     </tr>
 </thead>
 <tbody>
@@ -33,7 +34,8 @@
         {% if not hide_priority %}
         <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.priority }}</a></td>
         {% endif %}
-        <td>{{ dso.observations|length }}</td>
+        <td>{{ dso.number_of_observations }}</td>
+        <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
     </tr>
 {% endfor %}
 </tbody>

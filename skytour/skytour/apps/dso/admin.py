@@ -28,10 +28,11 @@ class DSOAdmin(admin.ModelAdmin):
         'ra_text', 
         'dec_text', 
         'magnitude',
-        'constellation',
-        'major_axis_size',
+        'constellation_abbreviation',
+        'maj_axis',
         'priority',
-        #'has_observations'
+        'n_obs',
+        'obs_date'
     ]
     list_display_links = ['pk', 'shown_name',]
     readonly_fields = [
@@ -40,7 +41,6 @@ class DSOAdmin(admin.ModelAdmin):
         'dso_finder_chart_tag',
     ]
     list_filter = ['priority', 'object_type', 'ra_h', ConstellationFilter]
-    #list_filter = ['object_type', 'ra_h', 'constellation']
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
     fieldsets = (
         (None, {
@@ -85,6 +85,24 @@ class DSOAdmin(admin.ModelAdmin):
         return obj.format_dec
     list_dec.short_description = 'Dec.'
 
+    @admin.display(description='Con.', ordering='constellation')
+    def constellation_abbreviation(self, obj):
+        return obj.constellation
+
+    @admin.display(description='Maj. Axis', ordering='major_axis_size')
+    def maj_axis(self, obj):
+        return obj.major_axis_size
+
+    @admin.display(description='# Obs.')
+    def n_obs(self, obj):
+        return obj.number_of_observations
+
+    @admin.display(description='Date')
+    def obs_date(self, obj):
+        if obj.last_observed is not None:
+            return obj.last_observed.strftime("%Y-%m-%d")
+        return None
+    
     def get_form(self, request, obj=None, **kwargs):
         """
         This just removes some of the widgets in the admin because you'll never

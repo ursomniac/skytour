@@ -25,19 +25,12 @@ class SkyView(TemplateView):
         context = deal_with_cookie(self.request, context)
         utdt_start = context['utdt_start']
         location = context['location']
-        priority = find_site_parameter(slug='skymap-dso-priority', default=1, param_type='positive')
-        dso_mag_limit = find_site_parameter(slug='skychart-magnitude-limit-dsos', default=10, param_type='float') 
-        star_mag_limit = find_site_parameter(slug='skymap-magnitude-limit-stars', default=5.5, param_type='float')
         asteroid_slugs = context.get('visible_asteroids', None)
         asteroid_list = assemble_asteroid_list(utdt_start, slugs=asteroid_slugs)
         context['skymap'], context['interesting'], context['sidereal_time'] = get_skymap(
             utdt_start, 
             location, 
-            dso_mag_limit=dso_mag_limit, 
-            star_mag_limit=star_mag_limit,
-            priority=priority,
-            asteroid_list = asteroid_list,
-            include_comets = True
+            asteroid_list = asteroid_list
         )
         return context
 
