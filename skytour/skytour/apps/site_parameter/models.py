@@ -17,6 +17,10 @@ class AbstractSiteParameter(models.Model):
     slug = models.SlugField (
         _('Slug')
     )
+    description = models.TextField (
+        _('Description'),
+        null = True, blank = True
+    )
 
     class Meta:
         abstract=True

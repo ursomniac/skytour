@@ -24,11 +24,9 @@ def saturn_ring(t, saturn, return_dict=True):
     # inner ring  a, b * 0.665
     # outer ring  a, b * ?
     
+    # TODO: factor in the tilt of the axis projected to the earth
     # Longitude of the ascending node of Saturn's orbit
     # n = 113.6655 + 0.8771 * t  # degrees
-
-    ###
-    ### TODO: FINISH THIS UP...
 
     return {
         'major': a,

@@ -1,5 +1,3 @@
-
-
 import math
 import numpy as np
 import datetime
@@ -11,6 +9,7 @@ from matplotlib import patches
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
+from skytour.apps.site_parameter.helpers import find_site_parameter
 from skytour.apps.stars.models import BrightStar
 from skytour.apps.dso.models import DSO
 
@@ -172,18 +171,7 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False, test=False):
 
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
-    mmm = np.array(other_dsos['marker'])
-    # This is tricky for the different markers:
-    """
-    unique_markers = set(mmm)
-    for um in unique_markers:
-        mask = mmm == um
-        ax.scatter(
-            xxx[mask], yyy[mask],
-            s=90., edgecolor='g', facecolors='none',
-            marker=um
-        )
-    """
+
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         plt.annotate(
             z, (x, y), 
@@ -191,7 +179,6 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False, test=False):
             xytext=(5, 5),
             ha='left'
         )
-
 
     ##### background stars
     scatter = ax.scatter(
@@ -216,8 +203,8 @@ def create_dso_finder_chart(dso, fov=8, mag0=9, axes=False, test=False):
         )
 
     # Add an eyepiece circle, 32mm = 0.0071 radians diameter
-    #circle1 = plt.Circle((0, 0), 0.00357, color='#999', fill=False)
-    circle1 = plt.Circle((0, 0), 49.214 * 2.909e-4 / 2. / 2., color='#999', fill=False)
+    eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
+    circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color='#999', fill=False)
     ax.add_patch(circle1)
 
     ### Finish up

@@ -1,27 +1,9 @@
-import datetime
+import datetime, pytz
 import math
-import pytz
-
 from ..utils.format import to_sex
 from .astro import get_nutation, get_obliquity
 
-# TODO: Change this to a model?  For just me it's not particularly necessary
-# since I'm not likely to be moving around THAT much...
-TIME_ZONES = (
-    ('UTC', 'UTC'),
-    ('US/Eastern', 'US/Eastern'),
-)
-
 #### DATETIME METHODS
-def get_local_datetime(xdate, xtime, xzone):
-    """
-    Combine a datetime date and time to a datetime object.
-    Then, apply the time_zone localization
-    """
-    local_time = datetime.datetime.combine(xdate, xtime)
-    local_time = local_time.replace(tzinfo=pytz.timezone(xzone))
-    return local_time
-
 def get_utdt(utdt=None):
     """
     Take a non-TZ aware datetime and return an aware one.
@@ -29,14 +11,6 @@ def get_utdt(utdt=None):
     if not utdt:
         utdt = datetime.datetime.utcnow()
     return utdt.replace(tzinfo=pytz.utc)
-
-def utdt_to_local_time(utdt, timezone_name='US/Eastern'):
-    utdt.replace(pytz.utc) # force UTC 
-    local_time = utdt.astimezone(pytz.timezone(timezone_name))
-    return local_time
-
-def local_time_to_utdt(local_time):
-    return local_time.astimezone(pytz.timezone('UTC'))
 
 def get_0h(utdt):
     return utdt.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -132,7 +106,6 @@ def get_gmst0(utdt, format='hours'):
     x = utdt.replace(hour=0, minute=0, second=0, microsecond=0)
     jd0 = get_julian_date(x)
     t = get_t_epoch(jd0)
-    #gmst = ((24110.54841 + 8_640_184.81266 * t + 9.3104e-2 * t*t - 6.2e-6 *t*t*t) / 3600.) % 24.
     gmst = (100.460_618_37 + 36_000.770_053_608 * t + 3.87933e-4 * t**2 - t**3 / 38_710_000.) % 360.
     if format == 'hours':
         gmst = gmst / 15.

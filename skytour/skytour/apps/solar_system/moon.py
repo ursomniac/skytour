@@ -98,7 +98,6 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     mag = -1.1466_606*x**2 - 5.760_663*x - 11.983_484
 
     # angular size
-    # TODO: THIS GIVES THE WRONG ANSWER
     ang_size = get_angular_size(3474.8, xmdist.km, units='degrees') # diameter in degrees for the Moon
 
     return {

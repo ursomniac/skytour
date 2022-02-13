@@ -3,21 +3,7 @@ from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
 from ..utils.utils import get_limiting_magnitude
-from .time import TIME_ZONES
-#from colorfield.fields import ColorField
 
-STATE_CHOICES = [
-    ('CT', 'CT'), 
-    ('MA', 'MA'), 
-    ('ME', 'ME'), 
-    ('NH', 'NH'), 
-    ('NY', 'NY'),
-    ('VT', 'VT')
-]
-PRIMARY_USER_CHOICES = [
-    ('Bob', 'Bob Donahue'),
-    ('Rick', 'Rick Costello')
-]
 CARDINAL_DIRECTIONS = [
     ('N', 'North'),
     ('NE', 'Northeast'),
@@ -58,12 +44,6 @@ class ObservingLocation(models.Model):
     state = models.ForeignKey (
         StateRegion,
         on_delete = models.CASCADE
-    )
-    primary_user = models.CharField (
-        _('Primary User'),
-        max_length = 20,
-        default = 'Bob',
-        choices = PRIMARY_USER_CHOICES
     )
     status = models.CharField (
         _('Status'),

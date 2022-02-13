@@ -7,6 +7,7 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.comets import get_comet
 from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.models import Comet
@@ -117,17 +118,18 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
         s=[90.], c=['#900'], 
         marker='+'
     )
-    # Add an eyepiece circle, 32mm = 0.00714 units (not 0.0036)
-    eyepiece = plt.Circle((0, 0), 49.214 * 2.909e-4 / 2., color='b', fill=False)
+    # Add an eyepiece circle, 32mm = 0.00714 units
+    fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
+    eyepiece = plt.Circle((0, 0), fov * 2.909e-4 / 2., color='b', fill=False)
     ax.add_patch(eyepiece)
     return ax
 
 def map_eyepiece(ax, diam=None):
     """
-    TODO: Do we need this since map_target seems to do it?
-    Note: I had 0.0038 - I think it should be 0.00714
+    the default is 1° FOV.
     """
-    radius = diam/2 if diam is not None else 49.214 * 2.909e-4 / 2.
+    fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
+    radius = diam/2 if diam is not None else fov * 2.909e-4 / 2.
     eyepiece = plt.Circle((0,0), radius, color='b', fill=False)
     return ax
 

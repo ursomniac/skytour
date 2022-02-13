@@ -26,6 +26,7 @@ def get_skymap(
     # Parameters that might be in the SiteParameter apps/models
     priority = find_site_parameter('skymap-dso-priority', default=1, param_type='positive')
     star_mag_limit = find_site_parameter('skymap-magnitude-limit-stars', default=5.5, param_type='float')
+    # TODO: should this be set from the limiting magnitude at the location based on its Bortle value?
     dso_mag_limit = find_site_parameter('skymap-magnitude-limit-dsos', default=6.0, param_type='float')
     
     # Set up SkyField

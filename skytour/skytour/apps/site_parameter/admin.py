@@ -20,8 +20,10 @@ class AbstractAdmin(admin.ModelAdmin):
             None,
             {
                 'fields': (
-                    ('pk', 'date_created', 'date_modified'), ('title', 'slug'),
-                    ('value', )
+                    ('pk', 'date_created', 'date_modified'), 
+                    ('title', 'slug'),
+                    'value', 
+                    'description'
                 ),
             },
         ),
@@ -53,7 +55,8 @@ class SPLinkAdmin(AbstractAdmin):
                 ('pk', 'date_created', 'date_modified'), 
                 ('title', 'slug'),
                 'value',
-                'new_window'
+                'new_window',
+                'description'
             ),
         },),
     )

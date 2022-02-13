@@ -6,7 +6,7 @@ from ..site_parameter.helpers import find_site_parameter
 
 def get_cookie_defaults():
     ut0 = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-    session_length = 3 # TODO: Set this in the Admin
+    session_length = find_site_parameter('observing-session-length', default=3.0, param_type='float')
     ut1 = ut0 + datetime.timedelta(hours=session_length)
     julian_date = get_julian_date(ut0)
     t = get_t_epoch(julian_date)
@@ -43,8 +43,7 @@ def deal_with_cookie(request, context):
 
 def update_cookie_with_asteroids(request, asteroid_list):
     """ 
-    for some reason this runs but doesn't update the cookie .
-    TODO: fix this...
+    TODO: Do we still need this?
     """
     if len(asteroid_list) > 0:
         asteroid_slugs = [x['slug'] for x in asteroid_list]

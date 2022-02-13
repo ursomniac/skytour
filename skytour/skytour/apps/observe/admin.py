@@ -30,7 +30,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': [
-                ('status', 'primary_user'), 
+                'status', 
                 ('name'),
                 ('street_address',), 
                 ('city', 'state', 'time_zone'),

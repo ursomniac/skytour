@@ -6,7 +6,10 @@ from ..solar_system.helpers import get_adjacent_planets, get_all_planets
 
 class HomePageView(TemplateView):
     """
-    TODO: come up with a reason to have a home page... :-)
+    Basically this just shows:
+        1. the relevant Calendar entries
+        2. active Meteor showers
+        3. adjacent Planets
     """
     template_name = 'home.html'
     

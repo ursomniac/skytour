@@ -23,17 +23,19 @@ def get_visible_asteroids(utdt, utdt_end=None, location=None, debug=False):
    """
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
+
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
    # This is just to limit the queryset so that we're not calculating orbital elements for 
    # hundreds of asteroids, when we'll only be interested in ~20 tops.
    cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
-   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff) ### TODO: CLEAN THIS UP!
+
+   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
    asteroid_list = []
    for a in asteroids:
       try:
          this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location)
       except:
-         continue # skip
+         continue # no asteroid returned for some reason, skip
       mag = this_asteroid['observe']['apparent_mag'] 
       if mag <= mag_limit:
          asteroid_list.append(this_asteroid)
