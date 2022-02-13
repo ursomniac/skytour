@@ -3,11 +3,6 @@
 
 In no particular order.
 
-## Run-time environment
-
-1. Create a way to have "dark mode" at startup.
-    * Figure out the CSS to do this.
-
 ## Front-End / Static
 
 1. Better CSS, less stuff crammed in templates
