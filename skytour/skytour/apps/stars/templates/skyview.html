@@ -2,26 +2,36 @@
 {% load skytour_filters %}
 {% block content %}
 <style>
-    td.side { font-size: 80%; }
+    table.lite { border-style: none;  }
+    table.lite td { border-style: none; vertical-align: top;  padding: 3px 5px;}
+    td.side { font-size: 70%; vertical-align: top; }
     td.tight { padding: 0 !important; margin: 0 !important; }
 </style>
 
-<table>
+<table class="lite">
     <tr>
-        <td>
-            <h1>SkyMap</h1> 
+        <td style="vertical-align: top;">
+            <h1 style="padding-top: 0">SkyMap</h1> 
         </td>
         <td>
-            Date: {{ utdt_start|date:"Y-m-d H:i" }} UT<br>
-            Sidereal Time: {{ sidereal_time|to_hms }}
+            <table class="lite">
+            <tr><td>Date:</td><td>{{ utdt_start|date:"Y-m-d H:i" }} UT</td></tr>
+            <tr><td>Sid. Time:</td><td>{{ sidereal_time|to_hms }}</td></tr>
+            </table>
         </td>
         <td>
-            Location:  {{ location }}<br>
-            Latitude:  {{ location.latitude|to_dms }}<br> 
-            Longitude: {{ location.longitude|to_dms }}
+            <table class="lite">
+            <tr><td>Location:</td><td> {{ location }}</td></tr>
+            <tr><td>Latitude:</td><td>{{ location.latitude|to_dms }} Longitude:{{ location.longitude|to_dms }}</td></tr>
+            <tr><td>Elevation:</td><td>{{ location.elevation }} m ({{ location.elevation_feet|floatformat:0 }} ft)</td></tr>
+            </table>
         </td>
         <td>
-
+            <table class="lite">
+            <tr><td>SQM:</td><td>{{ location.sqm }} <small>mag/arcsec<sup>2</sup></small></td></tr>
+            <tr><td>Bortle:</td><td>Class {{ location.bortle }}</td></tr>
+            <tr><td>Lim. Mag:</td><td>{{ location.limiting_magnitude }}</td></tr>
+            </table>
         </td>
     </tr>
 </table>

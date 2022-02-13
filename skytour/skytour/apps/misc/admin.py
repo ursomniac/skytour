@@ -3,6 +3,7 @@ from django.utils.html import mark_safe
 from .models import (
     Calendar, CalendarEventReference,
     EventType,
+    Glossary,
     StateRegion,
     TimeZone,
     Website,
@@ -16,6 +17,9 @@ class EventTypeAdmin(admin.ModelAdmin):
     model = EventType
 
     list_display = ['pk', 'name', 'icon']
+
+class GlossaryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name", )}
 
 class CalendarAdmin(admin.ModelAdmin):
     model = Calendar
@@ -45,6 +49,7 @@ class WebsiteAdmin(admin.ModelAdmin):
 
 admin.site.register(Calendar, CalendarAdmin)
 admin.site.register(EventType, EventTypeAdmin)
+admin.site.register(Glossary, GlossaryAdmin)
 admin.site.register(StateRegion)
 admin.site.register(TimeZone)
 admin.site.register(Website, WebsiteAdmin)

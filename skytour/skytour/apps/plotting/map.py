@@ -573,7 +573,6 @@ def map_comets(ax, utdt, earth, t, projection,
     for x, y, z in zip(d['x'], d['y'], d['label']):
         fsize = 6
         dy = -3
-        print ("X: ", x, "Y: ", y, "Z: ", z)
         ax.annotate(
             z, xy=(x,y),
             textcoords='offset points',

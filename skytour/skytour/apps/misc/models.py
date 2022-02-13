@@ -21,6 +21,11 @@ class StateRegion(models.Model):
         max_length = 5,
         default = 'o'
     )
+    abbreviation = models.CharField (
+        _('Abbreviation'),
+        max_length = 2,
+        null = True, blank = True
+    )
 
     def __str__(self):
         return self.name
@@ -146,3 +151,30 @@ class Website(models.Model):
         
     class Meta:
         ordering = ['name']
+
+class Glossary(models.Model):
+    name = models.CharField (
+        _('Name/Topic'),
+        max_length = 100,
+    )
+    slug = models.SlugField (
+        _('Slug'),
+        unique = True
+    )
+    description = models.TextField (
+        _('Description'),
+        null = True, blank = True
+    )
+    link = models.URLField (
+        _('Link'),
+        null = True, blank = True,
+        help_text = 'External link for more information'
+    )
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['slug']
+        verbose_name = 'Glossary Entry'
+        verbose_name_plural = 'Glossary Entries'

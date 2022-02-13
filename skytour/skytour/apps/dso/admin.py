@@ -48,7 +48,7 @@ class DSOAdmin(admin.ModelAdmin):
                 ('catalog', 'id_in_catalog'),
                 'constellation',
                 'nickname',
-                ('object_type', 'priority'),
+                ('object_type', 'morphological_type', 'priority'),
             ]
         }),
         ('Coordinates', {

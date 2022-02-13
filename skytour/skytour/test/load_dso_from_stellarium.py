@@ -1,4 +1,4 @@
-from skytour.apps.dso.models import DSO
+from ..apps.dso.models import DSO
 
 def get_new_fields(debug=True):
     """
@@ -16,9 +16,11 @@ def get_new_fields(debug=True):
             continue # skip comment lines
 
         fields = line.split('\t')
-        oangle = fields[9]
-        amajor = fields[7]
-        aminor = fields[8]
+        #oangle = fields[9]
+        #amajor = fields[7]
+        #aminor = fields[8]
+        dso_type = fields[5]
+        morph = fields[6].strip()
 
         # OK - this gets a little tricky
         #   Find the DSO record for this record
@@ -33,8 +35,7 @@ def get_new_fields(debug=True):
         if fields[16] == '0' and fields[17] == '0' and fields[18] == '0' and fields[19] == '0' and fields[20] == '0' and fields[26] == '0':
             continue # no point in going further
         
-
-        print (f"Testing {fields[0]}: V = {fields[4]} B = {fields[3]}, {oangle}° {amajor} x {aminor}")
+        print (f"Testing {fields[0]}: V = {fields[4]} B = {fields[3]}, Type: {dso_type}, {morph}")
         found = False
         for (cat, id) in clist:
             dso = dsos.filter(catalog__abbreviation=cat, id_in_catalog=str(id)).first()
@@ -46,11 +47,13 @@ def get_new_fields(debug=True):
             continue
         # OK we have our DSO!
         n_found += 1
-        if oangle != 0 and amajor != 0 and aminor != 0:
-            dso.orientation_angle = int(oangle) if int(oangle) >= 0 else None
-            dso.major_axis_size = float(amajor)
-            dso.minor_axis_size = float(aminor)
-            print(f"FOUND: {dso.shown_name} = {amajor}\' x {aminor}\'  at {oangle}°")
+        #if oangle != 0 and amajor != 0 and aminor != 0:
+        #    dso.orientation_angle = int(oangle) if int(oangle) >= 0 else None
+        #    dso.major_axis_size = float(amajor)
+        #    dso.minor_axis_size = float(aminor)
+        #    print(f"FOUND: {dso.shown_name} = {amajor}\' x {aminor}\'  at {oangle}°")
+        if len(morph) != 0:
+            dso.morphological_type = morph
             if not debug:
                 dso.save()
     p = 100. * n_found / float(n_total)

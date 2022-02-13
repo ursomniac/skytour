@@ -152,6 +152,12 @@ class ObservingLocation(models.Model):
         return mark_safe(u'<img src="%s" width=500>' % self.bortle_image.url)
 
     @property
+    def elevation_feet(self):
+        if self.elevation:
+            return self.elevation * 39.37 / 12.
+        return None
+        
+    @property
     def placename(self):
         x = "{}, {}: {}".format(self.city, self.state, self.street_address)
         if self.name:
@@ -177,7 +183,7 @@ class ObservingLocation(models.Model):
 
     @property
     def name_for_header(self):
-        x = "{}, {} {}".format(self.street_address, self.city, self.state)
+        x = "{}, {} {}".format(self.street_address, self.city, self.state.abbreviation)
         if self.name:
             x = "{}: ".format(self.name) + x
         return x
@@ -186,18 +192,6 @@ class ObservingLocation(models.Model):
     def limiting_magnitude(self):
         return get_limiting_magnitude(self.bortle)
 
-    def get_absolute_url(self):
-        return '/observing_location/{}'.format(self.pk)
-
-    def __str__(self):
-        if self.name:
-            tag = "{}: {}".format(self.name, self.street_address)
-        else:
-            tag = self.street_address
-
-        return "{}: {} | {} {}, {}".format(
-            self.pk, self.status, tag, self.city, self.state
-        )
 
     @property
     def number_of_sessions(self):
@@ -210,6 +204,19 @@ class ObservingLocation(models.Model):
         if x:
             return x.ut_date
         return None
+
+    def get_absolute_url(self):
+        return '/observing_location/{}'.format(self.pk)
+
+    def __str__(self):
+        if self.name:
+            tag = "{}: {}".format(self.name, self.street_address)
+        else:
+            tag = self.street_address
+
+        return "{}: {} | {} {}, {}".format(
+            self.pk, self.status, tag, self.city, self.state.abbreviation
+        )
 
     class Meta:
         ordering = ['travel_distance']

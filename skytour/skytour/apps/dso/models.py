@@ -52,6 +52,12 @@ class DSO(Coordinates, FieldView, ObservableObject):
     )
     constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
     object_type = models.ForeignKey(ObjectType, on_delete=models.PROTECT)
+    morphological_type = models.CharField (
+        _('Morphological Type'),
+        max_length = 20,
+        null = True, blank = True,
+        help_text = 'Gal Type, GC Class, etc.'
+    )
     magnitude = models.FloatField (
         _('Mag.'),
         null = True, blank = True

@@ -50,7 +50,7 @@ def get_skymap(
     zenith = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
 
     # Start up a Matplotlib plot
-    fig, ax = plt.subplots(figsize=[12,12])
+    fig, ax = plt.subplots(figsize=[10,10])
 
     # center
     projection = build_stereographic_projection(zenith)
@@ -108,6 +108,7 @@ def get_skymap(
     ax.set_ylim(-limit, limit)
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
+    plt.tight_layout(pad=2.0)
 
     # Set title
     ax.set_title("{}".format(utdt.strftime("%Y-%m-%d %Hh UT")))
