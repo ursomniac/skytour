@@ -11,11 +11,13 @@ def get_cookie_defaults():
     julian_date = get_julian_date(ut0)
     t = get_t_epoch(julian_date)
 
+    default_location_pk = ObservingLocation.objects.first().pk
+
     cookie_dict = dict (
         utdt_start = ut0.isoformat(),
         utdt_end = ut1.isoformat(),
         session_length = session_length,
-        location = find_site_parameter('default-location-id', default=43, param_type='positive'),
+        location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
         dec_limit = find_site_parameter('declination-limit', default=-25., param_type='float'),
         mag_limit = find_site_parameter('dso-magnitude-limit', default=12.0, param_type='float'),
         hour_angle_range = find_site_parameter('hour-angle-range', default=3.5, param_type='float'),

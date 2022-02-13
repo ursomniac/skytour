@@ -60,7 +60,10 @@ There's a library of models under "Site Parameters".  Here you can set site-wide
 
 Each parameter is of a different type: float, positive integers, "regular" integers, images, strings, and links.  These are used elsewhere in the code, if the corresponding value is in the DB, then it will be used; otherwise there'll be a default (hardcoded) in the code.
 
-NOTE: You *have* to use the slugs shown below, otherwise the code won't know where to find them!
+The default values given below are hard-coded into the system;  if you create the corresponding record
+under SiteParameters, then it will override those defaults.
+
+NOTE: You *have* to use the slugs shown below, otherwise the code won't know where to find the values!
 
 #### Float
 
@@ -71,10 +74,11 @@ NOTE: You *have* to use the slugs shown below, otherwise the code won't know whe
 | Asteroid Mag. Limit      | asteroid-magnitude-limit     |    10.0 |     3 |
 | Declination Limit        | declination-limit            |   -25.0 |     4 | 
 | DSO Mag. Limit           | dso-magnitude-limit          |    12.0 |     5 |
-| Hour Angle Range         | hour-angle-range             |     3.5 |     6 | 
-| Obs. Session Length      | observing-session-length     |     3.0 |     7 | 
-| Skymap Mag. Limit: DSOs  | skymap-magnitude-limit-dsos  |     9.2 |     8 | 
-| Skymap Mag. Limit: Stars | skymap-magnitude-limit-stars |     5.5 |     9 |
+| Eyepiece FOV             | eyepiece-fov                 |    60.0 |     6 |
+| Hour Angle Range         | hour-angle-range             |     3.5 |     7 | 
+| Obs. Session Length      | observing-session-length     |     3.0 |     8 | 
+| Skymap Mag. Limit: DSOs  | skymap-magnitude-limit-dsos  |     9.2 |     9 | 
+| Skymap Mag. Limit: Stars | skymap-magnitude-limit-stars |     5.5 |    10 |
 
 
 ##### Notes
@@ -89,25 +93,29 @@ NOTE: You *have* to use the slugs shown below, otherwise the code won't know whe
 4. The most-southern declination includes in observing plans
     * TODO: somehow make this work for observers south of the equator (so that it's a northern limit).
 5. Faintest DSOs shown on list of DSOs - can reset in the session cookie
-6. How far E/W an observing plan will list objects
+6. The size of the FOV centered on finder charts (in arcmin): 
+    * Default is 1°
+    * You probably want to set this to the largest FOV eyepiece you have.
+7. How far E/W an observing plan will list objects
     * Western extent at the beginning of the session; 
     * Eastern extent at the end of the session.
-7. Used to create DSO lists for an observing plan
-8. On the Skymap, how faint to show DSOs
+8. Used to create DSO lists for an observing plan
+9. On the Skymap, how faint to show DSOs
     * Note: Only DSOs with a priority = 'highest' will be shown here.  
     * You can change priorities to highlight your favorite DSOs.
-9. Faintest stars to show on a SkyMap
+10. Faintest stars to show on a SkyMap
 
 #### Positive Integers
 
 |        Name         |        Slug         | Default | Notes | 
 | :------------------ | :------------------ |   :-:   | ----: |
-| Default Location ID | default-location-id |   TBD   |     1 | 
+| Default Location ID | default-location-id |    *    |     1 | 
 | SkyMap DSO Priority | skymap-dso-priority |    1    |  2, 3 | 
 
 ##### Notes
 
 1. This is the ID/PK of the record in the ObservingLocation table of your "base" location.
+    * The default is the first ObservingLocation record in the table.
 2. This sets how "deep" we plot DSOs on a skymap
 3. The value 1 here means "highest priority" only;  using 2 would be "highest + high" and so on.
 
