@@ -101,7 +101,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
             **kwargs
         )
         context['catalog_list'] = cat_list
-        #context['object_list'] = all_objects_sort
+        context['table_id'] = 'catalog_dso_list'
         return context
 
 class ObjectTypeListView(ListView):

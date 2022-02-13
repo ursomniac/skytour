@@ -9,10 +9,11 @@
         <th>Count</th>
     </tr>
     {% for obj in object_list %}
-    <tr>
+    <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url 'object-type-detail' obj.slug %}">{{ obj.name }}</a></td>
-        <td style="text-align: right">{{ obj.dso_count }}</td>
+        <td style="text-align: right; padding-right: 5px;">{{ obj.dso_count }}</td>
     </tr>
     {% endfor %}
 </table>
+<br>
 {% endblock %}

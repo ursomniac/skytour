@@ -17,6 +17,8 @@
         padding: 2px 5px;
 
     }
+    h3 { color: #cc0; }
+    h4 { color: #cc0; }
 </style>
 {% endblock styles %}
 
@@ -24,11 +26,13 @@
 <table class="boxed">
     <tr>
         <td width="30%"%>
-            <h1>Observing Session:<br>{{ object.ut_date|date:"Y-m-d" }}</h1>
-            Location: {{ object.location.address }}<br/>
-            {{ object.location.city}}, {{ object.location.state }}<br/>
-            Latitude: {{ object.location.latitude|floatformat:5 }}<br/>
-            Longitude {{ object.location.longitude|floatformat:5 }}<br/>
+            <h2>Observing Session: {{ object.ut_date|date:"Y-m-d" }}</h2>
+            <h3>Location: {{ object.location.address }}</h3>
+            <ul class="no_bullets">
+                <li>{{ object.location.city }}, {{ object.location.state }}</li>
+                <li>Latitude: {{ object.location.latitude|floatformat:5 }}</li>
+                <li>Longitude {{ object.location.longitude|floatformat:5 }}</li>
+            </ul>
         </td>
         <td style="vertical-align: top;">
             <h4>Notes:</h4>
@@ -37,12 +41,12 @@
     </tr>
 </table>
 
-<h2>Observations</h2>
+<h2>&nbsp;Observations</h2>
 
 <table class="boxed">
 {% for target in object.session_observations %}
 {% with e=target.observation_metadata %}
-<tr>
+<tr class="{% cycle 'odd' 'even' %}">
     <td width="20%">
     {% if target.object_type == 'Condition' %}
         <h3>Condition: {{ target.session_stage }}</h3>

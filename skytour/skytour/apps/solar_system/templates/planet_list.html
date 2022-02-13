@@ -20,7 +20,7 @@
     </thead>
     <tbody>
         {% for k, v in pdict.items %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'planet-detail' k|lower %}">{{ k }}</a></td>
             <td>{{ v.coords.ra_str }}</td>
             <td>{{ v.coords.dec_str }}</td>

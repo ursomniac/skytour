@@ -2,71 +2,66 @@
 
 {% block styles %}
 <style>
-	body {font-family: Arial, sans-serif; width: 900px}
-	h1 { font-weight: bold; font-size: 200%; color: #fff; line-height: 1.2; }
-    h2 { margin: 2px 4px 6px 4px; }
-	h3 { color: #fff; margin: 8px; }
-	p { margin: 3px 6px; }
-	td { vertical-align: top; }
-	td.object_name { vertical-align: middle; padding-left: 20px; }
-	td.description { vertical-align: middle; text-align: center; line-height: 1.1; color: #FFF;}
-	img.location_image { max-height: 300px;  max-width: 850px; height: auto; width: auto;}
-	img.map_image { max-height: 400px; max-width: 400px; height: auto; width: auto;}
+	td { padding: 10px; vertical-align: top; }
+	td.description { padding-top: 20px; line-height: 1.4; }
+	.map_image { width: 100%; }
+	.location_image { width: 100%; }
 </style>
 {% endblock styles %}
 {% block title %}Location: {{ object.street_address}} {{ object.city }}: Skytour{% endblock %}
 {% block content %}
+
+<table width="100%" bgcolor="{{ object.status_color }}">
+	<tr>
+		<td width=66% class="object_name">
+			<h1>
+				{% if object.name %}
+				{{ object.name }}: 
+				{% endif %}
+				{{ object.street_address }}
+			</h1>
+			<h2>{{ object.city }}, {{ object.state }}</h2>
+
+		</td>
+		<td width=33% class="description">
+			<b>Distance:</b>
+			{{ object.travel_distance }} mi
+			<br><b>Travel Time:</b>
+			{{ object.travel_time }} min
+			<br><b>Status:</b>
+			{{ object.status }}
+		</td>
+	</tr>
+</table>
+
 <table>
-<tr>
-	<td colspan=2 class="object_header">
-		<table width="100%" bgcolor="{{ object.status_color }}" width=100%>
-			<tr>
-				<td width=75% class="object_name">
-					<h1>
-                        {% if object.name %}
-						{{ object.name }}<br/>
-                        {% endif %}
-                        {{ object.street_address }}<br/>
-                        {{ object.city }}, {{ object.state }}
-					</h1>
+	<tr>
+		<td id="finder" width=33%>
+			<h2>Google Map:</h2>
+			{% if object.map_image %}
+			<img src="{{ object.map_image.url }}" class="map_image">
+			{% endif %}
+			<br>
+			<a href="https://www.google.com/maps/place/{ object.latitude }%2C{ object.longitude }">
+			<button>Google Map</button></a>
+		</td>
 
-				</td>
-				<td width=20% class="description" rowspan=2>
-                    <h3>Distance</h3>
-					{{ object.travel_distance }} mi
-					<br>
-                    <h3>Travel Time</h3>
-					{{ object.travel_time }} min
-					<br>
-					<h3>Status</h3>
-					{{ object.status }}
-				</td>
-			</tr>
-		</table>
-	</td>
-</tr>
+		<td id="field_view" width=33%>
+			<h2>Google Earth Image:</h2>
+			{% if object.earth_image %}
+			<img src="{{ object.earth_image.url }}" class="map_image">
+			{% endif %}
+		</td>
+		<td id="bortle_map">
+			<H2>Sky Brightness Map:</h2>
+			{% if object.bortle_image %}
+			<img src="{{ object.bortle_image.url }}" class="map_image">
+			{% endif %}
+		</td>
+	</tr>
+</table>
 
-<tr>
-	<td id="finder" width=50%>
-		<h2>Map:</h2>
-		{% if object.map_image %}
-		<img src="{{ object.map_image.url }}" class="map_image">
-		{% else %}
-		<br>(No map.)
-		{% endif %}
-		<a href="https://www.google.com/maps/place/{ object.latitude }%2C{ object.longitude }"><button>Google Map</button></a>
-	</td>
-
-	<td id="field_view" width=50%>
-		<h2>Earth Image:</h2>
-		{% if object.earth_image %}
-		<img src="{{ object.earth_image.url }}" class="map_image">
-		{% else %}
-		<br>(No Earth Image.)
-		{% endif %}
-	</td>
-</tr>
-
+<table>
 <tr>
 	<td id="metadata" colspan=2>
 		<table width=100% class="info_box">
@@ -91,15 +86,10 @@
 	<td id="object_notes" valign="top" colspan=2>
 		<h2>Description:</h2>
 		{% if object.description %}
-		{{ object.description}}
+		{{ object.description }}
 		{% else %}
 		<br/><br/><br/><br/><br/><br/><br/>
 		{% endif %}
-		{% for img in object.locationimage_set.all %}
-		<img src="{{ img.image.url }}" class="location_image">
-		<br>
-		{{ img.description }}
-		{% endfor %}
 	</td>
 </tr>
 <tr class="bottom">
@@ -113,7 +103,7 @@
 	</td>
 </tr>
 <tr class="bottom">
-	<td>
+	<td width="50%">
 		<h2>Light Sources:</h2>
 		{% if object.light_sources %}
 		<p>Notes:<br/>{{ object.light_sources }}<br/></p>
@@ -139,5 +129,18 @@
 	</td>
 </tr>
 </table>
+
+{% if object.locationimage_set.all|length > 0 %}
+<h2>&nbsp;Location Images:</h2>
+<table class="lite">
+{% for img in object.locationimage_set.all %}
+	<tr><td>
+		<img src="{{ img.image.url }}" class="location_image">
+		<br>
+		{{ img.description|safe }}
+	</td></tr>
+{% endfor %}
+</table>
+{% endif %}
 
 {% endblock content %}

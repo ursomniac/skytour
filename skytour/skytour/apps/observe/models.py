@@ -172,10 +172,11 @@ class ObservingLocation(models.Model):
     def status_color(self):
         colors = {
             'TBD': '#666', 
-            'Active': '#090', 
-            'Issues': '#990',
-            'Possible': '#099', 
-            'Rejected': '#900'
+            'Active': '#060', 
+            'Provisional': '#006',
+            'Issues': '#960',
+            'Possible': '#066', 
+            'Rejected': '#600'
         }
         if self.status in colors.keys():
             return colors[self.status]

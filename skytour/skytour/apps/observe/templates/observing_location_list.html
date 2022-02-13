@@ -2,11 +2,13 @@
 {% block title %}Observing Locations: Skytour{% endblock %}
 {% block content %}
 <h1>Observing Locations</h1>
-
-<div class="images">
-    <img src="{{ sqm_plot }}"/>
-    <img src="{{ brightness_plot }}"/>
+<table class="images">
+    <tr>
+        <td><img src="{{ sqm_plot }}"/></td>
+        <td><img src="{{ brightness_plot }}"/></td>
+    </tr>
 </div>
+<br>
 <table id="{{ table_id }}">
 <thead>
     <tr>
@@ -42,6 +44,5 @@
     {% endfor %}
 </tbody>
 </table>
-
 {% include 'includes/sortable_table.html' %}
 {% endblock content %}

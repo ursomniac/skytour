@@ -4,18 +4,19 @@
 {% block content %}
 <h1>DSO Priorities</h1>
 
-<table class="half-width" id="{{ table_id }}">
+<table id="{{ table_id }}">
 <thead>
     <tr><th>Priority</th><th>Count</th></tr>
 </thead>
 <tbody>
 {% for p in priorities %}
-    <tr>
+    <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url 'priority-detail' p %}">{{ p }}</a></td>
         <td>{{ priority_count|dict_value:p }}</td>
     </tr>
 {% endfor %}
 </tbody>
 </table>
+<br>
 {% include 'includes/sortable_table.html' %}
 {% endblock %}

@@ -12,7 +12,7 @@
             <tr>
                 <td style="width: 150px;">
                 {% if page_obj.has_previous %}
-                    <button><a href="?page={{ page_obj.previous_page_number }}">Previous Page</a></button>
+                    <a href="?page={{ page_obj.previous_page_number }}"><button>Previous Page</button></a>
                 {% endif %}
                 </td>
                 <td style="width: 200px;">
@@ -22,7 +22,7 @@
                 </td>
                 <td style="width: 150px;">
                 {% if page_obj.has_next %}
-                    <button><a href="?page={{ page_obj.next_page_number }}">Next Page</a></button>
+                    <a href="?page={{ page_obj.next_page_number }}"><button>Next Page</button></a>
                 {% endif %}
                 </td>
             </tr>

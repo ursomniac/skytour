@@ -101,6 +101,7 @@ class ObservingSessionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'session_table'
         return context
 
 class ObservingSessionDetailView(DetailView):

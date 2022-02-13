@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         {% for asteroid in asteroid_list %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'asteroid-detail' asteroid.slug %}">{{ asteroid.name }}</a></td>
             <td>
                 &alpha;: {{ asteroid.coords.ra_str }} &nbsp;

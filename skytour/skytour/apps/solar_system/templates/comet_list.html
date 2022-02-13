@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         {% for comet in comet_list %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'comet-detail' comet.pk %}">{{ comet.name }}</a></td>
             <td>
                 &alpha;: {{ comet.coords.ra_str }} &nbsp;
@@ -34,4 +34,5 @@
         {% endfor %}
     </tbody>
 </table>
+<br>
 {% endblock content %}
