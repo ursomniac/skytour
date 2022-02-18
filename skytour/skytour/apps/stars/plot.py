@@ -25,10 +25,8 @@ def get_skymap(
     Create a full map of the sky for a given UTDT and location.
     """ 
     # Parameters that might be in the SiteParameter apps/models
-    priority = find_site_parameter('skymap-dso-priority', default=1, param_type='positive')
     star_mag_limit = find_site_parameter('skymap-magnitude-limit-stars', default=5.5, param_type='float')
     # TODO: should this be set from the limiting magnitude at the location based on its Bortle value?
-    dso_mag_limit = find_site_parameter('skymap-magnitude-limit-dsos', default=6.0, param_type='float')
     
     # Set up SkyField
     ts = load.timescale()
@@ -84,9 +82,7 @@ def get_skymap(
     # 5. DSOs
     ax, interesting['dsos'] = map_dsos(ax, earth, t, projection, 
         center = (center_ra, center_dec),
-        mag_limit=dso_mag_limit, 
-        alpha=0.7, 
-        priority=priority,
+        label_size='xx-small',
         reversed=reversed
     )
 

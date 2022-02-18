@@ -24,6 +24,10 @@ PRIORITY_COLORS = {
     'Low': '#096',
     'None': '#ccc'
 }
+INT_YES_NO = (
+    (0, 'No'),
+    (1, 'Yes')
+)
 
 class DSO(Coordinates, FieldView, ObservableObject):
     """
@@ -102,12 +106,16 @@ class DSO(Coordinates, FieldView, ObservableObject):
         upload_to = 'dso_finder_chart',
         null = True, blank = True
     )
-
     priority = models.CharField (
         _('Priority'),
         max_length = 20,
         choices = PRIORITY_CHOICES,
         null = True, blank = True
+    )
+    show_on_skymap = models.PositiveIntegerField (
+        _('Show on Skymap'),
+        default = 0,
+        choices = INT_YES_NO
     )
 
     # From Stellarium DSO model and SIMBAD

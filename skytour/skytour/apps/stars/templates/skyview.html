@@ -1,14 +1,8 @@
 {% extends 'base.html' %}
 {% load skytour_filters %}
 {% block content %}
-<style>
-    table.lite { border-style: none;  }
-    table.lite td { border-style: none; vertical-align: top;  padding: 3px 5px;}
-    td.side { font-size: 70%; vertical-align: top; }
-    td.tight { padding: 0 !important; margin: 0 !important; }
-</style>
-
-<table class="lite">
+<div class="skymap">
+<table class="lite splash">
     <tr>
         <td style="vertical-align: top;">
             <h1 style="padding-top: 0">SkyMap</h1> 
@@ -38,7 +32,7 @@
 
 <table>
     <tr>
-        <td class="tight" style="vertical-align: top">
+        <td class="tight">
             <img src="{{ skymap }}">
         </td>
         <td class="side">
@@ -70,4 +64,5 @@
         </td>
     </tr>
 </table>
+</div>
 {% endblock content %}

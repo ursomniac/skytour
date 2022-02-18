@@ -335,7 +335,9 @@ def map_saturn_rings(ax, planet, t0, reversed=False):
 
 def map_dsos(ax, earth, t, projection, 
         center = None,
-        mag_limit=None, dso=None, priority=5, alpha=1,
+        dso=None, 
+        alpha=1,
+        label_size = None,
         reversed=False
     ):
     """
@@ -345,32 +347,9 @@ def map_dsos(ax, earth, t, projection,
         called from create_planet_image or plot_track because then we ought
         to be able to make things run faster.
     """
-    other_dso_records = DSO.objects.all()
-
-    # Filter the set
-    if mag_limit: # exclude faint objects off the top
-        other_dso_records = other_dso_records.exclude(magnitude__gte=mag_limit)
+    other_dso_records = DSO.objects.filter(show_on_skymap=1)
     if dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
-
-    # Winnow the list:
-    # Priorities are Highest, High, Medium, Low, and None, ranked 1 to 5.
-    # Cull the list based on priority:
-    #   A. DSO Finder charts want everything shown, so the default priority is set
-    #       to something > 4 so that everything shows up.
-    #   B. Skymap, however, only wants the highest priority DSOs so as not to 
-    #       overwhelm the chart.
-    #   C. Other custom calls could have something in-between
-    #       TODO: Create this functionality!
-    #
-    if priority <= 4:
-        other_dso_records = other_dso_records.exclude(priority='None')
-    if priority <= 3:
-        other_dso_records = other_dso_records.exclude(priority='Low')
-    if priority <= 2:
-        other_dso_records = other_dso_records.exclude(priority='Medium')
-    if priority <= 1:
-        other_dso_records = other_dso_records.exclude(priority='High')
 
     # Create the plotting dictionary
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
@@ -406,7 +385,7 @@ def map_dsos(ax, earth, t, projection,
             marker=um, alpha=alpha
         )
     # Add labels
-    color = '#ccc' if reversed else '#000'
+    color = '#cc0' if reversed else '#ccc'
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),
@@ -414,7 +393,9 @@ def map_dsos(ax, earth, t, projection,
             textcoords='offset points',
             horizontalalignment='left',
             annotation_clip = True,
-            color=color
+            color=color,
+            fontsize=label_size,
+            fontweight='bold'
         )
     return ax, interesting
 
@@ -553,7 +534,7 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
 
 def map_comets(ax, utdt, earth, t, projection,
         center = None, comet_mag_limit = 12.0,
-        color='#cc0', marker='h', size=60, alpha=1.0,
+        color='#f0e090', marker='h', size=60, alpha=1.0,
         reversed=True
     ):
 
