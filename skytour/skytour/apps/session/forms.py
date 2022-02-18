@@ -8,6 +8,11 @@ YES_NO = [
     ('Yes', 'Yes'),
     ('No', 'No')
 ]
+GRAPH_COLOR_SCHEME = [
+    ('dark', 'DARK: White on Black'),
+    ('light', 'LIGHT: Black on White')
+]
+
 class ObservingParametersForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='0:00') # Keep? or use the astro system?
@@ -19,8 +24,6 @@ class ObservingParametersForm(forms.Form):
     hour_angle_range = forms.FloatField(initial=find_site_parameter('hour-angle-range', default=3.5, param_type='float'))
     session_length = forms.FloatField(initial=find_site_parameter('session-length', default=3.0, param_type='float'))
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial=find_site_parameter('poll-planets', default='visible', param_type='string'))
+    color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
     poll_asteroids = forms.ChoiceField(choices=YES_NO, initial='Yes')
-
-
-    

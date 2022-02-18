@@ -27,7 +27,7 @@
             <td>{{ v.observe.apparent_mag|floatformat:2 }}</td>
             <td><a href="{% url 'constellation-detail' v.observe.constellation.abbr|upper %}">{{ v.observe.constellation.name }}</a></td>
             <td>{{ v.object.number_of_observations }}</td>
-            <td>{% if v.object.last_observed %}{{ v.object.last_observed|date:"Y-m-d h:i" }} UT{% endif %}</td>
+            <td>{% if v.object.last_observed %}{{ v.object.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -13,9 +13,17 @@
         <td width="25%">
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ asteroid.observe.constellation.name }}</h2>
-            Class: {{ object.classification }}<br>
-            Diameter: {{ object.diameter }} km<br>
-            Discovered: {{ object.year_of_discovery }}
+            <table class="lite">
+                <tr><td>Class:</td><td>{{ object.classification }}</td></tr>
+                <tr><td>Diameter:</td><td>{{ object.diameter }} km</td></tr>
+                <tr><td>Discovered:</td><td>{{ object.year_of_discovery }}<br/><br/></td></tr>
+                <tr><td></td><td></td></tr>
+                <tr><td># Obs:</td><td>{{ object.number_of_observations }}</td></tr>
+                <tr><td>Last Observed:</td><td> 
+                    {% if object.last_observed %}{{ object.last_observed|date:"Y-m-d H:i"}}
+                    {% else %}(not yet){% endif %}
+                </td></tr>
+            </table>
         </td>
         <td width="35%">
             {% if object.image %}
@@ -23,7 +31,7 @@
             {% endif %}
         </td>
         <td width="40%">
-            <p>{{ object.description }}</p>
+            <p>{{ object.description|safe }}</p>
         </td>
     </tr>
 </table>
@@ -60,11 +68,12 @@
         {% endwith %}
         </td>
     </tr>
+</table>
+<br><br>
+<table class="lite">
     <tr>
-        <td width="50%" colspan=2>
-            <img src="{{ finder_chart }}">
-        </td>
-        <td width="50%" colspan=2>
+        <td style="text-align: center;">
+            <img src="{{ finder_chart }}" width="60%">
         </td>
     </tr>
     </tbody>

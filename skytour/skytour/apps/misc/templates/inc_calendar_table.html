@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         {% for obj in object_list %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
             <td>{{ obj.date|date:"F j" }}</td>
             <td>{{ obj.time|date:"H:i" }}</td>
             <td>{{ obj.event_type }}</td>

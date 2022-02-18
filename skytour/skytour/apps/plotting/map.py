@@ -24,7 +24,7 @@ Each takes the matplotlib.Axes object instance (ax), does some operation,
 and returns it "back" to whatever is assembling the plot.
 """
 
-def map_constellation_lines(ax, stars):
+def map_constellation_lines(ax, stars, reversed=False):
     """
     This requires that the map_hipparcos() method run first, since it
     gets the list of stars FROM the return of that method.
@@ -42,10 +42,11 @@ def map_constellation_lines(ax, stars):
     xy2 = stars[['x', 'y']].loc[edges_star2].values
     lines_xy = np.rollaxis(np.array([xy1, xy2]), 1)
     ##### constellation lines
-    ax.add_collection(LineCollection(lines_xy, colors='#00f2'))
+    line_color = '#99f4' if reversed else '#00f2' 
+    ax.add_collection(LineCollection(lines_xy, colors=line_color))
     return ax
 
-def map_hipparcos(ax, earth, t, mag_limit, projection):
+def map_hipparcos(ax, earth, t, mag_limit, projection, reversed=False):
     """
     Put down sized points for stars.
     While this DOES pre-filter by mag_limit it does NOT filter
@@ -62,13 +63,16 @@ def map_hipparcos(ax, earth, t, mag_limit, projection):
     magnitude = stars['magnitude'][bright_stars]
     marker_size = (0.5 + mag_limit - magnitude) **2.0
     ##### background stars
+    star_color = 'w' if reversed else 'k'
     scatter = ax.scatter(
         stars['x'][bright_stars], stars['y'][bright_stars], 
-        s=marker_size, color='k'
+        s=marker_size, color=star_color
     )
     return ax, stars
 
-def map_bright_stars(ax, earth, t, projection, mag_limit=None, points=True, annotations=True):
+def map_bright_stars(ax, earth, t, projection, 
+        mag_limit=None, points=True, annotations=True, reversed=False
+    ):
     """
     Use the Bright Star Catalog to annotate bright stars (since that information is
     not in the Hipparcos data file).
@@ -124,16 +128,17 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     ax.add_patch(eyepiece)
     return ax
 
-def map_eyepiece(ax, diam=None):
+def map_eyepiece(ax, diam=None, reversed=False):
     """
     the default is 1° FOV.
     """
     fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
     radius = diam/2 if diam is not None else fov * 2.909e-4 / 2.
-    eyepiece = plt.Circle((0,0), radius, color='b', fill=False)
+    circle_color = 'c' if reversed else 'b'
+    eyepiece = plt.Circle((0,0), radius, color=circle_color, fill=False)
     return ax
 
-def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
+def map_moons(ax, planet, earth, t, projection, ang_size_radians, reversed=False, debug=False):
     """
     Given the RA/Dec for the moons in a system, plot them against a rendering of
     the planet's angular diameter (and in the case of Saturn the projection of
@@ -186,8 +191,8 @@ def map_moons(ax, planet, earth, t, projection, ang_size_radians, debug=False):
                 moon_pos_list['o'].append(-20)
             else: # I'm behind the planet!
                 moon_pos_list['o'].append(10)
-
-        moon_scatter = ax.scatter(moon_pos_list['x'], moon_pos_list['y'], color='b', marker='+')
+        moon_color = 'c' if reversed else 'b'
+        moon_scatter = ax.scatter(moon_pos_list['x'], moon_pos_list['y'], color=moon_color, marker='+')
     except:
         pass # bail -- oops.
     return ax, moon_pos_list, max_sep
@@ -292,18 +297,19 @@ def map_phased_planet(ax, planet, ang_size_radians):
     ax.add_patch(circle2)
     return ax
 
-def map_whole_planet(ax, ang_size_radians):
+def map_whole_planet(ax, ang_size_radians, reversed=False):
     """
     For superior planets (esp. Mars) we COULD generate a phased image.
     But for now, we won't.
     """
-    circle1 = plt.Circle((0,0), ang_size_radians/2., color='w')
+    disk_color = '#ccc' if reversed else 'w'
+    circle1 = plt.Circle((0,0), ang_size_radians/2., color=disk_color)
     ax.add_patch(circle1)
     circle2 = plt.Circle((0,0), ang_size_radians/2., color='r', fill=False)
     ax.add_patch(circle2)
     return ax
 
-def map_saturn_rings(ax, planet, t0):
+def map_saturn_rings(ax, planet, t0, reversed=False):
     """
     Given the tilt of the rings as seen from Earth, superimpose them on the disk.
         - 0.665 is the fractional radius of the inner edge of the inner ring.
@@ -319,16 +325,18 @@ def map_saturn_rings(ax, planet, t0):
     b = math.radians(rings['minor'] / 3600.)
     
     # Outer edge of the rings
-    re1 = Ellipse((0,0), a, b, fill=False)
+    ring_color = 'w' if reversed else 'k'
+    re1 = Ellipse((0,0), a, b, fill=False, color=ring_color)
     ax.add_patch(re1)
     # Inner edge of the rings
-    re2 = Ellipse((0,0), a*.665, b*.665, fill=False)
+    re2 = Ellipse((0,0), a*.665, b*.665, fill=False, color=ring_color)
     ax.add_patch(re2)
     return ax
 
 def map_dsos(ax, earth, t, projection, 
         center = None,
-        mag_limit=None, dso=None, priority=5, color='black', alpha=1
+        mag_limit=None, dso=None, priority=5, alpha=1,
+        reversed=False
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -383,19 +391,22 @@ def map_dsos(ax, earth, t, projection,
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     mmm = np.array(other_dsos['marker'])
+
     # On the Sky Map, we don't show the scaled DSO and custom markers, e.g., 
     #   rotated ellipses for galaxies.
     # Instead we just have some marker symbols.
     # Matplotlib needs us to overlay each set of those marker symbols individually (sigh)
     unique_markers = set(mmm) 
+    dso_color = '#9f9' if reversed else 'g'
     for um in unique_markers:
         mask = mmm == um # note = then == !
         ax.scatter(
             xxx[mask], yyy[mask],
-            s=90., edgecolor='g', facecolors='none',
+            s=90., edgecolor=dso_color, facecolors='none',
             marker=um, alpha=alpha
         )
     # Add labels
+    color = '#ccc' if reversed else '#000'
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),
@@ -445,7 +456,10 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
         )
     return ax, interesting
 
-def map_asteroids(ax, asteroid_list, utdt, projection, center=None, size=60, color='maroon', marker='o', alpha=0.8):
+def map_asteroids(ax, asteroid_list, utdt, projection, 
+        center=None, size=60, marker='o', alpha=0.8,
+        reversed=False
+    ):
     adict = { 'x': [], 'y': [], 'label': []}
     interesting = []
     for a in asteroid_list:
@@ -459,9 +473,10 @@ def map_asteroids(ax, asteroid_list, utdt, projection, center=None, size=60, col
         adict['x'].append(x)
         adict['y'].append(y)
         adict['label'].append(a['object'].number)
+    asteroid_color = 'red' if reversed else 'maroon'
     scatter = ax.scatter(
         adict['x'], adict['y'], 
-        s=size, c=color, 
+        s=size, c=asteroid_color, 
         marker=marker, alpha=alpha
     )
     for x, y, z in zip(adict['x'], adict['y'], adict['label']):
@@ -505,7 +520,9 @@ def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
 
 def map_meteor_showers(ax, utdt, earth, t, projection, 
         center=None,
-        color='c', marker='x', size=150, alpha=1.0):
+        color='c', marker='x', size=150, alpha=1.0,
+        reversed=True
+    ):
     """
     Show meteor showers on the map with a big cyan X.
     """    
@@ -536,7 +553,9 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
 
 def map_comets(ax, utdt, earth, t, projection,
         center = None, comet_mag_limit = 12.0,
-        color='#cc0', marker='h', size=60, alpha=1.0):
+        color='#cc0', marker='h', size=60, alpha=1.0,
+        reversed=True
+    ):
 
     alpha_list = 'ABCDEFGH'
     n = 0

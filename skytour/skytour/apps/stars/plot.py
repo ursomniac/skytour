@@ -18,7 +18,8 @@ def get_skymap(
         utdt, 
         location, 
         asteroid_list=None, 
-        include_comets=True
+        include_comets=True,
+        reversed=True
     ):
     """
     Create a full map of the sky for a given UTDT and location.
@@ -50,7 +51,11 @@ def get_skymap(
     zenith = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
 
     # Start up a Matplotlib plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+
     fig, ax = plt.subplots(figsize=[10,10])
+
 
     # center
     projection = build_stereographic_projection(zenith)
@@ -58,10 +63,10 @@ def get_skymap(
     # NOW PLOT THINGS!
 
     # 1. stars and constellation lines
-    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection)
-    ax = map_constellation_lines(ax, stars)
+    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, reversed=reversed)
+    ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(
-        ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True
+        ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
     )
 
     # 2. Sun - only matters if the plot is during the day
@@ -82,19 +87,26 @@ def get_skymap(
         mag_limit=dso_mag_limit, 
         alpha=0.7, 
         priority=priority,
-        color='grey'
+        reversed=reversed
     )
 
     # 6. Active Meteor Showers
-    ax, interesting['meteor_showers'] = map_meteor_showers(ax, utdt, earth, t, projection, center=(center_ra, center_dec), size=250, color='#ffaa00')
+    ax, interesting['meteor_showers'] = map_meteor_showers(
+        ax, utdt, earth, t, projection, 
+        center=(center_ra, center_dec), size=250, color='#ffaa00'
+    )
 
     # 7. Asteroids
     if asteroid_list:
-        ax, interesting['asteroids'] = map_asteroids(ax, asteroid_list, utdt, projection, center=(center_ra, center_dec))
+        ax, interesting['asteroids'] = map_asteroids(
+            ax, asteroid_list, utdt, projection, center=(center_ra, center_dec), reversed=reversed
+        )
 
     # 8. Comets
     if include_comets:
-        ax, interesting['comets'] = map_comets(ax, utdt, earth, t, projection, center=(center_ra, center_dec))
+        ax, interesting['comets'] = map_comets(
+            ax, utdt, earth, t, projection, center=(center_ra, center_dec), reversed=reversed
+        )
         
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)

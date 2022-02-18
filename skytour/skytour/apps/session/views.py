@@ -62,6 +62,7 @@ class SetSessionCookieView(FormView):
             hour_angle_range = d['hour_angle_range'],
             session_length = d['session_length'],
             show_planets = d['show_planets'],
+            color_scheme = d['color_scheme'],
             visible_asteroids = visible_asteroids
         )
         context['completed'] = True

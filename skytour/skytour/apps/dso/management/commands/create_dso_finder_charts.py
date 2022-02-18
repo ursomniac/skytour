@@ -9,9 +9,9 @@ from matplotlib import patches
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
-from skytour.apps.site_parameter.helpers import find_site_parameter
-from skytour.apps.stars.models import BrightStar
-from skytour.apps.dso.models import DSO
+from ....site_parameter.helpers import find_site_parameter
+from ....stars.models import BrightStar
+from ...models import DSO
 
 def plot_dso(ax, x, y, dso, color='r', size_limit=0.0005, alpha=1):
     oangle = dso.orientation_angle or 0

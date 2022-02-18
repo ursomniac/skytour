@@ -28,7 +28,7 @@ No upcoming events.
     </thead>
     <tbody>
 {% for shower in meteor_showers %}
-    <tr>
+    <tr class="{% cycle 'odd' 'even' %}">
         <td>{{ shower.name }}</td>
         <td>{{ shower.start_date }}</td>
         <td>{{ shower.peak_date }}</td>
@@ -49,7 +49,7 @@ None active.
     <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th></tr></thead>
     <tbody>
         {% for pair in adjacent_planets %}
-        <tr>
+        <tr class="{% cycle 'odd' 'even' %}">
             <td>{{ pair.0 }}</td>
             <td>{{ pair.1 }}</td>
             <td>{{ pair.2|floatformat:1 }}°</td>

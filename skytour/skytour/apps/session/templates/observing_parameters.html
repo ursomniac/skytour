@@ -47,7 +47,7 @@ summary::-webkit-details-marker {
 }
 </style>
 
-<h1>Plan Observations</h1>
+<h1>Set Session Parameters</h1>
 <h2>Current UT: {{ now|date:"D Y-M-d H:i" }}</h2>
 <div class="plan_form">
     {% if form %}
@@ -71,6 +71,7 @@ summary::-webkit-details-marker {
   <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
   <tr><td>Mag. Limit:</td><td>{{ cookie.mag_limit }}</td></tr>
   <tr><td>HR Range:</td><td>{{ cookie.hour_angle_range }}</td></tr>
+  <tr><td>Color Scheme:</td><td>{{ cookie.color_scheme }}</td></tr>
   <tr><td>Session Length:</td><td>{{ cookie.session_length }}</td></tr>
   <tr><td>Show Planets:</td><td>{{ cookie.show_planets }}</td></tr>
   </tr>

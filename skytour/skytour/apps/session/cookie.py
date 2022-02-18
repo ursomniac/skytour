@@ -10,7 +10,6 @@ def get_cookie_defaults():
     ut1 = ut0 + datetime.timedelta(hours=session_length)
     julian_date = get_julian_date(ut0)
     t = get_t_epoch(julian_date)
-
     default_location_pk = ObservingLocation.objects.first().pk
 
     cookie_dict = dict (
@@ -22,6 +21,7 @@ def get_cookie_defaults():
         mag_limit = find_site_parameter('dso-magnitude-limit', default=12.0, param_type='float'),
         hour_angle_range = find_site_parameter('hour-angle-range', default=3.5, param_type='float'),
         show_planets = find_site_parameter('poll-planets', default='visible', param_type='string'),
+        color_scheme = 'dark',
         julian_date = julian_date,
         t = t,
         visible_asteroids = []

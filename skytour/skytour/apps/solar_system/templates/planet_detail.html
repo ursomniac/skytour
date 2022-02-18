@@ -14,24 +14,31 @@
     <tr>
         <td width="25%">
             <h1> {{ planet.name }}</h1> 
-            in {{ planet.observe.constellation.name }}
+            in 
+            {{ planet.observe.constellation.name }}
         </td>
-        <td width="50%">
+        <td width="40%">
             <h2>Observations</h2>
-            # Observations: {{ planet.number_of_observations }}<br>
-            Last Observed: {{ planet.last_observed }}
+            # Observations:  {{ planet.object.number_of_observations }}
+            <br>
+            Last Observed:
+            {% if planet.object.last_observed %}
+                {{ planet.object.last_observed|date:"Y-m-d H:i" }} UT
+            {% else %}
+                (not yet)
+            {% endif %}
         </td>
         <td>
             <h2>Solar System</h2>
             <a href="{% url 'planet-detail' 'mercury' %}">  <button>Mercury</button></a>
-            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a><br>
-            <a href="{% url 'planet-detail' 'venus' %}">    <button>Venus</button></a>
-            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
-            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
-            <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
             <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
+            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
+            <a href="{% url 'planet-detail' 'venus' %}">    <button>Venus</button></a>
+            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a>
+            <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
             <a href="{% url 'moon-detail' %}">              <button>Moon</button></a>
-            <br>
+            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
+            <br><br>
         </td>
     </tr>
 </table>
@@ -79,7 +86,7 @@
         {% endwith %}
         </td>
     </tr>
-    <tr>
+    <tr style='margin-top: 10px;'>
         <td width="50%" colspan=2>
             <img src="{{ finder_chart }}">
         </td>

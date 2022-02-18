@@ -29,6 +29,7 @@ def create_planet_image(
         finder_chart=False, # Am I making a eyepiece view or finder chart?
         flipped = False, # for SCT there's a flip in RA
         show_axes=False, # mostly for debugging
+        reversed=True,
         debug=False # print stuff to the console
     ):
     """
@@ -55,6 +56,10 @@ def create_planet_image(
         ang_size_radians = math.radians(ang_size) if ang_size else 0.
 
     # Start making a plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    
+
     fig, ax = plt.subplots(figsize=[6,6])
     projection = build_stereographic_projection(planet['target'])
 
@@ -62,23 +67,23 @@ def create_planet_image(
     if finder_chart:
         # Add stars from Hipparcos, constellation lines (from Stellarium),
         #   and Bayer/Flamsteed designations from the BSC
-        ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
-        ax = map_constellation_lines(ax, stars)
-        ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True)
+        ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
+        ax = map_constellation_lines(ax, stars, reversed=reversed)
+        ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
 
         # Don't plot the planet - just a symbol.
         (planet_ra, planet_dec, planet_dist) = planet['target'].radec()
         ax = map_target(ax, planet_ra, planet_dec, projection, earth, t, '+')
 
         # Add an eyepiece circle, 32mm eyepiece = 0.0038 radians
-        ax = map_eyepiece(ax, diam=0.0038)
+        ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
 
         # Add planet symbols (Unicode)
         if other_planets:
             ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
 
         # Add DSOs
-        ax, _ = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection, reversed=reversed)
 
     # OR put up a telescopic view of the planet with moons, or phases
     else:
@@ -86,7 +91,7 @@ def create_planet_image(
         if 'moons' in planet.keys():
             # return the maximum separation of a moon from its planet.
             # This determines the scale of the view.
-            ax, moon_pos_list, max_sep = map_moons(ax, planet, earth, t, projection, ang_size_radians)
+            ax, moon_pos_list, max_sep = map_moons(ax, planet, earth, t, projection, ang_size_radians, reversed=reversed)
             for x, y, z, o in zip(moon_pos_list['x'], moon_pos_list['y'], moon_pos_list['label'], moon_pos_list['o']):
                 plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
         else: # no moons, set max_sep to 3*ang_size of the planet.
@@ -97,13 +102,13 @@ def create_planet_image(
         # If Saturn, add rings
         # TODO: deal with having the ring in front of the planet and then behind it.
         if name == 'Saturn':
-            ax = map_saturn_rings(ax, planet, t0)
+            ax = map_saturn_rings(ax, planet, t0, reversed=reversed)
 
         # Moon and inferior planets have phases!
         if name in ['Moon', 'Mercury', 'Venus']:
             ax = map_phased_planet(ax, planet, ang_size_radians)
         else: # just a regular disk for superior planets
-            ax = map_whole_planet(ax, ang_size_radians)
+            ax = map_whole_planet(ax, ang_size_radians, reversed=reversed)
 
     # Add planet symbols (Unicode)
     if other_planets:
@@ -210,6 +215,7 @@ def plot_track(
         mag_limit=None, 
         dsos=True, 
         fov=None,
+        reversed=True,
         debug=False
     ):
     """
@@ -230,6 +236,9 @@ def plot_track(
     t = ts.from_datetime(utdt)
 
     first_projection = earth.at(t).observe(target)
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+
     fig, ax = plt.subplots(figsize=[8,8])
     projection = build_stereographic_projection(first_projection)
     # Build the observation points
@@ -258,8 +267,10 @@ def plot_track(
         i += 1
     if debug:
         print (d_planet['label'])
-    w = ax.plot(d_planet['x'], d_planet['y'], color='orange', marker=None)
-    w = ax.scatter(d_planet['x'], d_planet['y'], s=90., c='#900', marker='+', alpha=0.7)
+    line_color = 'red' if reversed else 'orange'
+    w = ax.plot(d_planet['x'], d_planet['y'], color=line_color, marker=None)
+    plus_color = 'orange' if reversed else '#900'
+    w = ax.scatter(d_planet['x'], d_planet['y'], s=90., c=plus_color, marker='+', alpha=0.7)
 
     for x, y, l in zip(d_planet['x'], d_planet['y'], d_planet['label']):
         ax.annotate(
@@ -278,9 +289,9 @@ def plot_track(
         else:
             mag_limit = 9.0
 
-    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
-    ax = map_constellation_lines(ax, stars)
-    ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit)
+    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
+    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
     # Add DSOs
     if dsos:
         ax, _ = map_dsos(ax, earth, t, projection)

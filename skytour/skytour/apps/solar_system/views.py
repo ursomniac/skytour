@@ -34,6 +34,8 @@ class PlanetDetailView(DetailView):
         context = super(PlanetDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
         context = deal_with_cookie(self.request, context) 
+        reversed = context['color_scheme'] == 'dark'
+
         # Replace this after testing
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
@@ -42,38 +44,23 @@ class PlanetDetailView(DetailView):
         pdict = context['planet'] = planets[obj.name]
         pdict['name'] = obj.name
         flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
-        # IF there are objects within 0.5° set fov to that
-        sep = None
-        #if obj.name not in ['Uranus', 'Neptune']: # too small to do this
-        #    for nearby in pdict['close_to']:
-        #        if nearby[1] <= 0.5:
-        #            sep = math.radians(nearby[1])
-        #            print ("Sep now: ", sep)
-        if sep:
-            context['view_image'] = create_planet_image(
-                pdict, 
-                utdt=utdt_start, 
-                other_planets=planets, 
-                flipped=flipped,
-                min_sep = sep
-            )
-        else:
-            context['view_image'] = create_planet_image(
-                pdict, 
-                utdt=utdt_start,  
-                flipped=flipped
-            )
-            
+
+        context['view_image'] = create_planet_image(
+            pdict, 
+            utdt=utdt_start,  
+            flipped=flipped,
+            reversed=reversed
+        )
+        
+        # TODO: Put this in site-parameters?
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
         other_asteroids = None
+
         if 'visible_asteroids' in context.keys():
-            print ("ASTEROIDS: ", context['visible_asteroids'])
             alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
             other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
-        else:
-            print ("NO ASTEROIDS")
-            
+
         context['finder_chart'] = create_planet_image(
             pdict, 
             utdt=utdt_start, 
@@ -81,8 +68,10 @@ class PlanetDetailView(DetailView):
             mag_limit=mag_limit, 
             finder_chart=True, 
             other_planets=planets,
-            other_asteroids=other_asteroids
+            other_asteroids=other_asteroids,
+            reversed=reversed
         )
+
         context['planet_map'] = None
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
@@ -95,6 +84,8 @@ class MoonDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MoonDetailView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
+        reversed = context['color_scheme'] == True
+
         # Replace after testing
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
@@ -103,7 +94,7 @@ class MoonDetailView(TemplateView):
         planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
         pdict = context['planet'] = get_moon(utdt_start, utdt_end=utdt_end, location=location)
         pdict['name'] = 'Moon'
-        context['view_image'] = create_planet_image(pdict, utdt=utdt_start)
+        context['view_image'] = create_planet_image(pdict, utdt=utdt_start, reversed=reversed)
         fov = 8. if pdict['name'] in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if pdict['name'] in ['Uranus', 'Neptune'] else 6.5
         context['finder_chart'] = create_planet_image(
@@ -112,7 +103,8 @@ class MoonDetailView(TemplateView):
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
-            other_planets=planets
+            other_planets=planets,
+            reversed=reversed
         )
         return context
 
@@ -148,6 +140,8 @@ class AsteroidDetailView(DetailView):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         context = deal_with_cookie(self.request, context)
+        reversed = context['color_scheme'] == 'dark'
+
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
@@ -158,7 +152,7 @@ class AsteroidDetailView(DetailView):
             alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
             other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
         fov = 10.
-        #mag_limit = data['observe']['apparent_mag'] + 0.5
+
         mag_limit = 10
         context['finder_chart'] = create_planet_image(
             data, 
@@ -168,6 +162,7 @@ class AsteroidDetailView(DetailView):
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
+            reversed=reversed
         )
         return context
 
@@ -198,6 +193,8 @@ class CometDetailView(DetailView):
         context = super(CometDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         context = deal_with_cookie(self.request, context)
+        reversed = context['color_scheme'] == 'dark'
+        
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
@@ -219,6 +216,7 @@ class CometDetailView(DetailView):
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
+            reversed=reversed
         )        
         return context
 
@@ -249,8 +247,8 @@ class TrackerView(FormView):
 
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
-        #context = deal_with_cookie(self.request, context)
-        #utdt = context['utdt_start']
+        context = deal_with_cookie(self.request, context)
+        reversed = context['color_scheme'] == 'dark'
         d = form.cleaned_data
         model_dict = {'planet': Planet, 'asteroid': Asteroid, 'comet': Comet}
         object_type, slug = d['object'].split('--')
@@ -287,6 +285,7 @@ class TrackerView(FormView):
             step_label = step_labels,
             mag_limit = mag_limit,
             fov=fov,
+            reversed=reversed,
             dsos=False
         )
         context['form'] = form
@@ -300,18 +299,8 @@ class OrreryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(OrreryView, self).get_context_data(**kwargs)
-        params = self.request.GET
-        if 'date' in params.keys():  # Processing the form
-            utdt = parse_to_datetime(params['date'] + ' ' + params['time']).replace(tzinfo=pytz.utc)
-            initial = {'date': params['date'], 'time': params['time']}
-        else: # process the query string
-            if 'utdt' in params.keys():
-                utdt = parse_to_datetime(params['utdt'][0]).replace(tzinfo=pytz.utc)
-            else: 
-                utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-            initial = {'date': utdt.strftime("%Y-%m-%d"), 'time': utdt.strftime("%H-%M")}
-        
-        context['utdt'] = utdt
+        context = deal_with_cookie(self.request, context)        
+        utdt = context['utdt']
         planets = get_ecliptic_positions(utdt)
         context['system_image'] = plot_ecliptic_positions(planets)
         context['planets'] = planets
