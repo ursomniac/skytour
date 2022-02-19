@@ -75,9 +75,6 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     else:
         sun = sun['target']
 
-    #(xslat, xslon, xsdist) = sun.ecliptic_latlon()
-    #sun_lon = xslon.radians
-
     # Lunar Phase description
     phase = simple_lunar_phase(get_julian_date(utdt))
 
