@@ -5,21 +5,18 @@
 <h1>Session Cookies</h1>
 
 <h2>User Preferences</h2>
-{{ user_preferences }}
+{% if user_preferences %}{{ user_preferences }}{% else %}(Main cookie not set){% endif %}
+
+<h2>Sun and Moon</h2>
+<h3>Sun</h3>
+{% if sun %}{{ sun }}{% else %}(Sun not set.){% endif %}
+<h3>Moon</h3>
+{% if moon %}{{ moon }}{% else %}(Moon not set.){% endif %}
 
 <h2>Planets</h2>
-{% if planet_dict %}
-{{ planet_dict }}
-{% else %}
-(Planet dictionary not set.)
-{% endif %}
+{% if planets %}{{ planets }}{% else %}(Planet dictionary not set.){% endif %}
 
 <h2>Asteroids</h2>
-{% if asteroid_list %}
-{{ asteroid_list }}
-{% else %}
-(Asteroid list not set)
-{% endif %}
+{% if asteroids %}{{ asteroids }}{% else %}(Asteroid list not set){% endif %}
 
-{% include 'includes/sortable_table.html' %}
 {% endblock %}

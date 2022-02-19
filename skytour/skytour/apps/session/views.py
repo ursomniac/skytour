@@ -1,12 +1,15 @@
 import datetime, pytz
+import time
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
 from ..solar_system.helpers import get_visible_asteroids
+from ..solar_system.position import get_position, get_planet_positions
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingParametersForm
 from .models import ObservingSession
@@ -38,24 +41,52 @@ class SetSessionCookieView(FormView):
 
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
-
+        # Start timer
+        times = [(time.perf_counter(), 'Start')]
         d = form.cleaned_data
+        location_pk = d['location'].pk
+        times.append((time.perf_counter(), f'Processed Form'))
+        time_0 = times[0][0]
         if d['set_to_now'] == 'Yes':
             utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         else:
             utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
         utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
+        my_location = ObservingLocation.objects.get(pk=location_pk)
+        times.append((time.perf_counter(), f'Set Date/Location'))
 
+        # Sun
+        sun = get_position(utdt_start, 'Sun', location=my_location)
+        context['sun'] = sun 
+        self.request.session['sun'] = sun
+        times.append((time.perf_counter(), f'Got Sun'))
+
+        # Moon
+        moon = get_position(utdt_start, 'Moon', location=my_location)
+        context['moon'] = moon 
+        self.request.session['moon'] = moon
+        times.append((time.perf_counter(), f'Got Moon'))
+
+        # Planets
+        planets = get_planet_positions(utdt_start, location=my_location)
+        context['planets'] = planets
+        self.request.session['planets'] = planets
+        times.append((time.perf_counter(), f'Got Planets'))
+
+        # Asteroids
         visible_asteroids = None
         if d['poll_asteroids'] == 'Yes':
-            asteroid_list = get_visible_asteroids(utdt_start)
+            asteroid_list = get_visible_asteroids(utdt_start, serialize=True)
             visible_asteroids = [x['slug'] for x in asteroid_list]
+        context['asteroids'] = asteroid_list
+        self.request.session['asteroids'] = asteroid_list
+        times.append((time.perf_counter(), f'Got Asteroids'))
 
         # Set primary cookies
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start=utdt_start.isoformat(),
             utdt_end=utdt_end.isoformat(),
-            location = d['location'].pk,
+            location = location_pk,
             julian_date = get_julian_date(utdt_start),
             dec_limit = d['dec_limit'],
             mag_limit = d['mag_limit'],
@@ -65,7 +96,17 @@ class SetSessionCookieView(FormView):
             color_scheme = d['color_scheme'],
             visible_asteroids = visible_asteroids
         )
+
         context['completed'] = True
+        times.append((time.perf_counter(), f'Completed'))
+
+        time_list = []
+        for t in times:
+            dt = t[0] - time_0
+            time_list.append((t[0], dt, t[1]))
+        context['time_0'] = time_0
+        context['times'] = time_list
+
         return self.render_to_response(context)
             
     def form_invalid(self, form, **kwargs):
@@ -111,4 +152,14 @@ class ObservingSessionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)
+        return context
+
+class ShowCookiesView(TemplateView):
+    template_name = 'session_cookies.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ShowCookiesView, self).get_context_data(**kwargs)
+        for cookie in ['user_preferences', 'sun', 'moon', 'planets', 'asteroids']:
+            value = self.request.session.get(cookie, None)
+            context[cookie] = value
         return context

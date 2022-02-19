@@ -65,17 +65,36 @@ summary::-webkit-details-marker {
 
 {% if completed %}
 <h2>Session Cookie Updated</h2>
-<table class='half-width'>
-  <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
-  <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
-  <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
-  <tr><td>Mag. Limit:</td><td>{{ cookie.mag_limit }}</td></tr>
-  <tr><td>HR Range:</td><td>{{ cookie.hour_angle_range }}</td></tr>
-  <tr><td>Color Scheme:</td><td>{{ cookie.color_scheme }}</td></tr>
-  <tr><td>Session Length:</td><td>{{ cookie.session_length }}</td></tr>
-  <tr><td>Show Planets:</td><td>{{ cookie.show_planets }}</td></tr>
+<table>
+  <tr>
+    <td>
+      <h3>Metadata</h3>
+      <table>
+        <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
+        <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
+        <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
+        <tr><td>Mag. Limit:</td><td>{{ cookie.mag_limit }}</td></tr>
+        <tr><td>HR Range:</td><td>{{ cookie.hour_angle_range }}</td></tr>
+        <tr><td>Color Scheme:</td><td>{{ cookie.color_scheme }}</td></tr>
+        <tr><td>Session Length:</td><td>{{ cookie.session_length }}</td></tr>
+        <tr><td>Show Planets:</td><td>{{ cookie.show_planets }}</td></tr>
+      </table>
+    </td>
+    <td>
+      <h3>Times</h3>
+      <ul class="no_bullets">
+      {% for t in times %}
+      <li> {{ t.1|floatformat:3 }}: {{ t.2 }}</li>
+      {% endfor %}
+      </ul>
+    </td>
   </tr>
 </table>
+<br clear="all">
+<h3>Sun</h3> {{ sun }}
+<h3>Moon</h3> {{ moon }}
+<h3>Planets</h3> {{ planets }}
+<h3>Asteroids</h3> {{ asteroids }}
 {% endif %}
   <br><br><br><br clear="all">
   <hr>

@@ -44,7 +44,7 @@ def get_almanac_times(today, ts, f):
     return end_at, begin_at
 
 
-def get_object_rise_set(utdt, eph, target, location):
+def get_object_rise_set(utdt, eph, target, location, serialize=False):
     """
     Get Rise/Set times for an target from a given location.
     """
@@ -65,7 +65,8 @@ def get_object_rise_set(utdt, eph, target, location):
             event_type = 'Rise'
         jd = zt.tt.item()
         ut = zt.utc_datetime()
-
+        if serialize:
+            ut = ut.isoformat()
         events.append(dict(
             type = event_type, 
             jd = jd, 

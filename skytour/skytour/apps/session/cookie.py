@@ -53,3 +53,7 @@ def update_cookie_with_asteroids(request, asteroid_list):
         foo = request.session.get('user_preferences', None)
         return asteroid_slugs
     return None
+
+def get_cookie(request, slug):
+    cookie = request.session.get(slug, None)
+    return cookie

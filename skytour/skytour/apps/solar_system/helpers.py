@@ -14,7 +14,7 @@ def assemble_asteroid_list(utdt, slugs=None):
       alist.append(a)
    return alist
 
-def get_visible_asteroids(utdt, utdt_end=None, location=None, debug=False):
+def get_visible_asteroids(utdt, utdt_end=None, location=None, serialize=False, debug=False):
    """
    utdt = when we're observing
    utdt_end = when we're planning to stop observing, if not None then we return alt/az for
@@ -33,7 +33,7 @@ def get_visible_asteroids(utdt, utdt_end=None, location=None, debug=False):
    asteroid_list = []
    for a in asteroids:
       try:
-         this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location)
+         this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location, serialize=serialize)
       except:
          continue # no asteroid returned for some reason, skip
       mag = this_asteroid['observe']['apparent_mag'] 

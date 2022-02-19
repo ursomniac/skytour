@@ -16,7 +16,7 @@ def get_asteroid_target(asteroid, ts, sun):
    target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
    return target
 
-def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
+def get_asteroid(utdt, asteroid, utdt_end=None, location=None, serialize=False):
    ts = load.timescale()
    eph = load('de421.bsp')
    sun, earth = eph['sun'], eph['earth']
@@ -66,11 +66,9 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
 
    ang_size = get_angular_size(asteroid.mean_diameter, xdelta.km.item())
 
-   return dict(
+   return_dict = dict(
       name = "{} {}".format(asteroid.number, asteroid.name),
-      object = asteroid,
       slug = asteroid.slug,
-      target = observe,
       coords = observe_to_values(observe),
       observe = dict(
          constellation=constellation,
@@ -91,6 +89,10 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None):
       sun_distance = r,
       earth_sun_distance  = rr
    )
+   if not serialize:
+      return_dict['object'] = asteroid
+      return_dict['target'] = observe
+   return return_dict
    
 
       
