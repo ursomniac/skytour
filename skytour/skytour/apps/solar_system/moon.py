@@ -11,7 +11,13 @@ from ..observe.local import get_observing_situation
 from ..observe.time import get_julian_date
 from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
-from .utils import get_angular_size, get_plotting_phase_angle, get_phase_description, get_constellation, get_elongation
+from .utils import (
+    get_angular_size, 
+    #get_plotting_phase_angle, 
+    get_phase_description, 
+    get_constellation, 
+    get_elongation
+)
 
 MOON_PHASES = [
     'NEW MOON', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL MOON', 
@@ -69,16 +75,17 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     else:
         sun = sun['target']
 
-    (xslat, xslon, xsdist) = sun.ecliptic_latlon()
-    sun_lon = xslon.radians
+    #(xslat, xslon, xsdist) = sun.ecliptic_latlon()
+    #sun_lon = xslon.radians
 
     # Lunar Phase description
     phase = simple_lunar_phase(get_julian_date(utdt))
 
     # i = phase angle
     i = get_phase_angle(eph, 'moon', t).degrees.item() # degrees
+
     elongation = get_elongation(moon, sun)
-    x_plotting_phase_angle = get_plotting_phase_angle('Moon', i, elongation)
+    #x_plotting_phase_angle = get_plotting_phase_angle('Moon', i, elongation)
     # Use something different for the Moon than for inferior planets.
     plotting_phase_angle = phase['angle']
 
@@ -98,6 +105,7 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     mag = -1.1466_606*x**2 - 5.760_663*x - 11.983_484
 
     # angular size
+    # TODO: THIS GIVES THE WRONG ANSWER
     ang_size = get_angular_size(3474.8, xmdist.km, units='degrees') # diameter in degrees for the Moon
 
     return {

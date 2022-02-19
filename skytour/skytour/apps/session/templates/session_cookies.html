@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Sessions: Skytour{% endblock %}
+{% block content %}
+<h1>Session Cookies</h1>
+
+<h2>User Preferences</h2>
+{{ user_preferences }}
+
+<h2>Planets</h2>
+{% if planet_dict %}
+{{ planet_dict }}
+{% else %}
+(Planet dictionary not set.)
+{% endif %}
+
+<h2>Asteroids</h2>
+{% if asteroid_list %}
+{{ asteroid_list }}
+{% else %}
+(Asteroid list not set)
+{% endif %}
+
+{% include 'includes/sortable_table.html' %}
+{% endblock %}

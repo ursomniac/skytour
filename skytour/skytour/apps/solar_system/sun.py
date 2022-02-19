@@ -1,5 +1,6 @@
 from skyfield.api import load
 from ..observe.almanac import get_object_rise_set
+from .serializer import serialize_astrometric
 
 def get_sun(utdt, location=None, eph=None):
     """
@@ -16,8 +17,10 @@ def get_sun(utdt, location=None, eph=None):
     almanac = None
     if location:
         almanac = get_object_rise_set(utdt, eph, sun, location)
-    
+    target = earth.at(t).observe(sun)
+
     return {
         'target': earth.at(t).observe(sun),
+        'apparent': serialize_astrometric(target.apparent()),
         'almanac': almanac
     }
