@@ -51,9 +51,7 @@ def get_skymap(
     # Start up a Matplotlib plot
     style = 'dark_background' if reversed else 'default'
     plt.style.use(style)
-
     fig, ax = plt.subplots(figsize=[10,10])
-
 
     # center
     projection = build_stereographic_projection(zenith)

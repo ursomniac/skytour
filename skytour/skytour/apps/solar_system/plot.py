@@ -59,7 +59,6 @@ def create_planet_image(
     style = 'dark_background' if reversed else 'default'
     plt.style.use(style)
     
-
     fig, ax = plt.subplots(figsize=[6,6])
     projection = build_stereographic_projection(planet['target'])
 

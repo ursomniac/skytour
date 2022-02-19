@@ -16,7 +16,7 @@
         <td>
             <h2>Bordering Constellations</h2>
             {% for c in object.neighbors.all %}
-            <button><a href="{% url 'constellation-detail' c.slug %}">{{ c.name }}</a></button>
+           <a href="{% url 'constellation-detail' c.slug %}"> <button>{{ c.name }}</button></a>
             {% endfor %}
         </td>
     </tr>

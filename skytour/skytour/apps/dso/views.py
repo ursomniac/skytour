@@ -2,6 +2,9 @@ from collections import Counter
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from ..session.cookie import deal_with_cookie
+from ..solar_system.helpers import get_planet_dict, assemble_asteroid_list
+from .finder import create_dso_finder_chart
 from .models import DSO, PRIORITY_CHOICES
 
 class DSOListView(ListView):
@@ -21,6 +24,16 @@ class DSODetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+        print("CONTEXT: ", context)
+        planets_dict = get_planet_dict(context['utdt_start'])
+        asteroid_list = assemble_asteroid_list(context['utdt_start'], slugs=context['visible_asteroids'])
+        context['live_finder_chart'] = create_dso_finder_chart(
+            self.object, 
+            planets_dict = planets_dict, 
+            utdt = context['utdt_start'], 
+            asteroid_list = asteroid_list
+        )
         return context
 
 class PriorityListView(TemplateView):

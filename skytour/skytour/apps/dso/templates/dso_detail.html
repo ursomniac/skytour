@@ -8,7 +8,7 @@
 	h1 { font-weight: bold; font-size: 250%; color: #fff; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
-	td.description { vertical-align: middle; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
 	td.description a { color: #ff0; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; width: 25%; }
@@ -28,7 +28,7 @@
 		<a name="top"></a>
 		<table width="100%" class="lite" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
 			<tr>
-				<td width=80% class="object_name">
+				<td width=60% class="object_name">
 					<h1>
 						{{ object.shown_name }}
 						{% if object.nickname %}
@@ -45,11 +45,14 @@
 							{{ object.constellation.abbreviation }}
 						</a>
 					</b>
-					{% if object.priority %}
-					<br><br/>
+				</td>
+				<td width=20% class="description" rowspan=2>
 					<b>Priority:&nbsp;
 						<a href="{% url 'priority-detail' object.priority %}">{{ object.priority }}</a>
-					{% endif %}
+					<br>
+					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
+					<br>
+					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>
 				</td>
 			</tr>
 			{% if object.alias_list %}
@@ -86,11 +89,14 @@
 	<td id="finder" width=50%>
 		<a name="charts"></a>
 		<h3>DSO Finder Chart:</h3>
+	{% comment %}
 		{% if object.dso_finder_chart %}
 		<img src="{{ object.dso_finder_chart.url }}" width=100%>
 		{% else %}
 		<br>(No finder chart.)
 		{% endif %}
+	{% endcomment %}
+		<img src="{{ live_finder_chart }}" width=100%>
 	</td>
 	<td id="field_view" width=50%>
 		<h3>Field View:</h3>

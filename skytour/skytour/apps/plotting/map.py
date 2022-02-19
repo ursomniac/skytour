@@ -338,6 +338,7 @@ def map_dsos(ax, earth, t, projection,
         dso=None, 
         alpha=1,
         label_size = None,
+        symbol_size = 40., # was 90
         reversed=False
     ):
     """
@@ -381,7 +382,7 @@ def map_dsos(ax, earth, t, projection,
         mask = mmm == um # note = then == !
         ax.scatter(
             xxx[mask], yyy[mask],
-            s=90., edgecolor=dso_color, facecolors='none',
+            s=symbol_size, edgecolor=dso_color, facecolors='none',
             marker=um, alpha=alpha
         )
     # Add labels

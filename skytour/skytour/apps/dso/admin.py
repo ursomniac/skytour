@@ -40,13 +40,13 @@ class DSOAdmin(ObservableObjectAdmin):
         'finder_chart_tag',
         'dso_finder_chart_tag',
     ]
-    list_filter = ['priority', 'object_type', 'ra_h', ConstellationFilter]
+    list_filter = ['priority', 'show_on_skymap', 'object_type', 'ra_h', ConstellationFilter]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
     fieldsets = (
         (None, {
             'fields': [
                 ('catalog', 'id_in_catalog'),
-                'constellation',
+                ('constellation', 'show_on_skymap'),
                 'nickname',
                 ('object_type', 'morphological_type', 'priority'),
             ]
