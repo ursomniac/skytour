@@ -9,7 +9,8 @@ from django.views.generic.list import ListView
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
 from ..solar_system.helpers import get_visible_asteroids
-from ..solar_system.position import get_position, get_planet_positions
+from ..solar_system.position import get_position, get_planet_positions, get_comet_positions
+from ..utils.timer import compile_times
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingParametersForm
 from .models import ObservingSession
@@ -82,6 +83,12 @@ class SetSessionCookieView(FormView):
         self.request.session['asteroids'] = asteroid_list
         times.append((time.perf_counter(), f'Got Asteroids'))
 
+        # Comets
+        comet_list = get_comet_positions(utdt_start, location=my_location)
+        context['comets'] = comet_list
+        self.request.session['comets'] = comet_list
+        times.append((time.perf_counter(), 'Got Comets'))
+
         # Set primary cookies
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start=utdt_start.isoformat(),
@@ -99,13 +106,7 @@ class SetSessionCookieView(FormView):
 
         context['completed'] = True
         times.append((time.perf_counter(), f'Completed'))
-
-        time_list = []
-        for t in times:
-            dt = t[0] - time_0
-            time_list.append((t[0], dt, t[1]))
-        context['time_0'] = time_0
-        context['times'] = time_list
+        context['times'] = compile_times(times)
 
         return self.render_to_response(context)
             
@@ -159,7 +160,10 @@ class ShowCookiesView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowCookiesView, self).get_context_data(**kwargs)
-        for cookie in ['user_preferences', 'sun', 'moon', 'planets', 'asteroids']:
+        for cookie in [
+                'user_preferences', 'sun', 'moon', 
+                'planets', 'asteroids', 'comets'
+            ]:
             value = self.request.session.get(cookie, None)
             context[cookie] = value
         return context

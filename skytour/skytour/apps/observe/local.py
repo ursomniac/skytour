@@ -1,5 +1,4 @@
 
-from ..utils.format import to_sex
 from ..utils.transform import get_alt_az
 
 def is_object_up(utdt, location, ra, dec, min_alt=0.):

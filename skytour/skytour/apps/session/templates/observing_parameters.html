@@ -81,12 +81,7 @@ summary::-webkit-details-marker {
       </table>
     </td>
     <td>
-      <h3>Times</h3>
-      <ul class="no_bullets">
-      {% for t in times %}
-      <li> {{ t.1|floatformat:3 }}: {{ t.2 }}</li>
-      {% endfor %}
-      </ul>
+      {% include 'includes/performance_time.html' %}
     </td>
   </tr>
 </table>
@@ -95,6 +90,7 @@ summary::-webkit-details-marker {
 <h3>Moon</h3> {{ moon }}
 <h3>Planets</h3> {{ planets }}
 <h3>Asteroids</h3> {{ asteroids }}
+<h3>Comets</h3> {{ comets }}
 {% endif %}
   <br><br><br><br clear="all">
   <hr>

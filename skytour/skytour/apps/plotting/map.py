@@ -10,7 +10,7 @@ from ..dso.models import DSO
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.comets import get_comet
 from ..solar_system.meteors import get_meteor_showers
-from ..solar_system.models import Comet
+from ..solar_system.models import Comet, Planet
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
@@ -412,8 +412,15 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
     for k,v in planets.items():
         if k == this_planet:
             continue
-        ra = v['coords']['ra']
-        dec = v['coords']['dec']
+        this_planet = Planet.objects.get(slug=v['slug'])
+
+        try:
+            ra = v['apparent']['equ']['ra']
+            dec = v['apparent']['equ']['dec']
+        except:
+            ra = v['coords']['ra']
+            dec = v['coords']['dec']
+            
         if center:
             sin_dist = get_altitude(center[0], center[1], ra, dec)
             if sin_dist < 0.: # skip the rest of processing.
@@ -436,9 +443,10 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
             color='fuchsia',
             fontsize=20
         )
+    print ("INTERESTING: ", interesting)
     return ax, interesting
 
-def map_asteroids(ax, asteroid_list, utdt, projection, 
+def map_asteroids(ax, asteroid_list, earth, t, projection, 
         center=None, size=60, marker='o', alpha=0.8,
         reversed=False
     ):
@@ -451,10 +459,13 @@ def map_asteroids(ax, asteroid_list, utdt, projection,
                 continue # skip the rest of processing
             else:
                 interesting.append(a)
-        x, y = projection(a['target'])
+
+        ra = a['coords']['ra']
+        dec = a['coords']['dec']
+        x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         adict['x'].append(x)
         adict['y'].append(y)
-        adict['label'].append(a['object'].number)
+        adict['label'].append(a['number'])
     asteroid_color = 'red' if reversed else 'maroon'
     scatter = ax.scatter(
         adict['x'], adict['y'], 
@@ -533,34 +544,26 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
     )
     return ax, interesting
 
-def map_comets(ax, utdt, earth, t, projection,
+def map_comets(ax, comet_list, earth, t, projection,
         center = None, comet_mag_limit = 12.0,
         color='#f0e090', marker='h', size=60, alpha=1.0,
         reversed=True
     ):
 
-    alpha_list = 'ABCDEFGH'
+    alpha_list = 'ABCDEFGHJKLMNPQRSTUVWXYZ' # No I or O
     n = 0
-    comets = Comet.objects.filter(status=1)
     d = {'x': [], 'y': [], 'label': [], 'marker': []}
     interesting = []
-    for c in comets:
-        obs = get_comet(utdt, c)
-        mag = obs['observe'].get('apparent_mag', 99)
-        if mag > comet_mag_limit:
-            continue # too faint - keep going
-        #if obs is None:
-        #    continue
-        ra = obs['coords']['ra']
-        dec = obs['coords']['dec']
+    for c in comet_list:
+        ra = c['apparent']['equ']['ra']
+        dec = c['apparent']['equ']['dec']
         if center:
             sin_dist = get_altitude(center[0], center[1],ra, dec)
             if sin_dist < 0.:
                 continue
+            c['letter'] = alpha_list[n]
             interesting.append(c)
-        x, y = projection(earth.at(t).observe(
-            Star(ra_hours=ra,dec_degrees=dec)
-        ))
+        x, y = projection(earth.at(t).observe(Star(ra_hours=ra,dec_degrees=dec)))
         d['x'].append(x)
         d['y'].append(y)
         d['label'].append(alpha_list[n])

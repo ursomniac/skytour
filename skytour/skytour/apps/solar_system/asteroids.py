@@ -69,6 +69,7 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None, serialize=False):
    return_dict = dict(
       name = "{} {}".format(asteroid.number, asteroid.name),
       slug = asteroid.slug,
+      number = asteroid.number,
       coords = observe_to_values(observe),
       observe = dict(
          constellation=constellation,

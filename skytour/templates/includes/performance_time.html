@@ -1,0 +1,6 @@
+<h3>Page Generation Times</h3>
+<ul class="no_bullets">
+{% for t in times %}
+<li> {{ t.0|floatformat:3 }} = {{ t.1|floatformat:3 }}, ∆ {{ t.2|floatformat:3 }}: {{ t.3 }}</li>
+{% endfor %}
+</ul>

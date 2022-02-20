@@ -3,6 +3,7 @@ import datetime, pytz
 import io
 import math
 import numpy as np
+import time
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -20,16 +21,16 @@ from ..stars.models import BrightStar
 from .models import DSO
 
 def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1):
+
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
+
+    # Get the major/minor axis sizes
     aminor = dso.minor_axis_size # total width
     amajor = dso.major_axis_size # total length
-    #print (f"AMAJOR: {amajor} AMINOR: {aminor}")
     if aminor == 0:
         aminor = amajor
-
     ratio = aminor / amajor
-
     if amajor > 60.:
         amajor = 60
         aminor = ratio * amajor
@@ -117,6 +118,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
         axes=False,  # not generally used
         test=False   # not generally used
     ):
+    times = [(time.perf_counter(), 'Start')]
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
     eph = load('de421.bsp')
@@ -126,6 +128,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     center = earth.at(t).observe(dso.skyfield_object)
     projection = build_stereographic_projection(center)
     field_of_view_degrees = fov
+    times.append((time.perf_counter(), 'Initialize Ephem'))
 
     # Start Plot!
     style = 'dark_background' if reversed else 'default'
@@ -133,10 +136,14 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     fig, ax = plt.subplots(figsize=[8,8])
     angle = np.pi - field_of_view_degrees / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
+    times.append((time.perf_counter(), 'Start Plot'))
 
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
+    times.append((time.perf_counter(), 'Hipparcos'))
     ax = map_constellation_lines(ax, stars, reversed=reversed)
+    times.append((time.perf_counter(), 'Constellation Lines'))
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
+    times.append((time.perf_counter(), 'Bright Stars'))
 
     ##### other dsos
     other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
@@ -159,17 +166,20 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
             xytext=(5, 5),
             ha='left'
         )
+    times.append((time.perf_counter(), 'Other DSOs'))
 
     ### Planets, Asteroids
     if planets_dict is not None and utdt is not None:
         ax, _ = map_planets(ax, None, planets_dict, earth, t, projection)
+    times.append((time.perf_counter(), 'Planets'))
+
     if asteroid_list is not None and utdt is not None:
-        ax, _ = map_asteroids(ax, asteroid_list, utdt, projection, reversed=reversed)
+        ax, _ = map_asteroids(ax, asteroid_list, earth, t, projection, reversed=reversed)
+    times.append((time.perf_counter(), 'Asteroids'))
 
     ##### this object
     object_x, object_y = projection(center)
     ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
-
     this_dso_color = '#ffc' if reversed else 'k'
     plt.annotate(
         dso.shown_name, (object_x, object_y), 
@@ -181,6 +191,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
     circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color=ecolor, fill=False)
     ax.add_patch(circle1)
+    times.append((time.perf_counter(), 'Done Mapping'))
 
     ### Finish up
     # scaling
@@ -191,12 +202,13 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
     ax.set_aspect(1.0)
-    
+
     # title
     title = "{}: {} in {}".format(dso.shown_name, dso.object_type, dso.constellation)
     if dso.nickname:
         title = "{} = ".format(dso.nickname) + title
     ax.set_title(title)
+    times.append((time.perf_counter(), 'Set Limits/Add Title'))
     
     # legend
     #kw = dict(prop="sizes", num=6, fmt="{x:.2f}",
@@ -234,5 +246,5 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     plt.tight_layout()
     plt.cla()
     plt.close(fig)
-    
-    return pngImageB64String
+    times.append((time.perf_counter(), 'Returning Image'))
+    return pngImageB64String, times

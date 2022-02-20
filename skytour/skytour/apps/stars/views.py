@@ -1,11 +1,11 @@
+import time
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie
-#from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.helpers import assemble_asteroid_list
+from ..session.cookie import deal_with_cookie, get_cookie
+from ..utils.timer import compile_times
 from .forms import SkyMapForm
 from .models import BrightStar
 from .plot import get_skymap
@@ -21,18 +21,27 @@ class SkyView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SkyView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
-
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
         location = context['location']
-        asteroid_slugs = context.get('visible_asteroids', None)
-        asteroid_list = assemble_asteroid_list(utdt_start, slugs=asteroid_slugs)
-        context['skymap'], context['interesting'], context['sidereal_time'] = get_skymap(
+        # get cookies
+        planets = get_cookie(self.request, 'planets')
+        asteroid_list = get_cookie(self.request, 'asteroids')
+        comet_list = get_cookie(self.request, 'comets')
+
+        map, interesting, last, times = get_skymap(
             utdt_start, 
             location, 
+            planets = planets,
             asteroid_list = asteroid_list,
+            comet_list=comet_list,
             reversed=reversed
         )
+        context['skymap'] = map
+        context['interesting'] = interesting
+        context['sidereal_time'] = last
+        # Deal with times
+        context['times'] = compile_times(times)
         return context
 
 class BrightStarDetailView(DetailView):

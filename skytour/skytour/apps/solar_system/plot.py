@@ -113,7 +113,7 @@ def create_planet_image(
     if other_planets:
         ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
     if other_asteroids:
-        ax, _ = map_asteroids(ax, other_asteroids, utdt, projection)
+        ax, _ = map_asteroids(ax, other_asteroids, earth, t, projection)
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.

@@ -96,3 +96,5 @@ def get_comet(utdt, comet, utdt_end=None, location=None):
         session = session
     )
     
+def get_comet_obs(utdt, earth, sun, t, apparent):
+    pass

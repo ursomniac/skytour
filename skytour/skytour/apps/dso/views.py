@@ -2,8 +2,9 @@ from collections import Counter
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie
-from ..solar_system.helpers import get_planet_dict, assemble_asteroid_list
+from ..session.cookie import deal_with_cookie, get_cookie
+#from ..solar_system.helpers import get_planet_dict, assemble_asteroid_list
+from ..utils.timer import compile_times
 from .finder import create_dso_finder_chart
 from .models import DSO, PRIORITY_CHOICES
 
@@ -25,15 +26,18 @@ class DSODetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
-        print("CONTEXT: ", context)
-        planets_dict = get_planet_dict(context['utdt_start'])
-        asteroid_list = assemble_asteroid_list(context['utdt_start'], slugs=context['visible_asteroids'])
-        context['live_finder_chart'] = create_dso_finder_chart(
+        #planets_dict = get_planet_dict(context['utdt_start'])
+        planets_dict = get_cookie(self.request, 'planets')
+        #asteroid_list = assemble_asteroid_list(context['utdt_start'], slugs=context['visible_asteroids'])
+        asteroid_list = get_cookie(self.request, 'asteroids')
+        finder_chart, times = create_dso_finder_chart(
             self.object, 
-            planets_dict = planets_dict, 
             utdt = context['utdt_start'], 
+            planets_dict = planets_dict, 
             asteroid_list = asteroid_list
         )
+        context['live_finder_chart'] = finder_chart
+        context['times'] = compile_times(times)
         return context
 
 class PriorityListView(TemplateView):
