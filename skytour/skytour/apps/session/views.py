@@ -61,24 +61,25 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Set Date/Location'))
 
         # Sun
-        sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location)
+        sun = get_object_metadata(utdt_start, 'Sun', 'sun', utdt_end=utdt_end, location=my_location)
         context['sun'] = sun 
         self.request.session['sun'] = sun
         times.append((time.perf_counter(), f'Got Sun'))
 
         # Moon
-        moon = get_object_metadata(utdt_start, 'Moon', 'moon', location=my_location)
+        moon = get_object_metadata(utdt_start, 'Moon', 'moon', utdt_end=utdt_end, location=my_location)
         context['moon'] = moon 
         self.request.session['moon'] = moon
         times.append((time.perf_counter(), f'Got Moon'))
 
         # Planets
-        planets = get_planet_positions(utdt_start, location=my_location)
+        planets = get_planet_positions(utdt_start, utdt_end=utdt_end, location=my_location)
         context['planets'] = planets
         self.request.session['planets'] = planets
         times.append((time.perf_counter(), f'Got Planets'))
 
         # Asteroids
+        # TODO: REWRITE HOW THIS WORKS
         visible_asteroids = None
         if d['poll_asteroids'] == 'Yes':
             asteroid_list = get_visible_asteroids(utdt_start, serialize=True)
@@ -88,7 +89,7 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Got Asteroids'))
 
         # Comets
-        comet_list = get_comet_positions(utdt_start, location=my_location)
+        comet_list = get_comet_positions(utdt_start, utdt_end=utdt_end, location=my_location)
         context['comets'] = comet_list
         self.request.session['comets'] = comet_list
         times.append((time.perf_counter(), 'Got Comets'))

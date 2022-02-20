@@ -13,7 +13,6 @@ from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 from .utils import (
     get_angular_size, 
-    #get_plotting_phase_angle, 
     get_phase_description, 
     get_constellation, 
     get_elongation

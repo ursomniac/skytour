@@ -14,7 +14,7 @@ def serialize_astrometric(target):
     return dict(
         equ = dict (
             ra = ra, 
-            ra_str = to_sex(dec, format='hours'),
+            ra_str = to_sex(ra, format='hours'),
             dec = dec,
             dec_str = to_sex(dec, format='degrees')
         ),

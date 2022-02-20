@@ -7,6 +7,7 @@ from skyfield.almanac import (
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set
+from ..observe.local import get_observing_situation
 from ..solar_system.comets import get_comet_target
 from .moon import simple_lunar_phase
 from .models import Planet, Comet
@@ -16,7 +17,7 @@ from .utils import (
     get_constellation
 )
 
-def get_object_metadata(utdt, eph_label, object_type, instance=None, location=None):
+def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=None, location=None):
     """
     Get the serialized metadata for an object at a given utdt and location.
         1. UTDT
@@ -54,8 +55,9 @@ def get_object_metadata(utdt, eph_label, object_type, instance=None, location=No
     sun_long = sun_apparent['ecl']['longitude']
     r_sun = sun_target.radec()[2].au.item()
 
-    # Get rise/set
+    # Get rise/set and session parameters
     almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True) if location else None
+    session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     ### Observational Metadata:
     # Constellation
@@ -72,10 +74,8 @@ def get_object_metadata(utdt, eph_label, object_type, instance=None, location=No
             phase_angle = None
     else:
         phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
-    # Illum. Fraction if Moon/Mercury/Venus
-    k = 1
-    if eph_label.lower() in ['moon', 'mercury', 'venus', 'mars']:
-        k = fraction_illuminated(eph, eph_label, t).item() # float
+    # Illum. Fraction
+    k = fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
     # Apparent Magnitude
     if object_type == 'moon':
         x = math.log10(k)
@@ -96,9 +96,9 @@ def get_object_metadata(utdt, eph_label, object_type, instance=None, location=No
         m2 = 2.5 * math.log10((1 - instance.g) * phi_1 + instance.g * phi_2)
         mag = m1 - m2
     elif object_type == 'comet':
-        g = row['magnitude_g']
-        k = row['magnitude_k']
-        mag = g + 5. * math.log10(delta) + k * math.log10(r_sun)
+        mg = row['magnitude_g']
+        mk = row['magnitude_k']
+        mag = mg + 5. * math.log10(delta) + mk * math.log10(r_sun)
     else:
         mag = None
     apparent_magnitude = mag
@@ -135,33 +135,34 @@ def get_object_metadata(utdt, eph_label, object_type, instance=None, location=No
     return_dict = dict(
             apparent = apparent,
             almanac = almanac,
+            session = session,
             observe = observe
         )
 
     # Planetary Satellites!!!
-
+    # Physical (Mars, Jupiter)
 
     return return_dict
 
-def get_planet_positions(utdt, location=None):
+def get_planet_positions(utdt, utdt_end=None, location=None):
     """
     This replaces the get_planet_dict (eventually)
     """
     planets = Planet.objects.order_by('pk')
     planet_dict = {}
     for p in planets:
-        d = get_object_metadata(utdt, p.target, 'planet', instance=p, location=location)
+        d = get_object_metadata(utdt, p.target, 'planet', utdt_end=utdt_end, instance=p, location=location)
         d['slug'] = p.slug
         d['name'] = p.name
         planet_dict[p.name] = d
         # Deal with moons!
     return planet_dict
 
-def get_comet_positions(utdt, location=None):
+def get_comet_positions(utdt, utdt_end=None, location=None):
     comets = Comet.objects.filter(status=1)
     comet_list = []
     for c in comets:
-        d = get_object_metadata(utdt, c.name, 'comet', instance=c, location=location)
+        d = get_object_metadata(utdt, c.name, 'comet', utdt_end=utdt_end, instance=c, location=location)
         d['pk'] = c.pk
         d['name'] = c.name
         comet_list.append(d)

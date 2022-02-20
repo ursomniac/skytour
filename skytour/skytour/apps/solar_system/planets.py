@@ -38,7 +38,7 @@ def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
     obs = earth.at(t).observe(eph[planet.target])
     (obs_ra, obs_dec, obs_distance) = obs.radec()
     ra = obs_ra.hours.item()
-    dec = obs_dec.hours.item()
+    dec = obs_dec.degrees.item()
     # Get what constellation this is in
     constellation = get_constellation(obs_ra.hours.item(), obs_dec.degrees.item())
     # Get the location of the Sun (from Earth)
