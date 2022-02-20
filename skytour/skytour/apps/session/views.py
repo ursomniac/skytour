@@ -9,7 +9,11 @@ from django.views.generic.list import ListView
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
 from ..solar_system.helpers import get_visible_asteroids
-from ..solar_system.position import get_position, get_planet_positions, get_comet_positions
+from ..solar_system.position import (
+    get_object_metadata, 
+    get_planet_positions, 
+    get_comet_positions
+)
 from ..utils.timer import compile_times
 from .cookie import deal_with_cookie, update_cookie_with_asteroids
 from .forms import ObservingParametersForm
@@ -57,13 +61,13 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Set Date/Location'))
 
         # Sun
-        sun = get_position(utdt_start, 'Sun', location=my_location)
+        sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location)
         context['sun'] = sun 
         self.request.session['sun'] = sun
         times.append((time.perf_counter(), f'Got Sun'))
 
         # Moon
-        moon = get_position(utdt_start, 'Moon', location=my_location)
+        moon = get_object_metadata(utdt_start, 'Moon', 'moon', location=my_location)
         context['moon'] = moon 
         self.request.session['moon'] = moon
         times.append((time.perf_counter(), f'Got Moon'))

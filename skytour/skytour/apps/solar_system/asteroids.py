@@ -39,6 +39,9 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None, serialize=False):
    rr = xrr.au.item()
    xra, xdec, xdelta = observe.radec()
    delta = xdelta.au.item()
+
+   ra = xra.hours.item()
+   dec = xdec.degrees.item()
    #
    # Phase angle is needed for calculating magnitude,
    # It APPEARS that this is in v1.42 of Skyfield, as-yet not released.
@@ -58,11 +61,11 @@ def get_asteroid(utdt, asteroid, utdt_end=None, location=None, serialize=False):
    psi = math.degrees(math.acos(cos_psi))
 
    # Get what constellation this is in
-   constellation = get_constellation(xra.hours.item(), xdec.degrees.item())
+   constellation = get_constellation(ra, dec)
    # If location is provided, get the almanac dict
    almanac = get_object_rise_set(utdt, eph, target, location) if location else None
    # if location AND utdt_end are provided, get the session dict
-   session = get_observing_situation(observe, utdt, utdt_end, location) if utdt_end and location else None
+   session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
    ang_size = get_angular_size(asteroid.mean_diameter, xdelta.km.item())
 

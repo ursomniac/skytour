@@ -8,8 +8,12 @@ from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
-from .utils import get_angular_size, get_plotting_phase_angle, get_elongation
-from .utils import get_constellation
+from .utils import (
+    get_angular_size, 
+    get_plotting_phase_angle, 
+    get_elongation,
+    get_constellation,
+)
 from .vocabs import PLANETS
 
 def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
@@ -23,8 +27,6 @@ def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
             If provided, then almanac information (rise/set) will be added
         - utdt_end - the ending of the observing window
             If provided (with location) then alt/az info at start/end will be added.
-
-    TODO: Should all the coordinates be apparent?   Need to test this.
     """
     # Things from Skyfield to get things started.
     ts = load.timescale()
@@ -35,6 +37,8 @@ def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
     # Get the coordinates at time t from Earth
     obs = earth.at(t).observe(eph[planet.target])
     (obs_ra, obs_dec, obs_distance) = obs.radec()
+    ra = obs_ra.hours.item()
+    dec = obs_dec.hours.item()
     # Get what constellation this is in
     constellation = get_constellation(obs_ra.hours.item(), obs_dec.degrees.item())
     # Get the location of the Sun (from Earth)
@@ -43,7 +47,7 @@ def get_solar_system_object(utdt, planet, utdt_end=None, location=None):
     # If location is provided, get the almanac dict
     almanac = get_object_rise_set(utdt, eph, eph[planet.target], location) if location else None
     # if location AND utdt_end are provided, get the session dict
-    session = get_observing_situation(obs, utdt, utdt_end, location) if utdt_end and location else None
+    session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     # Get things from almanac
     # i = phase angle

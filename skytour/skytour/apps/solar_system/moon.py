@@ -64,10 +64,12 @@ def get_moon(utdt, utdt_end=None, location=None, sun=None, eph=None, apparent=Fa
     moon_lat = xmlat.radians
     moon_lon = xmlon.radians
     (moon_ra, moon_dec, moon_dist) = moon.radec()
-    constellation = get_constellation(moon_ra.hours.item(), moon_dec.degrees.item())
+    ra = moon_ra.hours.item()
+    dec = moon_dec.degrees.item()
+    constellation = get_constellation(ra, dec)
     almanac = get_object_rise_set(utdt, eph, eph['Moon'], location=location) if location else None
     # creates session
-    session = get_observing_situation(moon, utdt, utdt_end, location) if utdt_end and location else None
+    session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     # Get Sun position
     if not sun:

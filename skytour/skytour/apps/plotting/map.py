@@ -407,13 +407,11 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
     So, let's put in the other planets too.
     """
     d = {'x': [], 'y': [], 'marker': []}
-    planet_labels = []
     interesting = []
     for k,v in planets.items():
         if k == this_planet:
             continue
         this_planet = Planet.objects.get(slug=v['slug'])
-
         try:
             ra = v['apparent']['equ']['ra']
             dec = v['apparent']['equ']['dec']

@@ -40,8 +40,10 @@ def get_comet(utdt, comet, utdt_end=None, location=None):
     # Earth to Comet
     obs = earth.at(t).observe(target)
     xra, xdec, xdelta = obs.radec()
+    ra = xra.hours.item()
+    dec = xdec.degrees.item()
     delta = xdelta.au.item()
-    constellation = get_constellation(xra.hours.item(), xdec.degrees.item())
+    constellation = get_constellation(ra, dec)
     
     # Earth to Sun
     earth_sun = earth.at(t).observe(sun)
@@ -71,7 +73,7 @@ def get_comet(utdt, comet, utdt_end=None, location=None):
     # If location is provided, get the almanac dict
     almanac = get_object_rise_set(utdt, eph, target, location) if location else None
     # if location AND utdt_end are provided, get the session dict
-    session = get_observing_situation(obs, utdt, utdt_end, location) if utdt_end and location else None
+    session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     return dict(
         name = comet.name,

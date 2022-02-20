@@ -6,19 +6,19 @@ def is_object_up(utdt, location, ra, dec, min_alt=0.):
     up = alt > min_alt
     return az, alt, up
 
-def get_observing_situation(obs, utdt_start, utdt_end, location):
+def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
     """
     Given:
-        1. object location object
+        1. ra, dec
         2. UT values
         3. location
     Get the altitude, azimuth, and a flag is_up for each UT.
     """
     d = {}
-    (obj_ra, obj_dec, obj_dist) = obs.radec()
+    #(obj_ra, obj_dec, obj_dist) = obs.radec()
     for k, v in [('start', utdt_start), ('end', utdt_end)]:
         d[k] = {}
-        az, alt, is_up = is_object_up(v, location, obj_ra.hours.item(), obj_dec.degrees.item(), min_alt=0.)
+        az, alt, is_up = is_object_up(v, location, ra, dec, min_alt=0.)
         d[k]['azimuth'] = az
         d[k]['altitude'] = alt
         d[k]['is_up'] = is_up

@@ -5,7 +5,6 @@ from skyfield.api import (
     load_constellation_map,
     load_constellation_names
 )
-from ..observe.time import get_julian_date
 
 def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'Mars'
     """
@@ -58,4 +57,3 @@ def get_constellation(ra, dec):
     d = dict(load_constellation_names())
     abbr = constellation_at(position_of_radec(ra, dec))
     return dict(name = d[abbr], abbr = abbr)
-
