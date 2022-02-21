@@ -18,7 +18,6 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         cookie = deal_with_cookie(self.request, context)
-        # TODO: What if there's no cookie!
         planets = get_cookie(self.request, 'planets')
         if planets:
             context['adjacent_planets'] = get_adjacent_planets(planets, cookie['utdt_start'])

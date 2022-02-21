@@ -1,4 +1,3 @@
-import datetime, pytz
 import math
 from skyfield.api import (
     position_of_radec, 
@@ -12,8 +11,6 @@ def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'M
     """
     if diameter is None or distance is None:
         return None
-        
-    #print ("DIAMETER: ", diameter, 'DISTANCE: ', distance)
     theta = math.degrees(math.asin(diameter/distance)) * 3600. # arcsec
     if units == 'arcmin':
         return theta / 60.

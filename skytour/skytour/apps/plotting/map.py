@@ -49,8 +49,6 @@ def map_hipparcos(ax, earth, t, mag_limit, projection, reversed=False):
     Put down sized points for stars.
     While this DOES pre-filter by mag_limit it does NOT filter
     by proximity to the center of the map and its scale!
-
-    TODO: generate some timing tests.
     """
     with load.open(hipparcos.URL) as f:
         stars = hipparcos.load_dataframe(f)
