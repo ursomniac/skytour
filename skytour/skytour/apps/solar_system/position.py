@@ -85,7 +85,7 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     elongation = longitude - sun_long
     if elongation < -180.:
         elongation += 360.
-    if elongation < 180.:
+    if elongation > 180.:
         elongation -= 360.
     # Phase Angle and phase
     if object_type in ['comet', 'asteroid']:

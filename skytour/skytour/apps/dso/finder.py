@@ -174,7 +174,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     times.append((time.perf_counter(), 'Planets'))
 
     if asteroid_list is not None and utdt is not None:
-        ax, _ = map_asteroids(ax, asteroid_list, earth, t, projection, reversed=reversed)
+        ax, _ = map_asteroids(ax, None, asteroid_list, earth, t, projection, reversed=reversed)
     times.append((time.perf_counter(), 'Asteroids'))
 
     ##### this object

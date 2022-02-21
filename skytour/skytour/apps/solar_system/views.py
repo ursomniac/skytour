@@ -148,30 +148,35 @@ class AsteroidDetailView(DetailView):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         context = deal_with_cookie(self.request, context)
+        cookie = get_cookie(self.request, 'asteroids')
+        planets_cookie = get_cookie(self.request, 'planets')
         reversed = context['color_scheme'] == 'dark'
 
         utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
-        context['asteroid'] = data = get_asteroid(utdt_start, object, utdt_end=utdt_end, location=location)
-        other_planets = get_all_planets(utdt_start)
-        other_asteroids = None
-        if 'visible_asteroids' in context.keys():
-            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
-            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
+        mag = None
+        pdict = None
+        for a in cookie: # Get apparent magnitude
+            if a['name'] == object.full_name:
+                pdict = a
+                mag = a['observe']['apparent_magnitude']
+                break
+        mag_limit = mag + 0.5 if mag is not None else 10.
+        mag_limit = 10 if mag_limit < 10. else mag_limit
+        context['asteroid'] = pdict
         fov = 10.
-
-        mag_limit = 10
-        context['finder_chart'] = create_planet_image(
-            data, 
-            utdt=utdt_start, 
-            other_asteroids=other_asteroids,
-            other_planets=other_planets,
-            fov=fov, 
-            mag_limit=mag_limit, 
-            finder_chart=True, 
-            reversed=reversed
-        )
+        
+        if pdict: # This is so you COULD go to an page for something not in the cookie
+            context['finder_chart'], ftimes = create_planet_finder_chart (
+                utdt_start, 
+                object,
+                planets_cookie=planets_cookie,
+                asteroids=cookie,
+                object_type = 'asteroid',
+                obj_cookie = pdict,
+                fov=fov, 
+                reversed = reversed,
+                mag_limit=mag_limit, 
+            )
         return context
 
 class CometListView(ListView):

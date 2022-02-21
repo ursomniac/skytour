@@ -445,7 +445,7 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
 
     return ax, interesting
 
-def map_asteroids(ax, asteroid_list, earth, t, projection, 
+def map_asteroids(ax, name, asteroid_list, earth, t, projection, 
         center=None, size=60, marker='o', alpha=0.8,
         reversed=False
     ):
@@ -454,6 +454,9 @@ def map_asteroids(ax, asteroid_list, earth, t, projection,
     for a in asteroid_list:
         ra = a['apparent']['equ']['ra']
         dec = a['apparent']['equ']['dec']
+        print("NAME: ", name, "ANAME: ", a['name'])
+        if name == a['name']:
+            continue # don't map myself!
         if center:
             sin_dist = get_altitude(center[0], center[1], ra, dec)
             if sin_dist < 0.:

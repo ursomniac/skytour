@@ -26,7 +26,7 @@ def create_planet_finder_chart(
         planets_cookie,         # metadata from cookie
         asteroids,              # asteroids cookie
         object_type = 'planet', # override for Moon
-        moon_cookie = None,     # override cookie for Moon
+        obj_cookie = None,      # override cookie for Moon
         fov = None,             # force FOV
         reversed = True,        # B on W or W on B
         mag_limit = 8.5,        # magnitude limit of stars
@@ -37,7 +37,10 @@ def create_planet_finder_chart(
 
     if object_type == 'moon':
         name = 'Moon'
-        pdict = moon_cookie
+        pdict = obj_cookie
+    elif object_type == 'asteroid':
+        name = planet.full_name
+        pdict = obj_cookie
     else:
         name = planet.name
         pdict = planets_cookie[name]
@@ -82,7 +85,7 @@ def create_planet_finder_chart(
     times.append((time.perf_counter(), 'DSOs'))
 
     # Asteroids
-    ax, _ = map_asteroids(ax, asteroids, earth, t, projection)
+    ax, _ = map_asteroids(ax, name, asteroids, earth, t, projection)
     times.append((time.perf_counter(), 'Asteroids'))
 
     # Plot scaling
@@ -231,13 +234,7 @@ def create_planet_system_view (
     return pngImageB64String
 
 
-
-
-
-
-
-
-
+### THIS CODE IS PROBABLY REDUNDANT
 
 def create_planet_image(
         planet, # dict from get_solar_system_object() - can also be the Moon
@@ -335,7 +332,7 @@ def create_planet_image(
     if other_planets:
         ax, _ = map_planets(ax, name, other_planets, earth, t, projection)
     if other_asteroids:
-        ax, _ = map_asteroids(ax, other_asteroids, earth, t, projection)
+        ax, _ = map_asteroids(ax, None, other_asteroids, earth, t, projection)
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.

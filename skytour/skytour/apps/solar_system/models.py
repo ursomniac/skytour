@@ -251,6 +251,10 @@ class Asteroid(ObservableObject):
     def orbital_period(self):
         return math.sqrt(self.semi_major_axis**3)
 
+    @property
+    def full_name(self):
+        return "{}: {}".format(self.number, self.name)
+
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
 
