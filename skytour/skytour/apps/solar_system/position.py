@@ -11,6 +11,8 @@ from ..observe.local import get_observing_situation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.asteroids import get_asteroid_target
 from ..solar_system.comets import get_comet_target
+from .jupiter import get_jupiter_physical_ephem
+from .mars import get_mars_physical_ephem
 from .moon import simple_lunar_phase
 from .models import Planet, Comet, Asteroid
 from .serializer import serialize_astrometric
@@ -142,11 +144,11 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
             angular_diameter = angular_diameter,     # degrees
             apparent_magnitude = apparent_magnitude
         )
+
     # Special Cases --- ADD to observe dict
     if object_type == 'moon':
         observe['lunar_phase'] = simple_lunar_phase(jd) # this is a DICT!
         observe['position_angle'] = moon_phase(eph, t).degrees.item() # degrees
-
 
     # Moons
     moon_obs = None
@@ -166,6 +168,11 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
 
     # Physical (Mars, Jupiter)
     physical = None
+    if object_type == 'planet' and instance is not None:
+        if instance.name == 'Jupiter':
+            physical = get_jupiter_physical_ephem(utdt, instance)
+        elif instance.name == 'Mars':
+            physical = get_mars_physical_ephem(utdt, instance)
 
     return_dict = dict(
             apparent = apparent,

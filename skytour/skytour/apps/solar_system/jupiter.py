@@ -132,7 +132,7 @@ def get_jupiter_features(utdt, jupiter, debug=False):
         fdict['meridian'] = meridian
         fdict['ha_deg'] = ha_degrees
         fdict['view'] = view
-        fdict['next_transit'] = t_trans
+        fdict['next_transit'] = t_trans.isoformat()
         fdict['time_from_meridian'] = dtt
         fdicts.append(fdict)
     return fdicts

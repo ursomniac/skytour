@@ -149,7 +149,7 @@ def get_mars_features(utdt, mars):
         fdict['meridian'] = meridian
         fdict['ha_deg'] = ha_degrees
         fdict['view'] = view
-        fdict['next_transit'] = t_trans
+        fdict['next_transit'] = t_trans.isoformat()
         fdict['time_from_meridian'] = dtt
         fdicts.append(fdict)
     return fdicts
