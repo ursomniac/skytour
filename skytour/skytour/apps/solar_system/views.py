@@ -1,4 +1,5 @@
 import datetime, pytz
+from numpy import object0
 import time
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -13,7 +14,7 @@ from .models import Comet, Planet, Asteroid
 from .moon import get_moon
 from .planets import get_ecliptic_positions
 from .plot import (
-    create_planet_finder_chart, create_planet_image, 
+    create_planet_finder_chart, 
     create_planet_system_view,
     plot_ecliptic_positions, 
     plot_track, 
@@ -189,24 +190,12 @@ class CometListView(ListView):
         cookie = get_cookie(self.request, 'comets')
         comets = Comet.objects.filter(status=1)
         comet_list = []
-        for d in cookie:
+        for d in cookie: # get the observation history for each comet on the list
             comet = comets.get(pk=d['pk'])
             d['n_obs'] = comet.number_of_observations
             d['last_observed'] = comet.last_observed
             comet_list.append(d)
         context['comet_list'] = comet_list
-
-        """
-        # Replace after testing
-        utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
-        comets = Comet.objects.filter(status=1)
-        comet_list = []
-        for comet in comets:
-            comet_list.append(get_comet(utdt_start, comet, utdt_end=utdt_end, location=location))
-        context['comet_list'] = comet_list
-        """
         return context
 
 class CometDetailView(DetailView):
@@ -215,33 +204,39 @@ class CometDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CometDetailView, self).get_context_data(**kwargs)
-        object = self.get_object()
         context = deal_with_cookie(self.request, context)
         reversed = context['color_scheme'] == 'dark'
-        
-        utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
 
-        context['comet'] = data = get_comet(utdt_start, object, utdt_end=utdt_end, location=location)
-        other_planets = get_all_planets(utdt_start)
-        other_asteroids = None
-        #if 'visible_asteroids' in context.keys():
-        #    alist = Asteroid.objects.filter(slug__in=context['visible_asteroids']).exclude(slug=object.slug)
-        #    other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
-        fov = 10.
-        #mag_limit = data['observe']['apparent_mag'] + 0.5
-        mag_limit = 10
-        context['finder_chart'] = create_planet_image(
-            data, 
-            utdt=utdt_start, 
-            #other_asteroids=other_asteroids,
-            other_planets=other_planets,
-            fov=fov, 
-            mag_limit=mag_limit, 
-            finder_chart=True, 
-            reversed=reversed
-        )        
+        object = self.get_object()
+        planets = get_cookie(self.request, 'planets')
+        asteroids = get_cookie(self.request, 'asteroids')
+        comets = get_cookie(self.request, 'comets')
+
+        pdict = None
+        mag_limit = 10.
+        for c in comets:
+            if c['name'] == object.name:
+                pdict = c
+                pdict['n_obs'] = object.number_of_observations
+                pdict['last_observed'] = object.last_observed
+                mag = pdict['observe']['apparent_magnitude']
+                break
+        if mag:
+            mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
+
+        context['comet'] = pdict
+
+        context['finder_chart'], ftimes = create_planet_finder_chart (
+            context['utdt_start'],
+            object,
+            planets,
+            asteroids,
+            object_type = 'comet',
+            obj_cookie = pdict,
+            fov = 10.,
+            reversed = reversed,
+            mag_limit = mag_limit
+        )
         return context
 
 ### These are still in development.

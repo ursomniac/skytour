@@ -22,7 +22,7 @@ matplotlib.use('Agg') # this gets around the threading issues.
 
 def create_planet_finder_chart(
         utdt,                   # UTDT
-        planet,                 # Planet instance
+        instance,               # Planet instance
         planets_cookie,         # metadata from cookie
         asteroids,              # asteroids cookie
         object_type = 'planet', # override for Moon
@@ -39,10 +39,13 @@ def create_planet_finder_chart(
         name = 'Moon'
         pdict = obj_cookie
     elif object_type == 'asteroid':
-        name = planet.full_name
+        name = instance.full_name
         pdict = obj_cookie
-    else:
-        name = planet.name
+    elif object_type == 'comet':
+        name = instance.name
+        pdict = obj_cookie
+    else: # I am a planet
+        name = instance.name
         pdict = planets_cookie[name]
     
     ra = pdict['apparent']['equ']['ra']
