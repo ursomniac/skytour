@@ -147,16 +147,34 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
         observe['lunar_phase'] = simple_lunar_phase(jd) # this is a DICT!
         observe['position_angle'] = moon_phase(eph, t).degrees.item() # degrees
 
+
+    # Moons
+    moon_obs = None
+    if object_type == 'planet' and instance is not None:
+        if instance.moon_list:
+            moon_obs = []
+            moonsys = load(instance.load)
+            earth_s = moonsys['earth']
+            for moon in instance.moon_list:
+                print("WORKING ON MOON: ",moon)
+                mdict = {}
+                mdict['name'] = moon
+                moon_target = moonsys[moon]
+                obs = earth_s.at(t).observe(moon_target)
+                mdict['apparent'] = serialize_astrometric(obs)
+                moon_obs.append(mdict)
+
+    # Physical (Mars, Jupiter)
+    physical = None
+
     return_dict = dict(
             apparent = apparent,
             almanac = almanac,
             session = session,
-            observe = observe
+            observe = observe,
+            moons = moon_obs,
+            physical = physical
         )
-
-    # Planetary Satellites!!!
-    # Physical (Mars, Jupiter)
-
     return return_dict
 
 def get_planet_positions(utdt, utdt_end=None, location=None):
@@ -170,7 +188,6 @@ def get_planet_positions(utdt, utdt_end=None, location=None):
         d['slug'] = p.slug
         d['name'] = p.name
         planet_dict[p.name] = d
-        # Deal with moons!
     return planet_dict
 
 def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
