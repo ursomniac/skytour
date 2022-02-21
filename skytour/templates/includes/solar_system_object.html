@@ -5,6 +5,7 @@
 
     table .twocol { border: 0; margin: 0; padding: 0}
     table .twocol td { padding: 0;}
+    table th { background-color: #000; }
 </style>
 
 <table>
@@ -14,30 +15,30 @@
         <th>Almanac</th>
     </tr>
     <tr>
-        <td style="vertical-align:top;">
+        <td style="vertical-align:top;" width=30%>
             <h5>Coordinates</h5>
-            &alpha;: {{ object.coords.ra_str }}<br/>
-            &delta;: {{ object.coords.dec_str }}
+            &alpha;: {{ object.apparent.equ.ra_str }}<br/>
+            &delta;: {{ object.apparent.equ.dec_str }}
             <h5>Distance</h5>
-            AU: {{ object.coords.distance.au|stringformat:'0.3f' }}<br/>
-            km: {{ object.coords.distance.km|stringformat:'0.1f'|intcomma }}<br/>
-            mi: {{ object.coords.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
-            Light Time: {{ object.coords.distance.light_time }}
+            AU: {{ object.apparent.distance.au|stringformat:'0.3f' }}<br/>
+            km: {{ object.apparent.distance.km|stringformat:'0.1f'|intcomma }}<br/>
+            mi: {{ object.apparent.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
+            Light Time: {{ object.apparent.distance.light_time_str }}<br/>&nbsp;
         </td>
-        <td style="vertical-align:top;">
+        <td style="vertical-align:top;" width=30%>
             <h5>Apparent</h5>
-            Mag: {{ object.observe.apparent_mag|floatformat:2 }}<br>
-            Ang Size: {{ object.observe.angular_diameter_str }}<br/>
+            Mag: {{ object.observe.apparent_magnitude|floatformat:2 }}<br>
+            Ang Size: {{ object.observe.angular_diameter|to_dms }}<br/>
             <h5>Projection</h5>
-            {% if object.observe.phase.phase %}
-            Phase: {{ object.observe.phase.phase }}<br/>
-            Phase Angle: {{ object.observe.phase.angle|to_dms }}<br/>
-            Day: {{ object.observe.phase.days_since_new_moon|to_dhms }}<br/>
+            {% if object.observe.lunar_phase %}
+            Phase: {{ object.observe.lunar_phase.phase }}<br/>
+            Phase Angle: {{ object.observe.lunar_phase.angle|to_dms }}<br/>
+            Day: {{ object.observe.lunar_phase.days_since_new_moon|to_dhms }}<br/>
             {% else %}
-            Phase Angle: {{ object.observe.phase_angle_str }}<br/>
+            Phase Angle: {{ object.observe.phase_angle|to_dms }}<br/>
             {% endif %}
-            {% if object.observe.illum_fraction %}
-            Illum.: {{ object.observe.illum_fraction|floatformat:1 }} %</br>
+            {% if object.observe.fraction_illumunated %}
+            Illum.: {{ object.observe.fraction_illumunated|floatformat:1 }} %</br>
             {% endif %}
             {% if object.observe.elongation %}
             Elongation: {{ object.observe.elongation|to_dms }}<br/>
@@ -46,7 +47,7 @@
         <td style="vertical-align:top;">
             <h5>Rise/Set Events</h5>
             {% for event in object.almanac %}
-            {{ event.type }}: {{ event.ut|date:"D Y M d  h:i"}} UT<br/>
+            {{ event.type }}: {{ event.ut|get_datetime|date:"D Y M d  h:i"}} UT<br/>
             {% endfor %}
             <table class="twocol">
                 <tr>

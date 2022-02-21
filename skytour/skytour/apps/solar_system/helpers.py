@@ -1,6 +1,7 @@
 from ..site_parameter.helpers import find_site_parameter
 from .models import Asteroid, Planet
 from .asteroids import get_asteroid
+from .position import get_object_metadata
 from .planets import get_solar_system_object
 from .vocabs import PLANETS
 
@@ -14,16 +15,9 @@ def assemble_asteroid_list(utdt, slugs=None):
       alist.append(a)
    return alist
 
-def get_visible_asteroids(utdt, utdt_end=None, location=None, serialize=False, debug=False):
-   """
-   utdt = when we're observing
-   utdt_end = when we're planning to stop observing, if not None then we return alt/az for
-      the entire session
-   location = ObservingLocation - used to get LAST/alt/az.
-   """
+def get_visible_asteroids(utdt, utdt_end=None, location=None):
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
-
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
    # This is just to limit the queryset so that we're not calculating orbital elements for 
    # hundreds of asteroids, when we'll only be interested in ~20 tops.
@@ -32,16 +26,14 @@ def get_visible_asteroids(utdt, utdt_end=None, location=None, serialize=False, d
    asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
    asteroid_list = []
    for a in asteroids:
-      try:
-         this_asteroid = get_asteroid(utdt, a, utdt_end=utdt_end, location=location, serialize=serialize)
-      except:
-         continue # no asteroid returned for some reason, skip
-      mag = this_asteroid['observe']['apparent_mag'] 
+      x = get_object_metadata(utdt, None, 'asteroid', utdt_end=utdt_end, instance=a, location=location)
+      if x is None:
+         continue
+      mag = x['observe']['apparent_magnitude']
+      x['name'] = a.name
+      x['slug'] = a.slug
       if mag <= mag_limit:
-         asteroid_list.append(this_asteroid)
-      else:
-         if debug:
-            print ("{} is too faint {}".format(a, mag))
+         asteroid_list.append(x)
    return asteroid_list
 
 def get_all_planets(utdt, utdt_end=None, location=None):

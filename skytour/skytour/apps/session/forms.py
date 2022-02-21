@@ -26,4 +26,4 @@ class ObservingParametersForm(forms.Form):
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial=find_site_parameter('poll-planets', default='visible', param_type='string'))
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
-    poll_asteroids = forms.ChoiceField(choices=YES_NO, initial='Yes')
+

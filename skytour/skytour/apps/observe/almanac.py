@@ -30,6 +30,16 @@ def dark_time(d, debug=False):
         print ("Begin at: ", begin_at)
     return end_at, begin_at
 
+def get_dark_time(utdt, location):
+    ts = load.timescale()
+    wgs = wgs84.latlon(location.latitude, location.longitude)
+    eph = load('de421.bsp')
+    f = dark_twilight_day(eph, wgs)
+    today = get_0h(utdt)
+    end_at, begin_at = get_almanac_times(today, ts, f)
+    return end_at, begin_at
+
+
 def get_almanac_times(today, ts, f):
     """
     Get the beginning and end of Astronomical Twilight for a date

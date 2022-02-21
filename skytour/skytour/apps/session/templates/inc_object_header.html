@@ -1,24 +1,25 @@
 <style>
     table.td_center td {
       vertical-align: middle;
-      background-color: #666;
+      background-color: #003;
     }
     table.td_center td.object_header {
       text-align: center;
       vertical-align: middle;
     }
+    h3 {
+      color: #ff3;
+    }
+    td.header {
+      height: 4em;
+    }
 </style>
 
 <table class="td_center">
     <tr>
-      <td width="30%"><h3>{{ object.name }}</h3></td>
+      <td width="30%" class="header"><h3>{{ object.name }}</h3></td>
       <td width="30%" style="text-align: center; vertical-align: middle !important;">
-        in {{ object.observe.constellation.name }}
-        {% if not show_object %}
-        <br/><b><span style="color: #f00;">NOT VISIBLE</span></b>
-        {% else %}
-        <br/><b><span style="color: #0c0;">VISIBLE</span></b>
-        {% endif %}
+        in <a href="{% url 'constellation-detail' object.observe.constellation.abbr|upper %}">{{ object.observe.constellation.name }}</a>
       </td>
       <td width="30%" style="text-align: left; vertical-align: middle !important;">
         {% if object_type != 'moon' %}

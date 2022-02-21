@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..observe.almanac import get_dark_time
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
 from ..solar_system.helpers import get_visible_asteroids
@@ -15,7 +16,7 @@ from ..solar_system.position import (
     get_comet_positions
 )
 from ..utils.timer import compile_times
-from .cookie import deal_with_cookie, update_cookie_with_asteroids
+from .cookie import deal_with_cookie, update_cookie_with_asteroids, get_cookie
 from .forms import ObservingParametersForm
 from .models import ObservingSession
 from .plan import get_plan
@@ -46,20 +47,20 @@ class SetSessionCookieView(FormView):
 
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
+
         # Start timer
         times = [(time.perf_counter(), 'Start')]
         d = form.cleaned_data
         location_pk = d['location'].pk
-        times.append((time.perf_counter(), f'Processed Form'))
-        time_0 = times[0][0]
+        my_location = ObservingLocation.objects.get(pk=location_pk)
         if d['set_to_now'] == 'Yes':
             utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         else:
             utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
         utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
-        my_location = ObservingLocation.objects.get(pk=location_pk)
-        times.append((time.perf_counter(), f'Set Date/Location'))
+        times.append((time.perf_counter(), f'Processed Form'))
 
+        # ADD TWILIGHT!
         # Sun
         sun = get_object_metadata(utdt_start, 'Sun', 'sun', utdt_end=utdt_end, location=my_location)
         context['sun'] = sun 
@@ -79,11 +80,7 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Got Planets'))
 
         # Asteroids
-        # TODO: REWRITE HOW THIS WORKS
-        visible_asteroids = None
-        if d['poll_asteroids'] == 'Yes':
-            asteroid_list = get_visible_asteroids(utdt_start, serialize=True)
-            visible_asteroids = [x['slug'] for x in asteroid_list]
+        asteroid_list = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=my_location)
         context['asteroids'] = asteroid_list
         self.request.session['asteroids'] = asteroid_list
         times.append((time.perf_counter(), f'Got Asteroids'))
@@ -94,7 +91,14 @@ class SetSessionCookieView(FormView):
         self.request.session['comets'] = comet_list
         times.append((time.perf_counter(), 'Got Comets'))
 
-        # Set primary cookies
+        # Twilight
+        twi_end, twi_begin = get_dark_time(utdt_start, my_location)
+        twilight = dict(
+            end=twi_end.utc_datetime().isoformat(), 
+            begin=twi_begin.utc_datetime().isoformat()
+        )
+
+        # Set primary cookie
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start=utdt_start.isoformat(),
             utdt_end=utdt_end.isoformat(),
@@ -106,7 +110,7 @@ class SetSessionCookieView(FormView):
             session_length = d['session_length'],
             show_planets = d['show_planets'],
             color_scheme = d['color_scheme'],
-            visible_asteroids = visible_asteroids
+            twilight = twilight
         )
 
         context['completed'] = True
@@ -135,12 +139,16 @@ class ObservingPlanView(TemplateView):
         
         # Update context from the session cookie
         context = deal_with_cookie(self.request, context)
+        # Get cookies
+        cookie_dict = {}
+        for k in ['sun', 'moon', 'planets', 'asteroids', 'comets']:
+            cookie_dict[k] = get_cookie(self.request, k)
         # Update context from the plan generator
-        context = get_plan(context)
-
+        context = get_plan(context, cookie_dict)
         # Update the cookie with the asteroids since we know this here.
-        slugs = update_cookie_with_asteroids(self.request, context.get('asteroids', None))
+        #slugs = update_cookie_with_asteroids(self.request, context.get('asteroids', None))
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['everything'] = context
         return context
 
 class ObservingSessionListView(ListView):

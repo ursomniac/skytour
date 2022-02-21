@@ -1,3 +1,4 @@
+import datetime
 from django import template
 register = template.Library()
 
@@ -72,3 +73,10 @@ def letter_index(i):
 @register.filter(name="modulus")
 def modulus(x, y):
     return x % y
+
+@register.filter(name="get_datetime")
+def get_datetime(x):
+    """
+    X is a string, convert to datetime
+    """
+    return datetime.datetime.fromisoformat(x)

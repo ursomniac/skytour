@@ -8,6 +8,7 @@ from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
+from ..solar_system.asteroids import get_asteroid_target
 from ..solar_system.comets import get_comet_target
 from .moon import simple_lunar_phase
 from .models import Planet, Comet
@@ -34,26 +35,34 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     earth = eph['Earth']
     sun = eph['Sun']
     if object_type == 'comet':
+        if instance is None:
+            return None
         eph_body, row = get_comet_target(instance, ts, sun)
+    elif object_type == 'asteroid':
+        if instance is None:
+            return None
+        eph_body = get_asteroid_target(instance, ts, sun)
+        if eph_body is None:
+            return None
     else: 
         eph_body = eph[eph_label]
 
+    # Earth-Object
     target = earth.at(t).observe(eph_body).apparent() # for solar system objects
     apparent = serialize_astrometric(target)
-
-    # The Triangle between Earth, the Sun, and the target
+    r_earth_target = apparent['distance']['au'] # Earth-Target distance
+    # Sun-Object
     sun_target = sun.at(t).observe(eph_body) # sun to target
+    r_sun_target = sun_target.radec()[2].au.item()
+    # Earth-Sun
     sun_apparent = serialize_astrometric(earth.at(t).observe(sun).apparent())
-    earth_sun = earth.at(t).observe(sun)
-    r_earth_sun = earth_sun.radec()[2].au.item()
+    r_earth_sun = sun_apparent['distance']['au']
 
     # Shortcuts for things we'll need
     ra = apparent['equ']['ra']
     dec = apparent['equ']['dec']
-    delta = apparent['distance']['au']
     longitude = apparent['ecl']['longitude']
     sun_long = sun_apparent['ecl']['longitude']
-    r_sun = sun_target.radec()[2].au.item()
 
     # Get rise/set and session parameters
     almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True) if location else None
@@ -65,17 +74,21 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     # Elongation - this is just target.longitude - sun.longitude
     elongation = longitude - sun_long
     # Phase Angle and phase
-    if object_type == 'comet':
-        cos_beta = (r_sun**2 + delta*+2 - r_earth_sun**2)/(2. * r_earth_sun * delta)
+    if object_type in ['comet', 'asteroid']:
+        cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
         # For some reason this doesn't always work.
         if abs(cos_beta) <= 1.:
             phase_angle = math.degrees(math.acos(cos_beta))
         else:
+            print("COS BETA: ", cos_beta)
+            print("EARTH_O: ", r_earth_target, r_earth_target**2)
+            print("SUN_O: ", r_sun_target, r_sun_target**2)
+            print("EARTH_SUN: ", r_earth_sun, r_earth_sun**2)
             phase_angle = None
     else:
         phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
-    # Illum. Fraction
-    k = fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
+    # Illum. Fraction - in percent
+    k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
     # Apparent Magnitude
     if object_type == 'moon':
         x = math.log10(k)
@@ -88,17 +101,19 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
         except:
             mag = None # there are some edge issues...
     elif object_type == 'asteroid':
+        mag = None
         # This is apparently in Skyfield v1.42 as-yet not released.
-        rpa = math.radians(phase_angle) # Assuming this is the same phase angle
-        phi_1 = math.exp(-3.33 * math.tan(rpa/2.)**0.63)
-        phi_2 = math.exp(-1.87 * math.tan(rpa/2.)**1.22)
-        m1 = instance.h + 5 * math.log10(r_sun * delta) 
-        m2 = 2.5 * math.log10((1 - instance.g) * phi_1 + instance.g * phi_2)
-        mag = m1 - m2
+        if phase_angle:
+            rpa = math.radians(phase_angle) # Assuming this is the same phase angle
+            phi_1 = math.exp(-3.33 * math.tan(rpa/2.)**0.63)
+            phi_2 = math.exp(-1.87 * math.tan(rpa/2.)**1.22)
+            m1 = instance.h + 5 * math.log10(r_sun_target * r_earth_target) 
+            m2 = 2.5 * math.log10((1 - instance.g) * phi_1 + instance.g * phi_2)
+            mag = m1 - m2
     elif object_type == 'comet':
         mg = row['magnitude_g']
         mk = row['magnitude_k']
-        mag = mg + 5. * math.log10(delta) + mk * math.log10(r_sun)
+        mag = mg + 5. * math.log10(r_earth_target) + mk * math.log10(r_sun_target)
     else:
         mag = None
     apparent_magnitude = mag
@@ -114,17 +129,17 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     elif object_type == 'asteroid' and instance is not None:
         diam = instance.mean_diameter
     else:
-        diam = 0.
-    angular_diameter = get_angular_size(diam, apparent['distance']['km'])
+        diam = None
+    angular_diameter = get_angular_size(diam, apparent['distance']['km']) /3600. if diam else None
 
 
     ### Put all of this into an "observe" dict.
     observe = dict (
             constellation = constellation, 
-            phase_angle = phase_angle,                # degrees
-            fraction_illuminated = k * 100.,          # percent
-            elongation = elongation,                  # degrees
-            angular_diameter = angular_diameter,      # arcseconds
+            phase_angle = phase_angle,               # degrees
+            fraction_illuminated = k,                # percent
+            elongation = elongation,                 # degrees
+            angular_diameter = angular_diameter,     # degrees
             apparent_magnitude = apparent_magnitude
         )
     # Special Cases --- ADD to observe dict
