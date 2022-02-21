@@ -23,8 +23,7 @@ def get_cookie_defaults():
         show_planets = find_site_parameter('poll-planets', default='visible', param_type='string'),
         color_scheme = 'dark',
         julian_date = julian_date,
-        t = t,
-        visible_asteroids = []
+        t = t
     )
     return cookie_dict
 

@@ -451,15 +451,14 @@ def map_asteroids(ax, asteroid_list, earth, t, projection,
     adict = { 'x': [], 'y': [], 'label': []}
     interesting = []
     for a in asteroid_list:
+        ra = a['apparent']['equ']['ra']
+        dec = a['apparent']['equ']['dec']
         if center:
-            sin_dist = get_altitude(center[0], center[1], a['coords']['ra'], a['coords']['dec'])
+            sin_dist = get_altitude(center[0], center[1], ra, dec)
             if sin_dist < 0.:
                 continue # skip the rest of processing
             else:
                 interesting.append(a)
-
-        ra = a['coords']['ra']
-        dec = a['coords']['dec']
         x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         adict['x'].append(x)
         adict['y'].append(y)

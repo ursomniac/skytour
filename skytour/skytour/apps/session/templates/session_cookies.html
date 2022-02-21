@@ -5,20 +5,20 @@
 <h1>Session Cookies</h1>
 
 <h2>User Preferences</h2>
-{% if user_preferences %}{{ user_preferences }}{% else %}(Main cookie not set){% endif %}
+{% if user_preferences %}<pre>{{ user_preferences|pprint }}</pre>{% else %}(Main cookie not set){% endif %}
 
 <h2>Sun and Moon</h2>
 <h3>Sun</h3>
-{% if sun %}{{ sun }}{% else %}(Sun not set.){% endif %}
+{% if sun %}<pre>{{ sun|pprint }}</pre>{% else %}(Sun not set.){% endif %}
 <h3>Moon</h3>
-{% if moon %}{{ moon }}{% else %}(Moon not set.){% endif %}
+{% if moon %}<pre>{{ moon|pprint }}</pre>{% else %}(Moon not set.){% endif %}
 
 <h2>Planets</h2>
-{% if planets %}{{ planets }}{% else %}(Planet dictionary not set.){% endif %}
+{% if planets %}<pre>{{ planets|pprint }}</pre>{% else %}(Planet dictionary not set.){% endif %}
 
 <h2>Asteroids</h2>
-{% if asteroids %}{{ asteroids }}{% else %}(Asteroid list not set){% endif %}
+{% if asteroids %}<pre>{{ asteroids|pprint }}</pre>{% else %}(Asteroid list not set){% endif %}
 
 <h3>Comets</h3>
-{% if comets %}{{ comets }}{% else %}(Comet list not set){% endif %}
+{% if comets %}<pre>{{ comets|pprint }}</pre>{% else %}(Comet list not set){% endif %}
 {% endblock %}

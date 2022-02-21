@@ -9,14 +9,14 @@ from django.views.generic.list import ListView
 from ..observe.almanac import get_dark_time
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
-from ..solar_system.helpers import get_visible_asteroids
 from ..solar_system.position import (
     get_object_metadata, 
     get_planet_positions, 
-    get_comet_positions
+    get_comet_positions,
+    get_visible_asteroid_positions
 )
 from ..utils.timer import compile_times
-from .cookie import deal_with_cookie, update_cookie_with_asteroids, get_cookie
+from .cookie import deal_with_cookie, get_cookie
 from .forms import ObservingParametersForm
 from .models import ObservingSession
 from .plan import get_plan
@@ -80,7 +80,7 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Got Planets'))
 
         # Asteroids
-        asteroid_list = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=my_location)
+        asteroid_list = get_visible_asteroid_positions(utdt_start, utdt_end=utdt_end, location=my_location)
         context['asteroids'] = asteroid_list
         self.request.session['asteroids'] = asteroid_list
         times.append((time.perf_counter(), f'Got Asteroids'))
@@ -116,7 +116,6 @@ class SetSessionCookieView(FormView):
         context['completed'] = True
         times.append((time.perf_counter(), f'Completed'))
         context['times'] = compile_times(times)
-
         return self.render_to_response(context)
             
     def form_invalid(self, form, **kwargs):
@@ -136,17 +135,14 @@ class ObservingPlanView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
-        
         # Update context from the session cookie
         context = deal_with_cookie(self.request, context)
-        # Get cookies
+        # Get object cookies
         cookie_dict = {}
         for k in ['sun', 'moon', 'planets', 'asteroids', 'comets']:
             cookie_dict[k] = get_cookie(self.request, k)
         # Update context from the plan generator
         context = get_plan(context, cookie_dict)
-        # Update the cookie with the asteroids since we know this here.
-        #slugs = update_cookie_with_asteroids(self.request, context.get('asteroids', None))
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         context['everything'] = context
         return context

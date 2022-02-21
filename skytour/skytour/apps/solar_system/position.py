@@ -8,10 +8,11 @@ from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.asteroids import get_asteroid_target
 from ..solar_system.comets import get_comet_target
 from .moon import simple_lunar_phase
-from .models import Planet, Comet
+from .models import Planet, Comet, Asteroid
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
@@ -73,6 +74,10 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     constellation = get_constellation(ra, dec)
     # Elongation - this is just target.longitude - sun.longitude
     elongation = longitude - sun_long
+    if elongation < -180.:
+        elongation += 360.
+    if elongation < 180.:
+        elongation -= 360.
     # Phase Angle and phase
     if object_type in ['comet', 'asteroid']:
         cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
@@ -80,10 +85,6 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
         if abs(cos_beta) <= 1.:
             phase_angle = math.degrees(math.acos(cos_beta))
         else:
-            print("COS BETA: ", cos_beta)
-            print("EARTH_O: ", r_earth_target, r_earth_target**2)
-            print("SUN_O: ", r_sun_target, r_sun_target**2)
-            print("EARTH_SUN: ", r_earth_sun, r_earth_sun**2)
             phase_angle = None
     else:
         phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
@@ -132,7 +133,6 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
         diam = None
     angular_diameter = get_angular_size(diam, apparent['distance']['km']) /3600. if diam else None
 
-
     ### Put all of this into an "observe" dict.
     observe = dict (
             constellation = constellation, 
@@ -172,6 +172,28 @@ def get_planet_positions(utdt, utdt_end=None, location=None):
         planet_dict[p.name] = d
         # Deal with moons!
     return planet_dict
+
+def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
+   # Actual magnitude of asteroid - if fainter than this, don't add to the list.
+   mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
+   # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
+   # This is just to limit the queryset so that we're not calculating orbital elements for 
+   # hundreds of asteroids, when we'll only be interested in ~20 tops.
+   cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
+
+   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
+   asteroid_list = []
+   for a in asteroids:
+      x = get_object_metadata(utdt, None, 'asteroid', utdt_end=utdt_end, instance=a, location=location)
+      if x is None:
+         continue
+      mag = x['observe']['apparent_magnitude']
+      x['name'] = f'{a.number}: {a.name}'
+      x['slug'] = a.slug
+      x['number'] = a.number
+      if mag <= mag_limit:
+         asteroid_list.append(x)
+   return asteroid_list
 
 def get_comet_positions(utdt, utdt_end=None, location=None):
     comets = Comet.objects.filter(status=1)

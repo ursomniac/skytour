@@ -57,6 +57,7 @@ summary::-webkit-details-marker {
             {{ form.as_table }}
         </table>
         <br><input type="submit" value="Submit"/>
+        <small>&nbsp;&nbsp;<b>Note:</b> This may take ~30 seconds to run</small>
     </form>
     {% else %}
     There is no form!
@@ -65,11 +66,12 @@ summary::-webkit-details-marker {
 
 {% if completed %}
 <h2>Session Cookie Updated</h2>
+
 <table>
   <tr>
     <td>
       <h3>Metadata</h3>
-      <table>
+      <table class="lite">
         <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
         <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
         <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
@@ -81,16 +83,11 @@ summary::-webkit-details-marker {
       </table>
     </td>
     <td>
+      <small>(<a href="{% url 'show-cookies' %}">Show Cookies</a>)</small><br>
       {% include 'includes/performance_time.html' %}
     </td>
   </tr>
 </table>
-<br clear="all">
-<h3>Sun</h3> {{ sun }}
-<h3>Moon</h3> {{ moon }}
-<h3>Planets</h3> {{ planets }}
-<h3>Asteroids</h3> {{ asteroids }}
-<h3>Comets</h3> {{ comets }}
 {% endif %}
   <br><br><br><br clear="all">
   <hr>
