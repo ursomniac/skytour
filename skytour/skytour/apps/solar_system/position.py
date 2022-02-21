@@ -18,6 +18,7 @@ from .models import Planet, Comet, Asteroid
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
+    get_angular_size_string,
     get_plotting_phase_angle,
     get_constellation
 )
@@ -147,6 +148,7 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     else:
         diam = None
     angular_diameter = get_angular_size(diam, apparent['distance']['km']) /3600. if diam else None
+    angular_diameter_str = get_angular_size_string(angular_diameter)
 
     ### Put all of this into an "observe" dict.
     observe = dict (
@@ -156,6 +158,7 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
             fraction_illuminated = k,                    # percent
             elongation = elongation,                     # degrees
             angular_diameter = angular_diameter,         # degrees
+            angular_diameter_str = angular_diameter_str,
             apparent_magnitude = apparent_magnitude
         )
     if object_type == 'moon':

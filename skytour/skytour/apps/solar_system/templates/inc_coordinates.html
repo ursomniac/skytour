@@ -1,19 +1,19 @@
 {% load skytour_filters humanize %}
 <h4>Coordinates</h4>
-&alpha;:&nbsp;&nbsp;{{ obj.coords.ra_str }}<br/>
-&delta;: {{ obj.coords.dec_str }}
+&alpha;:&nbsp;&nbsp;{{ obj.apparent.equ.ra_str }}<br/>
+&delta;: {{ obj.apparent.equ.dec_str }}
 <h4>Distance</h4>
-AU: {{ obj.coords.distance.au|stringformat:'0.3f' }}<br/>
-km: {{ obj.coords.distance.km|stringformat:'0.1f'|intcomma }}<br/>
-mi: {{ obj.coords.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
-Light Time: {{ obj.coords.distance.light_time }}
+AU: {{ obj.apparent.distance.au|stringformat:'0.3f' }}<br/>
+km: {{ obj.apparent.distance.km|stringformat:'0.1f'|intcomma }}<br/>
+mi: {{ obj.apparent.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
+Light Time: {{ obj.apparent.distance.light_time_str }}
 <h4>Projection</h4>
 {% if obj.observe.phase.phase %}
 Phase: {{ obj.observe.phase.phase }}<br/>
 Phase Angle: {{ obj.observe.phase.angle|to_dms }}<br/>
 Day: {{ obj.observe.phase.days_since_new_moon|to_dhms }}<br/>
 {% else %}
-Phase Angle: {{ obj.observe.phase_angle_str }}<br/>
+Phase Angle: {{ obj.observe.phase_angle|to_dms }}<br/>
 {% endif %}
 {% if obj.observe.illum_fraction %}
 Illum.: {{ obj.observe.illum_fraction|floatformat:1 }} %</br>

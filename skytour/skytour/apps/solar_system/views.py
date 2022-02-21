@@ -55,11 +55,7 @@ class PlanetDetailView(DetailView):
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
-        context['planet'] = planets_cookie[obj.name]
-        # This is where we start rebuilding...
-
-        planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
-        pdict = context['planet'] = planets[obj.name]
+        pdict = context['planet'] = planets_cookie[obj.name]
         pdict['name'] = obj.name
         
         # TODO: Put this in site-parameters?
@@ -88,6 +84,7 @@ class PlanetDetailView(DetailView):
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
+
         return context
 
 class MoonDetailView(TemplateView):
@@ -96,27 +93,32 @@ class MoonDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MoonDetailView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
-        reversed = context['color_scheme'] == True
-
-        # Replace after testing
-        utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
-
-        planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
-        pdict = context['planet'] = get_moon(utdt_start, utdt_end=utdt_end, location=location)
+        pdict = get_cookie(self.request, 'moon')
         pdict['name'] = 'Moon'
-        context['view_image'] = create_planet_image(pdict, utdt=utdt_start, reversed=reversed)
-        fov = 8. if pdict['name'] in ['Uranus', 'Neptune'] else 20.
-        mag_limit = 9. if pdict['name'] in ['Uranus', 'Neptune'] else 6.5
-        context['finder_chart'] = create_planet_image(
+        planets_cookie = get_cookie(self.request, 'planets')
+        asteroids_cookie = get_cookie(self.request, 'asteroids')
+        reversed = context['color_scheme'] == 'dark'
+        context['planet'] = pdict
+
+        context['finder_chart'], ftimes = create_planet_finder_chart (
+            context['utdt_start'],
             pdict, 
-            utdt=utdt_start, 
-            fov=fov, 
-            mag_limit=mag_limit, 
-            finder_chart=True, 
-            other_planets=planets,
-            reversed=reversed
+            planets_cookie,
+            asteroids_cookie,
+            object_type = 'moon',
+            moon_cookie = pdict,
+            reversed = reversed,
+            mag_limit = 6.5,
+            fov = 15.
+        )
+
+        context['view_image'] = create_planet_system_view(
+            context['utdt_start'],
+            None,  # There is no Moon model instance
+            pdict, # this is the moon cookie
+            object_type = 'moon',
+            flipped = False,
+            reversed = reversed
         )
         return context
 

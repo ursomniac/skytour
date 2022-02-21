@@ -21,28 +21,35 @@ from ..plotting.map import *
 matplotlib.use('Agg') # this gets around the threading issues.
 
 def create_planet_finder_chart(
-        utdt,             # UTDT
-        planet,           # Planet instance
-        planets_cookie,   # metadata from cookie
-        asteroids,        # asteroids cookie
-        fov = None,       # force FOV
-        reversed = True,  # B on W or W on B
-        mag_limit = 8.5,  # magnitude limit of stars
-        show_axes = False #
+        utdt,                   # UTDT
+        planet,                 # Planet instance
+        planets_cookie,         # metadata from cookie
+        asteroids,              # asteroids cookie
+        object_type = 'planet', # override for Moon
+        moon_cookie = None,     # override cookie for Moon
+        fov = None,             # force FOV
+        reversed = True,        # B on W or W on B
+        mag_limit = 8.5,        # magnitude limit of stars
+        show_axes = False       #
     ):
     # Start timer
     times = [(time.perf_counter(), 'Start')]
 
-    name = planet.name
-    pdict = planets_cookie[name]
-    planet_ra = pdict['apparent']['equ']['ra']
-    planet_dec = pdict['apparent']['equ']['dec']
+    if object_type == 'moon':
+        name = 'Moon'
+        pdict = moon_cookie
+    else:
+        name = planet.name
+        pdict = planets_cookie[name]
+    
+    ra = pdict['apparent']['equ']['ra']
+    dec = pdict['apparent']['equ']['dec']
 
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     eph = load('de421.bsp')
     earth = eph['earth']
-    target = earth.at(t).observe(Star(ra_hours=planet_ra, dec_degrees=planet_dec))
+    target = earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec))
     projection = build_stereographic_projection(target)
     times.append((time.perf_counter(), 'Astrometrics done'))
 
@@ -61,7 +68,7 @@ def create_planet_finder_chart(
     times.append((time.perf_counter(), 'Stars/Constellations'))
 
     # Don't plot the planet - just a symbol.
-    ax = map_target(ax, planet_ra, planet_dec, projection, earth, t, '+')
+    ax = map_target(ax, ra, dec, projection, earth, t, '+')
     # Add an eyepiece circle, 32mm eyepiece = 0.0038 radians
     ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
     times.append((time.perf_counter(), 'Symbol/Eyepiece'))
@@ -110,20 +117,26 @@ def create_planet_finder_chart(
 
 
 def create_planet_system_view (
-        utdt,             # UTDT
-        planet,           # Planet instance
-        planets_cookie,   # metadata from cookie
-        fov = None,       # force FOV
-        flipped = True,   # Flip X axis for eyepice view
-        reversed = True,  # B on W or W on B
-        min_sep = None,   # 
-        show_axes = False #
+        utdt,                   # UTDT
+        planet,                 # Planet instance
+        cookie,                 # metadata from cookie
+        object_type = 'planet', # Override for Moon
+        fov = None,             # force FOV
+        flipped = True,         # Flip X axis for eyepice view
+        reversed = True,        # B on W or W on B
+        min_sep = None, 
+        show_axes = False
     ):
     # Start timer
     times = [(time.perf_counter(), 'Start')]
 
-    name = planet.name
-    pdict = planets_cookie[name]
+    if object_type == 'moon':
+        pdict = cookie # Moon 
+        name = 'Moon'
+    else:        
+        name = planet.name
+        pdict = cookie[name]
+
     planet_ra = pdict['apparent']['equ']['ra']
     planet_dec = pdict['apparent']['equ']['dec']
     ang_size_radians = math.radians(pdict['observe']['angular_diameter'])

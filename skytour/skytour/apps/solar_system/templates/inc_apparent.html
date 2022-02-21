@@ -1,6 +1,6 @@
 {% load skytour_filters humanize %}
 <h4>Apparent</h4>
-Mag: {{ obj.observe.apparent_mag|floatformat:2 }}<br>
-{% if obj.observe.angular_diameter_str %}
+Mag: {{ obj.observe.apparent_magnitude|floatformat:2 }}<br>
+{% if obj.observe.angular_diameter %}
 Ang Size: {{ obj.observe.angular_diameter_str }}<br/>
 {% endif %}         

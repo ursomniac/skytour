@@ -21,6 +21,32 @@ def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'M
         return theta / 3600.
     return theta
 
+def get_angular_size_string(degrees):
+    x = degrees
+    if x is None:
+        return None
+    if x < 1./3600.:
+        mas = x * 3.600e6 # milliarcseconds
+        return f'{mas:.1f} mas'
+    x_deg = int(x)
+    x = (x - x_deg) * 60.
+    x_min = int(x)
+    x = (x - x_min) * 60.
+    x_sec = x
+
+    s = ''
+    if x_deg > 0:
+        s += f'{x_deg}° '
+    if x_min > 0 or x_deg > 0:
+        s += f'{x_min:02d}\' '
+
+    if x_sec > 0 or x_deg > 0 or x_min > 0:
+        s += f'{x_sec:05.2f}\"'
+    if x_sec > 0 and x_deg == 0 and x_min == 0:
+        s = f'{x_sec:5.2f}\"'
+
+    return s
+
 PHASES = [
     'NEW', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL', 
     'WANING GIBBOUS', 'LAST QUARTER', 'WANING CRESCENT', 'NEW'
