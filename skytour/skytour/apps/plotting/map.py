@@ -349,7 +349,7 @@ def map_dsos(ax, earth, t, projection,
     Like the star mapping methods above, put down symbols for DSOs.
 
     TODO: I THINK We want to ALWAYS send a center value, even when this is
-        called from create_planet_image or plot_track because then we ought
+        called from create_finder_chart or plot_track because then we ought
         to be able to make things run faster.
     """
     other_dso_records = DSO.objects.filter(show_on_skymap=1)

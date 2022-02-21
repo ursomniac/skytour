@@ -14,7 +14,7 @@ from .models import Comet, Planet, Asteroid
 from .moon import get_moon
 from .planets import get_ecliptic_positions
 from .plot import (
-    create_planet_finder_chart, 
+    create_finder_chart, 
     create_planet_system_view,
     plot_ecliptic_positions, 
     plot_track, 
@@ -63,7 +63,7 @@ class PlanetDetailView(DetailView):
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
 
-        context['finder_chart'], ftimes = create_planet_finder_chart (
+        context['finder_chart'], ftimes = create_finder_chart (
             utdt_start,
             obj, 
             planets_cookie,
@@ -101,7 +101,7 @@ class MoonDetailView(TemplateView):
         reversed = context['color_scheme'] == 'dark'
         context['planet'] = pdict
 
-        context['finder_chart'], ftimes = create_planet_finder_chart (
+        context['finder_chart'], ftimes = create_finder_chart (
             context['utdt_start'],
             pdict, 
             planets_cookie,
@@ -167,7 +167,7 @@ class AsteroidDetailView(DetailView):
         fov = 10.
         
         if pdict: # This is so you COULD go to an page for something not in the cookie
-            context['finder_chart'], ftimes = create_planet_finder_chart (
+            context['finder_chart'], ftimes = create_finder_chart (
                 utdt_start, 
                 object,
                 planets_cookie=planets_cookie,
@@ -226,7 +226,7 @@ class CometDetailView(DetailView):
 
         context['comet'] = pdict
 
-        context['finder_chart'], ftimes = create_planet_finder_chart (
+        context['finder_chart'], ftimes = create_finder_chart (
             context['utdt_start'],
             object,
             planets,
