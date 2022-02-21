@@ -490,15 +490,10 @@ def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
 
     TODO: replace the Moon's unicode with a scaled Moon phase.
     """
-    ra, dec, dist = obj['target'].radec()
-    x, y = projection(
-        earth.at(t).observe(
-            Star(
-                ra_hours=ra.hours.item(), 
-                dec_degrees=dec.degrees.item()
-            )
-        )
-    )
+    #ra, dec, dist = obj['target'].radec()
+    ra = obj['apparent']['equ']['ra']
+    dec = obj['apparent']['equ']['dec']
+    x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
     m = UNICODE[name]
     ax.annotate(
         m, xy=(x,y),

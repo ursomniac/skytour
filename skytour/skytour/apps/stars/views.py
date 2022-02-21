@@ -26,6 +26,8 @@ class SkyView(TemplateView):
         planets = get_cookie(self.request, 'planets')
         asteroid_list = get_cookie(self.request, 'asteroids')
         comet_list = get_cookie(self.request, 'comets')
+        sun = get_cookie(self.request, 'sun')
+        moon = get_cookie(self.request, 'moon')
 
         map, interesting, last, times = get_skymap(
             utdt_start, 
@@ -33,6 +35,8 @@ class SkyView(TemplateView):
             planets = planets,
             asteroid_list = asteroid_list,
             comet_list=comet_list,
+            moon = moon,
+            sun = sun,
             reversed=reversed
         )
         context['skymap'] = map

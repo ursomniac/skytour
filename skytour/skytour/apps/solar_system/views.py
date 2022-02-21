@@ -102,7 +102,7 @@ class MoonDetailView(TemplateView):
             planets_cookie,
             asteroids_cookie,
             object_type = 'moon',
-            moon_cookie = pdict,
+            obj_cookie = pdict,
             reversed = reversed,
             mag_limit = 6.5,
             fov = 15.

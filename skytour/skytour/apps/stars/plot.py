@@ -11,8 +11,6 @@ from skyfield.projections import build_stereographic_projection
 from ..observe.time import get_t_epoch, get_julian_date, get_last
 from ..plotting.map import *
 from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.moon import get_moon
-from ..solar_system.sun import  get_sun
 
 def get_skymap(
         utdt, 
@@ -20,6 +18,8 @@ def get_skymap(
         planets=None,
         asteroid_list=None, 
         comet_list=None,
+        moon = None,
+        sun = None,
         reversed=True
     ):
     """
@@ -72,14 +72,10 @@ def get_skymap(
     times.append((time.perf_counter(), 'Stars and Constellations'))
 
     # 2. Sun - only matters if the plot is during the day
-    # TODO: FIX THIS - use Sun cookie!
-    sun = get_sun(utdt, eph=eph) 
     ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
     times.append((time.perf_counter(), 'Sun'))
 
     # 3. Moon
-    # TODO: FIX THIS - use Moon cookie!
-    moon = get_moon(utdt, sun=sun, eph=eph)
     ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
     times.append((time.perf_counter(), 'Moon'))
 
