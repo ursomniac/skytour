@@ -1,19 +1,24 @@
 import datetime, pytz
-from dateutil.parser import parse as parse_to_datetime
+import time
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie, get_cookie #, update_cookie_with_asteroids
+from ..session.cookie import deal_with_cookie, get_cookie
 from .asteroids import get_asteroid
-from .helpers import get_visible_asteroids
 from .comets import get_comet
 from .forms import TrackerForm
 from .helpers import get_all_planets
 from .models import Comet, Planet, Asteroid
 from .moon import get_moon
 from .planets import get_ecliptic_positions
-from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
+from .plot import (
+    create_planet_finder_chart, create_planet_image, 
+    create_planet_system_view,
+    plot_ecliptic_positions, 
+    plot_track, 
+    get_planet_map
+)
 
 class PlanetListView(ListView): # Updated!
     model = Planet 
@@ -50,35 +55,35 @@ class PlanetDetailView(DetailView):
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
-        # This is where we start rebuilding...
         context['planet'] = planets_cookie[obj.name]
-        #planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
-        #pdict = context['planet'] = planets[obj.name]
-        #pdict['name'] = obj.name
-        
-        context['view_image'] = create_planet_image(
-            pdict, 
-            utdt=context['utdt_start'],  
-            flipped=flipped,
-            reversed=reversed
-        )
+        # This is where we start rebuilding...
+
+        planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
+        pdict = context['planet'] = planets[obj.name]
+        pdict['name'] = obj.name
         
         # TODO: Put this in site-parameters?
         fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
-        other_asteroids = None
 
-        context['finder_chart'] = create_planet_image(
-            pdict, 
-            utdt=utdt_start, 
-            fov=fov, 
-            mag_limit=mag_limit, 
-            finder_chart=True, 
-            other_planets=planets_cookie,
-            other_asteroids=asteroids_cookie,
-            reversed=reversed
+        context['finder_chart'], ftimes = create_planet_finder_chart (
+            utdt_start,
+            obj, 
+            planets_cookie,
+            asteroids_cookie,
+            reversed=reversed,
+            mag_limit=mag_limit,
+            fov=fov
         )
 
+        context['view_image'] = create_planet_system_view(
+            utdt_start,
+            obj, 
+            planets_cookie,
+            flipped=flipped,
+            reversed=reversed
+        )
+        
         context['planet_map'] = None
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])

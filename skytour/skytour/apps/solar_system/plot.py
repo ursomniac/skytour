@@ -4,18 +4,227 @@ import io
 import math
 import matplotlib
 import numpy as np
+import time
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.patches import Wedge, Ellipse
+
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
+
 from .asteroids import get_asteroid_target
 from .comets import get_comet_target
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
 
 matplotlib.use('Agg') # this gets around the threading issues.
+
+def create_planet_finder_chart(
+        utdt,             # UTDT
+        planet,           # Planet instance
+        planets_cookie,   # metadata from cookie
+        asteroids,        # asteroids cookie
+        fov = None,       # force FOV
+        reversed = True,  # B on W or W on B
+        mag_limit = 8.5,  # magnitude limit of stars
+        show_axes = False #
+    ):
+    # Start timer
+    times = [(time.perf_counter(), 'Start')]
+
+    name = planet.name
+    pdict = planets_cookie[name]
+    planet_ra = pdict['apparent']['equ']['ra']
+    planet_dec = pdict['apparent']['equ']['dec']
+
+    ts = load.timescale()
+    t = ts.from_datetime(utdt)
+    eph = load('de421.bsp')
+    earth = eph['earth']
+    target = earth.at(t).observe(Star(ra_hours=planet_ra, dec_degrees=planet_dec))
+    projection = build_stereographic_projection(target)
+    times.append((time.perf_counter(), 'Astrometrics done'))
+
+    # Start making a plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    
+    fig, ax = plt.subplots(figsize=[6,6])
+    times.append((time.perf_counter(), 'Map set up'))
+
+    # Add stars from Hipparcos, constellation lines (from Stellarium),
+    #   and Bayer/Flamsteed designations from the BSC
+    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
+    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
+    times.append((time.perf_counter(), 'Stars/Constellations'))
+
+    # Don't plot the planet - just a symbol.
+    ax = map_target(ax, planet_ra, planet_dec, projection, earth, t, '+')
+    # Add an eyepiece circle, 32mm eyepiece = 0.0038 radians
+    ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
+    times.append((time.perf_counter(), 'Symbol/Eyepiece'))
+
+    # Add planet symbols (Unicode)
+    ax, _ = map_planets(ax, name, planets_cookie, earth, t, projection)
+    times.append((time.perf_counter(), 'Other planets'))
+
+    # Add DSOs
+    ax, _ = map_dsos(ax, earth, t, projection, reversed=reversed)
+    times.append((time.perf_counter(), 'DSOs'))
+
+    # Asteroids
+    ax, _ = map_asteroids(ax, asteroids, earth, t, projection)
+    times.append((time.perf_counter(), 'Asteroids'))
+
+    # Plot scaling
+    if not fov: # set FOV if not supplied
+        fov = 8. if name in ['Uranus', 'Neptune'] else 20.
+    angle = np.pi - fov / 360.0 * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+
+    ax.set_xlim(limit, -limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(show_axes)
+    ax.yaxis.set_visible(show_axes)
+
+    const = pdict['observe']['constellation']['abbr']
+    title = "{} Finder Chart (in {}) - FOV = {}".format(name, const, fov)
+    ax.set_title(title)
+    times.append((time.perf_counter(), 'Plotting...'))
+
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # close things
+    plt.tight_layout()
+    plt.cla()
+    plt.close(fig)
+    times.append((time.perf_counter(), 'Rendering as PNG'))
+    return pngImageB64String, times
+
+
+def create_planet_system_view (
+        utdt,             # UTDT
+        planet,           # Planet instance
+        planets_cookie,   # metadata from cookie
+        fov = None,       # force FOV
+        flipped = True,   # Flip X axis for eyepice view
+        reversed = True,  # B on W or W on B
+        min_sep = None,   # 
+        show_axes = False #
+    ):
+    # Start timer
+    times = [(time.perf_counter(), 'Start')]
+
+    name = planet.name
+    pdict = planets_cookie[name]
+    planet_ra = pdict['apparent']['equ']['ra']
+    planet_dec = pdict['apparent']['equ']['dec']
+    ang_size_radians = math.radians(pdict['observe']['angular_diameter'])
+    ts = load.timescale()
+    t = ts.from_datetime(utdt)
+    t0 = get_t_epoch(get_julian_date(utdt))
+    eph = load('de421.bsp')
+    earth = eph['earth']
+    target = earth.at(t).observe(Star(ra_hours=planet_ra, dec_degrees=planet_dec))
+    projection = build_stereographic_projection(target)
+    times.append((time.perf_counter(), 'Astrometrics done'))
+
+    # Start making a plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    
+    fig, ax = plt.subplots(figsize=[6,6])
+    times.append((time.perf_counter(), 'Map set up'))
+
+    # Add moons
+    moons = pdict.get('moons', None)
+    if moons:
+        # return the maximum separation of a moon from its planet.
+        # This determines the scale of the view.
+        ax, moon_pos_list, max_sep = map_moons(ax, pdict, earth, t, projection, ang_size_radians, reversed=reversed)
+        for x, y, z, o in zip(moon_pos_list['x'], moon_pos_list['y'], moon_pos_list['label'], moon_pos_list['o']):
+            plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
+    else: # no moons, set max_sep to 3*ang_size of the planet.
+        max_sep = 3 * ang_size_radians
+    if min_sep and max_sep < min_sep:
+        max_sep = min_sep
+
+    # If Saturn, add rings
+    # TODO: deal with having the ring in front of the planet and then behind it.
+    if name == 'Saturn':
+        ax = map_saturn_rings(ax, pdict, t0, reversed=reversed)
+
+    # Moon and inferior planets have phases!
+    if name in ['Moon', 'Mercury', 'Venus']:
+        ax = map_phased_planet(ax, pdict, ang_size_radians)
+    else: # just a regular disk for superior planets
+        ax = map_whole_planet(ax, ang_size_radians, reversed=reversed)
+
+    # Plot scaling
+    # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.
+    if not fov: # set FOV if not supplied
+        # set FOV to slightly more than the greatest moon distance
+        # if no moons, then against the angular size of the planet
+        if max_sep == 0.:
+            fov = 0.05
+        else:
+            multiple = 0.05
+            min_fov = 1.0 * math.degrees(2. * max_sep)
+            fov = multiple * round((min_fov +multiple/2)/multiple)
+        if fov < 0.05:
+            fov = 0.05
+
+    angle = np.pi - fov / 360.0 * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+    # This is an unresolved WTF bug --- I don't know why the math gets weird here.
+    foo = 2. * limit * 180. / np.pi 
+    if flipped:
+        ax.set_xlim(limit, -limit)
+    else:
+        ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+
+    ax.xaxis.set_visible(show_axes)
+    ax.yaxis.set_visible(show_axes)
+
+    if foo > 1.2: # more than 1 degree -ish
+        fov_str = "{:.1f}°".format(foo) # show degrees
+    else:
+        fov_str = "{:.1f}\'".format(foo*60.) # show arcminutes
+
+    title = "{} Telescope View - FOV = {}".format(name, fov_str)
+    if flipped:
+        title += " (flipped)"
+    ax.set_title(title)
+    plt.xlabel('ID above + = moon behind planet in orbit;\nID below + = moon in front of planet in orbit')
+
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # close things
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String
+
+
+
+
+
+
+
+
+
 
 def create_planet_image(
         planet, # dict from get_solar_system_object() - can also be the Moon

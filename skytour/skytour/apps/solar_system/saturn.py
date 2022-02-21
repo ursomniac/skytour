@@ -1,13 +1,16 @@
 import math
 
-def saturn_ring(t, saturn, return_dict=True):
+def saturn_ring(t, pdict):
     """
     Given the obs object for Saturn, get ring information.
     """
     # Saturn's position (provided)
-    geo_lat, geo_lon, geo_dist = saturn.ecliptic_latlon()
-    lamb = math.radians(geo_lon.degrees.item())
-    beta = math.radians(geo_lat.degrees.item())
+    ecl_lat = pdict['apparent']['ecl']['latitude']
+    ecl_lon = pdict['apparent']['ecl']['longitude']
+    distance = pdict['apparent']['distance']['au']
+
+    lamb = math.radians(ecl_lon)
+    beta = math.radians(ecl_lat)
 
     # inclination of the plane of the ring
     iota = math.radians(28.075_216 - 0.012_998*t + 4.e-6*t**2)
@@ -19,7 +22,7 @@ def saturn_ring(t, saturn, return_dict=True):
             - math.cos(iota) * math.sin(beta)
     )
     # Major and minor axes of the rings in arcseconds
-    a = 375.35 / geo_dist.au # geo_dist in AU;  arcsec
+    a = 375.35 / distance # geo_dist in AU;  arcsec
     b = a * math.sin(abs(bb))
     # inner ring  a, b * 0.665
     # outer ring  a, b * ?

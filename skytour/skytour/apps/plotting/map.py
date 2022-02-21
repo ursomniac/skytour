@@ -115,7 +115,7 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     For finding charts, I use this.
     """
     object_x, object_y = projection(earth.at(t).observe(
-        Star(ra_hours=ra.hours, dec_degrees=dec.degrees))
+        Star(ra_hours=ra, dec_degrees=dec))
     )
     object_scatter = ax.scatter(
         [object_x], [object_y], 
@@ -138,7 +138,7 @@ def map_eyepiece(ax, diam=None, reversed=False):
     eyepiece = plt.Circle((0,0), radius, color=circle_color, fill=False)
     return ax
 
-def map_moons(ax, planet, earth, t, projection, ang_size_radians, reversed=False, debug=False):
+def map_moons(ax, pdict, earth, t, projection, ang_size_radians, reversed=False, debug=False):
     """
     Given the RA/Dec for the moons in a system, plot them against a rendering of
     the planet's angular diameter (and in the case of Saturn the projection of
@@ -155,15 +155,19 @@ def map_moons(ax, planet, earth, t, projection, ang_size_radians, reversed=False
     semi-diameter of the planet) are not shown.
     """
     moon_pos_list = {'x': [], 'y': [], 'label': [], 'd': [], 'o': []}
-
-    dist_to_planet = planet['target'].distance().au
+    dist_to_planet = pdict['apparent']['distance']['au']
+    planet_ra = pdict['apparent']['equ']['ra']
+    planet_dec = pdict['apparent']['equ']['dec']
+    planet_target = earth.at(t).observe(Star(ra_hours=planet_ra, dec_degrees=planet_dec))
     max_sep = 0.
     try:
-        for moon in planet['moons']:
-            (moon_ra, moon_dec, moon_dist) = moon['target'].radec()
-            x, y = projection(earth.at(t).observe(Star(ra_hours=moon_ra.hours, dec_degrees=moon_dec.degrees)))
-            d = moon_dist.au
-            sep = moon['target'].separation_from(planet['target']).radians
+        for moon in pdict['moons']:
+            moon_ra = moon['apparent']['equ']['ra']
+            moon_dec = moon['apparent']['equ']['dec']
+            d = moon['apparent']['distance']['au']
+            moon_target = earth.at(t).observe(Star(ra_hours=moon_ra, dec_degrees=moon_dec))
+            sep = moon_target.separation_from(planet_target).radians
+            x, y = projection(moon_target)
             if debug:
                 print("{}: X: {:.3f} Y: {:.3f} SEP: {:.3f} ANG: {:.3f} ∆d: {:.3f}".format(
                     moon['name'], x*1e5, y*1e5, sep*1e5, 1e5*ang_size_radians/2., 1e5*(dist_to_planet - d))
@@ -309,7 +313,7 @@ def map_whole_planet(ax, ang_size_radians, reversed=False):
     ax.add_patch(circle2)
     return ax
 
-def map_saturn_rings(ax, planet, t0, reversed=False):
+def map_saturn_rings(ax, pdict, t0, reversed=False):
     """
     Given the tilt of the rings as seen from Earth, superimpose them on the disk.
         - 0.665 is the fractional radius of the inner edge of the inner ring.
@@ -320,7 +324,7 @@ def map_saturn_rings(ax, planet, t0, reversed=False):
         - use arcs to simulate the 3-dness of things
         - test against the vector of the pole of Saturn's rotation...
     """
-    rings = saturn_ring(t0, planet['target'])
+    rings = saturn_ring(t0, pdict)
     a = math.radians(rings['major'] / 3600.)
     b = math.radians(rings['minor'] / 3600.)
     
@@ -408,27 +412,24 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
     """
     d = {'x': [], 'y': [], 'marker': []}
     interesting = []
-    for k,v in planets.items():
-        if k == this_planet:
+    for k, v in planets.items():
+        if k == this_planet: # Skip me
             continue
-        this_planet = Planet.objects.get(slug=v['slug'])
-        try:
-            ra = v['apparent']['equ']['ra']
-            dec = v['apparent']['equ']['dec']
-        except:
-            ra = v['coords']['ra']
-            dec = v['coords']['dec']
+        ra = v['apparent']['equ']['ra']
+        dec = v['apparent']['equ']['dec']
             
-        if center:
+        if center: # Used for Skymap
             sin_dist = get_altitude(center[0], center[1], ra, dec)
             if sin_dist < 0.: # skip the rest of processing.
                 continue
             else:
                 interesting.append(v)
+
         x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         d['x'].append(x)
         d['y'].append(y)
         d['marker'].append(UNICODE[k])
+
     xxx = np.array(d['x'])
     yyy = np.array(d['y'])
     mmm = np.array(d['marker'])
@@ -441,7 +442,7 @@ def map_planets(ax, this_planet, planets, earth, t, projection, center=None):
             color='fuchsia',
             fontsize=20
         )
-    print ("INTERESTING: ", interesting)
+
     return ax, interesting
 
 def map_asteroids(ax, asteroid_list, earth, t, projection, 

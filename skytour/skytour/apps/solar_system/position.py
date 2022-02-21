@@ -18,6 +18,7 @@ from .models import Planet, Comet, Asteroid
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
+    get_plotting_phase_angle,
     get_constellation
 )
 
@@ -71,6 +72,11 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True) if location else None
     session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
+    # Special Cases --- ADD to observe dict
+    if object_type == 'moon':
+        lunar_phase = simple_lunar_phase(jd) # this is a DICT!
+        position_angle = moon_phase(eph, t).degrees.item() # degrees
+
     ### Observational Metadata:
     # Constellation
     constellation = get_constellation(ra, dec)
@@ -90,6 +96,13 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
             phase_angle = None
     else:
         phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
+
+    plotting_phase_angle = None
+    if object_type == 'planet' and instance is not None:
+        plotting_phase_angle = get_plotting_phase_angle(instance.name, phase_angle, elongation)
+    elif object_type == 'moon':
+        plotting_phase_angle = lunar_phase['angle']
+
     # Illum. Fraction - in percent
     k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
     # Apparent Magnitude
@@ -138,18 +151,17 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     ### Put all of this into an "observe" dict.
     observe = dict (
             constellation = constellation, 
-            phase_angle = phase_angle,               # degrees
-            fraction_illuminated = k,                # percent
-            elongation = elongation,                 # degrees
-            angular_diameter = angular_diameter,     # degrees
+            phase_angle = phase_angle,                   # degrees
+            plotting_phase_angle = plotting_phase_angle, # degrees
+            fraction_illuminated = k,                    # percent
+            elongation = elongation,                     # degrees
+            angular_diameter = angular_diameter,         # degrees
             apparent_magnitude = apparent_magnitude
         )
-
-    # Special Cases --- ADD to observe dict
     if object_type == 'moon':
-        observe['lunar_phase'] = simple_lunar_phase(jd) # this is a DICT!
-        observe['position_angle'] = moon_phase(eph, t).degrees.item() # degrees
-
+        observe['lunar_phase'] = lunar_phase
+        observe['position_angle'] = position_angle
+        
     # Moons
     moon_obs = None
     if object_type == 'planet' and instance is not None:
@@ -158,7 +170,6 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
             moonsys = load(instance.load)
             earth_s = moonsys['earth']
             for moon in instance.moon_list:
-                print("WORKING ON MOON: ",moon)
                 mdict = {}
                 mdict['name'] = moon
                 moon_target = moonsys[moon]
