@@ -103,12 +103,6 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1
         )
     return ax
 
-
-#####
-#####
-#####
-#####
-#####
 def create_dso_finder_chart(dso, fov=8, mag_limit=9, 
         reversed=True,  # white on black or black on white
         save_file=False, # return a stream or a filename
@@ -216,7 +210,6 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     #legend2 = ax.legend(*scatter.legend_elements(**kw), loc="upper left", title="Mag.")
 
     if save_file:
-    # SAVE IT!
         if test:
             fn = 'test_{}.png'.format(dso.pk)
         else:
@@ -231,9 +224,8 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
         plt.cla()
         plt.close(fig)
         return fn
-    
-    # else return the file as a stream
-        # Render and close
+
+    # Render and close
     # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)

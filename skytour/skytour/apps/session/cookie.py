@@ -42,17 +42,6 @@ def deal_with_cookie(request, context):
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
     return context
 
-def update_cookie_with_asteroids(request, asteroid_list):
-    """ 
-    TODO: Do we still need this?
-    """
-    if len(asteroid_list) > 0:
-        asteroid_slugs = [x['slug'] for x in asteroid_list]
-        request.session['user_preferences']['visible_asteroids'] = asteroid_slugs
-        foo = request.session.get('user_preferences', None)
-        return asteroid_slugs
-    return None
-
 def get_cookie(request, slug):
     cookie = request.session.get(slug, None)
     return cookie

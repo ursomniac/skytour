@@ -5,7 +5,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie, get_cookie
 from ..utils.timer import compile_times
-from .forms import SkyMapForm
 from .models import BrightStar
 from .plot import get_skymap
 

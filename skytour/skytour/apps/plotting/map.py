@@ -8,9 +8,7 @@ from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..dso.models import DSO
 from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.comets import get_comet
 from ..solar_system.meteors import get_meteor_showers
-from ..solar_system.models import Comet, Planet
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar

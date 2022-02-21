@@ -66,6 +66,7 @@ def get_plotting_phase_angle(name, phase, elongation):
 def get_elongation(target, sun):
     """
     This doesn't disambiguate between eastern and western elongations.
+    TODO: Fix this from the position.py and where get_moon is called
     """
     _, mlon, tdist = target.apparent().ecliptic_latlon('date')
     _, slon, sdist = sun.apparent().ecliptic_latlon('date')

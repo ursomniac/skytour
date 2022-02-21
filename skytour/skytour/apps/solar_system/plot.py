@@ -8,7 +8,6 @@ import time
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.patches import Wedge, Ellipse
 
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection

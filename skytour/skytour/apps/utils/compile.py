@@ -1,5 +1,6 @@
 from .format import to_sex
 
+# TODO: Remove this after solar system cleanup if no longer needed
 def observe_to_values(obs):
     """
     Take the object from e.g., earth.at(t).observe(moon)

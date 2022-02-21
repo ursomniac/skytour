@@ -5,7 +5,6 @@ from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
-from .comets import get_comet_object
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -296,10 +295,6 @@ class Comet(ObservableObject):
         choices = STATUS_CHOICES,
         default = 1
     )
-
-    @property
-    def get_mpc_data(self):
-        return get_comet_object(self)
         
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)

@@ -1,13 +1,14 @@
 import math
 
+"""
 def get_angular_distance(ra1, dec1, ra2, dec2):
-    """
-    Not useful for small angular distance
-    """
+    # This doesn't appear to be used anywhere, but keeping it around in case it gets useful.
+    # Not useful for small angular distance
     dra = math.radians(15.*ra1 - 15.*ra2)
     d1 = math.sin(math.radians(dec1)) * math.sin(math.radians(dec2))
     d2 = math.cos(math.radians(dec1)) * math.cos(math.radians(dec2)) * math.cos(dra)
     return d1 + d2 # cosine
+"""
 
 def get_altitude(last, lat, ra, dec):
     ha = 15.*(last-ra)
