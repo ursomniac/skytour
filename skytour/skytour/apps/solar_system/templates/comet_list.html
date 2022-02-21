@@ -22,14 +22,14 @@
         <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'comet-detail' comet.pk %}">{{ comet.name }}</a></td>
             <td>
-                &alpha;: {{ comet.coords.ra_str }} &nbsp;
-                &delta;: {{ comet.coords.dec_str }}
+                &alpha;: {{ comet.apparent.equ.ra_str }} &nbsp;
+                &delta;: {{ comet.apparent.equ.dec_str }}
             </td>
-            <td>{{ comet.coords.distance.au|floatformat:2 }} AU</td>
+            <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
-            <td>{{ comet.observe.apparent_mag|floatformat:2 }}</td>
-            <td>{{ comet.object.number_of_observations }}</td>
-            <td>{% if comet.object.last_observed %}{{ comet.object.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
+            <td>{{ comet.observe.apparent_magnitude|floatformat:2 }}</td>
+            <td>{{ comet.n_obs }}</td>
+            <td>{% if comet.last_observed %}{{ comet.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

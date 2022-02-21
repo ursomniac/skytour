@@ -186,7 +186,17 @@ class CometListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CometListView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
+        cookie = get_cookie(self.request, 'comets')
+        comets = Comet.objects.filter(status=1)
+        comet_list = []
+        for d in cookie:
+            comet = comets.get(pk=d['pk'])
+            d['n_obs'] = comet.number_of_observations
+            d['last_observed'] = comet.last_observed
+            comet_list.append(d)
+        context['comet_list'] = comet_list
 
+        """
         # Replace after testing
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
@@ -196,6 +206,7 @@ class CometListView(ListView):
         for comet in comets:
             comet_list.append(get_comet(utdt_start, comet, utdt_end=utdt_end, location=location))
         context['comet_list'] = comet_list
+        """
         return context
 
 class CometDetailView(DetailView):
