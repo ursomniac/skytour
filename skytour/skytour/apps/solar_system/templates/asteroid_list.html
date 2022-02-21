@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load skytour_filters %}
 {% block styles %}
 {% endblock styles %}
 {% block title %}Observable Asteroids: Skytour{% endblock %}
@@ -22,14 +22,14 @@
         <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'asteroid-detail' asteroid.slug %}">{{ asteroid.name }}</a></td>
             <td>
-                &alpha;: {{ asteroid.coords.ra_str }} &nbsp;
-                &delta;: {{ asteroid.coords.dec_str }}
+                &alpha;: {{ asteroid.apparent.equ.ra_str }} &nbsp;
+                &delta;: {{ asteroid.apparent.equ.dec_str }}
             </td>
-            <td>{{ asteroid.coords.distance.au|floatformat:2 }} AU</td>
+            <td>{{ asteroid.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ asteroid.observe.constellation.name }}</td>
-            <td>{{ asteroid.observe.apparent_mag|floatformat:2 }}</td>
-            <td>{{ asteroid.object.number_of_observations }}</td>
-            <td>{% if asteroid.object.last_observed %}{{ asteroid.object.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
+            <td>{{ asteroid.observe.apparent_magnitude|floatformat:2 }}</td>
+            <td>{{ asteroid.n_obs }}</td>
+            <td>{% if asteroid.last_observed %}{{ asteroid.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

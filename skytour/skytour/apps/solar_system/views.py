@@ -129,21 +129,15 @@ class AsteroidListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AsteroidListView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
-
-        # Replace after testing
-        utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
-
-        # Skip re-calculating the asteroid list if we can avoid it...
-        #if 'visible_asteroids' in context.keys():
-        #    context['asteroid_list'] = [
-        #        get_asteroid(utdt_start, x, utdt_end=utdt_end, location=location) 
-        #        for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
-        #    ]
-        #else:
-        #    context['asteroid_list'] = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
-        #    slugs = update_cookie_with_asteroids(self.request, context['asteroid_list'])
+        asteroids = Asteroid.objects.order_by('number')
+        cookie = get_cookie(self.request, 'asteroids')
+        asteroid_list = []
+        for d in cookie:
+            a = asteroids.get(number=d['number'])
+            d['n_obs'] = a.number_of_observations
+            d['last_observed'] = a.last_observed
+            asteroid_list.append(d)
+        context['asteroid_list'] = asteroid_list
         return context
 
 class AsteroidDetailView(DetailView):
