@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie, update_cookie_with_asteroids
+from ..session.cookie import deal_with_cookie, get_cookie #, update_cookie_with_asteroids
 from .asteroids import get_asteroid
 from .helpers import get_visible_asteroids
 from .comets import get_comet
@@ -15,15 +15,21 @@ from .moon import get_moon
 from .planets import get_ecliptic_positions
 from .plot import create_planet_image, plot_ecliptic_positions, plot_track, get_planet_map
 
-class PlanetListView(ListView):
+class PlanetListView(ListView): # Updated!
     model = Planet 
     template_name = 'planet_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PlanetListView, self).get_context_data(**kwargs)
-        context['utdt'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        context['planets'] = Planet.objects.all()
-        context['pdict'] = get_all_planets(context['utdt'])
+        planets = Planet.objects.order_by('pk')
+        cookie = get_cookie(self.request, 'planets')
+        planet_list = []
+        for p in planets:
+            d = cookie[p.name]
+            d['n_obs'] = p.number_of_observations
+            d['last_observed'] = p.last_observed
+            planet_list.append(d)
+        context['planet_list'] = planet_list
         return context
 
 class PlanetDetailView(DetailView):
@@ -33,21 +39,26 @@ class PlanetDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PlanetDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
-        context = deal_with_cookie(self.request, context) 
+        context = deal_with_cookie(self.request, context)
+        planets_cookie = get_cookie(self.request, 'planets')
+        asteroids_cookie = get_cookie(self.request, 'asteroids')
+
+        flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
         reversed = context['color_scheme'] == 'dark'
 
         # Replace this after testing
         utdt_start = context['utdt_start']
         utdt_end = context['utdt_end']
         location = context['location']
-        planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
-        pdict = context['planet'] = planets[obj.name]
-        pdict['name'] = obj.name
-        flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
-
+        # This is where we start rebuilding...
+        context['planet'] = planets_cookie[obj.name]
+        #planets = get_all_planets(utdt_start, utdt_end=utdt_end, location=location)
+        #pdict = context['planet'] = planets[obj.name]
+        #pdict['name'] = obj.name
+        
         context['view_image'] = create_planet_image(
             pdict, 
-            utdt=utdt_start,  
+            utdt=context['utdt_start'],  
             flipped=flipped,
             reversed=reversed
         )
@@ -57,18 +68,14 @@ class PlanetDetailView(DetailView):
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
         other_asteroids = None
 
-        if 'visible_asteroids' in context.keys():
-            alist = Asteroid.objects.filter(slug__in=context['visible_asteroids'])
-            other_asteroids = [get_asteroid(utdt_start, x) for x in alist]
-
         context['finder_chart'] = create_planet_image(
             pdict, 
             utdt=utdt_start, 
             fov=fov, 
             mag_limit=mag_limit, 
             finder_chart=True, 
-            other_planets=planets,
-            other_asteroids=other_asteroids,
+            other_planets=planets_cookie,
+            other_asteroids=asteroids_cookie,
             reversed=reversed
         )
 
@@ -122,14 +129,14 @@ class AsteroidListView(ListView):
         location = context['location']
 
         # Skip re-calculating the asteroid list if we can avoid it...
-        if 'visible_asteroids' in context.keys():
-            context['asteroid_list'] = [
-                get_asteroid(utdt_start, x, utdt_end=utdt_end, location=location) 
-                for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
-            ]
-        else:
-            context['asteroid_list'] = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
-            slugs = update_cookie_with_asteroids(self.request, context['asteroid_list'])
+        #if 'visible_asteroids' in context.keys():
+        #    context['asteroid_list'] = [
+        #        get_asteroid(utdt_start, x, utdt_end=utdt_end, location=location) 
+        #        for x in Asteroid.objects.filter(slug__in=context['visible_asteroids'])
+        #    ]
+        #else:
+        #    context['asteroid_list'] = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+        #    slugs = update_cookie_with_asteroids(self.request, context['asteroid_list'])
         return context
 
 class AsteroidDetailView(DetailView):
