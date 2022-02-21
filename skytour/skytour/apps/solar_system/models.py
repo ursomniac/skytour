@@ -5,9 +5,7 @@ from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
-from .asteroids import get_asteroid
-from .comets import get_comet_object, get_comet
-from .planets import get_solar_system_object
+from .comets import get_comet_object
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -109,8 +107,7 @@ class PlanetObservation(ObservingLog):
 
     @property
     def observation_metadata(self):
-        ephem = get_solar_system_object(self.ut_datetime, self.object, location=self.location)
-        return get_metadata(self, ephem=ephem)
+        return get_metadata(self)
 
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
@@ -279,8 +276,7 @@ class AsteroidObservation(ObservingLog):
 
     @property
     def observation_metadata(self):
-        ephem = get_asteroid(self.ut_datetime, self.object, location=self.location)
-        return get_metadata(self, ephem=ephem)
+        return get_metadata(self)
 
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
@@ -326,8 +322,7 @@ class CometObservation(ObservingLog):
     
     @property
     def observation_metadata(self):
-        ephem = get_comet(self.ut_datetime, self.object, location=self.location)
-        return get_metadata(self, ephem=ephem)
+        return get_metadata(self)
 
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"

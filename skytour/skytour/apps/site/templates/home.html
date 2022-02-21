@@ -42,7 +42,7 @@ No upcoming events.
 None active.
 {% endif %}
 
-<h3>Planets Close Together</h3>
+<h3>Planets Close Together (within {{ min_sep }}°)</h3>
 
 {% if adjacent_planets %}
 <table width="100%">
@@ -58,9 +58,6 @@ None active.
     </tbody>
 </table>
 {% else %}
-None near each other (10°).
+None near each other ({{ min_sep }}°).
 {% endif %}
-<br/>
-Cookie:
-<pre>{{ cookie|pprint }}</pre>
 {% endblock %}

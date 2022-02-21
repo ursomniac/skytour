@@ -1,4 +1,5 @@
 import math
+
 from skyfield.almanac import (
     phase_angle as get_phase_angle, 
     fraction_illuminated,
@@ -6,15 +7,15 @@ from skyfield.almanac import (
 )
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
+
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
-from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.asteroids import get_asteroid_target
 from ..solar_system.comets import get_comet_target
+
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
 from .moon import simple_lunar_phase
-from .models import Planet, Comet, Asteroid
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
@@ -23,7 +24,14 @@ from .utils import (
     get_constellation
 )
 
-def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=None, location=None):
+def get_object_metadata(
+        utdt, 
+        eph_label, 
+        object_type, 
+        utdt_end=None, 
+        instance=None, 
+        location=None
+    ):
     """
     Get the serialized metadata for an object at a given utdt and location.
         1. UTDT
@@ -106,6 +114,7 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
 
     # Illum. Fraction - in percent
     k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
+
     # Apparent Magnitude
     if object_type == 'moon':
         x = math.log10(k)
@@ -134,6 +143,7 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
     else:
         mag = None
     apparent_magnitude = mag
+
     # Angular Diameter
     if object_type == 'moon':
         diam = 3_475
@@ -197,48 +207,3 @@ def get_object_metadata(utdt, eph_label, object_type, utdt_end=None, instance=No
             physical = physical
         )
     return return_dict
-
-def get_planet_positions(utdt, utdt_end=None, location=None):
-    """
-    This replaces the get_planet_dict (eventually)
-    """
-    planets = Planet.objects.order_by('pk')
-    planet_dict = {}
-    for p in planets:
-        d = get_object_metadata(utdt, p.target, 'planet', utdt_end=utdt_end, instance=p, location=location)
-        d['slug'] = p.slug
-        d['name'] = p.name
-        planet_dict[p.name] = d
-    return planet_dict
-
-def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
-   # Actual magnitude of asteroid - if fainter than this, don't add to the list.
-   mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
-   # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
-   # This is just to limit the queryset so that we're not calculating orbital elements for 
-   # hundreds of asteroids, when we'll only be interested in ~20 tops.
-   cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
-
-   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
-   asteroid_list = []
-   for a in asteroids:
-      x = get_object_metadata(utdt, None, 'asteroid', utdt_end=utdt_end, instance=a, location=location)
-      if x is None:
-         continue
-      mag = x['observe']['apparent_magnitude']
-      x['name'] = f'{a.number}: {a.name}'
-      x['slug'] = a.slug
-      x['number'] = a.number
-      if mag <= mag_limit:
-         asteroid_list.append(x)
-   return asteroid_list
-
-def get_comet_positions(utdt, utdt_end=None, location=None):
-    comets = Comet.objects.filter(status=1)
-    comet_list = []
-    for c in comets:
-        d = get_object_metadata(utdt, c.name, 'comet', utdt_end=utdt_end, instance=c, location=location)
-        d['pk'] = c.pk
-        d['name'] = c.name
-        comet_list.append(d)
-    return comet_list

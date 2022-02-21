@@ -1,5 +1,6 @@
 import math
 from ..observe.time import get_last, get_julian_date
+from ..solar_system.position import get_object_metadata
 from ..utils.transform import get_alt_az
 
 def rectify_ha(xha):
@@ -9,7 +10,7 @@ def rectify_ha(xha):
         return xha - 24.
     return xha
 
-def get_metadata(observation, ephem=None):
+def get_metadata(observation):
     """
     For the set of observables:
         Planet
@@ -29,20 +30,24 @@ def get_metadata(observation, ephem=None):
             Distance
             Angular Diameter
     """
-
     utdt = observation.ut_datetime
     target = observation.object
     location = observation.location
     last = get_last(utdt, location.longitude)
+    object_type = observation.object_type
 
-    if observation.object_type != 'DSO' and ephem is not None:
-        ra = ephem['coords']['ra']
-        dec = ephem['coords']['dec']
-        distance = ephem['coords']['distance']['au']
+    if observation.object_type != 'DSO':
+        eph_label = target.target if object_type == 'Planet' else None
+        ephem = get_object_metadata(
+            utdt, eph_label, object_type.lower(), instance=target, location=location
+        )
+        ra = ephem['apparent']['equ']['ra']
+        dec = ephem['apparent']['equ']['dec']
+        distance = ephem['apparent']['distance']['au']
         distance_units = 'AU'
         constellation = ephem['observe']['constellation']['abbr']
         angular_diameter = ephem['observe']['angular_diameter']
-        apparent_magnitude = ephem['observe']['apparent_mag']
+        apparent_magnitude = ephem['observe']['apparent_magnitude']
     else:
         ra = target.ra_float
         dec = target.dec_float

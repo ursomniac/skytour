@@ -9,12 +9,12 @@ from django.views.generic.list import ListView
 from ..observe.almanac import get_dark_time
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
-from ..solar_system.position import (
-    get_object_metadata, 
+from ..solar_system.helpers import ( 
     get_planet_positions, 
     get_comet_positions,
     get_visible_asteroid_positions
 )
+from ..solar_system.position import get_object_metadata
 from ..utils.timer import compile_times
 from .cookie import deal_with_cookie, get_cookie
 from .forms import ObservingParametersForm

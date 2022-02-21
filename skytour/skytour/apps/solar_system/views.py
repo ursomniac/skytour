@@ -1,17 +1,12 @@
 import datetime, pytz
-from numpy import object0
 import time
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie, get_cookie
-from .asteroids import get_asteroid
-from .comets import get_comet
 from .forms import TrackerForm
-from .helpers import get_all_planets
 from .models import Comet, Planet, Asteroid
-from .moon import get_moon
 from .planets import get_ecliptic_positions
 from .plot import (
     create_finder_chart, 

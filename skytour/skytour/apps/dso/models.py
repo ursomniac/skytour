@@ -274,7 +274,7 @@ class DSOObservation(ObservingLog):
 
     @property
     def observation_metadata(self):
-        return get_metadata(self, ephem=None)
+        return get_metadata(self)
         
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.shown_name}"
