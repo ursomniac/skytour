@@ -214,6 +214,7 @@ class Asteroid(ObservableObject):
         _('Description'),
         null = True, blank = True
     )
+    
 
     ### Magnitude
     h = models.FloatField (
@@ -232,7 +233,7 @@ class Asteroid(ObservableObject):
 
     @property
     def mpc_lookup_designation(self):
-        return "({}) {}".format(self.pk, self.name)
+        return "({}) {}".format(self.number, self.name)
         
     @property
     def mean_diameter(self):

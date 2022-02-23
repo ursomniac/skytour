@@ -9,7 +9,6 @@ from skyfield.almanac import (
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
 from ..observe.time import get_julian_date
-from ..utils.compile import observe_to_values
 from ..utils.format import to_sex
 from .utils import (
     get_angular_size, 

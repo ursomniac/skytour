@@ -98,8 +98,10 @@ def create_finder_chart(
 
     ax.set_xlim(limit, -limit)
     ax.set_ylim(-limit, limit)
+
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
+    # TODO: Change this to show arcmin or arcsec as a secondary axis
 
     const = pdict['observe']['constellation']['abbr']
     title = "{} Finder Chart (in {}) - FOV = {}".format(name, const, fov)
@@ -130,7 +132,6 @@ def create_planet_system_view (
         flipped = True,         # Flip X axis for eyepice view
         reversed = True,        # B on W or W on B
         min_sep = None, 
-        show_axes = False
     ):
     # Start timer
     times = [(time.perf_counter(), 'Start')]
@@ -168,7 +169,8 @@ def create_planet_system_view (
         # This determines the scale of the view.
         ax, moon_pos_list, max_sep = map_moons(ax, pdict, earth, t, projection, ang_size_radians, reversed=reversed)
         for x, y, z, o in zip(moon_pos_list['x'], moon_pos_list['y'], moon_pos_list['label'], moon_pos_list['o']):
-            plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center') 
+            plt.annotate(z, (x, y), textcoords='offset points', xytext=(0, o), ha='center')
+        ax.set_xlabel('ID above + = moon behind planet in orbit;\nID below + = moon in front of planet in orbit')
     else: # no moons, set max_sep to 3*ang_size of the planet.
         max_sep = 3 * ang_size_radians
     if min_sep and max_sep < min_sep:
@@ -209,8 +211,13 @@ def create_planet_system_view (
         ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
 
-    ax.xaxis.set_visible(show_axes)
-    ax.yaxis.set_visible(show_axes)
+    #ax.xaxis.set_visible(show_axes)
+    #ax.yaxis.set_visible(show_axes)
+    ax.set_yticklabels([])
+    ax.set_xticklabels([])
+    ax.set_xticks([])
+    ax.set_yticks([])
+    # TODO: Change this to use arcmin/arcsec as a secondary axis!
 
     if foo > 1.2: # more than 1 degree -ish
         fov_str = "{:.1f}°".format(foo) # show degrees
@@ -221,7 +228,6 @@ def create_planet_system_view (
     if flipped:
         title += " (flipped)"
     ax.set_title(title)
-    plt.xlabel('ID above + = moon behind planet in orbit;\nID below + = moon in front of planet in orbit')
 
     # Convert to a PNG image
     pngImage = io.BytesIO()

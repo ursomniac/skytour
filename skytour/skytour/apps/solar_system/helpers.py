@@ -1,4 +1,7 @@
+import time
 from skyfield.api import load, Star
+from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
+from skyfield.data import mpc
 from ..site_parameter.helpers import find_site_parameter
 from .models import Planet, Asteroid, Comet
 from .position import get_object_metadata
@@ -56,10 +59,22 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
    # hundreds of asteroids, when we'll only be interested in ~20 tops.
    cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
 
+   ts = load.timescale()
+   eph = load('de421.bsp')
+   sun = eph['sun']
+
    asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
+   # This is in asteroids.py but putting it here is faster.
+   with load.open('bright_asteroids.txt') as f:
+      mps = mpc.load_mpcorb_dataframe(f)
+   mps = mps.set_index('designation', drop=False)
+
    asteroid_list = []
+   times = [(time.perf_counter(), 'Start')]
    for a in asteroids:
-      x = get_object_metadata(utdt, None, 'asteroid', utdt_end=utdt_end, instance=a, location=location)
+      row = mps.loc[a.mpc_lookup_designation]
+      target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
+      x = get_object_metadata(utdt, target, 'asteroid', utdt_end=utdt_end, instance=a, location=location)
       if x is None:
          continue
       mag = x['observe']['apparent_magnitude']
@@ -68,7 +83,8 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
       x['number'] = a.number
       if mag <= mag_limit:
          asteroid_list.append(x)
-   return asteroid_list
+      times.append((time.perf_counter(), x['name']))
+   return asteroid_list, times
 
 def get_comet_positions(utdt, utdt_end=None, location=None):
     comets = Comet.objects.filter(status=1)

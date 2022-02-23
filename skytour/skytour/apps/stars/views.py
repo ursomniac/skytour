@@ -28,6 +28,7 @@ class SkyView(TemplateView):
         comet_list = get_cookie(self.request, 'comets')
         sun = get_cookie(self.request, 'sun')
         moon = get_cookie(self.request, 'moon')
+        context['show_moon'] =  moon is not None and moon['session']['start']['is_up']
 
         map, interesting, last, times = get_skymap(
             utdt_start, 
@@ -39,6 +40,7 @@ class SkyView(TemplateView):
             sun = sun,
             reversed=reversed
         )
+
         context['skymap'] = map
         context['interesting'] = interesting
         context['sidereal_time'] = last

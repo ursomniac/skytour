@@ -36,11 +36,12 @@
             <img src="{{ skymap }}">
         </td>
         <td class="side">
-            <h4> Planets </h4>
-            {% if interesting.planets|length > 0 %}
+
+            <h4> Moon and Planets </h4>
+            {% if interesting.planets|length > 0 or show_moon %}
             {% with object_list=interesting.planets url_type='planet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
             {% else %}
-            (No visible planets)
+            (No visible planets or Moon)
             {% endif %}
 
             {% if interesting.asteroids|length > 0 %}

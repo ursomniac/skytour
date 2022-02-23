@@ -450,7 +450,6 @@ def map_asteroids(ax, name, asteroid_list, earth, t, projection,
     for a in asteroid_list:
         ra = a['apparent']['equ']['ra']
         dec = a['apparent']['equ']['dec']
-        print("NAME: ", name, "ANAME: ", a['name'])
         if name == a['name']:
             continue # don't map myself!
         if center:

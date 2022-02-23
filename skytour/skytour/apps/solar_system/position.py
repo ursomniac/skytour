@@ -1,5 +1,4 @@
 import math
-
 from skyfield.almanac import (
     phase_angle as get_phase_angle, 
     fraction_illuminated,
@@ -7,12 +6,10 @@ from skyfield.almanac import (
 )
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
-
 from ..observe.almanac import get_object_rise_set
 from ..observe.local import get_observing_situation
-from ..solar_system.asteroids import get_asteroid_target
-from ..solar_system.comets import get_comet_target
 
+from .comets import get_comet_target
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
 from .moon import simple_lunar_phase
@@ -54,9 +51,8 @@ def get_object_metadata(
     elif object_type == 'asteroid':
         if instance is None:
             return None
-        eph_body = get_asteroid_target(instance, ts, sun)
-        if eph_body is None:
-            return None
+        # TODO: This is a hack, really but it improves processing by 20%
+        eph_body = eph_label
     else: 
         eph_body = eph[eph_label]
 
