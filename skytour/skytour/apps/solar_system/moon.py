@@ -1,21 +1,4 @@
-
-import math
-from skyfield.api import load
-from skyfield.almanac import (
-    phase_angle as get_phase_angle, 
-    fraction_illuminated,
-    moon_phase
-)
-from ..observe.almanac import get_object_rise_set
-from ..observe.local import get_observing_situation
-from ..observe.time import get_julian_date
-from ..utils.format import to_sex
-from .utils import (
-    get_angular_size, 
-    get_phase_description, 
-    get_constellation, 
-    get_elongation
-)
+from .utils import get_phase_description
 
 MOON_PHASES = [
     'NEW MOON', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL MOON', 

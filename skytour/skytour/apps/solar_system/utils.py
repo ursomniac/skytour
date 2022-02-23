@@ -60,15 +60,17 @@ def get_plotting_phase_angle(name, phase, elongation):
         return 360. - phase if elongation < 0. else phase
     return phase
 
-def get_elongation(target, sun):
+def get_elongation(l_target, l_sun):
     """
-    This doesn't disambiguate between eastern and western elongations.
-    TODO: Fix this from the position.py and where get_moon is called
+    I think this handles E/W elongations.
+    ??? if < 0. it's to the W of the Sun, E if > 0.
     """
-    _, mlon, tdist = target.apparent().ecliptic_latlon('date')
-    _, slon, sdist = sun.apparent().ecliptic_latlon('date')
-    angle = mlon.degrees - slon.degrees
-    return angle
+    elongation = l_target - l_sun
+    if elongation < -180.:
+        elongation += 360.
+    if elongation > 180.:
+        elongation -= 360.
+    return elongation
 
 def get_constellation(ra, dec):
     """

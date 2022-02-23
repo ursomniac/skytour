@@ -18,7 +18,8 @@ from .utils import (
     get_angular_size,
     get_angular_size_string,
     get_plotting_phase_angle,
-    get_constellation
+    get_constellation,
+    get_elongation
 )
 
 def get_object_metadata(
@@ -85,12 +86,10 @@ def get_object_metadata(
     ### Observational Metadata:
     # Constellation
     constellation = get_constellation(ra, dec)
+
     # Elongation - this is just target.longitude - sun.longitude
-    elongation = longitude - sun_long
-    if elongation < -180.:
-        elongation += 360.
-    if elongation > 180.:
-        elongation -= 360.
+    elongation = get_elongation(longitude, sun_long)
+
     # Phase Angle and phase
     if object_type in ['comet', 'asteroid']:
         cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
