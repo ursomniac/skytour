@@ -15,7 +15,7 @@ Day: {{ obj.observe.phase.days_since_new_moon|to_dhms }}<br/>
 {% else %}
 Phase Angle: {{ obj.observe.phase_angle|to_dms }}<br/>
 {% endif %}
-{% if obj.observe.illum_fraction %}
-Illum.: {{ obj.observe.illum_fraction|floatformat:1 }} %</br>
+{% if obj.observe.fraction_illuminated %}
+% Illuminated: {{ obj.observe.fraction_illuminated|floatformat:1 }} %</br>
 {% endif %}
 Elongation: {{ obj.observe.elongation|to_dms }}<br/>
