@@ -19,6 +19,22 @@ from ..plotting.map import *
 
 matplotlib.use('Agg') # this gets around the threading issues.
 
+def r2d(a): # a is a numpy.array
+    return a * (180.*2) / math.pi # Why times 2?  I have no idea, but it's the only way it works...
+def d2r(a): # a us a numpy.array
+    return a * math.pi / (180.*2)
+
+def r2am(a):
+    return 60. * a * 360. / math.pi
+def am2r(a):
+    return a * math.pi / 360. / 60.
+
+def r2as(a):
+    return a * 360. * 3600. / math.pi
+
+def as2r(a):
+    return a * math.pi / (360.*3600.)
+
 def create_finder_chart(
         utdt,                   # UTDT
         instance,               # Planet instance
@@ -101,6 +117,9 @@ def create_finder_chart(
 
     ax.xaxis.set_visible(show_axes)
     ax.yaxis.set_visible(show_axes)
+    secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    secax.set_xlabel('Degrees')
+    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
     # TODO: Change this to show arcmin or arcsec as a secondary axis
 
     const = pdict['observe']['constellation']['abbr']
@@ -211,20 +230,22 @@ def create_planet_system_view (
         ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
 
-    #ax.xaxis.set_visible(show_axes)
-    #ax.yaxis.set_visible(show_axes)
-    ax.set_yticklabels([])
-    ax.set_xticklabels([])
-    ax.set_xticks([])
-    ax.set_yticks([])
-    # TODO: Change this to use arcmin/arcsec as a secondary axis!
-
-    if foo > 1.2: # more than 1 degree -ish
-        fov_str = "{:.1f}°".format(foo) # show degrees
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    #ax.set_yticklabels([])
+    #ax.set_xticklabels([])
+    #ax.set_xticks([])
+    #ax.set_yticks([])
+    if limit < 0.0003:
+            secax = ax.secondary_xaxis('bottom', functions=(r2as, as2r))
+            secax.set_xlabel('Arcsec')
+            secay = ax.secondary_yaxis('left', functions=(r2as, as2r))
     else:
-        fov_str = "{:.1f}\'".format(foo*60.) # show arcminutes
+        secax = ax.secondary_xaxis('bottom', functions=(r2am, am2r))
+        secax.set_xlabel('Arcminutes')
+        secay = ax.secondary_yaxis('left', functions=(r2am, am2r))
 
-    title = "{} Telescope View - FOV = {}".format(name, fov_str)
+    title = "{} Telescope View".format(name)
     if flipped:
         title += " (flipped)"
     ax.set_title(title)

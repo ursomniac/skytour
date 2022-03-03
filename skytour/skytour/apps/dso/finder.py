@@ -7,7 +7,6 @@ import time
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.collections import LineCollection
 from matplotlib import patches
 
 from skyfield.api import Star, load
@@ -19,6 +18,11 @@ from ..session.cookie import deal_with_cookie
 from ..site_parameter.helpers import find_site_parameter
 from ..stars.models import BrightStar
 from .models import DSO
+
+def r2d(a): # a is a numpy.array
+    return a * (180.*2) / math.pi
+def d2r(a): # a us a numpy.array
+    return a * math.pi / (180.*2)
 
 def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1):
 
@@ -128,7 +132,8 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     style = 'dark_background' if reversed else 'default'
     plt.style.use(style)
     fig, ax = plt.subplots(figsize=[8,8])
-    angle = np.pi - field_of_view_degrees / 360.0 * np.pi
+    angle = np.pi - field_of_view_degrees  / 360.0 * np.pi
+    #angle = math.radians(field_of_view_degrees)
     limit = np.sin(angle) / (1.0 - np.cos(angle))
     times.append((time.perf_counter(), 'Start Plot'))
 
@@ -195,6 +200,9 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     if not axes:
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
+    secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    secax.set_xlabel('Degrees')
+    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
     ax.set_aspect(1.0)
 
     # title
