@@ -386,7 +386,7 @@ def map_dsos(ax, earth, t, projection,
             marker=um, alpha=alpha
         )
     # Add labels
-    color = '#cc0' if reversed else '#ccc'
+    color = '#cc0' if reversed else '#666'
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),

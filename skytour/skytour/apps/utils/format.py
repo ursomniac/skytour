@@ -1,3 +1,6 @@
+import hmac
+
+
 SEX_FORMAT = {
     'hours': "{}{:02d}h {:02d}m {:06.3f}s",
     'hms': "{}{:02d}:{:02d}:{:02d}",
@@ -27,3 +30,35 @@ def to_sex(value, format='hours'):
         s = int(s)
 
     return SEX_FORMAT[format].format(sign, h, m, s)
+
+def to_hm(value):
+    x = abs(value)
+    h = int(x)
+    x -= h
+    x *= 60.
+    m = x
+    return f'{h:02d}h {m:04.1f}m'
+
+def to_dm(value):
+    x = abs(value)
+    sign = '+' if value > 0 else '-'
+    d = int(x)
+    x -= d
+    x *= 60.
+    m = int(x)
+    return f"{sign}{d:02d}° {m:02d}\'"
+
+def to_time(value):
+    x = abs(value)
+    l = []
+    h = int(x)
+    if h != 0:
+        l.append(f'{h:02d}')
+    x -= h
+    x *= 60.
+    m = int(x)
+    l.append(f'{m:02d}')
+    x -= m
+    x *= 60.
+    l.append(f'{x:04.1f}')
+    return ':'.join(l)

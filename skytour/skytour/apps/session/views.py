@@ -2,6 +2,7 @@ import datetime, pytz
 import time
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView

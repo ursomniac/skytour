@@ -28,7 +28,7 @@ No upcoming events.
     </thead>
     <tbody>
 {% for shower in meteor_showers %}
-    <tr class="{% cycle 'odd' 'even' %}">
+    <tr class="M{% cycle 'odd' 'even' %}">
         <td>{{ shower.name }}</td>
         <td>{{ shower.start_date }}</td>
         <td>{{ shower.peak_date }}</td>

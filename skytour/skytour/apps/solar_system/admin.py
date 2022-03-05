@@ -22,7 +22,6 @@ class MeteorShowerAdmin(admin.ModelAdmin):
                 ('radiant_ra', 'radiant_dec', 'longitude'),
                 ('speed', 'zhr', 'parent_body'),
                 'notes',
-                'est_brightest'
             ]
         }),
     )

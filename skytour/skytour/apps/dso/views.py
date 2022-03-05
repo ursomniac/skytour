@@ -59,3 +59,8 @@ class PriorityDetailView(TemplateView):
         context['table_id'] = 'dso_list_by_priority'
         return context
 
+class DSOCatalogView(ListView):
+    """
+    This creates a PDF catalog (printable).
+    """
+    model = DSO

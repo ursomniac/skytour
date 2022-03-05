@@ -20,7 +20,7 @@ def get_meteor_showers(utdt=None):
                 dstart = datetime.datetime(utdt.year-1, s.start_date.month, s.start_date.day)
         jd0 = get_julian_date(dstart)
         jd1 = get_julian_date(dend)
-        if jd >= get_julian_date(dstart) and jd <= get_julian_date(dend):
+        if jd >= jd0 and jd <= jd1:
             active.append(s)
-    
+
     return active

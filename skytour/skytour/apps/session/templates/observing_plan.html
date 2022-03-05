@@ -73,6 +73,8 @@ td.normal {
 <h1>Plan Observations</h1>
 <h3>Current UT: {{ now|date:"D Y-m-d H:i" }}</h3>
 <h3>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h3>
+<a href="{% url 'plan-pdf' %}" target="_new"><button>Print Observing Plan PDF</button></a>
+<br/><br>
 
 <table class="subnav">
     <tr>
