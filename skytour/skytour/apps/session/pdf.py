@@ -7,7 +7,6 @@ from django.views.generic import View
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
-#from reportlab.platypus import Image, PageBreak, Paragraph, SimpleDocTemplate
 from reportlab.rl_config import defaultPageSize
 from ..dso.models import DSO
 from ..misc.utils import get_upcoming_calendar

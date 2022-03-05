@@ -234,7 +234,6 @@ class CometDetailView(DetailView):
         )
         return context
 
-### These are still in development.
 class TrackerView(FormView):
     """
     Combine planet, asteroid, and comet tracking into a single view.

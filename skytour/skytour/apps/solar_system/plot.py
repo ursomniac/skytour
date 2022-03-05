@@ -358,13 +358,14 @@ def plot_track(
     plus_color = 'orange' if reversed else '#900'
     w = ax.scatter(d_planet['x'], d_planet['y'], s=90., c=plus_color, marker='+', alpha=0.7)
 
+    label_color = 'goldenrod' if reversed else 'maroon'
     for x, y, l in zip(d_planet['x'], d_planet['y'], d_planet['label']):
         ax.annotate(
             l, xy=(x, y), 
             textcoords='offset points',
             xytext=(3, 10),
             horizontalalignment='left',
-            color='maroon'
+            color=label_color
         )
     
     # Add stars from Hipparcos, constellation lines (from Stellarium),
@@ -392,11 +393,15 @@ def plot_track(
     else:
         dx = (max_x - min_x) * 0.25
         ax.set_xlim(min_x-dx, max_x+dx)
-        #ax.set_ylim(-dx*4, dx*4)
         ax.set_ylim(min_y-dx, max_y+dx)
 
     ax.xaxis.set_visible(True)
     ax.yaxis.set_visible(True)
+    # This doesn't work on this plot!
+    # TODO: Fix this!
+    #secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    #secax.set_xlabel('Degrees')
+    #secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
 
     title = "Track for {}".format(object.name)
     ax.set_title(title)
