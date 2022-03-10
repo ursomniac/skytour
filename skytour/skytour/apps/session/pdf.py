@@ -17,7 +17,7 @@ from ..solar_system.models import Planet, Asteroid, Comet
 from ..solar_system.plot import create_planet_system_view, create_finder_chart
 from ..stars.plot import get_skymap
 from ..utils.format import to_sex, to_hm, to_dm, to_time
-from .cookie import deal_with_cookie, get_cookie
+from .cookie import deal_with_cookie, get_all_cookies
 from .plan import get_plan
 
 PLANET_LIST = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
@@ -83,10 +83,8 @@ class PlanPDFView(View):
         context = self.get_context_data()
         context = deal_with_cookie(request, context)
         utdt = context['utdt_start']
-        cookie_dict = {}
-        for k in ['sun', 'moon', 'planets', 'asteroids', 'comets']:
-            cookie_dict[k] = get_cookie(request, k)
-        context = get_plan(context, cookie_dict)
+        cookie_dict = context['cookies'] = get_all_cookies(request)
+        context = get_plan(context)
 
         uts = context['utdt_start'].strftime('%Y%b%d_%H%M')
         location = context['location']
@@ -157,7 +155,8 @@ class PlanPDFView(View):
                 p.drawString(50, y, e.date.strftime('%b %-d'))
                 if e.time:
                     p.drawString(150, y, e.time.strftime('%H:%M')+' UT')
-                p.drawString(250, y, e.event_type.name)
+                if e.event_type:
+                    p.drawString(250, y, e.event_type.name)
                 p.drawString(350, y, e.title.encode('UTF-8'))
                 y -= 15
         else:

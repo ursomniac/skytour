@@ -118,20 +118,17 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
         s=[90.], c=['#900'], 
         marker='+'
     )
-    # Add an eyepiece circle, 32mm = 0.00714 units
-    fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
-    eyepiece = plt.Circle((0, 0), fov * 2.909e-4 / 2., color='b', fill=False)
-    ax.add_patch(eyepiece)
     return ax
 
 def map_eyepiece(ax, diam=None, reversed=False):
     """
     the default is 1° FOV.
     """
-    fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
-    radius = diam/2 if diam is not None else fov * 2.909e-4 / 2.
+    diam = find_site_parameter('eyepiece-fov', default=60., param_type='float')
+    radius = math.radians(diam/ 60. / 2. / 2.) # if diam is not None else fov * 2.909e-4 / 2.
     circle_color = 'c' if reversed else 'b'
     eyepiece = plt.Circle((0,0), radius, color=circle_color, fill=False)
+    ax.add_patch(eyepiece)
     return ax
 
 def map_moons(ax, pdict, earth, t, projection, ang_size_radians, reversed=False, debug=False):

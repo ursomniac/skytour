@@ -3,10 +3,11 @@ from ..dso.models import DSO
 from ..solar_system.models import Comet, Planet, Asteroid
 from ..utils.timer import compile_times
 
-def get_plan(context, cookies, debug=False):
+def get_plan(context, debug=False):
     """
     This creates an observing plan for a UTDT and location.
     """
+    cookies = context['cookies']
     times = [(time.perf_counter(), 'Start')]
     show_all = context.get('show_planets', 'visible') == 'all'
     location = context['location']

@@ -43,6 +43,7 @@ def create_finder_chart(
         object_type = 'planet', # override for Moon
         obj_cookie = None,      # override cookie for Moon
         fov = None,             # force FOV
+        flipped = False,        # Flip E-W
         reversed = True,        # B on W or W on B
         mag_limit = 8.5,        # magnitude limit of stars
         show_axes = False       #
@@ -90,8 +91,7 @@ def create_finder_chart(
 
     # Don't plot the planet - just a symbol.
     ax = map_target(ax, ra, dec, projection, earth, t, '+')
-    # Add an eyepiece circle, 32mm eyepiece = 0.0038 radians
-    ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
+    ax = map_eyepiece(ax, reversed=reversed)
     times.append((time.perf_counter(), 'Symbol/Eyepiece'))
 
     # Add planet symbols (Unicode)
@@ -112,7 +112,10 @@ def create_finder_chart(
     angle = np.pi - fov / 360.0 * np.pi
     limit = np.sin(angle) / (1.0 - np.cos(angle))
 
-    ax.set_xlim(limit, -limit)
+    if flipped:
+        ax.set_xlim(limit, -limit)
+    else:
+        ax.set_xlim(-limit, limit)
     ax.set_ylim(-limit, limit)
 
     ax.xaxis.set_visible(show_axes)
@@ -120,17 +123,16 @@ def create_finder_chart(
     secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
     secax.set_xlabel('Degrees')
     secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
-    # TODO: Change this to show arcmin or arcsec as a secondary axis
 
+    flip_text = ' - (flipped)' if flipped else ''
     const = pdict['observe']['constellation']['abbr']
-    title = "{} Finder Chart (in {}) - FOV = {}".format(name, const, fov)
+    title = f"{name} Finder Chart (in {const}) {flip_text}"
     ax.set_title(title)
     times.append((time.perf_counter(), 'Plotting...'))
 
     # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
-    # Encode PNG to Base64 string
     pngImageB64String = 'data:image/png;base64,'
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
 

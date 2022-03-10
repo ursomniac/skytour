@@ -3,7 +3,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie, get_cookie
+from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
 from .models import BrightStar
 from .plot import get_skymap
@@ -13,21 +13,20 @@ class BrightStarListView(ListView):
     template_name = 'bright_star_list.html'
 
 @method_decorator(cache_page(30), name='dispatch')
-class SkyView(TemplateView):
+class SkyView(CookieMixin, TemplateView):
     template_name = 'skyview.html'
 
     def get_context_data(self, **kwargs):
         context = super(SkyView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
         location = context['location']
         # get cookies
-        planets = get_cookie(self.request, 'planets')
-        asteroid_list = get_cookie(self.request, 'asteroids')
-        comet_list = get_cookie(self.request, 'comets')
-        sun = get_cookie(self.request, 'sun')
-        moon = get_cookie(self.request, 'moon')
+        planets = context['cookies']['planets']
+        asteroid_list = context['cookies']['asteroids']
+        comet_list = context['cookies']['comets']
+        sun = context['cookies']['sun']
+        moon = context['cookies']['moon']
         context['show_moon'] =  moon is not None and moon['session']['start']['is_up']
 
         map, interesting, last, times = get_skymap(

@@ -2,7 +2,7 @@ from collections import Counter
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie, get_cookie
+from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
 from .finder import create_dso_finder_chart
 from .models import DSO, PRIORITY_CHOICES
@@ -18,15 +18,14 @@ class DSOListView(ListView):
         context['table_id'] = 'dso_list'
         return context
 
-class DSODetailView(DetailView):
+class DSODetailView(CookieMixin, DetailView):
     model = DSO 
     template_name = 'dso_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
-        planets_dict = get_cookie(self.request, 'planets')
-        asteroid_list = get_cookie(self.request, 'asteroids')
+        planets_dict = context['cookies']['planets']
+        asteroid_list = context['cookies']['asteroids']
         finder_chart, times = create_dso_finder_chart(
             self.object, 
             utdt = context['utdt_start'], 

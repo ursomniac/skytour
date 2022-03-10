@@ -4,7 +4,8 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from ..session.cookie import deal_with_cookie, get_cookie
+from ..session.cookie import deal_with_cookie
+from ..session.mixins import CookieMixin
 from .forms import TrackerForm
 from .models import Comet, Planet, Asteroid
 from .planets import get_ecliptic_positions
@@ -16,46 +17,42 @@ from .plot import (
     get_planet_map
 )
 
-class PlanetListView(ListView): # Updated!
+class PlanetListView(CookieMixin, ListView):
     model = Planet 
     template_name = 'planet_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PlanetListView, self).get_context_data(**kwargs)
         planets = Planet.objects.order_by('pk')
-        cookie = get_cookie(self.request, 'planets')
+        planet_cookie = context['cookies']['planets']
         planet_list = []
         for p in planets:
-            d = cookie[p.name]
+            d = planet_cookie[p.name]
             d['n_obs'] = p.number_of_observations
             d['last_observed'] = p.last_observed
             planet_list.append(d)
         context['planet_list'] = planet_list
         return context
 
-class PlanetDetailView(DetailView):
+class PlanetDetailView(CookieMixin, DetailView):
     model = Planet
     template_name = 'planet_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(PlanetDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
-        context = deal_with_cookie(self.request, context)
-        planets_cookie = get_cookie(self.request, 'planets')
-        asteroids_cookie = get_cookie(self.request, 'asteroids')
+        planets_cookie = context['cookies']['planets']
+        asteroids_cookie = context['cookies']['asteroids']
 
         flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
         reversed = context['color_scheme'] == 'dark'
 
-        # Replace this after testing
         utdt_start = context['utdt_start']
-        utdt_end = context['utdt_end']
-        location = context['location']
         pdict = context['planet'] = planets_cookie[obj.name]
         pdict['name'] = obj.name
         
         # TODO: Put this in site-parameters?
-        fov = 8. if obj.name in ['Uranus', 'Neptune'] else 20.
+        fov = 4. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
 
         context['finder_chart'], ftimes = create_finder_chart (
@@ -65,6 +62,7 @@ class PlanetDetailView(DetailView):
             asteroids_cookie,
             reversed=reversed,
             mag_limit=mag_limit,
+            flipped=False,
             fov=fov
         )
 
@@ -83,16 +81,15 @@ class PlanetDetailView(DetailView):
 
         return context
 
-class MoonDetailView(TemplateView):
+class MoonDetailView(CookieMixin, TemplateView):
     template_name = 'planet_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(MoonDetailView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
-        pdict = get_cookie(self.request, 'moon')
+        pdict = context['cookies']['moon']
         pdict['name'] = 'Moon'
-        planets_cookie = get_cookie(self.request, 'planets')
-        asteroids_cookie = get_cookie(self.request, 'asteroids')
+        planets_cookie = context['cookies']['planets']
+        asteroids_cookie = context['cookies']['asteroids']
         reversed = context['color_scheme'] == 'dark'
         context['planet'] = pdict
 
@@ -118,17 +115,16 @@ class MoonDetailView(TemplateView):
         )
         return context
 
-class AsteroidListView(ListView):
+class AsteroidListView(CookieMixin, ListView):
     model = Asteroid
     template_name = 'asteroid_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(AsteroidListView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
         asteroids = Asteroid.objects.order_by('number')
-        cookie = get_cookie(self.request, 'asteroids')
+        asteroid_cookie = context['cookies']['asteroids']
         asteroid_list = []
-        for d in cookie:
+        for d in asteroid_cookie:
             a = asteroids.get(number=d['number'])
             d['n_obs'] = a.number_of_observations
             d['last_observed'] = a.last_observed
@@ -136,22 +132,21 @@ class AsteroidListView(ListView):
         context['asteroid_list'] = asteroid_list
         return context
 
-class AsteroidDetailView(DetailView):
+class AsteroidDetailView(CookieMixin, DetailView):
     model = Asteroid
     template_name = 'asteroid_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
-        context = deal_with_cookie(self.request, context)
-        cookie = get_cookie(self.request, 'asteroids')
-        planets_cookie = get_cookie(self.request, 'planets')
+        asteroid_cookie = context['cookies']['asteroids']
+        planets_cookie = context['cookies']['planets']
         reversed = context['color_scheme'] == 'dark'
 
         utdt_start = context['utdt_start']
         mag = None
         pdict = None
-        for a in cookie: # Get apparent magnitude
+        for a in asteroid_cookie: # Get apparent magnitude
             if a['name'] == object.full_name:
                 pdict = a
                 mag = a['observe']['apparent_magnitude']
@@ -159,14 +154,14 @@ class AsteroidDetailView(DetailView):
         mag_limit = mag + 0.5 if mag is not None else 10.
         mag_limit = 10 if mag_limit < 10. else mag_limit
         context['asteroid'] = pdict
-        fov = 10.
+        fov = 5.
         
         if pdict: # This is so you COULD go to an page for something not in the cookie
             context['finder_chart'], ftimes = create_finder_chart (
                 utdt_start, 
                 object,
                 planets_cookie=planets_cookie,
-                asteroids=cookie,
+                asteroids=asteroid_cookie,
                 object_type = 'asteroid',
                 obj_cookie = pdict,
                 fov=fov, 
@@ -175,17 +170,16 @@ class AsteroidDetailView(DetailView):
             )
         return context
 
-class CometListView(ListView):
+class CometListView(CookieMixin, ListView):
     model = Comet
     template_name = 'comet_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(CometListView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
-        cookie = get_cookie(self.request, 'comets')
+        comet_cookie = context['cookies']['comets']
         comets = Comet.objects.filter(status=1)
         comet_list = []
-        for d in cookie: # get the observation history for each comet on the list
+        for d in comet_cookie: # get the observation history for each comet on the list
             comet = comets.get(pk=d['pk'])
             d['n_obs'] = comet.number_of_observations
             d['last_observed'] = comet.last_observed
@@ -193,19 +187,17 @@ class CometListView(ListView):
         context['comet_list'] = comet_list
         return context
 
-class CometDetailView(DetailView):
+class CometDetailView(CookieMixin, DetailView):
     model = Comet
     template_name = 'comet_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(CometDetailView, self).get_context_data(**kwargs)
-        context = deal_with_cookie(self.request, context)
         reversed = context['color_scheme'] == 'dark'
-
         object = self.get_object()
-        planets = get_cookie(self.request, 'planets')
-        asteroids = get_cookie(self.request, 'asteroids')
-        comets = get_cookie(self.request, 'comets')
+        planets = context['cookies']['planets']
+        asteroids = context['cookies']['asteroids']
+        comets = context['cookies']['comets']
 
         pdict = None
         mag_limit = 10.

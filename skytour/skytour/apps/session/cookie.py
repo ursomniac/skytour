@@ -4,6 +4,30 @@ from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date, get_t_epoch
 from ..site_parameter.helpers import find_site_parameter 
 
+def test_all_cookies(cookies):
+    for key in ['planets', 'asteroids', 'comets', 'moon', 'sun']:
+        if key not in cookies.keys():
+            return False
+        if cookies[key] is None:
+            return False
+    return True
+    
+def get_all_cookies(request):
+    user_pref = deal_with_cookie(request, {})
+    planets = get_cookie(request, 'planets')
+    asteroids = get_cookie(request, 'asteroids')
+    comets = get_cookie(request, 'comets')
+    moon = get_cookie(request, 'moon')
+    sun = get_cookie(request, 'sun')
+    cookies = dict(
+        planets = planets,
+        asteroids = asteroids,
+        comets = comets,
+        moon = moon,
+        sun = sun
+    )
+    return cookies
+
 def get_cookie_defaults():
     ut0 = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     session_length = find_site_parameter('observing-session-length', default=3.0, param_type='float')

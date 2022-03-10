@@ -1,5 +1,6 @@
 import datetime, pytz
 import time
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import View
@@ -17,8 +18,8 @@ from ..solar_system.helpers import (
 )
 from ..solar_system.position import get_object_metadata
 from ..utils.timer import compile_times
-from .cookie import deal_with_cookie, get_cookie
 from .forms import ObservingParametersForm
+from .mixins import CookieMixin
 from .models import ObservingSession
 from .plan import get_plan
 from .utils import get_initial_from_cookie
@@ -132,21 +133,13 @@ class SetSessionCookieView(FormView):
         return context
 
 @method_decorator(cache_page(0), name='dispatch')
-class ObservingPlanView(TemplateView):
+class ObservingPlanView(CookieMixin, TemplateView):
     template_name = 'observing_plan.html'
 
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
-        # Update context from the session cookie
-        context = deal_with_cookie(self.request, context)
-        # Get object cookies
-        cookie_dict = {}
-        for k in ['sun', 'moon', 'planets', 'asteroids', 'comets']:
-            cookie_dict[k] = get_cookie(self.request, k)
-        # Update context from the plan generator
-        context = get_plan(context, cookie_dict)
+        context = get_plan(context)
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        context['everything'] = context
         return context
 
 class ObservingSessionListView(ListView):
