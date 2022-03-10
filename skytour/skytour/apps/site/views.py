@@ -1,7 +1,6 @@
 import datetime, pytz
 from django.views.generic.base import TemplateView
-from ..misc.utils import get_upcoming_calendar
-from ..session.cookie import deal_with_cookie, get_all_cookies
+from ..misc.utils import get_upcoming_calendar, create_calendar_grid
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
@@ -28,5 +27,5 @@ class HomePageView(CookieMixin, TemplateView):
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)
         context['upcoming_events'] = get_upcoming_calendar(utdt)
         context['min_sep'] = find_site_parameter('adjacent-planets-separation', default=10., param_type='float')
-
+        context['grid'] = create_calendar_grid(utdt-datetime.timedelta(days=2))
         return context

@@ -1,0 +1,45 @@
+
+<style>
+    table.calendar-grid td {
+        border: 1px solid #ccc;
+        width: 14%;
+        vertical-align: top;
+    }
+    table.calendar-cell td {
+        border: none!important;
+        padding: 2px 2px;
+    }
+</style>
+
+<h2>Calendar</h2>
+<table width="100%" class="calendar-grid">
+{% for week in grid %}
+    <tr>
+    {% for day in week %}
+        <td>
+        {% if day.date %}
+            <table width="100%" class='calendar-cell'>
+                <tr>
+                    <th>{{ day.date.day }}</th>
+                    <th><small>{{ day.jd }}</small></th>
+                    <th>{{ day.moon.phase_abbr }}</th>
+                </tr>
+            </table>
+            {% for e in day.events %}
+                <small>
+                {% if e.time %}
+                    {{e.time|time:"H:i"}}
+                {% endif %}
+                {% if e.event_type %}
+                    {{ e.event_type.icon }}
+                {% endif %}
+                {{ e.title }}
+                </small>
+                <br/>
+            {% endfor %}
+        {% endif %}
+        </td>
+    {% endfor %}
+    </tr>
+{% endfor %}
+</table>

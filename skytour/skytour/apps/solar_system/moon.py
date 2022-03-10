@@ -1,10 +1,5 @@
 from .utils import get_phase_description
 
-MOON_PHASES = [
-    'NEW MOON', 'WAXING CRESCENT', 'FIRST QUARTER', 'WAXING GIBBOUS', 'FULL MOON', 
-    'WANING GIBBOUS', 'LAST QUARTER', 'WANING CRESCENT', 'NEW MOON'
-]
-
 def simple_lunar_phase(jd):
     """
     This just does a quick-and-dirty estimate of the Moon's phase given the date.
