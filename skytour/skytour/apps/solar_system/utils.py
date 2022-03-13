@@ -83,3 +83,11 @@ def get_constellation(ra, dec):
     d = dict(load_constellation_names())
     abbr = constellation_at(position_of_radec(ra, dec))
     return dict(name = d[abbr], abbr = abbr)
+
+def get_meeus_phase_angle(sun_earth, earth_obj, sun_obj):
+    c1 = sun_obj**2 + earth_obj**2 - sun_earth**2
+    c2 = 2. * sun_obj * earth_obj
+    cos_i = c1 / c2
+    if abs(cos_i) > 1.0:
+        return None
+    return math.degrees(math.acos(cos_i))

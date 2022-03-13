@@ -7,15 +7,5 @@ AU: {{ obj.apparent.distance.au|stringformat:'0.3f' }}<br/>
 km: {{ obj.apparent.distance.km|stringformat:'0.1f'|intcomma }}<br/>
 mi: {{ obj.apparent.distance.mi|stringformat:'0.1f'|intcomma }}<br/>
 Light Time: {{ obj.apparent.distance.light_time_str }}
-<h4>Projection</h4>
-{% if obj.observe.phase.phase %}
-Phase: {{ obj.observe.phase.phase }}<br/>
-Phase Angle: {{ obj.observe.phase.angle|to_dms }}<br/>
-Day: {{ obj.observe.phase.days_since_new_moon|to_dhms }}<br/>
-{% else %}
-Phase Angle: {{ obj.observe.phase_angle|to_dms }}<br/>
-{% endif %}
-{% if obj.observe.fraction_illuminated %}
-% Illuminated: {{ obj.observe.fraction_illuminated|floatformat:1 }} %</br>
-{% endif %}
-Elongation: {{ obj.observe.elongation|to_dms }}<br/>
+<br><br>
+Dist to Sun: {{ obj.apparent.sun_distance|floatformat:3 }} AU<br/>

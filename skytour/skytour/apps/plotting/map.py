@@ -250,7 +250,7 @@ def map_phased_planet(ax, planet, ang_size_radians):
     #print("Phase: ", phase_angle, 'Major: ', major_axis, 'Minor: ', minor_axis)
     # Circumstances:
     #    phase:  0, 360:  minor  = 1.  New Moon        (left: black, right: black, half-ellipse: n/a really)
-    if abs(phase_angle) < 2.: # New Moon
+    if phase_angle < 2. or phase_angle > 358.0: # New Moon
         cir1 = plt.Circle((0,0), ang_size_radians/2., color='k') # black disk
     #    phase:   0- 90:  minor  > 0.  Waxing Crescent (left: black, right: white, half-ellipse: black)
     elif phase_angle < 178:

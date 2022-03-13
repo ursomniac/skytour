@@ -9,6 +9,9 @@
         border: none!important;
         padding: 2px 2px;
     }
+    .day-cell {
+        color = #eee!important;
+    }
 </style>
 
 <h2>Calendar</h2>
@@ -16,7 +19,7 @@
 {% for week in grid %}
     <tr>
     {% for day in week %}
-        <td>
+        <td style="background-color: {{day.moon.bgcolor}}" class="day-cell">
         {% if day.date %}
             <table width="100%" class='calendar-cell'>
                 <tr>
@@ -25,6 +28,7 @@
                     <th>{{ day.moon.phase_abbr }}</th>
                 </tr>
             </table>
+            <br/>
             {% for e in day.events %}
                 <small>
                 {% if e.time %}
@@ -37,6 +41,7 @@
                 </small>
                 <br/>
             {% endfor %}
+            <br/>
         {% endif %}
         </td>
     {% endfor %}

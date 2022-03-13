@@ -75,6 +75,10 @@
             {% endfor %}
             {% endif %}
 
+            {% with planet as obj %}
+            {% include 'inc_projection.html' %}
+            {% endwith %}
+
             {% if planet.physical %}
             {% include 'inc_physical.html' %}
             {% endif %}
@@ -86,7 +90,8 @@
         {% endwith %}
         </td>
     </tr>
-    <tr style='margin-top: 10px;'>
+    
+    <tr style='margin-top: 20px;'>
         <td width="50%" colspan=2>
             <img src="{{ finder_chart }}">
         </td>

@@ -247,9 +247,13 @@ def create_planet_system_view (
         secax.set_xlabel('Arcminutes')
         secay = ax.secondary_yaxis('left', functions=(r2am, am2r))
 
-    title = "{} Telescope View".format(name)
-    if flipped:
-        title += " (flipped)"
+    if object_type != 'moon':
+        title = "{} Telescope View".format(name)
+        if flipped:
+            title += " (flipped)"
+    else:
+        title = "Lunar Disk View"
+
     ax.set_title(title)
 
     # Convert to a PNG image

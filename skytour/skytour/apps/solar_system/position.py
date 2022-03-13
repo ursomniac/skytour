@@ -12,14 +12,15 @@ from ..observe.local import get_observing_situation
 from .comets import get_comet_target
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
-from .moon import simple_lunar_phase
+from .moon import simple_lunar_phase, equ_lunar_phase_angle
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
     get_angular_size_string,
     get_plotting_phase_angle,
     get_constellation,
-    get_elongation
+    get_elongation,
+    get_meeus_phase_angle
 )
 
 def get_object_metadata(
@@ -64,6 +65,7 @@ def get_object_metadata(
     # Sun-Object
     sun_target = sun.at(t).observe(eph_body) # sun to target
     r_sun_target = sun_target.radec()[2].au.item()
+    apparent['sun_distance'] = r_sun_target
     # Earth-Sun
     sun_apparent = serialize_astrometric(earth.at(t).observe(sun).apparent())
     r_earth_sun = sun_apparent['distance']['au']
@@ -91,15 +93,23 @@ def get_object_metadata(
     elongation = get_elongation(longitude, sun_long)
 
     # Phase Angle and phase
-    if object_type in ['comet', 'asteroid']:
-        cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
-        # For some reason this doesn't always work.
-        if abs(cos_beta) <= 1.:
-            phase_angle = math.degrees(math.acos(cos_beta))
-        else:
-            phase_angle = None
+    # For some reason this gives the wrong answer.
+    #if object_type in ['comet', 'asteroid']:
+    #    cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
+    #    # For some reason this doesn't always work.
+    #    if abs(cos_beta) <= 1.:
+    #        phase_angle = math.degrees(math.acos(cos_beta))
+    #    else:
+    #        phase_angle = None
+    #else:
+    #    skyfield_phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
+
+    if object_type == 'sun':
+        phase_angle = 0.
+    elif object_type == 'moon':
+        phase_angle = equ_lunar_phase_angle(apparent, sun_apparent, r_earth_sun, r_earth_target)
     else:
-        phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
+        phase_angle = meeus_phase_angle = get_meeus_phase_angle(r_earth_sun, r_earth_target, r_sun_target) \
 
     plotting_phase_angle = None
     if object_type == 'planet' and instance is not None:
@@ -108,7 +118,13 @@ def get_object_metadata(
         plotting_phase_angle = lunar_phase['angle']
 
     # Illum. Fraction - in percent
-    k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
+    # TODO: This is never right - why?
+    #k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
+    if phase_angle is not None:
+        k = 0.5 * (1. + math.cos(math.radians(phase_angle)))
+        fraction_illuminated = 100. * k
+    else:
+        fraction_illuminated = None
 
     # Apparent Magnitude
     if object_type == 'moon':
@@ -159,8 +175,9 @@ def get_object_metadata(
     observe = dict (
             constellation = constellation, 
             phase_angle = phase_angle,                   # degrees
+            #meeus_phase_angle = meeus_phase_angle,      # degrees
             plotting_phase_angle = plotting_phase_angle, # degrees
-            fraction_illuminated = k,                    # percent
+            fraction_illuminated = fraction_illuminated, # percent
             elongation = elongation,                     # degrees
             angular_diameter = angular_diameter,         # degrees
             angular_diameter_str = angular_diameter_str,
