@@ -68,10 +68,10 @@
             {% include 'inc_apparent.html' %}
             {% endwith %}
 
-            {% if obj.close_to|length > 0 %}
+            {% if close_by|length > 0 %}
             <h4>Nearby Planets</h4>
-            {% for encounter in planet.close_to %}
-                Close to {{ encounter.0 }}: {{ encounter.1|floatformat:1 }}°<br/>
+            {% for encounter in close_by %}
+                {{ encounter.0 }} is {{ encounter.1|floatformat:1 }}° away<br/>
             {% endfor %}
             {% endif %}
 

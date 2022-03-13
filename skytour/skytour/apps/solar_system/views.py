@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from .forms import TrackerForm
+from .helpers import compile_nearby_planet_list
 from .models import Comet, Planet, Asteroid
 from .planets import get_ecliptic_positions
 from .plot import (
@@ -51,6 +52,7 @@ class PlanetDetailView(CookieMixin, DetailView):
         pdict = context['planet'] = planets_cookie[obj.name]
         pdict['name'] = obj.name
         
+        context['close_by'] = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start)
         # TODO: Put this in site-parameters?
         fov = 4. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5

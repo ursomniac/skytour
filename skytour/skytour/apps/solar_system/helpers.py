@@ -8,6 +8,16 @@ from .models import Planet, Asteroid, Comet
 from .position import get_object_metadata
 from .vocabs import PLANETS
 
+def compile_nearby_planet_list(p, pdict, utdt):
+   near_to_me = []
+   adj_list = get_adjacent_planets(pdict, utdt)
+   for adj in adj_list:
+      if p == adj[0]:
+         near_to_me.append((adj[1], adj[2]))
+      elif p == adj[1]:
+         near_to_me.append((adj[0], adj[2]))
+   return near_to_me
+
 def get_adjacent_planets(planet_dict, utdt):
    """
    How close are planets to each other?
