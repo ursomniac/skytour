@@ -17,12 +17,16 @@ class HomePageView(CookieMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
+        utdt = context['utdt_start'] \
+            if self.request.GET.get('cookie') is not None \
+            else datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         planets = context['cookies']['planets']
         if planets:
             context['adjacent_planets'] = get_adjacent_planets(planets, context['utdt_start'])
         else:
             context['adjacent_planets'] = None
-        utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+
+
         context['now'] = utdt
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)
         context['upcoming_events'] = get_upcoming_calendar(utdt)

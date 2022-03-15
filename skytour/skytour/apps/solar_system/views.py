@@ -44,7 +44,7 @@ class PlanetDetailView(CookieMixin, DetailView):
         obj = self.get_object()
         planets_cookie = context['cookies']['planets']
         asteroids_cookie = context['cookies']['asteroids']
-
+        
         flipped =  obj.name in ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
         reversed = context['color_scheme'] == 'dark'
 

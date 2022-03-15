@@ -29,6 +29,17 @@
             <td>{% if p.last_observed %}{{ p.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}
+        <tr class="even">
+            {% with moon=cookies.moon %}
+            <td><a href="{% url 'moon-detail' %}">Moon</a></td>
+            <td>{{ moon.apparent.equ.ra_str }}</td>
+            <td>{{ moon.apparent.equ.dec_str }}</td>
+            <td>{{ moon.observe.apparent_magnitude|floatformat:2 }}</td>
+            <td><a href="{% url 'constellation-detail' moon.observe.constellation.abbr|upper %}">{{ moon.observe.constellation.name }}</a></td>
+            <td></td>
+            <td></td>
+            {% endwith %}
+        </tr>
     </tbody>
 </table>
 {% endblock content %}
