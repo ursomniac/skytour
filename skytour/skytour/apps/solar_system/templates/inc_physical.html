@@ -8,5 +8,6 @@ D<sub>S</sub>: {{ planet.physical.d_s|floatformat:3 }}°<br>
 D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}°<br>
 {% elif planet.name == 'Mars' %}
 &omega;: {{ planet.physical.omega|to_dms }}<br/>
-D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}
+&zeta;: {{ planet.physical.zeta|to_dms }}<br/>
+D<sub>E</sub>: {{ planet.physical.d_e|to_dms }}
 {% endif %}

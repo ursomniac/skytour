@@ -450,11 +450,15 @@ def get_planet_map(planet, physical):
         #   9° + 0.05719° * (utdt - datetime(2022, 1, 1)); i.e., # days since the beginning of the year.
         do = angle - delta_longitude
         px = do if angle <= 180 else do - 360.
-        py = -d_e
+        print("Angle: ", angle)
+        print("∆L: ", delta_longitude)
+        print("DO: ", do)
+        print ("PX: ", px)
+        py = d_e
     elif planet.name == 'Mars':
         im = ax.imshow(im, extent=[360, 0, -90, 90])
         px = angle + 360 if angle < 0 else angle
-        py = -d_e
+        py = d_e
     ax.plot([int(px)], [int(py)], 'wP')
 
     # Plot feature locations:
