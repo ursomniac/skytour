@@ -12,7 +12,7 @@ def _tand(d):
     return math.tan(math.radians(d))
 
 
-def get_mars_physical_ephem(utdt, planet, fudge=58.01676611111111, debug=False):
+def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
     """
     Meeus, 2nd Ed., chapter 41
     All we need here is D_E and omega
@@ -20,6 +20,7 @@ def get_mars_physical_ephem(utdt, planet, fudge=58.01676611111111, debug=False):
     For some reason the #'s in Stellarium and these calcuations are different.
     I THINK it might be because the central meridian definition for Mars is different in Meeus???
     So, fudge is applied to omega to line things up.
+    58.01676611111111
     """
     jd = get_julian_date(utdt)
     delta_t = estimate_delta_t(utdt)
