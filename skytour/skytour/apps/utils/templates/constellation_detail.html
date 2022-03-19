@@ -3,11 +3,11 @@
 {% block title %}{{ object.name }}{% endblock %}
 {% block content %}
 <style>
-    td { padding: 0 10px 0 10px; }
+    table.constellation-header td { padding: 0 10px 0 10px; }
     td.number { text-align: right; }
     img { display: block; }
 </style>
-<table>
+<table class="constellation-header">
     <tr>
         <td>
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
@@ -35,6 +35,25 @@
         </td>
     </tr>
 </table>
+
+{% if planets %}
+{% with section='Planets' object_list=planets detail_url='planet-detail' %}
+{% include 'inc_solsystem_objects.html' %}
+{% endwith %}
+{% endif %}
+
+{% if asteroids %}
+{% with section='Asteroids' object_list=asteroids detail_url='asteroid-detail' %}
+{% include 'inc_solsystem_objects.html' %}
+{% endwith %}
+{% endif %}
+
+{% if comets %}
+{% with section='Comets' object_list=comets detail_url='comet-detail' %}
+{% include 'inc_solsystem_objects.html' %}
+{% endwith %}
+{% endif %}
+
 <h2>DSOs</h2>
 {% with table_id='constellation_dso' %}
 {% include 'includes/dso_table.html' %}

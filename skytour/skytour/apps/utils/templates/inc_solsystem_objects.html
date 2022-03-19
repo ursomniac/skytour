@@ -1,0 +1,29 @@
+<h2>{{ section }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>&alpha;</th>
+            <th>&delta;</th>
+            <th>Mag</th>
+            <th># Obs.</th>
+            <th>Last Obs.</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for p in object_list %}
+    <tr class="{% cycle 'odd' 'even' %}">
+        {% if section == 'Comets' %}
+        <td><a href="{% url detail_url p.pk %}">{{ p.name }}</a></td>
+        {% else %}
+        <td><a href="{% url detail_url p.slug %}">{{ p.name }}</a></td>
+        {% endif %}
+        <td>{{ p.apparent.equ.ra_str }}</td>
+        <td>{{ p.apparent.equ.dec_str }}</td>
+        <td>{{ p.observe.apparent_magnitude|floatformat:2 }}</td>
+        <td>{{ p.n_obs }}</td>
+        <td>{% if p.last_observed %}{{ p.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

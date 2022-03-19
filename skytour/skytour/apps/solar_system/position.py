@@ -55,7 +55,11 @@ def get_object_metadata(
         eph_body = eph[eph_label]
 
     # Earth-Object
-    target = earth.at(t).observe(eph_body).apparent() # for solar system objects
+    try:
+        target = earth.at(t).observe(eph_body).apparent() # for solar system objects
+    except:
+        print(f"Cannot establish target {eph_body} - skipping")
+        return None
     apparent = serialize_astrometric(target)
     r_earth_target = apparent['distance']['au'] # Earth-Target distance
     # Sun-Object

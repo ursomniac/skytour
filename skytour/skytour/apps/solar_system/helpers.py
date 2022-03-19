@@ -102,11 +102,17 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None):
    return asteroid_list, times
 
 def get_comet_positions(utdt, utdt_end=None, location=None):
-    comets = Comet.objects.filter(status=1)
-    comet_list = []
-    for c in comets:
-        d = get_object_metadata(utdt, c.name, 'comet', utdt_end=utdt_end, instance=c, location=location)
-        d['pk'] = c.pk
-        d['name'] = c.name
-        comet_list.append(d)
-    return comet_list
+   mag_limit = find_site_parameter('comet-magnitude-limit', 12.0, 'float')
+   comets = Comet.objects.filter(status=1)
+   comet_list = []
+   for c in comets:
+      d = get_object_metadata(utdt, c.name, 'comet', utdt_end=utdt_end, instance=c, location=location)
+      if d is None:
+         continue
+      app_mag = d['observe']['apparent_magnitude']
+      if app_mag > mag_limit:
+         continue
+      d['pk'] = c.pk
+      d['name'] = c.name
+      comet_list.append(d)
+   return comet_list

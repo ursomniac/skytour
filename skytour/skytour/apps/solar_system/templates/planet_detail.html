@@ -15,7 +15,7 @@
         <td width="25%">
             <h1> {{ planet.name }}</h1> 
             in 
-            {{ planet.observe.constellation.name }}
+            <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
         </td>
         <td width="40%">
             <h2>Observations</h2>
@@ -57,11 +57,13 @@
         <td width="25%"  style="vertical-align:top;">
             {% include 'inc_date_time.html' %}
             {% include 'inc_location.html' %}
+            <br><br>
         </td>
         <td width="25%" style="vertical-align:top;">
             {% with planet as obj %}
             {% include 'inc_coordinates.html' %}
             {% endwith %}
+            <br><br>
         </td>
         <td width="25%" style="vertical-align:top;">
             {% with planet as obj %}
@@ -82,12 +84,14 @@
             {% if planet.physical %}
             {% include 'inc_physical.html' %}
             {% endif %}
+            <br><br>
         </td>
 
         <td width="25%" style="vertical-align:top;">
         {% with planet as obj %}
         {% include 'inc_rise_set.html' %}
         {% endwith %}
+        <br><br>
         </td>
     </tr>
     

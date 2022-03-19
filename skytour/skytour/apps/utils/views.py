@@ -7,6 +7,7 @@ from django.views.generic.list import ListView, MultipleObjectMixin
 from .models import Constellation, Catalog, ObjectType
 from ..dso.models import DSO, DSOAlias
 from ..stars.models import BrightStar
+from .helpers import get_objects_from_cookie
 
 def try_int(x):
     try:
@@ -46,6 +47,12 @@ class ConstellationDetailView(DetailView):
         context['table_id'] = 'dso_table'
         context['hide_constellation'] = True
         context['bright_stars'] = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
+        
+        # Add solar system objects that happen to be within the constellation from the session cookie
+        context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)
+        context['asteroids'] = get_objects_from_cookie(self.request, 'asteroids', object.abbreviation)
+        context['comets'] = get_objects_from_cookie(self.request, 'comets', object.abbreviation)
+
         return context
 
 class CatalogListView(ListView):
