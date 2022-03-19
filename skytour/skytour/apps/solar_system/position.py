@@ -1,9 +1,5 @@
 import math
-from skyfield.almanac import (
-    phase_angle as get_phase_angle, 
-    fraction_illuminated,
-    moon_phase
-)
+from skyfield.almanac import moon_phase
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..observe.almanac import get_object_rise_set

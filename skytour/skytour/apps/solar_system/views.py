@@ -17,6 +17,7 @@ from .plot import (
     plot_track, 
     get_planet_map
 )
+from .utils import get_constellation
 
 class PlanetListView(CookieMixin, ListView):
     model = Planet 
@@ -282,7 +283,7 @@ class TrackerView(FormView):
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
 
-        context['track_image'] = plot_track(
+        context['track_image'], starting_position = plot_track(
             utdt,
             object_type=object_type,
             object=object, 
@@ -296,6 +297,18 @@ class TrackerView(FormView):
             dsos=False
         )
         context['form'] = form
+
+        if starting_position:
+            xra, xdec, xdist = starting_position.radec()
+            context['observe'] = dict(
+                ra = xra.hours.item(),
+                dec = xdec.degrees.item(),
+                dist =  xdist.au.item(),
+                utdt = utdt
+            )
+            context['instance'] = object
+            context['constellation'] = get_constellation(xra.hours.item(), xdec.degrees.item())
+
         return self.render_to_response(context)
 
 class TrackerResultView(TemplateView):

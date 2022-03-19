@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load skytour_filters humanize %}
 
 {% block styles %}
 {% endblock styles %}
@@ -18,6 +19,17 @@
             </form>
             {% else %}
             There is no form!
+            {% endif %}
+
+            {% if instance %}
+            <br/><br/><br/>
+            <h3>Tracking {{ instance.name }}</h3> 
+            <b>Starting at {{ observe.utdt|date:"Y-m-d H:i" }} UT</b><br/>
+            
+            <br>&alpha;: {{ observe.ra|to_hms }}
+            <br>&delta;: {{ observe.dec|to_dms }}
+            <br>Dist.: {{ observe.dist|floatformat:3 }} AU
+            <br>in <a href="{% url 'constellation-detail' constellation.abbr %}">{{ constellation.name }}</a>
             {% endif %}
         </td>
         <td style="vertical-align: top">

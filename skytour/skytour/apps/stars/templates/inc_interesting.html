@@ -1,7 +1,7 @@
 {% load skytour_filters %}
 <table>
     <tbody>
-        {% if show_moon %}
+        {% if show_moon and url_type == 'planet-detail' %}
         <tr><td><a href="{% url 'moon-detail' %}">Moon</a></td></tr>
         {% endif %}
         {% for object in object_list %}

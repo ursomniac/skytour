@@ -340,11 +340,15 @@ def plot_track(
     max_x = 0
     min_y = 0
     max_y = 0
+    first = True
     for dt in range(offset_before, offset_after, step_days):
         this_utdt = utdt + datetime.timedelta(days=dt)
         tt = ts.from_datetime(this_utdt)
         z = earth.at(tt).observe(target)
         ra, dec, distance = z.radec()
+        if first:
+            starting_position = z
+            first = False
 
         xx, yy = projection(earth.at(tt).observe(Star(ra_hours=ra.hours, dec_degrees=dec.degrees)))
         min_x = xx if xx < min_x else min_x
@@ -401,13 +405,11 @@ def plot_track(
         ax.set_xlim(min_x-dx, max_x+dx)
         ax.set_ylim(min_y-dx, max_y+dx)
 
-    ax.xaxis.set_visible(True)
-    ax.yaxis.set_visible(True)
-    # This doesn't work on this plot!
-    # TODO: Fix this!
-    #secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
-    #secax.set_xlabel('Degrees')
-    #secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    secax.set_xlabel('Degrees')
+    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
 
     title = "Track for {}".format(object.name)
     ax.set_title(title)
@@ -422,7 +424,7 @@ def plot_track(
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String
+    return pngImageB64String, starting_position
 
 def get_planet_map(planet, physical):
     try:
