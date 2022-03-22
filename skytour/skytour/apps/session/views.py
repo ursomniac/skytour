@@ -1,6 +1,6 @@
 import datetime, pytz
 import time
-from django.http import HttpResponseRedirect
+#from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import View
@@ -11,6 +11,7 @@ from django.views.generic.list import ListView
 from ..observe.almanac import get_dark_time
 from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
     get_planet_positions, 
     get_comet_positions,
@@ -33,6 +34,9 @@ class SetSessionCookieView(FormView):
     def get_initial(self):
         initial = super().get_initial() # needed since we override?
         initial = get_initial_from_cookie(self.request, initial)
+        time_zone = find_site_parameter('default-time-zone-id', None, 'positive')
+        if time_zone is not None:
+            initial['time_zone'] = time_zone
         return initial
 
     def get(self, request, *args, **kwargs):
@@ -59,37 +63,43 @@ class SetSessionCookieView(FormView):
             utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         else:
             utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
+        local_time_zone = d['time_zone'].name
+        try:
+            time_zone = pytz.timezone(local_time_zone)
+        except:
+            time_zone = None
         utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
+        local_time_start = utdt_start.astimezone(time_zone) if time_zone is not None else None
         times.append((time.perf_counter(), f'Processed Form'))
 
         # ADD TWILIGHT!
         # Sun
-        sun = get_object_metadata(utdt_start, 'Sun', 'sun', utdt_end=utdt_end, location=my_location)
+        sun = get_object_metadata(utdt_start, 'Sun', 'sun', utdt_end=utdt_end, location=my_location, time_zone=time_zone)
         context['sun'] = sun 
         self.request.session['sun'] = sun
         times.append((time.perf_counter(), f'Got Sun'))
 
         # Moon
-        moon = get_object_metadata(utdt_start, 'Moon', 'moon', utdt_end=utdt_end, location=my_location)
+        moon = get_object_metadata(utdt_start, 'Moon', 'moon', utdt_end=utdt_end, location=my_location, time_zone=time_zone)
         context['moon'] = moon 
         self.request.session['moon'] = moon
         times.append((time.perf_counter(), f'Got Moon'))
 
         # Planets
-        planets = get_planet_positions(utdt_start, utdt_end=utdt_end, location=my_location)
+        planets = get_planet_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
         context['planets'] = planets
         self.request.session['planets'] = planets
         times.append((time.perf_counter(), f'Got Planets'))
 
         # Asteroids
-        asteroid_list, atimes = get_visible_asteroid_positions(utdt_start, utdt_end=utdt_end, location=my_location)
+        asteroid_list, atimes = get_visible_asteroid_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
         context['asteroids'] = asteroid_list
         self.request.session['asteroids'] = asteroid_list
         times += atimes
         times.append((time.perf_counter(), f'Got Asteroids'))
 
         # Comets
-        comet_list = get_comet_positions(utdt_start, utdt_end=utdt_end, location=my_location)
+        comet_list = get_comet_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
         context['comets'] = comet_list
         self.request.session['comets'] = comet_list
         times.append((time.perf_counter(), 'Got Comets'))
@@ -103,9 +113,11 @@ class SetSessionCookieView(FormView):
 
         # Set primary cookie
         context['cookie'] = self.request.session['user_preferences'] = dict(
-            utdt_start=utdt_start.isoformat(),
-            utdt_end=utdt_end.isoformat(),
+            utdt_start = utdt_start.isoformat(),
+            utdt_end = utdt_end.isoformat(),
+            local_time_start = local_time_start.astimezone(time_zone).isoformat(),
             location = location_pk,
+            time_zone = local_time_zone,
             julian_date = get_julian_date(utdt_start),
             dec_limit = d['dec_limit'],
             mag_limit = d['mag_limit'],

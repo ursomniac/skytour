@@ -64,6 +64,10 @@ def deal_with_cookie(request, context):
     context['utdt_start'] = isoparse(cookie['utdt_start'])
     context['utdt_end'] = isoparse(cookie['utdt_end'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
+    if context['time_zone'] is not None:
+        context['local_time'] = context['utdt_start'].astimezone(pytz.timezone(context['time_zone']))
+    else:
+        context['local_time'] = None
     return context
 
 def get_cookie(request, slug):

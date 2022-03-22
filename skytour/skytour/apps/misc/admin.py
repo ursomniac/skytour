@@ -46,10 +46,13 @@ class WebsiteAdmin(admin.ModelAdmin):
         return mark_safe(f'<a href="{obj.url}" target="_new">{obj.url}')
     get_url_link.short_description = 'Link'
 
+class TimeZoneAdmin(admin.ModelAdmin):
+    model = TimeZone
+    list_display = ['pk', 'name', 'utc_offset']
 
 admin.site.register(Calendar, CalendarAdmin)
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Glossary, GlossaryAdmin)
 admin.site.register(StateRegion)
-admin.site.register(TimeZone)
+admin.site.register(TimeZone, TimeZoneAdmin)
 admin.site.register(Website, WebsiteAdmin)

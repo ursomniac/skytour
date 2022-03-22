@@ -2,7 +2,9 @@
 <h4>Rise/Set Events</h4>
 {% for event in obj.almanac %}
     {{ event.type }}:<br/> 
-    &nbsp;&nbsp;{{ event.ut|get_datetime|date:"D Y M d H:i"}} UT<br/>
+    &nbsp;&nbsp;{{ event.local_time|get_local_time}}<br>
+    <small>&nbsp;&nbsp;({{ event.ut|get_datetime|date:"D Y M d H:i"}} UT)</small><br/>
+
 {% endfor %}
 <h4>Start</h4>
     Az: {{ obj.session.start.azimuth|to_dms }}<br/>

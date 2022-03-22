@@ -80,3 +80,11 @@ def get_datetime(x):
     X is a string, convert to datetime
     """
     return datetime.datetime.fromisoformat(x)
+
+@register.filter(name='get_local_time')
+def get_local_time(x):
+    """
+    X is a isoformat string with time zone
+    """
+    dt = datetime.datetime.fromisoformat(x)
+    return dt.strftime("%b %-d, %Y %-I:%M %p %z")

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django import forms
 from ..observe.models import ObservingLocation
+from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from .vocabs import PLANET_CHOICES
 
@@ -16,6 +17,9 @@ GRAPH_COLOR_SCHEME = [
 class ObservingParametersForm(forms.Form):
     date = forms.DateField(initial=datetime.now)
     time = forms.TimeField(initial='0:00') # Keep? or use the astro system?
+    time_zone = forms.ModelChoiceField(
+        queryset = TimeZone.objects.all().order_by('utc_offset')
+    )
     location = forms.ModelChoiceField(
         queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
     )

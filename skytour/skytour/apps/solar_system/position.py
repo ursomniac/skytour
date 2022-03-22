@@ -25,7 +25,8 @@ def get_object_metadata(
         object_type, 
         utdt_end=None, 
         instance=None, 
-        location=None
+        location=None,
+        time_zone=None
     ):
     """
     Get the serialized metadata for an object at a given utdt and location.
@@ -77,7 +78,7 @@ def get_object_metadata(
     sun_long = sun_apparent['ecl']['longitude']
 
     # Get rise/set and session parameters
-    almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True) if location else None
+    almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone) if location else None
     session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     # Special Cases --- ADD to observe dict
