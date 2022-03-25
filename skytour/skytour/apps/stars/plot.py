@@ -11,6 +11,8 @@ from skyfield.projections import build_stereographic_projection
 from ..observe.time import get_t_epoch, get_julian_date, get_last
 from ..plotting.map import *
 from ..site_parameter.helpers import find_site_parameter
+from ..solar_system.plot import r2d, d2r
+from ..utils.format import to_hm, to_dm
 
 def get_skymap(
         utdt, 
@@ -64,7 +66,7 @@ def get_skymap(
 
     # NOW PLOT THINGS!
     # 1. stars and constellation lines
-    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, reversed=reversed)
+    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, mag_offset=0.1, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
@@ -146,3 +148,97 @@ def get_skymap(
     times.append((time.perf_counter(), 'Rendering Complete'))
 
     return pngImageB64String, interesting, last, times
+
+def get_zenith_map(
+        utdt, 
+        location, 
+        mag_limit, 
+        zenith_dist, 
+        reversed=False,
+        mag_offset = 0.5
+    ):
+    # Center is LAST, latitude
+    ts = load.timescale()
+    t = ts.from_datetime(utdt)
+    eph = load('de421.bsp')
+    earth = eph['earth']
+    t0 = get_t_epoch(get_julian_date(utdt))
+    last = get_last(utdt, location.longitude)
+    center_ra = last
+    center_dec = location.latitude
+    zenith = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
+
+    ra = to_hm(center_ra) # String value
+    dec = to_dm(center_dec) # string value
+
+    # Start up a Matplotlib plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    fig, ax = plt.subplots(figsize=[9,9])
+
+    # center
+    projection = build_stereographic_projection(zenith)
+
+    # NOW PLOT THINGS!
+    # 1. stars and constellation lines
+    ax, stars = map_hipparcos(
+        ax, 
+        earth, 
+        t, 
+        mag_limit, 
+        projection, 
+        mag_offset=mag_offset, 
+        reversed=reversed
+    )
+    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    ax = map_bright_stars(
+        ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
+    )
+    bright_stars = (stars.magnitude <= mag_limit)
+    magnitude = stars['magnitude'][bright_stars]
+    xx = stars['x'][bright_stars]
+    yy = stars['y'][bright_stars]
+    label_color = '#CC6' if reversed else '#66F'
+    for x, y, z in zip(xx, yy, magnitude):
+        ax.annotate(
+            z, xy=(x, y),
+            textcoords='offset points',
+            xytext=(4, 4),
+            horizontalalignment='left',
+            annotation_clip=True,
+            fontsize='x-small',
+            color=label_color
+        )
+
+    # Put a circle for the horizon.
+    r = math.radians(zenith_dist)/4.
+    horizon = plt.Circle((0,0), r, color='b', fill=False)
+    ax.add_patch(horizon)
+    
+    # Set the display
+    fov = zenith_dist
+    angle = np.pi - fov / 360. * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    secax.set_xlabel('Degrees')
+    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
+    
+    title = f"Zenith Chart: RA {ra}  DEC {dec}"
+    ax.set_title(title)
+    
+    plt.tight_layout(pad=2.0)
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # close things
+    plt.tight_layout()
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String, last

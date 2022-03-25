@@ -10,6 +10,7 @@
         <td>
             <table class="lite">
             <tr><td>Date:</td><td>{{ utdt_start|date:"Y-m-d H:i" }} UT</td></tr>
+            <tr><td>Local Time:</td><td>{{ local_time_str }}</td></tr>
             <tr><td>Sid. Time:</td><td>{{ sidereal_time|to_hms }}</td></tr>
             </table>
         </td>

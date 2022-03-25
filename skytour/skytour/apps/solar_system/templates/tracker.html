@@ -29,7 +29,7 @@
             <br>&alpha;: {{ observe.ra|to_hms }}
             <br>&delta;: {{ observe.dec|to_dms }}
             <br>Dist.: {{ observe.dist|floatformat:3 }} AU
-            <br>in <a href="{% url 'constellation-detail' constellation.abbr %}">{{ constellation.name }}</a>
+            <br>in <a href="{% url 'constellation-detail' constellation.abbr|upper %}">{{ constellation.name }}</a>
             {% endif %}
         </td>
         <td style="vertical-align: top">

@@ -1,6 +1,6 @@
+import datetime, pytz
 import io
 
-from numpy import frompyfunc
 from dateutil.parser import isoparse
 from django.http import HttpResponse
 from django.views.generic import View
@@ -8,6 +8,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.rl_config import defaultPageSize
+
 from ..dso.models import DSO
 from ..misc.utils import get_upcoming_calendar
 from ..site_parameter.helpers import find_site_parameter
@@ -15,8 +16,9 @@ from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.helpers import get_adjacent_planets
 from ..solar_system.models import Planet, Asteroid, Comet
 from ..solar_system.plot import create_planet_system_view, create_finder_chart
-from ..stars.plot import get_skymap
+from ..stars.plot import get_skymap, get_zenith_map
 from ..utils.format import to_sex, to_hm, to_dm, to_time
+
 from .cookie import deal_with_cookie, get_all_cookies
 from .plan import get_plan
 
@@ -245,7 +247,27 @@ class PlanPDFView(View):
 
         p.showPage() # This ends the page
 
-        ######################################### PAGE 3
+        ######################################### PAGE 2
+        # Zenith Finding Chart for limiting magnitude
+        y = 720
+        p.setFont('Helvetica-Bold', 24)
+        p.drawCentredString(PAGE_WIDTH/2, 700, 'Zenith Chart')
+        p.setFont('Helvetica', 12)
+        utdt_mid = context['utdt_start'] + datetime.timedelta(hours=context['session_length']/2.)
+        local_mid = context['local_time'] + datetime.timedelta(hours=context['session_length']/2.)
+        p.drawString(50, 670, f"{local_mid.strftime('%b %-d, %Y %-I:%M %p %z')}")
+        zenith_chart, _ = get_zenith_map(
+            utdt_mid,
+            location, 
+            6.5, # mag limit
+            30., # radius from zenith
+            reversed=False,
+            mag_offset = 0.5
+        ) 
+        p.drawInlineImage(zenith_chart, 28, 100, 7.5*72, 7.5*72)
+        p.showPage() # This ends the page
+
+        ######################################### PAGE 4
         y = 720
         p.setFont('Helvetica-Bold', 14)
         p.drawString(50, y, 'Planets:')
@@ -288,7 +310,7 @@ class PlanPDFView(View):
                 dy -= 15
         p.showPage() # This is page 3
 
-        ######################################### PAGE 4
+        ######################################### PAGE 5
         # Asteroids
         FCX = [390, 30, 210, 390, 30, 210, 390, 30, 210, 390]
         FCY = [-45, 130, 130, 130, 310, 310, 310, 490, 490, 490]
@@ -328,7 +350,7 @@ class PlanPDFView(View):
             p.drawString(50, y, '(no Asteroids)')
         p.showPage() # This is page 4
 
-        ######################################### PAGE 5
+        ######################################### PAGE 6
         # Comets
         y = 720
         p.setFont('Helvetica-Bold', 14)
@@ -404,9 +426,9 @@ class PlanPDFView(View):
             reversed = False
         )
         p.drawInlineImage(moon_tel, 390, y_start - 150, 180, 180)
-        p.showPage() # This is page 5
+        p.showPage()
 
-        ######################################### PAGE 6
+        ######################################### PAGE 7
         # DSOs
         targets = []
         all_dsos = DSO.objects.filter(
@@ -459,7 +481,7 @@ class PlanPDFView(View):
                 dx = 0
         p.showPage()
 
-        ######################################### PAGE 7+
+        ######################################### PAGE 8+
         # Observing Forms!
         n_form_pages = find_site_parameter('observe_form_pages', default=5, param_type='positive')
 
@@ -512,14 +534,6 @@ class PlanPDFView(View):
             # Column 3:
             # Drawing circle
                 p.circle(500, section_tops[section]-80, 72)
-
-            # Column 4:
-            # SQM
-            # Temp
-            # Hum
-            # Wind
-            # Seeing
-            # Clouds
 
             p.showPage()
 

@@ -62,7 +62,7 @@ class SetSessionCookieView(FormView):
         if d['set_to_now'] == 'Yes':
             utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         else:
-            utdt_start = datetime.datetime.combine(d['date'], d['time']).replace(tzinfo=pytz.utc)
+            utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
         local_time_zone = d['time_zone'].name
         try:
             time_zone = pytz.timezone(local_time_zone)
@@ -151,6 +151,14 @@ class ObservingPlanView(CookieMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
         context = get_plan(context)
+
+        # Get the mid-point time from the local_time_start + 0.5 * session_length
+        local_time = context['local_time_start']
+        #tzone = pytz.timezone(context['time_zone'])
+        ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
+        ztime += datetime.timedelta(hours=context['session_length']/2.)
+        context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
+
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context
 

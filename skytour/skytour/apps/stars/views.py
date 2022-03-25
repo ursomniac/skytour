@@ -1,12 +1,16 @@
+import datetime, pytz
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
 from .models import BrightStar
-from .plot import get_skymap
+from .forms import ZenithMagForm
+from .plot import get_skymap, get_zenith_map
 
 class BrightStarListView(ListView):
     model = BrightStar
@@ -51,4 +55,53 @@ class BrightStarDetailView(DetailView):
     model = BrightStar
     template_name = 'bright_star_detail.html'
 
-    
+class ZenithMagView(FormView):
+    form_class = ZenithMagForm
+    template_name = 'zenith_view.html'
+    success_url = '/stars/zenith_plot'
+
+    def get_initial(self):
+        initial = super(ZenithMagView, self).get_initial()
+        c = deal_with_cookie(self.request, {})
+        utdt = c.get('utdt_start', None)
+        utdt += datetime.timedelta(hours = c.get('session_length', 3.)/2.)
+        if not utdt:
+            utdt = datetime.datetime.utcnow().replace(hour=21, minute=0, tzinfo=pytz.utc)
+
+        initial['ut_date'] = utdt.date()
+        initial['ut_time'] = utdt.time()
+        return initial
+
+    def form_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context = deal_with_cookie(self.request, context)
+        print ("CONTEXT: ", context)
+        location = context['location']
+
+        d = form.cleaned_data
+        reversed = d['color_scheme'] == 'dark'
+        utdt = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
+        mag_limit = context['mag_limit'] = d['mag_limit']
+        zenith = context['zenith_distance'] = d['zenith_limit']
+        context['map'], last = get_zenith_map(
+            utdt, 
+            location, 
+            mag_limit, 
+            zenith,
+            reversed=reversed,
+            mag_offset=1.0
+        )
+        context['center_ra'] = last
+        context['center_dec'] = location.latitude
+        context['utdt'] = utdt
+        print ("UTDT: ", utdt)
+        tzone = pytz.timezone(context['time_zone'])
+        local_time = utdt.astimezone(tzone)
+        context['local_time'] = local_time.strftime("%A %b %-d, %Y %-I:%M %p %z")
+        print ("Local: ", context['local_time'])
+        context['form'] = form
+        context['results'] = True
+        return self.render_to_response(context)
+
+class ZenithMagResult(TemplateView):
+    template_name = 'zenith_view.html'

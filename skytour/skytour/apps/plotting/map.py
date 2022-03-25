@@ -44,7 +44,7 @@ def map_constellation_lines(ax, stars, reversed=False):
     ax.add_collection(LineCollection(lines_xy, colors=line_color))
     return ax
 
-def map_hipparcos(ax, earth, t, mag_limit, projection, reversed=False):
+def map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=0.25, reversed=False):
     """
     Put down sized points for stars.
     While this DOES pre-filter by mag_limit it does NOT filter
@@ -57,7 +57,7 @@ def map_hipparcos(ax, earth, t, mag_limit, projection, reversed=False):
     stars['x'], stars['y'] = projection(star_positions)
     bright_stars = (stars.magnitude <= mag_limit)
     magnitude = stars['magnitude'][bright_stars]
-    marker_size = (0.5 + mag_limit - magnitude) **2.0
+    marker_size = (mag_offset + mag_limit - magnitude) **2.0 
     ##### background stars
     star_color = 'w' if reversed else 'k'
     scatter = ax.scatter(
@@ -574,3 +574,5 @@ def map_comets(ax, comet_list, earth, t, projection,
             fontsize=fsize
         )
     return ax, interesting
+
+

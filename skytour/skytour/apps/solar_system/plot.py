@@ -31,9 +31,11 @@ def am2r(a):
 
 def r2as(a):
     return a * 360. * 3600. / math.pi
-
 def as2r(a):
     return a * math.pi / (360.*3600.)
+
+def sizeme(mag, limit):
+    return (0.5 + limit - mag) **2.0
 
 def create_finder_chart(
         utdt,                   # UTDT
@@ -46,6 +48,7 @@ def create_finder_chart(
         flipped = False,        # Flip E-W
         reversed = True,        # B on W or W on B
         mag_limit = 8.5,        # magnitude limit of stars
+        mag_offset = 0.05,
         show_axes = False       #
     ):
     # Start timer
@@ -84,7 +87,7 @@ def create_finder_chart(
 
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
-    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
+    ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=mag_offset, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
     times.append((time.perf_counter(), 'Stars/Constellations'))
@@ -105,6 +108,11 @@ def create_finder_chart(
     # Asteroids
     ax, _ = map_asteroids(ax, name, asteroids, earth, t, projection)
     times.append((time.perf_counter(), 'Asteroids'))
+
+    # legend
+    #kw = dict(prop="sizes", num=6, fmt="{x:.2f}",
+    #    func=lambda s: -1.*(np.sqrt(s)-0.5-mag_limit) )
+    #legend2 = ax.legend(*scatter.legend_elements(**kw), loc="upper left", title="Mag.")
 
     # Plot scaling
     if not fov: # set FOV if not supplied
@@ -234,10 +242,7 @@ def create_planet_system_view (
 
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
-    #ax.set_yticklabels([])
-    #ax.set_xticklabels([])
-    #ax.set_xticks([])
-    #ax.set_yticks([])
+
     if limit < 0.0003:
             secax = ax.secondary_xaxis('bottom', functions=(r2as, as2r))
             secax.set_xlabel('Arcsec')
@@ -383,6 +388,8 @@ def plot_track(
     if not mag_limit:
         if object_type == 'planet' and object.slug not in ['uranus', 'neptune']:
             mag_limit = 6.0
+        elif object_type in ['comet', 'asteroid']:
+            mag_limit = 10.
         else:
             mag_limit = 9.0
 

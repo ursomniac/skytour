@@ -73,7 +73,12 @@ td.normal {
 <h1>Plan Observations</h1>
 <h3>Current UT: {{ now|date:"D Y-m-d H:i" }}</h3>
 <h3>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h3>
+<h3>Plan Local Time: {{ local_time_str }}</h3>
 <a href="{% url 'plan-pdf' %}" target="_new"><button>Print Observing Plan PDF</button></a>
+<small>(This takes up to a minute to run.)</small>
+<br><br/>
+<a href="{% url 'zenith-view' %}"><button>Zenith Finding Chart</button></a>
+<small>(Will run for <b><span style="color: #fff">{{ zenith_time }}</span></b>)</small>
 <br/><br>
 
 <table class="subnav">
@@ -110,9 +115,7 @@ td.normal {
 <a name="moon"></a>
 <h2>Moon</h2>
   {% with object=moon object_type='moon' show_object=show_moon %}{% include 'inc_object_header.html' %}{% endwith %}
-  {% if show_moon %}
   {% with moon as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
-  {% endif %}
 
 <a name="planets"></a>
   <h2>Planets</h2>
@@ -120,6 +123,8 @@ td.normal {
     {% with object=planet object_type='planet' show_object=planet.show_planet %}{% include 'inc_object_header.html' %}{% endwith %}
     {% with planet as object %}{% include 'includes/solar_system_object.html' %}{% endwith %}
     <br>
+  {% empty %}
+  No Planets visible.
   {% endfor %}
 
 <a name="asteroids"></a>
@@ -131,7 +136,7 @@ td.normal {
     <br>
   {% endfor %}
   {% else %}
-  <p>No Asteroids</p>
+  <p>No Asteroids visible</p>
   {% endif %}
 
 <a name="comets"></a>
@@ -143,7 +148,7 @@ td.normal {
   <br>
   {% endfor %}
   {% else %}
-  <p>No Comets</p>
+  <p>No Comets visible</p>
   {% endif %}
 
 <a name="dso"></a>

@@ -47,7 +47,9 @@
         <td style="vertical-align:top;">
             <h5>Rise/Set Events</h5>
             {% for event in object.almanac %}
-            {{ event.type }}: {{ event.ut|get_datetime|date:"D Y M d  h:i"}} UT<br/>
+            {{ event.type }}: 
+                {{ event.local_time|get_local_time }} &nbsp;
+                <small>({{ event.ut|get_datetime|date:"Y M d  h:i"}} UT)</small><br/>
             {% endfor %}
             <table class="twocol">
                 <tr>
@@ -66,8 +68,5 @@
                 </tr>
             </table>
         </td>
-        {% comment %}
-        <td width="40%" style="vertical-align:top;"><img src="{{ object.view_image }}"/></td>
-        {% endcomment %}
     </tr>
   </table>

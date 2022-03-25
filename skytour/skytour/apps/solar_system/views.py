@@ -154,8 +154,9 @@ class AsteroidDetailView(CookieMixin, DetailView):
                 pdict = a
                 mag = a['observe']['apparent_magnitude']
                 break
-        mag_limit = mag + 0.5 if mag is not None else 10.
-        mag_limit = 10 if mag_limit < 10. else mag_limit
+        #mag_limit = mag + 0.5 if mag is not None else 10.
+        #mag_limit = 10 if mag_limit < 10. else mag_limit
+        mag_limit = 11
         context['asteroid'] = pdict
         fov = 5.
         

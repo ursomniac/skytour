@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load skytour_filters %}
+{% block content %}
+
+<h1>Zenith Finding Chart</h1>
+{% if form %}
+<form method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <br><input type="submit" value="Submit"/>
+</form>
+{% else %}
+There is no form!
+{% endif %}
+
+{% if results %}
+<h2>Parameters</h2>
+Center &alpha;: {{ center_ra|to_hms }}
+<br>Center &delta;: {{ center_dec|to_dms }}
+<br><br>UT: {{ utdt|date:"Y-m-d H:i" }} 
+<br>Local Time: {{ local_time }} 
+
+<h2>Map</h2>
+<img src="{{ map }}">
+{% endif %}
+{% endblock content %}

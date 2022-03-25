@@ -41,11 +41,8 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1
     if amajor < 3.:
         amajor = 3
         aminor = ratio * amajor
-    #print (f"AMAJOR: {amajor} AMINOR: {aminor}")
     amajor *= 2.909e-4
     aminor *= 2.909e-4
-    # 2.909e-4
-    #angle = 90 - oangle
     angle = oangle
 
     #if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
@@ -69,10 +66,12 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1
     elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
         color = '#999' if ft == 'gray-circle' else '#ff0'
         c1 = patches.Circle((x, y), amajor/2., fill=True, color=color, alpha=alpha)
-        c2 = patches.Circle((x, y), amajor/2., fill=False, color='#000')
+        r_color = '#fff' if reversed else '#000'
+        c2 = patches.Circle((x, y), amajor/2., fill=False, color=r_color)
         if ft == 'circle-plus':
-            ax.vlines(x, y-amajor/2, y+amajor/2, color='k')
-            ax.hlines(y, x-amajor/2, x+amajor/2, color='k')
+            cp_color = '#999' if reversed else '#000'
+            ax.vlines(x, y-amajor/2, y+amajor/2, color=cp_color)
+            ax.hlines(y, x-amajor/2, x+amajor/2, color=cp_color)
         ax.add_patch(c1)
         ax.add_patch(c2)
     elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square']: # UGH - the center point is the lower-left corner
@@ -89,7 +88,6 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1
             ax.add_patch(r2)
         else:
             color = '#0f0' if ft == 'circle-square' else '#999'
-            #print (f"MAJOR: {amajor} MINOR: {aminor}")
             r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
             c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff')
@@ -98,6 +96,11 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1
             ax.add_patch(r2)
             ax.add_patch(c1)
             ax.add_patch(c2)
+    elif ft in ('two-circles'):
+        c1 = patches.Circle((x, y), amajor/2., fill=False, color='#3fc')
+        c2 = patches.Circle((x, y), 0.75 * amajor/2., fill=False, color='#3fc')
+        ax.add_patch(c1)
+        ax.add_patch(c2)
     else: # marker
         test = ax.scatter(
             [x], [y],
