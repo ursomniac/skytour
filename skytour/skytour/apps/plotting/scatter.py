@@ -8,7 +8,7 @@ from .plot_utils import do_scatter_plot, fix_axis
 def create_plot(
     type = 'scatter', x = [], y = [], \
     title='Generic Title', xtitle='X Axis', ytitle='Y Axis', \
-    colors = None, markers = None, \
+    colors = None, markers = None, lines = None, \
     grid = False, \
         xpad = 0., ypad= 0.02, 
 		subplot = (1,1,1)
@@ -34,6 +34,9 @@ def create_plot(
     if not type or type == 'scatter':
         panel = do_scatter_plot(panel, x, y, markers, colors)
 
+    if lines and len(lines) > 0:
+        for line in lines:
+            panel.axhline(line, ls = '--', color='#ccc')
     # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)

@@ -5,9 +5,9 @@ This is the code to make the two scatter plots on the ObservingLocationList view
 """
 STATUS_COLOR = {
 	'Active': '#090',
-	'Possible': '#0FF',
+	'Possible': '#0CC',
 	'Rejected': '#C00',
-    'Provisional': '#009',
+    'Provisional': '#00F',
 	'TBD': '#CCC',
 	'Issues': '#FC0'
 }
@@ -48,6 +48,7 @@ def make_location_plot(
         xtitle = 'Distance (miles)'
         ytitle = 'SQM'
         ypad = -0.02
+        lines = [20.49, 21.69, 21.89, 21.99]
 
     elif type == 'bright':
         x = travel
@@ -55,6 +56,7 @@ def make_location_plot(
         title = 'Brightness by Travel Time'
         xtitle = 'Travel Time (minutes)'
         ytitle = 'Brightness'
+        lines = [0.685, 0.225, 0.187, 0.171]
 
     else:
         x = [0, 1]
@@ -67,6 +69,7 @@ def make_location_plot(
         markers = markers, colors = colors,
         grid = grid, title=title,
         xtitle = xtitle, ytitle=ytitle,
-        xpad = xpad, ypad = ypad
+        xpad = xpad, ypad = ypad,
+        lines = lines
     )
     return image
