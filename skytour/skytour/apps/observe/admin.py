@@ -27,6 +27,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag', 'n_sessions', 'last_session']
     search_fields = ['name', 'city']
     list_filter = ['status', 'state']
+    save_on_top = True
     fieldsets = (
         (None, {
             'fields': [
@@ -60,7 +61,8 @@ class ObservingLocationAdmin(admin.ModelAdmin):
                 ('parking', 'is_flat'),
                 'description',
                 'light_sources',
-                'horizon_blockage'
+                'horizon_blockage',
+                'pdf_form'
             ]
         })
     )

@@ -3,6 +3,7 @@ from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
 from ..utils.utils import get_limiting_magnitude
+from .pdf import create_pdf_form
 
 CARDINAL_DIRECTIONS = [
     ('N', 'North'),
@@ -143,7 +144,13 @@ class ObservingLocation(models.Model):
         null = True, blank = True,
         upload_to = 'bortle_maps/'
     )
-
+    #
+    ### FORM
+    pdf_form = models.FileField ( 
+        _('PDF Form'),
+        upload_to = 'media/location_pdf/',
+        null = True, blank = True
+    )
     def map_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.map_image.url)
     def earth_tag(self):
@@ -219,9 +226,15 @@ class ObservingLocation(models.Model):
             self.pk, self.status, tag, self.city, self.state.abbreviation
         )
 
+    def save(self, *args, **kwargs):
+        filename = create_pdf_form(self)
+        self.pdf_form.name = filename
+        super(ObservingLocation, self).save(*args, **kwargs)
+        return
+
     class Meta:
         ordering = ['travel_distance']
-
+ 
 
 class LocationImage(models.Model):
     location = models.ForeignKey('ObservingLocation', on_delete = models.CASCADE)
@@ -242,3 +255,6 @@ class LocationImage(models.Model):
 
     def image_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
+
+
+        
