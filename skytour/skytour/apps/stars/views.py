@@ -75,30 +75,30 @@ class ZenithMagView(FormView):
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)
-        print ("CONTEXT: ", context)
         location = context['location']
 
         d = form.cleaned_data
         reversed = d['color_scheme'] == 'dark'
+        
         utdt = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
         mag_limit = context['mag_limit'] = d['mag_limit']
-        zenith = context['zenith_distance'] = d['zenith_limit']
+        zenith_distance = context['zenith_distance'] = d['zenith_limit']
         context['map'], last = get_zenith_map(
             utdt, 
             location, 
             mag_limit, 
-            zenith,
+            zenith_distance,
             reversed=reversed,
-            mag_offset=1.0
+            mag_offset=1.0,
+            center_ra = d['center_ra'],
+            center_dec = d['center_dec']
         )
         context['center_ra'] = last
         context['center_dec'] = location.latitude
         context['utdt'] = utdt
-        print ("UTDT: ", utdt)
         tzone = pytz.timezone(context['time_zone'])
         local_time = utdt.astimezone(tzone)
         context['local_time'] = local_time.strftime("%A %b %-d, %Y %-I:%M %p %z")
-        print ("Local: ", context['local_time'])
         context['form'] = form
         context['results'] = True
         return self.render_to_response(context)

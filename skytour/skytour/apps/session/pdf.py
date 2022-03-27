@@ -73,7 +73,6 @@ def show_table_header(p, y, xoff=0):
 def do_line(p, x, y, l, dy=15):
     p.drawString(x, y, l)
     y -= dy
-    print ("Y NOW: ", y)
     return p, y
 
 class PlanPDFView(View):
@@ -541,7 +540,7 @@ class PlanPDFView(View):
         p.save()
         buffer.seek(0)
 
-        filename = f'skytour_plan_{uts}_{loc}.pdf'
+        #filename = f'skytour_plan_{uts}_{loc}.pdf'
 
         response = HttpResponse(buffer, content_type='application/pdf')
         return response

@@ -155,7 +155,9 @@ def get_zenith_map(
         mag_limit, 
         zenith_dist, 
         reversed=False,
-        mag_offset = 0.5
+        mag_offset = 0.5,
+        center_ra = None,
+        center_dec = None
     ):
     # Center is LAST, latitude
     ts = load.timescale()
@@ -164,8 +166,10 @@ def get_zenith_map(
     earth = eph['earth']
     t0 = get_t_epoch(get_julian_date(utdt))
     last = get_last(utdt, location.longitude)
-    center_ra = last
-    center_dec = location.latitude
+    if center_ra is None:
+        center_ra = last
+    if center_dec is None:
+        center_dec = location.latitude
     zenith = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
 
     ra = to_hm(center_ra) # String value
