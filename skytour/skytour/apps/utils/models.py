@@ -56,6 +56,11 @@ class ObjectType(models.Model):
         _('Slug'),
         unique = True
     )
+    short_name = models.CharField (
+        _('Short Name'),
+        max_length = 40,
+        null = True, blank = True
+    )
     bgcolor = ColorField (
         _('Background Color'),
         default = '#666666'

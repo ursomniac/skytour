@@ -53,6 +53,7 @@
 					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
 					<br>
 					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>
+					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button></a>
 				</td>
 			</tr>
 			{% if object.alias_list %}

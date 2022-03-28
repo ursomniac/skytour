@@ -69,7 +69,8 @@ class DSOAdmin(ObservableObjectAdmin):
             'fields': [
                 ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
-                ('finder_chart', 'finder_chart_tag')
+                ('finder_chart', 'finder_chart_tag'),
+                'pdf_page'
             ]
         })
     )

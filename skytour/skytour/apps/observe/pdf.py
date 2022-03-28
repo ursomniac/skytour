@@ -17,11 +17,11 @@ def bold_text (p, x, y, text, size=14):
     tw = stringWidth(text, DEFAULT_BOLD, size)
     return p, tw
 
-def add_image(p, y, file):
+def add_image(p, y, file, x=50, size=250):
     if file is not None:
         map_img = ImageReader(file)
-        p.drawImage(map_img, 50, y-250, width=250, height=250, preserveAspectRatio=True)
-    return p, y - 250
+        p.drawImage(map_img, x, y-size, width=size, height=size, preserveAspectRatio=True)
+    return p, y - size
 
 def long_text(p, limit, x, y, text, dy=15, size=10):
     p.setFont(DEFAULT_FONT, size)

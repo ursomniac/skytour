@@ -9,6 +9,7 @@ from ..abstract.utils import get_metadata
 from ..utils.angdist import get_neighbors
 from ..utils.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
+from .pdf import create_pdf_page
 
 PRIORITY_CHOICES = [
     ('Highest', 'Highest'),
@@ -135,6 +136,12 @@ class DSO(Coordinates, FieldView, ObservableObject):
         help_text = 'arcmin'
     )
 
+    pdf_page = models.FileField (
+        _('PDF Page'),
+        null = True, blank = True,
+        upload_to = 'dso_pdf'
+    )
+
     @property
     def alias_list(self):
         aliases = []
@@ -197,6 +204,8 @@ class DSO(Coordinates, FieldView, ObservableObject):
         # Except you can't - it crashes everything, UNLESS
         # you run the code in it's own thread.  Why?  Who knows?
         # UPDATE: 2 Jan 2022 --- this might actually work now.
+        fn = create_pdf_page(self)
+        self.pdf_page.name = fn
         super(DSO, self).save(*args, **kwargs)
         
     class Meta:
