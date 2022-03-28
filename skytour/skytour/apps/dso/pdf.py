@@ -15,6 +15,7 @@ X0 = 50
 def create_pdf_page(dso):
     dir = 'dso_pdf/'
     lname = dso.shown_name.lower().replace(' ','_')
+    lname = lname.replace('/', '_')
     filename = f'{dir}{dso.pk}__{lname}.pdf'
     p = canvas.Canvas('media/'+filename)
 
@@ -25,8 +26,9 @@ def create_pdf_page(dso):
     if dso.nickname is not None:
         p, tw = bold_text(p, 200, y, dso.nickname, size=14)
     # Priority
+    priority = 'None' if dso.priority is None else dso.priority
     p, tw = bold_text(p, 400, y, "Priority: ")
-    p.drawString(400 + tw, y, dso.priority)
+    p.drawString(400 + tw, y, priority)
     y -= 15
     # Aliases
     p.drawString(X0, y, dso.alias_list)
@@ -45,12 +47,14 @@ def create_pdf_page(dso):
     # Mag/Ang Size/Surf.Br.
     y -= 20
     p, tw = bold_text(p, X0, y, 'Mag: ')
-    p.drawString(X0 + tw, y, f"{dso.magnitude:.2f}")
+    mag = '' if dso.magnitude is None else f"{dso.magnitude:.2f}"
+    p.drawString(X0 + tw, y, mag)
     p, tw = bold_text(p, 200, y, 'Surf. Br.: ')
     sbr = '' if dso.surface_brightness is None else f'{dso.surface_brightness:.2f}'
     p.drawString(200 + tw, y, sbr)
     p, tw = bold_text(p, 400, y, 'Ang. Size.: ')
-    p.drawString(400 + tw, y, dso.angular_size)
+    asize = '' if dso.angular_size is None else dso.angular_size
+    p.drawString(400 + tw, y, asize)
     # Distance/Units
     y -= 20
     p, tw = bold_text(p, X0, y, 'Dist.: ')
