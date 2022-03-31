@@ -24,6 +24,7 @@
                     {% if object.last_observed %}{{ object.last_observed|date:"Y-m-d H:i"}}
                     {% else %}(not yet){% endif %}
                 </td></tr>
+                <tr><td><a href="/admin/solar_system/asteroid/{{object.pk}}/change" target="_new"><button>Admin</button></a></td></tr>
             </table>
         </td>
         <td width="35%">

@@ -16,6 +16,8 @@
             <h1> {{ planet.name }}</h1> 
             in 
             <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
+            <br><br>
+            <a href="/admin/solar_system/planet/{{instance.pk}}/change" target="_new"><button>Admin</button></a>
         </td>
         <td width="40%">
             <h2>Observations</h2>

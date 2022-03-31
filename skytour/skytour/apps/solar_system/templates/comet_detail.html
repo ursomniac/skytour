@@ -12,6 +12,8 @@
         <td width="25%">
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ comet.observe.constellation.name }}</h2>
+            <a href="/admin/solar_system/comet/{{ object.pk }}/change" target="_new"><button>Admin</button></a>
+            <br><br>
         </td>
         <td width="35%">
             {% if object.image %}

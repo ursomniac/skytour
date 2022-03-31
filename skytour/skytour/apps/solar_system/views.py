@@ -81,7 +81,7 @@ class PlanetDetailView(CookieMixin, DetailView):
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
-
+        context['instance'] = obj
         return context
 
 class MoonDetailView(CookieMixin, TemplateView):
