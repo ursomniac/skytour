@@ -1,3 +1,4 @@
+import numpy as np
 from ..plotting.scatter import create_plot
 
 """
@@ -71,5 +72,43 @@ def make_location_plot(
         xtitle = xtitle, ytitle=ytitle,
         xpad = xpad, ypad = ypad,
         lines = lines
+    )
+    return image
+
+def plot_sqm_history(loc):
+    sessions = loc.observingsession_set.all()
+    if sessions.count() < 1:
+        return None
+    lines = [loc.sqm] if loc.sqm is not None else []
+    x = []
+    y = []
+    e = []
+
+    for s in sessions:
+        sx = s.ut_date
+        sy = []
+        obs = s.observingcircumstances_set.all()
+        for o in obs:
+            if o.sqm is not None:
+                sy.append(o.sqm)
+        if len(sy) == 0:
+            continue
+        avg = np.average(sy)
+        rms = np.std(sy)
+        x.append(sx)
+        y.append(avg)
+        e.append(rms)
+
+    image = create_plot(
+        x=x, 
+        y=y, 
+        grid=True, 
+        error=e, 
+        lines=lines, 
+        xpad=0., 
+        ypad=-0.02,
+        title=f"SQM Measures: {loc}",
+        xtitle='Date',
+        ytitle='SQM (mag/arcsec^2)'
     )
     return image

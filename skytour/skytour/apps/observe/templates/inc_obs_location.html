@@ -1,0 +1,36 @@
+<table id="{{ table_id }}">
+    <thead>
+        <tr>
+            <th>Dist.</th>
+            <th>Status</th>
+            <th>Name/Address</th>
+            <th>City</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Bortle</th>
+            <th>Bright</th>
+            <th>SQM</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in object_list %}
+        <tr>
+            <td class="number-column">{{ obj.travel_distance|floatformat:1 }}</td>
+            <td>{{ obj.status }}</td>
+            <td>
+                <a href="{% url 'observing-location-detail' obj.pk %}">
+                {% if obj.name %}{{ obj.name }}:&nbsp;{% endif %}
+                {{ obj.street_address }}
+                </a>
+            </td>
+            <td>{{ obj.city }}, {{ obj.state }}</td>
+            <td class="number-column">{{ obj.latitude|floatformat:5 }}</td>
+            <td class="number-column">{{ obj.longitude|floatformat:5 }}</td>
+            <td style="text-align: center">{{ obj.bortle }}</td>
+            <td class="number-column">{{ obj.brightness|floatformat:3 }}</td>
+            <td class="number-column">{{ obj.sqm|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    {% include 'includes/sortable_table.html' %}

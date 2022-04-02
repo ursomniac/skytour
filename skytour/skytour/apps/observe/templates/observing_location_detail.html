@@ -79,6 +79,9 @@
 				<td>Brightness: {{ object.brightness }} {{ object.distance_units }}</td>
 				<td>Limiting Mag: {{ object.limiting_magnitude }}</td>
 			</tr>
+			{% if sqm_plot %}
+			<tr><td colspan=5><img src="{{ sqm_plot }}"></td></tr>
+			{% endif %}
 		</table>
 	</td>
 </tr>

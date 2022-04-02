@@ -7,42 +7,14 @@
         <td><img src="{{ sqm_plot }}"/></td>
         <td><img src="{{ brightness_plot }}"/></td>
     </tr>
-</div>
-<br>
-<table id="{{ table_id }}">
-<thead>
-    <tr>
-        <th>Dist.</th>
-        <th>Status</th>
-        <th>Name/Address</th>
-        <th>City</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Bortle</th>
-        <th>Bright</th>
-        <th>SQM</th>
-    </tr>
-</thead>
-<tbody>
-    {% for obj in object_list %}
-    <tr>
-        <td class="number-column">{{ obj.travel_distance|floatformat:1 }}</td>
-        <td>{{ obj.status }}</td>
-        <td>
-            <a href="{% url 'observing-location-detail' obj.pk %}">
-            {% if obj.name %}{{ obj.name }}:&nbsp;{% endif %}
-            {{ obj.street_address }}
-            </a>
-        </td>
-        <td>{{ obj.city }}, {{ obj.state }}</td>
-        <td class="number-column">{{ obj.latitude|floatformat:5 }}</td>
-        <td class="number-column">{{ obj.longitude|floatformat:5 }}</td>
-        <td style="text-align: center">{{ obj.bortle }}</td>
-        <td class="number-column">{{ obj.brightness|floatformat:3 }}</td>
-        <td class="number-column">{{ obj.sqm|floatformat:2 }}</td>
-    </tr>
-    {% endfor %}
-</tbody>
 </table>
-{% include 'includes/sortable_table.html' %}
+<br>
+
+{% for key, value in locations.items %}
+    <h2>{{ key }} Locations</h2>
+    {% with object_list=value table_id=section %}
+        {% include 'inc_obs_location.html' %}
+    {% endwith %}
+{% endfor %}
+
 {% endblock content %}

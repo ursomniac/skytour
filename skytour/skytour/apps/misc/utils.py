@@ -79,7 +79,3 @@ def create_calendar_grid(start_date, days_out=30):
         
     return grid
 
-
-
-    
-    
