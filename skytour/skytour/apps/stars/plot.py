@@ -89,7 +89,8 @@ def get_skymap(
     ax, interesting['dsos'] = map_dsos(ax, earth, t, projection, 
         center = (center_ra, center_dec),
         label_size='xx-small',
-        reversed=reversed
+        reversed=reversed,
+        ignore_setting = True
     )
     times.append((time.perf_counter(), 'DSOs'))
 

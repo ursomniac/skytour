@@ -70,7 +70,7 @@
         {% if target.object_type == 'Condition' %}
         <h4>Conditions:</h4>
         <table class="internal">
-            <tr><td>SQM:</td><td>{{ target.sqm }}</td></tr>
+            <tr><td>SQM:</td><td>{{ target.sqm|floatformat:2 }}</td></tr>
             <tr><td>Seeing:</td><td>{{ target.seeing }}</td></tr>
             <tr><td>Cloud Cover:</td><td>{{ cloud_cover }}</td></tr>
         {% else %}

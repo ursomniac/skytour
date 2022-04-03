@@ -12,7 +12,7 @@
 
 {% for key, value in locations.items %}
     <h2>{{ key }} Locations</h2>
-    {% with object_list=value table_id=section %}
+    {% with object_list=value table_id=key %}
         {% include 'inc_obs_location.html' %}
     {% endwith %}
 {% endfor %}

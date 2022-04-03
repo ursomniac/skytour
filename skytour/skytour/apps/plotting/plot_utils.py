@@ -10,9 +10,18 @@ def fix_axis(a, pad):
 		return (a_high, a_low)
 	return (a_low, a_high)
 
-def do_scatter_plot(panel, x, y, markers, colors):
+def do_scatter_plot(panel, x, y, markers, colors, sizes):
 	# Put each point on the plot with the appropriate color and marker
-	# UGH - I don't know how to handle the combinations elegantly.
+
+	n = len(x)
+	markers = n * ['o'] if not markers else markers
+	colors = n * ['#000'] if not colors else colors
+	sizes = n * [30] if not sizes else sizes
+	
+	for _x, _y, _c, _m, _s in zip(x, y, colors, markers, sizes):
+		panel.scatter(_x, _y, marker=_m, s=_s, c=_c)
+
+	"""
 	if markers and colors:
 		for _s, _c, _x, _y in zip(markers, colors, x, y):
 			panel.scatter(_x, _y, marker=_s, c=_c)
@@ -25,4 +34,5 @@ def do_scatter_plot(panel, x, y, markers, colors):
 	else: 
 		for _x, _y in zip(x, y):
 			panel.scatter(_x, _y)
+	"""
 	return panel

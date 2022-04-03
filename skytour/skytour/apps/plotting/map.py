@@ -336,7 +336,8 @@ def map_dsos(ax, earth, t, projection,
         alpha=1,
         label_size = None,
         symbol_size = 40., # was 90
-        reversed=False
+        reversed=False,
+        ignore_setting = False # for Skymap, not finder charts
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -359,7 +360,18 @@ def map_dsos(ax, earth, t, projection,
             if sin_dist < 0: # if the sine of the distance angle is <0 we're below the horizon
                 continue
             else: # Oooh - I'm a contender
-                interesting.append(other)
+                if not ignore_setting:
+                    interesting.append(other)
+                else:
+                    # TODO: a better way might be:
+                    #   1. if altitude > -90 + latitude + 25
+                    #   2. AND HA < HA_limit
+                    #   then add to interesting...
+                    ha = center[0] - other.ra
+                    ha_limit = find_site_parameter('hour-angle-range', 6, 'float')
+                    dec_limit = find_site_parameter('declination-limit', -30, 'float')
+                    if other.dec >= dec_limit and ha < ha_limit:
+                        interesting.append(other) 
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)
         other_dsos['y'].append(y)

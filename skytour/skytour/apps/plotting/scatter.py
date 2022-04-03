@@ -15,6 +15,7 @@ def create_plot(
         colors = None, 
         markers = None, 
         lines = None,
+        sizes = None,
         grid = False,
         error = None, 
         xpad = 0., 
@@ -40,13 +41,13 @@ def create_plot(
     panel.set_ylim(fix_axis(y, ypad))
 
     if not type or type == 'scatter':
-        panel = do_scatter_plot(panel, x, y, markers, colors)
+        panel = do_scatter_plot(panel, x, y, markers, colors, sizes)
         if error:
             panel.errorbar(x, y, yerr=error, linestyle='None')
 
     if lines and len(lines) > 0:
         for line in lines:
-            panel.axhline(line, ls = '--', color='#ccc')
+            panel.axhline(line, ls = '--', color='#333')
     # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)

@@ -1,4 +1,5 @@
 import datetime
+import numpy as np
 from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
@@ -61,6 +62,20 @@ class ObservingSession(models.Model):
                 return f'{sqm_min:.2f} - {sqm_max:.2f}'
         except:
             return None
+
+    @property
+    def sqm_avg(self):
+        conditions = self.observingcircumstances_set.all()
+        y = []
+        for c in conditions:
+            if c.sqm:
+                y.append(c.sqm)
+        avg = np.average(y)
+        rms = np.std(y)
+        s = f"{avg:.2f}"
+        if rms > 0:
+            s += f' ± {rms:.2f}'
+        return s
 
     @property
     def seeing_range(self):

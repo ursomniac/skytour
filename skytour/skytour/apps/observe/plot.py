@@ -1,4 +1,5 @@
 import numpy as np
+import datetime, pytz
 from ..plotting.scatter import create_plot
 
 """
@@ -13,8 +14,17 @@ STATUS_COLOR = {
 	'Issues': '#FC0'
 }
 
+SIZES = {
+    'Active': 100,
+	'Possible': 60,
+	'Rejected': 20,
+    'Provisional': 80,
+	'TBD': 50,
+	'Issues': 40
+}
+
 def make_location_plot(
-    obj_list, 
+    obj_list,
     type, 
     title='Generic Title', 
     xtitle = 'X Axis Title',
@@ -33,6 +43,7 @@ def make_location_plot(
     distance = []
     colors = []
     markers = []
+    sizes = []
 
     for obj in obj_list:
         sqm.append(obj.sqm)
@@ -41,6 +52,7 @@ def make_location_plot(
         distance.append(obj.travel_distance)
         colors.append(STATUS_COLOR[obj.status])
         markers.append(obj.state.marker)
+        sizes.append(SIZES[obj.status] * .5)
 
     if type == 'sqm':
         x = distance
@@ -67,7 +79,7 @@ def make_location_plot(
 
     image = create_plot(
         x = x, y = y, 
-        markers = markers, colors = colors,
+        markers = markers, colors = colors, sizes=sizes,
         grid = grid, title=title,
         xtitle = xtitle, ytitle=ytitle,
         xpad = xpad, ypad = ypad,
