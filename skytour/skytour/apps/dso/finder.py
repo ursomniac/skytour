@@ -24,7 +24,7 @@ def r2d(a): # a is a numpy.array
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
 
-def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=1):
+def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=.7):
 
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
@@ -158,7 +158,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
         other_dsos['y'].append(y)
         other_dsos['label'].append(other.shown_name)
         other_dsos['marker'].append(other.object_type.marker_type)
-        ax = plot_dso(ax, x, y, other, alpha=0.7)
+        ax = plot_dso(ax, x, y, other, alpha=0.6)
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     for x, y, z in zip(xxx, yyy, other_dsos['label']):

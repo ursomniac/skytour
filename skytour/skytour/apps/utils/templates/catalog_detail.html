@@ -34,8 +34,9 @@
         <th>&delta; (2000)</th>
         <th>Type</th>
         <th>Mag</th>
-        <th>Size/Sep</th>
-        <th>Constellation</th>
+        <th>Size</th>
+        <th>Con.</th>
+        <th>Pri.</th>
         <th># Obs.</th>
         <th>Last Obs.</th>
     </tr>
@@ -58,6 +59,7 @@
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.constellation.abbreviation }}</td>
+        <td>{{ thing.priority }}</td>
         <td>{{ thing.number_of_observations }}</td>
         <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
     </tr>

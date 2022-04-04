@@ -2,17 +2,17 @@
 <table>
     <tbody>
         {% if show_moon and url_type == 'planet-detail' %}
-        <tr><td><a href="{% url 'moon-detail' %}">Moon</a></td></tr>
+        <tr><td><a href="{% url 'moon-detail' %}" target="_new">Moon</a></td></tr>
         {% endif %}
         {% for object in object_list %}
         <tr>
             <td>
                 {% if url_type == 'dso-detail' %}
-                <a href="{% url url_type object.pk %}">{{ object.shown_name }}</a> {{ object.object_type }}
+                <a href="{% url url_type object.pk %}" target="_new">{{ object.shown_name }}</a> {{ object.object_type }}
                 {% elif url_type == 'comet-detail' %}
-                {{ object.letter }}: <a href="{% url url_type object.pk %}">{{ object.name }}</a>
+                {{ object.letter }}: <a href="{% url url_type object.pk %}" target="_new">{{ object.name }}</a>
                 {% else %}
-                <a href="{% url url_type object.slug %}">{{ object.name }}</a>
+                <a href="{% url url_type object.slug %}" target="_new">{{ object.name }}</a>
                 {% endif %}
             </td>
         </tr>

@@ -346,7 +346,7 @@ def map_dsos(ax, earth, t, projection,
         called from create_finder_chart or plot_track because then we ought
         to be able to make things run faster.
     """
-    other_dso_records = DSO.objects.filter(show_on_skymap=1)
+    other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
     if dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
 
@@ -367,10 +367,13 @@ def map_dsos(ax, earth, t, projection,
                     #   1. if altitude > -90 + latitude + 25
                     #   2. AND HA < HA_limit
                     #   then add to interesting...
+                    # UGH - this fails in the NW because of the HA,
+                    #   SO, allow for circumpolar objects to always appear
+                    #   ... for now
                     ha = center[0] - other.ra
                     ha_limit = find_site_parameter('hour-angle-range', 6, 'float')
                     dec_limit = find_site_parameter('declination-limit', -30, 'float')
-                    if other.dec >= dec_limit and ha < ha_limit:
+                    if other.dec >= dec_limit and (ha < ha_limit or other.dec > center[1]):
                         interesting.append(other) 
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)

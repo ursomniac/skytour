@@ -116,7 +116,7 @@ class MoonDetailView(CookieMixin, TemplateView):
             flipped = False,
             reversed = reversed
         )
-        return context
+        return context 
 
 class AsteroidListView(CookieMixin, ListView):
     model = Asteroid
