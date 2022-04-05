@@ -1,0 +1,20 @@
+<h2>Position of the Planets {{ utdt_start|date:"Y-m-d h:i" }} UT</h2>
+<table>
+    <tr>
+        <td><img src="{{ system_image }}"/></td>
+        <td style="vertical-align: top">
+            <h3>Heliocentric Ecliptic Positions</h3>
+            <table>
+                <tr><th>Planet</th><th>Long.</th><th>Dist.</th></tr>
+                {% for p in ecl_pos %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.longitude|floatformat:2 }}</td>
+                    <td>{{ p.distance|floatformat:2 }}</td>
+
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+</table>

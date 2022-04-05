@@ -34,6 +34,8 @@ class PlanetListView(CookieMixin, ListView):
             d['last_observed'] = p.last_observed
             planet_list.append(d)
         context['planet_list'] = planet_list
+        pdict = get_ecliptic_positions(context['utdt_start'])
+        context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context
 
 class PlanetDetailView(CookieMixin, DetailView):
@@ -321,11 +323,9 @@ class OrreryView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(OrreryView, self).get_context_data(**kwargs)
         context = deal_with_cookie(self.request, context)        
-        utdt = context['utdt']
-        planets = get_ecliptic_positions(utdt)
-        context['system_image'] = plot_ecliptic_positions(planets)
-        context['planets'] = planets
-        # Ugh this is from the Earth's perspective!  Oops!
-        ### Use the distance, and ecliptic coordinates to plot the planets
+        utdt = context['utdt_start']
+        # Get the heliocentric ecliptic positions
+        pdict = get_ecliptic_positions(utdt)
+        context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict)
         return context
 

@@ -1,5 +1,5 @@
 PLANETS = ['Mercury', 'Venus', 'Mars', 'Jupiter','Saturn', 'Uranus', 'Neptune']
-
+PLANETS_8 = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
 UNICODE = {
     'Mercury': '\u263F', 'Venus': '\u2640', 'Earth': '\U0001F728', 'Mars': '\u2642', 
     'Jupiter': '\u2643','Saturn': '\u2644', 'Uranus': '\u26E2', 'Neptune': '\u2646', 
@@ -17,4 +17,19 @@ UNICODE = {
 STATUS_CHOICES = [
     (1, 'On'),
     (0, 'Off')
+]
+
+ZODIAC = [
+    ('Aries',        15, '\u2648'),
+    ('Taurus',       45, '\u2649'),
+    ('Gemini',       75, '\u264A'),
+    ('Cancer',      105, '\u264B'),
+    ('Leo',         135, '\u264C'),
+    ('Virgo',       165, '\u264D'),
+    ('Libra',       195, '\u264E'),
+    ('Scorpius',    225, '\u264F'),
+    ('Sagittarius', 255, '\u2650'),
+    ('Capricornus', 285, '\u2651'),
+    ('Aquarius',    315, '\u2652'),
+    ('Pisces',      345, '\u2653')
 ]

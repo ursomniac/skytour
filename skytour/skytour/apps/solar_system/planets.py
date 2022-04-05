@@ -1,12 +1,11 @@
 import datetime, pytz
 from skyfield.api import load 
-from .vocabs import PLANETS
+from .vocabs import PLANETS_8
 
 def get_ecliptic_positions(utdt=None):
     if utdt is None:
         utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-    all_planets = PLANETS
-    all_planets.insert(2, 'Earth')
+    all_planets = PLANETS_8
     # start
     ts = load.timescale()
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)

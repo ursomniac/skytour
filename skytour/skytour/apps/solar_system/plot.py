@@ -5,17 +5,16 @@ import math
 import matplotlib
 import numpy as np
 import time
-
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
-
-from .asteroids import get_asteroid_target
-from .comets import get_comet_target
 from ..observe.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
+from .asteroids import get_asteroid_target
+from .comets import get_comet_target
+from .vocabs import ZODIAC
+
 
 matplotlib.use('Agg') # this gets around the threading issues.
 
@@ -273,22 +272,36 @@ def create_planet_system_view (
     plt.close(fig)
     return pngImageB64String
 
-def plot_ecliptic_positions(planets):
+def plot_ecliptic_positions(planets, reversed):
+    dmax = 48
     r = [0., ]
     theta = [0., ]
     label = ['Sun', ]
     colors = ['y', 'grey', 'orange', 'blue', 'red', 'pink', 'brown', 'lime', 'cyan']
     fig = plt.figure()
     ax = fig.add_subplot(projection='polar')
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    
     for d in planets:
         r.append(d['distance'])
-        theta.append(d['longitude'])
+        theta.append(math.radians(d['longitude']))
         label.append(d['name'])
 
     ax.set_xticks = (np.arange(0, 2.*math.pi, math.pi/12.))
-    ax.set_ylim(0, 40)
+    ax.set_ylim(0, dmax)
     ax.set_rscale('symlog')
     c = ax.scatter(theta, r, s=40, c=colors)
+
+    for (_, longitude, symbol) in ZODIAC:
+        plt.annotate(
+            symbol, 
+            (math.radians(longitude), dmax*.8), 
+            textcoords='offset points', 
+            xytext=(0, 0), 
+            ha='center', 
+            va='center'
+        )
 
     # Convert to a PNG image
     pngImage = io.BytesIO()
@@ -299,7 +312,7 @@ def plot_ecliptic_positions(planets):
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String
+    return pngImageB64String, planets
 
 def plot_track(
         utdt, 
