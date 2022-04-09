@@ -33,6 +33,7 @@ urlpatterns = [
     path('priority/', include('skytour.apps.dso.urls_priority')),
     path('session/', include('skytour.apps.session.urls')),
     path('solar_system/', include('skytour.apps.solar_system.urls_features')),
+    path('sso_pdf/', include('skytour.apps.solar_system.urls_pdf')),
     path('stars/', include('skytour.apps.stars.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

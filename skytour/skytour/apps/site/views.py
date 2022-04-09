@@ -25,11 +25,14 @@ class HomePageView(CookieMixin, TemplateView):
             context['adjacent_planets'] = get_adjacent_planets(planets, context['utdt_start'])
         else:
             context['adjacent_planets'] = None
-
-
+        if 'time_zone' in context.keys():
+            time_zone = pytz.timezone(context['time_zone'])
+        else:
+            time_zone = None
+        
         context['now'] = utdt
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)
         context['upcoming_events'] = get_upcoming_calendar(utdt)
         context['min_sep'] = find_site_parameter('adjacent-planets-separation', default=10., param_type='float')
-        context['grid'] = create_calendar_grid(utdt-datetime.timedelta(days=2))
+        context['grid'] = create_calendar_grid(utdt-datetime.timedelta(days=2), time_zone=time_zone)
         return context

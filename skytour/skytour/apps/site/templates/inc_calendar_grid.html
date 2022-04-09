@@ -26,11 +26,19 @@
         {% if day.date %}
             <table width="100%" class='calendar-cell'>
                 <tr>
-                    <th>{{ day.date.day }}</th>
-                    <th><small>{{ day.jd }}</small></th>
-                    <th>{{ day.moon.phase_abbr }}</th>
+                    <th colspan=1>{{ day.date.day }}</th>
+                    <th colspan=1><small>{{ day.jd }}</small></th>
+                    <th colspan=1>{{ day.moon.phase_abbr }}</th>
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <small>R: {{ day.sunrise.local_str}} &#9788; S: {{ day.sunset.local_str}}</small>
+                        <br><small>R: {{ day.moonrise.local_str}} &#9789; S: {{ day.moonset.local_str}}</small>
+                        <br><small>&#x1F52D;  {{ day.twilight.night.start }} to {{ day.twilight.astro.end }}</small>
+                    </td>
                 </tr>
             </table>
+            <br/>
             <br/>
             {% for e in day.events %}
                 <small>

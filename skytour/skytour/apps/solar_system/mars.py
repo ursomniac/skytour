@@ -129,6 +129,8 @@ def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
 
     return mars
 
+MARS_DAY = 24.624
+MARS_HALF_DAY = MARS_DAY / 2.
 def get_mars_features(utdt, mars):
     features = [
         dict(name='Olympus Mons', longitude=226, latitude=19),
@@ -143,16 +145,21 @@ def get_mars_features(utdt, mars):
         ha_degrees = map_longitude - meridian
         if ha_degrees < 0.:
             ha_degrees += 360.
-        dtt = ha_degrees * 24.624 / 360.
-        t_trans = utdt - datetime.timedelta(hours=dtt)  
+        dtt = ha_degrees * MARS_DAY / 360.
+        t_trans = utdt - datetime.timedelta(hours=dtt)
         if dtt < 0: # still to come
             t_trans = t_trans + datetime.datetime(hours=24.624)
+        xtd = dtt
+        if xtd > MARS_HALF_DAY:
+            xtd -= MARS_DAY
+        if xtd < -1.*MARS_HALF_DAY:
+            xtd += MARS_DAY
         view = 'No'
-        if abs(dtt) < 6.156:
+        if abs(xtd) < 6.156:
             view = 'Edge'
-        if abs(dtt) < 2.46:
+        if abs(xtd) < 2.46:
             view = 'Possible'
-        if abs(dtt) < 1.23:
+        if abs(xtd) < 1.23:
             view = 'Best'
 
         #print(f"{feature['name']}: {feature['longitude']} - {meridian} = {ha_degrees}")

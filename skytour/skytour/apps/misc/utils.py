@@ -1,5 +1,9 @@
 import datetime
+from skyfield import api
+from ..observe.almanac import get_sun_rise_set, get_moon_rise_set, get_twilight_begin_end
+from ..observe.models import ObservingLocation
 from ..observe.time import get_julian_date
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.moon import simple_lunar_phase
 from .models import Calendar
 
@@ -20,7 +24,7 @@ PHASE_ABBR = {
     'WANING CRESCENT': 'WnC'
 }
 
-def create_calendar_grid(start_date, days_out=30):
+def create_calendar_grid(start_date, location_pk = None, days_out=30, time_zone=None):
     """
     Create a list of weeks, which itself is a list of 7 days.
     Populate each [week, day] with information.
@@ -41,6 +45,14 @@ def create_calendar_grid(start_date, days_out=30):
     week_number = 0
     cells = []
 
+    # Set up rise/set, AT start/end
+    ts = api.load.timescale()
+    eph = api.load('de421.bsp')
+    if location_pk is None:
+        location_pk = find_site_parameter('default-location-id', 43, 'positive')
+    location = ObservingLocation.objects.get(pk=location_pk)
+    loc = api.wgs84.latlon(location.latitude, location.longitude)
+
     # Create a list of data, one for each day shown
     for i in range(days_out + 1):
         tt = t0 + datetime.timedelta(days=i)
@@ -49,13 +61,26 @@ def create_calendar_grid(start_date, days_out=30):
         jd = get_julian_date(tt)
         moon = simple_lunar_phase(jd)
         moon['phase_abbr'] = PHASE_ABBR[moon['phase']]
+
+        # sunrise, sunset
+        sunrise, sunset = get_sun_rise_set(tt, loc, ts, eph, time_zone=time_zone)
+        # AT start, end
+        twilight = get_twilight_begin_end(tt, location, time_zone=time_zone)
+        # moonrise, moonset
+        moonrise, moonset = get_moon_rise_set(tt, location, eph, time_zone=time_zone)
+
         cell_dict = dict(
             date = tt.date(),
             events = ee,
             day_of_week = wd,
             week = week_number,
             jd = int(jd),
-            moon = moon
+            moon = moon,
+            sunset = sunset,
+            sunrise = sunrise,
+            moonrise = moonrise,
+            moonset = moonset,
+            twilight = twilight
         )
         # If the next day is a Sunday, start a new week
         if wd == 6:

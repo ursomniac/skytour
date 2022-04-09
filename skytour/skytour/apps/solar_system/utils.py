@@ -82,6 +82,8 @@ def get_constellation(ra, dec):
     constellation_at = load_constellation_map()
     d = dict(load_constellation_names())
     abbr = constellation_at(position_of_radec(ra, dec))
+    # Stupid hack - error in Skyfield
+    abbr = 'Cvn' if abbr == 'CVn' else abbr
     return dict(name = d[abbr], abbr = abbr)
 
 def get_meeus_phase_angle(sun_earth, earth_obj, sun_obj):

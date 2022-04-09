@@ -13,7 +13,8 @@ class PlanetObservationAdmin(AbstractObservation):
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
-    list_display = ['pk', 'name', 'radiant_ra', 'radiant_dec', 'start_date', 'peak_date', 'end_date']
+    list_display = ['pk', 'name', 'radiant_ra', 'radiant_dec', 'start_date', 'peak_date', 'end_date', 'zhr']
+    search_fields = ['name']
     fieldsets = (
         (None, {
             'fields': [
