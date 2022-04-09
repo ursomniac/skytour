@@ -1,57 +1,10 @@
-import textwrap
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
-from reportlab.rl_config import defaultPageSize
+from ..pdf.utils import (
+    DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_ITAL,
+    PAGE_WIDTH, PAGE_HEIGHT, X0,
+    add_image, bold_text, long_text
+)
 
-DEFAULT_FONT_SIZE = 12
-DEFAULT_FONT = 'Helvetica'
-DEFAULT_BOLD = 'Helvetica-Bold'
-DEFAULT_ITAL = 'Helvetica'
-
-def place_text(p, x, y, text, size=DEFAULT_FONT_SIZE):
-    p.setFont(DEFAULT_FONT, size)
-    text = '' if text is None else text
-    p.drawString(x, y, text)
-    return p
-
-def bold_text (p, x, y, text, size=14):
-    p.setFont(DEFAULT_BOLD, size)
-    text = '' if text is None else text
-    p.drawString(x, y, text)
-    p.setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE)
-    tw = stringWidth(text, DEFAULT_BOLD, size)
-    return p, tw
-
-def add_image(p, y, file, x=50, size=250):
-    if file is not None:
-        map_img = ImageReader(file)
-        p.drawImage(map_img, x, y-size, width=size, height=size, preserveAspectRatio=True)
-    return p, y - size
-
-def long_text(p, limit, x, y, text, dy=15, size=10):
-    p.setFont(DEFAULT_FONT, size)
-    text = '' if text is None else text
-    text = text.replace('\r', '')
-    pass1 = text.split('\n')
-
-    lines = []
-    for line in pass1:
-        if len(line.strip()) == 0:
-            continue
-        if len(line) > limit:
-            nlines = textwrap.wrap(line, width=limit)
-            lines += nlines
-        else:
-            lines.append(line)
-
-    for line in lines:
-        p.drawString(x, y, line)
-        y -= dy
-
-    p.setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE)
-    return p, y
 
 def create_pdf_form(loc):
     dir = 'location_pdf/'
@@ -59,10 +12,7 @@ def create_pdf_form(loc):
     filename = f'{dir}{loc.pk}__{lname}{loc.city.lower()}_{loc.state.abbreviation.lower()}.pdf'
     #p = canvas.Canvas(buffer, pagesize=letter) # width = 612, height = 792
     p = canvas.Canvas('media/'+filename)
-    PAGE_WIDTH = defaultPageSize[0]
-    PAGE_HEIGHT = defaultPageSize[1]
-    x0 = 50
-
+    x0 = X0
     title = loc.street_address if loc.street_address is not None else ''
     if loc.name is not None:
         title = loc.name + " " + title

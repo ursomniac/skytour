@@ -35,12 +35,6 @@ PDICT = {
     'Neptune': dict(y0=130, xp=240, yp=20)
 }
 
-def show_dso_header(p, y):
-    pass
-
-def show_dso_line(p, y, instance):
-    pass
-
 def show_object_table(obj, p, y, instance, xoff=0):
     app = obj['apparent']
     obs = obj['observe']

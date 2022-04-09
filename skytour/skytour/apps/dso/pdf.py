@@ -1,16 +1,6 @@
-import textwrap
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
-from reportlab.rl_config import defaultPageSize
-
-from ..observe.pdf import bold_text, long_text, add_image
 from ..observe.pdf import DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE
-
-PAGE_WIDTH = defaultPageSize[0]
-PAGE_HEIGHT = defaultPageSize[1]
-X0 = 50
+from ..pdf.utils import PAGE_WIDTH, PAGE_HEIGHT, X0, bold_text, long_text, add_image
 
 def create_pdf_page(dso):
     dir = 'dso_pdf/'

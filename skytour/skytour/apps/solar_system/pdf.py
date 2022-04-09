@@ -7,12 +7,11 @@ from django.views.generic import View
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.rl_config import defaultPageSize
-from ..observe.pdf import (
-    bold_text, 
-    add_image, 
-    place_text
+from ..pdf.utils import (
+    DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_ITAL,
+    PAGE_WIDTH, PAGE_HEIGHT,
+    add_image, bold_text, place_text
 )
-from ..observe.pdf import DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_ITAL
 from ..session.cookie import deal_with_cookie, get_all_cookies
 from ..solar_system.plot import (
     create_planet_system_view, 
@@ -66,8 +65,6 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     Unlike the others this creates a page on the fly
     based on the cookie settings.
     """
-    PAGE_WIDTH = defaultPageSize[0]
-    PAGE_HEIGHT = defaultPageSize[1]
     location = cookies['location']
     time_zone = pytz.timezone(cookies['time_zone']) if cookies['time_zone'] is not None else None
 
