@@ -6,11 +6,34 @@ from reportlab.rl_config import defaultPageSize
 PAGE_WIDTH = defaultPageSize[0]
 PAGE_HEIGHT = defaultPageSize[1]
 X0 = 50
+Y0 = 750
 
 DEFAULT_FONT_SIZE = 12
 DEFAULT_FONT = 'Helvetica'
 DEFAULT_BOLD = 'Helvetica-Bold'
 DEFAULT_ITAL = 'Helvetica'
+
+def copy(item):
+    is_str = isinstance(item, str)
+    copy = item if is_str else item[0]
+    return copy
+
+def size(item):
+    is_str = isinstance(item, str)
+    size = DEFAULT_FONT_SIZE if is_str else item[1]
+    return size
+
+def label_and_text(p, x, y, label, text, cr=15):
+    """
+    label and text are either string or a tuple (string, font_size):
+        (text, [font_size])
+    """
+    p, tw = bold_text(p, x, y, copy(label), size=size(label))
+    if text is not None:
+        p = place_text(p, x + tw, y, copy(text), size=size(text))
+    if cr > 0:
+        y -= cr
+    return p, y
 
 def place_text(p, x, y, text, size=DEFAULT_FONT_SIZE):
     p.setFont(DEFAULT_FONT, size)

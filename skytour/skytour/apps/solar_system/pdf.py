@@ -9,8 +9,8 @@ from reportlab.pdfgen import canvas
 from reportlab.rl_config import defaultPageSize
 from ..pdf.utils import (
     DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_ITAL,
-    PAGE_WIDTH, PAGE_HEIGHT,
-    add_image, bold_text, place_text
+    PAGE_WIDTH, PAGE_HEIGHT, X0, Y0,
+    add_image, bold_text, place_text, label_and_text
 )
 from ..session.cookie import deal_with_cookie, get_all_cookies
 from ..solar_system.plot import (
@@ -72,71 +72,50 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     obs = session['observe']
     phy = session['physical']
 
-    X0 = 50
-    y0 = 750
-
     # Title
-    y = y0
+    y = Y0
     p, tw = bold_text(p, X0, y, object.name, size=20)
     # Metadata
     #   - Overall (UTDT, etc.)
-    p, tw = bold_text(p, 300, y, 'Date: ', size=FS)
+
     tstr = cookies['utdt_start'].strftime('%Y-%m-%d %H:%M')
     lstr = cookies['utdt_start'].astimezone(time_zone).strftime("%Y-%m-%d %H:%M %z") if time_zone is not None else None
-    p = place_text(p, 300 + tw, y, f"{lstr}  ({tstr} UT)", size=FS)
-
-    y -= 15
-    p, tw = bold_text(p, 300, y, "Loc: ", size=FS)
-    p = place_text(p, 300 + tw, y, f'{location}', size=FS)
-    y -= 15
-    p, tw = bold_text(p, 300, y, "Lat: ", size=FS)
-    p = place_text(p, 300 + tw, y, f"{location.latitude}", size=FS)
-    y -= 15
-    p, tw = bold_text(p, 300, y, "Long: ", size=FS)
-    p = place_text(p, 300 + tw, y, f'{location.longitude}', size=FS)
-    #   - Almanac (rise/set)
-    y = y0 - 30
-    orise, oset = get_rise_set(session['almanac'])
-    p, tw = bold_text(p, X0, y, "Rise: ", size=FS)
-    p = place_text(p, X0 + tw, y, orise, size=FS)
-    y -= 15
-    p, tw = bold_text(p, X0, y, 'Set: ', size=FS)
-    p = place_text(p, X0 + tw, y, oset, size=FS)
-    #   - Apparent/Astro 
+    p, y = label_and_text(p, 300, y, ('Date: ', 10), (f"{lstr}  ({tstr} UT)", 10), cr=15)
+    p, y = label_and_text(p, 300, y, ("Loc: ", FS), (f'{location}', FS), cr=15)
+    p, y = label_and_text(p, 300, y, ("Lat: ", FS), (f"{location.latitude}", FS), cr=0)
+    p, y = label_and_text(p, 400, y, ("Long: ", FS), (f'{location.longitude}', FS), cr=30)
+   #   - Apparent/Astro 
     #       RA, Dec
-    y -= 30
     ynow = y
-    p, tw = bold_text(p, X0, y, u'RA: ', size=FS)
-    p = place_text(p, X0 + tw, y, app['equ']['ra_str'], size=FS)
-    y -= 15
-    p, tw = bold_text(p, X0, y, u'Dec: ', size=FS)
-    p = place_text(p, X0 + tw, y, app['equ']['dec_str'], size=FS)
+    p, y = label_and_text(p, X0, y, ("RA: ", FS), (app['equ']['ra_str'], FS), cr=15)
+    p, y = label_and_text(p, X0, y, ('Dec: ', FS), (app['equ']['dec_str'], FS), cr=15)
     #       mag, ang size, etc.
-    xnow = 200
+    xnow = 175
     y = ynow
-    p, tw = bold_text(p, xnow, y, 'Mag: ', size=FS)
-    p = place_text(p, xnow + tw, y, f"{obs['apparent_magnitude']:.2f}", size=FS)
-    p, tw = bold_text(p, xnow, y-15, 'Ang Diam: ', size=FS)
-    p = place_text(p, xnow + tw, y-15, obs['angular_diameter_str'], size=FS)
+    p, y = label_and_text(p, xnow, y, ('Mag: ', FS), (f"{obs['apparent_magnitude']:.2f}", FS), cr=0)
+    p, y = label_and_text(p, xnow, y-15, ('Ang Diam: ', FS), (obs['angular_diameter_str'], FS), cr=0)
     #       distance
     y = ynow
-    xnow = 400
+    xnow = 275
     p, tw = bold_text(p, xnow, y, 'Dist: ', size=FS)
     dist = app['distance']
     p = place_text(p, xnow + tw, y, f"{dist['au']:.2f} AU = {dist['mi']/1.e6:.1f} Mmi", size=FS)
     p = place_text(p, xnow + tw, y-15, f"{dist['light_time_str']}", size=FS)
+    #   - Almanac (rise/set)
+    xnow = 425
+    y = ynow
+    orise, oset = get_rise_set(session['almanac'])
+    p, y = label_and_text(p, xnow, y, ("Rise: ", FS), (orise, FS), cr=15)
+    p, y = label_and_text(p, xnow, y, ("Set: ", FS), (oset, FS), cr=15)
+ 
     # Planets section
-    y -= 30
     if object_type == 'planet':
         # % Illum
         # Elong.
-        p, tw = bold_text(p, X0, y, '% Illum: ', size=FS)
-        p = place_text(p, X0 + tw, y, f"{obs['fraction_illuminated']:.1f} %", size=FS)
-        p, tw = bold_text(p, 200, y, 'Elong: ', size=FS)
-        p = place_text(p, 200 + tw, y, f"{obs['elongation']:.2f}°", size=FS)
+        p, y = label_and_text(p, X0, y, ('% Illum: ', FS), (f"{obs['fraction_illuminated']:.1f} %", FS), cr=0)
+        p, y = label_and_text(p, 175, y, ('Elong: ', FS), (f"{obs['elongation']:.2f}°", FS), cr=10)
 
     # Finder Chart
-    y -= 10
     finder, _ = create_finder_chart(
         utdt, 
         object, 
@@ -144,7 +123,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
         asteroids=cookies['cookies']['asteroids'], 
         object_type = object_type,
         obj_cookie = session,
-        fov = 5,
+        fov = 10,
         reversed=False
     )
     p, newy = add_image(p, y, finder, x=50, size=250)
@@ -162,6 +141,18 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
             p.setFont(DEFAULT_ITAL, 8)
             p.drawString(380, y, 'ID above + = moon behind planet')
             p.setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE)
+    else:
+        closer, _ = create_finder_chart(
+            utdt, 
+            object, 
+            planets_cookie=cookies['cookies']['planets'], 
+            asteroids=cookies['cookies']['asteroids'], 
+            object_type = object_type,
+            obj_cookie = session,
+            fov = 5,
+            reversed=False
+        )
+        p, newy = add_image(p, y, closer, x=300, size=250)
     # Map
     if object_type == 'planet' and object.slug in ['mars', 'jupiter']:
         y -= 20
