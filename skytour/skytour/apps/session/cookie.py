@@ -2,7 +2,7 @@ import datetime, pytz
 from dateutil.parser import isoparse
 from ..misc.models import TimeZone
 from ..observe.models import ObservingLocation
-from ..observe.time import get_julian_date, get_t_epoch
+from ..astro.time import get_julian_date, get_t_epoch
 from ..site_parameter.helpers import find_site_parameter 
 
 def test_all_cookies(cookies):

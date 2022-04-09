@@ -1,6 +1,6 @@
 import datetime, pytz
 from django.views.generic.base import TemplateView
-from ..misc.utils import get_upcoming_calendar, create_calendar_grid
+from ..astro.calendar import get_upcoming_calendar, create_calendar_grid
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
-from ..utils.utils import get_limiting_magnitude
+from ..astro.utils import get_limiting_magnitude
 from .pdf import create_pdf_form
 
 CARDINAL_DIRECTIONS = [

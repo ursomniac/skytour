@@ -8,7 +8,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
 
-from ..observe.time import get_t_epoch, get_julian_date, get_last
+from ..astro.time import get_t_epoch, get_julian_date, get_last
 from ..plotting.map import *
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.plot import r2d, d2r

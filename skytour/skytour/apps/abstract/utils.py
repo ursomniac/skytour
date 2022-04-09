@@ -1,7 +1,7 @@
 import math
-from ..observe.time import get_last, get_julian_date
+from ..astro.time import get_last, get_julian_date
 from ..solar_system.position import get_object_metadata
-from ..utils.transform import get_alt_az
+from ..astro.transform import get_alt_az
 
 def rectify_ha(xha):
     if xha <= -12.:

@@ -8,9 +8,9 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from ..observe.almanac import get_dark_time
+from ..astro.almanac import get_dark_time
 from ..observe.models import ObservingLocation
-from ..observe.time import get_julian_date
+from ..astro.time import get_julian_date
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
     get_planet_positions, 

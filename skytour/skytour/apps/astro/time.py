@@ -1,7 +1,7 @@
 import datetime, pytz
 import math
 from ..utils.format import to_sex
-from .astro import get_nutation, get_obliquity
+from .altaz import get_nutation, get_obliquity
 
 #### DATETIME METHODS
 def get_utdt(utdt=None):

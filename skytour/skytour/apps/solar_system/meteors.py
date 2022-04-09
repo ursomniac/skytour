@@ -1,5 +1,5 @@
 import datetime, pytz
-from ..observe.time import get_julian_date
+from ..astro.time import get_julian_date
 from .models import MeteorShower
 
 def get_meteor_showers(utdt=None):

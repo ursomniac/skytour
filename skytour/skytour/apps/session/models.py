@@ -3,8 +3,8 @@ import numpy as np
 from django.db import models
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
-from ..observe.time import get_last, get_julian_date
-from ..utils.utils import get_limiting_magnitude
+from ..astro.time import get_last, get_julian_date
+from ..astro.utils import get_limiting_magnitude
 from .chain import get_all_observations, get_all_objects
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 

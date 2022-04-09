@@ -12,7 +12,7 @@ from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
-from ..utils.astro import get_altitude
+from ..astro.astro import get_altitude
 
 matplotlib.use('Agg') # This gets around some of Matplotlib's oddities
 

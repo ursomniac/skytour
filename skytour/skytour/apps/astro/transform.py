@@ -1,6 +1,6 @@
 import math
-from ..observe.time import get_last
-from .format import to_sex
+from .time import get_last
+from ..utils.format import to_sex
 
 def get_alt_az(utdt, latitude, longitude, ra, dec, from_south=False, debug=False):
     """

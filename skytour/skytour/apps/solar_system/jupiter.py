@@ -1,6 +1,6 @@
 import datetime, pytz
 import math
-from ..observe.time import get_julian_date, estimate_delta_t
+from ..astro.time import get_julian_date, estimate_delta_t
 
 sign = lambda a: 1 if a>0 else -1 if a<0 else 0
 

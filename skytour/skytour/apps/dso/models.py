@@ -6,8 +6,8 @@ from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
-from ..utils.angdist import get_neighbors
-from ..utils.transform import get_alt_az
+from ..astro.angdist import get_neighbors
+from ..astro.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
 from .pdf import create_pdf_page
 

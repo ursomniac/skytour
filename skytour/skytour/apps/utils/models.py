@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
-from .vocabs import MAP_SYMBOL_TYPES
+from ..plotting.vocabs import MAP_SYMBOL_TYPES
 
 class Catalog(models.Model):
     """

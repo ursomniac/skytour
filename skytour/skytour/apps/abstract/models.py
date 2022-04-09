@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
-from ..utils.transform import get_cartesian
+from ..astro.transform import get_cartesian
 
 class FieldView(models.Model):
     """

@@ -2,8 +2,8 @@ import math
 from skyfield.almanac import moon_phase
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
-from ..observe.almanac import get_object_rise_set
-from ..observe.local import get_observing_situation
+from ..astro.almanac import get_object_rise_set
+from ..astro.local import get_observing_situation
 
 from .comets import get_comet_target
 from .jupiter import get_jupiter_physical_ephem

@@ -10,7 +10,7 @@ from reportlab.pdfgen import canvas
 from reportlab.rl_config import defaultPageSize
 
 from ..dso.models import DSO
-from ..misc.utils import get_upcoming_calendar
+from ..astro.calendar import get_upcoming_calendar
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.helpers import get_adjacent_planets

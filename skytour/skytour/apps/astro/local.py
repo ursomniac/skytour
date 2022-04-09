@@ -1,5 +1,5 @@
 
-from ..utils.transform import get_alt_az
+from .transform import get_alt_az
 
 def is_object_up(utdt, location, ra, dec, min_alt=0.):
     az, alt = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)

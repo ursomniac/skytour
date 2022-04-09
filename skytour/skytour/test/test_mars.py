@@ -1,8 +1,8 @@
 import datetime, pytz
 import math
 from skyfield.api import load
-from ..apps.observe.astro import get_obliquity
-from ..apps.observe.time import get_julian_date, estimate_delta_t
+from ..apps.astro.altaz import get_obliquity
+from ..apps.astro.time import get_julian_date, estimate_delta_t
 
 def _cosd(d):
     return math.cos(math.radians(d))

@@ -1,7 +1,7 @@
 import math
 from scipy import spatial
 from skytour.apps.dso.models import DSO
-from skytour.apps.utils.transform import get_cartesian
+from skytour.apps.astro.transform import get_cartesian
 
 def arc_angle(d, r = 1, degrees=False):
     theta = 2. * math.asin(d / r / 2)
