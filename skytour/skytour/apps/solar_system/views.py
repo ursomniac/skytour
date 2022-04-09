@@ -9,6 +9,7 @@ from ..session.mixins import CookieMixin
 from .forms import TrackerForm
 from .helpers import compile_nearby_planet_list
 from .models import Comet, Planet, Asteroid
+from .pdf import get_rise_set
 from .planets import get_ecliptic_positions
 from .plot import (
     create_finder_chart, 
@@ -33,7 +34,10 @@ class PlanetListView(CookieMixin, ListView):
             d['n_obs'] = p.number_of_observations
             d['last_observed'] = p.last_observed
             planet_list.append(d)
+            d['obj_rise'], d['obj_set'] = get_rise_set(d['almanac'])
         context['planet_list'] = planet_list
+        moon = context['cookies']['moon']
+        context['moon_rise'], context['moon_set'] = get_rise_set(moon['almanac'])
         pdict = get_ecliptic_positions(context['utdt_start'])
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context
@@ -216,6 +220,7 @@ class CometDetailView(CookieMixin, DetailView):
                 break
         if mag:
             mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
+        mag_limit = 8.0 if mag_limit < 8.0 else mag_limit
 
         context['comet'] = pdict
 

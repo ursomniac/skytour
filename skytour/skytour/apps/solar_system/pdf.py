@@ -1,18 +1,14 @@
 import datetime, pytz
 import io
-import textwrap
 from dateutil.parser import isoparse
 from django.http import HttpResponse
 from django.views.generic import View
 
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.rl_config import defaultPageSize
 from ..observe.pdf import (
     bold_text, 
-    long_text, 
     add_image, 
     place_text
 )
@@ -25,15 +21,16 @@ from ..solar_system.plot import (
 )
 from .models import Asteroid, Comet, Planet
 
-def get_rise_set(alist):
+def get_rise_set(alist, format="%Y-%m-%d %I:%M %p"):
     orise = None
     oset = None
 
     for e in alist:
+        tstr = isoparse(e['local_time']).strftime(format)
         if e['type'] == 'Rise':
-            orise = isoparse(e['local_time']).strftime("%I:%M %p")
+            orise = tstr
         elif e['type'] == 'Set':
-            oset = isoparse(e['local_time']).strftime("%I:%M %p")
+            oset = tstr
     return orise, oset
 
 
@@ -72,6 +69,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     PAGE_WIDTH = defaultPageSize[0]
     PAGE_HEIGHT = defaultPageSize[1]
     location = cookies['location']
+    time_zone = pytz.timezone(cookies['time_zone']) if cookies['time_zone'] is not None else None
 
     app = session['apparent']
     obs = session['observe']
@@ -86,7 +84,10 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     # Metadata
     #   - Overall (UTDT, etc.)
     p, tw = bold_text(p, 300, y, 'Date: ', size=FS)
-    p = place_text(p, 300 + tw, y, f"{cookies['utdt_start'].strftime('%Y-%m-%d %H:%M')} UT", size=FS)
+    tstr = cookies['utdt_start'].strftime('%Y-%m-%d %H:%M')
+    lstr = cookies['utdt_start'].astimezone(time_zone).strftime("%Y-%m-%d %H:%M %z") if time_zone is not None else None
+    p = place_text(p, 300 + tw, y, f"{lstr}  ({tstr} UT)", size=FS)
+
     y -= 15
     p, tw = bold_text(p, 300, y, "Loc: ", size=FS)
     p = place_text(p, 300 + tw, y, f'{location}', size=FS)
@@ -160,9 +161,10 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
         )
         p, newy = add_image(p, y, telview, x=300, size=250)
         y -= 250
-        p.setFont(DEFAULT_ITAL, 8)
-        p.drawString(380, y, 'ID above + = moon behind planet')
-        p.setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE)
+        if object.slug not in ['mercury', 'venus']:
+            p.setFont(DEFAULT_ITAL, 8)
+            p.drawString(380, y, 'ID above + = moon behind planet')
+            p.setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE)
     # Map
     if object_type == 'planet' and object.slug in ['mars', 'jupiter']:
         y -= 20

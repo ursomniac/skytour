@@ -13,7 +13,9 @@
             <th>&alpha;</th>
             <th>&delta;</th>
             <th>Mag</th>
-            <th>Constellation</th>
+            <th>Const.</th>
+            <th>Rise</th>
+            <th>Set</th>
             <th># Obs.</th>
             <th>Last Obs.</th>
         </tr>
@@ -26,6 +28,8 @@
             <td>{{ p.apparent.equ.dec_str }}</td>
             <td>{{ p.observe.apparent_magnitude|floatformat:2 }}</td>
             <td><a href="{% url 'constellation-detail' p.observe.constellation.abbr|upper %}">{{ p.observe.constellation.name }}</a></td>
+            <td>{{ p.obj_rise }}</td>
+            <td>{{ p.obj_set }}</td>
             <td>{{ p.n_obs }}</td>
             <td>{% if p.last_observed %}{{ p.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
@@ -37,6 +41,8 @@
             <td>{{ moon.apparent.equ.dec_str }}</td>
             <td>{{ moon.observe.apparent_magnitude|floatformat:2 }}</td>
             <td><a href="{% url 'constellation-detail' moon.observe.constellation.abbr|upper %}">{{ moon.observe.constellation.name }}</a></td>
+            <td>{{ moon_rise }}</td>
+            <td>{{ moon_set }}</td>
             <td></td>
             <td></td>
             {% endwith %}

@@ -13,6 +13,7 @@
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ comet.observe.constellation.name }}</h2>
             <a href="/admin/solar_system/comet/{{ object.pk }}/change" target="_new"><button>Admin</button></a>
+            <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
             <br><br>
         </td>
         <td width="35%">

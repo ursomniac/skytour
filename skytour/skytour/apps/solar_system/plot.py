@@ -281,6 +281,7 @@ def plot_ecliptic_positions(planets, reversed):
     fig = plt.figure()
     ax = fig.add_subplot(projection='polar')
     style = 'dark_background' if reversed else 'default'
+    sym_color = '#fff' if reversed else '#000'
     plt.style.use(style)
     
     for d in planets:
@@ -288,7 +289,8 @@ def plot_ecliptic_positions(planets, reversed):
         theta.append(math.radians(d['longitude']))
         label.append(d['name'])
 
-    ax.set_xticks = (np.arange(0, 2.*math.pi, math.pi/12.))
+    #ax.set_xticks = (np.arange(0, 2.*math.pi, math.pi/12.))
+    ax.set_xticks(np.arange(0, 2.*np.pi, np.pi/6.0))
     ax.set_ylim(0, dmax)
     ax.set_rscale('symlog')
     c = ax.scatter(theta, r, s=40, c=colors)
@@ -296,11 +298,15 @@ def plot_ecliptic_positions(planets, reversed):
     for (_, longitude, symbol) in ZODIAC:
         plt.annotate(
             symbol, 
-            (math.radians(longitude), dmax*.8), 
+            (math.radians(longitude+30.), dmax*1.5),
+            color = sym_color,
+            weight='bold',
+            size='large',
             textcoords='offset points', 
             xytext=(0, 0), 
             ha='center', 
-            va='center'
+            va='center',
+            annotation_clip = False
         )
 
     # Convert to a PNG image
