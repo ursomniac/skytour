@@ -1,7 +1,7 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
-from .models import DSO, DSOImage, DSOAlias, DSOObservation
+from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -93,16 +93,6 @@ class DSOAdmin(ObservableObjectAdmin):
     @admin.display(description='Maj. Axis', ordering='major_axis_size')
     def maj_axis(self, obj):
         return obj.major_axis_size
-
-    #@admin.display(description='# Obs.')
-    #def n_obs(self, obj):
-    #    return obj.number_of_observations
-
-    #@admin.display(description='Date')
-    #def obs_date(self, obj):
-    #    if obj.last_observed is not None:
-    #        return obj.last_observed.strftime("%Y-%m-%d")
-    #    return None
     
     def get_form(self, request, obj=None, **kwargs):
         """
@@ -118,4 +108,21 @@ class DSOAdmin(ObservableObjectAdmin):
         field.widget.can_delete_related = False
         return form
 
+
+class DSOListAdmin(admin.ModelAdmin):
+    model = DSOList
+    list_display = ['pk', 'name', 'description', 'dso_count']
+    list_display_links = ['pk', 'name']
+    autocomplete_fields = ['dso']
+    #filter_horizontal = ['dso']
+    readonly_fields = ['dso_count']
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == 'dso':
+            kwargs['queryset'] = DSO.objects.exclude(priority='None')
+            #kwargs['queryset'] = DSO.objects.all()
+        
+        return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
 admin.site.register(DSO, DSOAdmin)
+admin.site.register(DSOList, DSOListAdmin)

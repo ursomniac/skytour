@@ -37,6 +37,29 @@ def dt_hms(d, n=3):
     except:
         return None
 
+@register.filter(name='to_hm')
+def to_hm(d, n=2):
+    try:
+        x = abs(d)
+        h = int(x)
+        m = (x-h) * 60.
+        w = n + 3
+        return f"{h:02d}h {m:0{w}.{n}f}m"
+    except:
+        return None
+
+@register.filter(name='to_dm')
+def to_dm(d, n=2):
+    try:
+        sign = '+' if d > 0. else '-'
+        x = abs(d)
+        h = int(x)
+        m = (x-h) * 60.
+        w = n + 3
+        return f"{sign}{h:02d}° {m:0{w}.{n}f}\'"
+    except:
+        return None
+
 
 @register.filter(name='to_dms')
 def to_dms(d, n=3):

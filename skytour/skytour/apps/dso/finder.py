@@ -251,3 +251,65 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     plt.close(fig)
     times.append((time.perf_counter(), 'Returning Image'))
     return pngImageB64String, times
+
+def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9, 
+        reversed=True,  # white on black or black on white
+        title='DSO List',
+        star_mag_limit = 11,
+        symbol_size=40,
+        label_size='xx-small'
+    ):
+    ts = load.timescale()
+    t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
+    eph = load('de421.bsp')
+    earth = eph['earth']
+
+    # Center the chart on the DSO
+    center = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
+    projection = build_stereographic_projection(center)
+
+    # Start up a Matplotlib plot
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    fig, ax = plt.subplots(figsize=[8,8])
+
+    # Stars
+    ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, mag_offset=0.1, reversed=reversed)
+    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    ax = map_bright_stars(
+        ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
+    )
+    ax, _ = map_dsos(ax, earth, t, projection, 
+        center = (center_ra, center_dec),
+        dso_list = dso_list,
+        label_size=label_size,
+        symbol_size=symbol_size,
+        reversed=reversed,
+        ignore_setting = True
+    )
+    angle = np.pi - fov / 360. * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
+    secax.set_xlabel('Degrees')
+    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
+    plt.tight_layout(pad=2.0)
+
+    ax.set_title(title)
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # Close the plot
+    plt.tight_layout()
+    plt.cla()
+    plt.close(fig)
+
+    return pngImageB64String

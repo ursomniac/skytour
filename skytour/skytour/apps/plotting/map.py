@@ -333,6 +333,7 @@ def map_saturn_rings(ax, pdict, t0, reversed=False):
 def map_dsos(ax, earth, t, projection, 
         center = None,
         dso=None, 
+        dso_list=None,
         alpha=1,
         label_size = None,
         symbol_size = 40., # was 90
@@ -346,7 +347,10 @@ def map_dsos(ax, earth, t, projection,
         called from create_finder_chart or plot_track because then we ought
         to be able to make things run faster.
     """
-    other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
+    if dso_list is not None:
+        other_dso_records = dso_list
+    else:
+        other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
     if dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
 

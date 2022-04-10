@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Max, Min, Avg
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from skyfield.api import Star
@@ -10,25 +11,7 @@ from ..astro.angdist import get_neighbors
 from ..astro.transform import get_alt_az
 from ..utils.models import Constellation, ObjectType
 from .pdf import create_pdf_page
-
-PRIORITY_CHOICES = [
-    ('Highest', 'Highest'),
-    ('High', 'High'),
-    ('Medium', 'Medium'),
-    ('Low', 'Low'),
-    ('None', 'None')
-]
-PRIORITY_COLORS = {
-    'Highest': '#f00',
-    'High': '#c90',
-    'Medium': '#090',
-    'Low': '#096',
-    'None': '#ccc'
-}
-INT_YES_NO = (
-    (0, 'No'),
-    (1, 'Yes')
-)
+from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
 
 class DSO(Coordinates, FieldView, ObservableObject):
     """
@@ -292,3 +275,59 @@ class DSOObservation(ObservingLog):
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
 
+class DSOList(models.Model):
+    """
+    Parameters/Features:
+        - RA range
+        - Type/Subclass
+        - pre-seed?
+    """
+    name = models.CharField (
+        _('Name'),
+        max_length = 100
+    )
+    description = models.TextField (
+        _('Description'),
+        null = True, blank = True
+    )
+    dso = models.ManyToManyField (DSO)
+
+    def get_absolute_url(self):
+        return '/dso/list/{}'.format(self.pk)
+
+    @property
+    def mid_ra(self):
+        """
+        Ugh - this won't work for things straddling 0h RA.
+        """
+        avg = self.aggregate(avg=Avg('ra'))
+        return avg['avg']
+
+    @property
+    def ra_range(self):
+        ra_min = None
+        ra_max = None
+        for dso in self.dso.all():
+            if ra_min is None or dso.ra < ra_min:
+                ra_min = dso.ra
+            if ra_max is None or dso.ra > ra_max:
+                ra_max = dso.ra
+        return (ra_min, ra_max)
+
+    @property
+    def dec_range(self):
+        dec_min = None
+        dec_max = None
+        for dso in self.dso.all():
+            if dec_min is None or dso.dec < dec_min:
+                dec_min = dso.dec
+            if dec_max is None or dso.dec > dec_max:
+                dec_max = dso.dec
+        return (dec_min, dec_max)
+
+    @property
+    def dso_count(self):
+        return self.dso.count()
+
+    def __str__(self):
+        return self.name

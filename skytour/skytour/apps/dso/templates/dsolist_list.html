@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<h1>Lists of Deep Sky Objects</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th># DSOs</th>
+        <th>RA Range</th>
+        <th>Dec Range</th>
+        <th>Admin</th>
+    </tr>
+{% for object in object_list %}
+    <tr>
+        <td><a href="{% url 'dsolist-detail' object.pk %}">{{ object.pk }}</a></td>
+        <td><a href="{% url 'dsolist-detail' object.pk %}">{{ object.name }}</a></td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.dso_count }}</td>
+        <td>{{ object.ra_range.0|to_hm:0 }} to {{ object.ra_range.1|to_hm:0 }}</td>
+        <td>{{ object.dec_range.0|to_dm:0 }} to {{ object.dec_range.1|to_dm:0 }}</td>
+        <td><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

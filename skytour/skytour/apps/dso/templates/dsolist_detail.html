@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<h1>DSO List: {{ object.name }}</h1>
+<h2>Description</h2>
+<p> {{ object.description }} </p>
+<p><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></p>
+<h2>DSOs</h2>
+{% with object.dso.all as dso_list %}
+{% include 'includes/dso_table.html' %}
+{% endwith %}
+<h2>Map</h2>
+<img src="{{map}}">
+{% endblock %}
