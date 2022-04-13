@@ -1,5 +1,7 @@
+from ajax_select.fields import AutoCompleteSelectMultipleField, AutoCompleteSelectMultipleWidget
 from datetime import datetime
 from django import forms
+from ..dso.models import DSO, DSOList
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
@@ -44,3 +46,23 @@ class ObservingParametersForm(forms.Form):
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
 
+class CustomPlanPDFForm(forms.Form):
+    ut_date = forms.DateField(initial=datetime.now, label="UT Date")
+    ut_time = forms.TimeField(initial='0:00', label='UT Time')
+    time_zone = forms.ModelChoiceField(
+        queryset = TimeZone.objects.all().order_by('utc_offset'),
+        label = 'Local Time Zone'
+    )
+    location = forms.ModelChoiceField(
+        queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
+    )
+    dso_lists = forms.ModelMultipleChoiceField (
+        required = False,
+        queryset = DSOList.objects.all()
+    )
+    other_dsos = AutoCompleteSelectMultipleField(
+        'dso', 
+        required=False, 
+        widget = AutoCompleteSelectMultipleWidget,
+        help_text = 'You have to be logged into the Admin to use this!'
+    )

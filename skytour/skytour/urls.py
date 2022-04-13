@@ -13,13 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from ajax_select import urls as ajax_select_urls
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
-
+admin.autodiscover()
 urlpatterns = [
     path('', include('skytour.apps.site.urls')),
+    path('ajax_select/', include(ajax_select_urls)),
     path('admin/', admin.site.urls),
     path('asteroid/', include('skytour.apps.solar_system.urls_asteroid')),
     path('calendar/', include('skytour.apps.misc.urls')),

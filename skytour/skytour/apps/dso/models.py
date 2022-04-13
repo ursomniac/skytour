@@ -3,6 +3,7 @@ from django.db.models import Count, Max, Min, Avg
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from skyfield.api import Star
+from taggit.managers import TaggableManager
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
@@ -124,6 +125,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         null = True, blank = True,
         upload_to = 'dso_pdf'
     )
+    tags = TaggableManager()
 
     @property
     def alias_list(self):
@@ -291,6 +293,8 @@ class DSOList(models.Model):
         null = True, blank = True
     )
     dso = models.ManyToManyField (DSO)
+    tags = TaggableManager()
+
 
     def get_absolute_url(self):
         return '/dso/list/{}'.format(self.pk)

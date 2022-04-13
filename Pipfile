@@ -17,6 +17,8 @@ django-yearlessdate = "*"
 ipython = "<8.0.0"
 django-ckeditor = "*"
 scipy = "*"
+django-taggit = "*"
+django-ajax-selects = "*"
 
 [dev-packages]
 

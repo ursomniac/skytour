@@ -29,3 +29,8 @@ class ObservableObjectAdmin(admin.ModelAdmin):
     
     class Meta:
         abstract = True
+
+class TagModelAdmin(admin.ModelAdmin):
+    @admin.display(description='Tags')
+    def tag_list(self, obj):
+        return u", ".join(o.name for o in obj.tags.all())

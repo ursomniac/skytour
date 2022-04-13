@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'admin_auto_filters',
+    'ajax_select',
     'colorfield',
     'djangoyearlessdate',
     'ckeditor',
+    'taggit',
     
     'skytour.apps.abstract',
     'skytour.apps.dso',

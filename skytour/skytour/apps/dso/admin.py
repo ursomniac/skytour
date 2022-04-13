@@ -1,6 +1,6 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
-from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
+from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList
 
 class ConstellationFilter(AutocompleteFilter):
@@ -49,6 +49,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('constellation', 'show_on_skymap'),
                 'nickname',
                 ('object_type', 'morphological_type', 'priority'),
+                'tags',
             ]
         }),
         ('Coordinates', {
@@ -109,9 +110,9 @@ class DSOAdmin(ObservableObjectAdmin):
         return form
 
 
-class DSOListAdmin(admin.ModelAdmin):
+class DSOListAdmin(TagModelAdmin):
     model = DSOList
-    list_display = ['pk', 'name', 'description', 'dso_count']
+    list_display = ['pk', 'name', 'description', 'tag_list', 'dso_count']
     list_display_links = ['pk', 'name']
     autocomplete_fields = ['dso']
     #filter_horizontal = ['dso']
@@ -121,7 +122,6 @@ class DSOListAdmin(admin.ModelAdmin):
         if db_field.name == 'dso':
             kwargs['queryset'] = DSO.objects.exclude(priority='None')
             #kwargs['queryset'] = DSO.objects.all()
-        
         return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
 admin.site.register(DSO, DSOAdmin)
