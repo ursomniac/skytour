@@ -3,9 +3,9 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView, UpdateView
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
@@ -83,6 +83,9 @@ class DSOListDetailView(CookieMixin, DetailView):
         min_ra, max_ra = self.object.ra_range
         min_dec, max_dec = self.object.dec_range
         center_ra = 0.5*(min_ra + max_ra)
+        if center_ra < min_ra or center_ra > max_ra:
+            center_ra += 12.
+            center_ra %= 24.
         center_dec = 0.5*(min_dec + max_dec)
         ra_deg = 15. * (max_ra - min_ra)
         if ra_deg < 0:

@@ -304,8 +304,18 @@ class DSOList(models.Model):
         """
         Ugh - this won't work for things straddling 0h RA.
         """
-        avg = self.aggregate(avg=Avg('ra'))
-        return avg['avg']
+        avg = self.dso.aggregate(avg=Avg('ra'))['avg']
+        min_ra, max_ra = self.ra_range
+        if max_ra - min_ra > 12:
+            avg = avg - 12.
+        if avg < 0:
+            avg += 24.
+        return avg
+    
+    @property
+    def mid_dec(self):
+        avg = self.dso.aggregate(avg=Avg('dec'))['avg']
+        return avg
 
     @property
     def ra_range(self):

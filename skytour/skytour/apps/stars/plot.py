@@ -118,6 +118,8 @@ def get_skymap(
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)
+    sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
+    ax.add_patch(sky_limit)
     
     # Set the display
     fov = 180.

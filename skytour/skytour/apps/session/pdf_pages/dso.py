@@ -1,4 +1,9 @@
+from ...astro.local import is_object_up
 from ...dso.models import DSO, DSOList
+from ...dso.finder import plot_dso_list
+from ...pdf.utils import bold_text, label_and_text, place_text, add_image
+from ...pdf.utils import X0, Y0
+from ...utils.format import to_hm, to_dm
 
 def do_dso_long_list(p, context):
     """
@@ -16,11 +21,6 @@ def do_dso_long_list(p, context):
     for dso in all_dsos:
         if dso.object_is_up(location, context['utdt_start'], min_alt=20.) \
                 or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
-            #priority = dso.priority.lower()
-            #if priority in targets.keys():
-            #    targets[priority].append(dso)
-            #else:
-            #    targets[priority] = [dso]
             targets.append(dso)
     n_lines = 0
     dx = 0
@@ -57,4 +57,97 @@ def do_dso_long_list(p, context):
             y = dy
             dx = 0
     p.showPage()
+    return p
+
+def do_dso_lists(p, context):
+    location = context['location']
+    ut0 = context['utdt_start']
+    ut1 = context['utdt_end']
+    dso_lists = DSOList.objects.all()
+    for dl in dso_lists:
+        # Are most of the things in the list going to be up during the session?
+        ra = dl.mid_ra
+        dec = dl.mid_dec
+        up0 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
+        up1 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
+        if not (up0 or up1):
+            continue
+
+        # Make the page for the DSO List
+        y = Y0
+        p, y = bold_text(p, X0, y, f'DSO List {dl.name}', size=18)
+
+        # Set up map
+        min_ra, max_ra = dl.ra_range
+        min_dec, max_dec = dl.dec_range
+        center_ra = (min_ra + max_ra) / 2.
+        if center_ra < min_ra or center_ra > max_ra:
+            center_ra += 12.
+            center_ra %= 24.
+        center_dec = (min_dec + max_dec) / 2.
+        ra_deg = 15. * (max_ra - min_ra)
+        if ra_deg < 0:
+            ra_deg = 360-ra_deg
+        dec_deg = max_dec - min_dec
+        fov = dec_deg if dec_deg > ra_deg else ra_deg
+        fov *= 1.25
+        mag_limit = 6.0 if fov > 20 else 7.0
+
+        y = 700
+        x = 350
+        p, y = label_and_text(p, x, y, ('Center RA: ', 10), (to_hm(center_ra), 10))
+        p, y = label_and_text(p, x, y, ('Center Dec: ', 10), (to_dm(center_dec), 10))
+        p, y = label_and_text(p, x, y, ('FOV: ', 10), (f"{fov:.0f}°", 10))
+        p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{mag_limit:.2f}", 10))
+
+        dso_set = dl.dso.all()
+        map = plot_dso_list(
+            center_ra, 
+            center_dec, 
+            dso_set, 
+            reversed = False,
+            fov = fov,
+            star_mag_limit = mag_limit,
+            label_size='small',
+            symbol_size=60,
+            title = f"DSO List: {dl.name}"
+        )
+        y = 735
+        p, y = add_image(p, y, map, size=300, x=40)
+
+        # Add table of member DSOs
+        c = 0
+        xoff = 0
+        y -= 15
+        ytop = y
+
+        for dso in dso_set:
+            if c % 35 == 0:
+                p.setFont('Helvetica-Bold', 8)
+                p.drawString(40+xoff, y, 'NAME')
+                p.drawString(85+xoff, y, 'CON.')
+                p.drawString(110+xoff, y, 'R.A.')
+                p.drawString(155+xoff, y, 'DEC.')
+                p.drawString(190+xoff, y, 'TYPE')
+                p.drawString(215+xoff, y, 'MAG')
+                p.drawString(240+xoff, y, 'LAST OBS.')
+                y -= 15
+                p.setFont('Helvetica', 8)
+            p.drawString(40+xoff, y, dso.shown_name)
+            p.drawString(85+xoff, y, dso.constellation.abbreviation)
+            p.drawString(110+xoff, y, to_hm(dso.ra))
+            p.drawString(155+xoff, y, to_dm(dso.dec))
+            p.drawString(190+xoff, y, dso.object_type.code)
+            if dso.magnitude is not None:
+                p.drawString(215+xoff, y, f"{dso.magnitude:.2f}")
+            if dso.last_observed is not None:
+                p.drawString(225+xoff, y, dso.last_observed.strftime('%Y-%m-%d'))
+            #p.drawString(240+xoff, y, 'YYYY-MM-DD')
+            y -= 10
+            c += 1
+            if c % 35 == 0:
+                xoff += 280
+                y = ytop
+
+        p.showPage()
     return p
