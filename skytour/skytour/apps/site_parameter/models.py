@@ -83,3 +83,8 @@ class SiteParameterImage (AbstractSiteParameter):
     )
     upload_to = 'site_parameter_images'
 
+class SiteParameterPDFFile(AbstractSiteParameter):
+    value = models.FileField (
+        _('PDF File'),
+        upload_to = 'pdf_files'
+    )

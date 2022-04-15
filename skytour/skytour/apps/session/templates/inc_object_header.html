@@ -32,6 +32,8 @@
         <a href="{% url 'asteroid-detail' object.slug %}"><button>Detail View</button></a>
         {% elif object_type == 'planet' %}
         <a href="{% url 'planet-detail' object.slug %}"><button>Detail View</button></a>
+        {% elif object_type == 'comet' %}
+        <a href="{% url 'comet-detail' object.pk %}"><button>Detail View</button></a>
         {% else %}
         <a href="{% url 'moon-detail' %}"><button>Detail View</button></a>
         {% endif %}
