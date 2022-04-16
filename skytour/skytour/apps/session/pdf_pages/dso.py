@@ -63,7 +63,7 @@ def do_dso_lists(p, context):
     location = context['location']
     ut0 = context['utdt_start']
     ut1 = context['utdt_end']
-    dso_lists = DSOList.objects.all()
+    dso_lists = DSOList.objects.filter(show_on_plan=1)
     for dl in dso_lists:
         # Are most of the things in the list going to be up during the session?
         ra = dl.mid_ra

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Catalog, Constellation, ObjectType
+from .models import Catalog, Constellation, ObjectType, StarCatalog
 
 class ConstellationNeighborInline(admin.TabularInline):
     model = Constellation.neighbors.through
@@ -7,6 +7,9 @@ class ConstellationNeighborInline(admin.TabularInline):
     extra = 0
 
 class CatalogAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'name', 'abbreviation']
+
+class StarCatalogAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'abbreviation']
 
 class ConstellationAdmin(admin.ModelAdmin):
@@ -31,3 +34,4 @@ class ObjectTypeAdmin(admin.ModelAdmin):
 admin.site.register(Catalog, CatalogAdmin)
 admin.site.register(Constellation, ConstellationAdmin)
 admin.site.register(ObjectType, ObjectTypeAdmin)
+admin.site.register(StarCatalog, StarCatalogAdmin)

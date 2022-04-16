@@ -5,12 +5,23 @@ from django.utils.translation import gettext as _
 from numpy import True_
 from skyfield.api import Star
 from ..abstract.models import Coordinates
+from ..dso.utils import create_shown_name
 from ..utils.models import Constellation
  
 from .utils import create_star_name, parse_designation
 from .vocabs import ENTITY
 
 class DoubleStar(Coordinates):
+    catalog = models.ForeignKey('utils.StarCatalog', on_delete = models.CASCADE)
+    id_in_catalog = models.CharField (
+        _('ID'),
+        max_length = 24
+    )
+    shown_name = models.CharField (
+        _('Shown Name'),
+        max_length = 180,
+        null = True, blank = True
+    )
     constellation = models.ForeignKey (Constellation, 
         on_delete=models.PROTECT,
         null = True, blank = True
@@ -32,6 +43,18 @@ class DoubleStar(Coordinates):
         _('Notes'),
         null = True, blank = True
     )
+    distance = models.FloatField (
+        _('Distance'),
+        null = True, blank = True,
+        help_text = 'light years'
+    )
+
+    @property
+    def alias_list(self):
+        aliases = []
+        for alias in self.aliases.all():
+            aliases.append(alias.shown_name)
+        return ', '.join(aliases)
 
     @property
     def get_magnitudes(self):
@@ -40,12 +63,20 @@ class DoubleStar(Coordinates):
         for star in str_mags:
             mags.append(float(star))
 
+    def save(self, *args, **kwargs):
+        self.ra = self.ra_float # get from property
+        self.dec = self.dec_float # get from property
+        self.ra_text = self.format_ra # get from property
+        self.dec_text = self.format_dec # get from property
+        self.shown_name = create_shown_name(self)
+        super(DoubleStar, self).save(*args, **kwargs)
+
 class DoubleStarAlias(models.Model):
     object = models.ForeignKey(DoubleStar, 
         on_delete=models.CASCADE,
         related_name='aliases'
     )
-    catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
+    catalog = models.ForeignKey('utils.StarCatalog', on_delete = models.CASCADE)
     id_in_catalog = models.CharField (
         _('ID'),
         max_length = 24

@@ -294,7 +294,12 @@ class DSOList(models.Model):
     )
     dso = models.ManyToManyField (DSO)
     tags = TaggableManager()
-
+    show_on_plan = models.PositiveIntegerField (
+        _('On Plan PDF'),
+        choices = INT_YES_NO,
+        default = 1,
+        help_text = 'Set to YES/1 to add this to a PDF plan'
+    )
 
     def get_absolute_url(self):
         return '/dso/list/{}'.format(self.pk)
@@ -345,3 +350,17 @@ class DSOList(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'DSO List'
+        verbose_name_plural = 'DSO Lists'
+
+class AtlasPlate(models.Model):
+    center_ra = models.FloatField(_('Center RA'))
+    center_dec = models.FloatField(_('Center Dec'))
+    radius = models.FloatField(_('Radius'))
+    plate = models.ImageField(
+        _('Plate'),
+        upload_to = 'atlas_images'
+    )
+    tags = TaggableManager()

@@ -4,10 +4,7 @@ from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
 from ..plotting.vocabs import MAP_SYMBOL_TYPES
 
-class Catalog(models.Model):
-    """
-    One Catalog is Proper Name - it has an empty abbreviation.
-    """
+class AbstractCatalog(models.Model):
     name = models.CharField (
         _('Catalog Name'),
         max_length = 100
@@ -28,6 +25,13 @@ class Catalog(models.Model):
         null=True, blank=True
     )
 
+    class Meta:
+        abstract = True
+
+class Catalog(AbstractCatalog):
+    """
+    One Catalog is Proper Name - it has an empty abbreviation.
+    """
     @property
     def dso_count(self):
         """
@@ -43,6 +47,10 @@ class Catalog(models.Model):
 
     def __str__(self):
         return self.abbreviation
+
+class StarCatalog(AbstractCatalog):
+    pass
+
 
 class ObjectType(models.Model):
     """

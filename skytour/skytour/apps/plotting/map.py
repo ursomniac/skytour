@@ -338,7 +338,8 @@ def map_dsos(ax, earth, t, projection,
         label_size = None,
         symbol_size = 40., # was 90
         reversed=False,
-        ignore_setting = False # for Skymap, not finder charts
+        ignore_setting = False, # for Skymap, not finder charts
+        skymap=True,
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -346,13 +347,19 @@ def map_dsos(ax, earth, t, projection,
     TODO: I THINK We want to ALWAYS send a center value, even when this is
         called from create_finder_chart or plot_track because then we ought
         to be able to make things run faster.
+
+    TODO: IF you are creating a plot that has a center + radius or FOV, 
+        then you can change the sin(altitude) to be > 0, i.e., the sin(90 - radius)
+        or sin(90 - fov/2)...   I think.
     """
     if dso_list is not None:
         other_dso_records = dso_list
-    else:
-        other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
-    if dso: # if I'm a DSO finder chart, exclude myself
+    elif dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
+    elif skymap:
+        other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
+    else:
+        other_dso_records = DSO.objects.order_by('ra_text')
 
     # Create the plotting dictionary
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}

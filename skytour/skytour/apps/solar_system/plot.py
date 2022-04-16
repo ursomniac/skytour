@@ -101,7 +101,9 @@ def create_finder_chart(
     times.append((time.perf_counter(), 'Other planets'))
 
     # Add DSOs
-    ax, _ = map_dsos(ax, earth, t, projection, reversed=reversed)
+    ax, _ = map_dsos(ax, earth, t, projection, 
+        reversed=reversed, skymap=False
+    )
     times.append((time.perf_counter(), 'DSOs'))
 
     # Asteroids
@@ -417,7 +419,7 @@ def plot_track(
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
     # Add DSOs
     if dsos:
-        ax, _ = map_dsos(ax, earth, t, projection)
+        ax, _ = map_dsos(ax, earth, t, projection, skymap=False)
     
     if fov:
         angle = np.pi - fov / 360.0 * np.pi

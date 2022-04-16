@@ -109,20 +109,29 @@ class DSOAdmin(ObservableObjectAdmin):
         field.widget.can_delete_related = False
         return form
 
+@admin.action(description='Show on Plan PDF')
+def add_to_plan(modeladmin, request, queryset):
+    queryset.udpate(show_on_plan=1)
+
+@admin.action(description='Do not show on Plan PDF')
+def remove_from_plan(modeladmin, request, queryset):
+    queryset.update(show_on_plan=0)
 
 class DSOListAdmin(TagModelAdmin):
     model = DSOList
-    list_display = ['pk', 'name', 'description', 'tag_list', 'dso_count']
+    list_display = ['pk', 'name', 'description', 'tag_list', 'show_on_plan', 'dso_count']
     list_display_links = ['pk', 'name']
     autocomplete_fields = ['dso']
-    #filter_horizontal = ['dso']
     readonly_fields = ['dso_count']
+    actions = [add_to_plan, remove_from_plan]
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'dso':
             kwargs['queryset'] = DSO.objects.exclude(priority='None')
             #kwargs['queryset'] = DSO.objects.all()
         return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
+
 
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)

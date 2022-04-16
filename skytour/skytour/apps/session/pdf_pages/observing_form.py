@@ -3,10 +3,11 @@ from .utils import do_line
 from .vocabs import PAGE_WIDTH
 
 def do_observing_form(p, context):
+    num_pages = find_site_parameter('pdf-observing-form-pages', 2, 'positive')
+    if num_pages < 1:
+        return p # do Nothing
 
-    n_form_pages = find_site_parameter('observe_form_pages', default=5, param_type='positive')
-        
-    for i in range(n_form_pages):
+    for i in range(num_pages):
         y = 720
         p.setFont('Helvetica-Bold', 14)
         p.drawString(50, y, 'Observation Forms:')
@@ -18,7 +19,6 @@ def do_observing_form(p, context):
         for ly in section_tops:
             p.line(40, ly, PAGE_WIDTH-20, ly)
 
-        
         for section in range(3):
             y = section_tops[section] - 20
             p.setFont('Helvetica-Bold', 12)

@@ -1,4 +1,3 @@
-
 def create_shown_name(obj):
     """
     This takes the main name, or if there's a Bayer/Flamsteed designation, 
@@ -17,3 +16,4 @@ def create_shown_name(obj):
         things.append(obj.id_in_catalog)
         things.append(obj.constellation.abbreviation)
     return ' '.join(things)
+
