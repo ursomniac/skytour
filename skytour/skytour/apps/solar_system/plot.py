@@ -102,7 +102,7 @@ def create_finder_chart(
 
     # Add DSOs
     ax, _ = map_dsos(ax, earth, t, projection, 
-        reversed=reversed, skymap=False
+        reversed=reversed, product='finder'
     )
     times.append((time.perf_counter(), 'DSOs'))
 
@@ -419,7 +419,7 @@ def plot_track(
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
     # Add DSOs
     if dsos:
-        ax, _ = map_dsos(ax, earth, t, projection, skymap=False)
+        ax, _ = map_dsos(ax, earth, t, projection, product='finder')
     
     if fov:
         angle = np.pi - fov / 360.0 * np.pi

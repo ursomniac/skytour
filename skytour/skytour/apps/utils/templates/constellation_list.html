@@ -5,9 +5,10 @@
 <table id="{{ table_id }}">
     <thead>
         <tr>
-            <th width="55%">Name</th>
-            <th width="25%">Abbr.</th>
-            <th width="20%">DSO Count</th>
+            <th>Name</th>
+            <th>Abbr.</th>
+            <th>Plate List</th>
+            <th>DSO Count</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +16,7 @@
         <tr class="even">
             <td><a href="{% url 'constellation-detail' obj.slug %}">{{ obj.name }}</a></td>
             <td style="text-align: center">{{ obj.slug }}</td>
+            <td>{{ obj.atlas_plate_list}}</td>
             <td style="text-align: right; padding-right: 20px">{{ obj.dso_count }}</td>
         </tr>
     {% endfor %}

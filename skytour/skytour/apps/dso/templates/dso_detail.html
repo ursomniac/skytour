@@ -53,7 +53,7 @@
 					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
 					<br>
 					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>
-					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button></a>
+					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button>
 				</td>
 			</tr>
 			{% if object.alias_list %}
@@ -81,6 +81,10 @@
 			<tr>
 				<td>Contrast Index: {{ object.contrast_index }}</td>
 				<td>Morphological Type: {{ object.morphological_type }}</td>
+			</tr>
+			<tr>
+				<td>On Atlas Plates: {{ object.atlas_plate_list }}</td>
+				<td></td>
 			</tr>
 		</table>
 	</td>

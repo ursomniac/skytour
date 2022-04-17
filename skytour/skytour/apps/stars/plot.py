@@ -90,7 +90,8 @@ def get_skymap(
         center = (center_ra, center_dec),
         label_size='xx-small',
         reversed=reversed,
-        ignore_setting = True
+        ignore_setting = True,
+        product = 'skymap'
     )
     times.append((time.perf_counter(), 'DSOs'))
 

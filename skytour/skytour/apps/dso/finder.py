@@ -285,6 +285,7 @@ def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9,
         label_size=label_size,
         symbol_size=symbol_size,
         reversed=reversed,
+        product = 'finder',
         ignore_setting = True
     )
     angle = np.pi - fov / 360. * np.pi

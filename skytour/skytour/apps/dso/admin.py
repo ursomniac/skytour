@@ -1,7 +1,7 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
-from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList
+from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList, AtlasPlate
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -39,6 +39,7 @@ class DSOAdmin(ObservableObjectAdmin):
         'field_view_tag', 
         'finder_chart_tag',
         'dso_finder_chart_tag',
+        'atlas_plate_list',
     ]
     list_filter = ['priority', 'show_on_skymap', 'object_type', 'ra_h', ConstellationFilter]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
@@ -47,7 +48,7 @@ class DSOAdmin(ObservableObjectAdmin):
             'fields': [
                 ('catalog', 'id_in_catalog'),
                 ('constellation', 'show_on_skymap'),
-                'nickname',
+                ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type', 'priority'),
                 'tags',
             ]
@@ -94,6 +95,14 @@ class DSOAdmin(ObservableObjectAdmin):
     @admin.display(description='Maj. Axis', ordering='major_axis_size')
     def maj_axis(self, obj):
         return obj.major_axis_size
+
+    def atlas_plate_list(self, obj):
+        plates = obj.atlasplate_set.order_by('plate_id')
+        pp = []
+        for p in plates:
+            pp.append(p.plate_id)
+        return pp
+    atlas_plate_list.short_description = 'Plates'
     
     def get_form(self, request, obj=None, **kwargs):
         """
@@ -131,7 +140,35 @@ class DSOListAdmin(TagModelAdmin):
             #kwargs['queryset'] = DSO.objects.all()
         return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
+class AtlasPlateAdmin(TagModelAdmin):
+    model = AtlasPlate
+    list_display = ['plate_id', 'center_ra', 'center_dec', 'center_constellation',  'con_list', 'dso_count']
+    autocomplete_fields = ['dso', 'constellation']
+    readonly_fields = ['plate_tag', 'con_list', 'dso_count', 'center_constellation']
+    fieldsets = (
+        (None, {
+            'fields': [
+                'plate_id',
+                ('center_ra', 'center_dec'),
+                'tags',
+                ('plate_tag', 'plate'),
+                'dso',
+                'constellation'
+            ]
+        }),
+    )
 
+    def con_list(self, object):
+        cc = []
+        for c in object.constellation.all():
+            cc.append(c.abbreviation)
+        return ', '.join(cc)
+    con_list.short_description = 'Constellations'
+
+    def dso_count(self, object):
+        return object.dso.count()
+    dso_count.short_description = '# DSOs'
 
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
+admin.site.register(AtlasPlate, AtlasPlateAdmin)

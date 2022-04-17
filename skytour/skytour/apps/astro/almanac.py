@@ -149,7 +149,7 @@ def get_twilight_begin_end(utdt, loc, time_zone=None):
     for t, e in zip(times, events):
         local_time = t.astimezone(time_zone)
         side = 'am' if local_time.hour < 12 else 'pm'
-        print (f'T: {t} E: {e} L: {local_time} S: {local_time.strftime("%I:%M %p")}')
+        #print (f'T: {t} E: {e} L: {local_time} S: {local_time.strftime("%I:%M %p")}')
         #skey = 'start' if previous_e < e else 'end'
         skey = 'start' if side == 'pm' else 'end'
         twilight[twi_list[e]][skey] = local_time.strftime("%I:%M %p")

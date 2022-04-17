@@ -339,7 +339,8 @@ def map_dsos(ax, earth, t, projection,
         symbol_size = 40., # was 90
         reversed=False,
         ignore_setting = False, # for Skymap, not finder charts
-        skymap=True,
+        product = 'skymap',
+        label_weight = 'bold'
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -356,7 +357,7 @@ def map_dsos(ax, earth, t, projection,
         other_dso_records = dso_list
     elif dso: # if I'm a DSO finder chart, exclude myself
         other_dso_records = other_dso_records.exclude(pk = dso.pk)
-    elif skymap:
+    elif product == 'skymap':
         other_dso_records = DSO.objects.filter(show_on_skymap=1).order_by('ra_text')
     else:
         other_dso_records = DSO.objects.order_by('ra_text')
@@ -399,8 +400,11 @@ def map_dsos(ax, earth, t, projection,
     #   rotated ellipses for galaxies.
     # Instead we just have some marker symbols.
     # Matplotlib needs us to overlay each set of those marker symbols individually (sigh)
-    unique_markers = set(mmm) 
-    dso_color = '#9f9' if reversed else 'g'
+    unique_markers = set(mmm)
+    if product != 'atlas':
+        dso_color = '#9f9' if reversed else 'g'
+    else:
+        dso_color = 'c' if reversed else 'b'
     for um in unique_markers:
         mask = mmm == um # note = then == !
         ax.scatter(
@@ -409,7 +413,10 @@ def map_dsos(ax, earth, t, projection,
             marker=um, alpha=alpha
         )
     # Add labels
-    color = '#cc0' if reversed else '#666'
+    if product != 'atlas':
+        color = '#cc0' if reversed else '#666'
+    else:
+        color = '#9ff' if reversed else '#33c'
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),
@@ -419,7 +426,7 @@ def map_dsos(ax, earth, t, projection,
             annotation_clip = True,
             color=color,
             fontsize=label_size,
-            fontweight='bold'
+            fontweight=label_weight
         )
     return ax, interesting
 

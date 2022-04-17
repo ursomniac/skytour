@@ -1,14 +1,37 @@
 import base64
 import datetime, pytz
+from re import X
 import io
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from scipy import spatial
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
+from ..astro.angdist import chord_length
+from ..astro.transform import get_cartesian
+from ..dso.models import DSO
 from ..plotting.map import *
 from ..solar_system.plot import r2d, d2r
 from ..utils.format import to_hm, to_dm
 from .finder import plot_dso
+
+def plate_list():
+    ldec = [90, 75, 60, 45, 30, 15, 0, -15, -30, -45, -60, -75, -90]
+    lsize = [1, 12, 16, 20, 24, 32, 48, 32, 24, 20, 16, 12, 1]
+    mul = [0., 2.0, 1.5, 1.2, 1.0, 0.75, 0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 0.]
+    plate = {}
+    j = 1
+    for i in range(len(ldec)):
+        dec = ldec[i]
+        if abs(dec) == 90:
+            plate[j] = (0, dec)
+            j += 1
+            continue
+        ras = [x * mul[i] for x in range(lsize[i])]
+        for ra in ras:
+            plate[j] = (ra, dec)
+            j += 1
+    return plate
 
 def get_fn(ra, dec, shapes=False):
     rah = int(ra)
@@ -20,11 +43,28 @@ def get_fn(ra, dec, shapes=False):
     x = 'X' if shapes else ''
     return f"{rah:02d}{ram:02d}{decs}{dd:02d}{dm:02d}.png"
 
+def get_dsos_on_plate(ra, dec, fov=20):
+    fudge = 120
+    dsos = DSO.objects.all()
+    radius = chord_length(fov, degrees=True) * fudge
+    coords = []
+    for other in dsos:
+        coords.append(other.get_xyz)
+    center = get_cartesian(ra, dec, ra_dec=True)
+    tree = spatial.KDTree(coords)
+    neighbor_list = tree.query_ball_point([center], radius)
+    neighbor_objects = []
+    for idx in neighbor_list[[0][0]]:
+        neighbor_objects.append(dsos[idx])
+    return neighbor_objects
+
 def create_atlas_plot(
         center_ra, center_dec, 
         reversed=False, mag_limit=9.5, 
         fov=20, save_file=True,
-        mag_offset = 0, shapes = False
+        mag_offset = 0, shapes = False,
+        label_size = 'x-small',
+        label_weight = 'normal'
     ):
 
     ts = load.timescale()
@@ -75,9 +115,12 @@ def create_atlas_plot(
                 ha='left'
             )
     else:
-        ax, interesting = map_dsos(ax, earth, t, projection,
+        ax, _ = map_dsos(ax, earth, t, projection,
             center = (center_ra, center_dec), 
-            reversed=reversed, skymap=False
+            reversed=reversed,
+            label_size=label_size,
+            label_weight=label_weight,
+            product = 'atlas'
         )
 
     # Set the display
@@ -92,12 +135,14 @@ def create_atlas_plot(
     title = f"Chart: RA {ra}  DEC {dec}"
     ax.set_title(title)
     
+    on_plate = get_dsos_on_plate(center_ra, center_dec, fov=fov)
+
     if save_file:
         fn = get_fn(center_ra, center_dec, shapes=shapes)
         fig.savefig('media/atlas_images/{}'.format(fn), bbox_inches='tight')
         plt.cla()
         plt.close(fig)
-        return fn, interesting
+        return fn, on_plate
 
     plt.tight_layout(pad=2.0)
     # Convert to a PNG image
@@ -109,7 +154,7 @@ def create_atlas_plot(
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String, interesting
+    return pngImageB64String, on_plate
 
 """
 258 atlas plates

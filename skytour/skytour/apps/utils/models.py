@@ -147,6 +147,13 @@ class Constellation(models.Model):
         blank = True
     )
 
+    @property
+    def atlas_plate_list(self):
+        pp = []
+        for p in self.atlasplate_set.order_by('plate_id'):
+            pp.append(str(p.plate_id))
+        return ', '.join(pp)
+
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)
 

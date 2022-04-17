@@ -10,6 +10,7 @@ from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog,
 from ..abstract.utils import get_metadata
 from ..astro.angdist import get_neighbors
 from ..astro.transform import get_alt_az
+from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 from .pdf import create_pdf_page
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
@@ -150,6 +151,13 @@ class DSO(Coordinates, FieldView, ObservableObject):
         if self.priority:
             return PRIORITY_COLORS[self.priority]
         return '#666'
+
+    @property
+    def atlas_plate_list(self):
+        pp = []
+        for p in self.atlasplate_set.all():
+            pp.append(str(p.plate_id))
+        return ', '.join(pp)
 
     def finder_chart_tag(self):
         """
@@ -293,7 +301,7 @@ class DSOList(models.Model):
         null = True, blank = True
     )
     dso = models.ManyToManyField (DSO)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     show_on_plan = models.PositiveIntegerField (
         _('On Plan PDF'),
         choices = INT_YES_NO,
@@ -356,11 +364,26 @@ class DSOList(models.Model):
         verbose_name_plural = 'DSO Lists'
 
 class AtlasPlate(models.Model):
+    plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
     center_ra = models.FloatField(_('Center RA'))
     center_dec = models.FloatField(_('Center Dec'))
-    radius = models.FloatField(_('Radius'))
     plate = models.ImageField(
         _('Plate'),
-        upload_to = 'atlas_images'
+        upload_to = 'atlas_images',
+        null = True, blank = True
     )
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
+    dso = models.ManyToManyField(DSO, blank=True)
+    constellation = models.ManyToManyField(Constellation, blank=True)
+
+    @property
+    def center_constellation(self):
+        lookup = get_constellation(self.center_ra, self.center_dec)
+        constellation = Constellation.objects.filter(abbreviation__iexact=lookup['abbr']).first()
+        return constellation
+
+    def plate_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
+
+    def __str__(self):
+        return f"Plate {self.plate_id}"
