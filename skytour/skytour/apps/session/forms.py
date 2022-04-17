@@ -43,3 +43,21 @@ class ObservingParametersForm(forms.Form):
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial=find_site_parameter('poll-planets', default='visible', param_type='string'))
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
+
+PAGE_CHOICES = [
+    ('skymap', 'SkyMap'),
+    ('zenith', 'Zenith Map'),
+    ('planets', 'Planets'),
+    ('asteroids', 'Asteroids'),
+    ('comets', 'Comets'),
+    ('moon', 'Moon'),
+    ('dso_lists', 'DSO Lists'),
+    ('dsos', 'All DSOs')
+]
+class PDFSelectForm(forms.Form):
+    pages = forms.MultipleChoiceField(
+        widget = forms.CheckboxSelectMultiple, 
+        choices=PAGE_CHOICES,
+        initial = [c[0] for c in PAGE_CHOICES]
+    )
+    obs_forms = forms.IntegerField(initial=2)

@@ -1,6 +1,7 @@
 import datetime, pytz
+import io
 import time
-#from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import View
@@ -8,6 +9,9 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 from ..astro.almanac import get_dark_time
 from ..observe.models import ObservingLocation
 from ..astro.time import get_julian_date
@@ -19,9 +23,10 @@ from ..solar_system.helpers import (
 )
 from ..solar_system.position import get_object_metadata
 from ..utils.timer import compile_times
-from .forms import ObservingParametersForm
+from .forms import ObservingParametersForm, PDFSelectForm
 from .mixins import CookieMixin
 from .models import ObservingSession
+from .pdf import run_pdf
 from .plan import get_plan
 from .utils import get_initial_from_cookie
 
@@ -145,22 +150,42 @@ class SetSessionCookieView(FormView):
         return context
 
 @method_decorator(cache_page(0), name='dispatch')
-class ObservingPlanView(CookieMixin, TemplateView):
+class ObservingPlanView(CookieMixin, FormView):
     template_name = 'observing_plan.html'
+    form_class = PDFSelectForm
 
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
         context = get_plan(context)
-
         # Get the mid-point time from the local_time_start + 0.5 * session_length
         local_time = context['local_time_start']
         #tzone = pytz.timezone(context['time_zone'])
         ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
         ztime += datetime.timedelta(hours=context['session_length']/2.)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
-
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['form'] = PDFSelectForm()
         return context
+
+    def form_valid(self, form, **kwargs):
+        all = ['skymap', 'zenith', 'planets', 'asteroids', 'comets', 'moon', 'dso_lists', 'dsos']
+        context = self.get_context_data(**kwargs)
+
+        d = form.cleaned_data
+        opt = d['pages']
+        # Which things aren't checked?
+        skip = list(set(all).difference(opt))
+        pages = d['obs_forms']
+        # Create a PDF file
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        p = run_pdf(p, context, skip=skip, pages=pages)
+        buffer.seek(0)
+        if p:
+            response = HttpResponse(buffer, content_type='application/pdf')
+            return response
+        return self.render_to_response(context)
+
 
 class ObservingSessionListView(ListView):
     model = ObservingSession

@@ -2,8 +2,11 @@ from ...site_parameter.helpers import find_site_parameter
 from .utils import do_line
 from .vocabs import PAGE_WIDTH
 
-def do_observing_form(p, context):
-    num_pages = find_site_parameter('pdf-observing-form-pages', 2, 'positive')
+def do_observing_form(p, context, pages=None):
+    if pages is not None:
+        num_pages = pages
+    else:
+        num_pages = find_site_parameter('pdf-observing-form-pages', 2, 'positive')
     if num_pages < 1:
         return p # do Nothing
 

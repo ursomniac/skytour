@@ -70,17 +70,39 @@ td.normal {
 }
 </style>
 
-<h1>Plan Observations</h1>
-<h3>Current UT: {{ now|date:"D Y-m-d H:i" }}</h3>
-<h3>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h3>
-<h3>Plan Local Time: {{ local_time_str }}</h3>
-<a href="{% url 'plan-pdf' %}" target="_new"><button>Print Observing Plan PDF</button></a>
-<small>(This takes up to a minute to run.)</small>
-<br><br/>
-<a href="{% url 'zenith-view' %}"><button>Zenith Finding Chart</button></a>
-<small>(Will run for <b><span style="color: #fff">{{ zenith_time }}</span></b>)</small>
-<br/><br>
-
+<table>
+  <tr>
+    <td width="50%">
+      <h1>Plan Observations</h1>
+      <h4>Current UT: {{ now|date:"D Y-m-d H:i" }}</h4>
+      <h4>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h4>
+      <h4>Plan Local Time: {{ local_time_str }}</h4>
+      <a href="{% url 'zenith-view' %}"><button>Zenith Finding Chart</button></a>
+      <small>(Will run for <b><span style="color: #fff">{{ zenith_time }}</span></b>)</small>
+      <br/><br>
+      Start: {{ utdt_start|date:"D Y M d  H:i"}} UT<br/>
+      End: {{ utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
+      Julian Date: {{ julian_date|floatformat:5 }}<br>
+      Twilight Ends: {{ twilight.end|get_datetime|date:"Y M d H:i" }} UT <br/>
+      Twilight Begins: {{ twilight.begin|get_datetime|date:"Y M d H:i" }} UT
+    </td>
+    <td width="50%">
+      <h3>Custom Plan PDF</h3>
+      <p>Choose which pages to print.  A full PDF takes about a minute to run.</p>
+      {% comment %}
+      <a href="{% url 'plan-pdf' %}" target="_new"><button>Print (Full) Observing Plan PDF</button></a>
+      <small>(This takes up to a minute to run.)</small>
+      {% endcomment %}
+      <form method="post">
+      {% csrf_token %}
+      <div>{{ form.as_p }}</div>
+      <input type="submit" value="Create PDF">
+      <br><br>
+      </form>
+    </td>
+  </tr>
+</table>
+<br>
 <table class="subnav">
     <tr>
     <td class="normal">Jump to:</td>
@@ -89,26 +111,6 @@ td.normal {
     <td class="click"><a href="#asteroids">Asteroids</a></td>
     <td class="click"><a href="#comets">Comets</a></td>
     <td class="click"><a href="#dso">DSO</a></td>
-    </tr>
-</table>
-
-<h2>Observing Plan</h2>
-
-<table class="plan">
-    <tr>
-        <th>Session</th>
-        <th>Almanac</th>
-    </tr>
-    <tr>
-        <td>
-            Start: {{ utdt_start|date:"D Y M d  H:i"}} UT<br/>
-            End: {{ utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
-            Julian Date: {{ julian_date|floatformat:5 }}
-        </td>
-        <td>
-            Twilight Ends: {{ twilight.end|get_datetime|date:"Y M d H:i" }} UT <br/>
-            Twilight Begins: {{ twilight.begin|get_datetime|date:"Y M d H:i" }} UT
-        </td>
     </tr>
 </table>
 
