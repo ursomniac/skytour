@@ -382,6 +382,17 @@ class AtlasPlate(models.Model):
         constellation = Constellation.objects.filter(abbreviation__iexact=lookup['abbr']).first()
         return constellation
 
+    @property
+    def constellation_list(self):
+        cc = []
+        for c in self.constellation.all():
+            cc.append(c.abbreviation)
+        return ', '.join(cc)
+
+    @property
+    def dso_count(self):
+        return self.dso.count()
+
     def plate_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
 

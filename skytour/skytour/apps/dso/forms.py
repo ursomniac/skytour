@@ -20,12 +20,14 @@ class DSOFilterForm(forms.Form):
     object_type = forms.ModelMultipleChoiceField(
         required=False,
         widget=forms.CheckboxSelectMultiple(),
-        queryset = ObjectType.objects.all()
+        queryset = ObjectType.objects.all(),
+        initial = [c for c in ObjectType.objects.all().values_list("id", flat=True)]
     )
     priority = forms.MultipleChoiceField (
         required = False,
         widget = forms.CheckboxSelectMultiple,
-        choices = PRIORITY_CHOICES 
+        choices = PRIORITY_CHOICES,
+        initial = [c for c in ('Highest', 'High', 'Medium')]
     )
 
 class DSOAddForm(forms.Form):

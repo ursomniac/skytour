@@ -11,7 +11,7 @@ from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
-from .models import DSO, DSOList
+from .models import DSO, DSOList, AtlasPlate
 from .vocabs import PRIORITY_CHOICES
 
 class DSOListView(ListView):
@@ -190,3 +190,10 @@ class DSOCreateList(TemplateView):
         #return render(request, self.template_name, {})
         return HttpResponseRedirect(reverse('dsolist-detail', args=[dso_list.pk]))
 
+class AtlasPlateListView(ListView):
+    model = AtlasPlate
+    template_name = 'atlasplate_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AtlasPlateListView, self).get_context_data(**kwargs)
+        return context
