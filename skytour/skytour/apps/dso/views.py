@@ -197,3 +197,11 @@ class AtlasPlateListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AtlasPlateListView, self).get_context_data(**kwargs)
         return context
+
+class AtlasPlateDetailView(DetailView):
+    model = AtlasPlate
+    template_name = 'atlasplate_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AtlasPlateDetailView, self).get_context_data(**kwargs)
+        return context

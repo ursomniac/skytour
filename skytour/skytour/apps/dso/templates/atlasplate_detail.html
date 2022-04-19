@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<h1>Atlas - Plate {{ object.plate_id }}</h1>
+<h2>Details</h2>
+<b>Center RA/Dec:</b> {{ object.center_ra }}  {{ object.center_dec }}
+<br><b>Constellations</b> {{ object.constellation_list }}
+<br><b>Tags:</b> {{ object.tags }}
+<hr>
+<img src="{{ object.plate.url }}">
+<hr>
+<h2>DSO List</h2>
+{% with object.dso.all as dso_list %}
+{% include 'includes/dso_table.html' %}
+{% endwith %}
+{% endblock %}

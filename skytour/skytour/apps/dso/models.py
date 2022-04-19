@@ -365,6 +365,7 @@ class DSOList(models.Model):
 
 class AtlasPlate(models.Model):
     plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
+    slug = models.SlugField(unique=True)
     center_ra = models.FloatField(_('Center RA'))
     center_dec = models.FloatField(_('Center Dec'))
     plate = models.ImageField(
@@ -396,5 +397,14 @@ class AtlasPlate(models.Model):
     def plate_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
 
+    def save(self, *args, **kwargs):
+        self.slug = self.plate_id
+        super(AtlasPlate, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"Plate {self.plate_id}"
+
+    class Meta:
+        verbose_name = 'Atlas Plate'
+        verbose_name_plural = 'Atlas Plates'
+        ordering = ['plate_id']

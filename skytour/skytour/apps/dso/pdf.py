@@ -1,61 +1,54 @@
 from reportlab.pdfgen import canvas
 from ..observe.pdf import DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE
-from ..pdf.utils import PAGE_WIDTH, PAGE_HEIGHT, X0, bold_text, long_text, add_image
-
-def create_pdf_page(dso):
+from ..pdf.utils import (
+    PAGE_WIDTH, PAGE_HEIGHT, X0, 
+    bold_text, long_text, add_image,
+    label_and_text
+)
+def create_pdf_page(dso, fn=None):
     dir = 'dso_pdf/'
     lname = dso.shown_name.lower().replace(' ','_')
     lname = lname.replace('/', '_')
-    filename = f'{dir}{dso.pk}__{lname}.pdf'
+    if fn is None:
+        filename = f'{dir}{dso.pk}__{lname}.pdf'
+    else:
+        filename = f'{fn}.pdf'
     p = canvas.Canvas('media/'+filename)
 
     y = 800
-    # Title
+    # Title and Nickname
     p, tw = bold_text(p, X0, y, dso.shown_name, size=16)
-    # Nickname
     if dso.nickname is not None:
         p, tw = bold_text(p, 200, y, dso.nickname, size=14)
     # Priority
     priority = 'None' if dso.priority is None else dso.priority
-    p, tw = bold_text(p, 400, y, "Priority: ")
-    p.drawString(400 + tw, y, priority)
-    y -= 15
+    p, y = label_and_text(p, 400, y, 'Priority: ', priority)
     # Aliases
     p.drawString(X0, y, dso.alias_list)
+    y -= 25
 
     # RA/Dec
-    y -= 25
-    p, tw = bold_text(p, X0, y, 'R.A.: ')
-    p.drawString(X0 + tw, y, dso.ra_text)
-    p, tw = bold_text(p, 200, y, 'Dec.: ')
-    p.drawString(200 + tw, y, dso.dec_text)
+    p, y = label_and_text(p, X0, y, 'R.A.: ', dso.ra_text, cr=0)
+    p, y = label_and_text(p, 200, y, 'Dec: ', dso.dec_text, cr=0)
     # Type / Morph.
-    p, tw = bold_text(p, 400, y, 'Type: ')
     mtype = '' if dso.morphological_type is None else dso.morphological_type
     otype = f"{dso.object_type.short_name} {mtype}"
-    p.drawString(400 + tw, y, otype)
+    p, y = label_and_text(p, 400, y, 'Type: ', otype, cr=20)
     # Mag/Ang Size/Surf.Br.
-    y -= 20
-    p, tw = bold_text(p, X0, y, 'Mag: ')
     mag = '' if dso.magnitude is None else f"{dso.magnitude:.2f}"
-    p.drawString(X0 + tw, y, mag)
-    p, tw = bold_text(p, 200, y, 'Surf. Br.: ')
+    p, y = label_and_text(p, X0, y, 'Mag: ', mag, cr=0)
     sbr = '' if dso.surface_brightness is None else f'{dso.surface_brightness:.2f}'
-    p.drawString(200 + tw, y, sbr)
-    p, tw = bold_text(p, 400, y, 'Ang. Size.: ')
+    p, y = label_and_text(p, 200, y, 'Surf. Br.: ', sbr, cr=0)
     asize = '' if dso.angular_size is None else dso.angular_size
-    p.drawString(400 + tw, y, asize)
+    p, y = label_and_text(p, 400, y, 'Ang. Size: ', asize, cr=20)
     # Distance/Units
-    y -= 20
-    p, tw = bold_text(p, X0, y, 'Dist.: ')
-    if dso.distance is not None:
-        p.drawString(X0 + tw, y, f"{dso.distance} {dso.distance_units}")
-    p, tw = bold_text(p, 200, y, 'Constellation: ')
-    p.drawString(200 + tw, y, dso.constellation.name)
+    dstr = f'{dso.distance} {dso.distance_units}' if dso.distance is not None else ''
+    p, y = label_and_text(p, X0, y, 'Dist.: ', dstr, cr=0)
+    p, y == label_and_text(p, 200, y, 'Constellation: ', dso.constellation.name, cr=10)
     y -= 10
     p.line(50, y, 550, y)
     y -= 10
-
+    
     # Finder Chart
     ytop = y
     finder = None if dso.dso_finder_chart.name == '' else dso.dso_finder_chart.file

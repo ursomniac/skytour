@@ -24,6 +24,7 @@ urlpatterns = [
     path('ajax_select/', include(ajax_select_urls)),
     path('admin/', admin.site.urls),
     path('asteroid/', include('skytour.apps.solar_system.urls_asteroid')),
+    path('atlas/', include('skytour.apps.dso.urls_atlas')),
     path('calendar/', include('skytour.apps.misc.urls')),
     path('catalog/', include('skytour.apps.utils.urls_catalog')),
     path('comet/', include('skytour.apps.solar_system.urls_comet')),

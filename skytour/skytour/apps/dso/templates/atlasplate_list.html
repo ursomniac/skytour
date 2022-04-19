@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<h1>List of Atlas Plates</h1>
+<table>
+    <tr>
+        <th>Plate #</th>
+        <th>Center RA</th>
+        <th>Center Dec</th>
+        <th>Constellations</th>
+        <th># DSOs</th>
+    </tr>
+{% for object in object_list %}
+    <tr>
+        <td><a href="{% url 'atlas-detail' object.plate_id %}">{{ object.plate_id }}</a></td>
+        <td>{{ object.center_ra }}</td>
+        <td>{{ object.center_dec }}</td>
+        <td>{{ object.constellation_list }}</td>
+        <td>{{ object.dso_count }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}
