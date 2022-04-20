@@ -170,16 +170,16 @@ class ObservingPlanView(CookieMixin, FormView):
     def form_valid(self, form, **kwargs):
         all = ['skymap', 'zenith', 'planets', 'asteroids', 'comets', 'moon', 'dso_lists', 'dsos']
         context = self.get_context_data(**kwargs)
-
         d = form.cleaned_data
         opt = d['pages']
         # Which things aren't checked?
         skip = list(set(all).difference(opt))
+        planet_list = d['planets']
         pages = d['obs_forms']
         # Create a PDF file
         buffer = io.BytesIO()
         p = canvas.Canvas(buffer, pagesize=letter)
-        p = run_pdf(p, context, skip=skip, pages=pages)
+        p = run_pdf(p, context, planet_list=planet_list, skip=skip, pages=pages)
         buffer.seek(0)
         if p:
             response = HttpResponse(buffer, content_type='application/pdf')

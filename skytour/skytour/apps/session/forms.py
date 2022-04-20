@@ -3,6 +3,7 @@ from django import forms
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
+from ..solar_system.models import Planet
 from .vocabs import PLANET_CHOICES
 
 YES_NO = [
@@ -59,5 +60,8 @@ class PDFSelectForm(forms.Form):
         widget = forms.CheckboxSelectMultiple, 
         choices=PAGE_CHOICES,
         initial = [c[0] for c in PAGE_CHOICES]
+    )
+    planets = forms.ModelMultipleChoiceField(
+        queryset = Planet.objects.all()
     )
     obs_forms = forms.IntegerField(initial=2)
