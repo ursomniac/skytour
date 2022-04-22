@@ -84,6 +84,9 @@ def create_finder_chart(
     fig, ax = plt.subplots(figsize=[6,6])
     times.append((time.perf_counter(), 'Map set up'))
 
+    # Add equator and ecliptic
+    ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=mag_offset, reversed=reversed)
@@ -404,6 +407,8 @@ def plot_track(
             color=label_color
         )
     
+    ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
     if not mag_limit:

@@ -65,6 +65,11 @@ def get_skymap(
     times.append((time.perf_counter(), 'Starting Plot'))
 
     # NOW PLOT THINGS!
+
+    # 1a Equator and Ecliptic
+    ax = map_equ(ax, earth, t, projection, type='equ', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, type='ecl', reversed=reversed)
+
     # 1. stars and constellation lines
     ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, mag_offset=0.1, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
@@ -72,9 +77,6 @@ def get_skymap(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
     )
     times.append((time.perf_counter(), 'Stars and Constellations'))
-    # 1a Equator and Ecliptic
-    ax = map_equ(ax, earth, t, projection, type='equ', reversed=reversed)
-    ax = map_equ(ax, earth, t, projection, type='ecl', reversed=reversed)
 
     # 2. Sun - only matters if the plot is during the day
     ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
