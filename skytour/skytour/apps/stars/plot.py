@@ -72,6 +72,9 @@ def get_skymap(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
     )
     times.append((time.perf_counter(), 'Stars and Constellations'))
+    # 1a Equator and Ecliptic
+    ax = map_equ(ax, earth, t, projection, type='equ', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, type='ecl', reversed=reversed)
 
     # 2. Sun - only matters if the plot is during the day
     ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')

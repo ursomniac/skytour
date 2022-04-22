@@ -6,6 +6,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
+from ..astro.markers import generate_equator
 from ..dso.models import DSO
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
@@ -609,3 +610,25 @@ def map_comets(ax, comet_list, earth, t, projection,
     return ax, interesting
 
 
+def map_equ(ax, earth, t, projection, type, reversed=False):
+    if type == 'equ':
+        points = generate_equator()
+        line_type = (0, (7, 10))
+        color = '#f9f' if reversed else '#f99'
+    elif type == 'ecl':
+        points = generate_equator(type='ecl')
+        line_type = '-.'
+        color = '#6ff' if reversed else '#3c3'
+    else:
+        return ax
+
+    d = dict(x = [], y = [])
+    for p in points:
+        ra, dec = p
+        xx, yy = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
+        d['x'].append(xx)
+        d['y'].append(yy)
+    line_color = '#66f' if reversed else '#f99'
+    #w = ax.scatter(d['x'], d['y'], c=line_color, marker='.')
+    w = ax.plot(d['x'], d['y'], ls=line_type, lw=1., alpha=0.7, c=color)
+    return ax

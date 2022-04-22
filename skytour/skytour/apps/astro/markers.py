@@ -19,12 +19,12 @@ def generate_equator(step=0.5, type='equ'):
         sx = math.sin(rx)
         cx = math.cos(rx)
         if type == 'equ':
-            points.append(tuple(d, 0.))
+            points.append(tuple([d, 0.]))
         elif type == 'ecl':
             # Because beta is 0, some terms cancel out
             ra = math.degrees(math.atan2(sx * ce,  cx)) / 15.
             dec = math.degrees(math.asin(se * sx)) 
-            points.append(tuple(ra, dec))
+            points.append(tuple([ra, dec]))
         elif type == 'gal':
             pass
         d += step
