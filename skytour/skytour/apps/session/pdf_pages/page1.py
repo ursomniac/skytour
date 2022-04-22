@@ -54,9 +54,8 @@ def do_page1(p, context):
     p.drawString(350, y-90, 'Wind:    ____________________')
     p.drawString(50, y-120, 'Seeing: ______________')
     p.setFont('Helvetica', 12)
-    y -= 200
+    y -= 160
     # Calendar
-    y -= 50
     p.setFont('Helvetica-Bold', 14)
     p.drawString(50, y, 'Calendar:')
     p.setFont('Helvetica', 10)
@@ -79,7 +78,7 @@ def do_page1(p, context):
     p.setFont('Helvetica-Bold', 14)
     p.drawString(50, y, 'Meteor Showers:')
     p.setFont('Helvetica', 10)
-    y -= 30
+    y -= 24
     meteors = get_meteor_showers(utdt)
     if len(meteors) > 0:
         for ms in meteors:
@@ -94,11 +93,11 @@ def do_page1(p, context):
     else:
         p.drawString(50, y, '(no meteor showers)')
     # Planets Close Together
-    y -= 45
+    y -= 30
     p.setFont('Helvetica-Bold', 14)
     p.drawString(50, y, 'Planets Close Together:')
     p.setFont('Helvetica', 10)
-    y -= 30
+    y -= 24
     adj_planets = get_adjacent_planets(cookie_dict['planets'], utdt)
     if len(adj_planets) > 0:
         for ap in adj_planets:
