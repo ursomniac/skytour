@@ -15,11 +15,18 @@ def run_pdf(p, context, planet_list= None, skip=[], pages=None):
     if 'zenith' not in skip:
         p = do_zenith(p, context)        # Zenith Chart
     if 'planets' not in skip:
-        p = do_planets(p, context)       # Planets
+        p = do_planets(p, context)       # Planets Overview
     for planet in planet_list:
         pname = planet.name
         session = planet_cookie[pname]
-        p = create_pdf_view(p, utdt, planet, 'planet', session, context)
+        p = create_pdf_view(             # Individual Planets
+            p, 
+            utdt, 
+            planet, 
+            'planet', 
+            session, 
+            context
+    )
     if 'asteroids' not in skip:
         p = do_asteroids(p, context)     # Asteroids
     if 'comets' not in skip:
@@ -31,6 +38,10 @@ def run_pdf(p, context, planet_list= None, skip=[], pages=None):
     if 'dsos' not in skip:
         p = do_dso_long_list(p, context) # Long list of DSOs
     if 'forms' not in skip:
-        p = do_observing_form(p, context, pages=pages)
+        p = do_observing_form(           # Blank Observing Forms
+            p, 
+            context, 
+            pages=pages
+    )
     p.save()
     return p

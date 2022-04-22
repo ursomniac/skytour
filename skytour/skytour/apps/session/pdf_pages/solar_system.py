@@ -1,4 +1,6 @@
 from dateutil.parser import isoparse
+from ...pdf.utils import label_and_text
+from ...site_parameter.helpers import find_site_parameter
 from ...solar_system.models import Asteroid, Comet, Planet
 from ...solar_system.plot import create_planet_system_view, create_finder_chart
 from ...utils.format import to_sex, to_hm, to_dm, to_time
@@ -151,26 +153,31 @@ def do_moon(p, context):
 
     y_start = 720
     y = y_start
-    p.setFont('Helvetica-Bold', 14)
+    p.setFont('Helvetica-Bold', 16)
     p.drawString(50, y, 'Moon:')
-    p.setFont('Helvetica', 10)
-    y -= 15
-
+    p.setFont('Helvetica', 12)
+    y -= 30
+    ytop = y
     obs = cookie_dict['moon']['observe']
     ses = cookie_dict['moon']['session']
     app = cookie_dict['moon']['apparent']
     for s in [
-        f"in {obs['constellation']['abbr']}",
-        f"Phase: {obs['lunar_phase']['phase']}",
-        f"Illum.: {obs['fraction_illuminated']:.1f}%",
-        f"Dist.: {app['distance']['km']:.1f} km",
-        f"Light Time: {to_time(app['distance']['light_time'])}",
-        f"Mag: {obs['apparent_magnitude']:.2f}"
+        ("in: ", f"{obs['constellation']['name']}", 24),
+        ("RA: ", f"{app['equ']['ra_str']}", 16),
+        ("Dec: ", f"{app['equ']['dec_str']}", 24),
+        ("Phase: ",f"{obs['lunar_phase']['phase']}", 16),
+        ("Illum.: ",f"{obs['fraction_illuminated']:.1f}%", 24),
+        ("Dist.: ",f"{app['distance']['km']:.1f} km", 16),
+        ("Light Time: ",f"{to_time(app['distance']['light_time'])}", 16),
+        ("Mag: ",f"{obs['apparent_magnitude']:.2f}", 24)
+
     ]:
-        p, y = do_line(p, 50, y, s, dy=12)
+        p, y = label_and_text(p, 50, y, (s[0], 12), (s[1], 12), cr=s[2])
+
     for alm in cookie_dict['moon']['almanac']:
-        p.drawString(50, y, f"{alm['type']}: {isoparse(alm['ut']).strftime('%H:%M')} UT")
-        y -= 12
+        l = f"{alm['type']}: "
+        t = f"{isoparse(alm['local_time']).strftime('%H:%M %p')} {context['time_zone']}"
+        p, y = label_and_text(p, 50, y, (l, 12), (t, 12), cr=16) 
     # Phase plot
     cookie_dict['moon']['name'] = 'Moon' # TODO: Fix this bug!
     moon_tel = create_planet_system_view(
@@ -181,7 +188,15 @@ def do_moon(p, context):
         flipped = False,
         reversed = False
     )
-    p.drawInlineImage(moon_tel, 390, y_start - 150, 180, 180)
+    p.drawInlineImage(moon_tel, 30, y -200, 200, 200)
+    y =  200
+
+    map = find_site_parameter('simple-moon-map', None, 'image')
+    p.drawImage(map.file.name, 250, 450, width=300, height=300, mask=None)
+
+    sqm = find_site_parameter('moon-vs-sqm', None, 'image')
+    y -= 150
+    p.drawImage(sqm.file.name, 50, y, width=500,  height=.46*500, mask=None)
     p.showPage()
 
     return p
