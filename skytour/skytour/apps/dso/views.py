@@ -186,8 +186,7 @@ class DSOCreateList(TemplateView):
                     dso_to_add = DSO.objects.filter(pk = pk).first()
                     if dso_to_add is not None:
                         dso_list.dso.add(dso_to_add)
-
-        #return render(request, self.template_name, {})
+                        
         return HttpResponseRedirect(reverse('dsolist-detail', args=[dso_list.pk]))
 
 class AtlasPlateListView(ListView):

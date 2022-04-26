@@ -9,13 +9,7 @@ class CookieMixin(object):
         context = deal_with_cookie(self.request, context)
         context.update({'cookies': get_all_cookies(self.request)})
         return context
-
-    #def render_to_response(self, context):
-    #    complete = test_all_cookies(context['cookies'])
-    #    if not complete:
-    #        return HttpResponseRedirect('/session/cookie')
-    #    return super(CookieMixin, self).render_to_response(context)
-
+        
     def dispatch(self, request, *args, **kwargs):
         cookies = get_all_cookies(request)
         complete = test_all_cookies(cookies)

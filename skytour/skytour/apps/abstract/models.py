@@ -167,9 +167,9 @@ class ObservingLog(models.Model):
         on_delete = models.CASCADE
     )
     # Eyepiece(s)
-    eyepieces = models.ManyToManyField (Eyepiece)
+    eyepieces = models.ManyToManyField (Eyepiece, blank=True)
     # Filter(s)
-    filters = models.ManyToManyField (Filter)
+    filters = models.ManyToManyField (Filter, blank=-True)
     # Ugh you need location!
     location = models.ForeignKey (
         ObservingLocation,

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Add Observation: Skytour{% endblock %}
+{% block content %}
+
+
+<h1>Add Observation</h1>
+<h2>Session Info</h2>
+Session info goes here.
+
+<div class="plan_form">
+    {% if form %}
+    {{ form.media }}
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+{% endblock %}

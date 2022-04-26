@@ -1,6 +1,7 @@
 import datetime, pytz
 import io
 import time
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -13,17 +14,25 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from ..astro.almanac import get_dark_time
-from ..observe.models import ObservingLocation
 from ..astro.time import get_julian_date
+from ..dso.models import DSO, DSOObservation
+from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
     get_planet_positions, 
     get_comet_positions,
     get_visible_asteroid_positions
 )
+from ..solar_system.models import (
+    Asteroid, AsteroidObservation,
+    Comet, CometObservation,
+    Planet, PlanetObservation
+)
 from ..solar_system.position import get_object_metadata
+from ..tech.models import Telescope
 from ..utils.timer import compile_times
-from .forms import ObservingParametersForm, PDFSelectForm
+from .cookie import get_all_cookies, deal_with_cookie
+from .forms import ObservingParametersForm, PDFSelectForm, SessionAddForm
 from .mixins import CookieMixin
 from .models import ObservingSession
 from .pdf import run_pdf
@@ -216,3 +225,87 @@ class ShowCookiesView(TemplateView):
             value = self.request.session.get(cookie, None)
             context[cookie] = value
         return context
+
+class SessionAddView(CookieMixin, FormView):
+    template_name = 'session_add.html'
+    success_url = '/session/add_object'
+    form_class = SessionAddForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        cookies = get_all_cookies(self.request)
+        aa = cookies['asteroids']
+        aslugs = [a['slug'] for a in aa]
+        form.fields['asteroid'].queryset = Asteroid.objects.filter(slug__in=aslugs)
+        cc = cookies['comets']
+        cslugs = [c['pk'] for c in cc]
+        form.fields['comet'].queryset = Comet.objects.filter(pk__in=cslugs)
+        return form
+
+    def get_initial(self):
+        initial = super().get_initial() # needed since we override?
+        # Apparently get_context_data comes after get_initial...
+        deal = deal_with_cookie(self.request, {})
+        ut_date = deal.get('utdt_start', None)
+        if ut_date is not None:
+            initial['ut_date'] = ut_date.date()
+            session = ObservingSession.objects.filter(ut_date=ut_date).first()
+            if session:
+                initial['session'] = session
+        location = deal.get('location', None)
+        if location is not None:
+            initial['location'] = location
+        tel_pk = find_site_parameter('default-telescope-pk', None, 'positive')
+        if tel_pk is not None:
+            initial['telescope'] = Telescope.objects.filter(pk=tel_pk).first()
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionAddView, self).get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        d = form.cleaned_data
+        print ("D: ", d)
+        object_type = d['object_type']
+        object = None
+
+        if object_type == 'planet':
+            object = d['planet']
+            obs = PlanetObservation()
+        elif object_type == 'moon': # TBD
+            pass
+        elif object_type == 'other': # TBD
+            #obj_name = d['other_object']
+            pass
+        elif object_type == 'asteroid':
+            object = d['asteroid']
+            obs = AsteroidObservation()
+        elif object_type == 'comet':
+            object = d['comet']
+            obs = CometObservation()
+        elif object_type == 'dso':
+            dso_id = d['id_in_catalog'].strip()
+            object = DSO.objects.filter(catalog=d['catalog'], id_in_catalog=dso_id).first()
+            if object is None:
+                raise ValidationError(f"Failed to look up DSO {d['catalog']} {dso_id}")
+            obs = DSOObservation()
+        else:
+            raise ValidationError (f"Object Type {object_type} not found!")
+
+        print(f"Object Type: {object_type} found {object}")
+        if object:
+            obs.object = object
+        obs.ut_datetime = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
+        obs.location = d['location']
+        obs.telescope = d['telescope']
+        obs.notes = d['notes']
+        obs.save()
+        if d['eyepiece'].count() > 0:
+            obs.eyepieces.add(*d['eyepiece'])
+        if d['filter'].count() > 0:
+            obs.filters.add(*d['filter'])
+        obs.notes = d['notes']
+        obs.save()
+        return self.render_to_response(context)

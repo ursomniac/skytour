@@ -3,7 +3,10 @@ from django import forms
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.models import Planet
+from ..solar_system.models import Planet, Asteroid, Comet
+from ..tech.models import Telescope, Eyepiece, Filter
+from ..utils.models import Catalog
+from .models import ObservingSession
 from .vocabs import PLANET_CHOICES
 
 YES_NO = [
@@ -59,9 +62,76 @@ class PDFSelectForm(forms.Form):
     pages = forms.MultipleChoiceField(
         widget = forms.CheckboxSelectMultiple, 
         choices=PAGE_CHOICES,
-        initial = [c[0] for c in PAGE_CHOICES]
+        initial = [c[0] for c in PAGE_CHOICES],
+        required=False
     )
     planets = forms.ModelMultipleChoiceField(
-        queryset = Planet.objects.all()
+        queryset = Planet.objects.all(),
+        required=False
     )
     obs_forms = forms.IntegerField(initial=2)
+
+OBSERVE_TYPES = [
+    ('planet', 'Planet'), 
+    ('dso', 'DSO'),
+    ('asteroid', 'Asteroid'), 
+    ('comet', 'Comet'), 
+    ('moon', 'Moon'), 
+    ('other', 'Other')
+]
+class SessionAddForm(forms.Form):
+    # Fill these in from the session cookie OR override
+    session = forms.ModelChoiceField (
+        queryset = ObservingSession.objects.all()
+    )
+    ut_date = forms.DateField(label='UT Date')
+    location = forms.ModelChoiceField (
+        queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
+    )
+    telescope = forms.ModelChoiceField (
+        queryset = Telescope.objects.all()
+    )
+    eyepiece = forms.ModelMultipleChoiceField (
+        queryset = Eyepiece.objects.all(),
+        required = False
+    )
+    filter = forms.ModelMultipleChoiceField (
+        queryset = Filter.objects.all(),
+        required = False
+    )
+    # Required
+    ut_time = forms.TimeField(label='UT Time')
+    object_type = forms.ChoiceField(
+        choices = OBSERVE_TYPES, initial='DSO'
+    )
+    # SOLAR SYSTEM section - Selections will be overridden in get_initial()
+    planet = forms.ModelChoiceField (
+        queryset = Planet.objects.all(),
+        required=False
+    )
+    asteroid = forms.ModelChoiceField (
+        queryset = Asteroid.objects.all(),
+        required=False
+    )
+    comet = forms.ModelChoiceField (
+        queryset = Comet.objects.all(),
+        required=False
+    )
+    # DSO section 
+    catalog = forms.ModelChoiceField (
+        queryset = Catalog.objects.all(),
+        required = False,
+        label = 'DSO Catalog'
+    )
+    id_in_catalog = forms.CharField (
+        required = False,
+        label = 'ID in Catalog'
+    )
+    # Misc Section
+    other_object = forms.CharField (
+        required = False
+    )
+    notes = forms.CharField (
+        widget = forms.Textarea,
+        required = False
+    )

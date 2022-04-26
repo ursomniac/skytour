@@ -126,7 +126,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         null = True, blank = True,
         upload_to = 'dso_pdf'
     )
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     @property
     def alias_list(self):

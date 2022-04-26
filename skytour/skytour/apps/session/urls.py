@@ -4,6 +4,7 @@ from .views import (
     SetSessionCookieView,
     ObservingSessionListView, 
     ObservingSessionDetailView,
+    SessionAddView,
     ShowCookiesView,
 )
 
@@ -12,5 +13,6 @@ urlpatterns = (
     path('<int:pk>', ObservingSessionDetailView.as_view(), name='session-detail'),
     path('cookie', SetSessionCookieView.as_view(), name='session-set'),
     path('plan', ObservingPlanView.as_view(), name='observing-plan'),
-    path('show_cookies', ShowCookiesView.as_view(), name='show-cookies')
+    path('show_cookies', ShowCookiesView.as_view(), name='show-cookies'),
+    path('add', SessionAddView.as_view(), name='session-add'),
 )
