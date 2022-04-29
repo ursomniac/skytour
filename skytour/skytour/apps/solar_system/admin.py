@@ -1,6 +1,12 @@
 from django.contrib import admin
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
-from .models import Planet, MeteorShower, Asteroid, Comet, PlanetObservation, CometObservation, AsteroidObservation
+from .models import (
+    Asteroid, AsteroidObservation,
+    Comet, CometObservation, 
+    Planet, PlanetObservation, 
+    MoonObservation,
+    MeteorShower, 
+)
 
 class AsteroidObservationAdmin(AbstractObservation):
     model = AsteroidObservation
@@ -10,6 +16,9 @@ class CometObservationAdmin(AbstractObservation):
 
 class PlanetObservationAdmin(AbstractObservation):
     model = PlanetObservation
+
+class MoonObservationAdmin(AbstractObservation):
+    model = MoonObservation
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
@@ -55,3 +64,4 @@ admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
 admin.site.register(Asteroid, AsteroidAdmin)
 admin.site.register(Comet, CometAdmin)
+admin.site.register(MoonObservation)

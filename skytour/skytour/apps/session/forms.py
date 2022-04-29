@@ -1,5 +1,6 @@
 from datetime import datetime
 from django import forms
+from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
@@ -72,8 +73,8 @@ class PDFSelectForm(forms.Form):
     obs_forms = forms.IntegerField(initial=2)
 
 OBSERVE_TYPES = [
-    ('planet', 'Planet'), 
     ('dso', 'DSO'),
+    ('planet', 'Planet'), 
     ('asteroid', 'Asteroid'), 
     ('comet', 'Comet'), 
     ('moon', 'Moon'), 
@@ -84,7 +85,7 @@ class SessionAddForm(forms.Form):
     session = forms.ModelChoiceField (
         queryset = ObservingSession.objects.all()
     )
-    ut_date = forms.DateField(label='UT Date')
+    ut_date = forms.DateField(required=False, label='UT Date')
     location = forms.ModelChoiceField (
         queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
     )
@@ -129,9 +130,49 @@ class SessionAddForm(forms.Form):
     )
     # Misc Section
     other_object = forms.CharField (
-        required = False
+        required = False,
+        help_text = 'Not supported yet...'
     )
     notes = forms.CharField (
         widget = forms.Textarea,
         required = False
+    )
+
+    #def __init__(self, *args, **kwargs):
+    #    OT = {'asteroid': 'Asteroid', 'comet': 'Comet', 'dso': 'DSO', 
+    #        'planet': 'Planet', 'moon': 'Moon', 'other': 'Other'}
+    #    if 'object_type' in kwargs:
+    #        object_type = kwargs.pop('object_type')
+    #        if object_type is not None:
+    #            otot = OT[object_type]
+    #            print ("OTOT: ", otot)
+    #            #kwargs.update(initial={'object_type': OT[object_type]})
+    #            kwargs.update(initial={'object_type': None})
+    #    if 'pk' in kwargs and object_type is not None:
+    #        print ("GOT HERE")
+    #        pk = int(kwargs.pop('pk'))
+    #        if object_type == 'planet':
+    #            kwargs.update(initial={'planet': Planet.objects.filter(pk=pk).first()})
+    #        elif object_type == 'asteroid':
+    #            kwargs.update(initial={'asteroid': Asteroid.objects.filter(pk=pk).first()})
+    #        elif object_type == 'comet':
+    #            kwargs.update(initial={'comet': Comet.objects.filter(pk=pk).first()})
+    #        elif object_type == 'dso':
+    #            dso = DSO.objects.filter(pk=pk).first()
+    #            if dso:
+    #                kwargs.update(
+    #                    initial={
+    #                        'catalog': dso.catalog,
+    #                        'id_in_catalog': dso.id_in_catalog
+    #                    }
+    #                )
+    #    else:
+    #        return
+    #    print ("GOT HERE 2")
+    #    super(SessionAddForm, self).__init__(*args, **kwargs)
+
+class StartSessionForm(forms.Form):
+    ut_date = forms.DateField ()
+    location = forms.ModelChoiceField (
+        queryset = ObservingLocation.objects.filter(status__in=['provisional', 'active'])
     )

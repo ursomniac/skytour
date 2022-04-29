@@ -15,7 +15,8 @@ from reportlab.pdfgen import canvas
 
 from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date
-from ..dso.models import DSO, DSOObservation
+from ..dso.helpers import lookup_dso
+from ..dso.models import DSOObservation
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
@@ -26,7 +27,8 @@ from ..solar_system.helpers import (
 from ..solar_system.models import (
     Asteroid, AsteroidObservation,
     Comet, CometObservation,
-    Planet, PlanetObservation
+    Planet, PlanetObservation,
+    MoonObservation
 )
 from ..solar_system.position import get_object_metadata
 from ..tech.models import Telescope
@@ -264,6 +266,13 @@ class SessionAddView(CookieMixin, FormView):
         context = super(SessionAddView, self).get_context_data(**kwargs)
         return context
 
+    #def get_form_kwargs(self):
+    #    kwargs = super(SessionAddView, self).get_form_kwargs()
+    #    kwargs['object_type'] = self.request.GET.get('object_type')
+    #    kwargs['pk'] = self.request.GET.get('pk')
+    #    print (f"OT: {kwargs['object_type']} PK: {kwargs['pk']}")
+    #    return kwargs
+
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         d = form.cleaned_data
@@ -271,11 +280,18 @@ class SessionAddView(CookieMixin, FormView):
         object_type = d['object_type']
         object = None
 
+        # Get UTDT Date
+        if d['ut_date'] is not None:
+            ut_date = datetime.datetime.fromisoformat(d['ut_date']).date()
+        else:
+            session = d['session']
+            ut_date = session.ut_date
+
         if object_type == 'planet':
             object = d['planet']
             obs = PlanetObservation()
         elif object_type == 'moon': # TBD
-            pass
+            obs = MoonObservation()
         elif object_type == 'other': # TBD
             #obj_name = d['other_object']
             pass
@@ -287,7 +303,8 @@ class SessionAddView(CookieMixin, FormView):
             obs = CometObservation()
         elif object_type == 'dso':
             dso_id = d['id_in_catalog'].strip()
-            object = DSO.objects.filter(catalog=d['catalog'], id_in_catalog=dso_id).first()
+            shown_name = f"{d['catalog'].abbreviation} {d['id_in_catalog']}"
+            object = lookup_dso(shown_name)
             if object is None:
                 raise ValidationError(f"Failed to look up DSO {d['catalog']} {dso_id}")
             obs = DSOObservation()
@@ -297,7 +314,7 @@ class SessionAddView(CookieMixin, FormView):
         print(f"Object Type: {object_type} found {object}")
         if object:
             obs.object = object
-        obs.ut_datetime = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
+        obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
         obs.location = d['location']
         obs.telescope = d['telescope']
         obs.notes = d['notes']

@@ -51,9 +51,29 @@
     {% if target.object_type == 'Condition' %}
         <h3>Condition: {{ target.session_stage }}</h3>
     {% elif target.object_type == 'DSO' %}
-        <h3>{{ target.object_type}}: {{ target.object.shown_name }}</h3>
+        <h3>{{ target.object_type}}: 
+            <a href="{% url target.url_path target.object.pk %}" target="_new">
+            {{ target.object.shown_name }}
+            </a>
+        </h3>
+    {% elif target.object_type == 'Comet' %}
+        <h3>{{ target.object_type}}: 
+            <a href="{% url target.url_path target.object.pk %}" target="_new">
+            {{ target.object.name }}
+            </a>
+        </h3>
+    {% elif target.object_type == "Planet" or target.object_name == 'Asteroid' %}
+        <h3>{{ target.object_type }}: 
+            <a href="{% url target.url_path target.object.slug %}" target="_new">
+            {{ target.object.name }}
+            </a>
+        </h3>
+    {% elif target.object_type == 'Moon' %}
+        <h3>Moon</h3>
     {% else %}
-        <h3>{{ target.object_type}}: {{ target.object.name }}</h3>
+    <h3>{{ target.object_type }}: 
+        {{ target.object.name }}
+    </h3>
     {% endif %}
         <table class="internal">
             <tr><td>UT:</td><td>{{ target.ut_datetime|date:"Y-m-d h:i" }}</td></tr>

@@ -78,7 +78,11 @@ def get_object_metadata(
     sun_long = sun_apparent['ecl']['longitude']
 
     # Get rise/set and session parameters
-    almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone) if location else None
+    if location:
+        time_zone = location.my_time_zone
+        almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone)
+    else: 
+        almanac = None
     session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
 
     # Special Cases --- ADD to observe dict

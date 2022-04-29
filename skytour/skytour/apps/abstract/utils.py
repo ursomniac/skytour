@@ -39,7 +39,11 @@ def get_metadata(observation):
     if observation.object_type != 'DSO':
         eph_label = target.target if object_type == 'Planet' else None
         ephem = get_object_metadata(
-            utdt, eph_label, object_type.lower(), instance=target, location=location
+            utdt, 
+            eph_label, 
+            object_type.lower(), 
+            instance=target, 
+            location=location
         )
         ra = ephem['apparent']['equ']['ra']
         dec = ephem['apparent']['equ']['dec']

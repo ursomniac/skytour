@@ -1,3 +1,4 @@
+import pytz
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -200,6 +201,9 @@ class ObservingLocation(models.Model):
     def limiting_magnitude(self):
         return get_limiting_magnitude(self.bortle)
 
+    @property
+    def my_time_zone(self):
+        return pytz.timezone(self.time_zone.name)
 
     @property
     def number_of_sessions(self):

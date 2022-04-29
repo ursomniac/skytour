@@ -1,4 +1,4 @@
-from .models import DSOList, AtlasPlate
+from .models import DSOList, AtlasPlate, DSO
 from .plot import plate_list, create_atlas_plot
 
 def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
@@ -28,3 +28,8 @@ def create_atlas_plate(plate_id):
     x.save()
     return x
 
+def lookup_dso(name):
+    d = DSO.objects.filter(shown_name=name).first()
+    if d is None:
+        d = DSO.objects.filter(aliases__shown_name=name).first()
+    return d
