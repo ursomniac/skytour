@@ -364,6 +364,13 @@ class DSOList(models.Model):
         verbose_name_plural = 'DSO Lists'
 
 class AtlasPlate(models.Model):
+    """
+    TODO: How to get a list of adjoining plates?
+    TODO: Constellation boundaries
+    TODO: Bright Star Lists
+    TODO: Double Stars?
+    TODO: Milky Way Contours
+    """
     plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
     slug = models.SlugField(unique=True)
     center_ra = models.FloatField(_('Center RA'))
