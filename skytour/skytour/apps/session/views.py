@@ -209,6 +209,9 @@ class ObservingSessionListView(ListView):
     model = ObservingSession
     template_name = 'session_list.html'
 
+    def get_queryset(self):
+        return self.model.objects.order_by('-ut_date')
+
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionListView, self).get_context_data(**kwargs)
         context['table_id'] = 'session_table'
