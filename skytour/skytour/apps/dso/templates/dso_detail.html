@@ -85,7 +85,7 @@
 			<tr>
 				<td>On Atlas Plates: {# object.atlas_plate_list #}
 					{% for plate in object.atlasplate_set.all %}
-					<a href="{% url 'atlas-detail' plate.pk %}" target="_new">{{ plate.pk }}<a>
+					<a href="{% url 'atlas-detail' plate.pk %}" target="_new">{{ plate.plate_id }}<a>
 					{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 				</td>
