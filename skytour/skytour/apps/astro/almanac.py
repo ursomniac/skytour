@@ -64,6 +64,11 @@ def get_object_rise_set(utdt, eph, target, location, serialize=False, time_zone=
     t0 = ts.utc(utdt)
     t1 = ts.utc(ut1)
 
+    # Comets do not work...
+    # Look at https://rhodesmill.org/skyfield/examples.html#when-is-a-body-or-fixed-coordinate-above-the-horizon
+    # to see about a possible solution
+    # It's probably as simple as changing target to be a Star() call - yes, comets ARE moving, but if they're
+    # near the horizon anyway you won't want to observe them.
     f = risings_and_settings(eph, target, loc)
     t, y = find_discrete(t0, t1, f)
 

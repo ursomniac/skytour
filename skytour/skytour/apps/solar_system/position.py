@@ -80,6 +80,7 @@ def get_object_metadata(
     # Get rise/set and session parameters
     if location:
         time_zone = location.my_time_zone
+        # TODO: Support comets here.
         almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone)
     else: 
         almanac = None
