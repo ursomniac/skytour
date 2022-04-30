@@ -18,7 +18,8 @@ def do_skymap(p, context):
         comet_list = cookie_dict['comets'],
         moon = cookie_dict['moon'],
         sun = cookie_dict['sun'],
-        reversed=False
+        reversed=False,
+        local_time = context['local_time']
     ) 
     p.drawInlineImage(skymap, 28, 150, 7.5*72, 7.5*72)
     p.setFont('Helvetica-Bold', 14)

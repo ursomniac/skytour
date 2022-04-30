@@ -22,7 +22,8 @@ def get_skymap(
         comet_list=None,
         moon = None,
         sun = None,
-        reversed=True
+        reversed=True,
+        local_time = None
     ):
     """
     Create a full map of the sky for a given UTDT and location.
@@ -138,7 +139,10 @@ def get_skymap(
     plt.tight_layout(pad=2.0)
 
     # Set title
-    ax.set_title("{}".format(utdt.strftime("%Y-%m-%d %Hh UT")))
+    title = utdt.strftime("%Y-%m-%d %Hh %Mm UT")
+    if local_time is not None:
+        title += f" = {local_time}"
+    ax.set_title(title)
     times.append((time.perf_counter(), 'Plotting Complete'))
 
     # Render and close

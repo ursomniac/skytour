@@ -84,7 +84,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     p, y = label_and_text(p, 300, y, ("Loc: ", FS), (f'{location}', FS), cr=15)
     p, y = label_and_text(p, 300, y, ("Lat: ", FS), (f"{location.latitude}", FS), cr=0)
     p, y = label_and_text(p, 400, y, ("Long: ", FS), (f'{location.longitude}', FS), cr=30)
-   #   - Apparent/Astro 
+    #   - Apparent/Astro 
     #       RA, Dec
     ynow = y
     p, y = label_and_text(p, X0, y, ("RA: ", FS), (app['equ']['ra_str'], FS), cr=15)
