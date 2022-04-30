@@ -5,10 +5,9 @@ from .pdf_pages.page1 import do_page1
 from .pdf_pages.solar_system import do_asteroids, do_comets, do_moon, do_planets
 from .pdf_pages.stars import do_skymap, do_zenith
 
-def run_pdf(p, context, planet_list= None, skip=[], pages=None):
+def run_pdf(p, context, planet_list= None, dso_lists=None, skip=[], pages=None):
     utdt = context['utdt_start']
     planet_cookie = context['cookies']['planets']
-    
     p = do_page1(p, context)             # Cover Page
     if 'skymap' not in skip:
         p = do_skymap(p, context)        # Skymap
@@ -33,8 +32,8 @@ def run_pdf(p, context, planet_list= None, skip=[], pages=None):
         p = do_comets(p, context)        # Comets
     if 'moon' not in skip:
         p = do_moon(p, context)          # Moon   
-    if 'dso_lists' not in skip:
-        p = do_dso_lists(p, context)     # DSO Lists       
+    if dso_lists is not None:
+        p = do_dso_lists(p, context, dso_lists=dso_lists)     # DSO Lists       
     if 'dsos' not in skip:
         p = do_dso_long_list(p, context) # Long list of DSOs
     if 'forms' not in skip:

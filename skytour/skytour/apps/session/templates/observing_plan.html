@@ -111,8 +111,12 @@ td.normal {
       {{ hidden_field }}
     {% endfor %}
   
-    <table border="1">
+    <table>
+      <tr><th></th><th>DSO Lists</th></tr>
+      <tr><td>
+        <table>
       {% for field in form.visible_fields %}
+        {% if field.name != 'dso_lists' %}
         <tr>
           <th>{{ field.label_tag }}</th>
           <td>
@@ -129,10 +133,33 @@ td.normal {
             {% endif %}
             <br>
           </td>
+          <td></td>
         </tr>
+        {% endif %}
       {% endfor %}
+      </table>
+      </td>
+      <td>
+        {% for field in form.visible_fields %}
+        {% if field.name == 'dso_lists' %}
+            {% if field.errors %}
+            <ul>
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {{ field }}
+            {% if field.help_text %}
+              <br />{{ field.help_text }}
+            {% endif %}
+            <br>
+        {% endif %}
+        {% endfor %}
+      </td>
+      </tr>
     </table>
-  
+      <br/>
       <input type="submit" value="Create PDF">
       <br><br>
       </form>

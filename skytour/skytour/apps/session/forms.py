@@ -1,14 +1,14 @@
 from datetime import datetime
 from django import forms
-from ..dso.models import DSO
+from ..dso.models import DSOList
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.models import Planet, Asteroid, Comet
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
-from .models import ObservingSession
-from .vocabs import PLANET_CHOICES
+from .models import ObservingSession, ObservingCircumstances
+from .vocabs import PLANET_CHOICES, SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 YES_NO = [
     ('Yes', 'Yes'),
@@ -56,7 +56,6 @@ PAGE_CHOICES = [
     ('asteroids', 'Asteroids'),
     ('comets', 'Comets'),
     ('moon', 'Moon'),
-    ('dso_lists', 'DSO Lists'),
     ('dsos', 'All DSOs')
 ]
 class PDFSelectForm(forms.Form):
@@ -71,6 +70,11 @@ class PDFSelectForm(forms.Form):
         required=False
     )
     obs_forms = forms.IntegerField(initial=2)
+    dso_lists = forms.ModelMultipleChoiceField(
+        widget = forms.CheckboxSelectMultiple, 
+        queryset = DSOList.objects.filter(show_on_plan=True),
+        required = False,
+    )
 
 OBSERVE_TYPES = [
     ('dso', 'DSO'),
@@ -171,8 +175,19 @@ class SessionAddForm(forms.Form):
     #    print ("GOT HERE 2")
     #    super(SessionAddForm, self).__init__(*args, **kwargs)
 
-class StartSessionForm(forms.Form):
-    ut_date = forms.DateField ()
-    location = forms.ModelChoiceField (
-        queryset = ObservingLocation.objects.filter(status__in=['provisional', 'active'])
-    )
+class ObservingConditionsForm(forms.ModelForm):
+
+    class Meta:
+        model = ObservingCircumstances
+        fields = [
+            'session',
+            'session_stage',
+            'ut_datetime',
+            'seeing',
+            'sqm',
+            'temperature',
+            'humidity',
+            'cloud_cover',
+            'wind',
+            'notes'
+        ]

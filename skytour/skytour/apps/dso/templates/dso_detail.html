@@ -83,7 +83,12 @@
 				<td>Morphological Type: {{ object.morphological_type }}</td>
 			</tr>
 			<tr>
-				<td>On Atlas Plates: {{ object.atlas_plate_list }}</td>
+				<td>On Atlas Plates: {# object.atlas_plate_list #}
+					{% for plate in object.atlasplate_set.all %}
+					<a href="{% url 'atlas-detail' plate.pk %}" target="_new">{{ plate.pk }}<a>
+					{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+				</td>
 				<td></td>
 			</tr>
 		</table>

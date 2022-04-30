@@ -34,6 +34,12 @@
                 <li>Longitude {{ object.location.longitude|floatformat:5 }}</li>
             </ul>
         </td>
+        <td style='width=30%; text-align: center;'>
+            <br><br><br>
+            <a href="{% url 'session-add' %}"><button>Add Observation</button></a>
+            <br><br><br>
+            <a href="{% url 'session-conditions' %}"><button>Add Conditions</button></a>
+        </td>
         <td style="vertical-align: top;">
             <h4>Notes:</h4>
             {{ object.notes }}

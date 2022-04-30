@@ -10,7 +10,8 @@ class ObservingCircumstancesInline(admin.StackedInline):
                 ('session_stage', 'ut_datetime'),
                 ('temperature', 'humidity'), 
                 ('cloud_cover', 'wind'),
-                ('seeing', 'sqm')
+                ('seeing', 'sqm'),
+                'notes'
             ]
         }),
     ]
@@ -29,4 +30,17 @@ class ObservingSessionAdmin(admin.ModelAdmin):
     )
     inlines = [ObservingCircumstancesInline]
 
+class ObservingCircumstancesAdmin(admin.ModelAdmin):
+    model = ObservingCircumstances
+    list_display = [
+        'pk', 'session', 'session_stage', 'sqm', 'seeing_number', 'temperature', 'wind'
+    ]
+    readonly_fields = ['seeing_number']
+
+    def seeing_number(self, object):
+        return object.seeing
+    seeing_number.short_description = 'Seeing'
+
+
 admin.site.register(ObservingSession, ObservingSessionAdmin)
+admin.site.register(ObservingCircumstances, ObservingCircumstancesAdmin)

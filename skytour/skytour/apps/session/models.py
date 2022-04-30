@@ -33,7 +33,6 @@ class ObservingSession(models.Model):
         null = True, blank = True
     )
 
-
     def get_absolute_url(self):
         return '/session/{}'.format(self.pk)
 
@@ -146,6 +145,10 @@ class ObservingCircumstances(models.Model):
         null = True, blank = True,
         help_text = 'Speed/Direction'
     )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
+    )
 
     url_path = None
     object_type = 'Condition'
@@ -187,7 +190,7 @@ class ObservingCircumstances(models.Model):
         return get_last(self.ut_datetime, self.session.location.longitude)
 
     class Meta:
-        ordering = ['ut_datetime']
+        ordering = ['-ut_datetime']
         verbose_name = 'Conditions'
         verbose_name_plural = 'Observing Conditions'
 

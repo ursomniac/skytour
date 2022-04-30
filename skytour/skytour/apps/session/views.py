@@ -3,12 +3,13 @@ import io
 import time
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 from django.views.generic.list import ListView
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -34,9 +35,14 @@ from ..solar_system.position import get_object_metadata
 from ..tech.models import Telescope
 from ..utils.timer import compile_times
 from .cookie import get_all_cookies, deal_with_cookie
-from .forms import ObservingParametersForm, PDFSelectForm, SessionAddForm
+from .forms import (
+    ObservingConditionsForm,
+    ObservingParametersForm, 
+    PDFSelectForm, 
+    SessionAddForm
+)
 from .mixins import CookieMixin
-from .models import ObservingSession
+from .models import ObservingSession, ObservingCircumstances
 from .pdf import run_pdf
 from .plan import get_plan
 from .utils import get_initial_from_cookie
@@ -170,7 +176,6 @@ class ObservingPlanView(CookieMixin, FormView):
         context = get_plan(context)
         # Get the mid-point time from the local_time_start + 0.5 * session_length
         local_time = context['local_time_start']
-        #tzone = pytz.timezone(context['time_zone'])
         ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
         ztime += datetime.timedelta(hours=context['session_length']/2.)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
@@ -185,12 +190,14 @@ class ObservingPlanView(CookieMixin, FormView):
         opt = d['pages']
         # Which things aren't checked?
         skip = list(set(all).difference(opt))
+        # Specific fields
         planet_list = d['planets']
+        dso_lists = d['dso_lists']
         pages = d['obs_forms']
         # Create a PDF file
         buffer = io.BytesIO()
         p = canvas.Canvas(buffer, pagesize=letter)
-        p = run_pdf(p, context, planet_list=planet_list, skip=skip, pages=pages)
+        p = run_pdf(p, context, planet_list=planet_list, dso_lists=dso_lists, skip=skip, pages=pages)
         buffer.seek(0)
         if p:
             response = HttpResponse(buffer, content_type='application/pdf')
@@ -206,6 +213,11 @@ class ObservingSessionListView(ListView):
         context = super(ObservingSessionListView, self).get_context_data(**kwargs)
         context['table_id'] = 'session_table'
         return context
+
+class ObservingSessionCreateView(CreateView):
+    model = ObservingSession
+    template_name = 'session_create.html'
+    fields = ['ut_date', 'location', 'notes']
 
 class ObservingSessionDetailView(DetailView):
     model = ObservingSession
@@ -326,3 +338,21 @@ class SessionAddView(CookieMixin, FormView):
         obs.notes = d['notes']
         obs.save()
         return self.render_to_response(context)
+
+class ObservingConditionsFormView(CreateView):
+    model = ObservingCircumstances
+    form_class = ObservingConditionsForm
+    template_name = 'obs_circumstance.html'
+
+    def get_success_url(self):
+        if self.session_id:
+            return reverse(
+                'session-detail',
+                kwargs={'pk': self.object.session.pk}
+            )
+
+    def form_valid(self, form):
+        d = form.cleaned_data
+        session_id = d['session'].pk
+        self.session_id = session_id
+        return super().form_valid(form)

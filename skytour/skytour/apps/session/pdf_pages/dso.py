@@ -59,11 +59,12 @@ def do_dso_long_list(p, context):
     p.showPage()
     return p
 
-def do_dso_lists(p, context):
+def do_dso_lists(p, context, dso_lists=None):
     location = context['location']
-    ut0 = context['utdt_start']
-    ut1 = context['utdt_end']
-    dso_lists = DSOList.objects.filter(show_on_plan=1)
+    ut0 = context['utdt_start']    
+    if dso_lists is None:
+        dso_lists = DSOList.objects.filter(show_on_plan=1)
+        
     for dl in dso_lists:
         # Are most of the things in the list going to be up during the session?
         ra = dl.mid_ra
@@ -132,17 +133,18 @@ def do_dso_lists(p, context):
                 p.drawString(215+xoff, y, 'MAG')
                 p.drawString(240+xoff, y, 'LAST OBS.')
                 y -= 15
-                p.setFont('Helvetica', 8)
+                p.setFont('Helvetica', 7)
             p.drawString(40+xoff, y, dso.shown_name)
             p.drawString(85+xoff, y, dso.constellation.abbreviation)
             p.drawString(110+xoff, y, to_hm(dso.ra))
             p.drawString(155+xoff, y, to_dm(dso.dec))
             p.drawString(190+xoff, y, dso.object_type.code)
             if dso.magnitude is not None:
-                p.drawString(215+xoff, y, f"{dso.magnitude:.2f}")
+                p.drawString(215+xoff, y, f"{dso.magnitude:5.2f}")
             if dso.last_observed is not None:
-                p.drawString(225+xoff, y, dso.last_observed.strftime('%Y-%m-%d'))
-            #p.drawString(240+xoff, y, 'YYYY-MM-DD')
+                #p.setFont('Helvetica', 7)
+                p.drawString(245+xoff, y, dso.last_observed.strftime('%Y-%m-%d'))
+                #p.setFont('Helvetica', 8)
             y -= 10
             c += 1
             if c % 35 == 0:
