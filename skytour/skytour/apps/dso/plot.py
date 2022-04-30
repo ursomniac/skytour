@@ -64,7 +64,7 @@ def create_atlas_plot(
         fov=20, save_file=True,
         mag_offset = 0, shapes = False,
         label_size = 'x-small',
-        label_weight = 'normal'
+        label_weight = 'normal',
     ):
 
     ts = load.timescale()
