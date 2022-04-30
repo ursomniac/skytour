@@ -43,7 +43,7 @@ def to_hm(d, n=2):
         x = abs(d)
         h = int(x)
         m = (x-h) * 60.
-        w = n + 3
+        w = n + 2
         return f"{h:02d}h {m:0{w}.{n}f}m"
     except:
         return None
@@ -55,7 +55,7 @@ def to_dm(d, n=2):
         x = abs(d)
         h = int(x)
         m = (x-h) * 60.
-        w = n + 3
+        w = n + 2
         return f"{sign}{h:02d}° {m:0{w}.{n}f}\'"
     except:
         return None

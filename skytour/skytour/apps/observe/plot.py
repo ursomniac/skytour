@@ -111,16 +111,18 @@ def plot_sqm_history(loc):
         y.append(avg)
         e.append(rms)
 
-    image = create_plot(
-        x=x, 
-        y=y, 
-        grid=True, 
-        error=e, 
-        lines=lines, 
-        xpad=0., 
-        ypad=-0.02,
-        title=f"SQM Measures: {loc}",
-        xtitle='Date',
-        ytitle='SQM (mag/arcsec^2)'
-    )
-    return image
+    if len(x) > 0 and len(y) > 0:
+        image = create_plot(
+            x=x, 
+            y=y, 
+            grid=True, 
+            error=e, 
+            lines=lines, 
+            xpad=0., 
+            ypad=-0.02,
+            title=f"SQM Measures: {loc}",
+            xtitle='Date',
+            ytitle='SQM (mag/arcsec^2)'
+        )
+        return image
+    return None

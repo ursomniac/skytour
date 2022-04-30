@@ -65,6 +65,8 @@ class ObservingSession(models.Model):
     @property
     def sqm_avg(self):
         conditions = self.observingcircumstances_set.all()
+        if conditions.count() < 1:
+            return None
         y = []
         for c in conditions:
             if c.sqm:

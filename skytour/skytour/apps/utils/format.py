@@ -37,7 +37,7 @@ def to_hm(value):
     x -= h
     x *= 60.
     m = x
-    return f'{h:02d}h {m:04.1f}m'
+    return f'{h:02d}h {m:03.1f}m'
 
 def to_dm(value):
     x = abs(value)
