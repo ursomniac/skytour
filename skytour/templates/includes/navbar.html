@@ -4,7 +4,7 @@
         <td class="click"><a href="{% url 'observing-plan' %}">Plan</a></td>
         <td class="click"><a href="{% url 'object-track' %}">Track</a></td>
         <td class="click"><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
-        <td colspan=3>DSOs:  &nbsp;&nbsp;
+        <td colspan=4>DSOs:  &nbsp;&nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
             <a href="{% url 'object-type-list' %}">Types</a>
@@ -25,6 +25,7 @@
         <td class="click"><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
         <td class="click"><a href="{% url 'comet-list' %}">Comets</a></td>
         <td class="click"><a href="{% url 'constellation-list' %}">Constellations</a></td>
+        <td class="click"><a href="{% url 'atlas-list' %}">Atlas</a></td>
         <td class="click"><a href="{% url 'catalog-list' %}">Catalogs</a></td>
         <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
         <td class="click"><a href="{% url 'show-cookies' %}">Session Cookies</a></td>
@@ -36,7 +37,7 @@
             <br>
             <span style="padding-left: 2.em; color: #ff0;"><small>{{ local_time_str }}</small></span>
         </td>
-        <td colspan="2">
+        <td colspan="3">
             <span style="color: #fff; font-weight: bold;">Location:</span>
             <span style="color: #ff0;">{{ location.name_for_header }}</span>
         </td>

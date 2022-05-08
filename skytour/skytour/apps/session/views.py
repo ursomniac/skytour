@@ -291,13 +291,12 @@ class SessionAddView(CookieMixin, FormView):
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         d = form.cleaned_data
-        print ("D: ", d)
         object_type = d['object_type']
         object = None
 
         # Get UTDT Date
         if d['ut_date'] is not None:
-            ut_date = datetime.datetime.fromisoformat(d['ut_date']).date()
+            ut_date = d['ut_date']
         else:
             session = d['session']
             ut_date = session.ut_date

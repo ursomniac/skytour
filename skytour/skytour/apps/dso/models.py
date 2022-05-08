@@ -401,6 +401,10 @@ class AtlasPlate(models.Model):
     def dso_count(self):
         return self.dso.count()
 
+    @property
+    def plate_title(self):
+        return f"Plate {self.plate_id}: ({self.center_ra:.2f}h {self.center_dec}°) in {self.center_constellation}"
+
     def plate_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
 

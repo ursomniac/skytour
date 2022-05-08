@@ -195,6 +195,32 @@ class AtlasPlateListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AtlasPlateListView, self).get_context_data(**kwargs)
+        all_plates = AtlasPlate.objects.all()
+        d = {}
+        context['head'] = range(24)
+        dlist = [
+            (90, 1), (75, 12), (60, 16), (45, 20), (30, 24), (15, 32), (0, 48),
+            (-15, 32), (-30, 24), (-45, 20), (-60, 16), (-75, 12), (-90, 1)
+        ]
+        n = 0
+        for key, np in dlist:
+            col = int(480 / np)  # colspan for each
+            plates = []            
+            for p in range(np):
+                n += 1
+                obj = all_plates.filter(plate_id=n).first()
+                this_plate = dict(
+                    ra = f"{p * 24/np:.1f}",
+                    number = n,
+                    slug = f"{n}",
+                    title = obj.plate_title
+                )
+                plates.append(this_plate)
+            d[key] = dict(
+                plates=plates,
+                cspan = col
+            )
+        context['plate_list'] = d
         return context
 
 class AtlasPlateDetailView(DetailView):

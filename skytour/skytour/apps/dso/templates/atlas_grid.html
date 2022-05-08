@@ -1,0 +1,42 @@
+<style>
+    table.tiny { border: 0 }
+    table.tiny td { 
+        border: 0; 
+        font-size: 8px; 
+        text-align: center; 
+        border-spacing: 0;
+        padding: 2px 0px;
+    }
+    table.tiny td.header {
+        color: #ff0;
+        font-weight: 800;
+    }
+</style>
+
+<table class="tiny">
+    <tr>
+        <td></td>
+        {% for h in head %}
+        <td colspan="20" class="header"><b>{{h}}h</b></td>
+        {% endfor %}
+    </tr>
+    {% for dec, val in plate_list.items %}
+    <tr>
+        <td class="header">{{ dec }}°</td>
+        {% for item in val.plates %}
+        {% comment %}
+        <td colspan="{{ val.cspan }}">{{ item.ra }}<br>{{ item.number }}</td>
+        {% endcomment %}
+        <td colspan="{{ val.cspan }}">
+            <a href="{% url 'atlas-detail' item.slug %}" target="_new" title="{{ item.title }}">{{ item.number }}</a>
+        </td>
+        {% endfor %}
+    <tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        {% for h in head %}
+        <td colspan="20" class="header"><b>{{h}}h</b></td>
+        {% endfor %}
+    </tr>
+</table>
