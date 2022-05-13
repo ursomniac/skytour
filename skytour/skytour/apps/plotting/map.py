@@ -121,7 +121,7 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     )
     return ax
 
-def map_eyepiece(ax, diam=None, reversed=False):
+def map_eyepiece(ax, diam=None, color=None, reversed=False):
     """
     the default is 1° FOV.
     """
@@ -130,6 +130,21 @@ def map_eyepiece(ax, diam=None, reversed=False):
     circle_color = 'c' if reversed else 'b'
     eyepiece = plt.Circle((0,0), radius, color=circle_color, fill=False)
     ax.add_patch(eyepiece)
+    return ax
+
+def map_circle(ax, diam=None, center=None, reversed=False):
+    if diam is None:
+        return ax
+    radius = math.radians(diam/60./2./.2)
+    if color is None:
+        color = '#333' if reversed else '#ccc'
+    if center is None:
+        center = (0,0)
+    else:
+        pass # TODO: What goes here?
+    
+    circ = plt.Circle((0,0), radius, color=color, fill=False)
+    ax.add_patch(circ)
     return ax
 
 def map_moons(ax, pdict, earth, t, projection, ang_size_radians, reversed=False, debug=False):

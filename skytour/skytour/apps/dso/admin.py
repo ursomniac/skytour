@@ -142,9 +142,15 @@ class DSOListAdmin(TagModelAdmin):
 
 class AtlasPlateAdmin(TagModelAdmin):
     model = AtlasPlate
-    list_display = ['plate_id', 'center_ra', 'center_dec', 'center_constellation',  'con_list', 'dso_count']
+    list_display = ['plate_id', 'center_ra', 'center_dec', 'center_constellation',  'con_list', 'tag_list', 'dso_count']
     autocomplete_fields = ['dso', 'constellation']
-    readonly_fields = ['plate_tag', 'con_list', 'dso_count', 'center_constellation']
+    readonly_fields = [
+        'plate_tag', 
+        'con_list', 
+        'dso_count', 
+        'center_constellation',
+        'tag_list'
+    ]
     fieldsets = (
         (None, {
             'fields': [
@@ -157,6 +163,7 @@ class AtlasPlateAdmin(TagModelAdmin):
             ]
         }),
     )
+    save_on_top = True
 
     def con_list(self, object):
         cc = []
@@ -168,6 +175,14 @@ class AtlasPlateAdmin(TagModelAdmin):
     def dso_count(self, object):
         return object.dso.count()
     dso_count.short_description = '# DSOs'
+
+    def tag_list(self, object):
+        tags = object.tags.values().order_by('name')
+        tlist = []
+        for t in tags:
+            tlist.append(t['name'])
+        return ', '.join(tlist)
+    tag_list.short_description = 'Tags'
 
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)

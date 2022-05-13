@@ -9,6 +9,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
+from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .models import DSO, DSOList, AtlasPlate
@@ -229,4 +230,7 @@ class AtlasPlateDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AtlasPlateDetailView, self).get_context_data(**kwargs)
+        obj = self.get_object()
+        neighbors = find_neighbors(obj.center_ra, obj.center_dec)
+        context['assembled_neighbors'] = assemble_neighbors(neighbors)
         return context

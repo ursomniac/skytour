@@ -365,7 +365,6 @@ class DSOList(models.Model):
 
 class AtlasPlate(models.Model):
     """
-    TODO: How to get a list of adjoining plates?
     TODO: Constellation boundaries
     TODO: Bright Star Lists
     TODO: Double Stars?
@@ -411,6 +410,9 @@ class AtlasPlate(models.Model):
     def save(self, *args, **kwargs):
         self.slug = self.plate_id
         super(AtlasPlate, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return '/atlas/{}'.format(self.plate_id)
 
     def __str__(self):
         return f"Plate {self.plate_id}"

@@ -2,13 +2,38 @@
 {% load skytour_filters humanize %}
 {% block title %}Atlas Plate {{ object.plate_id }}: Skytour{% endblock %}
 {% block content %}
-<h1>Atlas - Plate {{ object.plate_id }}</h1>
-<h2>Details</h2>
-<b>Center RA/Dec:</b> {{ object.center_ra }}  {{ object.center_dec }}
-<br><b>Constellations</b> {{ object.constellation_list }}
-<br><b>Tags:</b> {{ object.tags }}
-<hr>
-<img src="{{ object.plate.url }}">
+<table>
+    <tr>
+        <td><img src="{{ object.plate.url }}"></td>
+        <td style="vertical-align: top;">
+            <h1>Atlas - Plate {{ object.plate_id }}</h1>
+            <h2>Details</h2>
+            <b>Center RA/Dec:</b> {{ object.center_ra }}h  {{ object.center_dec }}°
+            <br><br><b>Constellations</b> 
+            {% for con in object.constellation.all %}
+            <a href="{% url 'constellation-detail' con.abbreviation %}" target="_new">{{ con.abbreviation }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            <br><br/><b>Tags:  </b>{{ object.tags.all|join:", " }}
+            <br><br/><a href="/admin/dso/atlasplate/{{ object.pk }}/change/"><button>Admin</button></a>
+            <br><br>
+            <h2>Neighboring Atlas Plates</h2>
+            <table>
+            {% for r in assembled_neighbors %}
+            <tr>
+                <td style='text-align: center;'>
+                    &nbsp;
+                    {% for p in r %}
+                    <a href="{% url 'atlas-detail' p.obj.plate_id %}">{{ p.obj.plate_id }}</a>&nbsp;
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+</table>
+
 <hr>
 <h2>DSO List</h2>
 {% with object.dso.all as dso_list %}

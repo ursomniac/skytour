@@ -88,11 +88,15 @@ def create_atlas_plot(
     limit = np.sin(angle) / (1.0 - np.cos(angle))
 
     # NOW PLOT THINGS!
-    # 1. stars and constellation lines
+    # 1. stars constellation lines
+    ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
+    if abs(center_dec <= 15.):
+        ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
-
+    ax = map_circle(ax, 20., reversed=reversed)
+    
     if shapes:    
         other_dso_records = DSO.objects.order_by('-major_axis_size')
         other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
