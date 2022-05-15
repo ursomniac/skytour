@@ -456,3 +456,15 @@ class AtlasPlateVersion(models.Model):
 
     def __str__(self):
         return f"{self.plate.plate_id}: shapes={self.shapes} reversed={self.reversed}"
+
+class MilkyWay(models.Model):
+    """
+    Each row is a data point along a segment/contour of a particular level.
+    There are >1 segments of each.
+    """
+    contour = models.PositiveIntegerField (_('Level'),help_text = '1 to 5, 5 being the most intense')
+    segment = models.PositiveIntegerField (_('Segment #'),)
+    longitude = models.FloatField (_('Longitude'),)
+    ra = models.FloatField(_('R.A. 2000'))
+    dec = models.FloatField(_('Dec. 2000'))
+

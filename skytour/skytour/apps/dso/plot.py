@@ -140,6 +140,7 @@ def create_atlas_plot(
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     if abs(center_dec <= 15.):
         ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
+    ax = map_milky_way(ax, earth, t, projection, reversed=reversed)
     ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     line_color = '#99f' if reversed else "#00f4"

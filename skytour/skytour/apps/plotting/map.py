@@ -7,6 +7,7 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 from ..astro.markers import generate_equator
+from ..dso.milky_way import get_list_of_segments
 from ..dso.models import DSO
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
@@ -647,4 +648,25 @@ def map_equ(ax, earth, t, projection, type, reversed=False):
     line_color = '#66f' if reversed else '#f99'
     #w = ax.scatter(d['x'], d['y'], c=line_color, marker='.')
     w = ax.plot(d['x'], d['y'], ls=line_type, lw=1., alpha=0.7, c=color)
+    return ax
+
+def map_milky_way(
+        ax, earth, t, projection, 
+        contour_limit=1, 
+        center_ra=None, center_dec=None, radius=None,
+        reversed=False,
+        line_width = 2.,
+        alpha = 0.7
+    ):
+    color = '#f80' if reversed else '#f80'
+    line_type = (0, (1,1))
+    segments = get_list_of_segments()
+    for segment in segments:
+        d = dict(x = [], y = [])
+        for coord in segment:
+            xx, yy = projection(earth.at(t).observe(Star(ra_hours=coord[0], dec_degrees=coord[1])))
+            # TODO: test if xx, yy near the plot.
+            d['x'].append(xx)
+            d['y'].append(yy)
+        w = ax.plot(d['x'], d['y'], c=color, ls=line_type, lw=line_width, alpha=alpha)
     return ax
