@@ -167,3 +167,16 @@ class Constellation(models.Model):
         self.slug = self.abbreviation
         super(Constellation, self).save(*args, **kwargs)
 
+class ConstellationVertex(models.Model):
+    """
+    pk is the vertex ID.
+    """
+    ra_1875 = models.FloatField(_('R.A. 1875'))
+    dec_1875 = models.FloatField(_('Dec. 1875'))
+    constellation = models.ManyToManyField (Constellation)
+
+class ConstellationBoundaries(models.Model):
+    start_vertex = models.PositiveIntegerField('Start Vertex')
+    end_vertex = models.PositiveIntegerField('End Vertex')
+    ra = models.FloatField(_('Start R.A.'))
+    dec = models.FloatField(_('Start Dec.'))

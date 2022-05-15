@@ -8,7 +8,7 @@ from ..solar_system.models import Planet, Asteroid, Comet
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
-from .vocabs import PLANET_CHOICES, SESSION_STAGE_CHOICES, SEEING_CHOICES
+from .vocabs import PLANET_CHOICES
 
 YES_NO = [
     ('Yes', 'Yes'),
@@ -17,6 +17,10 @@ YES_NO = [
 GRAPH_COLOR_SCHEME = [
     ('dark', 'DARK: White on Black'),
     ('light', 'LIGHT: Black on White')
+]
+ATLAS_DSO_MARKERS = [
+    ('shapes', 'Shapes'),
+    ('symbols', 'Symbols')
 ]
 
 class ObservingParametersForm(forms.Form):
@@ -47,6 +51,10 @@ class ObservingParametersForm(forms.Form):
     )
     show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial=find_site_parameter('poll-planets', default='visible', param_type='string'))
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
+    atlas_dso_marker = forms.ChoiceField(
+        choices=ATLAS_DSO_MARKERS,
+        initial='shapes',
+        label = 'Atlas DSOs as Symbols or Shapes')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
 
 PAGE_CHOICES = [

@@ -365,7 +365,6 @@ class DSOList(models.Model):
 
 class AtlasPlate(models.Model):
     """
-    TODO: Constellation boundaries
     TODO: Bright Star Lists
     TODO: Double Stars?
     TODO: Milky Way Contours
@@ -405,7 +404,30 @@ class AtlasPlate(models.Model):
         return f"Plate {self.plate_id}: ({self.center_ra:.2f}h {self.center_dec}°) in {self.center_constellation}"
 
     def plate_tag(self):
+        """
+        Deprecated.
+        """
         return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
+
+    @property
+    def plate_images(self):
+        """
+        Create a dict of all available atlas plate image renditions.
+        There should be 4:
+            default = black-on-white, symbols
+            shapes = black-on-white, shapes
+            reversed = white-on-black, symbols
+            shapesreversed = white-on-black, shapes
+        """
+        vv = self.atlasplateversion_set.all()
+        d = {}
+        for v in vv:
+            if v.shapes:
+                k = 'shapesreversed' if v.reversed else 'shapes'
+            else:
+                k = 'reversed' if v.reversed else 'default'
+            d[k] = v
+        return d
 
     def save(self, *args, **kwargs):
         self.slug = self.plate_id
@@ -421,3 +443,16 @@ class AtlasPlate(models.Model):
         verbose_name = 'Atlas Plate'
         verbose_name_plural = 'Atlas Plates'
         ordering = ['plate_id']
+
+class AtlasPlateVersion(models.Model):
+    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
+    shapes = models.BooleanField(_('Shapes'), default=False)
+    reversed = models.BooleanField('Reversed', default=False)
+    image = models.ImageField(
+        _('Plate'),
+        upload_to = 'atlas_images',
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return f"{self.plate.plate_id}: shapes={self.shapes} reversed={self.reversed}"

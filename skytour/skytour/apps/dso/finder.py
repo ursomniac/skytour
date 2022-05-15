@@ -24,7 +24,14 @@ def r2d(a): # a is a numpy.array
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
 
-def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=.7):
+def plot_dso(ax, x, y, dso, 
+        color='r', 
+        reversed=True, 
+        size_limit=0.0005, 
+        alpha=.7, 
+        min_size=3., 
+        max_size=60.
+    ):
 
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
@@ -35,11 +42,11 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=.
     if aminor == 0:
         aminor = amajor
     ratio = aminor / amajor
-    if amajor > 60.:
-        amajor = 60
+    if amajor > max_size:
+        amajor = max_size
         aminor = ratio * amajor
-    if amajor < 3.:
-        amajor = 3
+    if amajor < min_size:
+        amajor = min_size
         aminor = ratio * amajor
     amajor *= 2.909e-4
     aminor *= 2.909e-4
@@ -97,8 +104,9 @@ def plot_dso(ax, x, y, dso, color='r', reversed=True, size_limit=0.0005, alpha=.
             ax.add_patch(c1)
             ax.add_patch(c2)
     elif ft in ('two-circles'):
-        c1 = patches.Circle((x, y), amajor/2., fill=False, color='#3fc')
-        c2 = patches.Circle((x, y), 0.75 * amajor/2., fill=False, color='#3fc')
+        ccolor = '#3fc' if reversed else '#3c9'
+        c1 = patches.Circle((x, y), amajor/2., fill=False, color=ccolor)
+        c2 = patches.Circle((x, y), 0.75 * amajor/2., fill=False, color=ccolor)
         ax.add_patch(c1)
         ax.add_patch(c2)
     else: # marker

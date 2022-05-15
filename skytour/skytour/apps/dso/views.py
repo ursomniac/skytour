@@ -13,6 +13,7 @@ from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .models import DSO, DSOList, AtlasPlate
+from .utils import select_atlas_plate
 from .vocabs import PRIORITY_CHOICES
 
 class DSOListView(ListView):
@@ -224,13 +225,14 @@ class AtlasPlateListView(ListView):
         context['plate_list'] = d
         return context
 
-class AtlasPlateDetailView(DetailView):
+class AtlasPlateDetailView(CookieMixin, DetailView):
     model = AtlasPlate
     template_name = 'atlasplate_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(AtlasPlateDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
+        context['selected_atlas_plate'] = select_atlas_plate(obj.plate_images, context)
         neighbors = find_neighbors(obj.center_ra, obj.center_dec)
         context['assembled_neighbors'] = assemble_neighbors(neighbors)
         return context

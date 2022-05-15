@@ -2,6 +2,7 @@ import base64
 import datetime, pytz
 from re import X
 import io
+from django.db.models import Q
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from scipy import spatial
@@ -13,7 +14,9 @@ from ..dso.models import DSO
 from ..plotting.map import *
 from ..solar_system.plot import r2d, d2r
 from ..utils.format import to_hm, to_dm
+from ..utils.models import ConstellationBoundaries, ConstellationVertex
 from .finder import plot_dso
+from .models import AtlasPlate
 
 def plate_list():
     ldec = [90, 75, 60, 45, 30, 15, 0, -15, -30, -45, -60, -75, -90]
@@ -33,15 +36,22 @@ def plate_list():
             j += 1
     return plate
 
-def get_fn(ra, dec, shapes=False):
+def get_fn(ra, dec, plate_id, shapes=False, reversed=reversed):
     rah = int(ra)
     ram = int(60.*(ra - rah) + 0.00005)
     decs = 'N' if dec >= 0.0 else 'S'
     d = abs(dec)
     dd = int(d)
     dm = int(60.*(d - dd) + 0.00005)
-    x = 'X' if shapes else ''
-    return f"{rah:02d}{ram:02d}{decs}{dd:02d}{dm:02d}.png"
+    xx = []
+    if shapes:
+        xx.append('shapes')
+    if reversed:
+        xx.append('reversed')
+    aux = '-'.join(xx)
+    if len(aux) > 0:
+        aux = '-' + aux
+    return f"{plate_id:03d}-{rah:02d}{ram:02d}{decs}{dd:02d}{dm:02d}{aux}.png"
 
 def get_dsos_on_plate(ra, dec, fov=20):
     fudge = 120
@@ -58,8 +68,46 @@ def get_dsos_on_plate(ra, dec, fov=20):
         neighbor_objects.append(dsos[idx])
     return neighbor_objects
 
+def get_boundary_lines(plate_id):
+    plate = AtlasPlate.objects.get(plate_id=plate_id)
+    # get constellations on plate
+    const_list = plate.constellation.all()
+    # get vertices for these constellations
+    verts = ConstellationVertex.objects.filter(constellation__in=const_list)
+    vert_list = verts.values_list('pk', flat=True)
+    # get boundary line segments
+    segments = ConstellationBoundaries.objects.filter(Q(start_vertex__in=vert_list) | Q(end_vertex__in=vert_list))
+    lines = {}
+    p = 0
+    for seg in segments:
+        v1 = seg.start_vertex
+        v2 = seg.end_vertex
+        t = tuple([v1, v2])
+        if t not in lines.keys():
+            lines[t] = []
+        lines[t].append(tuple([seg.ra, seg.dec]))
+        p += 1
+    return lines, p
+
+def map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=False):
+    lines, _ = get_boundary_lines(plate_id)
+    line_color = '#9907' if reversed else '#999'
+    line_width = 1.5
+    line_type = '--'
+    for k, v in lines.items():
+        # k is the key, v is the list of coordinates
+        d = dict(x =[], y = [])
+        for point in v:
+            ra = point[0]
+            dec = point[1]
+            x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
+            d['x'].append(x)
+            d['y'].append(y)
+        w = ax.plot(d['x'], d['y'], ls=line_type, lw=line_width, alpha=0.7, color=line_color)
+    return ax
+
 def create_atlas_plot(
-        center_ra, center_dec, 
+        center_ra, center_dec, plate_id,
         reversed=False, mag_limit=9.5, 
         fov=20, save_file=True,
         mag_offset = 0, shapes = False,
@@ -92,11 +140,12 @@ def create_atlas_plot(
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     if abs(center_dec <= 15.):
         ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
+    ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
-    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    line_color = '#99f' if reversed else "#00f4"
+    ax = map_constellation_lines(ax, stars, reversed=reversed, line_color=line_color)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
-    ax = map_circle(ax, 20., reversed=reversed)
-    
+
     if shapes:    
         other_dso_records = DSO.objects.order_by('-major_axis_size')
         other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
@@ -108,15 +157,22 @@ def create_atlas_plot(
             other_dsos['y'].append(y)
             other_dsos['label'].append(other.shown_name)
             other_dsos['marker'].append(other.object_type.marker_type)
-            ax = plot_dso(ax, x, y, other, alpha=0.6)
+            ax = plot_dso(ax, x, y, other, 
+                alpha=0.6, 
+                reversed=reversed, 
+                min_size=10.
+            )
         xxx = np.array(other_dsos['x'])
         yyy = np.array(other_dsos['y'])
+        text_color = '#ccc' if reversed else '#666'
         for x, y, z in zip(xxx, yyy, other_dsos['label']):
             plt.annotate(
                 z, (x, y), 
                 textcoords='offset points',
                 xytext=(5, 5),
-                ha='left'
+                ha='left',
+                color = text_color,
+                fontweight = 'bold'
             )
     else:
         ax, _ = map_dsos(ax, earth, t, projection,
@@ -136,13 +192,13 @@ def create_atlas_plot(
     secax.set_xlabel('Degrees')
     secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
     
-    title = f"Chart: RA {ra}  DEC {dec}"
+    title = f"Plate: {plate_id} -  RA {ra}  DEC {dec}"
     ax.set_title(title)
     
     on_plate = get_dsos_on_plate(center_ra, center_dec, fov=fov)
 
     if save_file:
-        fn = get_fn(center_ra, center_dec, shapes=shapes)
+        fn = get_fn(center_ra, center_dec, plate_id, shapes=shapes, reversed=reversed)
         fig.savefig('media/atlas_images/{}'.format(fn), bbox_inches='tight')
         plt.cla()
         plt.close(fig)

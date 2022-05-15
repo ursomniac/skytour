@@ -23,7 +23,7 @@ Each takes the matplotlib.Axes object instance (ax), does some operation,
 and returns it "back" to whatever is assembling the plot.
 """
 
-def map_constellation_lines(ax, stars, reversed=False):
+def map_constellation_lines(ax, stars, reversed=False, line_color=None):
     """
     This requires that the map_hipparcos() method run first, since it
     gets the list of stars FROM the return of that method.
@@ -41,7 +41,8 @@ def map_constellation_lines(ax, stars, reversed=False):
     xy2 = stars[['x', 'y']].loc[edges_star2].values
     lines_xy = np.rollaxis(np.array([xy1, xy2]), 1)
     ##### constellation lines
-    line_color = '#99f4' if reversed else '#00f2' 
+    if line_color is None:
+        line_color = '#99f8' if reversed else '#00f2' 
     ax.add_collection(LineCollection(lines_xy, colors=line_color))
     return ax
 
@@ -132,7 +133,7 @@ def map_eyepiece(ax, diam=None, color=None, reversed=False):
     ax.add_patch(eyepiece)
     return ax
 
-def map_circle(ax, diam=None, center=None, reversed=False):
+def map_circle(ax, diam=None, center=None, reversed=False, color=None):
     if diam is None:
         return ax
     radius = math.radians(diam/60./2./.2)

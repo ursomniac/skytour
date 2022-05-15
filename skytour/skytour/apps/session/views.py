@@ -147,6 +147,7 @@ class SetSessionCookieView(FormView):
             session_length = d['session_length'],
             show_planets = d['show_planets'],
             color_scheme = d['color_scheme'],
+            atlas_dso_marker = d['atlas_dso_marker'],
             twilight = twilight
         )
 

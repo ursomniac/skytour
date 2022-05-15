@@ -1,3 +1,5 @@
+from ..site_parameter.helpers import find_site_parameter
+
 def create_shown_name(obj):
     """
     This takes the main name, or if there's a Bayer/Flamsteed designation, 
@@ -17,3 +19,24 @@ def create_shown_name(obj):
         things.append(obj.constellation.abbreviation)
     return ' '.join(things)
 
+def select_atlas_plate(plates, context):
+    """
+    If the session cookie is set, use that to determine which atlas plate to show.
+    If not, then use the 'atlas-version-key' as the default.
+    Final back up is 'default'
+    """
+    k = ''
+    reversed = False
+    shapes = False
+    if 'color_scheme' in context.keys():
+        reversed = context['color_scheme'] == 'dark'
+    if 'atlas_dso_marker' in context.keys():
+        shapes = context['atlas_dso_marker'] == 'shapes'
+    
+    if shapes:
+        k += 'shapes'
+    if reversed:
+        k += 'reversed'
+    if k == '':
+        k = find_site_parameter('atlas-plate-version-key', 'default', 'char')
+    return plates[k]
