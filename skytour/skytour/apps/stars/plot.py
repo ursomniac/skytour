@@ -71,8 +71,10 @@ def get_skymap(
     # 1a Equator and Ecliptic
     ax = map_equ(ax, earth, t, projection, type='equ', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, type='ecl', reversed=reversed)
+    times.append((time.perf_counter(), 'Lines'))
     if milky_way:
-        ax = map_milky_way(ax, earth, t, projection, line_width=2.)
+        ax = map_milky_way(ax, earth, t, projection, line_width=2., colors=['#099', '#099'])
+        times.append((time.perf_counter(), 'Milky Way'))
     # 1. stars and constellation lines
     ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, mag_offset=0.1, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)

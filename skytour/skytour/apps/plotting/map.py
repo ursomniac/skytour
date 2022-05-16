@@ -656,9 +656,10 @@ def map_milky_way(
         center_ra=None, center_dec=None, radius=None,
         reversed=False,
         line_width = 2.,
-        alpha = 0.7
+        alpha = 0.7,
+        colors = ['#099', '#099']
     ):
-    color = '#f80' if reversed else '#f80'
+    color = colors[1] if reversed else colors[0]
     line_type = (0, (1,1))
     segments = get_list_of_segments()
     for segment in segments:
