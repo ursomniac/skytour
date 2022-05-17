@@ -11,14 +11,16 @@
         <th>Center RA</th>
         <th>Center Dec</th>
         <th>Constellations</th>
+        <th>Tags</th>
         <th># DSOs</th>
     </tr>
 {% for object in object_list %}
     <tr>
         <td><a href="{% url 'atlas-detail' object.plate_id %}">{{ object.plate_id }}</a></td>
-        <td>{{ object.center_ra }}</td>
+        <td>{{ object.center_ra|floatformat:2 }}</td>
         <td>{{ object.center_dec }}</td>
         <td>{{ object.constellation_list }}</td>
+        <td>{{ object.tags.all|join:", " }}</td>
         <td>{{ object.dso_count }}</td>
     </tr>
 {% endfor %}

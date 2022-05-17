@@ -114,7 +114,10 @@ def create_atlas_plot(
         label_size = 'x-small',
         label_weight = 'normal',
     ):
-
+    """
+    TODO: Fix annotation font to be consistent
+    TODO: Change annontation font weight to be BOLD for high/highest priority!
+    """
     ts = load.timescale()
     # Datetime is arbitrary
     t = ts.from_datetime(datetime.datetime(2022, 1, 1, 0, 0).replace(tzinfo=pytz.utc)) # Arbitrary time

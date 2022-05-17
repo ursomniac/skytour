@@ -50,7 +50,7 @@ def get_object_metadata(
     elif object_type == 'asteroid':
         if instance is None:
             return None
-        # TODO: This is a hack, really but it improves processing by 20%
+        # This is a hack, really but it improves processing by 20%
         eph_body = eph_label
     else: 
         eph_body = eph[eph_label]
@@ -124,8 +124,6 @@ def get_object_metadata(
         plotting_phase_angle = lunar_phase['angle']
 
     # Illum. Fraction - in percent
-    # TODO: This is never right - why?
-    #k = 100. * fraction_illuminated(eph, eph_label, t).item() if object_type in ['moon', 'planet'] else None
     if phase_angle is not None:
         k = 0.5 * (1. + math.cos(math.radians(phase_angle)))
         fraction_illuminated = 100. * k

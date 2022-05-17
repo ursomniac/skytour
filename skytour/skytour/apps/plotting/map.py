@@ -143,7 +143,7 @@ def map_circle(ax, diam=None, center=None, reversed=False, color=None):
     if center is None:
         center = (0,0)
     else:
-        pass # TODO: What goes here?
+        pass
     
     circ = plt.Circle((0,0), radius, color=color, fill=False)
     ax.add_patch(circ)
@@ -666,7 +666,7 @@ def map_milky_way(
         d = dict(x = [], y = [])
         for coord in segment:
             xx, yy = projection(earth.at(t).observe(Star(ra_hours=coord[0], dec_degrees=coord[1])))
-            # TODO: test if xx, yy near the plot.
+            # TODO: test if xx, yy near the plot to speed this up
             d['x'].append(xx)
             d['y'].append(yy)
         w = ax.plot(d['x'], d['y'], c=color, ls=line_type, lw=line_width, alpha=alpha)

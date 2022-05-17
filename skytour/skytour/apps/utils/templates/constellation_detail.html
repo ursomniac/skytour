@@ -16,7 +16,7 @@
         <td style='vertical-align: top;'>
             <h2>Atlas Plates</h2>
             {% for p in object.atlasplate_set.all %}
-            {{ p.plate_id }}{% if not forloop.last %},{% endif %}
+            <a href="{% url 'atlas-detail' p.plate_id %}">{{ p.plate_id }}</a>{% if not forloop.last %},{% endif %}
             {% endfor %}
         </td>
         <td style='vertical-align: top;'>

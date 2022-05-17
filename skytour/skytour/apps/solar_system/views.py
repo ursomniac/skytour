@@ -60,7 +60,6 @@ class PlanetDetailView(CookieMixin, DetailView):
         pdict['name'] = obj.name
         
         context['close_by'] = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start)
-        # TODO: Put this in site-parameters?
         fov = 4. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
 

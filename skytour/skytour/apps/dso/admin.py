@@ -1,7 +1,7 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
-from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList, AtlasPlate
+from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList, AtlasPlate, AtlasPlateVersion
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -140,30 +140,41 @@ class DSOListAdmin(TagModelAdmin):
             #kwargs['queryset'] = DSO.objects.all()
         return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
+class AtlasPlateVersionInline(admin.StackedInline):
+    model = AtlasPlateVersion
+    readonly_fields = ['plate_tag','shapes', 'reversed']
+    fieldsets = [
+        (None, {
+            'fields': (
+                ('shapes', 'reversed', 'image'),
+                'plate_tag'
+            )
+        }),
+    ]
+    extra = 0
+
 class AtlasPlateAdmin(TagModelAdmin):
     model = AtlasPlate
     list_display = ['plate_id', 'center_ra', 'center_dec', 'center_constellation',  'con_list', 'tag_list', 'dso_count']
     autocomplete_fields = ['dso', 'constellation']
     readonly_fields = [
-        'plate_tag', 
         'con_list', 
         'dso_count', 
         'center_constellation',
         'tag_list'
     ]
-    fieldsets = (
+    fieldsets = [
         (None, {
-            'fields': [
+            'fields': (
                 'plate_id',
                 ('center_ra', 'center_dec'),
                 'tags',
-                ('plate_tag', 'plate'),
-                'dso',
-                'constellation'
-            ]
+                ('dso','constellation'),
+            )
         }),
-    )
+    ]
     save_on_top = True
+    inlines = [AtlasPlateVersionInline,]
 
     def con_list(self, object):
         cc = []

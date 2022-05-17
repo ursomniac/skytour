@@ -367,7 +367,6 @@ class AtlasPlate(models.Model):
     """
     TODO: Bright Star Lists
     TODO: Double Stars?
-    TODO: Milky Way Contours
     """
     plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
     slug = models.SlugField(unique=True)
@@ -453,6 +452,9 @@ class AtlasPlateVersion(models.Model):
         upload_to = 'atlas_images',
         null = True, blank = True
     )
+
+    def plate_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.image.url)
 
     def __str__(self):
         return f"{self.plate.plate_id}: shapes={self.shapes} reversed={self.reversed}"
