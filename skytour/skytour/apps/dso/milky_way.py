@@ -1,3 +1,4 @@
+from skyfield.api import Star
 from .models import MilkyWay
 
 def get_list_of_segments(contour=1):

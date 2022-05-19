@@ -358,7 +358,8 @@ def map_dsos(ax, earth, t, projection,
         reversed=False,
         ignore_setting = False, # for Skymap, not finder charts
         product = 'skymap',
-        label_weight = 'bold'
+        label_weight = 'bold',
+        colors=None
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -431,10 +432,14 @@ def map_dsos(ax, earth, t, projection,
             marker=um, alpha=alpha
         )
     # Add labels
-    if product != 'atlas':
-        color = '#cc0' if reversed else '#666'
+    if colors is None:
+        if product != 'atlas':
+            color = '#cc0' if reversed else '#666'
+        else:
+            color = '#6ff' if reversed else '#333'
     else:
-        color = '#9ff' if reversed else '#33c'
+        color = colors[1] if reversed else colors[0]
+
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
         ax.annotate(
             z, xy=(x,y),
@@ -652,18 +657,18 @@ def map_equ(ax, earth, t, projection, type, reversed=False):
 
 def map_milky_way(
         ax, earth, t, projection, 
-        contour_limit=1, 
-        center_ra=None, center_dec=None, radius=None,
+        contour=1, 
+        # center_ra=None, center_dec=None, radius=None,
         reversed=False,
         line_width = 2.,
         alpha = 0.7,
-        colors = ['#099', '#099']
+        colors = ['#099', '#fc0'],
     ):
     color = colors[1] if reversed else colors[0]
     line_type = (0, (1,1))
-    segments = get_list_of_segments()
+    segments = get_list_of_segments(contour=contour)
     for segment in segments:
-        d = dict(x = [], y = [])
+        d = {'x': [], 'y': []}
         for coord in segment:
             xx, yy = projection(earth.at(t).observe(Star(ra_hours=coord[0], dec_degrees=coord[1])))
             # TODO: test if xx, yy near the plot to speed this up

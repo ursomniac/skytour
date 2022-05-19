@@ -17,6 +17,7 @@ from ..utils.format import to_hm, to_dm
 from ..utils.models import ConstellationBoundaries, ConstellationVertex
 from .finder import plot_dso
 from .models import AtlasPlate
+from .vocabs import MILKY_WAY_CONTOUR_COLORS
 
 def plate_list():
     ldec = [90, 75, 60, 45, 30, 15, 0, -15, -30, -45, -60, -75, -90]
@@ -143,7 +144,9 @@ def create_atlas_plot(
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     if abs(center_dec <= 15.):
         ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
-    ax = map_milky_way(ax, earth, t, projection, reversed=reversed)
+
+    ax = map_milky_way(ax, earth, t, projection, reversed=reversed, colors=MILKY_WAY_CONTOUR_COLORS[1])
+    ax = map_milky_way(ax, earth, t, projection, reversed=reversed, contour=2, colors=MILKY_WAY_CONTOUR_COLORS[2])
     ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     line_color = '#99f' if reversed else "#00f4"
@@ -168,7 +171,7 @@ def create_atlas_plot(
             )
         xxx = np.array(other_dsos['x'])
         yyy = np.array(other_dsos['y'])
-        text_color = '#ccc' if reversed else '#666'
+        text_color = '#6ff' if reversed else '#333'
         for x, y, z in zip(xxx, yyy, other_dsos['label']):
             plt.annotate(
                 z, (x, y), 
@@ -176,7 +179,8 @@ def create_atlas_plot(
                 xytext=(5, 5),
                 ha='left',
                 color = text_color,
-                fontweight = 'bold'
+                fontweight = label_weight,
+                fontsize=label_size
             )
     else:
         ax, _ = map_dsos(ax, earth, t, projection,
