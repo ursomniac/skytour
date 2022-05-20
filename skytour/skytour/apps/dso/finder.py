@@ -88,16 +88,16 @@ def plot_dso(ax, x, y, dso,
         dx = r * math.cos(math.radians(theta))
         dy = r * math.sin(math.radians(theta))
         if ft in ['square', 'gray-square']:
-            color = '#0f0' if ft == 'square' else '#999'
+            color = '#6f6' if ft == 'square' else '#999'
             r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='#000', angle=angle)
             ax.add_patch(r1)
             ax.add_patch(r2)
         else:
-            color = '#0f0' if ft == 'circle-square' else '#999'
+            color = '#6f6' if ft == 'circle-square' else '#999'
             r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
-            c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff')
+            c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff', alpha=alpha*.5)
             c2 = patches.Circle((x, y), aminor/2., fill=False, color='#000')
             ax.add_patch(r1)
             ax.add_patch(r2)

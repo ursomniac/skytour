@@ -3,19 +3,134 @@
 {% block title %}Add Observation: Skytour{% endblock %}
 {% block content %}
 
-
+<style>
+  h1, h4 { color: #ff6; }
+</style>
 <h1>Add Observation</h1>
-<h2>Session Info</h2>
-Session info goes here.
-
 <div class="plan_form">
     {% if form %}
     {{ form.media }}
     <form method="post">
         {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <ul>
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        
+        {% for hidden_field in form.hidden_fields %}
+        {% if hidden_field.errors %}
+          <ul>
+            {% for error in hidden_field.errors %}
+              <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {{ hidden_field }}
+        {% endfor %}
+        
+
         <table>
-            {{ form.as_table }}
+          <tr><td colspan=6><h4>Session Metadata</h4></td></tr>
+          <tr>
+            <td colspan="4">
+              {% with form.session as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.telescope as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              {% with form.ut_date as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="4">
+              {% with form.location as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              {% with form.eyepiece as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="3">
+              {% with form.filter as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr><td colspan=6><h4>Object Metadata</h4></td></tr>
+          <tr>
+            <td colspan="3">
+              {% with form.ut_time as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="3">
+              {% with form.object_type as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              {% with form.planet as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.asteroid as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.comet as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              {% with form.catalog as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.id_in_catalog as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.other_object as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan=6>
+              {% with form.notes as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
         </table>
+
+        {% comment %}
+        <table>{{ form.as_table }}</table>
+        {% endcomment %}
+
         <br><input type="submit" value="Submit"/>
     </form>
     {% else %}

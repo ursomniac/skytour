@@ -372,11 +372,6 @@ class AtlasPlate(models.Model):
     slug = models.SlugField(unique=True)
     center_ra = models.FloatField(_('Center RA'))
     center_dec = models.FloatField(_('Center Dec'))
-    plate = models.ImageField(
-        _('Plate'),
-        upload_to = 'atlas_images',
-        null = True, blank = True
-    )
     tags = TaggableManager(blank=True)
     dso = models.ManyToManyField(DSO, blank=True)
     constellation = models.ManyToManyField(Constellation, blank=True)
@@ -401,12 +396,6 @@ class AtlasPlate(models.Model):
     @property
     def plate_title(self):
         return f"Plate {self.plate_id}: ({self.center_ra:.2f}h {self.center_dec}°) in {self.center_constellation}"
-
-    def plate_tag(self):
-        """
-        Deprecated.
-        """
-        return mark_safe(u'<img src="%s" width=500>' % self.plate.url)
 
     @property
     def plate_images(self):

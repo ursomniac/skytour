@@ -4,6 +4,9 @@
 {% endblock styles %}
 {% block title %}{{ object.name }} Catalog: Skytour {% endblock %}
 {% block content %}
+<style>
+    table.catalog_list td { font-size: 14px; }
+</style>
 <!-- main -->
 {# header section #}
 <table class="lite">
@@ -25,7 +28,7 @@
 
 
 {% include 'includes/paginate.html' %}
-<table>
+<table class="catalog_list">
     <tr>
         <th>Object</th>
         <th>Other Catalog</th>
@@ -51,11 +54,16 @@
                 {% endif %}
             </a>
         </td>
-        <td>{% if thing.catalog != object %}{{ thing.shown_name }}{% endif %}</td>
+        <td>{% if thing.catalog != object %}
+               {{ thing.shown_name }}
+            {% else %}
+                {{ thing.alias_list }}
+            {% endif %}
+        </td>
         <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
         <td>{{ thing.ra_text }}</td>
         <td>{{ thing.dec_text }}</td>
-        <td>{{ thing.object_type }}</td>
+        <td>{{ thing.object_type.short_name }}</td>
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.constellation.abbreviation }}</td>

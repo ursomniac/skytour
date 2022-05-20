@@ -4,7 +4,7 @@
         <td class="click"><a href="{% url 'observing-plan' %}">Plan</a></td>
         <td class="click"><a href="{% url 'object-track' %}">Track</a></td>
         <td class="click"><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
-        <td colspan=4>DSOs:  &nbsp;&nbsp;
+        <td colspan=3>DSOs:  &nbsp;&nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
             <a href="{% url 'object-type-list' %}">Types</a>
@@ -15,7 +15,15 @@
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'dso-filter' %}">Filter</a>
         </td>
-        <td class="click"><a href="{% url 'session-list' %}">Sessions</a></td>
+        <td colspan=3>Sessions: &nbsp;&nbsp;
+            <a href="{% url 'session-list' %}">List</a>
+            &nbsp;|&nbsp;
+            <a href="{% url 'session-create' %}">Create</a>
+            &nbsp;|&nbsp;
+            <a href="{% url 'session-add' %}">Observe</a>
+            &nbsp;|&nbsp;
+            <a href="{% url 'session-conditions' %}">Conditions</a>
+        </td>
 
 
     </tr>
