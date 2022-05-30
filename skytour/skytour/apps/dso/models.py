@@ -381,6 +381,7 @@ class AtlasPlate(models.Model):
         lookup = get_constellation(self.center_ra, self.center_dec)
         constellation = Constellation.objects.filter(abbreviation__iexact=lookup['abbr']).first()
         return constellation
+    center_constellation.fget.short_description = 'Con.'
 
     @property
     def constellation_list(self):
@@ -458,4 +459,22 @@ class MilkyWay(models.Model):
     longitude = models.FloatField (_('Longitude'),)
     ra = models.FloatField(_('R.A. 2000'))
     dec = models.FloatField(_('Dec. 2000'))
+
+class AtlasPlateConstellationAnnotation(models.Model):
+    """
+    Each row is a position for a label on an Atlas Plate for a Constellation
+    """
+    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
+    constellation = models.ForeignKey(Constellation, on_delete=models.CASCADE)
+    ra = models.FloatField(_('R.A.'))
+    dec = models.FloatField(_('Dec.'))
+
+class AtlasPlateCrossReference(models.Model):
+    """
+    Each Row is a position for a label on an Atlas Plate showing the location of an other AtlasPlate
+    """
+    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
+    neighbor = models.PositiveIntegerField(_('Plate ID'))
+    ra = models.FloatField(_('R.A.'))
+    dec = models.FloatField(_('Dec.'))
 

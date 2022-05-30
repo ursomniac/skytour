@@ -8,34 +8,24 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from scipy import spatial
 from skyfield.api import load, Star
 from skyfield.projections import build_stereographic_projection
+
 from ..astro.angdist import chord_length
 from ..astro.transform import get_cartesian
 from ..dso.models import DSO
 from ..plotting.map import *
-from ..solar_system.plot import r2d, d2r
 from ..utils.format import to_hm, to_dm
 from ..utils.models import ConstellationBoundaries, ConstellationVertex
+
 from .finder import plot_dso
 from .models import AtlasPlate
 from .vocabs import MILKY_WAY_CONTOUR_COLORS
 
-def plate_list():
-    ldec = [90, 75, 60, 45, 30, 15, 0, -15, -30, -45, -60, -75, -90]
-    lsize = [1, 12, 16, 20, 24, 32, 48, 32, 24, 20, 16, 12, 1]
-    mul = [0., 2.0, 1.5, 1.2, 1.0, 0.75, 0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 0.]
-    plate = {}
-    j = 1
-    for i in range(len(ldec)):
-        dec = ldec[i]
-        if abs(dec) == 90:
-            plate[j] = (0, dec)
-            j += 1
-            continue
-        ras = [x * mul[i] for x in range(lsize[i])]
-        for ra in ras:
-            plate[j] = (ra, dec)
-            j += 1
-    return plate
+def r2d(a): # a is a numpy.array
+    return a * (180.*2) / math.pi # Why times 2?  I have no idea, but it's the only way it works...
+def d2r(a): # a us a numpy.array
+    return a * math.pi / (180.*2)
+
+
 
 def get_fn(ra, dec, plate_id, shapes=False, reversed=reversed):
     rah = int(ra)
@@ -116,9 +106,9 @@ def create_atlas_plot(
         label_weight = 'normal',
     ):
     """
-    TODO: Fix annotation font to be consistent
     TODO: Change annontation font weight to be BOLD for high/highest priority!
     """
+    object = AtlasPlate.objects.get(plate_id=plate_id)
     ts = load.timescale()
     # Datetime is arbitrary
     t = ts.from_datetime(datetime.datetime(2022, 1, 1, 0, 0).replace(tzinfo=pytz.utc)) # Arbitrary time
@@ -141,12 +131,17 @@ def create_atlas_plot(
 
     # NOW PLOT THINGS!
     # 1. stars constellation lines
+    ax = map_plate_neighbors(ax, object, earth, t, projection, reversed=reversed)
+    ax = map_constellation_names(ax, object, earth, t, projection, reversed=reversed)
+
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
     if abs(center_dec <= 15.):
         ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
 
     ax = map_milky_way(ax, earth, t, projection, reversed=reversed, colors=MILKY_WAY_CONTOUR_COLORS[1])
     ax = map_milky_way(ax, earth, t, projection, reversed=reversed, contour=2, colors=MILKY_WAY_CONTOUR_COLORS[2])
+    ax = map_special_points(ax, earth, t, projection, reversed=reversed)
     ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     line_color = '#99f' if reversed else "#00f4"

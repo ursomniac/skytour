@@ -42,6 +42,7 @@ class DSODetailView(CookieMixin, DetailView):
             asteroid_list = asteroid_list
         )
         context['live_finder_chart'] = finder_chart
+        # TODO: Add rise set times if cookie is set.
         context['times'] = compile_times(times)
         return context
 

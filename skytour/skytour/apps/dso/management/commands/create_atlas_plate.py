@@ -1,0 +1,31 @@
+from django.core.management.base import BaseCommand
+from ...helpers import create_atlas_plate
+
+
+class Command(BaseCommand):
+    help = 'Create DSO finder charts'
+
+    def add_arguments(self, parser):
+        parser.add_argument('plates', nargs="*", type=int)
+        parser.add_argument('-s', '--shapes', dest='shapes', action='store_true')
+        parser.add_argument('-r', '--reversed', dest='reversed', action='store_true')
+        parser.add_argument('-a', '--all', dest='do_all', action='store_true')
+        parser.add_argument('-d', '--debug', dest='debug', action='store_true')
+    
+    def handle(self, *args, **options):
+        debug = True if options['debug'] else False
+        reversed = True if options['reversed'] else False
+        shapes = True if options['shapes'] else False
+        do_all = True if options['do_all'] else False
+        plates = range(1,259) if do_all else options['plates']
+
+        if debug:
+            print (f"Reversed: {reversed} Shapes: {shapes} Do all: {do_all}")
+            print(f"Plate List: {plates}")
+
+        for plate_id in plates: 
+            if plate_id < 259 and plate_id > 0:
+                print("Plate: ", plate_id, " Shapes: ", shapes, " Reversed: ", reversed)
+                fn = create_atlas_plate(plate_id, shapes=shapes, reversed=reversed)
+            else:
+                print(f"Plate ID {plate_id} invalid.")

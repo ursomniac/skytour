@@ -1,7 +1,8 @@
 from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
-from .models import DSO, DSOImage, DSOAlias, DSOObservation, DSOList, AtlasPlate, AtlasPlateVersion
+from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
+    DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, AtlasPlateCrossReference
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -153,13 +154,31 @@ class AtlasPlateVersionInline(admin.StackedInline):
     ]
     extra = 0
 
+class AtlasPlateConstellationAnnotationInline(admin.TabularInline):
+    model = AtlasPlateConstellationAnnotation
+    extra = 0
+
+class AtlasPlateCrossReferenceInline(admin.TabularInline):
+    model = AtlasPlateCrossReference
+    extra = 0
+
 class AtlasPlateAdmin(TagModelAdmin):
     model = AtlasPlate
-    list_display = ['plate_id', 'center_ra', 'center_dec', 'center_constellation',  'con_list', 'tag_list', 'dso_count']
+    list_display = [
+        'plate_id', 
+        'format_ra', 
+        'format_dec', 
+        'center_constellation',  
+        'con_list', 
+        'tag_list', 
+        'dso_count'
+    ]
     autocomplete_fields = ['dso', 'constellation']
     readonly_fields = [
         'con_list', 
         'dso_count', 
+        'format_ra',
+        'format_dec',
         'center_constellation',
         'tag_list'
     ]
@@ -174,7 +193,17 @@ class AtlasPlateAdmin(TagModelAdmin):
         }),
     ]
     save_on_top = True
-    inlines = [AtlasPlateVersionInline,]
+    inlines = [AtlasPlateVersionInline, AtlasPlateConstellationAnnotationInline, AtlasPlateCrossReferenceInline]
+
+    def format_ra(self, obj):
+        return f"{obj.center_ra:.2f}"
+    format_ra.short_description = 'R.A.'
+    format_ra.admin_order_field = 'center_ra'
+
+    def format_dec(self, obj):
+        return f"{obj.center_dec:.1f}"
+    format_dec.short_description = "Dec."
+    format_dec.admin_order_field = 'center_dec'
 
     def con_list(self, object):
         cc = []

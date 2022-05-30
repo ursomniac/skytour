@@ -87,6 +87,7 @@ def create_finder_chart(
     # Add equator and ecliptic
     ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=mag_offset, reversed=reversed)
@@ -409,6 +410,7 @@ def plot_track(
     
     ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
     if not mag_limit:
@@ -485,10 +487,10 @@ def get_planet_map(planet, physical):
         #   9° + 0.05719° * (utdt - datetime(2022, 1, 1)); i.e., # days since the beginning of the year.
         do = angle - delta_longitude
         px = do if angle <= 180 else do - 360.
-        print("Angle: ", angle)
-        print("∆L: ", delta_longitude)
-        print("DO: ", do)
-        print ("PX: ", px)
+        #print("Angle: ", angle)
+        #print("∆L: ", delta_longitude)
+        #print("DO: ", do)
+        #print ("PX: ", px)
         py = d_e
     elif planet.name == 'Mars':
         im = ax.imshow(im, extent=[360, 0, -90, 90])

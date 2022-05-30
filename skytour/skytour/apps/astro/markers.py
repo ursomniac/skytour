@@ -1,4 +1,6 @@
 import math
+from re import X
+from xml.dom import xmlbuilder
 
 
 def generate_equator(step=0.5, type='equ'):
@@ -26,7 +28,8 @@ def generate_equator(step=0.5, type='equ'):
             dec = math.degrees(math.asin(se * sx)) 
             points.append(tuple([ra, dec]))
         elif type == 'gal':
-            pass
+            ra, dec = gal2equ(d, 0)
+            points.append(tuple([ra, dec]))
         d += step
     return points
 
@@ -34,12 +37,48 @@ def generate_equator(step=0.5, type='equ'):
 SPECIAL_POINTS = [
     dict(ra= 0.0000, dec= 90.0000, name='N. Celestial Pole', abbr='NCP'),
     dict(ra= 0.0000, dec=-90.0000, name='S. Celestial Pole', abbr='SCP'),
-    dict(ra= 0.0000, dec=  0.0000, name='Vernal Equinox', abbr='VE'),
-    dict(ra=12.0000, dec=  0.0000, name='Autumn Equinox', abbr='AE'),
+    dict(ra= 0.0000, dec=  0.0000, name='Vernal Equinox', abbr='VEq'),
+    dict(ra=12.0000, dec=  0.0000, name='Autumn Equinox', abbr='AEq'),
     dict(ra=18.0000, dec= 66.5608, name='N. Ecl. Pole', abbr='NEP'),
     dict(ra= 6.0000, dec=-66.5608, name='S. Ecl. Pole', abbr='SEP'),     
     dict(ra=12.8567, dec= 27.1167, name='N. Gal. Pole', abbr='NGP'),         # b = 90
     dict(ra= 0.8567, dec=-27.1167, name='S. Gal. Pole', abbr='SGP'),         # b = -90
-    dict(ra=17.7600, dec=-28.9333, name='Galactic Center', abbr='GC'),       # l, b = 0, 0
+    dict(ra=17.7600, dec=-28.9333, name='Galactic Center', abbr='GalCen'),       # l, b = 0, 0
     dict(ra= 5.7600, dec= 28.9333, name='Galactic Anti-Center', abbr='GAC'), # l, b = 180, 0
 ]
+
+def b1950toj2000(ra, dec):
+    xra = math.radians(ra)
+    xdec = math.radians(dec)
+    jra = ra + 0.640265 + 0.278369 * math.sin(xra) * math.tan(xdec)
+    jdec = dec + 0.278369 * math.cos(xra)
+    return jra, jdec
+
+def gal2equ(l, b, epoch=2000):
+    xl = math.radians(l - 123.)
+    xb = math.radians(b)
+    xe = math.radians(27.4)
+
+    sxl = math.sin(xl)
+    cxl = math.cos(xl)
+    sxe = math.sin(xe)
+    cxe = math.cos(xe)
+    sxb = math.sin(xb)
+    cxb = math.cos(xb)
+
+    xd = cxl * sxe - math.tan(xb) * cxe
+    x = math.atan2(sxl, xd)
+    ra = (math.degrees(x) + 12.25) % 360.
+
+    xdec = math.asin(sxb * sxe + cxb * cxe * cxl)
+    dec = math.degrees(xdec)
+
+    if epoch != 1950: # since b is always zero, this is OK
+        jra, jdec = b1950toj2000(ra, dec)
+        return jra / 15., jdec
+
+    return ra / 15., dec
+
+
+
+

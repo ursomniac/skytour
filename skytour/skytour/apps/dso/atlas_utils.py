@@ -1,6 +1,5 @@
 import math
 from .models import AtlasPlate
-from .plot import plate_list
 
 def get_sep(ra1, dec1, ra2, dec2):
     dra = ra1 - ra2
@@ -11,11 +10,16 @@ def get_sep(ra1, dec1, ra2, dec2):
     return sep
 
 def get_position_angle(ra1, dec1, ra2, dec2):
-    dra = ra1 - ra2
-    pa1 = math.sin(dra)
-    pa2 = math.cos(dec2) * math.tan(dec1)
-    pa3 = math.sin(dec2) * math.cos(dra)
-    pa = math.degrees(math.atan2(pa1, pa2-pa3))
+    # This has an error at the points (tangent 90)
+    if abs(dec1) < math.radians(90.):
+        dra = ra1 - ra2
+        pa1 = math.sin(dra)
+        pa2 = math.cos(dec2) * math.tan(dec1) 
+        pa3 = math.sin(dec2) * math.cos(dra)
+        pa = math.degrees(math.atan2(pa1, pa2-pa3))
+    else:
+        pa = (270. - math.degrees(ra2)) % 360.
+        
     return pa
 
 def get_relative_positions(p1, p2):
@@ -45,6 +49,10 @@ def sign(x):
     return 0
 
 def find_neighbors(my_ra, my_dec, limit=20.):
+    """
+    This fails for plates 1 and 258 because all the neighbors end up in the same place.
+    That's because abs(dec) == 90 and so tan(dec) is ∞.
+    """
     plate_dict = plate_list()
     plate_keys = plate_dict.keys()
     my_ra = math.radians(my_ra * 15.)
@@ -53,8 +61,6 @@ def find_neighbors(my_ra, my_dec, limit=20.):
     neighbors = []
     nstr = []
     for plate in plate_keys:
-        #if plate == p:
-        #    continue
         ra = math.radians(plate_dict[plate][0] * 15.)
         dec = math.radians(plate_dict[plate][1])
         sep = get_sep(my_ra, my_dec, ra, dec)
@@ -96,6 +102,24 @@ def assemble_neighbors(plist):
         z = sorted(plates_in_row, key=lambda d: d['xdist'])
         rows.append(z) # use sorted here
     return rows
+
+def plate_list():
+    ldec = [90, 75, 60, 45, 30, 15, 0, -15, -30, -45, -60, -75, -90]
+    lsize = [1, 12, 16, 20, 24, 32, 48, 32, 24, 20, 16, 12, 1]
+    mul = [0., 2.0, 1.5, 1.2, 1.0, 0.75, 0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 0.]
+    plate = {}
+    j = 1
+    for i in range(len(ldec)):
+        dec = ldec[i]
+        if abs(dec) == 90:
+            plate[j] = (0, dec)
+            j += 1
+            continue
+        ras = [x * mul[i] for x in range(lsize[i])]
+        for ra in ras:
+            plate[j] = (ra, dec)
+            j += 1
+    return plate
 
 def test_neighbor(p1, p2):
     plate_dict = plate_list()

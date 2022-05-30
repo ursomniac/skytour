@@ -150,6 +150,7 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
 
     ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
+    ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
     times.append((time.perf_counter(), 'Hipparcos'))
     ax = map_constellation_lines(ax, stars, reversed=reversed)

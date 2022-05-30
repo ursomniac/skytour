@@ -6,9 +6,11 @@ from matplotlib.collections import LineCollection
 from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
-from ..astro.markers import generate_equator
+
+from ..astro.markers import generate_equator, SPECIAL_POINTS
 from ..dso.milky_way import get_list_of_segments
 from ..dso.models import DSO
+from ..dso.atlas_utils import assemble_neighbors, find_neighbors
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.saturn import saturn_ring
@@ -561,7 +563,7 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
         reversed=True
     ):
     """
-    Show meteor showers on the map with a big cyan X.
+    Show meteor showers on the map with a big X.
     """    
     active = get_meteor_showers(utdt=utdt)
     if len(active) == 0: # Nothing to do!
@@ -641,6 +643,10 @@ def map_equ(ax, earth, t, projection, type, reversed=False):
         points = generate_equator(type='ecl')
         line_type = '-.'
         color = '#6ff' if reversed else '#3c3'
+    elif type == 'gal':
+        points = generate_equator(type='gal')
+        line_type = '--' # (0, (3, 5, 1, 5, 1, 5))
+        color = '#c6f'
     else:
         return ax
 
@@ -675,4 +681,105 @@ def map_milky_way(
             d['x'].append(xx)
             d['y'].append(yy)
         w = ax.plot(d['x'], d['y'], c=color, ls=line_type, lw=line_width, alpha=alpha)
+    return ax
+
+def map_special_points(ax, earth, t, projection, 
+        marker='x', 
+        size=150, 
+        reversed=False,
+        alpha = 0.8,
+        colors = ['#fa0', '#fa0']
+    ):
+    d = {'x': [], 'y': [], 'label': [], 'marker': []}
+    #dict(ra= 0.0000, dec= 90.0000, name='N. Celestial Pole', abbr='NCP'),
+    for a in SPECIAL_POINTS:
+        x, y = projection(earth.at(t).observe(Star(ra_hours=a['ra'], dec_degrees=a['dec'])))
+        d['x'].append(x)
+        d['y'].append(y)
+        d['label'].append(a['abbr'])
+
+    color = colors[1] if reversed else colors[0]
+    scatter = ax.scatter(
+        d['x'], d['y'], 
+        s=size, c=color, 
+        marker=marker, alpha=alpha
+    )
+    tcolor = '#ccc' if reversed else '#666'
+    for x, y, z in zip(d['x'], d['y'], d['label']):
+        ax.annotate(
+            z, xy=(x,y),
+            textcoords='offset points',
+            xytext=(10, -10),
+            horizontalalignment='center',
+            color=tcolor,
+            fontsize=6,
+            style='italic'
+        )
+    return ax
+
+def map_plate_neighbors(ax, plate, earth, t, projection, reversed=reversed):
+    # TODO: Fix error for plates 1 and 258
+    rows = assemble_neighbors(find_neighbors(plate.center_ra, plate.center_dec))
+    neighbors = []
+    row_number = 0
+    for row in rows:
+        p_num = 0
+        for n in row:
+            p_num += 1
+            if n['sep'] < 0.1: # skip center
+                continue
+            if len(row) == 5 and p_num not in [2,4]: # deal with dec 75 issue
+                continue
+            neighbors.append(n)
+        row_number += 1
+
+    csize = math.radians(.25)
+    radius = math.radians(9.2/2.)
+    d = {'x': [], 'y': [], 't': []}
+    tcolor = '#777' if reversed else '#fff'
+    fcolor = '#444' if reversed else '#ccc'
+
+    for n in neighbors:
+        pa = math.radians(n['pa'] - 90.)
+        text = n['plate']
+        plate_id = int(text)
+        if plate_id == 1:
+            pa = math.radians(90.)
+        elif plate_id == 258:
+            pa = math.radians(-90.)
+        x = radius * math.cos(pa)
+        y = radius * math.sin(pa)
+        d['x'].append(x)
+        d['y'].append(y)
+        d['t'].append(text)
+
+    for x, y, z in zip(d['x'], d['y'], d['t']):
+        c = plt.Circle((x,y), csize, color=fcolor, fill=True, alpha=0.7)
+        ax.add_patch(c)
+        ax.annotate(z, xy=(x, y), 
+            color=tcolor, fontsize=12, 
+            verticalalignment='center',
+            horizontalalignment='center'
+        )
+    return ax
+
+def map_constellation_names(ax, plate, earth, t, projection, reversed=reversed):
+    constellations = plate.atlasplateconstellationannotation_set.all()
+    d = {'x': [], 'y': [], 'label': []}
+    tcolor = '#ffb' if reversed else '#333'
+    fcolor = '#333' if reversed else '#fff'
+    ecolor = '#ffd' if reversed else '#000'
+    for c in constellations:
+        x, y = projection(earth.at(t).observe(Star(ra_hours=c.ra, dec_degrees=c.dec)))
+        d['x'].append(x)
+        d['y'].append(y)
+        d['label'].append(c.constellation.abbreviation)
+    for x, y, z in zip(d['x'], d['y'], d['label']):
+        ax.text(x, y, z, color=tcolor, fontsize='x-small',
+            bbox = dict(
+                facecolor=fcolor, 
+                edgecolor=ecolor,
+                pad=1.0
+            )
+        )
     return ax

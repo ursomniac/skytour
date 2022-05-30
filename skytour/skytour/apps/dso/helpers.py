@@ -1,5 +1,6 @@
+from .atlas_utils import plate_list
 from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion
-from .plot import plate_list, create_atlas_plot
+from .plot import create_atlas_plot
 
 def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
     x = DSOList()
@@ -35,8 +36,6 @@ def create_atlas_plate(plate_id, shapes=False, reversed=False):
     x.center_dec = dec
     fn, dso_list = create_atlas_plot(
         ra, dec, plate_id, shapes=shapes, reversed=reversed)
-    # Keep this around for now -- TODO: remove this from the model
-    #x.plate.name = 'atlas_images/' + fn
     x.save()
 
     # Store everything in AtlasPlateVersion
