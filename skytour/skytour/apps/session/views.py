@@ -283,13 +283,6 @@ class SessionAddView(CookieMixin, FormView):
         context = super(SessionAddView, self).get_context_data(**kwargs)
         return context
 
-    #def get_form_kwargs(self):
-    #    kwargs = super(SessionAddView, self).get_form_kwargs()
-    #    kwargs['object_type'] = self.request.GET.get('object_type')
-    #    kwargs['pk'] = self.request.GET.get('pk')
-    #    print (f"OT: {kwargs['object_type']} PK: {kwargs['pk']}")
-    #    return kwargs
-
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         d = form.cleaned_data
@@ -327,7 +320,6 @@ class SessionAddView(CookieMixin, FormView):
         else:
             raise ValidationError (f"Object Type {object_type} not found!")
 
-        print(f"Object Type: {object_type} found {object}")
         if object:
             obs.object = object
         obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
@@ -341,6 +333,8 @@ class SessionAddView(CookieMixin, FormView):
             obs.filters.add(*d['filter'])
         obs.notes = d['notes']
         obs.save()
+
+        context['message'] = f'{obs.ut_time}: Observation of {obs.target_name} logged.'
         return self.render_to_response(context)
 
 class ObservingConditionsFormView(CreateView):

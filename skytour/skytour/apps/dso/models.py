@@ -277,6 +277,10 @@ class DSOObservation(ObservingLog):
     @property
     def observation_metadata(self):
         return get_metadata(self)
+
+    @property
+    def target_name(self):
+        return self.object.shown_name
         
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.shown_name}"
@@ -367,6 +371,8 @@ class AtlasPlate(models.Model):
     """
     TODO: Bright Star Lists
     TODO: Double Stars?
+    TODO: "Special" plates for things like the LMC/SMC/Virgo, etc. - These will need a different FOV, or 
+        might be split up into sections...   Need to research.
     """
     plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
     slug = models.SlugField(unique=True)

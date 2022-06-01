@@ -121,13 +121,6 @@ def plate_list():
             j += 1
     return plate
 
-def test_neighbor(p1, p2):
-    plate_dict = plate_list()
-    pp1 = plate_dict[p1]
-    pp2 = plate_dict[p2]
-    p1_ra = math.radians(pp1[0] * 15)
-    p1_dec = math.radians(pp1[1])
-    p2_ra = math.radians(pp2[0] * 15.)
-    p2_dec = math.radians(pp2[1])
-    sep = get_sep(p1_ra, p1_dec, p2_ra, p2_dec)
-    print (f"{pp1} to {pp2} = {sep}")
+def create_atlas_legend():
+    pass
+

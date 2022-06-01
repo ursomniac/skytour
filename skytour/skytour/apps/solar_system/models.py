@@ -108,6 +108,10 @@ class PlanetObservation(ObservingLog):
     def observation_metadata(self):
         return get_metadata(self)
 
+    @property
+    def target_name(self):
+        return self.object.name
+
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
 
@@ -116,16 +120,11 @@ class PlanetObservation(ObservingLog):
         verbose_name_plural = 'Observations'
 
 class MoonObservation(ObservingLog):
-    """
-    M:1 between observation records and DSOs.
-    So a separate one of these for model?   That gets away from
-    dealing with GFKs...
-    """
     object_type = 'moon'
 
-    #@property
-    #def observation_metadata(self):
-    #    return get_metadata(self)
+    @property
+    def target_name(self):
+        return 'Moon'
 
     def __str__(self):
         return f"{self.ut_datetime}: Moon"
@@ -297,6 +296,10 @@ class AsteroidObservation(ObservingLog):
     def observation_metadata(self):
         return get_metadata(self)
 
+    @property
+    def target_name(self):
+        return self.object.name
+
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"
 
@@ -338,6 +341,10 @@ class CometObservation(ObservingLog):
     @property
     def observation_metadata(self):
         return get_metadata(self)
+
+    @property
+    def target_name(self):
+        return self.object.name
 
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.name}"

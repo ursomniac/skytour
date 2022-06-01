@@ -93,12 +93,13 @@ OBSERVE_TYPES = [
     ('moon', 'Moon'), 
     ('other', 'Other')
 ]
+
 class SessionAddForm(forms.Form):
     # Fill these in from the session cookie OR override
     session = forms.ModelChoiceField (
         queryset = ObservingSession.objects.all()
     )
-    ut_date = forms.DateField(required=False, label='UT Date')
+    ut_date = forms.DateField(required=False, label='UT Date', initial=datetime.utcnow)
     location = forms.ModelChoiceField (
         queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
     )
@@ -114,7 +115,10 @@ class SessionAddForm(forms.Form):
         required = False
     )
     # Required
-    ut_time = forms.TimeField(label='UT Time')
+    ut_time = forms.TimeField(
+        label='UT Time',
+        initial=datetime.utcnow # utc
+    )
     object_type = forms.ChoiceField(
         choices = OBSERVE_TYPES, initial='DSO'
     )
@@ -150,39 +154,6 @@ class SessionAddForm(forms.Form):
         widget = forms.Textarea,
         required = False
     )
-
-    #def __init__(self, *args, **kwargs):
-    #    OT = {'asteroid': 'Asteroid', 'comet': 'Comet', 'dso': 'DSO', 
-    #        'planet': 'Planet', 'moon': 'Moon', 'other': 'Other'}
-    #    if 'object_type' in kwargs:
-    #        object_type = kwargs.pop('object_type')
-    #        if object_type is not None:
-    #            otot = OT[object_type]
-    #            print ("OTOT: ", otot)
-    #            #kwargs.update(initial={'object_type': OT[object_type]})
-    #            kwargs.update(initial={'object_type': None})
-    #    if 'pk' in kwargs and object_type is not None:
-    #        print ("GOT HERE")
-    #        pk = int(kwargs.pop('pk'))
-    #        if object_type == 'planet':
-    #            kwargs.update(initial={'planet': Planet.objects.filter(pk=pk).first()})
-    #        elif object_type == 'asteroid':
-    #            kwargs.update(initial={'asteroid': Asteroid.objects.filter(pk=pk).first()})
-    #        elif object_type == 'comet':
-    #            kwargs.update(initial={'comet': Comet.objects.filter(pk=pk).first()})
-    #        elif object_type == 'dso':
-    #            dso = DSO.objects.filter(pk=pk).first()
-    #            if dso:
-    #                kwargs.update(
-    #                    initial={
-    #                        'catalog': dso.catalog,
-    #                        'id_in_catalog': dso.id_in_catalog
-    #                    }
-    #                )
-    #    else:
-    #        return
-    #    print ("GOT HERE 2")
-    #    super(SessionAddForm, self).__init__(*args, **kwargs)
 
 class ObservingConditionsForm(forms.ModelForm):
 
