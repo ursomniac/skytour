@@ -173,7 +173,7 @@ class ObservingLog(models.Model):
     # Ugh you need location!
     location = models.ForeignKey (
         ObservingLocation,
-        default = find_site_parameter('default-location-id', default=43, param_type='positive'),
+        default = find_site_parameter('default-location-id', default=48, param_type='positive'),
         on_delete = models.CASCADE,
         limit_choices_to = {'status__in': ['Active', 'Provisional']}
     )

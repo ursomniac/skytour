@@ -378,6 +378,7 @@ class AtlasPlate(models.Model):
     slug = models.SlugField(unique=True)
     center_ra = models.FloatField(_('Center RA'))
     center_dec = models.FloatField(_('Center Dec'))
+    radius = models.FloatField(_('Radius'), default=20.0)
     tags = TaggableManager(blank=True)
     dso = models.ManyToManyField(DSO, blank=True)
     constellation = models.ManyToManyField(Constellation, blank=True)

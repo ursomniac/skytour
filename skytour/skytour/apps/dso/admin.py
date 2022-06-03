@@ -186,7 +186,7 @@ class AtlasPlateAdmin(TagModelAdmin):
         (None, {
             'fields': (
                 'plate_id',
-                ('center_ra', 'center_dec'),
+                ('center_ra', 'center_dec', 'radius'),
                 'tags',
                 ('dso','constellation'),
             )
