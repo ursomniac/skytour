@@ -121,6 +121,4 @@ def plate_list():
             j += 1
     return plate
 
-def create_atlas_legend():
-    pass
 
