@@ -131,7 +131,7 @@ def create_atlas_plot(
 
     # NOW PLOT THINGS!
     # 1. stars constellation lines
-    ax = map_plate_neighbors(ax, object, earth, t, projection, reversed=reversed)
+    ax = map_plate_neighbors(ax, object, reversed=reversed)
     ax = map_constellation_names(ax, object, earth, t, projection, reversed=reversed)
 
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)

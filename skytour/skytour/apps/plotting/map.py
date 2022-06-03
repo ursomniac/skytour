@@ -717,8 +717,7 @@ def map_special_points(ax, earth, t, projection,
         )
     return ax
 
-def map_plate_neighbors(ax, plate, earth, t, projection, reversed=reversed):
-    # TODO: Fix error for plates 1 and 258
+def map_plate_neighbors(ax, plate, reversed=reversed):
     rows = assemble_neighbors(find_neighbors(plate.center_ra, plate.center_dec))
     neighbors = []
     row_number = 0
