@@ -34,3 +34,27 @@ MILKY_WAY_CONTOUR_COLORS = [
     ['#388', '#D40'],
     ['#688', '#C40']
 ]
+
+ATLAS_COLORS = {
+    'milky-way-contours': [    
+        ('#0ff', '#FF0'), # not used
+        ('#0cc', '#FC0'), ('#0aa', '#f90'),
+        ('#088', '#f60'), ('#388', '#D40'), ('#688', '#C40')
+    ],
+    'lines': {
+        'equator': ('#f99', '#f9f'), 
+        'ecliptic': ('#3c3', '#6ff'), 
+        'galactic': ('#c6f', '#c6f')
+    },
+    'special-points': { 
+        'symbol': ('#fa0', '#fa0'),
+        'label': ('#666', '#ccc') 
+    },
+    'constellation': {
+        'lines': ('#00f4', '#99f'),
+        'boundaries': ('#999', '#9907'), 
+        'markers':  { 'edge': ('#000', '#ffd'), 'label': ('#333', '#ffb'), 'background': ('#fff', '#333') },
+    },
+    'annotation':   ('#333', '#6ff'),
+    'atlas-plate-reference': { 'label': ('#fff', '#777'), 'background': ('#ccc', '#444') },
+}

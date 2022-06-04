@@ -638,15 +638,15 @@ def map_equ(ax, earth, t, projection, type, reversed=False):
     if type == 'equ':
         points = generate_equator()
         line_type = (0, (7, 10))
-        color = '#f9f' if reversed else '#f99'
+        color = '#f9f' if reversed else '#f99' # lines, equator
     elif type == 'ecl':
         points = generate_equator(type='ecl')
         line_type = '-.'
-        color = '#6ff' if reversed else '#3c3'
+        color = '#6ff' if reversed else '#3c3' # lines, ecliptic
     elif type == 'gal':
         points = generate_equator(type='gal')
         line_type = '--' # (0, (3, 5, 1, 5, 1, 5))
-        color = '#c6f'
+        color = '#c6f' # lines, galactic
     else:
         return ax
 
@@ -656,8 +656,6 @@ def map_equ(ax, earth, t, projection, type, reversed=False):
         xx, yy = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         d['x'].append(xx)
         d['y'].append(yy)
-    line_color = '#66f' if reversed else '#f99'
-    #w = ax.scatter(d['x'], d['y'], c=line_color, marker='.')
     w = ax.plot(d['x'], d['y'], ls=line_type, lw=1., alpha=0.7, c=color)
     return ax
 
@@ -691,20 +689,20 @@ def map_special_points(ax, earth, t, projection,
         colors = ['#fa0', '#fa0']
     ):
     d = {'x': [], 'y': [], 'label': [], 'marker': []}
-    #dict(ra= 0.0000, dec= 90.0000, name='N. Celestial Pole', abbr='NCP'),
+
     for a in SPECIAL_POINTS:
         x, y = projection(earth.at(t).observe(Star(ra_hours=a['ra'], dec_degrees=a['dec'])))
         d['x'].append(x)
         d['y'].append(y)
         d['label'].append(a['abbr'])
 
-    color = colors[1] if reversed else colors[0]
+    color = colors[1] if reversed else colors[0] # special-points, symbol
     scatter = ax.scatter(
         d['x'], d['y'], 
         s=size, c=color, 
         marker=marker, alpha=alpha
     )
-    tcolor = '#ccc' if reversed else '#666'
+    tcolor = '#ccc' if reversed else '#666' # special-points, label
     for x, y, z in zip(d['x'], d['y'], d['label']):
         ax.annotate(
             z, xy=(x,y),
@@ -735,8 +733,8 @@ def map_plate_neighbors(ax, plate, reversed=reversed):
     csize = math.radians(.25)
     radius = math.radians(9.2/2.)
     d = {'x': [], 'y': [], 't': []}
-    tcolor = '#777' if reversed else '#fff'
-    fcolor = '#444' if reversed else '#ccc'
+    tcolor = '#777' if reversed else '#fff' # atlas-plate-reference, label
+    fcolor = '#444' if reversed else '#ccc' # atlas-plate-reference, background
 
     for n in neighbors:
         pa = math.radians(n['pa'] - 90.)
@@ -765,9 +763,9 @@ def map_plate_neighbors(ax, plate, reversed=reversed):
 def map_constellation_names(ax, plate, earth, t, projection, reversed=reversed):
     constellations = plate.atlasplateconstellationannotation_set.all()
     d = {'x': [], 'y': [], 'label': []}
-    tcolor = '#ffb' if reversed else '#333'
-    fcolor = '#333' if reversed else '#fff'
-    ecolor = '#ffd' if reversed else '#000'
+    tcolor = '#ffb' if reversed else '#333'  # constellation, markers, label
+    fcolor = '#333' if reversed else '#fff'  # constellation, markers, background
+    ecolor = '#ffd' if reversed else '#000'  # constellation, markers, edge
     for c in constellations:
         x, y = projection(earth.at(t).observe(Star(ra_hours=c.ra, dec_degrees=c.dec)))
         d['x'].append(x)

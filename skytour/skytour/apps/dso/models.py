@@ -476,12 +476,5 @@ class AtlasPlateConstellationAnnotation(models.Model):
     ra = models.FloatField(_('R.A.'))
     dec = models.FloatField(_('Dec.'))
 
-class AtlasPlateCrossReference(models.Model):
-    """
-    Each Row is a position for a label on an Atlas Plate showing the location of an other AtlasPlate
-    """
-    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
-    neighbor = models.PositiveIntegerField(_('Plate ID'))
-    ra = models.FloatField(_('R.A.'))
-    dec = models.FloatField(_('Dec.'))
+
 

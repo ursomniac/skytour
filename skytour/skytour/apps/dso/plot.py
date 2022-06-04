@@ -82,7 +82,7 @@ def get_boundary_lines(plate_id):
 
 def map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=False):
     lines, _ = get_boundary_lines(plate_id)
-    line_color = '#9907' if reversed else '#999'
+    line_color = '#9907' if reversed else '#999' # constellation-boundary
     line_width = 1.5
     line_type = '--'
     for k, v in lines.items():
@@ -144,7 +144,7 @@ def create_atlas_plot(
     ax = map_special_points(ax, earth, t, projection, reversed=reversed)
     ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
-    line_color = '#99f' if reversed else "#00f4"
+    line_color = '#99f' if reversed else "#00f4" # constellation-line
     ax = map_constellation_lines(ax, stars, reversed=reversed, line_color=line_color)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
 
@@ -166,7 +166,7 @@ def create_atlas_plot(
             )
         xxx = np.array(other_dsos['x'])
         yyy = np.array(other_dsos['y'])
-        text_color = '#6ff' if reversed else '#333'
+        text_color = '#6ff' if reversed else '#333' # annotation
         for x, y, z in zip(xxx, yyy, other_dsos['label']):
             plt.annotate(
                 z, (x, y), 
@@ -234,4 +234,17 @@ def create_atlas_plot(
     230 - 245:  1.5h, -60
     246 - 257:  2.0h, -75
           258:     0, -90 S polar plot
+
+4 special plates
+    Com/Vir
+    Fornax
+    SMC
+    LMC
 """
+
+def create_atlas_legend():
+    """
+    This creates an image showing all the lines/symbols on the atlas.
+    TODO: put all the colors together in a single dictionary!
+    """
+    pass

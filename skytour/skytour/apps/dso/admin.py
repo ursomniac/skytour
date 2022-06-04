@@ -2,7 +2,7 @@ from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
-    DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, AtlasPlateCrossReference
+    DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -158,10 +158,6 @@ class AtlasPlateConstellationAnnotationInline(admin.TabularInline):
     model = AtlasPlateConstellationAnnotation
     extra = 0
 
-class AtlasPlateCrossReferenceInline(admin.TabularInline):
-    model = AtlasPlateCrossReference
-    extra = 0
-
 class AtlasPlateAdmin(TagModelAdmin):
     model = AtlasPlate
     list_display = [
@@ -193,7 +189,7 @@ class AtlasPlateAdmin(TagModelAdmin):
         }),
     ]
     save_on_top = True
-    inlines = [AtlasPlateVersionInline, AtlasPlateConstellationAnnotationInline, AtlasPlateCrossReferenceInline]
+    inlines = [AtlasPlateVersionInline, AtlasPlateConstellationAnnotationInline]
 
     def format_ra(self, obj):
         return f"{obj.center_ra:.2f}"
