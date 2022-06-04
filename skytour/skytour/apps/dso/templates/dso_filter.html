@@ -28,10 +28,14 @@
             <th></th>
             <th>Name</th>
             <th>ID</th>
+            <th>Aliases</th>
             <th></th>
             <th>Const.</th>
+            {% comment %}
             <th>RA</th>
             <th>DEC</th>
+            {% endcomment %}
+            <th>Coord.</th>
             <th>Type</th>
             <th>Priority</th>
             <th>Mag</th>
@@ -43,14 +47,18 @@
             <td><input type="checkbox" name="add_dso" value="{{ dso.pk }}" checked></td>
             <td><a href="{% url 'dso-detail' dso.pk %}">{{ dso.pk }}</a></td>
             <td><a href="{% url 'dso-detail' dso.pk %}">{{ dso }}</a></td>
+            <td>{{ dso.alias_list }}</td>
             <td>
                 {% with dso.images.all|first as img %}
                 <img src="{{ img.image.url }}" width=80>
                 {% endwith %}
             </td>
             <td>{{ dso.constellation.abbreviation }}</td>
+            {% comment %}
             <td>{{ dso.ra_text }}</td>
             <td>{{ dso.dec_text }}</td>
+            {% endcomment %}
+            <td>{{ dso.short_ra_dec }}</td>
             <td>{{ dso.object_type }}</td>
             <td>{{ dso.priority }}</td>
             <td>{{ dso.magnitude }}</td>

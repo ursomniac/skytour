@@ -119,6 +119,16 @@ class Coordinates(models.Model):
         return u"{}{:02d}° {:02d}\' {:05.2f}\"".format(
             self.dec_sign, self.dec_d, self.dec_m, self.dec_s
         )
+
+    @property
+    def short_ra_dec(self):
+        rah = int(self.ra)
+        ram = (self.ra - rah) * 60.
+        des = '-' if self.dec < 0 else '+'
+        dex = abs(self.dec) + 0.00015 # rounding
+        ded = int(dex)
+        dem = (dex - ded) * 60.
+        return f"{rah:02d}h{ram:04.1f}m {des}{ded:02d}°{dem:04.1f}\'"
     
     @property
     def get_xyz(self):

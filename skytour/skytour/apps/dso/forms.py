@@ -1,8 +1,6 @@
-from datetime import datetime
 from django import forms
-from .models import DSO, DSOList
-from ..site_parameter.helpers import find_site_parameter
-from ..utils.models import Constellation, ObjectType
+from .models import DSOList
+from ..utils.models import Catalog, ObjectType
 from .vocabs import PRIORITY_CHOICES
 
 YES_NO = [
@@ -29,6 +27,12 @@ class DSOFilterForm(forms.Form):
         choices = PRIORITY_CHOICES,
         initial = [c for c in ('Highest', 'High', 'Medium')]
     )
+    #catalog = forms.ModelMultipleChoiceField (
+    #    required = False,
+    #    widget = forms.CheckboxSelectMultiple(),
+    #    queryset = Catalog.objects.all(),
+    #    initial = [c for c in Catalog.objects.all().values_list("id", flat=True)]
+    #)
 
 class DSOAddForm(forms.Form):
     add_dso = forms.ModelChoiceField(
