@@ -1,4 +1,3 @@
-import math
 import datetime, pytz
 from skyfield.almanac import risings_and_settings, find_discrete, dark_twilight_day, sunrise_sunset, TWILIGHTS
 from skyfield.api import wgs84, load

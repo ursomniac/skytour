@@ -20,6 +20,7 @@ from .finder import plot_dso
 from .models import AtlasPlate
 from .vocabs import MILKY_WAY_CONTOUR_COLORS
 
+# These are used to create a secondary axis on the plot.
 def r2d(a): # a is a numpy.array
     return a * (180.*2) / math.pi # Why times 2?  I have no idea, but it's the only way it works...
 def d2r(a): # a us a numpy.array
@@ -28,6 +29,10 @@ def d2r(a): # a us a numpy.array
 
 
 def get_fn(ra, dec, plate_id, shapes=False, reversed=reversed):
+    """
+    Create a filename for an AtlasPlate instances based on the properties of the plate
+    (if shapes or markers are used and whether is printable = black on white, or reversed = white on black).
+    """
     rah = int(ra)
     ram = int(60.*(ra - rah) + 0.00005)
     decs = 'N' if dec >= 0.0 else 'S'
@@ -45,6 +50,12 @@ def get_fn(ra, dec, plate_id, shapes=False, reversed=reversed):
     return f"{plate_id:03d}-{rah:02d}{ram:02d}{decs}{dd:02d}{dm:02d}{aux}.png"
 
 def get_dsos_on_plate(ra, dec, fov=20):
+    """
+    Get all of the DSOs shown on a plate based on the ra/dec of the plate center.
+    This isn't 100% perfect, some things RIGHT on the edge might not appear.
+    It's also possible that it might include DSOs that are JUST off the edge.
+    But mostly it works.
+    """
     fudge = 120
     dsos = DSO.objects.all()
     radius = chord_length(fov, degrees=True) * fudge
@@ -60,6 +71,11 @@ def get_dsos_on_plate(ra, dec, fov=20):
     return neighbor_objects
 
 def get_boundary_lines(plate_id):
+    """
+    Get all of the constellation boundaries seen on a plate.
+    This is slightly optimized: it uses the list of known constellations on the plate,
+    and only returns the lines relevant to them.   
+    """
     plate = AtlasPlate.objects.get(plate_id=plate_id)
     # get constellations on plate
     const_list = plate.constellation.all()
@@ -81,6 +97,9 @@ def get_boundary_lines(plate_id):
     return lines, p
 
 def map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=False):
+    """
+    Map the constellation boundaries.
+    """
     lines, _ = get_boundary_lines(plate_id)
     line_color = '#9907' if reversed else '#999' # constellation-boundary
     line_width = 1.5
@@ -106,6 +125,7 @@ def create_atlas_plot(
         label_weight = 'normal',
     ):
     """
+    Create an AtlasPlate image.
     TODO: Change annontation font weight to be BOLD for high/highest priority!
     """
     object = AtlasPlate.objects.get(plate_id=plate_id)
@@ -244,6 +264,7 @@ def create_atlas_plot(
 
 def create_atlas_legend():
     """
+    TODO: write this.
     This creates an image showing all the lines/symbols on the atlas.
     TODO: put all the colors together in a single dictionary!
     """

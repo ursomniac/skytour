@@ -2,6 +2,10 @@ from skyfield.api import Star
 from .models import MilkyWay
 
 def get_list_of_segments(contour=1):
+     """
+     Get the list of segments for the Milky Way at a particular contour level.
+     (There are 5; Skymap only looks at level=1, but AtlasPlate uses levels 1 and 2.)
+     """
      points = MilkyWay.objects.filter(contour=contour)
      segment_ids = set(points.values_list('segment', flat=True))
      list_of_coords = []

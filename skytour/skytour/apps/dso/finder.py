@@ -10,15 +10,13 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib import patches
 
 from skyfield.api import Star, load
-from skyfield.data import hipparcos, mpc, stellarium
 from skyfield.projections import build_stereographic_projection
 
 from ..plotting.map import *
-from ..session.cookie import deal_with_cookie
 from ..site_parameter.helpers import find_site_parameter
-from ..stars.models import BrightStar
 from .models import DSO
 
+### These are used to create a secondary axis on the plot.
 def r2d(a): # a is a numpy.array
     return a * (180.*2) / math.pi
 def d2r(a): # a us a numpy.array
@@ -32,11 +30,20 @@ def plot_dso(ax, x, y, dso,
         min_size=3., 
         max_size=60.
     ):
-
+    """
+    Put a DSO on the map with custom markers related to the object type.
+    Scale the marker to the size and orientation of the object, if it's not
+    too small (or large).
+    """
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
 
     # Get the major/minor axis sizes
+    # 1. For very large DSOs, constrain the symbol to a max size.
+    # 2. For very small DSOs, use a minimum size.
+    # 3. For medium-sized DSOs, scale it.
+    # 4. For DSOs that aren't round (e.g., galaxies), use the major/minor axis values
+    # 5. Also, rotate by the position angle where appropriate.
     aminor = dso.minor_axis_size # total width
     amajor = dso.major_axis_size # total length
     if aminor == 0:
@@ -127,6 +134,10 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
         axes=False,  # not generally used
         test=False   # not generally used
     ):
+    """
+    Create a finder chart for a DSO for a given date.
+    Overlay planets and asteroids to this chart.
+    """
     times = [(time.perf_counter(), 'Start')]
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))

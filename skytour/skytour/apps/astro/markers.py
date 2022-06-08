@@ -48,6 +48,10 @@ SPECIAL_POINTS = [
 ]
 
 def b1950toj2000(ra, dec):
+    """
+    Quick conversion from B1950 coordinates to J2000.
+    This is used for generating the galactic equator, whose definition is based on B1950 coordinates.
+    """
     xra = math.radians(ra)
     xdec = math.radians(dec)
     jra = ra + 0.640265 + 0.278369 * math.sin(xra) * math.tan(xdec)
@@ -55,6 +59,10 @@ def b1950toj2000(ra, dec):
     return jra, jdec
 
 def gal2equ(l, b, epoch=2000):
+    """
+    Convert galactic (l, b) coordinates to ra, dec (B1950 epoch).
+    If epoch == 2000, then convert the B1950 ra, dec coordinates to J2000.
+    """
     xl = math.radians(l - 123.)
     xb = math.radians(b)
     xe = math.radians(27.4)

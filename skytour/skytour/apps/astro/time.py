@@ -13,6 +13,9 @@ def get_utdt(utdt=None):
     return utdt.replace(tzinfo=pytz.utc)
 
 def get_0h(utdt):
+    """
+    Reset a datetime to be at 0h.
+    """
     return utdt.replace(hour=0, minute=0, second=0, microsecond=0)
 
 #### Astronomy methods
@@ -103,6 +106,9 @@ def estimate_delta_t(utdt):
     return dt
 
 def get_gmst0(utdt, format='hours'):
+    """
+    Given a datetime (UT), return the Greenwich Mean Sidereal Time at 0h.
+    """
     x = utdt.replace(hour=0, minute=0, second=0, microsecond=0)
     jd0 = get_julian_date(x)
     t = get_t_epoch(jd0)

@@ -1,6 +1,10 @@
 import math
 from scipy import spatial
 
+"""
+These methods sort out finding a set of objects within an angular distance from a target.
+"""
+
 def chord_length(theta, r = 1, degrees=False):
     if degrees:
         theta = math.radians(theta)
@@ -14,7 +18,7 @@ def get_neighbors(
     """
     For some reason the KDTree distances are 90 "off" for a FOV of 8°.
     I'm GUESSING it has something to do with there being a unit sphere.
-    There are other weirdnessed that I can't suss out the math:
+    There are other weirdnessess that I can't suss out the math:
         1. the ratio between arc length and chord length for theta < 180
             is 1.1107207345 = pi/sqrt(8)
         2. 2. * sin(FOV/2*r) / FOV = pi

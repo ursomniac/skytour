@@ -1,5 +1,8 @@
 
 def get_limiting_magnitude(bortle):
+    """
+    Return the expected limiting magnitude (zenith) for a Bortle value.
+    """
     if bortle is None:
         return None
     vrange = [

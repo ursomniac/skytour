@@ -8,6 +8,10 @@ from ..solar_system.moon import simple_lunar_phase
 from ..misc.models import Calendar
 
 def get_upcoming_calendar(now, range=[-2, 5]):
+    """
+    Find records in the Calendar model within a range of dates around a target date.
+    Range defaults to -2 to 5 (i.e., two days ago to 5 days from now).
+    """
     r0 = (now + datetime.timedelta(days=range[0])).date()
     r1 = (now + datetime.timedelta(days=range[1])).date()
     events = Calendar.objects.filter(date__range=[r0, r1]).order_by('date')

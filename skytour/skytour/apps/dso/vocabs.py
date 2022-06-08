@@ -27,14 +27,17 @@ INT_YES_NO = (
 )
 
 MILKY_WAY_CONTOUR_COLORS = [
-    ['#0ff', '#FF0'], # not used
-    ['#0cc', '#FC0'],
-    ['#0aa', '#f90'],
-    ['#088', '#f60'],
-    ['#388', '#D40'],
-    ['#688', '#C40']
+    ['#0ff', '#FF0'], # this level is not used
+    ['#0cc', '#FC0'], # level 1
+    ['#0aa', '#f90'], # level 2
+    ['#088', '#f60'], # level 3 - not used presently
+    ['#388', '#D40'], # level 4 - not used presently
+    ['#688', '#C40']  # level 5 - not used presently
 ]
 
+"""
+TODO: move all of the code reference to plot color choices to point to this dict.
+"""
 ATLAS_COLORS = {
     'milky-way-contours': [    
         ('#0ff', '#FF0'), # not used
