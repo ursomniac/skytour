@@ -24,6 +24,7 @@ class SkyView(CookieMixin, TemplateView):
         context = super(SkyView, self).get_context_data(**kwargs)
         reversed = context['color_scheme'] == 'dark'
         milky_way = context['show_milky_way'] == 'Yes'
+        slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
         utdt_start = context['utdt_start']
         location = context['location']
         # get cookies
@@ -43,6 +44,7 @@ class SkyView(CookieMixin, TemplateView):
             moon = moon,
             sun = sun,
             milky_way=milky_way,
+            slew_limit = slew_limit,
             reversed=reversed
         )
 

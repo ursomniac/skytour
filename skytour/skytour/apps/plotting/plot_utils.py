@@ -1,11 +1,14 @@
 ### These just abstract things for scatter plots.
 
-def fix_axis(a, pad):
-	da = max(a) - min(a)
+def fix_axis(a, pad, ymin = None, ymax = None):
+	amin = min(a) if ymin is None or min(a) < ymin else ymin
+	amax = max(a) if ymax is None or max(a) > ymax else ymax
+
+	da = amax - amin
 	apad = abs(pad)
 	rev = pad < 0.
-	a_high = max(a) + da * apad
-	a_low = min(a) - da * apad
+	a_high = amax + da * apad
+	a_low = amin - da * apad
 	if rev:
 		return (a_high, a_low)
 	return (a_low, a_high)

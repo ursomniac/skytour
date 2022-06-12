@@ -91,6 +91,7 @@ def plot_sqm_history(loc):
     sessions = loc.observingsession_set.all()
     if sessions.count() < 1:
         return None
+    sqm = loc.sqm if loc.sqm is not None else None
     lines = [loc.sqm] if loc.sqm is not None else []
     x = []
     y = []
@@ -118,8 +119,9 @@ def plot_sqm_history(loc):
             grid=True, 
             error=e, 
             lines=lines, 
-            xpad=0., 
+            xpad=0.1, 
             ypad=-0.02,
+            ylim = sqm,
             title=f"SQM Measures: {loc}",
             xtitle='Date',
             ytitle='SQM (mag/arcsec^2)'

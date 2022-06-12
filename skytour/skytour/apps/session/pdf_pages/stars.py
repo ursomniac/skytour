@@ -11,6 +11,8 @@ def do_skymap(p, context):
     p.setFont('Helvetica-Bold', 24)
     p.drawCentredString(PAGE_WIDTH/2, 700, 'SKYMAP')
     p.setFont('Helvetica', 12)
+    slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
+    
     skymap, interesting, last, times = get_skymap(
         context['utdt_start'], location,
         planets = cookie_dict['planets'],
@@ -19,6 +21,7 @@ def do_skymap(p, context):
         moon = cookie_dict['moon'],
         sun = cookie_dict['sun'],
         reversed=False,
+        slew_limit = slew_limit,
         local_time = context['local_time']
     ) 
     p.drawInlineImage(skymap, 28, 150, 7.5*72, 7.5*72)

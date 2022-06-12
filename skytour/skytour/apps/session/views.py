@@ -142,6 +142,7 @@ class SetSessionCookieView(FormView):
             time_zone = local_time_zone,
             julian_date = get_julian_date(utdt_start),
             dec_limit = d['dec_limit'],
+            slew_limit = d['slew_limit'],
             mag_limit = d['mag_limit'],
             hour_angle_range = d['hour_angle_range'],
             session_length = d['session_length'],

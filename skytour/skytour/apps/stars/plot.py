@@ -24,6 +24,8 @@ def get_skymap(
         sun = None,
         reversed=True,
         milky_way=False,
+        sky_limit = 70.,
+        slew_limit=None,
         local_time = None
     ):
     """
@@ -136,6 +138,10 @@ def get_skymap(
     ax.add_patch(horizon)
     sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
     ax.add_patch(sky_limit)
+    # Slew limit
+    if slew_limit:
+        slew_limit_circle = plt.Circle((0,0), (90.-slew_limit)/90., color='#660', fill=False, ls='--')
+        ax.add_patch(slew_limit_circle)
     
     # Set the display
     fov = 180.

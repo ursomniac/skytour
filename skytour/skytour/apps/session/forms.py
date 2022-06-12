@@ -37,6 +37,10 @@ class ObservingParametersForm(forms.Form):
         initial = find_site_parameter('declination-limit', default=-20.0, param_type='float'),
         label = 'Dec. Limit (to S)'
     )
+    slew_limit = forms.FloatField(
+        initial = find_site_parameter('slew-limit', default=70.0, param_type='float'),
+        label = 'Alt. Slew Limit',
+    )
     mag_limit = forms.FloatField(
         initial = find_site_parameter('dso-mag-limit', default=11.5, param_type='float'),
         label = 'DSO Mag. Limit',

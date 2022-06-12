@@ -19,7 +19,8 @@ def create_plot(
         grid = False,
         error = None, 
         xpad = 0., 
-        ypad= 0.02, 
+        ypad = 0.02, 
+        ylim = None,
         subplot = (1,1,1)
 	):
     """
@@ -38,8 +39,7 @@ def create_plot(
         panel.grid()
 
     panel.set_xlim(fix_axis(x, xpad))
-    panel.set_ylim(fix_axis(y, ypad))
-
+    panel.set_ylim(fix_axis(y, ypad, ymax=ylim))
     if not type or type == 'scatter':
         panel = do_scatter_plot(panel, x, y, markers, colors, sizes)
         if error:
