@@ -5,7 +5,8 @@ from .views import (
     DSOFilterView, 
     DSOCreateList,
     DSOListListView,
-    DSOListDetailView
+    DSOListDetailView,
+    DSOObservationLogView,
 )
 urlpatterns = (
     path('', DSOListView.as_view(), name='dso-list'),
@@ -13,5 +14,6 @@ urlpatterns = (
     path('filter', DSOFilterView.as_view(), name='dso-filter'),
     path('list/<int:pk>', DSOListDetailView.as_view(), name='dsolist-detail'),
     path('list', DSOListListView.as_view(), name='dsolist-list'),
+    path('observe', DSOObservationLogView.as_view(), name='dso-observed'),
     path('<int:pk>', DSODetailView.as_view(), name='dso-detail'),
 )

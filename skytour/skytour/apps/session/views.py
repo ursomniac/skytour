@@ -2,6 +2,7 @@ import datetime, pytz
 import io
 import time
 from django.core.exceptions import ValidationError
+from django.db.models import Count
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -17,7 +18,7 @@ from reportlab.pdfgen import canvas
 from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date
 from ..dso.helpers import lookup_dso
-from ..dso.models import DSOObservation
+from ..dso.models import DSOObservation, DSO
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
@@ -355,3 +356,12 @@ class ObservingConditionsFormView(CreateView):
         session_id = d['session'].pk
         self.session_id = session_id
         return super().form_valid(form)
+
+class ObservingLogView(TemplateView):
+    template_name = 'observed_objects_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingLogView, self).get_context_data(**kwargs)
+        for run in [(DSO, 'dso_list'), (Planet, 'planet_list'), (Asteroid, 'asteroid_list'), (Comet, 'comet_list')]:
+            context[run[1]] = run[0].objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
+        return context

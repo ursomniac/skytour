@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<style>
+.plan td {
+    vertical-align: top;
+    padding: 1em;
+}
+.td-center td {
+  vertical-align: middle;
+}
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+table.subnav { 
+	width: 80%; 
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #603; 
+}
+table.subnav td {
+	text-align: center; 
+	vertical-align: middle !important; 
+	padding: 5px !important;
+	border: 1px solid white !important; 
+}
+table.subnav td a {
+	color: #fff; 
+	font-weight: 800; 
+	text-decoration: none;
+}
+
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+summary {
+  display: flex;
+  cursor: pointer;
+  background-color: #666;
+  color: #fff;
+  padding: 4px 10px;
+  margin: 0px 10px 20px 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+</style>
+<h1>Observed Objects</h1>
+
+<h2>Planets</h2>
+{% with obj_type='planet' table_id='planet_table' object_list=planet_list %}
+{% include 'includes/sso_table.html' %}
+{% endwith %}
+
+<h2>Deep Sky Objects</h2>
+{% include 'includes/paginate.html' %}
+{% include 'includes/dso_table.html' %}
+{% include 'includes/paginate.html' %}
+
+<h2>Asteroids</h2>
+{% with obj_type='asteroid' table_id='asteroid_table' object_list=asteroid_list %}
+{% include 'includes/sso_table.html' %}
+{% endwith %}
+
+<h2>Comets</h2>
+{% with obj_type='comet' table_id='comet_table' object_list=comet_list %}
+{% include 'includes/sso_table.html' %}
+{% endwith %}
+
+{% endblock %}

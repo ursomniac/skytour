@@ -14,6 +14,8 @@
             <a href="{% url 'dsolist-list' %}">Lists</a>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'dso-filter' %}">Filter</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'dso-observed' %}">Obs.</a>
         </td>
         <td colspan=3>Sessions: &nbsp;&nbsp;
             <a href="{% url 'session-list' %}">List</a>
@@ -36,7 +38,7 @@
         <td class="click"><a href="{% url 'atlas-list' %}">Atlas</a></td>
         <td class="click"><a href="{% url 'catalog-list' %}">Catalogs</a></td>
         <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
-        <td class="click"><a href="{% url 'show-cookies' %}">Session Cookies</a></td>
+        <td class="click"><a href="{% url 'observed-objects' %}">Observation List</a></td>
     </tr>
     <tr>
         <td colspan="2">
@@ -58,7 +60,12 @@
         </td>
 
         <td class="click"><a href="/admin" target="_new">Admin</a></td>
-        <td><a href="{% url 'session-set' %}"><button>Reset Session</button></a></td>
+        <td>
+            Session: 
+            <a href="{% url 'session-set' %}"><button>Reset Session</button></a> 
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            <a href="{% url 'show-cookies' %}">Cookies</a>
+        </td>
     </tr>
 </table>
 

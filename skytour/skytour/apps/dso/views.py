@@ -1,5 +1,5 @@
 from collections import Counter
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -12,7 +12,7 @@ from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
-from .models import DSO, DSOList, AtlasPlate
+from .models import DSO, DSOList, AtlasPlate, DSOObservation
 from .utils import select_atlas_plate
 from .vocabs import PRIORITY_CHOICES
 
@@ -236,4 +236,13 @@ class AtlasPlateDetailView(CookieMixin, DetailView):
         context['selected_atlas_plate'] = select_atlas_plate(obj.plate_images, context)
         neighbors = find_neighbors(obj.center_ra, obj.center_dec)
         context['assembled_neighbors'] = assemble_neighbors(neighbors)
+        return context
+
+class DSOObservationLogView(CookieMixin, ListView):
+    model = DSO
+    template_name = 'dsoobservation_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOObservationLogView, self).get_context_data(**kwargs)
+        context['dso_list'] = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
         return context

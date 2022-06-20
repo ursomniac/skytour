@@ -1,0 +1,38 @@
+{% if object_list|length == 0 %}
+<p>No observations</p>
+{% else %}
+<table width="100%" id="{{ table_id }}">
+    <thead>
+        <tr class="table-header">
+            <th>Name</th>
+            <th># Obs.</th>
+            <th>Last Obs.</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for obj in object_list %}
+        <tr>
+            <td>
+                {% if obj_type == 'comet' %}
+                <a href="{% url 'comet-detail' obj.id %}" target="_new">
+                {% elif obj_type == 'planet' %}
+                <a href="{% url 'planet-detail' obj.slug %}" target="_new">
+                {% elif obj_type == 'asteroid' %}
+                <a href="{% url 'asteroid-detail' obj.slug %}" target="_new">
+                {% endif %}
+                    {% if url_type != 'asteroid-detail' %}
+                    {{ obj.name }}
+                    {% else %}
+                    {{ obj.full_name }}
+                    {% endif %}
+                </a>
+            </td>
+            <td>{{ obj.number_of_observations }}</td>
+            <td>{% if obj.last_observed %}{{ obj.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
+    {% include 'includes/sortable_table.html' %}
+    <br/>
