@@ -114,4 +114,9 @@ def get_map_parameters(dso_list, debug=False):
     return ra, dec, max_dist, fov
 
 
-        
+def get_star_mag_limit(radius):
+    if radius < 15:
+        return 7
+    elif radius < 30:
+        return 6
+    return 5

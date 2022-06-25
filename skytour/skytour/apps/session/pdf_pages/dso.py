@@ -1,6 +1,7 @@
 from ...astro.local import is_object_up
 from ...dso.models import DSO, DSOList
 from ...dso.finder import plot_dso_list
+from ...dso.helpers import get_map_parameters, get_star_mag_limit
 from ...pdf.utils import bold_text, label_and_text, place_text, add_image
 from ...pdf.utils import X0, Y0
 from ...utils.format import to_hm, to_dm
@@ -79,36 +80,25 @@ def do_dso_lists(p, context, dso_lists=None):
         p, y = bold_text(p, X0, y, f'DSO List {dl.name}', size=18)
 
         # Set up map
-        min_ra, max_ra = dl.ra_range
-        min_dec, max_dec = dl.dec_range
-        center_ra = (min_ra + max_ra) / 2.
-        if center_ra < min_ra or center_ra > max_ra:
-            center_ra += 12.
-            center_ra %= 24.
-        center_dec = (min_dec + max_dec) / 2.
-        ra_deg = 15. * (max_ra - min_ra)
-        if ra_deg < 0:
-            ra_deg = 360-ra_deg
-        dec_deg = max_dec - min_dec
-        fov = dec_deg if dec_deg > ra_deg else ra_deg
-        fov *= 1.25
-        mag_limit = 6.0 if fov > 20 else 7.0
+        dso_set = dl.dso.all()
+        center_ra, center_dec, max_dist, fov = get_map_parameters(dl.dso.all())
+        star_mag_limit = get_star_mag_limit(max_dist)
 
         y = 700
         x = 350
         p, y = label_and_text(p, x, y, ('Center RA: ', 10), (to_hm(center_ra), 10))
         p, y = label_and_text(p, x, y, ('Center Dec: ', 10), (to_dm(center_dec), 10))
         p, y = label_and_text(p, x, y, ('FOV: ', 10), (f"{fov:.0f}°", 10))
-        p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{mag_limit:.2f}", 10))
+        p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{star_mag_limit:.1f}", 10))
 
-        dso_set = dl.dso.all()
+
         map = plot_dso_list(
             center_ra, 
             center_dec, 
             dso_set, 
             reversed = False,
             fov = fov,
-            star_mag_limit = mag_limit,
+            star_mag_limit = star_mag_limit,
             label_size='small',
             symbol_size=60,
             title = f"DSO List: {dl.name}"

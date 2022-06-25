@@ -12,7 +12,7 @@ from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
-from .helpers import get_map_parameters
+from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOObservation
 from .utils import select_atlas_plate
 from .vocabs import PRIORITY_CHOICES
@@ -79,15 +79,12 @@ class DSOListDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
+        
         # Make a map
         dso_list = self.object.dso.all()
         center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list)
-        if max_dist > 30:
-            star_mag_limit = 5
-        elif max_dist > 15.:
-            star_mag_limit = 6
-        else:
-            star_mag_limit = 7
+        star_mag_limit = get_star_mag_limit(max_dist)
+
         map = plot_dso_list(
             center_ra, 
             center_dec,
