@@ -39,6 +39,17 @@ class Catalog(AbstractCatalog):
         """
         return self.dso_set.count() + self.dsoalias_set.count()
 
+    @property
+    def dso_list(self):
+        dso1 = self.dso_set.order_by('id_in_catalog')
+        dso2 = self.dsoalias_set.annotate(iic=models.functions.Cast('order_in_catalog'), output_field=models.IntegerField()).order_by('iic')
+        dsos = []
+        for dso in dso1:
+            dsos.append(dso)
+        for dso in dso2:
+            dsos.append(dso.object)
+        return dsos
+        
     class Meta:
         ordering = ['abbreviation']
 

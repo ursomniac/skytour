@@ -12,6 +12,7 @@ from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
+from .helpers import get_map_parameters
 from .models import DSO, DSOList, AtlasPlate, DSOObservation
 from .utils import select_atlas_plate
 from .vocabs import PRIORITY_CHOICES
@@ -82,33 +83,23 @@ class DSOListDetailView(CookieMixin, DetailView):
     model = DSOList
     template_name = 'dsolist_detail.html'
 
-    def _map_params(self):
-        min_ra, max_ra = self.object.ra_range
-        min_dec, max_dec = self.object.dec_range
-        center_ra = 0.5*(min_ra + max_ra)
-        if center_ra < min_ra or center_ra > max_ra:
-            center_ra += 12.
-            center_ra %= 24.
-        center_dec = 0.5*(min_dec + max_dec)
-        ra_deg = 15. * (max_ra - min_ra)
-        if ra_deg < 0:
-            ra_deg = 360-ra_deg
-        dec_deg = max_dec - min_dec
-        fov = dec_deg if dec_deg > ra_deg else ra_deg
-        fov *= 1.25
-        return center_ra, center_dec, fov
-
     def get_context_data(self, **kwargs):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
         # Make a map
-        center_ra, center_dec, fov = self._map_params()
         dso_list = self.object.dso.all()
+        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, debug=True)
+        if max_dist > 30:
+            star_mag_limit = 5
+        elif max_dist > 15.:
+            star_mag_limit = 6
+        else:
+            star_mag_limit = 7
         map = plot_dso_list(
             center_ra, 
             center_dec,
             dso_list,
             fov=fov,
-            star_mag_limit = 7,
+            star_mag_limit = star_mag_limit,
             reversed = False,
             label_size='small',
             symbol_size=60,

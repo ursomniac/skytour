@@ -28,7 +28,7 @@
 
 
 {% include 'includes/paginate.html' %}
-<table class="catalog_list">
+<table class="catalog_list" id='catalog_dso_list'>
     <tr>
         <th>Object</th>
         <th>Other Catalog</th>
@@ -74,6 +74,6 @@
     {% endwith %}
     {% endfor %}
 </table>
-{% include 'includes/paginate.html' %}
 {% include 'includes/sortable_table.html' %}
+{% include 'includes/paginate.html' %}
 {% endblock content %}
