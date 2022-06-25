@@ -81,7 +81,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
         # Make a map
         dso_list = self.object.dso.all()
-        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, debug=True)
+        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list)
         if max_dist > 30:
             star_mag_limit = 5
         elif max_dist > 15.:
