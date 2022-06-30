@@ -57,12 +57,14 @@
                         <h5>Start</h5>
                         Az: {{ object.session.start.azimuth|to_dms }}<br/>
                         Alt: {{ object.session.start.altitude|to_dms }}<br/>
+                        Air: {{ object.session.start.airmass|floatformat:2 }}<br/>
                         Up: {{ object.session.start.is_up }}
                     </td>
                     <td>
                         <h5>End</h5>
                         Az: {{ object.session.end.azimuth|to_dms }}<br/>
                         Alt: {{ object.session.end.altitude|to_dms }}<br/>
+                        Air: {{ object.session.end.airmass|floatformat:2 }}<br/>
                         Up: {{ object.session.end.is_up }}
                     </td>
                 </tr>

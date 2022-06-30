@@ -318,6 +318,10 @@ class Comet(ObservableObject):
         choices = STATUS_CHOICES,
         default = 1
     )
+    mag_offset = models.FloatField (
+        _('Mag Offset'),
+        default = 0.
+    )
         
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)

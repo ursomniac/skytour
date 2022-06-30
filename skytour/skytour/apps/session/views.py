@@ -336,7 +336,7 @@ class SessionAddView(CookieMixin, FormView):
         obs.notes = d['notes']
         obs.save()
 
-        context['message'] = f'{obs.ut_time}: Observation of {obs.target_name} logged.'
+        context['message'] = f"{d['ut_time']}: Observation of {obs.target_name} logged."
         return self.render_to_response(context)
 
 class ObservingConditionsFormView(CreateView):

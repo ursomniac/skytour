@@ -4,7 +4,6 @@ from .vocabs import PAGE_WIDTH
 
 def do_skymap(p, context):
     cookie_dict = context['cookies']
-    location = context['location']
 
     ######################################### PAGE 2
     # Skymap 
@@ -14,13 +13,15 @@ def do_skymap(p, context):
     slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
     
     skymap, interesting, last, times = get_skymap(
-        context['utdt_start'], location,
+        context['utdt_start'], 
+        context['location'],
         planets = cookie_dict['planets'],
         asteroid_list = cookie_dict['asteroids'],
         comet_list = cookie_dict['comets'],
         moon = cookie_dict['moon'],
         sun = cookie_dict['sun'],
-        reversed=False,
+        reversed = False,
+        milky_way = context['show_milky_way'] == 'Yes',
         slew_limit = slew_limit,
         local_time = context['local_time']
     ) 
@@ -60,7 +61,6 @@ def do_skymap(p, context):
     return p
 
 def do_zenith(p, context):
-    location = context['location']
     ######################################### PAGE 3
     # Zenith Finding Chart for limiting magnitude
     y = 720
@@ -72,7 +72,7 @@ def do_zenith(p, context):
     p.drawString(50, 670, f"{local_mid.strftime('%b %-d, %Y %-I:%M %p %z')}")
     zenith_chart, _ = get_zenith_map(
         utdt_mid,
-        location, 
+        context['location'], 
         6.5, # mag limit
         30., # radius from zenith
         reversed=False,

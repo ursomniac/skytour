@@ -61,8 +61,7 @@ def get_metadata(observation):
         angular_diameter = target.major_axis_size * 60. # arcsec
         apparent_magnitude = target.magnitude
 
-    azimuth, altitude = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
-    sec_z = 1./math.cos(math.radians(90-altitude))
+    azimuth, altitude, airmass = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
     hour_angle = rectify_ha(last - ra)
     julian_date = get_julian_date(utdt)
 
@@ -76,7 +75,7 @@ def get_metadata(observation):
         apparent_magnitude = apparent_magnitude,
         altitude = altitude,
         azimuth = azimuth,
-        sec_z = sec_z,
+        sec_z = airmass,
         hour_angle = hour_angle,
         julian_date = julian_date,
         sidereal_time = last

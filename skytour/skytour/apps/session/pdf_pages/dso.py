@@ -91,7 +91,6 @@ def do_dso_lists(p, context, dso_lists=None):
         p, y = label_and_text(p, x, y, ('FOV: ', 10), (f"{fov:.0f}°", 10))
         p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{star_mag_limit:.1f}", 10))
 
-
         map = plot_dso_list(
             center_ra, 
             center_dec, 

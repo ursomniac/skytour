@@ -7,6 +7,7 @@
             <th>City</th>
             <th>Latitude</th>
             <th>Longitude</th>
+            <th>Elev.</th>
             <th>Bortle</th>
             <th>Bright</th>
             <th>SQM</th>
@@ -26,6 +27,7 @@
             <td>{{ obj.city }}, {{ obj.state }}</td>
             <td class="number-column">{{ obj.latitude|floatformat:5 }}</td>
             <td class="number-column">{{ obj.longitude|floatformat:5 }}</td>
+            <td>{{ obj.elevation|floatformat:0 }} m</td>
             <td style="text-align: center">{{ obj.bortle }}</td>
             <td class="number-column">{{ obj.brightness|floatformat:3 }}</td>
             <td class="number-column">{{ obj.sqm|floatformat:2 }}</td>

@@ -154,7 +154,10 @@ def get_object_metadata(
     elif object_type == 'comet':
         mg = row['magnitude_g']
         mk = row['magnitude_k']
+        #print (f"MG: {mg} MK: {mk} EPH: {eph_label}")
         mag = mg + 5. * math.log10(r_earth_target) + mk * math.log10(r_sun_target)
+        if instance is not None:
+            mag += instance.mag_offset
     else:
         mag = None
     apparent_magnitude = mag

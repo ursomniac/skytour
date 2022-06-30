@@ -9,9 +9,11 @@
 <h4>Start</h4>
     Az: {{ obj.session.start.azimuth|to_dms }}<br/>
     Alt: {{ obj.session.start.altitude|to_dms }}<br/>
+    Air: {{ obj.session.start.airmass|floatformat:2 }}<br/>
     Up: {{ obj.session.start.is_up }}
 <h4>End</h4>
     Az: {{ obj.session.end.azimuth|to_dms }}<br/>
     Alt: {{ obj.session.end.altitude|to_dms }}<br/>
+    Air: {{ obj.session.end.airmass|floatformat:2 }}<br/>
     Up: {{ obj.session.end.is_up }}
 <br/>

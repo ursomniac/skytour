@@ -128,6 +128,9 @@ class AsteroidListView(CookieMixin, ListView):
     template_name = 'asteroid_list.html'
 
     def get_context_data(self, **kwargs):
+        """
+        TODO: Table should include rise/set based off of the cookie.
+        """
         context = super(AsteroidListView, self).get_context_data(**kwargs)
         asteroids = Asteroid.objects.order_by('number')
         asteroid_cookie = context['cookies']['asteroids']
@@ -184,6 +187,9 @@ class CometListView(CookieMixin, ListView):
     template_name = 'comet_list.html'
 
     def get_context_data(self, **kwargs):
+        """
+        TODO: List should include rise/set info from the cookie.
+        """
         context = super(CometListView, self).get_context_data(**kwargs)
         comet_cookie = context['cookies']['comets']
         comets = Comet.objects.filter(status=1)

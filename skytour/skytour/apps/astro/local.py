@@ -11,9 +11,9 @@ def is_object_up(utdt, location, ra, dec, min_alt=0.):
 
     You can customize with a minimum altitude (default = 0.0°)
     """
-    az, alt = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
+    az, alt, airmass = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
     up = alt > min_alt
-    return az, alt, up
+    return az, alt, up, airmass
 
 def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
     """
@@ -27,8 +27,9 @@ def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
     d = {}
     for k, v in [('start', utdt_start), ('end', utdt_end)]:
         d[k] = {}
-        az, alt, is_up = is_object_up(v, location, ra, dec, min_alt=0.)
+        az, alt, is_up, airmass = is_object_up(v, location, ra, dec, min_alt=0.)
         d[k]['azimuth'] = az
         d[k]['altitude'] = alt
         d[k]['is_up'] = is_up
+        d[k]['airmass'] = airmass
     return d

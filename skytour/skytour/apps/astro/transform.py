@@ -18,17 +18,24 @@ def get_alt_az(utdt, latitude, longitude, ra, dec, from_south=False, debug=False
     alt2 = math.cos(xlat) * math.cos(xdec) * math.cos(xha)
     altitude = math.degrees(math.asin(alt1 + alt2))
 
+    if not from_south: # measure from north - default
+        azimuth += 180.
+        azimuth %= 360.
+
+    if altitude > 0.:
+        z = (90. - altitude)
+        airmass = 1. / math.cos(math.radians(z))
+    else:
+        airmass = None
+        
     if debug:
         print("XHA: ", math.degrees(xha))
         print("XDEC: ", to_sex(math.degrees(xdec), format="degrees"))
         print ("AZ: ", azimuth)
         print("ALT: ", altitude)
+        print("AIRMASS: ", airmass)
 
-    if not from_south: # measure from north - default
-        azimuth += 180.
-        azimuth %= 360.
-        
-    return azimuth, altitude
+    return azimuth, altitude, airmass
 
 def get_cartesian(longitude_or_ra, latitude_or_dec, ra_dec=True, radius=180.):
     """

@@ -179,7 +179,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         This is still used when creating an observing plan.
         Tests if a DSO is observable within a UTDT window.
         """
-        az, alt = self.alt_az(location, utdt)
+        az, alt, airmass = self.alt_az(location, utdt)
         if alt > min_alt:
             return True
         return False

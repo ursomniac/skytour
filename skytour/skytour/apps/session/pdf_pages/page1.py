@@ -35,11 +35,11 @@ def do_page1(p, context):
     # Latitude:
     tw = stringWidth('Longitude', 'Helvetica-Bold', 12)
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(300, 650, 'Latitude: ')
-    p.drawString(300, 625, 'Longitude: ')
+    p.drawString(400, 650, 'Latitude: ')
+    p.drawString(400, 625, 'Longitude: ')
     p.setFont('Helvetica', 12)
-    p.drawString(300 + tw + 5, 650, to_sex(location.latitude, format="degrees"))
-    p.drawString(300 + tw + 5, 625, to_sex(location.longitude, format="degrees"))
+    p.drawString(400 + tw + 5, 650, to_sex(location.latitude, format="degrees"))
+    p.drawString(400 + tw + 5, 625, to_sex(location.longitude, format="degrees"))
 
     # FORM for initial conditions: Temp, Hum, SQM, Wind, Seeing, Setup stars?
     y = 575
