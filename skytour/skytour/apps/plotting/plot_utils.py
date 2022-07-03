@@ -13,12 +13,13 @@ def fix_axis(a, pad, ymin = None, ymax = None):
 		return (a_high, a_low)
 	return (a_low, a_high)
 
-def do_scatter_plot(panel, x, y, markers, colors, sizes):
+def do_scatter_plot(panel, x, y, markers, colors, sizes, reversed=False):
 	# Put each point on the plot with the appropriate color and marker
 
 	n = len(x)
+	marker_color = '#999' if reversed else '#000'
 	markers = n * ['o'] if not markers else markers
-	colors = n * ['#000'] if not colors else colors
+	colors = n * [marker_color] if not colors else colors
 	sizes = n * [30] if not sizes else sizes
 	
 	for _x, _y, _c, _m, _s in zip(x, y, colors, markers, sizes):

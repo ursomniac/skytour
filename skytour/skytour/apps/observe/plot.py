@@ -111,6 +111,7 @@ def plot_sqm_history(loc):
         x.append(sx)
         y.append(avg)
         e.append(rms)
+        #print(f"X: {sx}  Y: {avg}  E: {rms}")
 
     if len(x) > 0 and len(y) > 0:
         image = create_plot(
@@ -120,7 +121,7 @@ def plot_sqm_history(loc):
             error=e, 
             lines=lines, 
             xpad=0.1, 
-            ypad=-0.02,
+            ypad=-0.1,
             ylim = sqm,
             title=f"SQM Measures: {loc}",
             xtitle='Date',

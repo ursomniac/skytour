@@ -366,6 +366,7 @@ class DSOList(models.Model):
     class Meta:
         verbose_name = 'DSO List'
         verbose_name_plural = 'DSO Lists'
+        ordering = ['-pk']
 
 class AtlasPlate(models.Model):
     """

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Conditions: Skytour{% endblock %}
+{% block content %}
+
+<h1>Observing Conditions</h1>
+
+<table>
+    <tr>
+        <th>Session</th>
+        <th>Location</th>
+        <th>Time</th>
+        <th>SQM</th>
+        <th>Temp.</th>
+        <th>Hum.</th>
+        <th>Wind</th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.session.ut_date }}</td>
+        <td>{{ obj.session.location.short_name }}</td>
+        <td>{{ obj.ut_datetime.time }}</td>
+        <td>{{ obj.sqm|floatformat:2 }}</td>
+        <td>{{ obj.temperature|floatformat:0 }}°F</td>
+        <td>{% if obj.humidity %}{{ obj.humidity }}%{% endif %}</td>
+        <td>{% if obj.wind %}{{ obj.wind }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

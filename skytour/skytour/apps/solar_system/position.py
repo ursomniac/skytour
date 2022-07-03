@@ -115,7 +115,7 @@ def get_object_metadata(
     elif object_type == 'moon':
         phase_angle = equ_lunar_phase_angle(apparent, sun_apparent, r_earth_sun, r_earth_target)
     else:
-        phase_angle = meeus_phase_angle = get_meeus_phase_angle(r_earth_sun, r_earth_target, r_sun_target) \
+        phase_angle = get_meeus_phase_angle(r_earth_sun, r_earth_target, r_sun_target)
 
     plotting_phase_angle = None
     if object_type == 'planet' and instance is not None:

@@ -1,5 +1,7 @@
 import datetime, pytz
 import io
+import numpy as np
+import pandas as pd
 import time
 from django.core.exceptions import ValidationError
 from django.db.models import Count
@@ -364,4 +366,22 @@ class ObservingLogView(TemplateView):
         context = super(ObservingLogView, self).get_context_data(**kwargs)
         for run in [(DSO, 'dso_list'), (Planet, 'planet_list'), (Asteroid, 'asteroid_list'), (Comet, 'comet_list')]:
             context[run[1]] = run[0].objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
+        context['table_dso_observed'] = 'dsos_observed'
+        return context
+
+class ObservingCircumstancesView(ListView):
+    model = ObservingCircumstances
+    template_name = 'observing_conditions_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingCircumstancesView, self).get_context_data(**kwargs)
+        qs = self.get_queryset()
+        df = pd.DataFrame(qs.values('ut_datetime', 'sqm', 'temperature', 'humidity', 'session__location__sqm'))
+        df = df.rename(columns={'session__location__sqm': 'lsqm'})
+        df['date'] = pd.DatetimeIndex(df['ut_datetime']).date
+        df['time'] = pd.DatetimeIndex(df['ut_datetime']).time
+        df['dsqm'] = pd['lsqm'] - pd['sqm']
+        # Histogram of SQM - ignore NaN values
+        sqm_bins = np.linspace(20.0, 22.0, num=21)
+        sqm_y, sqm_x = np.histogram(df['sqm'][~np.isnan(df['sqm'])], bins=sqm_bins)
         return context

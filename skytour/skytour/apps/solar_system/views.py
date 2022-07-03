@@ -296,7 +296,7 @@ class TrackerView(FormView):
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
 
-        context['track_image'], starting_position = plot_track(
+        context['track_image'], starting_position, track_positions = plot_track(
             utdt,
             object_type=object_type,
             object=object, 
@@ -307,10 +307,12 @@ class TrackerView(FormView):
             mag_limit = mag_limit,
             fov=fov,
             reversed=reversed,
+            return_data = True,
             dsos=False
         )
         context['form'] = form
-
+        context['track_positions'] = track_positions
+        
         if starting_position:
             xra, xdec, xdist = starting_position.radec()
             context['observe'] = dict(

@@ -97,6 +97,7 @@ class DSOListDetailView(CookieMixin, DetailView):
             title = f"DSO List: {self.object.name}"
         )
         context['map'] = map
+        context['table_id'] = 'dsos-on-list'
         return context
 
 
@@ -215,6 +216,7 @@ class AtlasPlateDetailView(CookieMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AtlasPlateDetailView, self).get_context_data(**kwargs)
         obj = self.get_object()
+        context['table_id'] = f"atlas_dso_{obj.plate_id}"
         context['selected_atlas_plate'] = select_atlas_plate(obj.plate_images, context)
         neighbors = find_neighbors(obj.center_ra, obj.center_dec)
         context['assembled_neighbors'] = assemble_neighbors(neighbors)
@@ -227,4 +229,5 @@ class DSOObservationLogView(CookieMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(DSOObservationLogView, self).get_context_data(**kwargs)
         context['dso_list'] = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
+        context['dso_table'] = 'dsos-observed'
         return context

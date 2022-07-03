@@ -21,7 +21,8 @@ def create_plot(
         xpad = 0., 
         ypad = 0.02, 
         ylim = None,
-        subplot = (1,1,1)
+        subplot = (1,1,1),
+        reversed = False
 	):
     """
     Given data, make a scatter plot.
@@ -41,13 +42,14 @@ def create_plot(
     panel.set_xlim(fix_axis(x, xpad))
     panel.set_ylim(fix_axis(y, ypad, ymax=ylim))
     if not type or type == 'scatter':
-        panel = do_scatter_plot(panel, x, y, markers, colors, sizes)
+        panel = do_scatter_plot(panel, x, y, markers, colors, sizes, reversed=reversed)
         if error:
             panel.errorbar(x, y, yerr=error, linestyle='None')
 
     if lines and len(lines) > 0:
         for line in lines:
             panel.axhline(line, ls = '--', color='#333')
+
     # Convert to a PNG image
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
@@ -59,3 +61,6 @@ def create_plot(
     plt.close(fig)
     
     return pngImageB64String
+
+def create_histogram(x, y):
+    pass

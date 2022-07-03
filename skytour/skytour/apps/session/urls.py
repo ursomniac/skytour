@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     ObservingPlanView,
     SetSessionCookieView,
+    ObservingCircumstancesView,
     ObservingConditionsFormView,
     ObservingSessionListView, 
     ObservingSessionCreateView,
@@ -20,5 +21,6 @@ urlpatterns = (
     path('create', ObservingSessionCreateView.as_view(), name='session-create'),
     path('add_object', SessionAddView.as_view(), name='session-add'),
     path('add_conditions', ObservingConditionsFormView.as_view(), name='session-conditions'),
-    path('observed', ObservingLogView.as_view(), name='observed-objects')
+    path('observed', ObservingLogView.as_view(), name='observed-objects'),
+    path('circumstances', ObservingCircumstancesView.as_view(), name='observing-circumstnaces')
 )

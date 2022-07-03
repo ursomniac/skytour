@@ -13,6 +13,7 @@ from ..astro.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
 from .asteroids import get_asteroid_target
 from .comets import get_comet_target
+from .utils import get_constellation
 from .vocabs import ZODIAC
 
 
@@ -338,6 +339,7 @@ def plot_track(
         dsos=True, 
         fov=None,
         reversed=True,
+        return_data = True,
         debug=False
     ):
     """
@@ -364,6 +366,7 @@ def plot_track(
     fig, ax = plt.subplots(figsize=[8,8])
     projection = build_stereographic_projection(first_projection)
     # Build the observation points
+    data = []
     d_planet = dict(x = [], y = [], label = [])
     i = 0
     min_x = 0
@@ -376,6 +379,16 @@ def plot_track(
         tt = ts.from_datetime(this_utdt)
         z = earth.at(tt).observe(target)
         ra, dec, distance = z.radec()
+
+        if return_data:
+            data.append(dict(
+                utdt = this_utdt,
+                ra = ra.hours.item(),
+                dec = dec.degrees.item(),
+                distance = distance.au.item(),
+                constellation = get_constellation(ra.hours.item(), dec.degrees.item())
+            ))
+
         if first:
             starting_position = z
             first = False
@@ -459,7 +472,7 @@ def plot_track(
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String, starting_position
+    return pngImageB64String, starting_position, data
 
 def get_planet_map(planet, physical):
     try:

@@ -1,3 +1,4 @@
+{% load skytour_filters %}
 <table width="100%" class="navbar">
     <tr>
         <td class="click"><a href="{% url 'home' %}">Home - Now</a></td>
@@ -53,10 +54,10 @@
         </td>
         <td colspan="2">
                 <span style="color: #fff;">Latitude: </span>
-                <span style="color: #ff0;">{{ location.latitude|floatformat:5 }}</span>
+                <span style="color: #ff0;">{{ location.latitude|to_dms:0 }}</span>
                 &nbsp;&nbsp;
                 <span style="color: #fff;">Longitude: </span>
-                <span style="color: #ff0;">{{ location.longitude|floatformat:5 }}</span>
+                <span style="color: #ff0;">{{ location.longitude|to_dms:0 }}</span>
         </td>
 
         <td class="click"><a href="/admin" target="_new">Admin</a></td>

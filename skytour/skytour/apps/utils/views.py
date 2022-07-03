@@ -103,12 +103,14 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
             all_objects_sort = sorted(all_objects, key=lambda d: try_int(d['in_catalog']))
         except:
             all_objects_sort = sorted(all_objects, key=lambda d: str(d['in_catalog']))
+        
         context = super(CatalogDetailView, self).get_context_data(
             object_list=all_objects_sort, 
             **kwargs
         )
+        
         context['catalog_list'] = cat_list
-        context['table_id'] = 'catalog_dso_list'
+        context['table_id'] = f'cat_dso_{object.slug}'
         return context
 
 class ObjectTypeListView(ListView):

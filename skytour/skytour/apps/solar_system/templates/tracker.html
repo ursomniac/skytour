@@ -39,4 +39,25 @@
         </td>
     </tr>
 </table>
+{% if track_positions|length > 0 %}
+<h2>Track Positions</h2>
+<table>
+<tr>
+    <th>Date</th>
+    <th>R.A.</th>
+    <th>Dec.</th>
+    <th>Constellation</th>
+    <th>Distance</th>
+</tr>
+{% for pos in track_positions %}
+    <tr>
+        <td>{{ pos.utdt.date }}</td>
+        <td>{{ pos.ra|to_hms }}</td>
+        <td>{{ pos.dec|to_dms }}</td>
+        <td>{{ pos.constellation.abbr }}</td>
+        <td>{{ pos.distance|floatformat:2 }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endif %}
 {% endblock content %}

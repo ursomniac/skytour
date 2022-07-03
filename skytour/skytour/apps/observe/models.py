@@ -198,6 +198,10 @@ class ObservingLocation(models.Model):
         return x
 
     @property
+    def short_name(self):
+        return f"{self.city}, {self.state.abbreviation}: {self.name}"
+
+    @property
     def limiting_magnitude(self):
         return get_limiting_magnitude(self.bortle)
 
