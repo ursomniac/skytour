@@ -1,10 +1,11 @@
+{% load skytour_filters %}
 <small>
 <table width="100%" id="{{ table_id }}">
 <thead>
     <tr class="table-header">
         <th>Name</th>
-        {% if not hide_type %}<th>Type</th>{% endif %}
         {% if not hide_constellation %}<th>Con.</th>{% endif %}
+        {% if not hide_type %}<th>Type</th>{% endif %}
         <th>Class</th>
         <th>R.A.</th>
         <th>Dec.</th>
@@ -25,13 +26,13 @@
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
             {% if dso.nickname %} - {{ dso.nickname }}{% endif %}
         </td>
-        {% if not hide_type %}<td><a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new">{{ dso.object_type.name }}</a></td>{% endif %}
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>
         {% endif %}
+        {% if not hide_type %}<td><a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new">{{ dso.object_type.name }}</a></td>{% endif %}
         <td>{{ dso.morphological_type }}</td>
-        <td>{{ dso.ra_text }}</td>
-        <td>{{ dso.dec_text }}</td>
+        <td>{{ dso.ra|to_hms:1 }}</td>
+        <td>{{ dso.dec|to_dm:1 }}</td>
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
