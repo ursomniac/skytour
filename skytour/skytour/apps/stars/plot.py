@@ -1,4 +1,5 @@
 import base64
+import datetime
 import io
 import numpy as np
 import time
@@ -15,7 +16,7 @@ from ..solar_system.plot import r2d, d2r
 from ..utils.format import to_hm, to_dm
 
 def get_skymap(
-        utdt, 
+        utdt_start, 
         location, 
         planets=None,
         asteroid_list=None, 
@@ -26,11 +27,14 @@ def get_skymap(
         milky_way=False,
         sky_limit = 70.,
         slew_limit=None,
-        local_time = None
+        local_time = None,
+        title = None,
+        hours = 0.
     ):
     """
     Create a full map of the sky for a given UTDT and location.
     """ 
+    utdt = utdt_start + datetime.timedelta(hours=hours)
     # Track performance
     times = [(time.perf_counter(), 'Start')]
 
@@ -154,7 +158,8 @@ def get_skymap(
     plt.tight_layout(pad=2.0)
 
     # Set title
-    title = utdt.strftime("%Y-%m-%d %Hh %Mm UT")
+    if title is None:
+        title = utdt.strftime("%Y-%m-%d %Hh %Mm UT")
     if local_time is not None:
         title += f" = {local_time}"
     ax.set_title(title)

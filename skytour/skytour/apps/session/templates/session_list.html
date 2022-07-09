@@ -20,7 +20,7 @@
 <tbody>
     {% for session in object_list %}
     <tr class="{% cycle 'odd' 'even' %}">
-        <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date }}</a></td>
+        <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date|date:"Y-m-d" }}</a></td>
         <td>{{ session.location }}</td>
         <td>{{ session.seeing_range }}</td>
         <td>{{ session.sqm_range }}</td>

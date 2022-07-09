@@ -42,6 +42,8 @@ class Planet(ObservableObject):
         null=True, blank=True,
         upload_to='planet_maps'
     )
+    object_class = 'planet'
+
     @property
     def target(self):
         return "{} Barycenter".format(self.name)
@@ -232,7 +234,6 @@ class Asteroid(ObservableObject):
         _('Description'),
         null = True, blank = True
     )
-    
 
     ### Magnitude
     h = models.FloatField (
@@ -248,6 +249,7 @@ class Asteroid(ObservableObject):
         _('Estimated Brightest'),
         null = True, blank = True
     )
+    object_class = 'asteroid'
 
     @property
     def mpc_lookup_designation(self):
@@ -322,6 +324,7 @@ class Comet(ObservableObject):
         _('Mag Offset'),
         default = 0.
     )
+    object_class = 'comet'
         
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)

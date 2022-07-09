@@ -37,33 +37,6 @@
 </table>
 
 <table>
-	<tr>
-		<td id="finder" width=33%>
-			<h2>Google Map:</h2>
-			{% if object.map_image %}
-			<img src="{{ object.map_image.url }}" class="map_image">
-			{% endif %}
-			<br>
-			<a href="https://www.google.com/maps/place/{ object.latitude }%2C{ object.longitude }">
-			<button>Google Map</button></a>
-		</td>
-
-		<td id="field_view" width=33%>
-			<h2>Google Earth Image:</h2>
-			{% if object.earth_image %}
-			<img src="{{ object.earth_image.url }}" class="map_image">
-			{% endif %}
-		</td>
-		<td id="bortle_map">
-			<H2>Sky Brightness Map:</h2>
-			{% if object.bortle_image %}
-			<img src="{{ object.bortle_image.url }}" class="map_image">
-			{% endif %}
-		</td>
-	</tr>
-</table>
-
-<table>
 <tr>
 	<td id="metadata" colspan=2>
 		<table width=100% class="info_box">
@@ -76,15 +49,28 @@
 			<tr>
 
 				<td>Bortle: {{ object.bortle }}</td>
-				<td>SQM: {{ object.sqm }}</td>
+				<td>
+					SQM: {{ object.sqm }}
+					{% if object.mean_obs_sqm.0 %}
+					&nbsp; (
+						Obs.: {{ object.mean_obs_sqm.0|floatformat:2 }}
+						{% if object.mean_obs_sqm.1 %}
+							±{{ object.mean_obs_sqm.1|floatformat:2 }}
+						{% endif %}
+					)
+					{% endif %}
+				</td>
 				<td>Brightness: {{ object.brightness }} {{ object.distance_units }}</td>
 				<td>Limiting Mag: {{ object.limiting_magnitude }}</td>
 			</tr>
 		</table>
 	</td>
 </tr>
+
+{% if object.observingsession_set.all|length > 0 %}
 <tr>
 	<td colspan=2>
+
 		<table>
 			<tr>
 				<td width="50%">
@@ -97,7 +83,6 @@
 				<td>
 
 					<h3>Sessions<h3>
-						{% if object.observingsession_set.all|length > 0 %}
 						<table>
 						<tr>
 							<th>Date</th>
@@ -119,14 +104,12 @@
 						</tr>
 						{% endfor %}
 						<table>
-						{% else %}
-						(No session at this location.)
-						{% endif %}
 				</td>
 			</tr>
 		</table>
 	</td>
 </tr>
+{% endif %}
 
 <tr class="bottom">
 	<td id="object_notes" valign="top" colspan=2>
@@ -174,6 +157,33 @@
 		{% endif %}
 	</td>
 </tr>
+</table>
+
+<table>
+	<tr>
+		<td id="finder" width=33%>
+			<h2>Google Map:</h2>
+			{% if object.map_image %}
+			<img src="{{ object.map_image.url }}" class="map_image">
+			{% endif %}
+			<br>
+			<a href="https://www.google.com/maps/place/{ object.latitude }%2C{ object.longitude }">
+			<button>Google Map</button></a>
+		</td>
+
+		<td id="field_view" width=33%>
+			<h2>Google Earth Image:</h2>
+			{% if object.earth_image %}
+			<img src="{{ object.earth_image.url }}" class="map_image">
+			{% endif %}
+		</td>
+		<td id="bortle_map">
+			<H2>Sky Brightness Map:</h2>
+			{% if object.bortle_image %}
+			<img src="{{ object.bortle_image.url }}" class="map_image">
+			{% endif %}
+		</td>
+	</tr>
 </table>
 
 {% if object.locationimage_set.all|length > 0 %}

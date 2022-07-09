@@ -127,6 +127,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         upload_to = 'dso_pdf'
     )
     tags = TaggableManager(blank=True)
+    object_class = 'dso'
 
     @property
     def alias_list(self):
@@ -281,7 +282,19 @@ class DSOObservation(ObservingLog):
     @property
     def target_name(self):
         return self.object.shown_name
-        
+
+    @property
+    def ra(self):
+        return self.object.ra
+
+    @property
+    def dec(self):
+        return self.object.dec
+
+    @property
+    def distance(self):
+        return f"{self.object.distance} {self.object.distance_units}"
+
     def __str__(self):
         return f"{self.ut_datetime}: {self.object_type}: {self.object.shown_name}"
         

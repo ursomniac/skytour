@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from .models import ObservingLocation
 from .plot import make_location_plot, plot_sqm_history
@@ -30,12 +31,13 @@ class ObservingLocationListView(ListView):
         context['table_id'] = 'location_table'
         return context
 
-class ObservingLocationDetailView(DetailView):
+class ObservingLocationDetailView(CookieMixin, DetailView):
     model = ObservingLocation
     template_name = 'observing_location_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(ObservingLocationDetailView, self).get_context_data(**kwargs)
         location = self.get_object()
-        context['sqm_plot'] = plot_sqm_history(location)
+        reversed = context['color_scheme'] == 'dark'
+        context['sqm_plot'] = plot_sqm_history(location, reversed=reversed)
         return context

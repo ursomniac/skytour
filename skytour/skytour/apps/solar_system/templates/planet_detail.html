@@ -6,6 +6,7 @@
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
     button { width: 10em; }
+    dt  { font-weight: bold; color: #ff6;}
 </style>
 {% endblock styles %}
 {% block title %}{{ planet.name }}: Skytour{% endblock %}
@@ -24,11 +25,11 @@
         </td>
         <td width="40%">
             <h2>Observations</h2>
-            # Observations:  {{ planet.object.number_of_observations }}
+            # Observations:  {{ instance.number_of_observations }}
             <br>
             Last Observed:
-            {% if planet.object.last_observed %}
-                {{ planet.object.last_observed|date:"Y-m-d H:i" }} UT
+            {% if instance.last_observed %}
+                {{ instance.last_observed|date:"Y-m-d H:i" }} UT
             {% else %}
                 (not yet)
             {% endif %}
@@ -155,4 +156,8 @@
     {% endif %}
     </tbody>
 </table>
+
+{% with admin_dir='solar_system/planet' %}
+{% include 'includes/observation_section.html' %}
+{% endwith %}
 {% endblock content %}

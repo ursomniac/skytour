@@ -96,7 +96,7 @@ class ObservingSession(models.Model):
 
     class Meta:
         # This mitigates the ">1 places on the same night issue"
-        ordering = ['-pk'] 
+        ordering = ['-ut_date'] 
         unique_together = ['ut_date', 'location']
 
 

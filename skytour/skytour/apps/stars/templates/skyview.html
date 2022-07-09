@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load skytour_filters %}
 {% block content %}
+<style>
+    td.subnav_ut {
+        background: #303;
+    }
+</style>
 <div class="skymap">
 <table class="lite splash">
     <tr>
@@ -9,7 +14,7 @@
         </td>
         <td>
             <table class="lite">
-            <tr><td>Date:</td><td>{{ utdt_start|date:"Y-m-d H:i" }} UT</td></tr>
+            <tr><td>Date:</td><td>{{ shown_datetime|date:"Y-m-d H:i" }} UT</td></tr>
             <tr><td>Local Time:</td><td>{{ local_time_str }}</td></tr>
             <tr><td>Sid. Time:</td><td>{{ sidereal_time|to_hms }}</td></tr>
             </table>
@@ -35,9 +40,31 @@
     </tr>
 </table>
 
+
 <table>
     <tr>
         <td class="tight">
+            <div class="subnav_ut">
+            <table>
+                <tr><td class="subnav_ut">
+                <b><span style="color: #ff0;">
+                    Reload Offset from Cookie UT: &nbsp;
+                </span>
+                <a href="/stars/skyview?hours=-3">  <button>-3.0h</button></a>
+                <a href="/stars/skyview?hours=-2.5"><button>-2.5h</button></a>
+                <a href="/stars/skyview?hours=-2">  <button>-2.0h</button></a>
+                <a href="/stars/skyview?hours=-1.5"><button>-1.5h</button></a>
+                <a href="/stars/skyview?hours=-1">  <button>-1.0h</button></a>
+                <a href="/stars/skyview?hours=-0.5"><button>-0.5h</button></a>&nbsp;&nbsp;
+                <a href="/stars/skyview?hours=0">   <button>+0.0h</button></a>&nbsp;&nbsp;
+                <a href="/stars/skyview?hours=0.5"> <button>+0.5h</button></a>
+                <a href="/stars/skyview?hours=1">   <button>+1.0h</button></a>
+                <a href="/stars/skyview?hours=1.5"> <button>+1.5h</button></a>
+                <a href="/stars/skyview?hours=2">   <button>+2.0h</button></a>
+                <a href="/stars/skyview?hours=2.5"> <button>+2.5h</button></a>
+                <a href="/stars/skyview?hours=3">   <button>+3.0h</button></a>
+                </td></tr>
+            </table>
             <img src="{{ skymap }}">
         </td>
         <td class="side">

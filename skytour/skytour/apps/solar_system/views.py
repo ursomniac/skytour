@@ -63,6 +63,8 @@ class PlanetDetailView(CookieMixin, DetailView):
         fov = 4. if obj.name in ['Uranus', 'Neptune'] else 20.
         mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
 
+        sun = context['cookies']['sun']
+        moon = context['cookies']['moon']
         context['finder_chart'], ftimes = create_finder_chart (
             utdt_start,
             obj, 
@@ -71,7 +73,9 @@ class PlanetDetailView(CookieMixin, DetailView):
             reversed=reversed,
             mag_limit=mag_limit,
             flipped=False,
-            fov=fov
+            fov=fov,
+            sun=sun,
+            moon=moon
         )
 
         context['view_image'] = create_planet_system_view(
@@ -179,6 +183,8 @@ class AsteroidDetailView(CookieMixin, DetailView):
                 fov=fov, 
                 reversed = reversed,
                 mag_limit=mag_limit, 
+                sun = context['cookies']['sun'],
+                moon = context['cookies']['moon']
             )
         return context
 
@@ -238,7 +244,9 @@ class CometDetailView(CookieMixin, DetailView):
             obj_cookie = pdict,
             fov = 10.,
             reversed = reversed,
-            mag_limit = mag_limit
+            mag_limit = mag_limit,
+            sun = context['cookies']['sun'],
+            moon = context['cookies']['moon']
         )
         return context
 

@@ -49,7 +49,9 @@ def create_finder_chart(
         reversed = True,        # B on W or W on B
         mag_limit = 8.5,        # magnitude limit of stars
         mag_offset = 0.05,
-        show_axes = False       #
+        show_axes = False,      #
+        sun = None,
+        moon = None
     ):
     # Start timer
     times = [(time.perf_counter(), 'Start')]
@@ -105,6 +107,17 @@ def create_finder_chart(
     ax, _ = map_planets(ax, name, planets_cookie, earth, t, projection)
     times.append((time.perf_counter(), 'Other planets'))
 
+
+    # 2. Sun - only matters if the plot is during the day
+    if sun is not None:
+        ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
+        times.append((time.perf_counter(), 'Sun'))
+
+    # 3. Moon
+    if moon is not None:
+        ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
+        times.append((time.perf_counter(), 'Moon'))
+        
     # Add DSOs
     ax, _ = map_dsos(ax, earth, t, projection, 
         reversed=reversed, product='finder'

@@ -1,0 +1,67 @@
+{% load skytour_filters %}
+<style>
+    table.observation_table th {
+        background: #303;
+    }
+    table.observation_table td { 
+        border: 1px solid #999; 
+        padding: 4px;
+    }
+    table.observation_table td .vcenter {
+        vertical-align: middle;
+        text-align: center;
+        font-weight: bold;
+        color: #ff6;
+    }
+</style>
+<h2>Observations</h2>
+
+{% if instance.observations.all|length > 0 %}
+<table class="observation_table">
+    <tr>
+        <th>Date (UT)</th>
+        <th>Location / Equipment</th>
+        {% if instance.object_class != 'dso' %}<th>Obj. Data</th>{% endif %}
+        <th>Obs. Data</th>
+        <th>Notes</th>
+        <th>Admin</th>
+    </tr>
+    {% for obs in instance.observations.all %}
+    {% with obs.observation_metadata as m %}
+    <tr>
+        <td class="vcenter">{{ obs.ut_datetime|date:"Y-m-d H:i"}}</td>
+        <td>
+            {{ obs.location.placename }}<br>
+            <br>Eyepieces:
+                {% if obs.eyepiece_list %} 
+                    {{ obs.eyepiece_list }}
+                {% else %}
+                    (probably low-power)
+                {% endif %}
+            {% if obs.filter_list %}
+                <br>Filters: {{ obs.filter_list }}
+            {% endif %}
+        </td>
+        {% if obs.object.object_class != 'dso' %}
+        <td>
+            Constellation: <b>{{ m.constellation|upper }}</b><br/>
+            Dist: {{ m.distance|floatformat:2 }} {{ m.distance_units }}<br/>
+            Ang. Size: {{ m.angular_diameter|floatformat:3 }}<br/>
+            Mag: {{ m.apparent_magnitude|floatformat:2 }}<br/>
+        </td>
+        {% endif %}
+        <td>
+            HA: {{ m.hour_angle|to_hms }}<br/>
+            Azimuth: {{ m.azimuth|to_dm }}<br/>
+            Altitude {{ m.altitude|to_dm }}<br>
+            Airmass: {{ m.sec_z|floatformat:3 }}
+        </td>
+        <td width="25%">{{ obs.notes }}</td>
+        <td class="vcenter"><a href="/admin/{{ admin_dir }}/{{ obs.object.pk }}/change/"><button>Admin</button></a></td>
+    </tr>
+    {% endwith %}
+    {% endfor %}
+</table>
+{% else %}
+<p>No observations.</p>
+{% endif %}

@@ -87,7 +87,7 @@ def make_location_plot(
     )
     return image
 
-def plot_sqm_history(loc):
+def plot_sqm_history(loc, reversed=False):
     sessions = loc.observingsession_set.all()
     if sessions.count() < 1:
         return None
@@ -96,6 +96,7 @@ def plot_sqm_history(loc):
     x = []
     y = []
     e = []
+    y_total = 0.
 
     for s in sessions:
         sx = s.ut_date
@@ -110,10 +111,13 @@ def plot_sqm_history(loc):
         rms = np.std(sy)
         x.append(sx)
         y.append(avg)
+        y_total += avg
         e.append(rms)
         #print(f"X: {sx}  Y: {avg}  E: {rms}")
 
     if len(x) > 0 and len(y) > 0:
+        sqm_avg = y_total / len(y)
+        lines.append(sqm_avg)
         image = create_plot(
             x=x, 
             y=y, 
@@ -125,7 +129,8 @@ def plot_sqm_history(loc):
             ylim = sqm,
             title=f"SQM Measures: {loc}",
             xtitle='Date',
-            ytitle='SQM (mag/arcsec^2)'
+            ytitle='SQM (mag/arcsec^2)',
+            reversed=reversed
         )
         return image
     return None

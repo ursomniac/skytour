@@ -17,7 +17,7 @@ def create_plot(
         lines = None,
         sizes = None,
         grid = False,
-        error = None, 
+        error = None,
         xpad = 0., 
         ypad = 0.02, 
         ylim = None,
@@ -27,11 +27,14 @@ def create_plot(
     """
     Given data, make a scatter plot.
     """
-    
 	# Create a new figure
+    #style = 'dark_background' if reversed else 'default'
     fig = Figure()
+    #plt.style.use(style)
+
     if subplot:
         panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])
+    
     panel.set_title(title)
     panel.set_xlabel(xtitle)
     panel.set_ylabel(ytitle)
@@ -47,8 +50,11 @@ def create_plot(
             panel.errorbar(x, y, yerr=error, linestyle='None')
 
     if lines and len(lines) > 0:
+        ltype = ['--', '-.']
+        ll = 0
         for line in lines:
-            panel.axhline(line, ls = '--', color='#333')
+            panel.axhline(line, ls = ltype[ll % len(ltype)], color='#333')
+            ll += 1
 
     # Convert to a PNG image
     pngImage = io.BytesIO()

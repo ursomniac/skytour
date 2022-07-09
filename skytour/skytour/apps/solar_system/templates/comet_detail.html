@@ -69,4 +69,8 @@
     </tr>
     </tbody>
 </table>
+
+{% with instance=object admin_dir='solar_system/comet' %}
+{% include 'includes/observation_section.html' %}
+{% endwith %}
 {% endblock content %}

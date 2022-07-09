@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
 from ..astro.utils import get_limiting_magnitude
 from .pdf import create_pdf_form
+from .utils import get_mean_obs_sqm
 
 CARDINAL_DIRECTIONS = [
     ('N', 'North'),
@@ -220,6 +221,11 @@ class ObservingLocation(models.Model):
         if x:
             return x.ut_date
         return None
+
+    @property
+    def mean_obs_sqm(self):
+        mean, rms = get_mean_obs_sqm(self)
+        return (mean, rms)
 
     def get_absolute_url(self):
         return '/observing_location/{}'.format(self.pk)
