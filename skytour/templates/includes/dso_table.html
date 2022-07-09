@@ -36,7 +36,7 @@
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         {% if not hide_priority %}
-        <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.priority }}</a></td>
+        <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.get_priority_display }}</a></td>
         {% endif %}
         <td>{{ dso.number_of_observations }}</td>
         <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>

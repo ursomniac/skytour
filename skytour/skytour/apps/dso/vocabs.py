@@ -8,11 +8,11 @@ DISTANCE_UNIT_CHOICES = [
 ]
 
 PRIORITY_CHOICES = [
-    ('Highest', 'Highest'),
-    ('High', 'High'),
-    ('Medium', 'Medium'),
-    ('Low', 'Low'),
-    ('None', 'None')
+    ('Highest', '4 - Highest'),
+    ('High', '3 - High'),
+    ('Medium', '2 -Medium'),
+    ('Low', '1 - Low'),
+    ('None', '0 - None')
 ]
 PRIORITY_COLORS = {
     'Highest': '#f00',
