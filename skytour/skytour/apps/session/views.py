@@ -210,7 +210,6 @@ class ObservingPlanView(CookieMixin, FormView):
             return response
         return self.render_to_response(context)
 
-
 class ObservingSessionListView(ListView):
     model = ObservingSession
     template_name = 'session_list.html'
@@ -218,6 +217,7 @@ class ObservingSessionListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionListView, self).get_context_data(**kwargs)
         context['table_id'] = 'session_table'
+        #context['object_list'] = ObservingSession.objects.order_by('-ut_date')
         return context
 
 class ObservingSessionCreateView(CreateView):
@@ -378,6 +378,7 @@ class ObservingCircumstancesView(ListView):
         df['date'] = pd.DatetimeIndex(df['ut_datetime']).date
         df['time'] = pd.DatetimeIndex(df['ut_datetime']).time
         df['dsqm'] = pd['lsqm'] - pd['sqm']
+
         # Histogram of SQM - ignore NaN values
         sqm_bins = np.linspace(20.0, 22.0, num=21)
         sqm_y, sqm_x = np.histogram(df['sqm'][~np.isnan(df['sqm'])], bins=sqm_bins)

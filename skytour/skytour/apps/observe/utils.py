@@ -1,5 +1,5 @@
 import pandas as pd
-def get_mean_obs_sqm(loc):
+def get_mean_obs_sqm(loc, include_moon=False):
 
     sessions = loc.observingsession_set.all()
     loc_sqm_list = []
@@ -8,6 +8,8 @@ def get_mean_obs_sqm(loc):
         sqm_list = []
         for circ in circumstances:
             if circ.sqm is None:
+                continue
+            if circ.moon and not include_moon:
                 continue
             sqm_list.append(circ.sqm)
         if len(sqm_list) > 0:

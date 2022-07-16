@@ -96,7 +96,10 @@
         {% if target.object_type == 'Condition' %}
         <h4>Conditions:</h4>
         <table class="internal">
-            <tr><td>SQM:</td><td>{{ target.sqm|floatformat:2 }}</td></tr>
+            <tr><td>
+                SQM:</td><td>{{ target.sqm|floatformat:2 }}
+                {% if target.moon %}&nbsp;<small>(Moon)</small>{% endif %}
+            </td></tr>
             <tr><td>Seeing:</td><td>{{ target.seeing }}</td></tr>
             <tr><td>Cloud Cover:</td><td>{{ cloud_cover }}</td></tr>
         {% else %}
@@ -121,8 +124,8 @@
         {% else %}
         <h4>Weather:</h4>
         <table class="internal">
-            <tr><td>Temp:</td><td>{{ target.temperature }}°F</td></tr>
-            <tr><td>Humidity:</td><td>{{ target.humidity }}%</td></tr>
+            <tr><td>Temp:</td><td>{% if target.temperature %}{{ target.temperature }}°F{% endif %}</td></tr>
+            <tr><td>Humidity:</td><td>{% if target.humidity %}{{ target.humidity }}%{% endif %}</td></tr>
             <tr><td>Wind:</td><td>
                 {% if target.wind %}{{ target.wind }}{% endif %}
             </td></tr>

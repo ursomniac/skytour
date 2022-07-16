@@ -12,16 +12,17 @@
 
         <table>
             <tr>
-                <td colspan=3>
+                <td colspan=2>
                     {% with form.session as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
-                <td colspan=1>
-                    {% with form.session_stage as field %}
+                <td colspan=2>
+                    {% with form.seeing as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
+
             </tr>
             <tr>
                 <td colspan=2>
@@ -30,14 +31,19 @@
                     {% endwith %}
                 </td>
                 <td colspan=2>
-                    {% with form.sqm as field %}
+                    {% with form.session_stage as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
             </tr>
             <tr>
-                <td colspan=4>
-                    {% with form.seeing as field %}
+                <td colspan=1>
+                    {% with form.sqm as field %}
+                    {% include "inc_form_field.html" %}
+                    {% endwith %}
+                </td>
+                <td colspan=1>
+                    {% with form.moon as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>

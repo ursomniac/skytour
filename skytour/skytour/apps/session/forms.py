@@ -173,5 +173,6 @@ class ObservingConditionsForm(forms.ModelForm):
             'humidity',
             'cloud_cover',
             'wind',
-            'notes'
+            'notes',
+            'moon'
         ]

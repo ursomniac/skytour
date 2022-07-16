@@ -1,15 +1,17 @@
 {% extends "base.html" %}
+{% load skytour_filters %}
 
 {% block styles %}
 {% endblock styles %}
 {% block title %}Observable Comets: Skytour{% endblock %}
 {% block content %}
 <h2>Observable Comets</h2>
-<table>
+<table id="{{ table_id }}">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Coordinates</th>
+            <th>RA</th>
+            <th>Dec</th>
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
@@ -21,10 +23,8 @@
         {% for comet in comet_list %}
         <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'comet-detail' comet.pk %}">{{ comet.name }}</a></td>
-            <td>
-                &alpha;: {{ comet.apparent.equ.ra_str }} &nbsp;
-                &delta;: {{ comet.apparent.equ.dec_str }}
-            </td>
+            <td>{{ comet.apparent.equ.ra|to_hms:1 }}</td>
+            <td>{{ comet.apparent.equ.dec|to_dms:0 }}</td>
             <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
             <td>{{ comet.observe.apparent_magnitude|floatformat:2 }}</td>
@@ -35,4 +35,5 @@
     </tbody>
 </table>
 <br>
+{% include 'includes/sortable_table.html' %}
 {% endblock content %}

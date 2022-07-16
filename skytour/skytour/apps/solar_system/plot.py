@@ -349,7 +349,8 @@ def plot_track(
         step_days=5, 
         step_label=5,
         mag_limit=None, 
-        dsos=True, 
+        dsos=False, 
+        #planets=None,
         fov=None,
         reversed=True,
         return_data = True,
@@ -437,6 +438,7 @@ def plot_track(
     ax = map_equ(ax, earth, t, projection, 'equ', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
+
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
     if not mag_limit:
@@ -450,10 +452,16 @@ def plot_track(
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
+    
     # Add DSOs
     if dsos:
         ax, _ = map_dsos(ax, earth, t, projection, product='finder')
-    
+
+    # TODO: Add (other) planets
+    # Would need multiple tracks...
+    #if planets:
+    #    ax, _ = map_planets(ax, None, planets_cookie, earth, t, projection)
+
     if fov:
         angle = np.pi - fov / 360.0 * np.pi
         limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
@@ -465,6 +473,7 @@ def plot_track(
         dx = (max_x - min_x) * 0.25
         ax.set_xlim(min_x-dx, max_x+dx)
         ax.set_ylim(min_y-dx, max_y+dx)
+
 
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)

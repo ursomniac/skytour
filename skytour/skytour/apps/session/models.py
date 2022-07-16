@@ -39,11 +39,11 @@ class ObservingSession(models.Model):
     # Get all of the Planet/OSD/etc. observations for this session
     @property
     def session_observations(self):
-        return get_all_observations(self.ut_date, self.observingcircumstances_set.all())
+        return get_all_observations(self)
 
     @property
     def number_objects_observed(self):
-        object_dict = get_all_objects(self.ut_date)
+        object_dict = get_all_objects(self)
         n = 0
         for k, v in object_dict.items():
             n += v.count()
@@ -96,7 +96,7 @@ class ObservingSession(models.Model):
 
     class Meta:
         # This mitigates the ">1 places on the same night issue"
-        ordering = ['-ut_date'] 
+        ordering = ['-ut_date', '-pk'] 
         unique_together = ['ut_date', 'location']
 
 
@@ -150,6 +150,10 @@ class ObservingCircumstances(models.Model):
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
+    )
+    moon = models.BooleanField (
+        _('Moon'),
+        default = False
     )
 
     url_path = None

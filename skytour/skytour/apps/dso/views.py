@@ -36,14 +36,22 @@ class DSODetailView(CookieMixin, DetailView):
         context = super(DSODetailView, self).get_context_data(**kwargs)
         planets_dict = context['cookies']['planets']
         asteroid_list = context['cookies']['asteroids']
-        finder_chart, times = create_dso_finder_chart(
+        finder_chart, times1 = create_dso_finder_chart(
             self.object, 
             utdt = context['utdt_start'], 
             planets_dict = planets_dict, 
             asteroid_list = asteroid_list
         )
+        close_up_finder, times2 = create_dso_finder_chart(
+            self.object,
+            fov = 2.,
+            mag_limit = 11.,
+            show_other_dsos = False
+        )
+        context['close_up_finder'] = close_up_finder
         context['live_finder_chart'] = finder_chart
         # TODO: Add rise set times if cookie is set.
+        times = times1 + times2
         context['times'] = compile_times(times)
         return context
 

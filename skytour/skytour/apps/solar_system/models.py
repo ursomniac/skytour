@@ -122,7 +122,7 @@ class PlanetObservation(ObservingLog):
         verbose_name_plural = 'Observations'
 
 class MoonObservation(ObservingLog):
-    object_type = 'moon'
+    object_type = 'Moon'
 
     @property
     def target_name(self):

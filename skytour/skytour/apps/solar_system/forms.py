@@ -1,8 +1,9 @@
 import datetime
 from django import forms
-
+from matplotlib.pyplot import show
 from ..session.cookie import deal_with_cookie
 from .models import Asteroid, Planet, Comet
+from .vocabs import STATUS_CHOICES
 
 def date_plus_10():
     today = datetime.datetime.utcnow()
@@ -31,6 +32,16 @@ class TrackerForm(forms.Form):
     mag_limit = forms.FloatField(
         required=False,
         help_text = 'Faintest star shown.'
+    )
+    #show_planets = forms.ChoiceField( 
+    #    initial = 0,
+    #    choices = STATUS_CHOICES,
+    #    label = 'Show (other) Planets'
+    #)
+    show_dsos = forms.ChoiceField(
+        initial = 0,
+        choices = STATUS_CHOICES,
+        label = 'Show DSOs'
     )
 
     def __init__(self, asteroid_list=None, *args, **kwargs):

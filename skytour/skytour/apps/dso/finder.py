@@ -125,12 +125,16 @@ def plot_dso(ax, x, y, dso,
         )
     return ax
 
-def create_dso_finder_chart(dso, fov=8, mag_limit=9, 
+def create_dso_finder_chart(
+        dso, 
+        fov=8., 
+        mag_limit=9., 
         reversed=True,  # white on black or black on white
         save_file=False, # return a stream or a filename
         planets_dict = None,
         asteroid_list = None,
         utdt = None,
+        show_other_dsos = True,
         axes=False,  # not generally used
         test=False   # not generally used
     ):
@@ -170,36 +174,37 @@ def create_dso_finder_chart(dso, fov=8, mag_limit=9,
     times.append((time.perf_counter(), 'Bright Stars'))
 
     ##### other dsos
-    other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
-    other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
-    for other in other_dso_records:
-        x, y = projection(earth.at(t).observe(other.skyfield_object))
-        if abs(x) > limit or abs(y) > limit:
-            continue # not on the plot
-        other_dsos['x'].append(x)
-        other_dsos['y'].append(y)
-        other_dsos['label'].append(other.shown_name)
-        other_dsos['marker'].append(other.object_type.marker_type)
-        ax = plot_dso(ax, x, y, other, alpha=0.6)
-    xxx = np.array(other_dsos['x'])
-    yyy = np.array(other_dsos['y'])
-    for x, y, z in zip(xxx, yyy, other_dsos['label']):
-        plt.annotate(
-            z, (x, y), 
-            textcoords='offset points',
-            xytext=(5, 5),
-            ha='left'
-        )
-    times.append((time.perf_counter(), 'Other DSOs'))
+    if show_other_dsos:
+        other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
+        other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
+        for other in other_dso_records:
+            x, y = projection(earth.at(t).observe(other.skyfield_object))
+            if abs(x) > limit or abs(y) > limit:
+                continue # not on the plot
+            other_dsos['x'].append(x)
+            other_dsos['y'].append(y)
+            other_dsos['label'].append(other.shown_name)
+            other_dsos['marker'].append(other.object_type.marker_type)
+            ax = plot_dso(ax, x, y, other, alpha=0.6)
+        xxx = np.array(other_dsos['x'])
+        yyy = np.array(other_dsos['y'])
+        for x, y, z in zip(xxx, yyy, other_dsos['label']):
+            plt.annotate(
+                z, (x, y), 
+                textcoords='offset points',
+                xytext=(5, 5),
+                ha='left'
+            )
+        times.append((time.perf_counter(), 'Other DSOs'))
 
     ### Planets, Asteroids
     if planets_dict is not None and utdt is not None:
         ax, _ = map_planets(ax, None, planets_dict, earth, t, projection)
-    times.append((time.perf_counter(), 'Planets'))
+        times.append((time.perf_counter(), 'Planets'))
 
     if asteroid_list is not None and utdt is not None:
         ax, _ = map_asteroids(ax, None, asteroid_list, earth, t, projection, reversed=reversed)
-    times.append((time.perf_counter(), 'Asteroids'))
+        times.append((time.perf_counter(), 'Asteroids'))
 
     ##### this object
     object_x, object_y = projection(center)

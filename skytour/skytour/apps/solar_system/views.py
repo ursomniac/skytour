@@ -60,8 +60,8 @@ class PlanetDetailView(CookieMixin, DetailView):
         pdict['name'] = obj.name
         
         context['close_by'] = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start)
-        fov = 4. if obj.name in ['Uranus', 'Neptune'] else 20.
-        mag_limit = 9. if obj.name in ['Uranus', 'Neptune'] else 6.5
+        fov = 2. if obj.name in ['Uranus', 'Neptune'] else 10.
+        mag_limit = 10. if obj.name in ['Uranus', 'Neptune'] else 6.
 
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
@@ -136,15 +136,21 @@ class AsteroidListView(CookieMixin, ListView):
         TODO: Table should include rise/set based off of the cookie.
         """
         context = super(AsteroidListView, self).get_context_data(**kwargs)
+        # TODO: allow full list of asteroids, but this might be time consuming
+        all = self.request.GET.get('all', None) is not None
         asteroids = Asteroid.objects.order_by('number')
-        asteroid_cookie = context['cookies']['asteroids']
-        asteroid_list = []
-        for d in asteroid_cookie:
-            a = asteroids.get(number=d['number'])
-            d['n_obs'] = a.number_of_observations
-            d['last_observed'] = a.last_observed
-            asteroid_list.append(d)
+        if all:
+            asteroid_list = asteroids
+        else:
+            asteroid_list = []
+            asteroid_cookie = context['cookies']['asteroids']
+            for d in asteroid_cookie:
+                a = asteroids.get(number=d['number'])
+                d['n_obs'] = a.number_of_observations
+                d['last_observed'] = a.last_observed
+                asteroid_list.append(d)
         context['asteroid_list'] = asteroid_list
+        context['table_id'] = 'obs_asteroid_list'
         return context
 
 class AsteroidDetailView(CookieMixin, DetailView):
@@ -166,12 +172,8 @@ class AsteroidDetailView(CookieMixin, DetailView):
                 pdict = a
                 mag = a['observe']['apparent_magnitude']
                 break
-        #mag_limit = mag + 0.5 if mag is not None else 10.
-        #mag_limit = 10 if mag_limit < 10. else mag_limit
-        mag_limit = 11
         context['asteroid'] = pdict
-        fov = 5.
-        
+
         if pdict: # This is so you COULD go to an page for something not in the cookie
             context['finder_chart'], ftimes = create_finder_chart (
                 utdt_start, 
@@ -180,9 +182,9 @@ class AsteroidDetailView(CookieMixin, DetailView):
                 asteroids=asteroid_cookie,
                 object_type = 'asteroid',
                 obj_cookie = pdict,
-                fov=fov, 
+                fov=2., 
                 reversed = reversed,
-                mag_limit=mag_limit, 
+                mag_limit=11., 
                 sun = context['cookies']['sun'],
                 moon = context['cookies']['moon']
             )
@@ -197,15 +199,21 @@ class CometListView(CookieMixin, ListView):
         TODO: List should include rise/set info from the cookie.
         """
         context = super(CometListView, self).get_context_data(**kwargs)
-        comet_cookie = context['cookies']['comets']
         comets = Comet.objects.filter(status=1)
-        comet_list = []
-        for d in comet_cookie: # get the observation history for each comet on the list
-            comet = comets.get(pk=d['pk'])
-            d['n_obs'] = comet.number_of_observations
-            d['last_observed'] = comet.last_observed
-            comet_list.append(d)
+        # TODO: allow for full set of comets but this might be time consumind
+        all = self.request.GET.get('all', None) is not None
+        if all:
+            comet_list = comets
+        else:
+            comet_list = []
+            comet_cookie = context['cookies']['comets']
+            for d in comet_cookie: # get the observation history for each comet on the list
+                comet = comets.get(pk=d['pk'])
+                d['n_obs'] = comet.number_of_observations
+                d['last_observed'] = comet.last_observed
+                comet_list.append(d)
         context['comet_list'] = comet_list
+        context['table_id'] = 'obs_comet_list'
         return context
 
 class CometDetailView(CookieMixin, DetailView):
@@ -229,9 +237,9 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['last_observed'] = object.last_observed
                 mag = pdict['observe']['apparent_magnitude']
                 break
-        if mag:
-            mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
-        mag_limit = 8.0 if mag_limit < 8.0 else mag_limit
+        #if mag:
+        #    mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
+        #mag_limit = 8.0 if mag_limit < 8.0 else mag_limit
 
         context['comet'] = pdict
 
@@ -242,9 +250,9 @@ class CometDetailView(CookieMixin, DetailView):
             asteroids,
             object_type = 'comet',
             obj_cookie = pdict,
-            fov = 10.,
+            fov = 4.,
             reversed = reversed,
-            mag_limit = mag_limit,
+            mag_limit = 11.,
             sun = context['cookies']['sun'],
             moon = context['cookies']['moon']
         )
@@ -300,6 +308,12 @@ class TrackerView(FormView):
         step_labels = d['label_step'] or 5
         mag_limit = d['mag_limit'] or 8.
         fov = d['fov']
+        dsos = d['show_dsos'] == '1'
+        # Planets
+        #planets = None
+        #print("CONTEXT: ",context.keys())
+        #if d['show_planets'] == '1':
+        #    pass
     
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
@@ -316,7 +330,8 @@ class TrackerView(FormView):
             fov=fov,
             reversed=reversed,
             return_data = True,
-            dsos=False
+            dsos=dsos,
+            #planets=planets
         )
         context['form'] = form
         context['track_positions'] = track_positions

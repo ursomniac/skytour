@@ -22,12 +22,12 @@
     <tr class="{% cycle 'odd' 'even' %}">
         <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date|date:"Y-m-d" }}</a></td>
         <td>{{ session.location }}</td>
-        <td>{{ session.seeing_range }}</td>
+        <td>{% if session.seeing_range != 'None' %}{{ session.seeing_range }}{% endif %}</td>
         <td>{{ session.sqm_range }}</td>
         <td>{{ session.number_objects_observed }}</td>
     </tr>
     {% endfor %}
 </tbody>
 </table>
-{% include 'includes/sortable_table.html' %}
+{# include 'includes/sortable_table.html' #}
 {% endblock %}
