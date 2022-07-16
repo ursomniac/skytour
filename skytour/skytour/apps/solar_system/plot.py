@@ -8,11 +8,12 @@ import time
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from skyfield.api import load, Star
+from skyfield.magnitudelib import planetary_magnitude
 from skyfield.projections import build_stereographic_projection
 from ..astro.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
-from .asteroids import get_asteroid_target
-from .comets import get_comet_target
+from .asteroids import get_asteroid_target, fast_asteroid
+from .comets import get_comet_target, get_comet_magnitude
 from .utils import get_constellation
 from .vocabs import ZODIAC
 
@@ -363,14 +364,14 @@ def plot_track(
     ts = load.timescale()
     eph = load('de421.bsp')
     earth = eph['earth']
+    sun = eph['sun']
     if object_type == 'planet':
         target = eph[object.target]
     elif object_type == 'asteroid':
-        sun = eph['sun']
         target = get_asteroid_target(object, ts, sun)
     elif object_type == 'comet':
-        sun = eph['sun']
-        target, _ = get_comet_target(object, ts, sun)
+        target, comet_row = get_comet_target(object, ts, sun)
+        
     t = ts.from_datetime(utdt)
 
     first_projection = earth.at(t).observe(target)
@@ -391,8 +392,25 @@ def plot_track(
     for dt in range(offset_before, offset_after, step_days):
         this_utdt = utdt + datetime.timedelta(days=dt)
         tt = ts.from_datetime(this_utdt)
-        z = earth.at(tt).observe(target)
+        z = earth.at(tt).observe(target).apparent()
         ra, dec, distance = z.radec()
+        
+        earth_sun = earth.at(tt).observe(sun)
+        r_earth_sun = earth_sun.radec()[2].au.item()
+
+        sun_target = sun.at(tt).observe(target)
+        r_sun_target = sun_target.radec()[2].au.item()
+
+        mag = None
+        if object_type == 'asteroid':
+            mag = fast_asteroid(object, target, tt, earth, sun, r_earth_sun)
+        elif object_type == 'planet':
+            mag = planetary_magnitude(z).item()
+        elif object_type == 'comet' and comet_row is not None:
+            mag_g = comet_row['magnitude_g']
+            mag_k = comet_row['magnitude_k']
+            mag_offset = object.mag_offset if object is not None else 0.
+            mag = get_comet_magnitude(mag_g, mag_k, distance.au.item(), r_sun_target, offset=mag_offset)
 
         if return_data:
             data.append(dict(
@@ -400,7 +418,8 @@ def plot_track(
                 ra = ra.hours.item(),
                 dec = dec.degrees.item(),
                 distance = distance.au.item(),
-                constellation = get_constellation(ra.hours.item(), dec.degrees.item())
+                constellation = get_constellation(ra.hours.item(), dec.degrees.item()),
+                mag = mag
             ))
 
         if first:

@@ -106,7 +106,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
             utdt_end=utdt_end, 
             instance=a, 
             location=location,
-            time_zone=time_zone
+            time_zone=time_zone 
          )
          if x is None:
             continue

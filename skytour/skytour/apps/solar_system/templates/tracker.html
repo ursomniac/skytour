@@ -48,6 +48,7 @@
     <th>Dec.</th>
     <th>Constellation</th>
     <th>Distance</th>
+    <th>Mag.</th>
 </tr>
 {% for pos in track_positions %}
     <tr>
@@ -56,6 +57,7 @@
         <td>{{ pos.dec|to_dms }}</td>
         <td>{{ pos.constellation.abbr }}</td>
         <td>{{ pos.distance|floatformat:2 }}</td>
+        <td>{{ pos.mag|floatformat:2 }}</td>
     </tr>
 {% endfor %}
 </table>

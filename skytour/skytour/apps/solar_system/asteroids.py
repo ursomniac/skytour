@@ -24,7 +24,7 @@ def fast_asteroid(asteroid, eph, t, earth, sun, r_earth_sun):
    # Sun to asteroid
    sun_target = sun.at(t).observe(eph)
    r_sun_target = sun_target.radec()[2].au.item()
-   
+
    # Phase angle
    cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
    if cos_beta > 1.:

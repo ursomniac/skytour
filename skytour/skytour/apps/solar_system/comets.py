@@ -1,7 +1,7 @@
+import math
 from skyfield.api import load
 from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
 from skyfield.data import mpc
-
 
 def get_comet_object(comet):
     with load.open('CometEls.txt') as f:
@@ -20,3 +20,11 @@ def get_comet_target(comet, ts, sun):
         target = sun + mpc.comet_orbit(row, ts, GM_SUN)
     return target, row
 
+def get_comet_magnitude(mg, mk, r_earth_target, r_sun_target, offset=0.):
+    mag = (
+        mg 
+        + 5. * math.log10(r_earth_target) 
+        + mk * math.log10(r_sun_target)
+        + offset
+    )
+    return mag

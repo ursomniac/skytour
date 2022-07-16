@@ -11,6 +11,16 @@ class ConstellationFilter(AutocompleteFilter):
 class DSOImageAdmin(admin.StackedInline):
     model = DSOImage
     extra = 0
+    readonly_fields = ['object_image_tag']
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('order_in_list', 'amateur_image'),
+                ('image', 'object_image_tag'),
+                'notes'
+            ]
+        }),
+    )
 
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias

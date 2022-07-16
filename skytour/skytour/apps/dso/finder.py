@@ -133,6 +133,7 @@ def create_dso_finder_chart(
         save_file=False, # return a stream or a filename
         planets_dict = None,
         asteroid_list = None,
+        comet_list = None,
         utdt = None,
         show_other_dsos = True,
         axes=False,  # not generally used
@@ -205,6 +206,9 @@ def create_dso_finder_chart(
     if asteroid_list is not None and utdt is not None:
         ax, _ = map_asteroids(ax, None, asteroid_list, earth, t, projection, reversed=reversed)
         times.append((time.perf_counter(), 'Asteroids'))
+
+    if comet_list is not None and utdt is not None:
+        ax, _ = map_comets(ax, comet_list, earth, t, projection, reversed=reversed)
 
     ##### this object
     object_x, object_y = projection(center)

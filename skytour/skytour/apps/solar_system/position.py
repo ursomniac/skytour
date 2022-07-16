@@ -5,7 +5,7 @@ from skyfield.magnitudelib import planetary_magnitude
 from ..astro.almanac import get_object_rise_set
 from ..astro.local import get_observing_situation
 
-from .comets import get_comet_target
+from .comets import get_comet_target, get_comet_magnitude
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
 from .moon import simple_lunar_phase, equ_lunar_phase_angle
@@ -154,10 +154,14 @@ def get_object_metadata(
     elif object_type == 'comet':
         mg = row['magnitude_g']
         mk = row['magnitude_k']
+        offset = instance.mag_offset if instance is not None else 0.
+        mag = get_comet_magnitude(mg, mk, r_earth_target, r_sun_target, offset=offset)
         #print (f"MG: {mg} MK: {mk} EPH: {eph_label}")
-        mag = mg + 5. * math.log10(r_earth_target) + mk * math.log10(r_sun_target)
-        if instance is not None:
-            mag += instance.mag_offset
+        #mag = mg + 5. * math.log10(r_earth_target) + mk * math.log10(r_sun_target)
+        #if instance is not None:
+        #    mag += instance.mag_offset
+    elif object_type == 'planet':
+        pass
     else:
         mag = None
     apparent_magnitude = mag
