@@ -37,6 +37,7 @@ class DSODetailView(CookieMixin, DetailView):
         planets_dict = context['cookies']['planets']
         asteroid_list = context['cookies']['asteroids']
         comet_list = context['cookies']['comets']
+
         finder_chart, times1 = create_dso_finder_chart(
             self.object, 
             utdt = context['utdt_start'], 
@@ -50,9 +51,9 @@ class DSODetailView(CookieMixin, DetailView):
             fov = 2.,
             mag_limit = 11.,
             show_other_dsos = False,
-            planets_dict=planets_dict,
-            asteroid_list=asteroid_list,
-            comet_list=comet_list
+            #planets_dict=planets_dict,
+            #asteroid_list=asteroid_list,
+            #comet_list=comet_list
         )
         context['close_up_finder'] = close_up_finder
         context['live_finder_chart'] = finder_chart

@@ -6,12 +6,33 @@
 {% block content %}
 <style>
     table.catalog_list td { font-size: 14px; }
+    table.stats { width: 50%; }
+    table.stats td {
+        padding: 3px;
+        text-align: center;
+    }
 </style>
 <!-- main -->
 {# header section #}
 <table class="lite">
     <tr>
-        <td width="50%"><h1>{{ object.abbreviation }}: {{ object.name }}</h1></td>
+        <td width="50%">
+            <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+            <table class="stats">
+                {% with object.observing_stats as x %}
+                <tr>
+                    <th>Observation Completion</th>
+                    <th>#</th><th># Obs.</th><th>%</th></tr>
+                <tr>
+                    <td>
+                    Avail.{% if x.n_available == x.n_total %}/Total{% endif %}
+                    </td><td>{{ x.n_available }}</td><td>{{ x.n_obs }}</td><td>{{ x.p_available|floatformat:1}}%</td></tr>
+                {% if x.n_available != x.n_total %}
+                <tr><td>Total</td><td>{{ x.n_total }}</td><td>{{ x.n_obs }}</td><td>{{ x.p_obs|floatformat:1 }}%</td></tr>
+                {% endif %}
+                {% endwith %}
+            </table>
+        </td>
         <td>
             <table class="lite">
             <tr>
@@ -33,12 +54,12 @@
         <th>Object</th>
         <th>Other Catalog</th>
         <th>Name</th>
+        <th>Con.</th>
         <th>&alpha; (2000)</th>
         <th>&delta; (2000)</th>
         <th>Type</th>
         <th>Mag</th>
         <th>Size</th>
-        <th>Con.</th>
         <th>Pri.</th>
         <th># Obs.</th>
         <th>Last Obs.</th>
@@ -61,12 +82,12 @@
             {% endif %}
         </td>
         <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
+        <td>{{ thing.constellation.abbreviation }}</td>
         <td>{{ thing.ra_text }}</td>
         <td>{{ thing.dec_text }}</td>
         <td>{{ thing.object_type.short_name }}</td>
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
-        <td>{{ thing.constellation.abbreviation }}</td>
         <td>{{ thing.priority }}</td>
         <td>{{ thing.number_of_observations }}</td>
         <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>

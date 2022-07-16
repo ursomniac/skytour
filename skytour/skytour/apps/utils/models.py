@@ -42,14 +42,40 @@ class Catalog(AbstractCatalog):
     @property
     def dso_list(self):
         dso1 = self.dso_set.order_by('id_in_catalog')
-        dso2 = self.dsoalias_set.annotate(iic=models.functions.Cast('order_in_catalog'), output_field=models.IntegerField()).order_by('iic')
+        dso2 = self.dsoalias_set.annotate(
+            iic=models.functions.Cast('id_in_catalog', models.IntegerField())
+        ).order_by('iic')
         dsos = []
         for dso in dso1:
             dsos.append(dso)
         for dso in dso2:
             dsos.append(dso.object)
         return dsos
+
+    @property
+    def observing_stats(self):
+        n_total = 0
+        n_obs = 0
+        n_available = 0
+        for dso in self.dso_list:
+            n_total += 1
+            if dso.number_of_observations > 0:
+                n_obs += 1
+            if dso.priority != 'None':
+                n_available += 1
         
+        f_obs = (n_obs + 0.)/n_total
+        f_avail = (n_obs + 0.)/n_available
+        return dict(
+            n_obs=n_obs,
+            n_total=n_total,
+            f_obs=f_obs,
+            p_obs=f_obs*100.,
+            n_available=n_available,
+            f_available=f_avail,
+            p_available=f_avail*100.
+        )
+
     class Meta:
         ordering = ['abbreviation']
 
