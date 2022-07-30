@@ -175,19 +175,23 @@ class AsteroidDetailView(CookieMixin, DetailView):
         context['asteroid'] = pdict
 
         if pdict: # This is so you COULD go to an page for something not in the cookie
-            context['finder_chart'], ftimes = create_finder_chart (
-                utdt_start, 
-                object,
-                planets_cookie=planets_cookie,
-                asteroids=asteroid_cookie,
-                object_type = 'asteroid',
-                obj_cookie = pdict,
-                fov=2., 
-                reversed = reversed,
-                mag_limit=11., 
-                sun = context['cookies']['sun'],
-                moon = context['cookies']['moon']
-            )
+            for c, sc, mm in [
+                ('finder_chart', 2., 11.), 
+                ('large_scale_map', 10., 9.)
+            ]:
+                context[c], ftimes = create_finder_chart (
+                    utdt_start, 
+                    object,
+                    planets_cookie=planets_cookie,
+                    asteroids=asteroid_cookie,
+                    object_type = 'asteroid',
+                    obj_cookie = pdict,
+                    fov=sc, 
+                    reversed = reversed,
+                    mag_limit=11., 
+                    sun = context['cookies']['sun'],
+                    moon = context['cookies']['moon']
+                )
         return context
 
 class CometListView(CookieMixin, ListView):
@@ -253,6 +257,19 @@ class CometDetailView(CookieMixin, DetailView):
             fov = 4.,
             reversed = reversed,
             mag_limit = 11.,
+            sun = context['cookies']['sun'],
+            moon = context['cookies']['moon']
+        )
+        context['large_scale_map'], ftimes = create_finder_chart (
+            context['utdt_start'],
+            object,
+            planets,
+            asteroids,
+            object_type = 'comet',
+            obj_cookie = pdict,
+            fov = 10.,
+            reversed = reversed,
+            mag_limit = 9.,
             sun = context['cookies']['sun'],
             moon = context['cookies']['moon']
         )

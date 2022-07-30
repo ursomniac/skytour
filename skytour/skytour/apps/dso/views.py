@@ -145,8 +145,8 @@ class DSOFilterView(FormView):
             dso_list = dso_list.exclude(surface_brightness__gte=d['surface_max'])
         context['dso_count'] = dso_list.count()
         context['dso_found'] = dso_list.order_by('ra')
-
         context['add_form'] = DSOAddForm(dso_list)
+        context['table_id'] = 'dso_picker'
         return self.render_to_response(context)
 
 class DSOCreateList(TemplateView):
