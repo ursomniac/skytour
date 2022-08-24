@@ -43,6 +43,11 @@
                     {% endwith %}
                 </td>
                 <td colspan=1>
+                    {% with form.use_sqm as field %}
+                    {% include "inc_form_field.html" %}
+                    {% endwith %}
+                </td>
+                <td colspan=1>
                     {% with form.moon as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
@@ -50,24 +55,22 @@
 
             </tr>
             <tr>
-                <td colspan=2>
+                <td colspan=1>
                     {% with form.temperature as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
-                <td colspan=2>
+                <td colspan=1>
                     {% with form.humidity as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
-            </tr>
-            <tr>
-                <td colspan=2>
+                <td colspan=1>
                     {% with form.cloud_cover as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}
                 </td>
-                <td colspan=2>
+                <td colspan=1>
                     {% with form.wind as field %}
                     {% include "inc_form_field.html" %}
                     {% endwith %}

@@ -17,8 +17,8 @@ class CometObservationAdmin(AbstractObservation):
 class PlanetObservationAdmin(AbstractObservation):
     model = PlanetObservation
 
-class MoonObservationAdmin(AbstractObservation):
-    model = MoonObservation
+#class MoonObservationAdmin(AbstractObservation):
+#    model = MoonObservation
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
@@ -59,9 +59,12 @@ class CometAdmin(ObservableObjectAdmin):
     list_display_links = ['pk', 'name']
     inlines = [CometObservationAdmin]
     save_on_top = True
-    
+
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
 admin.site.register(Asteroid, AsteroidAdmin)
 admin.site.register(Comet, CometAdmin)
 admin.site.register(MoonObservation)
+#admin.site.register(PlanetObservation, PlanetObservationAdmin)
+#admin.site.register(CometObservation, CometObservationAdmin)
+#admin.site.register(AsteroidObservation, AsteroidObservationAdmin)

@@ -23,6 +23,7 @@ from .models import Asteroid, Comet, Planet
 def get_rise_set(alist, format="%Y-%m-%d %I:%M %p"):
     orise = None
     oset = None
+    otrans = None
 
     for e in alist:
         tstr = isoparse(e['local_time']).strftime(format)
@@ -30,7 +31,9 @@ def get_rise_set(alist, format="%Y-%m-%d %I:%M %p"):
             orise = tstr
         elif e['type'] == 'Set':
             oset = tstr
-    return orise, oset
+        elif e['type'] == 'Transit':
+            otrans = tstr
+    return orise, oset, otrans
 
 
 def get_object(object_type, object_id):

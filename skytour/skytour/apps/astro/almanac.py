@@ -1,5 +1,12 @@
 import datetime, pytz
-from skyfield.almanac import risings_and_settings, find_discrete, dark_twilight_day, sunrise_sunset, TWILIGHTS
+from skyfield.almanac import (
+        risings_and_settings, 
+        find_discrete, 
+        dark_twilight_day, 
+        sunrise_sunset, 
+        meridian_transits,
+        TWILIGHTS
+    )
 from skyfield.api import wgs84, load
 from .time import get_0h
 
@@ -52,6 +59,27 @@ def get_almanac_times(today, ts, f):
     begin_at = get_astronomical_twilight(times, events, 1)
     return end_at, begin_at
 
+def get_events(t, y, events=None, transit=False, serialize=False, time_zone=None):
+    if events is None:
+        events = []
+    for zt, zy in zip(t, y):
+        if zy == 0: # set or meridian
+            event_type = 'Anti-Transit' if transit else 'Set' 
+        else:
+            event_type = 'Transit' if transit else 'Rise'
+        jd = zt.tt.item()
+        ut = zt.utc_datetime()
+        local_time = zt.astimezone(time_zone) if time_zone is not None else None
+        if serialize:
+            ut = ut.isoformat()
+            local_time = local_time.astimezone(time_zone).isoformat()
+        events.append(dict(
+            type = event_type, 
+            jd = jd, 
+            ut = ut,
+            local_time = local_time
+        ))
+    return events
 
 def get_object_rise_set(utdt, eph, target, location, serialize=False, time_zone=None):
     """
@@ -70,25 +98,12 @@ def get_object_rise_set(utdt, eph, target, location, serialize=False, time_zone=
     # near the horizon anyway you won't want to observe them.
     f = risings_and_settings(eph, target, loc)
     t, y = find_discrete(t0, t1, f)
+    events = get_events(t, y, serialize=serialize, time_zone=time_zone)
 
-    events = []
-    for zt, zy in zip(t, y):
-        if zy == 0: # set
-            event_type = 'Set'
-        else:
-            event_type = 'Rise'
-        jd = zt.tt.item()
-        ut = zt.utc_datetime()
-        local_time = zt.astimezone(time_zone) if time_zone is not None else None
-        if serialize:
-            ut = ut.isoformat()
-            local_time = local_time.astimezone(time_zone).isoformat()
-        events.append(dict(
-            type = event_type, 
-            jd = jd, 
-            ut = ut,
-            local_time = local_time
-        ))
+    # TODO: Add transit times!
+    f2 = meridian_transits(eph, target, loc)
+    t2, y2 = find_discrete(t0, t1, f2)
+    events = get_events(t2, y2, events=events, serialize=serialize, time_zone=time_zone, transit=True)
     return events
     
 def get_sun_rise_set(utdt, loc, ts, eph, time_zone=None):

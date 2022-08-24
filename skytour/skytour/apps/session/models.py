@@ -8,6 +8,10 @@ from ..astro.utils import get_limiting_magnitude
 from .chain import get_all_observations, get_all_objects
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
+YES_NO = [(1, 'Yes'), (0, 'No')]
+YES = 1
+NO = 0
+
 class ObservingSession(models.Model):
     """
     This indexes for view on PK.   I did this instead of a DateView because 
@@ -69,7 +73,7 @@ class ObservingSession(models.Model):
             return None
         y = []
         for c in conditions:
-            if c.sqm:
+            if c.sqm and c.use_sqm:
                 y.append(c.sqm)
         avg = np.average(y)
         rms = np.std(y)
@@ -114,7 +118,8 @@ class ObservingCircumstances(models.Model):
         _('Session Stage'),
         max_length = 20,
         choices = SESSION_STAGE_CHOICES,
-        null = True, blank = True
+        null = True, blank = True,
+        default = 'during'
     )
     seeing = models.PositiveIntegerField (
         _('Seeing'),
@@ -125,6 +130,11 @@ class ObservingCircumstances(models.Model):
     sqm = models.FloatField (
         _('SQM'),
         null = True, blank = True
+    )
+    use_sqm = models.PositiveIntegerField (
+        _('Use SQM in Stats'),
+        choices = YES_NO,
+        default = YES
     )
     temperature = models.IntegerField (
         _('Temperature'),

@@ -169,6 +169,7 @@ class ObservingConditionsForm(forms.ModelForm):
             'ut_datetime',
             'seeing',
             'sqm',
+            'use_sqm',
             'temperature',
             'humidity',
             'cloud_cover',

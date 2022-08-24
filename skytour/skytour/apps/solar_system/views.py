@@ -34,10 +34,10 @@ class PlanetListView(CookieMixin, ListView):
             d['n_obs'] = p.number_of_observations
             d['last_observed'] = p.last_observed
             planet_list.append(d)
-            d['obj_rise'], d['obj_set'] = get_rise_set(d['almanac'])
+            d['obj_rise'], d['obj_set'], d['obj_transit'] = get_rise_set(d['almanac'])
         context['planet_list'] = planet_list
         moon = context['cookies']['moon']
-        context['moon_rise'], context['moon_set'] = get_rise_set(moon['almanac'])
+        context['moon_rise'], context['moon_set'], context['moon_transit'] = get_rise_set(moon['almanac'])
         pdict = get_ecliptic_positions(context['utdt_start'])
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context

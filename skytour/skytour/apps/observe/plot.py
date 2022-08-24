@@ -103,7 +103,7 @@ def plot_sqm_history(loc, reversed=False):
         sy = []
         obs = s.observingcircumstances_set.all()
         for o in obs:
-            if o.sqm is not None:
+            if o.sqm is not None and o.use_sqm:
                 sy.append(o.sqm)
         if len(sy) == 0:
             continue
