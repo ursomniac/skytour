@@ -38,7 +38,6 @@ class SkyView(CookieMixin, TemplateView):
         context['shown_datetime'] = utdt_start + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
-        context['title'] = 'Skymap: Skytour'
         title = f"Skymap: {context['local_time_str']} - {location.name_for_header}"
         map, interesting, last, times = get_skymap(
             utdt_start, 

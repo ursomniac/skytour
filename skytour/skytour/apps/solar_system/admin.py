@@ -3,7 +3,7 @@ from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
 from .models import (
     Asteroid, AsteroidObservation,
     Comet, CometObservation, 
-    Planet, PlanetObservation, 
+    Planet, PlanetObservation, PlanetMoon,
     MoonObservation,
     MeteorShower, 
 )
@@ -60,8 +60,13 @@ class CometAdmin(ObservableObjectAdmin):
     inlines = [CometObservationAdmin]
     save_on_top = True
 
+class PlanetMoonAdmin(admin.ModelAdmin):
+    model = PlanetMoon
+    list_display = ['pk', 'name', 'planet', 'planet_index', 'radius', 'major_axis', 'h', 'period_in_days', 'use_in_modeling']
+
 admin.site.register(MeteorShower, MeteorShowerAdmin)
 admin.site.register(Planet, PlanetAdmin)
+admin.site.register(PlanetMoon, PlanetMoonAdmin)
 admin.site.register(Asteroid, AsteroidAdmin)
 admin.site.register(Comet, CometAdmin)
 admin.site.register(MoonObservation)

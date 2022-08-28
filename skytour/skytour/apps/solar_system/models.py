@@ -5,6 +5,7 @@ from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
+from ..abstract.vocabs import YES, NO, YES_NO
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -359,3 +360,55 @@ class CometObservation(ObservingLog):
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
+
+class PlanetMoon(models.Model):
+    name = models.CharField(
+        _('Name'),
+        max_length=50,
+    )
+    planet = models.ForeignKey(Planet, on_delete=models.CASCADE)
+    planet_index = models.PositiveIntegerField(
+        _('Index')
+    )
+    radius = models.FloatField(
+        _('Radius'),
+        help_text = 'km'
+    )
+    major_axis = models.FloatField(
+        _('Dist. from Planet'),
+        help_text = 'km',
+        null = True, blank = True
+    )
+    albedo = models.FloatField(
+        _('Albedo')
+    )
+    h = models.FloatField(
+        _('H'),
+        help_text = 'abs. mag'
+    )
+    g = models.FloatField(
+        ('G'),
+        default = 0.15,
+        help_text = 'slope parameter'
+    )
+    period = models.FloatField(
+        ('Period'),
+        help_text = ('hours')
+    )
+    use_in_modeling = models.PositiveIntegerField(
+        choices = YES_NO,
+        default = NO
+    )
+
+    class Meta:
+        verbose_name = 'Planetary Satellite'
+        verbose_name_plural = 'Planetary Satellites'
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def period_in_days(self):
+        return self.period / 24.
+
+ 

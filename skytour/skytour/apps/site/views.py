@@ -20,6 +20,7 @@ class HomePageView(CookieMixin, TemplateView):
         utdt = context['utdt_start'] \
             if self.request.GET.get('cookie') is not None \
             else datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['utdt'] = utdt
         planets = context['cookies']['planets']
         if planets:
             context['adjacent_planets'] = get_adjacent_planets(planets, context['utdt_start'])

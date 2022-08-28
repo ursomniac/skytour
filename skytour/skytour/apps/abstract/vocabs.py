@@ -5,3 +5,7 @@ SEEING_CHOICES = (
     (2, '2 = Poor: (partly) missing diffraction rings; eddy streams in central disk'),
     (1, '1 = Fail: boiling image; no sign of diffraction pattern')
 )
+
+YES_NO = [(1, 'Yes'), (0, 'No')]
+YES = 1
+NO = 0
