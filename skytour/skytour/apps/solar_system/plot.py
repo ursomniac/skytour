@@ -527,7 +527,7 @@ def get_planet_map(planet, physical):
                     delta_longitude = f['longitude']
             #delta_longitude = physical['red_spot']['delta_longitude']
     except:
-        print ("returning None")
+        #print ("returning None")
         return None, None, None
 
     plt.rcParams['figure.figsize'] = [10, 5]

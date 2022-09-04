@@ -37,7 +37,11 @@ def get_metadata(observation):
     object_type = observation.object_type
 
     if observation.object_type != 'DSO':
-        eph_label = target.target if object_type == 'Planet' else None
+        if object_type == 'Planet':
+            eph_label = target.target
+        else:
+            eph_label = None
+
         ephem = get_object_metadata(
             utdt, 
             eph_label, 
@@ -45,13 +49,16 @@ def get_metadata(observation):
             instance=target, 
             location=location
         )
-        ra = ephem['apparent']['equ']['ra']
-        dec = ephem['apparent']['equ']['dec']
-        distance = ephem['apparent']['distance']['au']
-        distance_units = 'AU'
-        constellation = ephem['observe']['constellation']['abbr']
-        angular_diameter = ephem['observe']['angular_diameter']
-        apparent_magnitude = ephem['observe']['apparent_magnitude']
+        try:
+            ra = ephem['apparent']['equ']['ra']
+            dec = ephem['apparent']['equ']['dec']
+            distance = ephem['apparent']['distance']['au']
+            distance_units = 'AU'
+            constellation = ephem['observe']['constellation']['abbr']
+            angular_diameter = ephem['observe']['angular_diameter']
+            apparent_magnitude = ephem['observe']['apparent_magnitude']
+        except:
+            return None
     else:
         ra = target.ra_float
         dec = target.dec_float

@@ -10,7 +10,7 @@ class ObservingCircumstancesInline(admin.StackedInline):
                 ('session_stage', 'ut_datetime'),
                 ('temperature', 'humidity'), 
                 ('cloud_cover', 'wind'),
-                ('seeing', 'sqm', 'use_sqm'),
+                ('seeing', 'sqm', 'moon', 'use_sqm'),
                 'notes'
             ]
         }),

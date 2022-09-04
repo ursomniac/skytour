@@ -4,7 +4,7 @@ from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..astro.almanac import get_object_rise_set
 from ..astro.local import get_observing_situation
-
+from .asteroids import get_asteroid_target
 from .comets import get_comet_target, get_comet_magnitude
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
@@ -50,8 +50,9 @@ def get_object_metadata(
     elif object_type == 'asteroid':
         if instance is None:
             return None
+        eph_body = get_asteroid_target(instance, ts, sun)
         # This is a hack, really but it improves processing by 20%
-        eph_body = eph_label
+        #eph_body = eph_label
     else: 
         eph_body = eph[eph_label]
 
