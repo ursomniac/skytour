@@ -65,12 +65,18 @@
             {% include 'inc_location.html' %}
             <br><br>
         </td>
+
         <td width="25%" style="vertical-align:top;">
             {% with planet as obj %}
             {% include 'inc_coordinates.html' %}
             {% endwith %}
             <br><br>
+
+            {% if planet.moons %}
+            {% include 'inc_moon_table.html' %}
+            {% endif %}
         </td>
+
         <td width="25%" style="vertical-align:top;">
             {% with planet as obj %}
             {% include 'inc_apparent.html' %}
@@ -90,7 +96,6 @@
             {% if planet.physical %}
             {% include 'inc_physical.html' %}
             {% endif %}
-            <br><br>
         </td>
 
         <td width="25%" style="vertical-align:top;">

@@ -3,6 +3,8 @@ from skyfield.almanac import moon_phase
 from skyfield.api import load
 from skyfield.magnitudelib import planetary_magnitude
 from ..astro.almanac import get_object_rise_set
+from ..astro.angdist import get_small_ang_sep
+from ..astro.astro import solar_system_apparent_magnitude, galilean_magnitude
 from ..astro.local import get_observing_situation
 from .asteroids import get_asteroid_target
 from .comets import get_comet_target, get_comet_magnitude
@@ -143,15 +145,7 @@ def get_object_metadata(
         except:
             mag = None # there are some edge issues...
     elif object_type == 'asteroid':
-        mag = None
-        # This is apparently in Skyfield v1.42 as-yet not released.
-        if phase_angle:
-            rpa = math.radians(phase_angle) # Assuming this is the same phase angle
-            phi_1 = math.exp(-3.33 * math.tan(rpa/2.)**0.63)
-            phi_2 = math.exp(-1.87 * math.tan(rpa/2.)**1.22)
-            m1 = instance.h + 5 * math.log10(r_sun_target * r_earth_target) 
-            m2 = 2.5 * math.log10((1 - instance.g) * phi_1 + instance.g * phi_2)
-            mag = m1 - m2
+        mag = solar_system_apparent_magnitude(r_earth_target, r_sun_target, instance.h, phase_angle, g=instance.g)
     elif object_type == 'comet':
         mg = row['magnitude_g']
         mk = row['magnitude_k']
@@ -206,12 +200,44 @@ def get_object_metadata(
             moon_obs = []
             moonsys = load(instance.load)
             earth_s = moonsys['earth']
+            sun_s = moonsys['sun']
             for moon in instance.moon_list:
+                print('Moon: ', moon)
                 mdict = {}
                 mdict['name'] = moon
                 moon_target = moonsys[moon]
-                obs = earth_s.at(t).observe(moon_target)
+                obs = earth_s.at(t).observe(moon_target) # Earth to Moon
                 mdict['apparent'] = serialize_astrometric(obs)
+                ang_sep = get_small_ang_sep(ra, dec, mdict['apparent']['equ']['ra'], mdict['apparent']['equ']['dec'], degrees=True )
+                mdict['planet_separation'] = ang_sep
+                mdict['planet_sep_str'] = get_angular_size_string(mdict['planet_separation'])
+                try: # TODO: Add additional code for Iapetus (somehow)
+                    moon_instance = instance.planetmoon_set.get(name=moon)
+                except:
+                    moon_instance = None
+
+                if moon_instance is not None:
+                    moon_sun = sun_s.at(t).observe(moon_target) # Sun to Moon
+                    earth_dist = obs.radec()[2].au.item()
+                    sun_dist = moon_sun.radec()[2].au.item()
+                    #m = moon_instance.h + 5 * math.log10(earth_dist * sun_dist) - moon_instance.g
+                    if instance.name != 'Jupiter':
+                        m = solar_system_apparent_magnitude (
+                            earth_dist, sun_dist, 
+                            moon_instance.h,
+                            None, #phase_angle, # use the planet
+                            g = 0.
+                        )
+                    else:
+                        m = galilean_magnitude(moon, moon_instance.h, phase_angle, earth_dist, sun_dist)
+                    mdict['sun_distance'] = sun_dist
+                    mdict['earth_distance'] = earth_dist
+                    #mdict['g_mag'] = moon_instance.g
+                    mdict['abs_mag'] = moon_instance.h
+                    #mdict['term1'] = math.log10(sun_dist * earth_dist)
+                    #mdict['phase_angle'] = phase_angle
+                    mdict['apparent_magnitude'] = m
+
                 moon_obs.append(mdict)
 
     # Physical (Mars, Jupiter)

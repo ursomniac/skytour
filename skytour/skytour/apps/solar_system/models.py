@@ -411,4 +411,7 @@ class PlanetMoon(models.Model):
     def period_in_days(self):
         return self.period / 24.
 
- 
+    @property
+    def apparent_magnitude(self, earth_dist, sun_dist):
+        m = self.h + 5 * math.log10(earth_dist * sun_dist) - self.g
+        return m

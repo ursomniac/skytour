@@ -1,0 +1,12 @@
+<h3>Moons</h3>
+<table>
+    <tr><th>Name</th><th>Mag.</th><th>Sep.</th></tr>
+    {% for moon in planet.moons %}
+    <tr>
+        <td>{{ moon.name }}</td>
+        <td>{{ moon.apparent_magnitude|floatformat:2 }}</td>
+        <td>{{ moon.planet_sep_str }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br><br>

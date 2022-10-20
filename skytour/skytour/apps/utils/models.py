@@ -32,6 +32,22 @@ class Catalog(AbstractCatalog):
     """
     One Catalog is Proper Name - it has an empty abbreviation.
     """
+
+    def filter_dso_list(self, filters=None):
+        dso_list = self.dso_list
+        flist = []
+        for dso in dso_list:
+            if 'seen' in filters and dso.observations.count() == 0:
+                continue
+            if 'important' in filters and dso.priority not in ['High', 'Highest']:
+                continue
+            if 'unseen' in filters and dso.observations.count() != 0:
+                continue
+            if 'available' in filters and dso.priority == 'None':
+                continue
+            flist.append(dso)
+        return flist
+
     @property
     def dso_count(self):
         """

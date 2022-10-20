@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from .models import Constellation, Catalog, ObjectType
+from .utils import filter_dso_test
 from ..dso.models import DSO, DSOAlias
 from ..stars.models import BrightStar
 from .helpers import get_objects_from_cookie
@@ -84,15 +85,23 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         if object.slug in ['messier', 'caldwell']: # Override pagination
             self.paginate_by = None
 
+        filter_string = self.request.GET.get('filters', None)
+        print("FILTER STRING: ", filter_string)
+        if filter_string is not None:
+            filters = filter_string.split(',')
         # OK - somehow merge these two.
         all_objects = []
         for o in primary_dsos:
+            if filters is not None and filter_dso_test(o, filters) is None:
+                continue
             entry = {}
             entry['in_catalog'] = o.id_in_catalog
             entry['primary_catalog'] = None
             entry['dso'] = o
             all_objects.append(entry)
         for o in alias_dsos:
+            if filters is not None and filter_dso_test(o, filters) is None:
+                continue
             entry = {}
             entry['primary_catalog'] = o.shown_name
             entry['in_catalog'] = o.aliases.filter(catalog = object).first().id_in_catalog
@@ -111,6 +120,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         
         context['catalog_list'] = cat_list
         context['table_id'] = f'cat_dso_{object.slug}'
+        context['object_count'] = len(all_objects)
         return context
 
 class ObjectTypeListView(ListView):
