@@ -17,8 +17,8 @@
     </tr>
     {% for obj in object_list %}
     <tr>
-        <td>{{ obj.session.ut_date }}</td>
-        <td>{{ obj.session.location.short_name }}</td>
+        <td><a href="{% url 'session-detail' obj.session.pk %}">{{ obj.session.ut_date }}</a></td>
+        <td><a href="{% url 'observing-location-detail' obj.session.location.pk %}">{{ obj.session.location.short_name }}</a></td>
         <td>{{ obj.ut_datetime.time }}</td>
         <td>{{ obj.sqm|floatformat:2 }}</td>
         <td>{{ obj.temperature|floatformat:0 }}°F</td>

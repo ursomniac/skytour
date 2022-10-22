@@ -323,7 +323,8 @@ class SessionAddView(CookieMixin, FormView):
 
         if object:
             obs.object = object
-        obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
+        #obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
+        obs.ut_datetime = datetime.datetime.now().replace(tzinfo=pytz.timezone('UTC')) # UTC
         obs.location = d['location']
         obs.telescope = d['telescope']
         obs.notes = d['notes']
@@ -377,7 +378,7 @@ class ObservingCircumstancesView(ListView):
         df = df.rename(columns={'session__location__sqm': 'lsqm'})
         df['date'] = pd.DatetimeIndex(df['ut_datetime']).date
         df['time'] = pd.DatetimeIndex(df['ut_datetime']).time
-        df['dsqm'] = pd['lsqm'] - pd['sqm']
+        df['dsqm'] = df['lsqm'] - df['sqm']
 
         # Histogram of SQM - ignore NaN values
         sqm_bins = np.linspace(20.0, 22.0, num=21)

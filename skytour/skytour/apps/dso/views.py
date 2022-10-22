@@ -97,7 +97,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         
         # Make a map
         dso_list = self.object.dso.all()
-        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list)
+        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, mag=1.8)
         star_mag_limit = get_star_mag_limit(max_dist)
 
         map = plot_dso_list(

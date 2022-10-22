@@ -66,7 +66,7 @@ def lookup_dso(name):
         d = DSO.objects.filter(aliases__shown_name=name).first()
     return d
 
-def get_map_parameters(dso_list, debug=False):
+def get_map_parameters(dso_list, mag=2.4, debug=False):
     """
     Given a list of DSOs, return:
        1. The center ra, dec
@@ -108,7 +108,7 @@ def get_map_parameters(dso_list, debug=False):
         elif dist > max_dist:
             max_dist = dist
 
-    fov = max_dist * 2.4
+    fov = max_dist * mag
     if debug:
         print(f"MAX DIST: {max_dist} FOV: {fov}")
     return ra, dec, max_dist, fov

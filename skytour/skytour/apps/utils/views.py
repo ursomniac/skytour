@@ -87,8 +87,8 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
 
         filter_string = self.request.GET.get('filters', None)
         print("FILTER STRING: ", filter_string)
-        if filter_string is not None:
-            filters = filter_string.split(',')
+        filters = filter_string.split(',') if filter_string is not None else None
+
         # OK - somehow merge these two.
         all_objects = []
         for o in primary_dsos:

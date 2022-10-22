@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..observe.models import ObservingLocation
+from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
@@ -165,6 +166,7 @@ class ObjectImage(models.Model):
 
 
 class ObservingLog(models.Model):
+    session = models.ForeignKey(ObservingSession, null=True, on_delete=models.CASCADE)
     ut_datetime = models.DateTimeField (
         _('UTDT of Obs.'),
         default = datetime.datetime.utcnow,

@@ -2,10 +2,10 @@ import datetime
 import numpy as np
 from django.db import models
 from django.utils.translation import gettext as _
+from itertools import chain
 from ..observe.models import ObservingLocation
 from ..astro.time import get_last, get_julian_date
 from ..astro.utils import get_limiting_magnitude
-from .chain import get_all_observations, get_all_objects
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 YES_NO = [(1, 'Yes'), (0, 'No')]
@@ -43,15 +43,24 @@ class ObservingSession(models.Model):
     # Get all of the Planet/OSD/etc. observations for this session
     @property
     def session_observations(self):
-        return get_all_observations(self)
+        ox = self.observingcircumstances_set.all()
+        od = self.dsoobservation_set.all()
+        op = self.planetobservation_set.all()
+        oa = self.asteroidobservation_set.all()
+        oc = self.cometobservation_set.all()
+        om = self.moonobservation_set.all()
+        sorted_list = sorted(chain(ox, od, op, oa, oc, om), key=lambda obs: obs.ut_datetime)
+        return sorted_list
 
     @property
     def number_objects_observed(self):
-        object_dict = get_all_objects(self)
-        n = 0
-        for k, v in object_dict.items():
-            n += v.count()
-        return n
+        count = 0
+        count += self.dsoobservation_set.count()
+        count += self.planetobservation_set.count()
+        count += self.asteroidobservation_set.count()
+        count += self.cometobservation_set.count()
+        count += self.moonobservation_set.count()
+        return count
 
     @property
     def sqm_range(self):

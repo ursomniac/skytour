@@ -61,6 +61,7 @@
         <th>Type</th>
         <th>Mag</th>
         <th>Size</th>
+        <th>S.Br.</th>
         <th>Pri.</th>
         <th># Obs.</th>
         <th>Last Obs.</th>
@@ -89,6 +90,7 @@
         <td>{{ thing.object_type.short_name }}</td>
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
+        <td>{{ thing.surface_brightness|floatformat:1}}</td>
         <td>{{ thing.priority }}</td>
         <td>{{ thing.number_of_observations }}</td>
         <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
