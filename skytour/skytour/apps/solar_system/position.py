@@ -202,7 +202,7 @@ def get_object_metadata(
             earth_s = moonsys['earth']
             sun_s = moonsys['sun']
             for moon in instance.moon_list:
-                print('Moon: ', moon)
+                #print('Moon: ', moon)
                 mdict = {}
                 mdict['name'] = moon
                 moon_target = moonsys[moon]
