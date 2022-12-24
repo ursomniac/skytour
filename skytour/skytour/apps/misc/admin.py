@@ -23,6 +23,7 @@ class GlossaryAdmin(admin.ModelAdmin):
 
 class CalendarAdmin(admin.ModelAdmin):
     model = Calendar
+    date_hierarchy = 'date'
     inlines = [CalendarEventReferenceInline]
     list_display = ['pk',  'date', 'time', 'title', 'event_type', 'reference_list']
     readonly_fields = ['reference_list']

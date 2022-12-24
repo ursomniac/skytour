@@ -44,8 +44,7 @@ def create_atlas_plate(plate_id, shapes=False, reversed=False):
     ra, dec = plates[plate_id]
     x.center_ra = ra
     x.center_dec = dec
-    fn, dso_list = create_atlas_plot(
-        ra, dec, plate_id, shapes=shapes, reversed=reversed)
+    fn, dso_list = create_atlas_plot(ra, dec, plate_id, shapes=shapes, reversed=reversed)
     x.save()
 
     # Store everything in AtlasPlateVersion

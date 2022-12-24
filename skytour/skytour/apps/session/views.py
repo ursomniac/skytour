@@ -334,6 +334,7 @@ class SessionAddView(CookieMixin, FormView):
         if d['filter'].count() > 0:
             obs.filters.add(*d['filter'])
         obs.notes = d['notes']
+        obs.session = d['session']
         obs.save()
 
         context['message'] = f"{d['ut_time']}: Observation of {obs.target_name} logged."

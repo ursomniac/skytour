@@ -22,12 +22,12 @@ class PlanetObservationAdmin(AbstractObservation):
 
 class MeteorShowerAdmin(admin.ModelAdmin):
     model = MeteorShower
-    list_display = ['pk', 'name', 'radiant_ra', 'radiant_dec', 'start_date', 'peak_date', 'end_date', 'zhr']
+    list_display = ['pk', 'slug', 'name', 'intensity', 'radiant_ra', 'radiant_dec', 'start_date', 'peak_date', 'end_date', 'zhr']
     search_fields = ['name']
     fieldsets = (
         (None, {
             'fields': [
-                ('name', 'slug'),
+                ('name', 'slug', 'intensity'),
                 ('start_date', 'peak_date', 'end_date'),
                 ('radiant_ra', 'radiant_dec', 'longitude'),
                 ('speed', 'zhr', 'parent_body'),

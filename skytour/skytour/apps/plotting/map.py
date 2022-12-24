@@ -569,7 +569,7 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
     if len(active) == 0: # Nothing to do!
         return ax, None
 
-    d = {'x': [], 'y': [], 'label': [], 'marker': []}
+    d = {'x': [], 'y': [], 'label': [], 'marker': [], 'size': []}
     interesting = []
     for a in active:
         if center:
@@ -582,10 +582,17 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
         d['x'].append(x)
         d['y'].append(y)
         d['label'].append(a.name)
+        if a.intensity == 'Major':
+            d['size'].append(size)
+        elif a.intensity == 'Minor':
+            d['size'].append(size * 0.6)
+        else:
+            d['size'].append(size * 0.4)
+
 
     scatter = ax.scatter(
         d['x'], d['y'], 
-        s=size, c=color, 
+        s=d['size'], c=color, 
         marker=marker, alpha=alpha
     )
     return ax, interesting

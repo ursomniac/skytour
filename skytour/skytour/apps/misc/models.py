@@ -122,6 +122,10 @@ class Calendar(models.Model):
 REFERENCE_MODEL_CHOICES = [
     ('Planet', 'Planet'),
     ('DSO', 'DSO'),
+    ('Asteroid', 'Asteroid'),
+    ('Moon', 'Moon'),
+    ('Sun', 'Sun'),
+    ('Comet', 'Comet')
 ]
 class CalendarEventReference(models.Model):
     calendar_event = models.ForeignKey(Calendar, on_delete=models.CASCADE)

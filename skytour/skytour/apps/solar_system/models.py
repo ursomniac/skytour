@@ -136,6 +136,12 @@ class MoonObservation(ObservingLog):
         verbose_name = 'Moon Observation'
         verbose_name_plural = 'Moon Observations'
 
+
+SHOWER_IMPORTANCE = (
+    ('Major', 'Major'),
+    ('Minor', 'Minor'),
+    ('Sporadic', 'Sporadic')
+)
 class MeteorShower(models.Model):
 
     name = models.CharField(
@@ -180,6 +186,12 @@ class MeteorShower(models.Model):
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
+    )
+    intensity = models.CharField (
+        _('Intensity'),
+        max_length = 20,
+        choices = SHOWER_IMPORTANCE,
+        default = 'Major'
     )
 
     def __str__(self):
