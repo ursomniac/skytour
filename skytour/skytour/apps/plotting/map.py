@@ -585,9 +585,9 @@ def map_meteor_showers(ax, utdt, earth, t, projection,
         if a.intensity == 'Major':
             d['size'].append(size)
         elif a.intensity == 'Minor':
-            d['size'].append(size * 0.6)
+            d['size'].append(size * 0.5)
         else:
-            d['size'].append(size * 0.4)
+            d['size'].append(size * 0.25)
 
 
     scatter = ax.scatter(

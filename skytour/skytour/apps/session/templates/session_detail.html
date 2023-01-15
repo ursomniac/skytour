@@ -100,6 +100,10 @@
                 SQM:</td><td>{{ target.sqm|floatformat:2 }}
                 {% if target.moon %}&nbsp;<small>(Moon)</small>{% endif %}
             </td></tr>
+            {% if target.sqm %}
+            <tr><td>Eff. Bortle:</td><td>{{ target.effective_bortle|floatformat:1 }}
+            </td></tr>
+            {% endif %}
             <tr><td>Seeing:</td><td>{{ target.seeing }}</td></tr>
             <tr><td>Cloud Cover:</td><td>{{ cloud_cover }}</td></tr>
         {% else %}

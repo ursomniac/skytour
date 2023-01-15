@@ -6,6 +6,7 @@ from itertools import chain
 from ..observe.models import ObservingLocation
 from ..astro.time import get_last, get_julian_date
 from ..astro.utils import get_limiting_magnitude
+from ..observe.utils import get_effective_bortle
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
 
 YES_NO = [(1, 'Yes'), (0, 'No')]
@@ -198,9 +199,14 @@ class ObservingCircumstances(models.Model):
         ]
         sqm = int(100.*(self.sqm + 0.005))/100. # round to 2 places
         for b in range(9):
-            if sqm >= b[0] and sqm <= b[1]:
+            if sqm >= sqm_ranges[b][0] and sqm <= sqm_ranges[b][1]:
                 return b + 1
         return None # shouldn't get here
+
+    @property
+    def effective_bortle(self):
+        return get_effective_bortle(self.sqm)
+
 
     @property
     def limiting_magnitude(self):
