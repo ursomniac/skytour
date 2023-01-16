@@ -208,6 +208,8 @@ class DSO(Coordinates, FieldView, ObservableObject):
         ordering = ['ra', 'dec']
 
     def __str__(self):
+        if self.shown_name is None:
+            return 'FOO'
         return self.shown_name
 
 class DSOAlias(models.Model):
