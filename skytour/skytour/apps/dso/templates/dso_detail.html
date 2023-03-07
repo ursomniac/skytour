@@ -73,14 +73,14 @@
 			</tr>
 			<tr>
 				<td>V: {{ object.magnitude }}</td>
-				<td>Ang. Size: {{ object.angular_size }}</td>
+				<td>Cul. Date: {{ object.opposition_date|date:"M d" }}</td>
 			</tr>
 			<tr>
 				<td>Surf. Bri: {{ object.surface_brightness }}</td>
-				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
+				<td>Ang. Size: {{ object.angular_size }}</td>
 			<tr>
 				<td>Contrast Index: {{ object.contrast_index }}</td>
-				<td>Morphological Type: {{ object.morphological_type }}</td>
+				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
 			</tr>
 			<tr>
 				<td>On Atlas Plates: {# object.atlas_plate_list #}
@@ -89,7 +89,7 @@
 					{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 				</td>
-				<td></td>
+				<td>Morphological Type: {{ object.morphological_type }}</td>
 			</tr>
 		</table>
 	</td>

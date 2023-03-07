@@ -1,3 +1,4 @@
+import datetime as dt
 import math
 from django.db import models
 from django.utils.translation import gettext as _
@@ -6,6 +7,7 @@ from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
+from .comets import get_comet_object
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -337,13 +339,32 @@ class Comet(ObservableObject):
         _('Mag Offset'),
         default = 0.
     )
+    light_curve_url = models.URLField (
+        _('Light Curve URL'),
+        null = True, blank = True
+    )
     object_class = 'comet'
+
+    @property
+    def perihelion_date(self):
+        try:
+            object = get_comet_object(self)    
+            year = object['perihelion_year']
+            month = object['perihelion_month']
+            day = int(object['perihelion_day'])
+            pdate = dt.date(year, month, day)
+        except:
+            pdate = None
+        return pdate
+
         
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)
 
     def __str__(self):
         return f"{self.pk}: {self.name}"
+
+
 
 class CometObservation(ObservingLog):
     """

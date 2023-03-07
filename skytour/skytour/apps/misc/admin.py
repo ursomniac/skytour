@@ -26,6 +26,7 @@ class CalendarAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
     inlines = [CalendarEventReferenceInline]
     list_display = ['pk',  'date', 'time', 'title', 'event_type', 'reference_list']
+    list_filter = ['date']
     readonly_fields = ['reference_list']
     fieldsets = (
         (None, {

@@ -9,6 +9,7 @@ from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from ..astro.angdist import get_neighbors
+from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
@@ -142,6 +143,10 @@ class DSO(Coordinates, FieldView, ObservableObject):
         This is handy when pointing at this DSO
         """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+
+    @property
+    def opposition_date(self):
+        return get_opposition_date(self.ra, next=True)
 
     @property
     def nearby_dsos(self):
