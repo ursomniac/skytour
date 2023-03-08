@@ -18,6 +18,21 @@
     <tr>
         <td width="50%">
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+        </td>
+        <td>
+            <table class="lite">
+            <tr>
+            {% for cat in catalog_list %}
+            {% if forloop.counter0|divisibleby:3 %}<td>{% endif %}
+                <a href="{% url 'catalog-detail' cat.pk %}"><button style="margin: 5px;">{{ cat.name }}</button></a><br/>
+            {% if forloop.counter0|modulus:3 == 2 or forloop.last %}</td>{% endif %}
+            {% endfor %}
+            </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
             <table class="stats">
                 {% with object.observing_stats as x %}
                 <tr>
@@ -34,15 +49,15 @@
             </table>
         </td>
         <td>
-            <table class="lite">
-            <tr>
-            {% for cat in catalog_list %}
-            {% if forloop.counter0|divisibleby:3 %}<td>{% endif %}
-                <a href="{% url 'catalog-detail' cat.pk %}"><button style="margin: 5px;">{{ cat.name }}</button></a><br/>
-            {% if forloop.counter0|modulus:3 == 2 or forloop.last %}</td>{% endif %}
-            {% endfor %}
-            </tr>
-            </table>
+            <br>
+            <b>Filters:</b>
+            <form request="GET" action="">
+                &nbsp;&nbsp;<input name="seen" type="checkbox">Seen
+                &nbsp;&nbsp;<input name="unseen" type="checkbox">Unseen
+                &nbsp;&nbsp;<input name="important" type="checkbox">Important
+                &nbsp;&nbsp;<input name="available" type="checkbox">Available
+                &nbsp;&nbsp;<input type="submit" value="Filter">
+            </form>
         </td>
     </tr>
 </table>

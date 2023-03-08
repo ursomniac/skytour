@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from .models import Constellation, Catalog, ObjectType
-from .utils import filter_dso_test
+from .utils import filter_dso_test, get_filter_list
 from ..dso.models import DSO, DSOAlias
 from ..stars.models import BrightStar
 from .helpers import get_objects_from_cookie
@@ -85,9 +85,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         if object.slug in ['messier', 'caldwell']: # Override pagination
             self.paginate_by = None
 
-        filter_string = self.request.GET.get('filters', None)
-        print("FILTER STRING: ", filter_string)
-        filters = filter_string.split(',') if filter_string is not None else None
+        filters = get_filter_list(self.request)
 
         # OK - somehow merge these two.
         all_objects = []

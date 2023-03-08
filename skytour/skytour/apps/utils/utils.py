@@ -1,3 +1,12 @@
+def get_filter_list(request):
+    filters = []
+    filter_names = ['seen', 'important', 'unseen', 'available']
+    for f in filter_names:
+        if request.GET.get(f, False):
+            filters.append(f)
+    return filters
+
+
 def filter_dso_test(dso, filters):
     if filters is None:
         return dso
