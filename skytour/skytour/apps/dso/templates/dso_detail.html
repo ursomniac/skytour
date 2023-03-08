@@ -73,7 +73,10 @@
 			</tr>
 			<tr>
 				<td>V: {{ object.magnitude }}</td>
-				<td>Cul. Date: {{ object.opposition_date|date:"M d" }}</td>
+				<td>
+					Midnight Cul. Date: {{ object.opposition_date|date:"M d" }}
+					at Time ({{ local_dt_str }}): {{ culmination_at_time|date:"M d" }}
+				</td>
 			</tr>
 			<tr>
 				<td>Surf. Bri: {{ object.surface_brightness }}</td>

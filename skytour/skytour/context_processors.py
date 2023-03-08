@@ -20,5 +20,7 @@ def get_global_items(request):
         user_preferences=user_preferences,
         location=location,
         utdt_str = utdt_str,
-        local_time_str = local_time_str
+        local_time_str = local_time_str,
+        cookie_utdt = ut,
+        cookie_local = local_time
     )

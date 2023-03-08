@@ -1,4 +1,5 @@
 from collections import Counter
+from dateutil.parser import isoparse
 from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -7,6 +8,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..astro.culmination import get_opposition_date_at_time
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
@@ -37,10 +39,17 @@ class DSODetailView(CookieMixin, DetailView):
         planets_dict = context['cookies']['planets']
         asteroid_list = context['cookies']['asteroids']
         comet_list = context['cookies']['comets']
+        utdt = context['utdt_start']
+        local_dt = isoparse(context['local_time_start'])
+        print("local dt type: ", type(local_dt), local_dt)
+        hours = local_dt.hour + local_dt.minute/60. + local_dt.second/3600.
+        context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
+        culm_at_time = get_opposition_date_at_time(self.object.ra, hours)
+        context['culmination_at_time'] = culm_at_time
 
         finder_chart, times1 = create_dso_finder_chart(
             self.object, 
-            utdt = context['utdt_start'], 
+            utdt = utdt, 
             planets_dict = planets_dict, 
             asteroid_list = asteroid_list,
             comet_list = comet_list
@@ -59,6 +68,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['live_finder_chart'] = finder_chart
         # TODO: Add rise set times if cookie is set.
         times = times1 + times2
+        
         context['times'] = compile_times(times)
         return context
 
