@@ -51,7 +51,7 @@ def get_opposition_date_at_time(ra, hours, next=True):
     delta = 365 * hours / 24.
     if next and delta < 0:
         delta -= YEAR_OFFSET
-    date1 = date0 + dt.timedelta(days = int(delta))
+    date1 = date0 - dt.timedelta(days = int(delta))
     new_date = date1.replace(hour=zh, minute=zm, second=zs, microsecond=zz)
     return new_date
 

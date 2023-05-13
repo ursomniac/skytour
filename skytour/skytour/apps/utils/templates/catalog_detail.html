@@ -65,12 +65,13 @@
 
 {% include 'includes/paginate.html' %}
 <h3>{{ object_count }} Objects in List</h3>
-<table class="catalog_list" id='{{table_id}}'>
+<table class="catalog_list" id='{{ table_id }}'>
     <tr>
         <th>Object</th>
         <th>Other Catalog</th>
         <th>Name</th>
         <th>Con.</th>
+        <th>Cum.</th>
         <th>&alpha; (2000)</th>
         <th>&delta; (2000)</th>
         <th>Type</th>
@@ -100,6 +101,7 @@
         </td>
         <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
         <td>{{ thing.constellation.abbreviation }}</td>
+        <td>{{ thing.opposition_date|date:"M d"}}
         <td>{{ thing.ra_text }}</td>
         <td>{{ thing.dec_text }}</td>
         <td>{{ thing.object_type.short_name }}</td>
