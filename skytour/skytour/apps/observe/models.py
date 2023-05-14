@@ -1,5 +1,6 @@
 import pytz
 from django.db import models
+from django.urls import reverse
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
@@ -232,7 +233,8 @@ class ObservingLocation(models.Model):
         return get_effective_bortle(self.sqm)
 
     def get_absolute_url(self):
-        return '/observing_location/{}'.format(self.pk)
+        return reverse('observing-location-detail', kwargs={'pk': self.pk})
+        #return '/observing_location/{}'.format(self.pk)
 
     def __str__(self):
         if self.name:

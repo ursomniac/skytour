@@ -323,8 +323,10 @@ class SessionAddView(CookieMixin, FormView):
 
         if object:
             obs.object = object
-        #obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
-        obs.ut_datetime = datetime.datetime.now().replace(tzinfo=pytz.timezone('UTC')) # UTC
+        if d['ut_time'] is not None:
+            obs.ut_datetime = datetime.datetime.combine(ut_date, d['ut_time']).replace(tzinfo=pytz.utc)
+        else:
+            obs.ut_datetime = datetime.datetime.now().replace(tzinfo=pytz.timezone('UTC')) # UTC
         obs.location = d['location']
         obs.telescope = d['telescope']
         obs.notes = d['notes']

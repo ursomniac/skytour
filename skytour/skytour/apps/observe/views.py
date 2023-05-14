@@ -18,10 +18,12 @@ class ObservingLocationListView(ListView):
         locations = {}
         for s in sections:
             if s == 'Distant':
-                locations[s] = all_locations.filter(travel_distance__gte=max_distance)
+                locations[s] = all_locations.filter(travel_distance__gte=max_distance).exclude(status='Active')
+            elif s != 'Active':
+                    locations[s] = all_locations.filter(status=s).exclude(travel_distance__gt=max_distance)
             else:
-                locations[s] = all_locations.filter(status=s).exclude(travel_distance__gt=max_distance)
-            print (f"LEN {s}: {locations[s].count()}")
+                locations[s] = all_locations.filter(status=s)
+            #print (f"LEN {s}: {locations[s].count()}")
         context['locations'] = locations
         context['sections'] = sections
 
