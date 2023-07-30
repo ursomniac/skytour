@@ -343,6 +343,10 @@ class Comet(ObservableObject):
         _('Light Curve URL'),
         null = True, blank = True
     )
+    override_limits = models.PositiveIntegerField(
+        choices = YES_NO,
+        default = NO
+    )
     object_class = 'comet'
 
     @property

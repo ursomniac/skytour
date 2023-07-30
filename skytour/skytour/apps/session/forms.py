@@ -1,5 +1,6 @@
 from datetime import datetime
 from django import forms
+from ..abstract.vocabs import IMAGING_STATUS_CHOICES
 from ..dso.models import DSOList
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
@@ -118,6 +119,11 @@ class SessionAddForm(forms.Form):
         queryset = Filter.objects.all(),
         required = False
     )
+    num_images = forms.IntegerField ()
+    imaging_status = forms.ChoiceField (
+        choices = IMAGING_STATUS_CHOICES
+    )
+    
     # Required
     ut_time = forms.TimeField(
         label='UT Time',

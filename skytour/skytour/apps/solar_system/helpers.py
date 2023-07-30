@@ -134,7 +134,7 @@ def get_comet_positions(utdt, utdt_end=None, location=None, time_zone=None):
       if d is None:
          continue
       app_mag = d['observe']['apparent_magnitude']
-      if app_mag > mag_limit:
+      if app_mag > mag_limit and c.override_limits == 0:
          continue
       d['pk'] = c.pk
       d['name'] = c.name

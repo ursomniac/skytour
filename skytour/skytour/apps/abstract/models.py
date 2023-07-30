@@ -8,6 +8,7 @@ from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
+from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, YES_NO
 
 class FieldView(models.Model):
     """
@@ -157,6 +158,21 @@ class ObjectImage(models.Model):
         default = None,
         null = True
     )
+    own_image = models.PositiveIntegerField (
+        _('My Own Image'),
+        default = 0,
+        choices = YES_NO
+    )
+    exposure = models.FloatField (
+        _('Image Exposure'),
+        null = True, blank = True
+    )
+    processing_status = models.CharField (
+        _('Image Processing Status'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGING_PROCESSING_CHOICES
+    )
 
     def object_image_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
@@ -189,6 +205,14 @@ class ObservingLog(models.Model):
         on_delete = models.CASCADE,
         limit_choices_to = {'status__in': ['Active', 'Provisional']}
     )
+    # Image metadata if imaged
+    num_images = models.PositiveIntegerField(default=0, blank=True, null=True)
+    imaging_status = models.IntegerField(
+        choices = IMAGING_STATUS_CHOICES,
+        default = 0,
+        null=True, blank=True
+    )
+
     # Filter(s)
     notes = models.TextField (
         _('Notes'),

@@ -74,6 +74,20 @@
               {% endwith %}
             </td>
           </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2">
+              {% with form.num_images as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+            <td colspan="2">
+              {% with form.imaging_status as field %}
+              {% include "inc_form_field.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+        </tr>
           <tr><td colspan=6><h4>Object Metadata</h4></td></tr>
           <tr>
             <td colspan="3">

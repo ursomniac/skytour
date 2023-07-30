@@ -136,6 +136,17 @@ class DSO(Coordinates, FieldView, ObservableObject):
         for alias in self.aliases.all():
             aliases.append(alias.shown_name)
         return ', '.join(aliases)
+    
+    @property
+    def ngc_alias(self):
+        """
+        Stupid Celestron and Unistellar don't support the Caldwell catalog.
+        """
+        if self.catalog.abbreviation == 'C':
+            aa = self.aliases.filter(catalog__abbreviation='NGC').first()
+            if aa is not None:
+                return aa.shown_name
+        return None
 
     @property
     def skyfield_object(self):
@@ -164,6 +175,14 @@ class DSO(Coordinates, FieldView, ObservableObject):
         for p in self.atlasplate_set.all():
             pp.append(str(p.plate_id))
         return ', '.join(pp)
+    
+    @property
+    def num_library_images(self):
+        return self.image_library_count()
+    
+    @property
+    def library_image(self):
+        return self.image_library.order_by('order_in_list').first() # returns None if none
 
     def finder_chart_tag(self):
         """
@@ -263,9 +282,28 @@ class DSOImage(ObjectImage):
         on_delete = models.CASCADE,
         related_name = 'images'
     )
+    def __str__(self):
+        out = self.object.shown_name
+        return out
+    
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
+
+class DSOLibraryImage(ObjectImage):
+    object = models.ForeignKey(
+        DSO,
+        on_delete = models.CASCADE,
+        related_name = 'image_library'
+    )
+    ut_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return self.object.shown_name
+    
+    class Meta:
+        verbose_name = 'Library Image'
+        verbose_name = 'Library Images'
 
 class DSOObservation(ObservingLog):
     """

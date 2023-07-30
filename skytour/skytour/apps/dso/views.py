@@ -70,6 +70,15 @@ class DSODetailView(CookieMixin, DetailView):
         times = times1 + times2
         
         context['times'] = compile_times(times)
+
+        # 2023-07-24 images
+        my_images = self.object.images.filter(own_image=1).order_by('order_in_list')
+        if len(my_images) > 0:
+            context['my_image'] = my_images.first()
+            context['has_image'] = True
+        else:
+            context['my_image'] = None
+            context['has_image'] = False
         return context
 
 class PriorityListView(TemplateView):

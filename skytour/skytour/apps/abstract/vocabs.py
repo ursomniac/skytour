@@ -6,6 +6,19 @@ SEEING_CHOICES = (
     (1, '1 = Fail: boiling image; no sign of diffraction pattern')
 )
 
+IMAGING_STATUS_CHOICES = (
+    (0, 'No Images'),
+    (1, 'Image Taken'),
+    (2, 'Multiple Images Taken')
+)
+
+IMAGING_PROCESSING_CHOICES = (
+    ('None', 'Not Yet Started'),
+    ('DB', 'Processed image added to DB'),
+    ('Rejected', 'Image Rejected'),
+    ('Unknown', 'Unknown')
+)
+
 YES_NO = [(1, 'Yes'), (0, 'No')]
 YES = 1
 NO = 0

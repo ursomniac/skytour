@@ -61,6 +61,13 @@
 			{% endif %}
 		</table>
 	</td>
+	<td width="400px" rowspan=2>
+		{% if object.library_image %}
+		<img src="{{ object.library_image.image.url }}" width=400px style="display:block;">
+		{% else %}
+		(No image in library.)
+		{% endif %}
+	</td>
 </tr>
 
 <tr>
@@ -97,7 +104,8 @@
 		</table>
 	</td>
 </tr>
-
+</table>
+<table>
 <tr>
 	<td id="finder" width=50%>
 		<a name="charts"></a>
@@ -117,6 +125,7 @@
 	</td>
 </tr>
 </table>
+
 <table>
 <tr>
 	<td>

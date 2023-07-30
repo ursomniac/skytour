@@ -2,7 +2,8 @@ from django.contrib import admin
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
-    DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation
+    DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
+    DSOLibraryImage
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -15,13 +16,26 @@ class DSOImageAdmin(admin.StackedInline):
     fieldsets =  (
         (None, {
             'fields': [
-                ('order_in_list', 'amateur_image'),
+                ('order_in_list', 'amateur_image', 'own_image', 'exposure'),
                 ('image', 'object_image_tag'),
                 'notes'
             ]
         }),
     )
 
+class DSOLibraryImageAdmin(admin.StackedInline):
+    model = DSOLibraryImage
+    extra = 0
+    readonly_fields = ['object_image_tag']
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('order_in_list', 'exposure', 'ut_datetime'),
+                ('image', 'object_image_tag'),
+                'notes'
+            ]
+        }),
+    )
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias
     extra = 0
@@ -87,7 +101,7 @@ class DSOAdmin(ObservableObjectAdmin):
             ]
         })
     )
-    inlines = [DSOAliasAdmin, DSOImageAdmin, DSOObservationAdmin]
+    inlines = [DSOAliasAdmin, DSOLibraryImageAdmin, DSOImageAdmin, DSOObservationAdmin]
     save_on_top = True
 
     # This is because stupid properties don't have short_description
