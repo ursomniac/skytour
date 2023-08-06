@@ -15,7 +15,7 @@ from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .helpers import get_map_parameters, get_star_mag_limit
-from .models import DSO, DSOList, AtlasPlate, DSOObservation
+from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
 from .utils import select_atlas_plate
 from .vocabs import PRIORITY_CHOICES
 
@@ -264,4 +264,12 @@ class DSOObservationLogView(CookieMixin, ListView):
         context = super(DSOObservationLogView, self).get_context_data(**kwargs)
         context['dso_list'] = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
         context['dso_table'] = 'dsos-observed'
+        return context
+    
+class DSOChecklistView(ListView):
+    model = DSOImagingChecklist
+    template_name = 'imaging_checklist.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOChecklistView, self).get_context_data(**kwargs)
         return context

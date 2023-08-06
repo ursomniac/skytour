@@ -233,6 +233,7 @@ class ObservingLog(models.Model):
         abstract = True
 
 class ObservableObject(models.Model):
+    
     @property
     def last_observed(self):
         obs = self.observations.order_by('-ut_datetime').first()

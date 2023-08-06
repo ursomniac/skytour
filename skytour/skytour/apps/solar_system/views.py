@@ -32,6 +32,7 @@ class PlanetListView(CookieMixin, ListView):
         for p in planets:
             d = planet_cookie[p.name]
             d['n_obs'] = p.number_of_observations
+            d['num_library_images'] = p.num_library_images
             d['last_observed'] = p.last_observed
             planet_list.append(d)
             d['obj_rise'], d['obj_set'], d['obj_transit'] = get_rise_set(d['almanac'])
@@ -147,6 +148,7 @@ class AsteroidListView(CookieMixin, ListView):
             for d in asteroid_cookie:
                 a = asteroids.get(number=d['number'])
                 d['n_obs'] = a.number_of_observations
+                d['num_library_images'] = a.num_library_images
                 d['last_observed'] = a.last_observed
                 asteroid_list.append(d)
         context['asteroid_list'] = asteroid_list
@@ -163,7 +165,6 @@ class AsteroidDetailView(CookieMixin, DetailView):
         asteroid_cookie = context['cookies']['asteroids']
         planets_cookie = context['cookies']['planets']
         reversed = context['color_scheme'] == 'dark'
-
         utdt_start = context['utdt_start']
         mag = None
         pdict = None
@@ -214,6 +215,7 @@ class CometListView(CookieMixin, ListView):
             for d in comet_cookie: # get the observation history for each comet on the list
                 comet = comets.get(pk=d['pk'])
                 d['n_obs'] = comet.number_of_observations
+                d['num_library_images'] = comet.num_library_images
                 d['last_observed'] = comet.last_observed
                 comet_list.append(d)
         context['comet_list'] = comet_list

@@ -72,8 +72,8 @@ def do_dso_lists(p, context, dso_lists=None):
         dec = dl.mid_dec
         up0 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
         up1 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
-        if not (up0 or up1):
-            continue
+        #if not (up0 or up1):
+        #    continue
 
         # Make the page for the DSO List
         y = Y0

@@ -1,9 +1,9 @@
 from django.contrib import admin
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin
 from .models import (
-    Asteroid, AsteroidObservation,
-    Comet, CometObservation, 
-    Planet, PlanetObservation, PlanetMoon,
+    Asteroid, AsteroidLibraryImage, AsteroidObservation,
+    Comet, CometObservation, CometLibraryImage,
+    Planet, PlanetLibraryImage, PlanetObservation, PlanetMoon,
     MoonObservation,
     MeteorShower, 
 )
@@ -11,12 +11,53 @@ from .models import (
 class AsteroidObservationAdmin(AbstractObservation):
     model = AsteroidObservation
 
+class AsteroidLibraryImageAdmin(admin.StackedInline):
+    model = AsteroidLibraryImage
+    extra = 0
+    readonly_fields = ['object_image_tag']
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('order_in_list', 'exposure', 'ut_datetime'),
+                ('image', 'object_image_tag'),
+                'notes'
+            ]
+        }),
+    )
+
 class CometObservationAdmin(AbstractObservation):
     model = CometObservation
+
+class CometLibraryImageAdmin(admin.StackedInline):
+    model = CometLibraryImage
+    extra = 0
+    readonly_fields = ['object_image_tag']
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('order_in_list', 'exposure', 'ut_datetime'),
+                ('image', 'object_image_tag'),
+                'notes'
+            ]
+        }),
+    )
 
 class PlanetObservationAdmin(AbstractObservation):
     model = PlanetObservation
 
+class PlanetLibraryImageAdmin(admin.StackedInline):
+    model = PlanetLibraryImage
+    extra = 0
+    readonly_fields = ['object_image_tag']
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('order_in_list', 'exposure', 'ut_datetime'),
+                ('image', 'object_image_tag'),
+                'notes'
+            ]
+        }),
+    )
 #class MoonObservationAdmin(AbstractObservation):
 #    model = MoonObservation
 
@@ -43,21 +84,21 @@ class PlanetAdmin(ObservableObjectAdmin):
     ]
     list_display_links = ['pk', 'name']
     readonly_fields = ['moon_list',]
-    inlines = [PlanetObservationAdmin]
+    inlines = [PlanetLibraryImageAdmin, PlanetObservationAdmin]
     save_on_top = True
 
 class AsteroidAdmin(ObservableObjectAdmin):
     model = Asteroid
     list_display = ['number', 'name', 'diameter', 'est_brightest', 'h', 'n_obs', 'obs_date']
     list_display_links = ['number', 'name']
-    inlines = [AsteroidObservationAdmin]
+    inlines = [AsteroidLibraryImageAdmin, AsteroidObservationAdmin]
     save_on_top = True
 
 class CometAdmin(ObservableObjectAdmin):
     model = Comet
     list_display = ['pk', 'name','peri_date', 'status', 'n_obs', 'obs_date']
     list_display_links = ['pk', 'name']
-    inlines = [CometObservationAdmin]
+    inlines = [CometLibraryImageAdmin, CometObservationAdmin]
     save_on_top = True
 
     def peri_date(self, obj):

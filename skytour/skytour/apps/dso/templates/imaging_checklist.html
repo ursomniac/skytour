@@ -1,6 +1,67 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<style>
+.plan td {
+    vertical-align: top;
+    padding: 1em;
+}
+.td-center td {
+  vertical-align: middle;
+}
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+table.subnav { 
+	width: 80%; 
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #603; 
+}
+table.subnav td {
+	text-align: center; 
+	vertical-align: middle !important; 
+	padding: 5px !important;
+	border: 1px solid white !important; 
+}
+table.subnav td a {
+	color: #fff; 
+	font-weight: 800; 
+	text-decoration: none;
+}
+
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+summary {
+  display: flex;
+  cursor: pointer;
+  background-color: #666;
+  color: #fff;
+  padding: 4px 10px;
+  margin: 0px 10px 20px 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+</style>
+<h1>Deep Sky Objects</h1>
+{# include 'includes/paginate.html' #}
+{# include 'includes/dso_table.html' #}
 {% load skytour_filters %}
 <small>
-<table width="100%" id="{{ table_id }}">
+<table width="100%" id="dso_imaging_checklist">
 <thead>
     <tr class="table-header">
         <th>Name</th>
@@ -12,15 +73,14 @@
         <th>Mag.</th>
         <th>Surf.</th>
         <th>Ang. Size</th>
-        {% if not hide_priority %}
-        <th> Priority</th>
-        {% endif %}
+        <th>Priority</th>
         <th># Obs./Images</th>
-        <th>Last Obs.</th>
+        <th>Issues</th>
     </tr>
 </thead>
 <tbody>
-{% for dso in dso_list %}
+{% for obj in object_list %}
+    {% with obj.dso as dso %}
     <tr>
         <td>
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
@@ -37,17 +97,22 @@
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
-        {% if not hide_priority %}
-        <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.get_priority_display }}</a></td>
-        {% endif %}
+        <td>{% if obj.priority %}{{ obj.get_priority_display }}{% endif %}</a></td>
         <td>
             {{ dso.number_of_observations }} / {{ dso.num_library_images }}
         </td>
+        {% comment %}
         <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
+        {% endcomment %}
+        <td>{% if obj.issues %}{{ obj.issues }}{% endif %}</td>
     </tr>
+    {% endwith %}
 {% endfor %}
 </tbody>
 </table>
 </small>
 {% include 'includes/sortable_table.html' %}
 <br/>
+
+{# include 'includes/paginate.html' #}
+{% endblock %}

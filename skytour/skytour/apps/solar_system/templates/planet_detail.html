@@ -6,14 +6,16 @@
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
     button { width: 10em; }
-    dt  { font-weight: bold; color: #ff6;}
+    dt  { font-weight: bold; color: #ff6; }
+    img.constrained { width: 100%; max-width: 500px; }
+    td.hvcenter { vertical-align: middle!important; text-align: center!important; }
 </style>
 {% endblock styles %}
 {% block title %}{{ planet.name }}: Skytour{% endblock %}
 {% block content %}
 <table>
     <tr>
-        <td width="25%">
+        <td width="20%">
             <h1> {{ planet.name }}</h1> 
             in 
             <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
@@ -23,7 +25,7 @@
             <a href="{% url 'sso-pdf' 'planet' planet.slug %}" target="_new"><button>PDF View</button></a>
             {% endif %}
         </td>
-        <td width="40%">
+        <td width="25%">
             <h2>Observations</h2>
             # Observations:  {{ instance.number_of_observations }}
             <br>
@@ -34,16 +36,26 @@
                 (not yet)
             {% endif %}
         </td>
+        {% if object.library_image %}
+        <td width="35%">
+            <a href="{{ object.library_image.image.url }}" target="_blank"><img 
+                src="{{ object.library_image.url }}" class="constrained"></a>
+        </td>
+        {% else %}
+        <td width="35%" class="hvcenter">
+            <p>No Image</p>
+        </td>
+        {% endif %}
         <td>
             <h2>Solar System</h2>
             <a href="{% url 'planet-detail' 'mercury' %}">  <button>Mercury</button></a>
-            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
-            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
+            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a><br>
             <a href="{% url 'planet-detail' 'venus' %}">    <button>Venus</button></a>
-            <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
+            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
+            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
             <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
+            <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
             <a href="{% url 'moon-detail' %}">              <button>Moon</button></a>
-            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a>
             <br><br>
         </td>
     </tr>

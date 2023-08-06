@@ -14,7 +14,7 @@
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
-            <th># Obs.</th>
+            <th># Obs./Images</th>
             <th>Last Observed</th>
         </tr>
     </thead>
@@ -27,7 +27,7 @@
             <td>{{ asteroid.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ asteroid.observe.constellation.name }}</td>
             <td>{{ asteroid.observe.apparent_magnitude|floatformat:2 }}</td>
-            <td>{{ asteroid.n_obs }}</td>
+            <td>{{ asteroid.n_obs }} / {{ asteroid.num_library_images }}</td>
             <td>{% if asteroid.last_observed %}{{ asteroid.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}

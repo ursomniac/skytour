@@ -6,9 +6,10 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from .models import Constellation, Catalog, ObjectType
 from .utils import filter_dso_test, get_filter_list
-from ..dso.models import DSO, DSOAlias
+from ..dso.models import DSO, DSOLibraryImage
 from ..stars.models import BrightStar
 from .helpers import get_objects_from_cookie
+from .models import ObjectType
 
 def try_int(x):
     try:
@@ -18,6 +19,20 @@ def try_int(x):
         if foo[0].isdigit:
             return int(foo)
         return 0
+    
+def assemble_object_types(all=True):
+    tt = ObjectType.objects.order_by('slug')
+    l = []
+    for t in tt:
+        d = dict(label=t.short_name, slug=t.slug, spaces = range(15 - len(t.short_name)))
+        l.append(d)
+    if all:
+        l.append(dict(label='Asteroid', slug='asteroid', spaces = range(7)))
+        l.append(dict(label='Comet', slug='comet', spaces = range(10)))
+        l.append(dict(label='Planet', slug='planet', spaces = range(9)))
+        l.append(dict(label='Sol. System', slug='solar-system', spaces = range(4)))
+    l.append(dict(label='All', slug='all', spaces=range(12)))
+    return l
 
 class ConstellationListView(ListView):
     """
@@ -147,4 +162,35 @@ class ObjectTypeDetailView(DetailView):
         context['dso_list'] = DSO.objects.filter(object_type=object)
         context['hide_type'] = True
         context['table_id'] = 'dso_table_by_type'
+        return context
+    
+class LibraryImageView(TemplateView):
+    template_name = 'library_image_list.html'
+    paginate_by = 30
+
+    def get_context_data(self, **kwargs):
+        context = super(LibraryImageView, self).get_context_data(**kwargs)
+        object_type = kwargs.get('object_type', None)
+        object_type = None if object_type == 'all' else object_type
+        context['object_type_list'] = assemble_object_types()
+        object_count = 0
+        # Asteroid
+        if object_type in ['asteroid', 'solar-system', None]:
+            pass
+        # Comet
+        if object_type in ['comet', 'solar-system', None]:
+            pass
+        # Planet
+        if object_type in ['planet', 'solar-system', None]:
+            pass
+        # DSOs
+        if object_type != 'solar-system' or object_type is None:
+            if object_type is None:
+                dso_image_list = DSOLibraryImage.objects.order_by('-ut_datetime')
+            else:
+                dso_image_list = DSOLibraryImage.objects.filter(object__object_type__slug=object_type).order_by('-ut_datetime')
+            object_count += dso_image_list.values('object').distinct().count()
+
+        context['image_list'] = dso_image_list
+        context['object_count'] = object_count
         return context

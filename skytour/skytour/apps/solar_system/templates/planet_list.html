@@ -17,7 +17,7 @@
             <th>Rise</th>
             <th>Transit</th>
             <th>Set</th>
-            <th># Obs.</th>
+            <th># Obs./Images</th>
             <th>Last Obs.</th>
         </tr>
     </thead>
@@ -32,7 +32,7 @@
             <td>{{ p.obj_rise }}</td>
             <td>{{ p.obj_transit }}</td>
             <td>{{ p.obj_set }}</td>
-            <td>{{ p.n_obs }}</td>
+            <td>{{ p.n_obs }} / {{ p.num_library_images }}</td>
             <td>{% if p.last_observed %}{{ p.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
         {% endfor %}

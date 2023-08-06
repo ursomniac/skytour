@@ -15,6 +15,8 @@
 	td.coordinates { font-size: 150%; padding-bottom: 10px; }
 	table.info_box { border: 2px solid black }
 	tr.bottom { height: 150px; }
+    img.constrained { width: 100%; max-width: 500px; }
+    td.hvcenter { vertical-align: middle!important; text-align: center!important; }
 </style>
 {% endblock styles %}
 
@@ -61,15 +63,16 @@
 			{% endif %}
 		</table>
 	</td>
-	<td width="400px" rowspan=2>
+	<td width="500px" rowspan=2 class="hvcenter">
 		{% if object.library_image %}
-		<img src="{{ object.library_image.image.url }}" width=400px style="display:block;">
+		<a href="{{ object.library_image.image.url }}" target="_blank"><img 
+			src="{{ object.library_image.image.url }}" class="constrained" 
+			style="display:block;"></a>
 		{% else %}
 		(No image in library.)
 		{% endif %}
 	</td>
 </tr>
-
 <tr>
 	<td id="metadata" colspan=2>
 		<h3>Information:</h3>

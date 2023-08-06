@@ -3,27 +3,39 @@
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
+    img.constrained { width: 100%; max-width: 500px; }
+    td.hvcenter { vertical-align: middle!important; text-align: center!important; }
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
 {% block content %}
 <table>
     <tr>
-        <td width="25%">
+        <td width="20%">
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ comet.observe.constellation.name }}</h2>
             <a href="/admin/solar_system/comet/{{ object.pk }}/change" target="_new"><button>Admin</button></a>
             <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
             <br><br>
         </td>
-        <td width="35%">
+        <td width="25%">
             {% if object.image %}
             <img src="{{ object.image.url }}">
             {% endif %}
         </td>
-        <td width="40%">
+        <td width="20%">
             <p>{{ object.description }}</p>
         </td>
+        {% if object.library_image %}
+        <td width="35%">
+            <a href="{{ object.library_image.image.url }}" target="_blank"><img 
+                src="{{ object.library_image.url }}" class="constrained"></a>
+        </td>
+        {% else %}
+        <td width="35%" class="hvcenter">
+            <p>No Image</p>
+        </td>
+        {% endif %}
     </tr>
 </table>
 

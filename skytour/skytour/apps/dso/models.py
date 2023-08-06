@@ -129,7 +129,14 @@ class DSO(Coordinates, FieldView, ObservableObject):
     )
     tags = TaggableManager(blank=True)
     object_class = 'dso'
+    
+    detail_view = 'dso-detail'
 
+    @property
+    def instance_id(self):
+        return self.pk
+
+    
     @property
     def alias_list(self):
         aliases = []
@@ -178,7 +185,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
     
     @property
     def num_library_images(self):
-        return self.image_library_count()
+        return self.image_library.count()
     
     @property
     def library_image(self):
@@ -302,8 +309,8 @@ class DSOLibraryImage(ObjectImage):
         return self.object.shown_name
     
     class Meta:
-        verbose_name = 'Library Image'
-        verbose_name = 'Library Images'
+        verbose_name = 'DSO Library Image'
+        verbose_name = 'DSO Library Images'
 
 class DSOObservation(ObservingLog):
     """
@@ -535,5 +542,40 @@ class AtlasPlateConstellationAnnotation(models.Model):
     ra = models.FloatField(_('R.A.'))
     dec = models.FloatField(_('Dec.'))
 
+IMAGING_PRIORITY_OPTIONS = (
+    (0, 'None'),
+    (1, 'Low'),
+    (2, 'Medium'),
+    (3, 'High'),
+    (4, 'Highest')
+)
+IMAGING_ISSUES_CHOICES = (
+    ('lowdec', 'Low Declination'),
+    ('angsize', 'Small Ang. Size'),
+    ('dim', 'Low Surf. Brightness'),
+    ('faint', 'Low V Magnitude'),
+    ('questionable', 'Might not be possible')
+)
+class DSOImagingChecklist(models.Model):
+    priority = models.IntegerField(
+        choices = IMAGING_PRIORITY_OPTIONS,
+        null = True, blank = True
+    )
+    issues = models.CharField(
+        _('Potential Issues'),
+        choices = IMAGING_ISSUES_CHOICES,
+        max_length = 20,
+        null = True, blank = True
+    )
+    dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
 
-
+    def get_absolute_url(self):
+        return '/dso_checklist/{}'.format(self.pk)
+    
+    def __str__(self):
+        return self.dso.__str__()
+    
+    class Meta:
+        verbose_name = 'Imaging Checklist DSO'
+        verbose_name_plural = 'Imaging Checklist DSOs'
+        ordering = ['-dso__dec']

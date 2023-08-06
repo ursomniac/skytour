@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load skytour_filters %}
+{% block styles %}
+{% endblock styles %}
+{% block title %}{{ object.name }} Library Images: Skytour {% endblock %}
+{% block content %}
+<style>
+    table.library_image_list td { font-size: 14px; }
+    table.library_image_list td h3 { margin-top: 0; }
+    img.library_image { display: block; max-width:400px; }
+</style>
+<!-- main -->
+{# header section #}
+<table class="lite">
+    <tr>
+        <td width="30%">
+            <h1>Library Images</h1>
+        </td>
+        <td width="70%">
+            <h2>Filter by Object Type</h2>
+            <table>
+                {% for t in object_type_list %}
+                {% if forloop.counter0|divisibleby:6 %}<tr>{% endif %}
+                    <td>
+                    <a href="{% url 'library-by-type' t.slug %}"><button>{{ t.label }}</button></a>
+                    {% for i in t.spaces %}&nbsp;{% endfor %}
+                    </td>
+                    {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
+                {% endfor %}
+                </tr>
+            </table>
+    </tr>
+</table>
+
+{% include 'includes/paginate.html' %}
+<h3>{{ object_count }} Objects in List</h3>
+<table class="library_image_list" id='{{ table_id }}'>
+    {% for image in image_list %}
+    {% with image.object as object %}
+    {% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
+    <td>
+        <a href="{{ image.image.url }}" target="_blank"><img src="{{ image.image.url }}" class="library_image"></a>
+        <br>
+        <table>
+            <tr>
+                <td>
+                    <h3>
+                        <a href="{% url object.detail_view object.instance_id %}">{{ object.shown_name }}</a>
+                        &nbsp;<small>in {{ object.constellation.abbreviation }}</small>
+                    </h3>
+                    {{ object.object_type.short_name }}
+                    {% if object.morphological_type %}
+                     - 
+                     {% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
+                     {{ object.morphological_type }}{% endif %}
+                    <br/>
+                    Date: {{ image.ut_datetime }}<br>
+                    Exposure: {{ image.exposure }} mins.
+                </td>
+                <td>
+                    {% if object.object_class == 'dso' %}
+                    Mag: {{ object.magnitude }}<br/>
+                    Ang. Size: {{ object.angular_size }}<br/>
+                    Surf. Br. {{ object.surface_brightness }}<br/>
+                    Dist. {{ object.distance }} {{ object.distance_units }}<br/>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </td>  
+    {% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
+    {% endwith %}
+    {% endfor %}
+    </tr>
+</table>
+{% include 'includes/sortable_table.html' %}
+{% include 'includes/paginate.html' %}
+{% endblock content %}

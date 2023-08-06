@@ -3,7 +3,7 @@ from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
-    DSOLibraryImage
+    DSOLibraryImage, DSOImagingChecklist
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -36,6 +36,7 @@ class DSOLibraryImageAdmin(admin.StackedInline):
             ]
         }),
     )
+    
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias
     extra = 0
@@ -247,3 +248,4 @@ class AtlasPlateAdmin(TagModelAdmin):
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
+admin.site.register(DSOImagingChecklist)

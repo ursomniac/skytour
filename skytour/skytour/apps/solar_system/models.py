@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
-from ..abstract.models import ObservingLog, ObservableObject
+from ..abstract.models import ObservingLog, ObservableObject, ObjectImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
 from .comets import get_comet_object
@@ -47,6 +47,12 @@ class Planet(ObservableObject):
     )
     object_class = 'planet'
 
+    detail_view = 'planet-detail'
+
+    @property
+    def instance_id(self):
+        return self.slug
+    
     @property
     def target(self):
         return "{} Barycenter".format(self.name)
@@ -59,6 +65,14 @@ class Planet(ObservableObject):
         for m in self.moon_names.split(','):
             mlist.append(m.strip())
         return mlist
+    
+    @property
+    def num_library_images(self):
+        return self.image_library.count()
+    
+    @property
+    def library_image(self):
+        return self.image_library.order_by('order_in_list').first() # returns None if none
 
     def get_absolute_url(self):
         return '/planet/{}'.format(self.slug)
@@ -68,6 +82,22 @@ class Planet(ObservableObject):
 
     class Meta:
         ordering = ['semi_major_axis']
+
+class PlanetLibraryImage(ObjectImage):
+    object = models.ForeignKey(
+        Planet,
+        on_delete = models.CASCADE,
+        related_name = 'image_library'
+    )
+    ut_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return self.object.shown_name
+    
+    class Meta:
+        verbose_name = 'Planet Library Image'
+        verbose_name = 'Planet Library Images'
+
 
 """
 SOMEHOW I want to add in moon metadata, like apparent magnitude which DOES
@@ -266,6 +296,12 @@ class Asteroid(ObservableObject):
     )
     object_class = 'asteroid'
 
+    detail_view = 'astroid-detail'
+
+    @property
+    def instance_id(self):
+        return self.slug
+    
     @property
     def mpc_lookup_designation(self):
         return "({}) {}".format(self.number, self.name)
@@ -286,6 +322,14 @@ class Asteroid(ObservableObject):
     @property
     def full_name(self):
         return "{}: {}".format(self.number, self.name)
+    
+    @property
+    def num_library_images(self):
+        return self.image_library.count()
+    
+    @property
+    def library_image(self):
+        return self.image_library.order_by('order_in_list').first() # returns None if none
 
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
@@ -295,6 +339,21 @@ class Asteroid(ObservableObject):
 
     class Meta:
         ordering = ['number']
+
+class AsteroidLibraryImage(ObjectImage):
+    object = models.ForeignKey(
+        Asteroid,
+        on_delete = models.CASCADE,
+        related_name = 'image_library'
+    )
+    ut_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return self.object.shown_name
+    
+    class Meta:
+        verbose_name = 'Asteroid Library Image'
+        verbose_name = 'Asteroid Library Images'
 
 class AsteroidObservation(ObservingLog):
     """
@@ -348,7 +407,12 @@ class Comet(ObservableObject):
         default = NO
     )
     object_class = 'comet'
+    detail_view = 'comet-detail'
 
+    @property
+    def instance_id(self):
+        return self.pk
+    
     @property
     def perihelion_date(self):
         try:
@@ -361,13 +425,35 @@ class Comet(ObservableObject):
             pdate = None
         return pdate
 
-        
+    @property
+    def num_library_images(self):
+        return self.image_library.count()
+    
+    @property
+    def library_image(self):
+        return self.image_library.order_by('order_in_list').first() # returns None if none
+
+
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)
 
     def __str__(self):
         return f"{self.pk}: {self.name}"
 
+class CometLibraryImage(ObjectImage):
+    object = models.ForeignKey(
+        Comet,
+        on_delete = models.CASCADE,
+        related_name = 'image_library'
+    )
+    ut_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return self.object.shown_name
+    
+    class Meta:
+        verbose_name = 'Comet Library Image'
+        verbose_name = 'Comet Library Images'
 
 
 class CometObservation(ObservingLog):
