@@ -17,6 +17,7 @@ from .forms import DSOFilterForm, DSOAddForm
 from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
 from .utils import select_atlas_plate
+from .utils_checklist import checklist_form, checklist_params, create_new_observing_list
 from .vocabs import PRIORITY_CHOICES
 
 class DSOListView(ListView):
@@ -133,7 +134,6 @@ class DSOListDetailView(CookieMixin, DetailView):
         context['map'] = map
         context['table_id'] = 'dsos-on-list'
         return context
-
 
 class DSOFilterView(FormView):
     form_class = DSOFilterForm
@@ -272,4 +272,43 @@ class DSOChecklistView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOChecklistView, self).get_context_data(**kwargs)
+        # Deal with form
+        form_params = checklist_params(self.request)
+        print ("FORM PARAMS: ", form_params)
+        all_dsos = DSOImagingChecklist.objects.all()
+        
+        #context['seen'] = 'checked' if form_params['seen'] else ''
+        context['priority'] = form_params['priority']
+        context['dso_type'] = form_params['dso_type'] if form_params['dso_type'] != 'all' else ''
+        context['constellation'] = form_params['constellation'] if form_params['constellation'] else ''
+        context['subset'] = form_params['subset'] if form_params['subset'] else 'all'
+        context['exclude_issues'] = form_params['exclude_issues']
+        context['dso_list'] = checklist_form(form_params, all_dsos)
+        context['list_count'] = context['dso_list'].count()
+        context['show_map'] = form_params['show_map']
+        new_obs_list = None
+        if form_params['create_list']:
+            new_obs_list = create_new_observing_list(context['dso_list'], form_params)
+        context['new_obs_list'] = new_obs_list if new_obs_list else None
+
+        # Make a map
+        if form_params['show_map']:
+            dso_list = [x.dso for x in context['dso_list']]
+            center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list) #, mag=1.8)
+            star_mag_limit = get_star_mag_limit(max_dist)
+            map = plot_dso_list(
+                center_ra, 
+                center_dec,
+                dso_list,
+                fov=fov,
+                star_mag_limit = star_mag_limit,
+                reversed = False,
+                label_size='small',
+                symbol_size=60,
+                title = f"Imaging Sample"
+            )
+            context['map'] = map
+        else:
+            context['map'] = None
+        context['table_id'] = 'dsos-on-list'
         return context

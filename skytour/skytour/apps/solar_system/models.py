@@ -279,6 +279,11 @@ class Asteroid(ObservableObject):
         _('Description'),
         null = True, blank = True
     )
+    always_include = models.BooleanField (
+        _('Always Include'),
+        default = False,
+        help_text = 'Override magnitude limit, e.g., for Pluto'
+    )
 
     ### Magnitude
     h = models.FloatField (
@@ -296,7 +301,7 @@ class Asteroid(ObservableObject):
     )
     object_class = 'asteroid'
 
-    detail_view = 'astroid-detail'
+    detail_view = 'asteroid-detail'
 
     @property
     def instance_id(self):
@@ -349,7 +354,7 @@ class AsteroidLibraryImage(ObjectImage):
     ut_datetime = models.DateTimeField()
 
     def __str__(self):
-        return self.object.shown_name
+        return self.object.full_name
     
     class Meta:
         verbose_name = 'Asteroid Library Image'
@@ -449,7 +454,7 @@ class CometLibraryImage(ObjectImage):
     ut_datetime = models.DateTimeField()
 
     def __str__(self):
-        return self.object.shown_name
+        return self.object.name
     
     class Meta:
         verbose_name = 'Comet Library Image'

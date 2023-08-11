@@ -13,9 +13,11 @@
     <tr>
         <td width="20%">
             <h1> {{ object.name }}</h1> 
+            {% if in_cookie %}
             <h3> Currently in 
                 <a href="{% url 'constellation-detail' asteroid.observe.constellation.abbr|upper %}">{{ asteroid.observe.constellation.name }}</a></h3>
-            <table class="lite">
+            {% endif %}
+                <table class="lite">
                 <tr><td>Class:</td><td>{{ object.classification }}</td></tr>
                 <tr><td>Diameter:</td><td>{{ object.diameter }} km</td></tr>
                 <tr><td>Discovered:</td><td>{{ object.year_of_discovery }}<br/><br/></td></tr>
@@ -31,9 +33,11 @@
                 </td></tr>
             </table>
         </td>
-        <td width="25%">
+        <td width="25%" class="hvcenter">
             {% if object.image %}
             <img src="{{ object.image.url }}" class="constrained">
+            {% else %}
+            No external image
             {% endif %}
         </td>
         <td width="20%">
@@ -42,7 +46,7 @@
         {% if object.library_image %}
         <td width="35%">
             <a href="{{ object.library_image.image.url }}"><img 
-                src="{{ object.library_image.url }}" class="constrained"></a>
+                src="{{ object.library_image.image.url }}" class="constrained"></a>
         </td>
         {% else %}
         <td width="35%" class="hvcenter">

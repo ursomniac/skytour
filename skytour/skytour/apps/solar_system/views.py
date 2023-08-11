@@ -193,6 +193,7 @@ class AsteroidDetailView(CookieMixin, DetailView):
                     sun = context['cookies']['sun'],
                     moon = context['cookies']['moon']
                 )
+        context['in_cookie'] = True if pdict else False
         return context
 
 class CometListView(CookieMixin, ListView):

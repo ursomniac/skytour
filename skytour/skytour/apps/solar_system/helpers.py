@@ -1,4 +1,5 @@
 import time
+from django.db.models import Q
 from skyfield.api import load, Star
 from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
 from skyfield.data import mpc
@@ -70,7 +71,7 @@ def get_planet_positions(utdt, utdt_end=None, location=None, time_zone=None):
       planet_dict[p.name] = d
    return planet_dict
 
-def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone=None):
+def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone=None, pluto=True):
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
@@ -86,7 +87,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
    earth = eph['earth']
    r_earth_sun = earth.at(t).observe(sun).radec()[2].au.item()
 
-   asteroids = Asteroid.objects.filter(est_brightest__lte=cutoff)
+   asteroids = Asteroid.objects.filter(Q(est_brightest__lte=cutoff) | Q(always_include=True))
 
    with load.open('bright_asteroids.txt') as f:
       mps = mpc.load_mpcorb_dataframe(f)
@@ -98,7 +99,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
       row = mps.loc[a.mpc_lookup_designation]
       target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
       mag = fast_asteroid(a, target, t, earth, sun, r_earth_sun)
-      if mag <= mag_limit:
+      if mag <= mag_limit or a.always_include:
          x = get_object_metadata(
             utdt, 
             target, 

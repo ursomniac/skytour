@@ -84,10 +84,12 @@ def do_dso_lists(p, context, dso_lists=None):
         center_ra, center_dec, max_dist, fov = get_map_parameters(dl.dso.all())
         star_mag_limit = get_star_mag_limit(max_dist)
 
-        y = 700
+        y = 760
         x = 350
         p, y = label_and_text(p, x, y, ('Center RA: ', 10), (to_hm(center_ra), 10))
         p, y = label_and_text(p, x, y, ('Center Dec: ', 10), (to_dm(center_dec), 10))
+        y = 760
+        x = 470
         p, y = label_and_text(p, x, y, ('FOV: ', 10), (f"{fov:.0f}°", 10))
         p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{star_mag_limit:.1f}", 10))
 
@@ -103,16 +105,17 @@ def do_dso_lists(p, context, dso_lists=None):
             title = f"DSO List: {dl.name}"
         )
         y = 735
-        p, y = add_image(p, y, map, size=300, x=40)
+        p, y = add_image(p, y, map, size=500, x=20)
 
         # Add table of member DSOs
         c = 0
         xoff = 0
-        y -= 15
+        y -= 0
         ytop = y
 
+        N_PER_COLUMN = 20
         for dso in dso_set:
-            if c % 35 == 0:
+            if c % N_PER_COLUMN == 0:
                 p.setFont('Helvetica-Bold', 8)
                 p.drawString(40+xoff, y, 'NAME')
                 p.drawString(85+xoff, y, 'CON.')
@@ -136,7 +139,7 @@ def do_dso_lists(p, context, dso_lists=None):
                 #p.setFont('Helvetica', 8)
             y -= 10
             c += 1
-            if c % 35 == 0:
+            if c % N_PER_COLUMN == 0:
                 xoff += 280
                 y = ytop
 

@@ -256,6 +256,7 @@ class SessionAddView(CookieMixin, FormView):
         cookies = get_all_cookies(self.request)
         aa = cookies['asteroids']
         aslugs = [a['slug'] for a in aa]
+        aslugs.append('134340-pluto')
         form.fields['asteroid'].queryset = Asteroid.objects.filter(slug__in=aslugs)
         cc = cookies['comets']
         cslugs = [c['pk'] for c in cc]

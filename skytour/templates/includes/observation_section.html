@@ -32,24 +32,31 @@
         <td class="vcenter">{{ obs.ut_datetime|date:"Y-m-d H:i"}}</td>
         <td>
             {{ obs.location.placename }}<br>
-            <br>Eyepieces:
-                {% if obs.eyepiece_list %} 
-                    {{ obs.eyepiece_list }}
-                {% else %}
-                    (probably low-power)
-                {% endif %}
-            {% if obs.filter_list %}
-                <br>Filters: {{ obs.filter_list }}
+            Telescope: {{ obs.telescope.name }}
+            <br>
+            {% if obs.telescope.id != 2 %}
+                Eyepieces:
+                    {% if obs.eyepiece_list %} 
+                        {{ obs.eyepiece_list }}
+                    {% else %}
+                        (probably low-power)
+                    {% endif %}
+                {% if obs.filter_list %}
+                    <br>Filters: {{ obs.filter_list }}
+            {% else %}
+                Images: {{ obs.num_images }}<br/>
+                Status: {{ obs.image_status }}<br/>
+            {% endif %}
             {% endif %}
         </td>
-        {% if obs.object.object_class != 'dso' %}
+
         <td>
             Constellation: <b>{{ m.constellation|upper }}</b><br/>
             Dist: {{ m.distance|floatformat:2 }} {{ m.distance_units }}<br/>
             Ang. Size: {{ m.angular_diameter|floatformat:3 }}<br/>
             Mag: {{ m.apparent_magnitude|floatformat:2 }}<br/>
         </td>
-        {% endif %}
+
         <td>
             HA: {{ m.hour_angle|to_hms }}<br/>
             Azimuth: {{ m.azimuth|to_dm }}<br/>

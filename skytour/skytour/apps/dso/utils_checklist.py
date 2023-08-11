@@ -1,0 +1,67 @@
+from .models import DSOList
+
+def checklist_params(request):
+    params = dict(
+        constellation = request.GET.get('constellation', None),
+        #seen = request.GET.get('seen', False) == 'on',
+        subset = request.GET.get('subset', 'all'),
+        priority = int(request.GET.get('priority', 0)),
+        dso_type = request.GET.get('dso_type', 'all'),
+        exclude_issues = request.GET.getlist('exclude_issues', None),
+        create_list = request.GET.get('create_list', False) == 'on',
+        new_list_name = request.GET.get('new_list_name', None),
+        show_map = request.GET.get('show_map', False) == 'on'
+    )
+    return params
+
+def checklist_form(params, dsos):
+    DSO_TYPE_DICT = {
+        'cluster': ['asterism', 'cluster-nebulosity', 'globular-cluster', 
+            'open-cluster', 'stellar-association'],
+        'nebula': ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula', 'nebula--emission', 
+            'interstellar-matter', 'planetary-nebula', 'reflection-nebula', 'supernova-remnant'],
+        'galaxy': ['barried-spiral', 'dwarf-galaxy', 'galaxy--elliptical', 'irregular-galaxy',
+            'galaxy--lenticular', 'seyfert-galaxy', 'galaxy--spiral']
+    }
+    # constellation
+    if params['constellation']:
+        in_clist = [x.upper().strip() for x in params['constellation'].split(',')]
+        dsos = dsos.filter(dso__constellation__abbreviation__in=in_clist)
+    if params['priority'] > 0:
+        dsos = dsos.filter(priority__gte=params['priority'])
+    if params['dso_type'] != 'all':
+        in_list = DSO_TYPE_DICT[params['dso_type']]
+        dsos = dsos.filter(dso__object_type__slug__in=in_list)
+
+    if params['subset'] == 'seen':
+        good_ids = [x.pk if x.dso.num_library_images > 0 else None for x in dsos]
+        dsos = dsos.filter(pk__in=good_ids)
+    elif params['subset'] == 'unseen':
+        good_ids = [x.pk if x.dso.num_library_images == 0 else None for x in dsos]
+        dsos = dsos.filter(pk__in=good_ids)
+
+    for issue in params['exclude_issues']:
+        #print("ISSUE: ", issue)
+        if issue == 'all':
+            continue
+        dsos = dsos.exclude(issues=issue)
+        
+    return dsos
+
+def create_new_observing_list(imaging_list, params):
+    name = params['new_list_name']
+    description = f"""
+        Constellations: {params['constellation']}
+        Exclude: {params['exclude_issues']}
+        Imaging: {params['subset']}
+        Object Types: {params['dso_type']}
+        Priority: {params['priority']}
+    """
+    new_list = DSOList()
+    new_list.name = name
+    new_list.description = description
+    new_list.save() # need to do this before adding DSOs
+    for item in imaging_list:
+        new_list.dso.add(item.dso)
+    new_list.save()
+    return new_list

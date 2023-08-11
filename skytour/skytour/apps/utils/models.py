@@ -72,6 +72,7 @@ class Catalog(AbstractCatalog):
     def observing_stats(self):
         n_total = 0
         n_obs = 0
+        n_imaged = 0
         n_available = 0
         for dso in self.dso_list:
             n_total += 1
@@ -79,17 +80,22 @@ class Catalog(AbstractCatalog):
                 n_obs += 1
             if dso.priority != 'None':
                 n_available += 1
+            n_imaged += 1 if dso.num_library_images > 0 else 0
         
         f_obs = (n_obs + 0.)/n_total
         f_avail = (n_obs + 0.)/n_available
         return dict(
             n_obs=n_obs,
+            n_imaged=n_imaged,
+            p_imaged = 100.* (n_imaged + 0.)/n_total,
+            p_img_available = 100.* (n_imaged + 0.)/n_available,
             n_total=n_total,
             f_obs=f_obs,
             p_obs=f_obs*100.,
             n_available=n_available,
             f_available=f_avail,
             p_available=f_avail*100.
+
         )
 
     class Meta:

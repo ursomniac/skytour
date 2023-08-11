@@ -18,18 +18,24 @@
             <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
             <br><br>
         </td>
-        <td width="25%">
+        <td width="25%" class="hvcenter">
             {% if object.image %}
             <img src="{{ object.image.url }}">
+            {% else %}
+            <p>No external image.</p>
             {% endif %}
         </td>
-        <td width="20%">
+        <td width="20%" class="hvcenter">
+            {% if object.description %}
             <p>{{ object.description }}</p>
+            {% else %}
+            <p>No description.</p>
+            {% endif %}
         </td>
         {% if object.library_image %}
         <td width="35%">
             <a href="{{ object.library_image.image.url }}" target="_blank"><img 
-                src="{{ object.library_image.url }}" class="constrained"></a>
+                src="{{ object.library_image.image.url }}" class="constrained"></a>
         </td>
         {% else %}
         <td width="35%" class="hvcenter">

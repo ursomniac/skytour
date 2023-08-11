@@ -17,6 +17,8 @@
             <a href="{% url 'dso-filter' %}">Filter</a>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'dso-observed' %}">Obs.</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'dso-checklist' %}">Checklist</a>
         </td>
         <td colspan=3>Sessions: &nbsp;&nbsp;
             <a href="{% url 'session-list' %}">List</a>
@@ -39,7 +41,12 @@
         <td class="click"><a href="{% url 'atlas-list' %}">Atlas</a></td>
         <td class="click"><a href="{% url 'catalog-list' %}">Catalogs</a></td>
         <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
-        <td class="click"><a href="{% url 'observed-objects' %}">Observation List</a></td>
+        <td colspan="2">
+            Lists:
+            <a href="{% url 'observed-objects' %}">Obs.</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'library-image-list' %}">Library Images</a>
+        </td>
     </tr>
     <tr>
         <td colspan="2">

@@ -175,7 +175,9 @@
 <tr>
 	<td class="dso_image" colspan=3 style="width:50%;">
 		{% if object.images.all.0 %}
+		<a href="{{ object.images.all.0.image.url}}" target="_blank">
 		<img src="{{ object.images.all.0.image.url }}" width=100% style="display:block;">
+		</a>
 		{% endif %}
 	</td>
 	<td id="field_view" colspan=3 style="width:50%;">
@@ -193,17 +195,23 @@
 
 	<td class="dso_image" colspan=2 style="width:33%;">
 		{% if object.images.all.1 %}
+		<a href="{{ object.images.all.1.image.url}}" target="_blank">
 		<img src="{{ object.images.all.1.image.url }}" width=100%>
+		</a>
 		{% endif %}
 	</td>
 	<td class="dso_image" colspan=2 style="width:33%;">
 		{% if object.images.all.2 %}
+		<a href="{{ object.images.all.2.image.url}}" target="_blank">
 		<img src="{{ object.images.all.2.image.url }}" width=100%>
+		</a>
 		{% endif %}
 	</td>
 	<td class="dso_image" colspan=2 style="width=33%;">
 		{% if object.images.all.3 %}
+		<a href="{{ object.images.all.3.image.url}}" target="_blank">
 		<img src="{{ object.images.all.3.image.url }}" width=100%>
+		</a>
 		{% endif %}
 	</td>
 </tr>

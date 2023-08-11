@@ -11,48 +11,89 @@
 </style>
 <!-- main -->
 {# header section #}
-<table class="lite">
+
+<h1>Library Images</h1>
+
+<h2>Filter by Object Type</h2>
+<table>
     <tr>
-        <td width="30%">
-            <h1>Library Images</h1>
-        </td>
-        <td width="70%">
-            <h2>Filter by Object Type</h2>
-            <table>
-                {% for t in object_type_list %}
-                {% if forloop.counter0|divisibleby:6 %}<tr>{% endif %}
-                    <td>
-                    <a href="{% url 'library-by-type' t.slug %}"><button>{{ t.label }}</button></a>
-                    {% for i in t.spaces %}&nbsp;{% endfor %}
-                    </td>
-                    {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
-                {% endfor %}
-                </tr>
-            </table>
+        <td><b>DSOs:</b></td>
+        <td class="click"><a href="{% url 'library-by-type' 'galaxy' %}">All</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'galaxy--spiral' %}">Spirals</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'barred-spiral' %}">Barred</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'dwarf-galaxy' %}">Dwarf</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'galaxy--elliptical' %}">Elliptical</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'galaxy--lenticular' %}">Lenticular</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'seyfert-galaxy' %}">Seyfert</a></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><b>Nebulae:</b></td>
+        <td class="click"><a href="{% url 'library-by-type' 'nebula' %}">All</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'nebula--emission' %}">Emission</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'reflection-nebula' %}">Reflection</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'diffuse-nebula' %}">Diffuse</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'dark-nebula' %}">Dark</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'planetary-nebula' %}">Planetary</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'interstellar-matter' %}">Interstellar</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'supernova-remnant' %}">SN Remnant</a></td>
+    </tr>
+    <tr>
+        <td><b>Clusters:</b></td>
+        <td class="click"><a href="{% url 'library-by-type' 'cluster' %}">All</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'open-cluster' %}">Open</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'globular-cluster' %}">Globular</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'stellar-association' %}">Association</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'asterism' %}">Asterism</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'cluster-nebulosity' %}">w/ Nebulosity</a></td>
+        <td></td><td></td>
+    </tr>
+    <tr>
+        <td><b>Solar System:</b></td>
+        <td class="click"><a href="{% url 'library-by-type' 'solar-system' %}">All</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'planet' %}">Planet</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'asteroid' %}">Asteroid</a></td>
+        <td class="click"><a href="{% url 'library-by-type' 'comet' %}">Comet</a></td>
+        <td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td colspan="7"><a href="{% url 'library-image-list'%}">All Object Types</a></td>
     </tr>
 </table>
-
+<br><br>
 {% include 'includes/paginate.html' %}
-<h3>{{ object_count }} Objects in List</h3>
+<h3>Images {{ page_obj.start_index}} to {{ page_obj.end_index }} of {{ image_list_count }} Images for {{ object_count }} Objects in List</h3>
 <table class="library_image_list" id='{{ table_id }}'>
     {% for image in image_list %}
     {% with image.object as object %}
     {% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
-    <td>
+    <td width="33%">
         <a href="{{ image.image.url }}" target="_blank"><img src="{{ image.image.url }}" class="library_image"></a>
         <br>
         <table>
             <tr>
                 <td>
                     <h3>
-                        <a href="{% url object.detail_view object.instance_id %}">{{ object.shown_name }}</a>
-                        &nbsp;<small>in {{ object.constellation.abbreviation }}</small>
+                        <a href="{% url object.detail_view object.instance_id %}" target="_blank">
+                            {% if object.object_class == 'dso' %}
+                            {{ object.shown_name }}
+                        </a>
+                            &nbsp;<small>in {{ object.constellation.abbreviation }}</small>
+                            {% else %}
+                            {{ object.name }}
+                        </a>
+                            {% endif %}
+
                     </h3>
-                    {{ object.object_type.short_name }}
-                    {% if object.morphological_type %}
-                     - 
-                     {% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
-                     {{ object.morphological_type }}{% endif %}
+                    {% if object.object_class == 'dso' %}
+                        {{ object.object_type.short_name }}
+                        {% if object.morphological_type %}
+                            - 
+                            {% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
+                            {{ object.morphological_type }}
+                        {% endif %}
+                    {% endif %}
                     <br/>
                     Date: {{ image.ut_datetime }}<br>
                     Exposure: {{ image.exposure }} mins.
@@ -62,6 +103,7 @@
                     Mag: {{ object.magnitude }}<br/>
                     Ang. Size: {{ object.angular_size }}<br/>
                     Surf. Br. {{ object.surface_brightness }}<br/>
+                    C.I.: {{ object.contrast_index }}<br/>
                     Dist. {{ object.distance }} {{ object.distance_units }}<br/>
                     {% endif %}
                 </td>
@@ -73,6 +115,5 @@
     {% endfor %}
     </tr>
 </table>
-{% include 'includes/sortable_table.html' %}
 {% include 'includes/paginate.html' %}
 {% endblock content %}

@@ -6,7 +6,7 @@
 {% block content %}
 <style>
     table.catalog_list td { font-size: 14px; }
-    table.stats { width: 50%; }
+    table.stats { width: 70%; }
     table.stats td {
         padding: 3px;
         text-align: center;
@@ -37,13 +37,26 @@
                 {% with object.observing_stats as x %}
                 <tr>
                     <th>Observation Completion</th>
-                    <th>#</th><th># Obs.</th><th>%</th></tr>
+                    <th>#</th><th># Obs.</th><th>%</th><th># Imaged</th><th>%</th></tr>
                 <tr>
                     <td>
-                    Avail.{% if x.n_available == x.n_total %}/Total{% endif %}
-                    </td><td>{{ x.n_available }}</td><td>{{ x.n_obs }}</td><td>{{ x.p_available|floatformat:1}}%</td></tr>
+                        Avail.{% if x.n_available == x.n_total %}/Total{% endif %}
+                    </td>
+                    <td>{{ x.n_available }}</td>
+                    <td>{{ x.n_obs }}</td>
+                    <td>{{ x.p_available|floatformat:1}}%</td>
+                    <td>{{ x.n_imaged }}</td>
+                    <td>{{ x.p_img_available|floatformat:1}}%</td>
+                </tr>
                 {% if x.n_available != x.n_total %}
-                <tr><td>Total</td><td>{{ x.n_total }}</td><td>{{ x.n_obs }}</td><td>{{ x.p_obs|floatformat:1 }}%</td></tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ x.n_total }}</td>
+                    <td>{{ x.n_obs }}</td>
+                    <td>{{ x.p_obs|floatformat:1 }}%</td>
+                    <td>{{ x.n_imaged }}</td>
+                    <td>{{ x.p_imaged|floatformat:1 }}%</td>
+                </tr>
                 {% endif %}
                 {% endwith %}
             </table>
@@ -79,7 +92,7 @@
         <th>Size</th>
         <th>S.Br.</th>
         <th>Pri.</th>
-        <th># Obs.</th>
+        <th># Obs./Img.</th>
         <th>Last Obs.</th>
     </tr>
     
@@ -109,7 +122,7 @@
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.surface_brightness|floatformat:1}}</td>
         <td>{{ thing.priority }}</td>
-        <td>{{ thing.number_of_observations }}</td>
+        <td>{{ thing.number_of_observations }} / {{ thing.num_library_images }}</td>
         <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
     </tr>
     {% endwith %}
