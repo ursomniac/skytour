@@ -37,40 +37,42 @@ class DSODetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
-        planets_dict = context['cookies']['planets']
-        asteroid_list = context['cookies']['asteroids']
-        comet_list = context['cookies']['comets']
+        now = self.request.GET.get('now', False)
+        planets_dict = context['cookies']['planets'] if now else None
+        asteroid_list = context['cookies']['asteroids'] if now else None
+        comet_list = context['cookies']['comets'] if now else None
         utdt = context['utdt_start']
         local_dt = isoparse(context['local_time_start'])
-        print("local dt type: ", type(local_dt), local_dt)
+        #print("local dt type: ", type(local_dt), local_dt)
         hours = local_dt.hour + local_dt.minute/60. + local_dt.second/3600.
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
         culm_at_time = get_opposition_date_at_time(self.object.ra, hours)
         context['culmination_at_time'] = culm_at_time
 
-        finder_chart, times1 = create_dso_finder_chart(
-            self.object, 
-            utdt = utdt, 
-            planets_dict = planets_dict, 
-            asteroid_list = asteroid_list,
-            comet_list = comet_list
-        )
-        close_up_finder, times2 = create_dso_finder_chart(
-            self.object,
-            utdt = context['utdt_start'],
-            fov = 2.,
-            mag_limit = 11.,
-            show_other_dsos = False,
-            #planets_dict=planets_dict,
-            #asteroid_list=asteroid_list,
-            #comet_list=comet_list
-        )
-        context['close_up_finder'] = close_up_finder
-        context['live_finder_chart'] = finder_chart
+        #finder_chart, times1 = create_dso_finder_chart(
+        #    self.object, 
+        #    utdt = utdt, 
+        #    planets_dict = planets_dict, 
+        #    asteroid_list = asteroid_list,
+        #    comet_list = comet_list,
+        #    now = now
+        #)
+        #close_up_finder, times2 = create_dso_finder_chart(
+        #    self.object,
+        #    utdt = context['utdt_start'],
+        #    fov = 2.,
+        #    mag_limit = 11.,
+        #    show_other_dsos = False,
+        #    now = now,
+        #    planets_dict=planets_dict,
+        #    asteroid_list=asteroid_list,
+        #    comet_list=comet_list
+        #)
+        #context['close_up_finder'] = close_up_finder
+        #context['live_finder_chart'] = finder_chart
         # TODO: Add rise set times if cookie is set.
-        times = times1 + times2
-        
-        context['times'] = compile_times(times)
+        #times = times1 + times2
+        #context['times'] = compile_times(times)
 
         # 2023-07-24 images
         my_images = self.object.images.filter(own_image=1).order_by('order_in_list')

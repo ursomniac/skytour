@@ -74,6 +74,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     app = session['apparent']
     obs = session['observe']
     phy = session['physical']
+    flip_planets = session['flip_planets'] == 'Yes'
 
     # Title
     y = Y0
@@ -136,6 +137,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
             utdt, 
             object, 
             cookies['cookies']['planets'], 
+            flipped = flip_planets,
             reversed=False
         )
         p, newy = add_image(p, y, telview, x=300, size=250)

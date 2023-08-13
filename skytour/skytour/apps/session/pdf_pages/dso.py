@@ -84,14 +84,12 @@ def do_dso_lists(p, context, dso_lists=None):
         center_ra, center_dec, max_dist, fov = get_map_parameters(dl.dso.all())
         star_mag_limit = get_star_mag_limit(max_dist)
 
-        y = 760
-        x = 350
-        p, y = label_and_text(p, x, y, ('Center RA: ', 10), (to_hm(center_ra), 10))
-        p, y = label_and_text(p, x, y, ('Center Dec: ', 10), (to_dm(center_dec), 10))
-        y = 760
-        x = 470
-        p, y = label_and_text(p, x, y, ('FOV: ', 10), (f"{fov:.0f}°", 10))
-        p, y = label_and_text(p, x, y, ('Mag. Limit: ', 10), (f"{star_mag_limit:.1f}", 10))
+        y = 770
+        x = 460
+        p, y = label_and_text(p, x, y, ('Center RA: ', 7), (to_hm(center_ra), 7), cr=9)
+        p, y = label_and_text(p, x, y, ('Center Dec: ', 7), (to_dm(center_dec), 7), cr=9)
+        p, y = label_and_text(p, x, y, ('FOV: ', 7), (f"{fov:.0f}°", 7), cr=9)
+        p, y = label_and_text(p, x, y, ('Mag. Limit: ', 7), (f"{star_mag_limit:.1f}", 7), cr=9)
 
         map = plot_dso_list(
             center_ra, 

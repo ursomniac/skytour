@@ -120,11 +120,19 @@
 		<br>(No finder chart.)
 		{% endif %}
 	{% endcomment %}
-		<img src="{{ live_finder_chart }}" width=100%>
+		<!--img src="{{ live_finder_chart }}" width=100%-->
+		{% if object.dso_finder_chart_wide %}
+		<img src = {{ object.dso_finder_chart_wide.url }} width="100%">
+		{% else %}<p>No Wide image finder (yet)</p>
+		{% endif %}
 	</td>
 	<td id="close_up" width=50%>
 		<h3>Close-Up Finder Chart:</h3>
-		<img src="{{ close_up_finder }}" width=100%>
+		<!--img src="{{ close_up_finder }}" width=100%-->
+		{% if object.dso_finder_chart_narrow %}
+		<img src = {{ object.dso_finder_chart_narrow.url }} width="100%">
+		{% else %}<p>No Narrow finder (yet)</p>
+		{% endif %}
 	</td>
 </tr>
 </table>
@@ -222,5 +230,5 @@
 {% include 'includes/observation_section.html' %}
 {% endwith %}
 
-{% include 'includes/performance_time.html' %}
+{# include 'includes/performance_time.html' #}
 {% endblock content %}

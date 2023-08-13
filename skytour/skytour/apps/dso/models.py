@@ -81,16 +81,24 @@ class DSO(Coordinates, FieldView, ObservableObject):
         _('Notes'),
         null = True, blank = True
     )
-
     finder_chart = models.ImageField (
         _('Finder Chart'),
         upload_to = 'finder_chart/',
         null = True, blank = True
     )
-
     dso_finder_chart = models.ImageField (
         _('DSO Finder Chart'),
         upload_to = 'dso_finder_chart',
+        null = True, blank = True
+    )
+    dso_finder_chart_wide = models.ImageField (
+        _('Constructed Finder Chart - Wide'),
+        upload_to = 'dso_finder_wide',
+        null = True, blank = True
+    )
+    dso_finder_chart_narrow = models.ImageField (
+        _('Constructed Finder Chart - Narrow'),
+        upload_to = 'dso_finder_narrow',
         null = True, blank = True
     )
     priority = models.CharField (
@@ -104,7 +112,6 @@ class DSO(Coordinates, FieldView, ObservableObject):
         default = 0,
         choices = INT_YES_NO
     )
-
     # From Stellarium DSO model and SIMBAD
     orientation_angle = models.PositiveIntegerField (
         _('Orientation Angle'),
@@ -121,7 +128,6 @@ class DSO(Coordinates, FieldView, ObservableObject):
         null = True, blank = True,
         help_text = 'arcmin'
     )
-
     pdf_page = models.FileField (
         _('PDF Page'),
         null = True, blank = True,
@@ -197,6 +203,12 @@ class DSO(Coordinates, FieldView, ObservableObject):
         """
         return mark_safe(u'<img src="%s" width=500>' % self.finder_chart.url)
 
+    def dso_finder_chart_narrow_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart_narrow.url)
+    
+    def dso_finder_chart_wide_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart_wide.url)
+    
     def dso_finder_chart_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart.url)
 

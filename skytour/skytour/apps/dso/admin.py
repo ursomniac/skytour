@@ -65,6 +65,8 @@ class DSOAdmin(ObservableObjectAdmin):
         'field_view_tag', 
         'finder_chart_tag',
         'dso_finder_chart_tag',
+        'dso_finder_chart_wide_tag',
+        'dso_finder_chart_narrow_tag',
         'atlas_plate_list',
     ]
     list_filter = ['priority', 'show_on_skymap', 'object_type', 'ra_h', ConstellationFilter]
@@ -98,6 +100,8 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
                 ('finder_chart', 'finder_chart_tag'),
+                ('dso_finder_chart_wide', 'dso_finder_chart_wide_tag'),
+                ('dso_finder_chart_narrow', 'dso_finder_chart_narrow_tag'),
                 'pdf_page'
             ]
         })

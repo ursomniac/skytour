@@ -136,13 +136,16 @@ def create_dso_finder_chart(
         comet_list = None,
         utdt = None,
         show_other_dsos = True,
-        axes=False,  # not generally used
-        test=False   # not generally used
+        now = False,
+        axes = False,  # not generally used
+        test = False,   # not generally used
+        path = 'dso_charts'
     ):
     """
     Create a finder chart for a DSO for a given date.
     Overlay planets and asteroids to this chart.
     """
+    path = 'media/dso_charts' if path is None else path
     times = [(time.perf_counter(), 'Start')]
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
@@ -199,15 +202,15 @@ def create_dso_finder_chart(
         times.append((time.perf_counter(), 'Other DSOs'))
 
     ### Planets, Asteroids
-    if planets_dict is not None and utdt is not None:
+    if planets_dict is not None and utdt is not None and now:
         ax, _ = map_planets(ax, None, planets_dict, earth, t, projection)
         times.append((time.perf_counter(), 'Planets'))
 
-    if asteroid_list is not None and utdt is not None:
+    if asteroid_list is not None and utdt is not None and now:
         ax, _ = map_asteroids(ax, None, asteroid_list, earth, t, projection, reversed=reversed)
         times.append((time.perf_counter(), 'Asteroids'))
 
-    if comet_list is not None and utdt is not None:
+    if comet_list is not None and utdt is not None and now:
         ax, _ = map_comets(ax, comet_list, earth, t, projection, reversed=reversed)
 
     ##### this object
@@ -224,6 +227,13 @@ def create_dso_finder_chart(
     eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
     circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color=ecolor, fill=False)
     ax.add_patch(circle1)
+    # TODO: ADD Rectangle for eQuinox2!!!
+    width = 47. * 2.909e-4 / 2.
+    height = 34. * 2.909e-4 / 2.
+    x0 = -width / 2.
+    y0 = -height / 2.
+    rect1 = plt.Rectangle((x0, y0), width, height, color='#f00', fill=False)
+    ax.add_patch(rect1)
     times.append((time.perf_counter(), 'Done Mapping'))
 
     ### Finish up
@@ -258,10 +268,10 @@ def create_dso_finder_chart(
             fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
 
         try:
-            fig.savefig('media/dso_charts/{}'.format(fn), bbox_inches='tight')
+            fig.savefig('{}/{}'.format(path, fn), bbox_inches='tight')
         except: # sometimes there's UTF-8 in the name
             fn = 'dso_chart_{}.png'.format(dso.pk)
-            fig.savefig('media/dso_charts/{}'.format(fn), bbox_inches='tight')
+            fig.savefig('{}/{}'.format(path, fn), bbox_inches='tight')
 
         plt.cla()
         plt.close(fig)
