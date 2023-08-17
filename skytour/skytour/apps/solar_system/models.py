@@ -1,6 +1,7 @@
 import datetime as dt
 import math
 from django.db import models
+from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
@@ -407,6 +408,10 @@ class Comet(ObservableObject):
         _('Light Curve URL'),
         null = True, blank = True
     )
+    light_curve_graph_url = models.URLField (
+        _('Light Curve Graph URL'),
+        null = True, blank = True
+    )
     override_limits = models.PositiveIntegerField(
         choices = YES_NO,
         default = NO
@@ -438,6 +443,13 @@ class Comet(ObservableObject):
     def library_image(self):
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
+    @property
+    def test_light_curve_graph(self):
+        if self.light_curve_url is None:
+            return None
+        pieces = self.light_curve_url.split('/')
+        x = self.light_curve_url.replace(pieces[-1], 'mag.gif')
+        return mark_safe(f'<img src="{x}" width=500>')
 
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)

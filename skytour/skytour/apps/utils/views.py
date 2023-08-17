@@ -172,7 +172,7 @@ class ObjectTypeDetailView(DetailView):
         context['table_id'] = 'dso_table_by_type'
         return context
 
-GALAXY_TYPES = ['barred-spiral', 'dwarf-galaxy', 'galaxy--elliptical'
+GALAXY_TYPES = ['barred-spiral', 'dwarf-galaxy', 'galaxy--elliptical',
     'irregular-galaxy', 'galaxy--lenticular', 'seyfert-galaxy',
     'galaxy--spiral']
 NEBULA_TYPES = ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula',
@@ -189,14 +189,13 @@ class LibraryImageView(TemplateView):
         context = super(LibraryImageView, self).get_context_data(**kwargs)
         object_type = kwargs.get('object_type', None)
         object_type = None if object_type == 'all' else object_type
-        #context['object_type_list'] = assemble_object_types()
         object_count = 0
 
         asteroid_image_list = []
         comet_image_list = []
         planet_image_list = []
         dso_image_list = []
-
+        sso_object_types = ['asteroid', 'comet', 'planet', 'solar-system']
         # Asteroid
         if object_type in ['asteroid', 'solar-system', None]:
             asteroid_image_list = AsteroidLibraryImage.objects.order_by('-ut_datetime')
@@ -210,7 +209,7 @@ class LibraryImageView(TemplateView):
             planet_image_list = PlanetLibraryImage.objects.order_by('-ut_datetime')
             object_count += planet_image_list.values('object').distinct().count()
         # DSOs
-        if object_type != 'solar-system' or object_type is None:
+        if object_type not in sso_object_types or object_type is None:
             if object_type is None:
                 dso_image_list = DSOLibraryImage.objects.order_by('-ut_datetime')
             elif object_type == 'galaxy':

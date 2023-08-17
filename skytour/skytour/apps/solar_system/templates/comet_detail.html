@@ -15,15 +15,14 @@
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ comet.observe.constellation.name }}</h2>
             <a href="/admin/solar_system/comet/{{ object.pk }}/change" target="_new"><button>Admin</button></a>
-            <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
+            <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a><br>
+            <a href="{{ object.light_curve_url }}" target="_new"><button>External Page</button></a>
             <br><br>
         </td>
         <td width="25%" class="hvcenter">
-            {% if object.image %}
-            <img src="{{ object.image.url }}">
-            {% else %}
-            <p>No external image.</p>
-            {% endif %}
+            <a href="{{ object.light_curve_graph_url }}" target="_new">
+            <img src="{{ object.light_curve_graph_url }}" class="constrained">
+            </a>
         </td>
         <td width="20%" class="hvcenter">
             {% if object.description %}
