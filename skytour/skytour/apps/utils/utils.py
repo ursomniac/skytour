@@ -23,3 +23,4 @@ def filter_dso_test(dso, filters):
     if 'unimaged' in filters and dso.num_library_images != 0:
         return None
     return dso
+

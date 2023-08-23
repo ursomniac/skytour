@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load skytour_filters %}
+{% block styles %}
+{% endblock styles %}
+{% block title %}{{ object.name }} Library Images: Skytour {% endblock %}
+{% block content %}
+<style>
+    table.library_image_list td { font-size: 14px; }
+    table.library_image_list td h3 { margin-top: 0; }
+    img.library_image { display: block; max-width:320px; }
+    td.library_image_cell { height: 320px; }
+    td.topalign { vertical-align: top; }
+    span.nickname { color: #ff9; font-style: italic; margin-botton: 2px; }
+    span.label { color: #999; }
+    span.value { font-size: 90%; }
+    div.object_header { margin-bottom: 2px; }
+    div.object_type { margin-top: 2px; }
+    h3 { margin-bottom: 3px; }
+</style>
+<!-- main -->
+{# header section #}
+
+<h1>Library Images</h1>
+<h2>Catalog: {{ catalog }}</h2>
+# Objects: {{ object_count }}
+<br># Images: {{ image_list_count }} = {{ image_percent|floatformat:1 }}%
+<br><br><br>
+
+<form action="" method="GET">
+    <select name="catalog_slug">
+        <option value="caldwell">Caldwell</option>
+        <option value="messier">Messier</option>
+    </select>
+    <select name="scope">
+        <option value="all">Show all Available Objects</option>
+        <option value="seen" selected>Show only Imaged Objects</option>
+    </select>
+    <input type="submit" value="Filter"/>
+</form>
+<br>
+
+<table class="library_image_list" id='{{ table_id }}'>
+    {% for object in object_list %}
+    {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
+    <td width="25%" class="library_image_cell">
+        <a href="{{ object.library_image.image.url }}" 
+            target="_blank"><img src="{{ object.library_image.image.url }}" 
+            class="library_image"></a>
+        <br>
+        <table>
+            <tr>
+                <td  width="55%" class="topalign">
+                    <div class="object_header">
+                        <h3>
+                            {# deal with Caldwell 14 being two NGC objects #}
+                            {% if catalog == 'Caldwell' and object.cid == 14 %}
+                                <a href="{% url 'dso-detail' object.pk %}" target="_blank">C 14</a>
+                                <small> ({{ object.shown_name }})</small>
+                            {% else %}
+                                <a href="{% url 'dso-detail' object.pk %}" target="_blank">{{ object.shown_name }}</a>
+                            {% endif %}
+                            &nbsp;<span class="value">in {{ object.constellation.abbreviation }}</span>
+                        </h3>
+                        {% if object.nickname %}
+                            <span class="nickname">{{ object.nickname }}</span>
+                        {% endif %}
+                        <br>
+                        <div class="object_type">
+                            {{ object.object_type.short_name }}{% if object.morphological_type %}: 
+                                <span type="value">{% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
+                                {{ object.morphological_type }}</span>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <br/>
+                    {% if object.library_image %}
+                    <span class="label">Date:</span> 
+                        <span class="value">{{ object.library_image.ut_datetime|date:'d-M-Y h:m' }} UT</span>
+                        <br>
+                    <span class="label">Exposure:</span> <span class="value">{{ object.library_image.exposure }} min</span>
+                    {% endif %}
+                </td>
+                <td width="45%" class="topalign">
+                    <span class="label">Mag:</span> 
+                        <span class="value">{{ object.magnitude }}</span>
+                        <br/>
+                    <span class="label">Ang. Size:</span> 
+                        <span class="value">{{ object.angular_size }}</span>
+                        <br/>
+                    <span class="label">Surf. Br.:</span> 
+                        <span class="value">{{ object.surface_brightness }}</span>
+                        <br/>
+                    <span class="label">C.I.:</span> 
+                        <span class="value">{{ object.contrast_index }}</span>
+                        <br/>
+                    <br>
+                    <span class="label">Dist:</span> 
+                        <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
+                        <br/>
+                </td>
+            </tr>
+        </table>
+    </td>  
+    {% if forloop.counter|divisibleby:4 %}</tr>{% endif %}
+    {% endfor %}
+    </tr>
+</table>
+{% endblock content %}

@@ -4,7 +4,7 @@
         background: #303;
     }
     table.observation_table td { 
-        border: 1px solid #999; 
+        /* border: 1px solid #999; */
         padding: 4px;
     }
     table.observation_table td .vcenter {
@@ -13,62 +13,85 @@
         font-weight: bold;
         color: #ff6;
     }
+    table.dso_table td { font-size: 80%; vertical-align: center; }
 </style>
-<h2>Observations</h2>
-
+<h3>Observations: {{ instance.observations.count }} </h3>
 {% if instance.observations.all|length > 0 %}
-<table class="observation_table">
-    <tr>
-        <th>Date (UT)</th>
-        <th>Location / Equipment</th>
-        {% if instance.object_class != 'dso' %}<th>Obj. Data</th>{% endif %}
-        <th>Obs. Data</th>
-        <th>Notes</th>
-        <th>Admin</th>
-    </tr>
-    {% for obs in instance.observations.all reversed %}
-    {% with obs.observation_metadata as m %}
-    <tr>
-        <td class="vcenter">{{ obs.ut_datetime|date:"Y-m-d H:i"}}</td>
-        <td>
-            {{ obs.location.placename }}<br>
-            Telescope: {{ obs.telescope.name }}
-            <br>
-            {% if obs.telescope.id != 2 %}
-                Eyepieces:
-                    {% if obs.eyepiece_list %} 
-                        {{ obs.eyepiece_list }}
-                    {% else %}
-                        (probably low-power)
-                    {% endif %}
-                {% if obs.filter_list %}
-                    <br>Filters: {{ obs.filter_list }}
-            {% else %}
-                Images: {{ obs.num_images }}<br/>
-                Status: {{ obs.image_status }}<br/>
-            {% endif %}
-            {% endif %}
-        </td>
-
-        <td>
-            Constellation: <b>{{ m.constellation|upper }}</b><br/>
-            Dist: {{ m.distance|floatformat:2 }} {{ m.distance_units }}<br/>
-            Ang. Size: {{ m.angular_diameter|floatformat:3 }}<br/>
-            Mag: {{ m.apparent_magnitude|floatformat:2 }}<br/>
-        </td>
-
-        <td>
-            HA: {{ m.hour_angle|to_hms }}<br/>
-            Azimuth: {{ m.azimuth|to_dm }}<br/>
-            Altitude {{ m.altitude|to_dm }}<br>
-            Airmass: {{ m.sec_z|floatformat:3 }}
-        </td>
-        <td width="25%">{{ obs.notes }}</td>
-        <td class="vcenter"><a href="/admin/{{ admin_dir }}/{{ obs.object.pk }}/change/"><button>Admin</button></a></td>
-    </tr>
-    {% endwith %}
-    {% endfor %}
-</table>
+    {% if instance.object_class != 'dso' %}
+    <table class="observation_table">
+        <tr>
+            <th>Date (UT)</th>
+            <th>Location / Equipment</th>
+            <th>Obj. Data</th>
+            <th>Obs. Data</th>
+            <th>Notes</th>
+            <th>Admin</th>
+        </tr>
+        {% for obs in instance.observations.all reversed %}
+        {% with obs.observation_metadata as m %}
+        <tr>
+            <td class="vcenter">{{ obs.ut_datetime|date:"Y-m-d H:i"}}</td>
+            <td>
+                {{ obs.location.placename }}<br>
+                Telescope: {{ obs.telescope.name }}
+                <br>
+                {% if obs.telescope.id != 2 %}
+                    Eyepieces:
+                        {% if obs.eyepiece_list %} 
+                            {{ obs.eyepiece_list }}
+                        {% else %}
+                            (probably low-power)
+                        {% endif %}
+                    {% if obs.filter_list %}
+                        <br>Filters: {{ obs.filter_list }}
+                {% else %}
+                    Images: {{ obs.num_images }}<br/>
+                    Status: {{ obs.image_status }}<br/>
+                {% endif %}
+                {% endif %}
+            </td>
+            <td>
+                Constellation: <b>{{ m.constellation|upper }}</b><br/>
+                Dist: {{ m.distance|floatformat:2 }} {{ m.distance_units }}<br/>
+                Ang. Size: {{ m.angular_diameter|floatformat:3 }}<br/>
+                Mag: {{ m.apparent_magnitude|floatformat:2 }}<br/>
+            </td>
+            <td>
+                HA: {{ m.hour_angle|to_hms }}<br/>
+                Azimuth: {{ m.azimuth|to_dm }}<br/>
+                Altitude {{ m.altitude|to_dm }}<br>
+                Airmass: {{ m.sec_z|floatformat:3 }}
+            </td>
+            <td width="25%">{{ obs.notes }}</td>
+            <td class="vcenter"><a href="/admin/{{ admin_dir }}/{{ obs.object.pk }}/change/"><button>Admin</button></a></td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+    </table>
+    {% else %} {# DSO #}
+        {% if object.number_of_observations > 0 %}
+        <table class="observation_table dso_table">
+            <tr>
+                <th>UT Date/Time</th>
+                <th>Tel.</th>
+                <th>Location</th>
+                <th>Alt.</th>
+                <th>Air</th>
+                <th>Notes</th>
+            </tr>
+        {% for obs in object.observations.all %}
+        <tr>
+            <td width="12%">{{ obs.ut_datetime|date:"Y-m-d H:i" }}</td>
+            <td width="10%">{{ obs.location.city }}, {{ obs.location.state.abbreviation}}</td>
+            <td width="10%">{{ obs.telescope.name }}</td>
+            <td width="5en;">{{ obs.observation_metadata.altitude|floatformat:1 }}°</td>
+            <td width="5en;">{{ obs.observation_metadata.sec_z|floatformat:3 }}</td>
+            <td>{{ obs.notes }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    {% endif %}
 {% else %}
 <p>No observations.</p>
 {% endif %}

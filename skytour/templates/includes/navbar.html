@@ -39,7 +39,11 @@
         <td class="click"><a href="{% url 'comet-list' %}">Comets</a></td>
         <td class="click"><a href="{% url 'constellation-list' %}">Constellations</a></td>
         <td class="click"><a href="{% url 'atlas-list' %}">Atlas</a></td>
-        <td class="click"><a href="{% url 'catalog-list' %}">Catalogs</a></td>
+        <td>
+            <a href="{% url 'catalog-list' %}">Catalogs</a>
+            &nbsp;|&nbsp;
+            <a href="{% url 'library-by-catalog' %}">Imaged</a>
+        </td>
         <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
         <td colspan="2">
             Lists:

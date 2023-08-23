@@ -19,6 +19,7 @@ from ..solar_system.plot import (
     get_planet_map
 )
 from .models import Asteroid, Comet, Planet
+from ..utils.format import float2ang
 
 def get_rise_set(alist, format="%Y-%m-%d %I:%M %p"):
     orise = None
@@ -74,7 +75,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     app = session['apparent']
     obs = session['observe']
     phy = session['physical']
-    flip_planets = session['flip_planets'] == 'Yes'
+    flip_planets = cookies['flip_planets'] == 'Yes'
 
     # Title
     y = Y0
@@ -108,8 +109,9 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     #   - Almanac (rise/set)
     xnow = 425
     y = ynow
-    orise, oset = get_rise_set(session['almanac'])
+    orise, oset, otrans = get_rise_set(session['almanac'])
     p, y = label_and_text(p, xnow, y, ("Rise: ", FS), (orise, FS), cr=15)
+    p, y = label_and_text(p, xnow, y, ("Trans: ", FS), (otrans, FS), cr=15)
     p, y = label_and_text(p, xnow, y, ("Set: ", FS), (oset, FS), cr=15)
  
     # Planets section
@@ -181,7 +183,21 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
             tt = isoparse(f['next_transit']).strftime('%Y-%m-%d %H:%I')
             p = place_text(p, 370, y, f"{tt} UT", size=8)
             y -= 10
-
+    elif object_type == 'planet' and object.slug in ['saturn', 'uranus', 'neptune']:
+        y -= 20
+        moons = session['moons']
+        p, tw = bold_text(p, 80, y, 'Moons', size=10)
+        p, tw = bold_text(p, 150, y, 'Mag.', size=10)
+        p, tw = bold_text(p, 200, y, 'Sep.', size=10)
+        y -= 7
+        p.line(70, y, 290, y)
+        y -= 10
+        for moon in moons:
+            p = place_text(p, 80, y, moon['name'], size=8)
+            p = place_text(p, 150, y, f"{moon['apparent_magnitude']:5.2f}", size=8)
+            ang_sep = float2ang(moon['planet_separation'], format='ms', space=' ')
+            p = place_text(p, 200, y, ang_sep, size=8)
+            y -= 10
     p.showPage()
     return p
 

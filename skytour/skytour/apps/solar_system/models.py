@@ -93,7 +93,7 @@ class PlanetLibraryImage(ObjectImage):
     ut_datetime = models.DateTimeField()
 
     def __str__(self):
-        return self.object.shown_name
+        return self.object.name
     
     class Meta:
         verbose_name = 'Planet Library Image'

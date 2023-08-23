@@ -96,6 +96,7 @@ class DSOAdmin(ObservableObjectAdmin):
             ]
         }),
         ('Charts', {
+            'classes': ['collapse'],
             'fields': [
                 ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
@@ -249,7 +250,12 @@ class AtlasPlateAdmin(TagModelAdmin):
         return ', '.join(tlist)
     tag_list.short_description = 'Tags'
 
+class DSOImagingChecklistAdmin(admin.ModelAdmin):
+    model = DSOImagingChecklist
+    search_fields = ['dso__nickname', 'dso__shown_name', 'dso__aliases__shown_name']
+
+
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
-admin.site.register(DSOImagingChecklist)
+admin.site.register(DSOImagingChecklist, DSOImagingChecklistAdmin)

@@ -1,12 +1,12 @@
 #import itertools
 from django.core.paginator import Paginator
-from itertools import chain, takewhile
-from operator import attrgetter
-from re import L
-from django.db.models import Count
+from django.db.models import Count, IntegerField
+from django.db.models.functions import Cast
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
+from itertools import chain, takewhile
+from operator import attrgetter
 from .models import Constellation, Catalog, ObjectType
 from .utils import filter_dso_test, get_filter_list
 from ..dso.models import DSO, DSOLibraryImage
@@ -244,4 +244,34 @@ class LibraryImageView(TemplateView):
 
         context['image_list_count'] = len(all_image_list)
         context['object_count'] = object_count
+        return context
+    
+class LibraryCatalogView(TemplateView):
+    template_name = 'library_catalog_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LibraryCatalogView, self).get_context_data(**kwargs)
+        catalog_slug = self.request.GET.get('catalog_slug', 'messier') # or 'caldwell'
+        all = self.request.GET.get('scope') == 'all'
+
+        raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug).exclude(priority='None')
+        raw_dso_list = raw_dso_list.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
+
+        # deal with C14 = NGC 869 and NGC 884 - both are C 14 but they have two separate
+        #   records in the DSO table because the primary IDs have to be unique.
+        if catalog_slug == 'caldwell': 
+            extra = DSO.objects.filter(catalog__slug='ngc', id_in_catalog__in=['869', '884'])
+            extra = extra.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
+            for e in extra:
+                e.cid = 14
+            dso_list = sorted(chain(raw_dso_list, extra), key = attrgetter('cid'))
+        else:
+            dso_list = raw_dso_list
+                                                      
+        imaged_dso_list =  [x  for x in dso_list if x.num_library_images > 0]
+        context['object_list'] = dso_list if all else imaged_dso_list
+        context['object_count'] = len(dso_list)
+        context['image_list_count'] = len(imaged_dso_list)
+        context['image_percent'] = 100. * len(imaged_dso_list) / len(dso_list)
+        context['catalog'] = 'Messier' if catalog_slug == 'messier' else 'Caldwell'
         return context

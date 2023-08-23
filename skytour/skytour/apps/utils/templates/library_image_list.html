@@ -8,6 +8,12 @@
     table.library_image_list td { font-size: 14px; }
     table.library_image_list td h3 { margin-top: 0; }
     img.library_image { display: block; max-width:400px; }
+    span.nickname { color: #ff9; font-style: italic; margin-botton: 2px; }
+    span.label { color: #999; }
+    span.value { font-size: 90%; }
+    div.object_header { margin-bottom: 2px; }
+    div.object_type { margin-top: 2px; }
+    h3 { margin-bottom: 3px; }
 </style>
 <!-- main -->
 {# header section #}
@@ -73,38 +79,65 @@
         <br>
         <table>
             <tr>
-                <td>
-                    <h3>
-                        <a href="{% url object.detail_view object.instance_id %}" target="_blank">
-                            {% if object.object_class == 'dso' %}
-                            {{ object.shown_name }}
-                        </a>
-                            &nbsp;<small>in {{ object.constellation.abbreviation }}</small>
-                            {% else %}
-                            {{ object.name }}
-                        </a>
-                            {% endif %}
-
-                    </h3>
-                    {% if object.object_class == 'dso' %}
-                        {{ object.object_type.short_name }}
-                        {% if object.morphological_type %}
-                            - 
-                            {% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
-                            {{ object.morphological_type }}
+                <td width="60%">
+                    <div class="object_header">
+                        <h3>
+                            <a href="{% url object.detail_view object.instance_id %}" target="_blank">
+                                {% if object.object_class == 'dso' %}
+                                {{ object.shown_name }}
+                                </a>
+                                &nbsp;
+                                <span class="value">in {{ object.constellation.abbreviation }}</span>
+                                {% else %}
+                                {{ object.name }}
+                                </a>
+                                {% endif %}
+                        </h3>
+                        {% if object.nickname %}
+                            <span class="nickname">{{ object.nickname }}</span>
                         {% endif %}
-                    {% endif %}
+                        <br>
+                        {% if object.object_class == 'dso' %}
+                            {{ object.object_type.short_name }}
+                            {% if object.morphological_type %}: 
+                                <span type="value">{% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
+                                {{ object.morphological_type }}</span>
+                            {% endif %}
+                        {% elif object.object_class == 'comet' %}
+                            Comet
+                        {% elif object.object_class == 'asteroid' %}
+                            {% if object.number != 134340 %}
+                            Asteroid <span class="value">({{ object.number }})</span>
+                            {% else %}
+                            Dwarf Planet
+                            {% endif %}
+                        {% endif %}
+                    </div>
                     <br/>
-                    Date: {{ image.ut_datetime }}<br>
-                    Exposure: {{ image.exposure }} mins.
+                    <span class="label">Date:</span>
+                    <span class="value">{{ image.ut_datetime|date:'d-M-Y h:m' }} UT</span>
+                    <br>
+                    <span class="label">Exposure:</span> 
+                    <span class="value">{{ image.exposure }} min</span>
                 </td>
-                <td>
+                <td  width="40%" class="topalign">
                     {% if object.object_class == 'dso' %}
-                    Mag: {{ object.magnitude }}<br/>
-                    Ang. Size: {{ object.angular_size }}<br/>
-                    Surf. Br. {{ object.surface_brightness }}<br/>
-                    C.I.: {{ object.contrast_index }}<br/>
-                    Dist. {{ object.distance }} {{ object.distance_units }}<br/>
+                    <span class="label">Mag:</span>
+                    <span class="value">{{ object.magnitude }}</span>
+                    <br/>
+                    <span class="label">Ang Size:</span>
+                    <span class="value">{{ object.angular_size }}</span>
+                    <br/>
+                    <span class="label">Surf Br:</span>
+                    <span class="value">{{ object.surface_brightness }}</span>
+                    <br/>
+                    <span class="label">CI:</span> 
+                    <span class="value">{{ object.contrast_index }}</span>
+                    <br/>
+                    <br/>
+                    <span class="label">Dist:</span>
+                    <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
+                    <br/>
                     {% endif %}
                 </td>
             </tr>

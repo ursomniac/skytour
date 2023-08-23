@@ -1,5 +1,6 @@
 import datetime
 from django import template
+#from skytour.apps.utils.format import float2ang
 register = template.Library()
 
 @register.filter(name='dict_value')

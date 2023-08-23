@@ -1,10 +1,17 @@
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+
 from ..observe.pdf import DEFAULT_BOLD, DEFAULT_FONT, DEFAULT_FONT_SIZE
 from ..pdf.utils import (
-    PAGE_WIDTH, PAGE_HEIGHT, X0, 
+    PAGE_WIDTH, PAGE_HEIGHT, 
     bold_text, long_text, add_image,
     label_and_text
 )
+from ..session.pdf_pages.dso import do_dso_lists
+from ..utils.format import float2ang
+
+X0 = 30
+
 def create_pdf_page(dso, fn=None):
     dir = 'dso_pdf/'
     lname = dso.shown_name.lower().replace(' ','_')
@@ -22,7 +29,7 @@ def create_pdf_page(dso, fn=None):
         p, tw = bold_text(p, 200, y, dso.nickname, size=14)
     # Priority
     priority = 'None' if dso.priority is None else dso.priority
-    p, y = label_and_text(p, 400, y, 'Priority: ', priority)
+    p, y = label_and_text(p, 370, y, 'Priority: ', priority)
     # Aliases
     p.drawString(X0, y, dso.alias_list)
     y -= 25
@@ -33,43 +40,63 @@ def create_pdf_page(dso, fn=None):
     # Type / Morph.
     mtype = '' if dso.morphological_type is None else dso.morphological_type
     otype = f"{dso.object_type.short_name} {mtype}"
-    p, y = label_and_text(p, 400, y, 'Type: ', otype, cr=20)
+    p, y = label_and_text(p, 370, y, 'Type: ', otype, cr=20)
     # Mag/Ang Size/Surf.Br.
     mag = '' if dso.magnitude is None else f"{dso.magnitude:.2f}"
     p, y = label_and_text(p, X0, y, 'Mag: ', mag, cr=0)
     sbr = '' if dso.surface_brightness is None else f'{dso.surface_brightness:.2f}'
     p, y = label_and_text(p, 200, y, 'Surf. Br.: ', sbr, cr=0)
     asize = '' if dso.angular_size is None else dso.angular_size
-    p, y = label_and_text(p, 400, y, 'Ang. Size: ', asize, cr=20)
+    p, y = label_and_text(p, 370, y, 'Ang. Size: ', asize, cr=20)
     # Distance/Units
     dstr = f'{dso.distance} {dso.distance_units}' if dso.distance is not None else ''
     p, y = label_and_text(p, X0, y, 'Dist.: ', dstr, cr=0)
-    p, y == label_and_text(p, 200, y, 'Constellation: ', dso.constellation.name, cr=10)
+    p, y = label_and_text(p, 200, y, 'Constellation: ', dso.constellation.name, cr=0)
+    p, y = label_and_text(p, 370, y, 'Plates: ', dso.atlas_plate_list, cr=10) 
     y -= 10
     p.line(50, y, 550, y)
     y -= 10
     
     # Finder Chart
-    ytop = y
+    ytop = y - 3
     finder = None if dso.dso_finder_chart.name == '' else dso.dso_finder_chart.file
-    p, y = add_image(p, ytop, finder, size=300, x=30)
+    p, y = add_image(p, ytop+10, finder, size=280, x=20)
     y2 = y
+    # Library Image OR Finder View
+    if dso.library_image:
+        p, y = add_image(p, ytop+2, dso.library_image.image.file, size=280, x=300)
+    elif dso.field_view:
+        fov = None if dso.field_view.name == '' else dso.field_view.file
+        p, y = add_image(p, ytop, fov, size=280, x=300)
+
+    # Start 2nd row
+    y = yrow2 = min(y, y2) - 15
+
     # Notes
-    y = ytop -10
-    p, tw = bold_text(p, 350, y, 'Notes: ')
-    y -= 15
-    p, y = long_text(p, 40, 350, y, dso.notes)
-    # FOV
-    y = y2
-    fov = None if dso.field_view.name == '' else dso.field_view.file
-    p, y = add_image(p, y, fov)
-    ybottom = y
+    p, tw = bold_text(p, X0, yrow2-5, 'Notes: ')
+    p, y = long_text(p, 60, X0, yrow2-18, dso.notes, dy=15, size=8)
+    yobs = y - 10
     # Image
-    y = y2
     pix = dso.images.first()
     if pix is not None:
-        p, y = add_image(p, y2, pix.image.file, x=320)
+        p, y = add_image(p, yrow2+3, pix.image.file, size=280, x=300)
 
+    # Obs List
+    p, tw = bold_text(p, X0, yobs, 'Observations:')
+    y = yobs - 15
+    obs = dso.observations.order_by('-ut_datetime')
+
+    for ch in [(0, 'Date/Time'), (80, 'Location'), (160, 'Alt.'), (200, 'Airmass')]:
+        p, tw = bold_text(p, X0 + ch[0], y, ch[1], size=9)
+    y -= 10
+    for o in obs:
+        dt = o.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
+        om = o.observation_metadata
+        loc = f"{o.location.city}, {o.location.state.abbreviation}"
+        p, y = label_and_text(p, X0 +  0, y, "", (f"{dt}", 7), cr=0)
+        p, y = label_and_text(p, X0 + 80, y, "", (loc, 7), cr=0)
+        p, y = label_and_text(p, X0 + 160, y, "", (f"{float2ang(om['altitude'], 'dm')}", 7), cr=0)
+        p, y = label_and_text(p, X0 + 200, y, "", (f"{om['sec_z']:.3f}", 7), cr=10)
 
     p.showPage()
     p.save()
@@ -130,6 +157,20 @@ def create_plate_pdf(plate, fn=None, shapes=True):
         p, y = label_and_text(p, x + 75, y, "", (f"{pd[priority]}", 7), cr=0)
         i += 1
 
+    p.showPage()
+    p.save()
+    return filename
+
+def create_dso_list_pdf_page(dso_list, fn=None):
+    dir = 'dsolist_pdf/'
+    if fn is None:
+        fn = f"dso_list_{dso_list.pk}.pdf"
+        filename = 'media/' + dir + fn
+    else:
+        filename = f"{fn}.pdf"
+    p = canvas.Canvas(filename, pagesize=letter)
+    dso_lists = [dso_list,]
+    p = do_dso_lists(p, None, dso_lists=dso_lists)
     p.showPage()
     p.save()
     return filename

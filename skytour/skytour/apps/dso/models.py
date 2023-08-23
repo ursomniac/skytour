@@ -13,7 +13,6 @@ from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
-from .pdf import create_pdf_page
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
 
 class DSO(Coordinates, FieldView, ObservableObject):
@@ -142,7 +141,6 @@ class DSO(Coordinates, FieldView, ObservableObject):
     def instance_id(self):
         return self.pk
 
-    
     @property
     def alias_list(self):
         aliases = []
@@ -188,6 +186,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
         for p in self.atlasplate_set.all():
             pp.append(str(p.plate_id))
         return ', '.join(pp)
+    
     
     @property
     def num_library_images(self):
@@ -241,8 +240,12 @@ class DSO(Coordinates, FieldView, ObservableObject):
         # Except you can't - it crashes everything, UNLESS
         # you run the code in it's own thread.  Why?  Who knows?
         # UPDATE: 2 Jan 2022 --- this might actually work now.
-        fn = create_pdf_page(self)
-        self.pdf_page.name = fn
+        try:
+            fn = create_pdf_page(self)
+            self.pdf_page.name = fn
+        except:
+            pass
+
         super(DSO, self).save(*args, **kwargs)
         
     class Meta:
@@ -365,6 +368,7 @@ class DSOObservation(ObservingLog):
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
+        ordering = ['-ut_datetime']
 
 class DSOList(models.Model):
     """
@@ -388,6 +392,11 @@ class DSOList(models.Model):
         choices = INT_YES_NO,
         default = 1,
         help_text = 'Set to YES/1 to add this to a PDF plan'
+    )
+    pdf_page = models.FileField (
+        _('PDF Page'),
+        null = True, blank = True,
+        upload_to = 'dso_pdf'
     )
 
     def get_absolute_url(self):
@@ -436,7 +445,7 @@ class DSOList(models.Model):
     @property
     def dso_count(self):
         return self.dso.count()
-
+    
     def __str__(self):
         return self.name
 
@@ -582,7 +591,7 @@ class DSOImagingChecklist(models.Model):
     dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
 
     def get_absolute_url(self):
-        return '/dso_checklist/{}'.format(self.pk)
+        return '/dso/{}'.format(self.dso.pk)
     
     def __str__(self):
         return self.dso.__str__()

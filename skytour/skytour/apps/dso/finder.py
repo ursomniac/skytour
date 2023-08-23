@@ -46,6 +46,7 @@ def plot_dso(ax, x, y, dso,
     # 5. Also, rotate by the position angle where appropriate.
     aminor = dso.minor_axis_size # total width
     amajor = dso.major_axis_size # total length
+    aminor = aminor if aminor else amajor
     if aminor == 0:
         aminor = amajor
     ratio = aminor / amajor
@@ -139,7 +140,7 @@ def create_dso_finder_chart(
         now = False,
         axes = False,  # not generally used
         test = False,   # not generally used
-        path = 'dso_charts'
+        path = 'media/dso_charts'
     ):
     """
     Create a finder chart for a DSO for a given date.

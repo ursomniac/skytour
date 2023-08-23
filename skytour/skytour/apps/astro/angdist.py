@@ -1,6 +1,6 @@
 import math
 from scipy import spatial
-
+from ..utils.python import grid_and_transpose_list
 """
 These methods sort out finding a set of objects within an angular distance from a target.
 """
@@ -14,6 +14,7 @@ def get_neighbors(
         object, 
         fov=8., 
         fudge=120,
+        grid = True
     ):
     """
     For some reason the KDTree distances are 90 "off" for a FOV of 8°.
@@ -24,7 +25,7 @@ def get_neighbors(
         2. 2. * sin(FOV/2*r) / FOV = pi
     """
     object_class = object.__class__
-    other_objects = object_class.objects.exclude(pk=object.pk)
+    other_objects = object_class.objects.exclude(pk=object.pk).order_by('catalog__slug', 'id_in_catalog')
     radius = chord_length(fov, degrees=True) * fudge
     coords = []
     for other in other_objects:
@@ -37,7 +38,10 @@ def get_neighbors(
     for idx in neighbor_list[[0][0]]:
         neighbor_objects.append(other_objects[idx])
     
-    return neighbor_objects
+    if grid:
+        return grid_and_transpose_list(neighbor_objects)
+    else:
+        return neighbor_objects
 
 def _hav(x):
     return (1. - math.cos(x)) / 2.

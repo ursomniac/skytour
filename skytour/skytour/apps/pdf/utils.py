@@ -55,7 +55,7 @@ def add_image(p, y, file, x=50, size=250):
         p.drawImage(map_img, x, y-size, width=size, height=size, preserveAspectRatio=True)
     return p, y - size
 
-def long_text(p, limit, x, y, text, dy=15, size=10):
+def long_text(p, limit, x, y, text, dy=15, size=8):
     p.setFont(DEFAULT_FONT, size)
     text = '' if text is None else text
     text = text.replace('\r', '')

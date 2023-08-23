@@ -11,6 +11,8 @@ def create_shown_name(obj):
                 return "{} {}".format(obj.id_in_catalog, obj.object.constellation.abbreviation)
             except:
                 pass
+    if obj.catalog.name == 'Sharpless':
+        return f"{obj.catalog.abbreviation}-{obj.id_in_catalog}"
     if obj.catalog.use_abbr:
         things.append(obj.catalog.abbreviation)
         things.append(obj.id_in_catalog)

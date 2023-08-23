@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from reportlab.pdfgen import canvas
 from ..astro.culmination import get_opposition_date_at_time
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
@@ -75,13 +76,16 @@ class DSODetailView(CookieMixin, DetailView):
         #context['times'] = compile_times(times)
 
         # 2023-07-24 images
-        my_images = self.object.images.filter(own_image=1).order_by('order_in_list')
-        if len(my_images) > 0:
-            context['my_image'] = my_images.first()
-            context['has_image'] = True
-        else:
-            context['my_image'] = None
-            context['has_image'] = False
+        #my_images = self.object.images.filter(own_image=1).order_by('order_in_list')
+        #if len(my_images) > 0:
+        #    context['my_image'] = my_images.first()
+        #    context['has_image'] = True
+        #else:
+        #    context['my_image'] = None
+        #    context['has_image'] = False
+
+        # 2023-08-19 images
+        context['image_list'] = self.object.images.order_by('order_in_list')
         return context
 
 class PriorityListView(TemplateView):
@@ -314,3 +318,4 @@ class DSOChecklistView(ListView):
             context['map'] = None
         context['table_id'] = 'dsos-on-list'
         return context
+    

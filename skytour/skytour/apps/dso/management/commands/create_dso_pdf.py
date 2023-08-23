@@ -1,13 +1,13 @@
 from django.core.management.base import BaseCommand
 from ...models import DSO
-from ...finder import create_dso_finder_chart
+from ...pdf import create_pdf_page
 
 class Command(BaseCommand):
-    help = 'Create DSO finder charts'
+    help = 'Create DSO PDF Page'
 
     def add_arguments(self, parser):
         parser.add_argument('--dso_list', dest='dso_list', nargs='+', type=int)
-        parser.add_argument('--all', dest='all', action='store_true')
+        parser.add_argument('--all', dest='all', action='store_true', help='Redo all pages')
         parser.add_argument('--test', action='store_true')
     
     def handle(self, *args, **options):
@@ -37,14 +37,12 @@ class Command(BaseCommand):
             dsos = DSO.objects.all()
 
         for dso in dsos:
-            if just_new and dso.dso_finder_chart:
+            if just_new and dso.pdf_page:
                 continue
             
             # Otherwise operate!
-            print("Creating/Updating Finder Chart for {}: {}".format(dso.pk, dso.shown_name))
+            print("Creating/Updating PDF File for {}: {}".format(dso.pk, dso.shown_name))
 
-            fn = create_dso_finder_chart(dso, test=options['test'], reversed=False, save_file=True)
-            if not options['test']:
-                dso.dso_finder_chart = 'dso_charts/{}'.format(fn)
-                #print ("\tFN: ", fn)
-                dso.save()
+            fn = create_pdf_page(dso)
+            dso.pdf_page.file = fn
+            dso.save()

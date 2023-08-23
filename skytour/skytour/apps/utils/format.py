@@ -62,3 +62,27 @@ def to_time(value):
     x *= 60.
     l.append(f'{x:04.1f}')
     return ':'.join(l)
+
+def float2ang(x, format='dms', precision=2, space=''): # x in degrees
+    s = ''
+    if format == 'm': # fractional minutes
+        return f"{x*60.:.{precision}f}\'"
+    if format == 'dm': # degrees and fractional minutes
+        d = int(x)
+        m = (x - d) * 60.
+        return f"{d}°{space}{m:{precision+3}.{precision}f}\'"
+    if format == 's':
+        return f'{x*3600.:.{precision}f}\"'
+    if format == 'ms':
+        xm = x * 60.
+        m = int(xm)
+        s = (xm - m) * 60.
+        return f'{m}\'{space}{s:0{precision+3}.{precision}f}\"'
+    if format == 'dms':
+        d = int(x)
+        xm = (x - d) * 60.
+        m = int(xm)
+        s = (xm - m) * 60.
+        return f"{d}°{space}{m:02d}\'{space}{s:0{precision+3}.{precision}f}\""
+    return f"{x:.{precision}f}°"
+

@@ -147,9 +147,11 @@
 			{% for x in object.nearby_dsos %}
 			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
 				<td width="20%">
+					{% if x is not None %}
 					<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
 					({{ x.object_type}}, 
 					<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>){% if not forloop.last %}, {% endif %}
+					{% endif %}
 				</td>
 			{% if forloop.counter0|modulus:5 == 4  or forloop.last %}</tr>{% endif %}
 			{% empty %}
@@ -162,29 +164,40 @@
 </table>
 <table>
 <tr class="bottom">
-	<td id="object_notes" valign="top" width=50% rowspan=2>
+	<td id="object_notes" valign="top" width=30% rowspan=2>
 		<a name="notes"></a>
 		<h3>Notes</h3>
 		{{ object.notes|linebreaks }}
 	</td>
 	<td>
+		{% with instance=object admin_dir='dso/dso'%}
+		{% include 'includes/observation_section.html' %}
+		{% endwith %}
+		{% comment %}
 		<h3>Observations: {{ object.number_of_observations }}</h3>
 		{% if object.number_of_observations > 0 %}
-		<ul>
+		<table>
+			<tr><th>UT Date/Time</th><th>Altitude</th><th>Airmass</th><th>Notes</th></tr>
 		{% for obs in object.observations.all %}
-		<li>{{ obs.ut_datetime|date:"Y-m-d H:i" }} UT</li>
+		<tr>
+			<td width="15%">{{ obs.ut_datetime|date:"Y-m-d H:i" }}</td>
+			<td>{{ obs.observation_metadata.altitude|floatformat:1 }}°</td>
+			<td>{{ obs.observation_metadata.sec_z|floatformat:3 }}</td>
+			<td>{{ obs.notes }}</td>
+		</tr>
 		{% endfor %}
-		</ul>
+		</table>
 		{% endif %}
+		{% endcomment %}
 	</td>
 </tr>
 </table>
 <table class="lite">
 <tr>
 	<td class="dso_image" colspan=3 style="width:50%;">
-		{% if object.images.all.0 %}
-		<a href="{{ object.images.all.0.image.url}}" target="_blank">
-		<img src="{{ object.images.all.0.image.url }}" width=100% style="display:block;">
+		{% if image_list.0 %}
+		<a href="{{ image_list.0.image.url}}" target="_blank">
+		<img src="{{ image_list.0.image.url }}" width=100% style="display:block;">
 		</a>
 		{% endif %}
 	</td>
@@ -198,27 +211,27 @@
 	</td>
 </tr>
 
-{% if object.images.all.1 %}
+{% if image_list.1 %}
 <tr class="bottom">
 
 	<td class="dso_image" colspan=2 style="width:33%;">
 		{% if object.images.all.1 %}
-		<a href="{{ object.images.all.1.image.url}}" target="_blank">
-		<img src="{{ object.images.all.1.image.url }}" width=100%>
+		<a href="{{ image_list.1.image.url}}" target="_blank">
+		<img src="{{ image_list.1.image.url }}" width=100%>
 		</a>
 		{% endif %}
 	</td>
 	<td class="dso_image" colspan=2 style="width:33%;">
-		{% if object.images.all.2 %}
-		<a href="{{ object.images.all.2.image.url}}" target="_blank">
-		<img src="{{ object.images.all.2.image.url }}" width=100%>
+		{% if image_list.2 %}
+		<a href="{{ image_list.2.image.url}}" target="_blank">
+		<img src="{{ image_list.2.image.url }}" width=100%>
 		</a>
 		{% endif %}
 	</td>
 	<td class="dso_image" colspan=2 style="width=33%;">
-		{% if object.images.all.3 %}
-		<a href="{{ object.images.all.3.image.url}}" target="_blank">
-		<img src="{{ object.images.all.3.image.url }}" width=100%>
+		{% if image_list.3 %}
+		<a href="{{ image_list.3.image.url}}" target="_blank">
+		<img src="{{ image_list.3.image.url }}" width=100%>
 		</a>
 		{% endif %}
 	</td>
@@ -226,9 +239,7 @@
 {% endif %}
 </table>
 
-{% with instance=object admin_dir='dso/dso'%}
-{% include 'includes/observation_section.html' %}
-{% endwith %}
+
 
 {# include 'includes/performance_time.html' #}
 {% endblock content %}
