@@ -1,6 +1,7 @@
 from collections import Counter
 from dateutil.parser import isoparse
 from django.db.models import Q, Count
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -11,6 +12,7 @@ from django.views.generic.list import ListView
 from reportlab.pdfgen import canvas
 from ..astro.culmination import get_opposition_date_at_time
 from ..session.mixins import CookieMixin
+from ..site_parameter.helpers import find_site_parameter
 from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
@@ -18,7 +20,8 @@ from .forms import DSOFilterForm, DSOAddForm
 from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
 from .utils import select_atlas_plate
-from .utils_checklist import checklist_form, checklist_params, create_new_observing_list
+from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
+    filter_dsos, get_filter_params, update_dso_filter_context
 from .vocabs import PRIORITY_CHOICES
 
 class DSOListView(ListView):
@@ -27,8 +30,28 @@ class DSOListView(ListView):
     context_object_name = 'dso_list'
     paginate_by = 100
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        params = get_filter_params(self.request)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(DSOListView, self).get_context_data(**kwargs)
+        params = get_filter_params(self.request)
+        context = update_dso_filter_context(context, params)
+        dso_list = filter_dsos(params, DSO.objects.all())
+        context['total_returned'] = len(dso_list)
+        context['default_dec_limit'] = dec_limit = find_site_parameter('declination-limit', -30, 'float')
+        # Pagination
+        page_no = self.request.GET.get('page', 1)
+        num_on_page = self.request.GET.get('page_size', self.paginate_by)
+        context['num_on_page'] = num_on_page
+        p = Paginator(dso_list, num_on_page)
+        this_page = p.page(page_no)
+        context['page_obj'] = this_page
+        context['dso_list'] = this_page.object_list # Just this page of objects.
+        context['is_paginated'] = True
+        # context['dso_count'] = len(context['dso_list'])
         context['table_id'] = 'dso_list'
         return context
 
@@ -280,7 +303,7 @@ class DSOChecklistView(ListView):
         context = super(DSOChecklistView, self).get_context_data(**kwargs)
         # Deal with form
         form_params = checklist_params(self.request)
-        print ("FORM PARAMS: ", form_params)
+        # print ("FORM PARAMS: ", form_params)
         all_dsos = DSOImagingChecklist.objects.all()
         
         #context['seen'] = 'checked' if form_params['seen'] else ''

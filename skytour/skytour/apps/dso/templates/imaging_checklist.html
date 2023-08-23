@@ -68,104 +68,10 @@ summary::-webkit-details-marker {
       {% endif %}
     </td>
     <td>
-      <form request="GET" action="">
-        <table>
-          <tr>
-            <td colspan=2><b>Constellations:</b> &nbsp; 
-              <input size="40" name="constellation" 
-                {% if constellation %}value="{{ constellation }}"{% endif %}>
-            </td>
-            <td colspan=1>
-              <b>Subset: </b>
-              <input name="subset" value="seen" type="radio" 
-                {% if subset == 'seen' %}checked="checked"{% endif %}>Seen
-                &nbsp;&nbsp;
-              <input name="subset" value="unseen" type="radio" 
-                {% if subset == 'unseen' %}checked="checked"{% endif %}>Unseen
-                &nbsp;&nbsp;
-              <input name="subset" value="all" type="radio" 
-                {% if subset == 'all' %}checked="checked"{% endif %}>Both
-              <!--input name="seen" type="checkbox" {% if seen %}checked{% endif %}>Seen<-->  
-            </td>
-          </tr>
-            <td colspan=1>
-              <b>Priority: </b>
-              <select name="priority">
-                <option value=0 {% if priority == 0 %}selected{% endif %}>All</option>
-                <option value=5 {% if priority == 5 %}selected{% endif %}>Highest</option>
-                <option value=4 {% if priority == 4 %}selected{% endif %}>High</option>
-                <option value=3 {% if priority == 3 %}selected{% endif %}>Medium</option>
-                <option value=2 {% if priority == 2 %}selected{% endif %}>Low</option>
-                <option value=1 {% if priority == 1 %}selected{% endif %}>Lowest</option>
-              </select>
-              &nbsp;&nbsp;&nbsp;
-              <b>Show Map: </b>
-              <input name="show_map" type="checkbox" 
-                {% if show_map %}checked{% endif %}>
-            </td>
-            <td colspan=2>
-              <b>Exclude Issues: </b>
-              <br/>
-              <input name="exclude_issues" value="lowdec" type="checkbox"
-                {% if 'lowdec' in exclude_issues %}checked="checked"{% endif %}>Low Dec.
-                &nbsp;&nbsp;
-              <input name="exclude_issues" value="faint" type="checkbox"
-                {% if 'faint' in exclude_issues %}checked="checked"{% endif %}>Faint
-                &nbsp;&nbsp;
-                <input name="exclude_issues" value="dim" type="checkbox"
-                {% if 'dim' in exclude_issues %}checked="checked"{% endif %}>Dim
-                &nbsp;&nbsp;
-                <input name="exclude_issues" value="angsize" type="checkbox"
-                {% if 'angsize' in exclude_issues %}checked="checked"{% endif %}>Small
-            </td>
-          </tr>
-          <tr>
-            <td colspan=2>
-              <b>DSO Type:</b>
-              <input name="dso_type" type="radio" value="all" 
-                {% if dso_type == 'all' %}checked="checked"{% endif %}>All 
-                &nbsp;&nbsp;
-              <input name="dso_type" type="radio" value="cluster" 
-                {% if dso_type == 'cluster' %}checked="checked"{% endif %}>Cluster 
-                &nbsp;&nbsp;
-              <input name="dso_type" type="radio" value="nebula"
-              {% if dso_type == 'nebula' %}checked="checked"{% endif %}>Nebula 
-                &nbsp;&nbsp;
-              <input name="dso_type" type="radio" value="galaxy"
-              {% if dso_type == 'galaxy' %}checked="checked"{% endif %}>Galaxy
-              <br>
-              {% comment %}
-              SEEN: {{ seen }}
-              TYPE: {{ dso_type }}
-              PRI: {{ priority }}
-              CON: {{ constellation }}
-              {% endcomment %}
-            </td>
-            <td>
-              <b>Create Obs. List</b>
-              <input name="create_list" type="checkbox">
-              &nbsp;&nbsp;
-              Name: <input name="new_list_name" size=20>
-
-            </td>
-          </tr>
-          <tr>
-            <td colspan=3>
-              <input type="submit" value="Filter">
-              {% comment %}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;
-              <input type="reset" value="Clear Form">
-              {% endcomment %}
-            </td>
-          </tr>
-        </table>
-    </form>
+      {% include 'includes/checklist_filter_form.html' %}
     </td>
 </table>
 {# include 'includes/paginate.html' #}
-
 
 <small>
 <h2># Matching DSOs: {{ list_count }}</h2>

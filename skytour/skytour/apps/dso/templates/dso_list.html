@@ -57,6 +57,8 @@ summary::-webkit-details-marker {
 }
 </style>
 <h1>Deep Sky Objects</h1>
+{% include 'includes/dso_filter_form.html' %}
+<h3>Total: {{ total_returned }}</h3>
 {% include 'includes/paginate.html' %}
 {% include 'includes/dso_table.html' %}
 {% include 'includes/paginate.html' %}

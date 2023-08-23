@@ -173,6 +173,13 @@ class DSO(Coordinates, FieldView, ObservableObject):
     @property
     def nearby_dsos(self):
         return get_neighbors(self)
+    
+    @property
+    def priority_value(self):
+        dv = {'Highest': 4, 'High': 3, 'Medium': 2, 'Low': 1, 'None': 0}
+        if self.priority is None:
+            return 0
+        return dv[self.priority]
 
     @property
     def priority_color(self):

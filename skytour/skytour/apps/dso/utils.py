@@ -42,3 +42,4 @@ def select_atlas_plate(plates, context):
     if k == '':
         k = find_site_parameter('atlas-plate-version-key', 'default', 'char')
     return plates[k]
+
