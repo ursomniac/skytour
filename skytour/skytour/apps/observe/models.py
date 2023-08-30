@@ -227,6 +227,17 @@ class ObservingLocation(models.Model):
     def mean_obs_sqm(self):
         mean, rms = get_mean_obs_sqm(self)
         return (mean, rms)
+    
+    @property
+    def mean_obs_bortle(self):
+        sqm, rms = self.mean_obs_sqm
+        if sqm is None:
+            return (None, None)
+        b_avg = get_effective_bortle(sqm)
+        b_low = get_effective_bortle(sqm - rms)
+        b_high = get_effective_bortle(sqm + rms)
+        b_rms = abs(b_high - b_low) / 2. # crude, but it'll work
+        return (b_avg, b_rms)
 
     @property
     def effective_bortle(self):

@@ -30,7 +30,7 @@ def checklist_form(params, dsos):
         in_clist = [x.upper().strip() for x in params['constellation'].split(',')]
         dsos = dsos.filter(dso__constellation__abbreviation__in=in_clist)
     if params['priority'] > 0:
-        dsos = dsos.filter(priority__gte=params['priority'])
+        dsos = dsos.filter(priority__gte=(params['priority'] -1))
     if params['dso_type'] != 'all':
         in_list = DSO_TYPE_DICT[params['dso_type']]
         dsos = dsos.filter(dso__object_type__slug__in=in_list)
@@ -88,7 +88,8 @@ def filter_dsos(params, dsos):
         dsos = dsos.filter(constellation__abbreviation__in=in_clist)
 
     if params['priority'] > 0:
-        good_ids = [x.pk for x in dsos if x.priority_value >= params['priority']]
+        use = params['priority']
+        good_ids = [x.pk for x in dsos if x.priority_value >= use]
         dsos = dsos.filter(pk__in=good_ids)
 
     if params['dso_type'] != 'all':

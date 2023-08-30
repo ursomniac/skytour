@@ -125,7 +125,7 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
     )
     return ax
 
-def map_eyepiece(ax, diam=None, color=None, reversed=False):
+def map_eyepiece(ax, diam=None, color=None, reversed=False, equinox=True):
     """
     the default is 1° FOV.
     """
@@ -134,6 +134,14 @@ def map_eyepiece(ax, diam=None, color=None, reversed=False):
     circle_color = 'c' if reversed else 'b'
     eyepiece = plt.Circle((0,0), radius, color=circle_color, fill=False)
     ax.add_patch(eyepiece)
+    # Equinox
+    if equinox:
+        width = 47. * 2.909e-4 / 2.
+        height = 34. * 2.909e-4 / 2.
+        x0 = -width / 2.
+        y0 = -height / 2.
+        rect1 = plt.Rectangle((x0, y0), width, height, color='#f00', fill=False)
+        ax.add_patch(rect1)
     return ax
 
 def map_circle(ax, diam=None, center=None, reversed=False, color=None):

@@ -26,7 +26,7 @@
             <tr><td>
                 Latitude:</td><td>{{ location.latitude|to_dms }}
                     &nbsp;&nbsp;&nbsp;
-                Longitude:{{ location.longitude|to_dms }}
+                Longitude: {{ location.longitude|to_dms }}
             </td></tr>
             <tr><td>Elevation:</td><td>{{ location.elevation }} m ({{ location.elevation_feet|floatformat:0 }} ft)</td></tr>
             </table>
@@ -34,7 +34,15 @@
         <td>
             <table class="lite">
             <tr><td>SQM:</td><td>{{ location.sqm|floatformat:2 }} <small>mag/arcsec<sup>2</sup></small></td></tr>
-            <tr><td>Bortle:</td><td>Class {{ location.bortle }}</td></tr>
+            <tr><td>Bortle:</td><td>Class {{ location.bortle }} ({{ location.effective_bortle|floatformat:2 }})</td></tr>
+            {% if location.mean_obs_bortle.0 %}
+                <tr><td>
+                Obs:</td><td>{{ location.mean_obs_bortle.0|floatformat:2 }} 
+                    {% if location.mean_obs_bortle.1 %}
+                    ± {{ location.mean_obs_bortle.1|floatformat:2 }}
+                    {% endif %}
+                </td></tr>
+            {% endif %}
             <tr><td>Lim. Mag:</td><td>{{ location.limiting_magnitude }}</td></tr>
             </table>
         </td>

@@ -9,6 +9,7 @@ from ..solar_system.models import Planet, Asteroid, Comet
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
+from .utils import get_observing_locations
 from .vocabs import PLANET_CHOICES
 
 YES_NO = [
@@ -32,7 +33,8 @@ class ObservingParametersForm(forms.Form):
         label = 'Local Time Zone'
     )
     location = forms.ModelChoiceField(
-        queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
+        queryset = get_observing_locations(ObservingLocation.objects.all())
+        #queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
     )
     dec_limit = forms.FloatField(
         initial = find_site_parameter('declination-limit', default=-20.0, param_type='float'),

@@ -14,6 +14,7 @@ PRIORITY_CHOICES = [
     ('Low', '1 - Low'),
     ('None', '0 - None')
 ]
+
 PRIORITY_COLORS = {
     'Highest': '#f00',
     'High': '#c90',
