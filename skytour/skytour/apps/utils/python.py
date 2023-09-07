@@ -1,6 +1,6 @@
 from itertools import chain
 import math
-def grid_and_transpose_list(l, cols=5, transpose=True, null=True, debug=True):
+def grid_and_transpose_list(l, cols=5, transpose=True, null=True, debug=False):
     rows = math.ceil(len(l) / cols)
     if debug:
         print("COLS: ", cols, " ROWS: ", rows)

@@ -16,7 +16,7 @@ class DSOImageAdmin(admin.StackedInline):
     fieldsets =  (
         (None, {
             'fields': [
-                ('order_in_list', 'amateur_image', 'own_image', 'exposure'),
+                ('order_in_list','exposure'),
                 ('image', 'object_image_tag'),
                 'notes'
             ]
@@ -31,6 +31,7 @@ class DSOLibraryImageAdmin(admin.StackedInline):
         (None, {
             'fields': [
                 ('order_in_list', 'exposure', 'ut_datetime'),
+                ('image_type', 'processing_status'),
                 ('image', 'object_image_tag'),
                 'notes'
             ]
@@ -68,6 +69,7 @@ class DSOAdmin(ObservableObjectAdmin):
         'dso_finder_chart_wide_tag',
         'dso_finder_chart_narrow_tag',
         'atlas_plate_list',
+        'library_image_checklist_param'
     ]
     list_filter = ['priority', 'show_on_skymap', 'object_type', 'ra_h', ConstellationFilter]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
@@ -78,6 +80,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('constellation', 'show_on_skymap'),
                 ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type', 'priority'),
+                'library_image_checklist_param',
                 'tags',
             ]
         }),
@@ -134,6 +137,15 @@ class DSOAdmin(ObservableObjectAdmin):
             pp.append(p.plate_id)
         return pp
     atlas_plate_list.short_description = 'Plates'
+
+    def library_image_checklist_param(self, obj):
+        c = obj.dsoimagingchecklist_set.first()
+        if c is not None:
+            s = f"Priority: {c.priority}"
+            if c.issues:
+                s += f" Issues: {c.issues}"
+            return s
+
     
     def get_form(self, request, obj=None, **kwargs):
         """
@@ -164,6 +176,8 @@ class DSOListAdmin(TagModelAdmin):
     autocomplete_fields = ['dso']
     readonly_fields = ['dso_count']
     actions = [add_to_plan, remove_from_plan]
+    save_on_top = True
+
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'dso':

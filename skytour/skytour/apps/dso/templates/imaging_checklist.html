@@ -88,7 +88,7 @@ summary::-webkit-details-marker {
         <th>Surf.</th>
         <th>Ang. Size</th>
         <th>Priority</th>
-        <th># Obs./Images</th>
+        <th># Obs/Img</th>
         <th>Issues</th>
     </tr>
 </thead>
@@ -111,9 +111,20 @@ summary::-webkit-details-marker {
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
-        <td>{% if obj.priority %}{{ obj.get_priority_display }}{% endif %}</a></td>
+        <td>
+          {{ obj.get_priority_display }}
+          {% if dso.is_on_imaging_checklist %} 
+            &nbsp; 
+            <span style="float: right; color: {{ dso.color_imaging_checklist_priority }}">
+            {{ dso.library_image_priority }}
+            </span>
+          {% endif %}
+        </td>
         <td>
             {{ dso.number_of_observations }} / {{ dso.num_library_images }}
+            {% if dso.library_image_camera %}
+            <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
+            {% endif %}
         </td>
         {% comment %}
         <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>

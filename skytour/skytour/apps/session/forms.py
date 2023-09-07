@@ -122,9 +122,12 @@ class SessionAddForm(forms.Form):
         queryset = Filter.objects.all(),
         required = False
     )
-    num_images = forms.IntegerField ()
+    num_images = forms.IntegerField (
+        initial = 0
+    )
     imaging_status = forms.ChoiceField (
-        choices = IMAGING_STATUS_CHOICES
+        choices = IMAGING_STATUS_CHOICES,
+        initial = 0
     )
     
     # Required

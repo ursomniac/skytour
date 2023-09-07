@@ -1,4 +1,6 @@
 import math
+from ..observe.models import ObservingLocation
+from ..site_parameter.helpers import find_site_parameter
 
 def get_altitude(last, lat, ra, dec):
     """
@@ -10,6 +12,45 @@ def get_altitude(last, lat, ra, dec):
     s1 = math.sin(math.radians(lat)) * math.sin(math.radians(dec))
     s2 = math.cos(math.radians(lat)) * math.cos(math.radians(dec)) * math.cos(xha)
     return s1 + s2 # sine of the altitude
+
+def get_delta_hour_for_altitude(dec, alt=20, dlat=None, send='days', debug=False):
+    # H = theta - RA : theta is local sidereal time
+    # sin h = sin phi sin dec + cos phi cos dec cos H
+    # H is zero on the meridian
+    rdec = math.radians(dec)
+    ralt = math.radians(alt)
+    # latitude
+    if dlat is None:
+        pk = find_site_parameter('default-location-id', default=1, param_type=int)
+        loc = ObservingLocation.objects.get(pk=pk)
+        dlat = loc.latitude
+    if debug:
+        print(f"PHI: {dlat} = {phi}")
+    phi = math.radians(dlat)
+
+    t1 = math.sin(ralt) - (math.sin(phi) * math.sin(rdec))
+    t2 = math.cos(phi) * math.cos(rdec)
+
+    cos_hh = t1 / t2
+    if cos_hh < -1.0: # circumpolar
+        return None, cos_hh
+    if cos_hh > 1.0: # never reaches this altitude
+        return None, cos_hh
+    # OK this should be valid
+    hh = math.acos(t1/t2)
+    if send == 'radians':
+        return hh, cos_hh
+    ha = math.degrees(hh)
+    if send == 'degrees':
+        return ha, cos_hh
+    hrs = ha / 15.
+    if send == 'hours':
+        return hrs, cos_hh
+    days = ha * 365 / 360.
+    return days, cos_hh
+    
+
+
 
 def solar_system_apparent_magnitude(
         earth_dist,

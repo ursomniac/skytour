@@ -1,4 +1,7 @@
 {% load skytour_filters %}
+<style>
+    span.light-yellow { color: #ffc; font-weight: bold; }
+</style>
 <small>
 <table width="100%" id="{{ table_id }}">
 <thead>
@@ -11,11 +14,9 @@
         <th>Dec.</th>
         <th>Mag.</th>
         <th>Surf.</th>
-        <th>Ang. Size</th>
-        {% if not hide_priority %}
+        <th>Size</th>
         <th> Priority</th>
-        {% endif %}
-        <th># Obs./Images</th>
+        <th># Obs/Img</th>
         <th>Last Obs.</th>
     </tr>
 </thead>
@@ -37,11 +38,21 @@
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
-        {% if not hide_priority %}
-        <td><a href="{% url 'priority-detail' dso.priority %}" target="_new">{{ dso.get_priority_display }}</a></td>
-        {% endif %}
+        <td>
+            <a href="{% url 'priority-detail' dso.priority %}" target="_new">
+                {{ dso.get_priority_display }}</a>
+                {% if dso.is_on_imaging_checklist %} 
+                    &nbsp; 
+                    <span style="float: right; color: {{ dso.color_imaging_checklist_priority }}">
+                    {{ dso.library_image_priority }}
+                    </span>
+                {% endif %}
+        </td>
         <td>
             {{ dso.number_of_observations }} / {{ dso.num_library_images }}
+            {% if dso.library_image_camera %}
+            <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
+            {% endif %}
         </td>
         <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
     </tr>

@@ -17,6 +17,10 @@
 	tr.bottom { height: 150px; }
     img.constrained { width: 100%; max-width: 500px; }
     td.hvcenter { vertical-align: middle!important; text-align: center!important; }
+	table.short {  display:inline-block; border-style: none; }
+	table.short td { margin-right: 4px; }
+	table.short td.hour { margin-right: 8px; }
+	div.no-library-image { font-size: 20px; line-height: 2.5 }
 </style>
 {% endblock styles %}
 
@@ -69,7 +73,19 @@
 			src="{{ object.library_image.image.url }}" class="constrained" 
 			style="display:block;"></a>
 		{% else %}
-		(No image in library.)
+			<div class="no-library-image">
+			No image in library.
+			{% if object.library_image_priority %}
+				<br>
+				Imaging Priority: 
+				<span style="color: {{ object.color_imaging_checklist_priority}}">
+					{{ object.library_image_priority }}
+				</span>
+			{% else %}
+				<br>
+				Not available for imaging.
+			{% endif %}
+			</div>
 		{% endif %}
 	</td>
 </tr>
@@ -83,10 +99,7 @@
 			</tr>
 			<tr>
 				<td>V: {{ object.magnitude }}</td>
-				<td>
-					Midnight Cul. Date: {{ object.opposition_date|date:"M d" }} /  
-					at Time ({{ local_dt_str }}): {{ culmination_at_time|date:"M d" }}
-				</td>
+				<td>Max Alt: {{ max_altitude|floatformat:1 }}°</td>
 			</tr>
 			<tr>
 				<td>Surf. Bri: {{ object.surface_brightness }}</td>
@@ -104,10 +117,34 @@
 				</td>
 				<td>Morphological Type: {{ object.morphological_type }}</td>
 			</tr>
+			<tr>
+				<td>
+					<h3>Observing Season: <small>(Alt = 20°)</small></h3>
+					{% if observing_date_grid.no_grid_reason %}
+						{{ observing_date_grid.no_grid_reason }}
+					{% else %}
+						<table class="short">
+						<tr>
+							<th>Time</th><th>Start Date</th><th>Meridian Date<th>End Date</th>
+						</tr>
+						{% for k, v in observing_date_grid.grid.items %}
+						<tr>
+							<td class="hour">{{k}}</td>
+							<td>{{v.0|date:"M d"}}</td>
+							<td>{{v.1|date:"M d"}}</td>
+							<td>{{v.2|date:"M d"}}</td>
+						</tr>
+						{% endfor %}
+						</table>
+					{% endif %}
+				</td>
+				<td></td>
+			</tr>
 		</table>
 	</td>
 </tr>
 </table>
+
 <table>
 <tr>
 	<td id="finder" width=50%>
@@ -148,9 +185,16 @@
 			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
 				<td width="20%">
 					{% if x is not None %}
-					<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
-					({{ x.object_type}}, 
-					<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>){% if not forloop.last %}, {% endif %}
+						<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
+						({{ x.object_type.short_name }}, 
+						<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>
+						{% if x.library_image_priority %}
+							&nbsp;
+							<span style="color: {{ x.color_imaging_checklist_priority }}">{{ x.library_image_priority }}</span>
+						{% endif %}
+						{% if x.library_image_camera %}{{ x.library_image_camera }}{% endif %}
+						)
+						{% if not forloop.last %}, {% endif %}
 					{% endif %}
 				</td>
 			{% if forloop.counter0|modulus:5 == 4  or forloop.last %}</tr>{% endif %}
@@ -162,6 +206,7 @@
 	</td>
 </tr>
 </table>
+
 <table>
 <tr class="bottom">
 	<td id="object_notes" valign="top" width=30% rowspan=2>
@@ -173,25 +218,10 @@
 		{% with instance=object admin_dir='dso/dso'%}
 		{% include 'includes/observation_section.html' %}
 		{% endwith %}
-		{% comment %}
-		<h3>Observations: {{ object.number_of_observations }}</h3>
-		{% if object.number_of_observations > 0 %}
-		<table>
-			<tr><th>UT Date/Time</th><th>Altitude</th><th>Airmass</th><th>Notes</th></tr>
-		{% for obs in object.observations.all %}
-		<tr>
-			<td width="15%">{{ obs.ut_datetime|date:"Y-m-d H:i" }}</td>
-			<td>{{ obs.observation_metadata.altitude|floatformat:1 }}°</td>
-			<td>{{ obs.observation_metadata.sec_z|floatformat:3 }}</td>
-			<td>{{ obs.notes }}</td>
-		</tr>
-		{% endfor %}
-		</table>
-		{% endif %}
-		{% endcomment %}
 	</td>
 </tr>
 </table>
+
 <table class="lite">
 <tr>
 	<td class="dso_image" colspan=3 style="width:50%;">
@@ -238,8 +268,6 @@
 </tr>
 {% endif %}
 </table>
-
-
 
 {# include 'includes/performance_time.html' #}
 {% endblock content %}

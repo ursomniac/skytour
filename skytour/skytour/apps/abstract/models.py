@@ -8,7 +8,8 @@ from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
-from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, YES_NO
+from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, IMAGE_TYPE_CHOICES, \
+    IMAGE_POST_OPTIONS, YES_NO
 
 class FieldView(models.Model):
     """
@@ -153,20 +154,26 @@ class ObjectImage(models.Model):
         _('Order'),
         default = 1
     )
-    amateur_image = models.BooleanField (
-        _('Amateur Image'),
-        default = None,
-        null = True
+    image_type = models.CharField(
+        _('Image Type'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_TYPE_CHOICES,
+        default = None
     )
-    own_image = models.PositiveIntegerField (
-        _('My Own Image'),
-        default = 0,
-        choices = YES_NO
+    image_alterations = models.CharField (
+        _('Image Alterations'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_POST_OPTIONS,
+        default = 'None'
     )
     exposure = models.FloatField (
         _('Image Exposure'),
         null = True, blank = True
     )
+
+    # This might go away
     processing_status = models.CharField (
         _('Image Processing Status'),
         max_length = 30,

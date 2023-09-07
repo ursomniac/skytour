@@ -11,6 +11,7 @@
         padding: 3px;
         text-align: center;
     }
+    span.light_yellow { color: #ff6; font-weight: bold;  }
 </style>
 <!-- main -->
 {# header section #}
@@ -85,7 +86,6 @@
     <tr>
         <th>Object</th>
         <th>Other Catalog</th>
-        <th>Name</th>
         <th>Con.</th>
         <th>Cum.</th>
         <th>&alpha; (2000)</th>
@@ -109,13 +109,18 @@
                 {% endif %}
             </a>
         </td>
-        <td>{% if thing.catalog != object %}
-               {{ thing.shown_name }}
-            {% else %}
-                {{ thing.alias_list }}
+        <td>
+            {% if thing.nickname %}
+                <span style="color: #ff6;">{{ thing.nickname }}</span>
+                <br>
             {% endif %}
+            {% if thing.catalog != object %}
+                <i><small>{{ thing.shown_name }}</small></i>
+            {% else %}
+                <i><small>{{ thing.alias_list }}</small></i>
+            {% endif %}
+
         </td>
-        <td>{% if thing.nickname %}{{ thing.nickname }}{% endif %}</td>
         <td>{{ thing.constellation.abbreviation }}</td>
         <td>{{ thing.opposition_date|date:"M d"}}
         <td>{{ thing.ra_text }}</td>
@@ -124,8 +129,22 @@
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.surface_brightness|floatformat:1}}</td>
-        <td>{{ thing.priority }}</td>
-        <td>{{ thing.number_of_observations }} / {{ thing.num_library_images }}</td>
+        <td>
+            {{ thing.priority }}
+            {% if thing.is_on_imaging_checklist %} 
+            &nbsp; 
+            <span style="float: right; color: {{ thing.color_imaging_checklist_priority }}">
+            {{ thing.library_image_priority }}
+            </span>
+        {% endif %}
+        </td>
+        <td>
+            {{ thing.number_of_observations }} 
+            / {{ thing.num_library_images }} 
+            {% if thing.library_image_camera %}
+            <span style="float: right;">{{ thing.library_image_camera }}&nbsp;&nbsp;</span>
+            {% endif %}
+        </td>
         <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
     </tr>
     {% endwith %}

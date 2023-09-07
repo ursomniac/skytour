@@ -19,6 +19,17 @@ IMAGING_PROCESSING_CHOICES = (
     ('Unknown', 'Unknown')
 )
 
+IMAGE_TYPE_CHOICES = (
+    ('e-crop', 'eQuinox 2: Cropped'),
+    ('e-full', 'eQuinox 2: Full'),
+)
+
+IMAGE_POST_OPTIONS = (
+    ('None', 'Raw'),
+    ('annotated', 'Annotated'),
+    ('processed', 'Processed')
+)
+
 YES_NO = [(1, 'Yes'), (0, 'No')]
 YES = 1
 NO = 0

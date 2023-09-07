@@ -113,7 +113,6 @@ class ObservingSession(models.Model):
         ordering = ['-ut_date', '-pk'] 
         unique_together = ['ut_date', 'location']
 
-
 class ObservingCircumstances(models.Model):
     # Each of these have a start and an end...
     session = models.ForeignKey(

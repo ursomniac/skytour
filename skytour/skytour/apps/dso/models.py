@@ -1,3 +1,4 @@
+import datetime as dt
 from django.db import models
 from django.db.models import Count, Max, Min, Avg
 from django.utils.html import mark_safe
@@ -9,10 +10,13 @@ from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from ..astro.angdist import get_neighbors
+from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
+#from .pdf import create_pdf_page
+from .observing import get_max_altitude
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
 
 class DSO(Coordinates, FieldView, ObservableObject):
@@ -169,6 +173,25 @@ class DSO(Coordinates, FieldView, ObservableObject):
     @property
     def opposition_date(self):
         return get_opposition_date(self.ra, next=True)
+    
+    @property
+    def hour_angle_min_alt(self):
+        delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
+        # if delta_days is None
+        #   if cos_hh < -1 this is circumpolar for alt=20.
+        #   if cos_hh >  1 this object never rises or reaches alt=20.
+        return delta_days, cos_hh
+    
+    @property
+    def observing_date_range(self):
+        # These are the dates where the object is above 20° altitude at midnight
+        delta_days, cos_hh = self.hour_angle_min_alt
+        if delta_days:
+            date_min = self.opposition_date - dt.timedelta(days=round(delta_days))
+            date_max = self.opposition_date + dt.timedelta(days=round(delta_days))
+            return date_min, date_max
+        else:
+            return None, None
 
     @property
     def nearby_dsos(self):
@@ -194,15 +217,64 @@ class DSO(Coordinates, FieldView, ObservableObject):
             pp.append(str(p.plate_id))
         return ', '.join(pp)
     
-    
     @property
     def num_library_images(self):
         return self.image_library.count()
+    
+    @property 
+    def color_imaging_checklist_priority(self):
+        colors = ['#666', '#c9f', '#6cf', '#3f3', '#ff6', '#f66']
+        c = self.dsoimagingchecklist_set.first()
+        if c and c.priority and c.priority >= 0:
+            return colors[c.priority]
+        return None
+    
+    @property
+    def library_image_camera(self):
+        return '📷' if self.num_library_images > 0 else None
+    
+    @property
+    def library_image_priority(self):
+        emoji_numbers = [ 
+            u"\u0030\uFE0F\u20E3", # 0
+            u"\u0031\uFE0F\u20E3", # 1
+            u"\u0032\uFE0F\u20E3", # 2
+            u"\u0033\uFE0F\u20E3", # 3
+            u"\u0034\uFE0F\u20E3", # 4
+            u"\u0035\uFE0F\u20E3"  # 5 
+        ]
+        light_circle_numbers = [
+            u"\u24EA", u"\u2460", u"\u2461", u"\u2462", u"\u2463", u"\u2464"
+        ]
+        dark_circle_numbers = [
+            u"\U0001F10C", u"\u278A", u"\u278B", u"\u278C", u"\u278D", u"\u278E"
+        ]
+        use = light_circle_numbers
+
+        c = self.dsoimagingchecklist_set.first()
+        if c:
+            my_priority = c.priority
+            if c.priority >= 0:
+                return use[my_priority]
+        # No priority or < 0
+        return None
     
     @property
     def library_image(self):
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
+    @property
+    def on_checklist(self):
+        c = self.dsoimagingchecklist_set.first() 
+        return '☑️' if c is not None else '⏹'
+    
+    @property
+    def is_on_imaging_checklist(self):
+        return self.dsoimagingchecklist_set.count() > 0
+
+    def max_altitude(self, location=None): # no location = default
+        return get_max_altitude(self)
+    
     def finder_chart_tag(self):
         """
         This makes the uploaded finder chart appear on the Admin page.
@@ -223,6 +295,21 @@ class DSO(Coordinates, FieldView, ObservableObject):
         Get my Alt/Az at a given UTDT.
         """
         return get_alt_az(utdt, location.latitude, location.longitude, self.ra, self.dec)
+    
+    def shift_observing_dates(self, delta=0.):
+        # delta is in hours:  -2 = 10PM
+        start_date, end_date = self.observing_date_range
+        if start_date is None:
+            return None, None
+        day_shift = round(-1 * 365. * delta / 24.) # earlier times are later in the calendar!
+        new_start_date = start_date + dt.timedelta(days=day_shift)
+        new_end_date = end_date + dt.timedelta(days=day_shift)
+        return new_start_date, new_end_date
+    
+    def shift_opposition_date(self, delta=0.):
+        day_shift = round(-1 * 365 * delta / 24.)
+        new_opp_date = self.opposition_date + dt.timedelta(days=day_shift)
+        return new_opp_date
 
     def object_is_up(self, location, utdt, min_alt=0.):
         """
@@ -247,11 +334,12 @@ class DSO(Coordinates, FieldView, ObservableObject):
         # Except you can't - it crashes everything, UNLESS
         # you run the code in it's own thread.  Why?  Who knows?
         # UPDATE: 2 Jan 2022 --- this might actually work now.
-        try:
-            fn = create_pdf_page(self)
-            self.pdf_page.name = fn
-        except:
-            pass
+        # UPDATE: 1 Sep 2023 --- ARGH circular import hell.
+        #try:
+        #    fn = create_pdf_page(self)
+        #    self.pdf_page.name = fn
+        #except:
+        #    pass
 
         super(DSO, self).save(*args, **kwargs)
         
@@ -571,7 +659,8 @@ class AtlasPlateConstellationAnnotation(models.Model):
     dec = models.FloatField(_('Dec.'))
 
 IMAGING_PRIORITY_OPTIONS = (
-    (0, 'None'),
+    (-1, 'None'),
+    (0, 'Lowest'),
     (1, 'Low'),
     (2, 'Medium'),
     (3, 'High'),

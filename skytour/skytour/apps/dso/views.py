@@ -19,6 +19,7 @@ from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
+from .observing import make_observing_date_grid, get_max_altitude
 from .utils import select_atlas_plate
 from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
     filter_dsos, get_filter_params, update_dso_filter_context
@@ -61,53 +62,21 @@ class DSODetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
+        object = self.get_object()
         now = self.request.GET.get('now', False)
-        planets_dict = context['cookies']['planets'] if now else None
-        asteroid_list = context['cookies']['asteroids'] if now else None
-        comet_list = context['cookies']['comets'] if now else None
-        utdt = context['utdt_start']
+        #planets_dict = context['cookies']['planets'] if now else None
+        #asteroid_list = context['cookies']['asteroids'] if now else None
+        #comet_list = context['cookies']['comets'] if now else None
+        #utdt = context['utdt_start']
+        location = context['location']
         local_dt = isoparse(context['local_time_start'])
         #print("local dt type: ", type(local_dt), local_dt)
-        hours = local_dt.hour + local_dt.minute/60. + local_dt.second/3600.
+        #hours = local_dt.hour + local_dt.minute/60. + local_dt.second/3600.
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
-        culm_at_time = get_opposition_date_at_time(self.object.ra, hours)
-        context['culmination_at_time'] = culm_at_time
-
-        #finder_chart, times1 = create_dso_finder_chart(
-        #    self.object, 
-        #    utdt = utdt, 
-        #    planets_dict = planets_dict, 
-        #    asteroid_list = asteroid_list,
-        #    comet_list = comet_list,
-        #    now = now
-        #)
-        #close_up_finder, times2 = create_dso_finder_chart(
-        #    self.object,
-        #    utdt = context['utdt_start'],
-        #    fov = 2.,
-        #    mag_limit = 11.,
-        #    show_other_dsos = False,
-        #    now = now,
-        #    planets_dict=planets_dict,
-        #    asteroid_list=asteroid_list,
-        #    comet_list=comet_list
-        #)
-        #context['close_up_finder'] = close_up_finder
-        #context['live_finder_chart'] = finder_chart
-        # TODO: Add rise set times if cookie is set.
-        #times = times1 + times2
-        #context['times'] = compile_times(times)
-
-        # 2023-07-24 images
-        #my_images = self.object.images.filter(own_image=1).order_by('order_in_list')
-        #if len(my_images) > 0:
-        #    context['my_image'] = my_images.first()
-        #    context['has_image'] = True
-        #else:
-        #    context['my_image'] = None
-        #    context['has_image'] = False
-
-        # 2023-08-19 images
+        #culm_at_time = get_opposition_date_at_time(self.object.ra, hours)
+        #context['culmination_at_time'] = culm_at_time
+        context['max_altitude'] = get_max_altitude(object, location=location)
+        context['observing_date_grid'] = make_observing_date_grid(object)
         context['image_list'] = self.object.images.order_by('order_in_list')
         return context
 
@@ -323,20 +292,23 @@ class DSOChecklistView(ListView):
         # Make a map
         if form_params['show_map']:
             dso_list = [x.dso for x in context['dso_list']]
-            center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list) #, mag=1.8)
-            star_mag_limit = get_star_mag_limit(max_dist)
-            map = plot_dso_list(
-                center_ra, 
-                center_dec,
-                dso_list,
-                fov=fov,
-                star_mag_limit = star_mag_limit,
-                reversed = False,
-                label_size='small',
-                symbol_size=60,
-                title = f"Imaging Sample"
-            )
-            context['map'] = map
+            if len(dso_list) == 0:
+                context['map'] = None
+            else:
+                center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list) #, mag=1.8)
+                star_mag_limit = get_star_mag_limit(max_dist)
+                map = plot_dso_list(
+                    center_ra, 
+                    center_dec,
+                    dso_list,
+                    fov=fov,
+                    star_mag_limit = star_mag_limit,
+                    reversed = False,
+                    label_size='small',
+                    symbol_size=60,
+                    title = f"Imaging Sample"
+                )
+                context['map'] = map
         else:
             context['map'] = None
         context['table_id'] = 'dsos-on-list'

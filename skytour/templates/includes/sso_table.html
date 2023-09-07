@@ -27,7 +27,9 @@
                     {% endif %}
                 </a>
             </td>
-            <td>{{ obj.number_of_observations }} / {{ obj.num_library_images }}</td>
+            <td>
+                {{ obj.number_of_observations }} / {{ obj.num_library_images }}
+            </td>
             <td>{% if obj.last_observed %}{{ obj.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
         </tr>
     {% endfor %}

@@ -69,7 +69,8 @@
 </table>
 <br><br>
 {% include 'includes/paginate.html' %}
-<h3>Images {{ page_obj.start_index}} to {{ page_obj.end_index }} of {{ image_list_count }} Images for {{ object_count }} Objects in List</h3>
+<h3>Images {{ page_obj.start_index}} to {{ page_obj.end_index }} 
+    of {{ image_list_count }} Images for {{ object_count }} Objects in List</h3>
 <table class="library_image_list" id='{{ table_id }}'>
     {% for image in image_list %}
     {% with image.object as object %}

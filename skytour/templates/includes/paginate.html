@@ -1,32 +1,44 @@
 {% if is_paginated %}
 <style>
-    .pagenav td { 
+    table.pagenav { table-layout: fixed; }
+    table.pagenav td { 
         background-color: #600;
         text-align: center;
         color: #fff;
     }
+    table.pagenav td.sides { width: 200px; }
+    table.pagenav td.center { width: 400px; }
 </style>
 
 <div class="pagination">
     <span class="page-links">
         <table class="pagenav" style="width: 500px">
             <tr>
-                <td style="width: 150px;">
+                <td class="sides">
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}"><button>Previous Page</button></a>
                 {% endif %}
                 </td>
-                <td style="width: 200px;">
+                <td class="center">
+                    <form action="" method="GET">
                     <span class="page-current">
-                        <b>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</b>
+                        <b>Page 
+                            <input name="page" value="{{ page_obj.number }}" size="2">
+                            </form>
+                            of {{ page_obj.paginator.num_pages }}
+                        </b>
+                        &nbsp;&nbsp;
+                        <input type="submit" value="Jump to Page">
                     </span>
+                    </form>
                 </td>
-                <td style="width: 150px;">
+                <td class="sides">
                 {% if page_obj.has_next %}
                     <a href="?page={{ page_obj.next_page_number }}"><button>Next Page</button></a>
                 {% endif %}
                 </td>
             </tr>
+            {% if page_error %}<tr><td colspan=3>{{ page_error }}</td></tr>{% endif %}
         </table>
         {% if num_on_page %}<small># entries on page: {{ num_on_page }}</small>{% endif %}
     </span>

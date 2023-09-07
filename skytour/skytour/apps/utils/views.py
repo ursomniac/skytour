@@ -195,6 +195,7 @@ class LibraryImageView(TemplateView):
         comet_image_list = []
         planet_image_list = []
         dso_image_list = []
+
         sso_object_types = ['asteroid', 'comet', 'planet', 'solar-system']
         # Asteroid
         if object_type in ['asteroid', 'solar-system', None]:
@@ -234,10 +235,15 @@ class LibraryImageView(TemplateView):
             reverse = True
         )
         # Pagination
+        context['page_error'] = None
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)
         p = Paginator(all_image_list, num_on_page)
-        this_page = p.page(page_no)
+        try:
+            this_page = p.page(page_no)
+        except:
+            this_page = p.page(1)
+            context['page_error'] = "Requested page not valid.  Resetting to the first page."
         context['page_obj'] = this_page
         context['image_list'] = this_page.object_list # Just this page of objects.
         context['is_paginated'] = True
