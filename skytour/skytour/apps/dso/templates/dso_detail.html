@@ -68,6 +68,7 @@
 		</table>
 	</td>
 	<td width="500px" rowspan=2 class="hvcenter">
+		<h2>Library Image</h2>
 		{% if object.library_image %}
 		<a href="{{ object.library_image.image.url }}" target="_blank"><img 
 			src="{{ object.library_image.image.url }}" class="constrained" 
@@ -150,27 +151,20 @@
 	<td id="finder" width=50%>
 		<a name="charts"></a>
 		<h3>DSO Finder Chart:</h3>
-	{% comment %}
-		{% if object.dso_finder_chart %}
-		<img src="{{ object.dso_finder_chart.url }}" width=100%>
-		{% else %}
-		<br>(No finder chart.)
-		{% endif %}
-	{% endcomment %}
-		<!--img src="{{ live_finder_chart }}" width=100%-->
 		{% if object.dso_finder_chart_wide %}
 		<img src = {{ object.dso_finder_chart_wide.url }} width="100%">
 		{% else %}<p>No Wide image finder (yet)</p>
 		{% endif %}
 	</td>
-	<td id="close_up" width=50%>
-		<h3>Close-Up Finder Chart:</h3>
-		<!--img src="{{ close_up_finder }}" width=100%-->
-		{% if object.dso_finder_chart_narrow %}
-		<img src = {{ object.dso_finder_chart_narrow.url }} width="100%">
-		{% else %}<p>No Narrow finder (yet)</p>
+	<td id="imaging_view" colspan=3 style="width:50%;">
+		<h3>Imaging Chart:</h3>
+		{% if object.dso_imaging_chart %}
+		<img src="{{ object.dso_imaging_chart.url }}" width=100% style="display:block;">
+		{% else %}
+		<br>(No imaging view.)
 		{% endif %}
 	</td>
+
 </tr>
 </table>
 
@@ -224,15 +218,16 @@
 
 <table class="lite">
 <tr>
-	<td class="dso_image" colspan=3 style="width:50%;">
-		{% if image_list.0 %}
-		<a href="{{ image_list.0.image.url}}" target="_blank">
-		<img src="{{ image_list.0.image.url }}" width=100% style="display:block;">
-		</a>
+	<td id="close_up" width=50%>
+		<h3>Close-Up Finder Chart:</h3>
+		<!--img src="{{ close_up_finder }}" width=100%-->
+		{% if object.dso_finder_chart_narrow %}
+		<img src = {{ object.dso_finder_chart_narrow.url }} width="100%">
+		{% else %}<p>No Narrow finder (yet)</p>
 		{% endif %}
 	</td>
 	<td id="field_view" colspan=3 style="width:50%;">
-		<!--h3>Field View:</h3-->
+		<h3>DSS Field View:</h3>
 		{% if object.field_view %}
 		<img src="{{ object.field_view.url }}" width=100% style="display:block;">
 		{% else %}
@@ -241,27 +236,28 @@
 	</td>
 </tr>
 
-{% if image_list.1 %}
+{% if image_list.0 %}
+<tr><td colspan="6"><h2>Images</h2></td></tr>
 <tr class="bottom">
 
 	<td class="dso_image" colspan=2 style="width:33%;">
-		{% if object.images.all.1 %}
+		{% if object.images.all.0 %}
+		<a href="{{ image_list.0.image.url}}" target="_blank">
+		<img src="{{ image_list.0.image.url }}" width=100%>
+		</a>
+		{% endif %}
+	</td>
+	<td class="dso_image" colspan=2 style="width:33%;">
+		{% if image_list.1 %}
 		<a href="{{ image_list.1.image.url}}" target="_blank">
 		<img src="{{ image_list.1.image.url }}" width=100%>
 		</a>
 		{% endif %}
 	</td>
-	<td class="dso_image" colspan=2 style="width:33%;">
+	<td class="dso_image" colspan=2 style="width=33%;">
 		{% if image_list.2 %}
 		<a href="{{ image_list.2.image.url}}" target="_blank">
 		<img src="{{ image_list.2.image.url }}" width=100%>
-		</a>
-		{% endif %}
-	</td>
-	<td class="dso_image" colspan=2 style="width=33%;">
-		{% if image_list.3 %}
-		<a href="{{ image_list.3.image.url}}" target="_blank">
-		<img src="{{ image_list.3.image.url }}" width=100%>
 		</a>
 		{% endif %}
 	</td>

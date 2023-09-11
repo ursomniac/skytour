@@ -104,6 +104,11 @@ class DSO(Coordinates, FieldView, ObservableObject):
         upload_to = 'dso_finder_narrow',
         null = True, blank = True
     )
+    dso_imaging_chart = models.ImageField (
+        _('Imaging Chart for eQuinox 2'),
+        upload_to = 'dso_imaging_charts',
+        null = True, blank = True
+    )
     priority = models.CharField (
         _('Priority'),
         max_length = 20,
@@ -280,6 +285,9 @@ class DSO(Coordinates, FieldView, ObservableObject):
         This makes the uploaded finder chart appear on the Admin page.
         """
         return mark_safe(u'<img src="%s" width=500>' % self.finder_chart.url)
+    
+    def dso_imaging_chart_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.dso_imaging_chart.url)
 
     def dso_finder_chart_narrow_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.dso_finder_chart_narrow.url)

@@ -52,6 +52,7 @@ class DSOAdmin(ObservableObjectAdmin):
         'shown_name', 
         'nickname',
         'object_type',
+        'has_dso_imaging_chart',
         'ra_text', 
         'dec_text', 
         'magnitude',
@@ -68,10 +69,12 @@ class DSOAdmin(ObservableObjectAdmin):
         'dso_finder_chart_tag',
         'dso_finder_chart_wide_tag',
         'dso_finder_chart_narrow_tag',
+        'dso_imaging_chart_tag',
         'atlas_plate_list',
-        'library_image_checklist_param'
+        'library_image_checklist_param',
+        'has_dso_imaging_chart'
     ]
-    list_filter = ['priority', 'show_on_skymap', 'object_type', 'ra_h', ConstellationFilter]
+    list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', ]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
     fieldsets = (
         (None, {
@@ -101,6 +104,7 @@ class DSOAdmin(ObservableObjectAdmin):
         ('Charts', {
             'classes': ['collapse'],
             'fields': [
+                ('dso_imaging_chart', 'dso_imaging_chart_tag'),
                 ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
                 ('finder_chart', 'finder_chart_tag'),
@@ -146,6 +150,10 @@ class DSOAdmin(ObservableObjectAdmin):
                 s += f" Issues: {c.issues}"
             return s
 
+    def has_dso_imaging_chart(self, obj):
+        return bool(obj.dso_imaging_chart) # Yeah, this is weird...
+    has_dso_imaging_chart.short_description = 'Chart'
+    has_dso_imaging_chart.boolean = True
     
     def get_form(self, request, obj=None, **kwargs):
         """
