@@ -228,7 +228,7 @@ class DSO(Coordinates, FieldView, ObservableObject):
     
     @property 
     def color_imaging_checklist_priority(self):
-        colors = ['#666', '#c9f', '#6cf', '#3f3', '#ff6', '#f66']
+        colors = ['#666', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
         c = self.dsoimagingchecklist_set.first()
         if c and c.priority and c.priority >= 0:
             return colors[c.priority]
@@ -557,7 +557,8 @@ class DSOList(models.Model):
         verbose_name_plural = 'DSO Lists'
         ordering = ['-pk']
 
-class AtlasPlate(models.Model):
+class AtlasPlateAbstract(models.Model):
+
     """
     TODO: Bright Star Lists
     TODO: Double Stars?
@@ -590,6 +591,11 @@ class AtlasPlate(models.Model):
     @property
     def dso_count(self):
         return self.dso.count()
+    
+    class Meta:
+        abstract = True
+
+class AtlasPlate(AtlasPlateAbstract):
 
     @property
     def plate_title(self):
@@ -630,21 +636,55 @@ class AtlasPlate(models.Model):
         verbose_name_plural = 'Atlas Plates'
         ordering = ['plate_id']
 
-class AtlasPlateVersion(models.Model):
-    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
+class AtlasPlateSpecial(AtlasPlateAbstract):
+    title = models.CharField(
+        _('Title'),
+        max_length = 100
+    )
+
+    @property
+    def plate_title(self):
+        return f"Plate {self.plate_id}: {self.title} ({self.center_ra:.2f}h {self.center_dec}°) in {self.center_constellation}"
+
+    def save(self, *args, **kwargs):
+        self.slug = f'special-{self.plate_id}'
+        super(AtlasPlateSpecial, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return '/atlas/special/{}'.format(self.plate_id)
+
+    def __str__(self):
+        return f"Special Plate {self.plate_id}: {self.title}"
+
+class AtlasPlateVersionAbstract(models.Model):
     shapes = models.BooleanField(_('Shapes'), default=False)
     reversed = models.BooleanField('Reversed', default=False)
-    image = models.ImageField(
-        _('Plate'),
-        upload_to = 'atlas_images',
-        null = True, blank = True
-    )
 
     def plate_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
 
     def __str__(self):
         return f"{self.plate.plate_id}: shapes={self.shapes} reversed={self.reversed}"
+
+    class Meta:
+        abstract = True
+
+class AtlasPlateVersion(AtlasPlateVersionAbstract):
+    plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
+    image = models.ImageField(
+        _('Plate'),
+        upload_to = 'atlas_images',
+        null = True, blank = True
+    )
+
+class AtlasPlateSpecialVersion(AtlasPlateVersionAbstract):
+    plate = models.ForeignKey(AtlasPlateSpecial, on_delete=models.CASCADE)
+    image = models.ImageField(
+        _('Plate'),
+        upload_to = 'atlas_images_special',
+        null = True, blank = True
+    )
+
 
 class MilkyWay(models.Model):
     """

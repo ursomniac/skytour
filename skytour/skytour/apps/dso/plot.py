@@ -119,16 +119,18 @@ def map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=Fa
 def create_atlas_plot(
         center_ra, center_dec, plate_id,
         reversed=False, mag_limit=9.5, 
-        fov=20, save_file=True,
+        fov=None, save_file=True,
         mag_offset = 0, shapes = False,
         label_size = 'x-small',
         label_weight = 'normal',
+        model = AtlasPlate
     ):
     """
     Create an AtlasPlate image.
     TODO: Change annontation font weight to be BOLD for high/highest priority!
     """
-    object = AtlasPlate.objects.get(plate_id=plate_id)
+    fov = fov if fov else 20.
+    object = model.objects.get(plate_id=plate_id)
     ts = load.timescale()
     # Datetime is arbitrary
     t = ts.from_datetime(datetime.datetime(2022, 1, 1, 0, 0).replace(tzinfo=pytz.utc)) # Arbitrary time
@@ -152,7 +154,8 @@ def create_atlas_plot(
     # NOW PLOT THINGS!
     # 1. stars constellation lines
     ax = map_plate_neighbors(ax, object, reversed=reversed)
-    ax = map_constellation_names(ax, object, earth, t, projection, reversed=reversed)
+    if model == AtlasPlate:
+        ax = map_constellation_names(ax, object, earth, t, projection, reversed=reversed)
 
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
@@ -162,7 +165,8 @@ def create_atlas_plot(
     ax = map_milky_way(ax, earth, t, projection, reversed=reversed, colors=MILKY_WAY_CONTOUR_COLORS[1])
     ax = map_milky_way(ax, earth, t, projection, reversed=reversed, contour=2, colors=MILKY_WAY_CONTOUR_COLORS[2])
     ax = map_special_points(ax, earth, t, projection, reversed=reversed)
-    ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
+    if model == AtlasPlate:
+        ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     line_color = '#99f' if reversed else "#00f4" # constellation-line
     ax = map_constellation_lines(ax, stars, reversed=reversed, line_color=line_color)
@@ -219,10 +223,11 @@ def create_atlas_plot(
     ax.set_title(title)
     
     on_plate = get_dsos_on_plate(center_ra, center_dec, fov=fov)
+    path = 'atlas_images' if model == AtlasPlate else 'atlas_images_special' 
 
     if save_file:
         fn = get_fn(center_ra, center_dec, plate_id, shapes=shapes, reversed=reversed)
-        fig.savefig('media/atlas_images/{}'.format(fn), bbox_inches='tight')
+        fig.savefig(f'media/{path}/{fn}', bbox_inches='tight')
         plt.cla()
         plt.close(fig)
         return fn, on_plate

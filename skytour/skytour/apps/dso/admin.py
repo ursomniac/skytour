@@ -3,7 +3,8 @@ from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
-    DSOLibraryImage, DSOImagingChecklist
+    DSOLibraryImage, DSOImagingChecklist, \
+    AtlasPlateSpecial, AtlasPlateSpecialVersion
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -206,6 +207,19 @@ class AtlasPlateVersionInline(admin.StackedInline):
     ]
     extra = 0
 
+class AtlasPlateSpecialVersionInline(admin.StackedInline):
+    model = AtlasPlateSpecialVersion
+    readonly_fields = ['plate_tag','shapes', 'reversed']
+    fieldsets = [
+        (None, {
+            'fields': (
+                ('shapes', 'reversed', 'image'),
+                'plate_tag'
+            )
+        }),
+    ]
+    extra = 0
+
 class AtlasPlateConstellationAnnotationInline(admin.TabularInline):
     model = AtlasPlateConstellationAnnotation
     extra = 0
@@ -272,6 +286,70 @@ class AtlasPlateAdmin(TagModelAdmin):
         return ', '.join(tlist)
     tag_list.short_description = 'Tags'
 
+class AtlasPlateSpecialAdmin(TagModelAdmin):
+    model = AtlasPlate
+    list_display = [
+        'plate_id', 
+        'title',
+        'format_ra', 
+        'format_dec', 
+        'center_constellation',  
+        'con_list', 
+        'tag_list', 
+        'dso_count'
+    ]
+    autocomplete_fields = ['dso', 'constellation']
+    readonly_fields = [
+        'con_list', 
+        'dso_count', 
+        'format_ra',
+        'format_dec',
+        'center_constellation',
+        'tag_list'
+    ]
+    fieldsets = [
+        (None, {
+            'fields': (
+                'plate_id',
+                'title',
+                ('center_ra', 'center_dec', 'radius'),
+                'tags',
+                ('dso','constellation'),
+            )
+        }),
+    ]
+    save_on_top = True
+    inlines = [AtlasPlateSpecialVersionInline,]
+
+    def format_ra(self, obj):
+        return f"{obj.center_ra:.2f}"
+    format_ra.short_description = 'R.A.'
+    format_ra.admin_order_field = 'center_ra'
+
+    def format_dec(self, obj):
+        return f"{obj.center_dec:.1f}"
+    format_dec.short_description = "Dec."
+    format_dec.admin_order_field = 'center_dec'
+
+    def con_list(self, object):
+        cc = []
+        for c in object.constellation.all():
+            cc.append(c.abbreviation)
+        return ', '.join(cc)
+    con_list.short_description = 'Constellations'
+
+    def dso_count(self, object):
+        return object.dso.count()
+    dso_count.short_description = '# DSOs'
+
+    def tag_list(self, object):
+        tags = object.tags.values().order_by('name')
+        tlist = []
+        for t in tags:
+            tlist.append(t['name'])
+        return ', '.join(tlist)
+    tag_list.short_description = 'Tags'
+
 class DSOImagingChecklistAdmin(admin.ModelAdmin):
     model = DSOImagingChecklist
     search_fields = ['dso__nickname', 'dso__shown_name', 'dso__aliases__shown_name']
@@ -280,4 +358,5 @@ class DSOImagingChecklistAdmin(admin.ModelAdmin):
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
+admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOImagingChecklist, DSOImagingChecklistAdmin)

@@ -12,7 +12,7 @@
 	td.description a { color: #ff0; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; }
-	td.coordinates { font-size: 150%; padding-bottom: 10px; }
+	td.coordinates { font-size: 150%; padding: 3px 5px 15px 5px!important; margin-bottom: 5px; }
 	table.info_box { border: 2px solid black }
 	tr.bottom { height: 150px; }
     img.constrained { width: 100%; max-width: 500px; }
@@ -100,27 +100,22 @@
 			</tr>
 			<tr>
 				<td>V: {{ object.magnitude }}</td>
-				<td>Max Alt: {{ max_altitude|floatformat:1 }}°</td>
-			</tr>
+				<td>Ang. Size: {{ object.angular_size }}</td>			</tr>
 			<tr>
 				<td>Surf. Bri: {{ object.surface_brightness }}</td>
-				<td>Ang. Size: {{ object.angular_size }}</td>
+				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
+
 			<tr>
 				<td>Contrast Index: {{ object.contrast_index }}</td>
-				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
-			</tr>
-			<tr>
-				<td>On Atlas Plates: {# object.atlas_plate_list #}
-					{% for plate in object.atlasplate_set.all %}
-					<a href="{% url 'atlas-detail' plate.slug %}" target="_new">{{ plate.plate_id }}<a>
-					{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-				</td>
 				<td>Morphological Type: {{ object.morphological_type }}</td>
-			</tr>
 			<tr>
 				<td>
-					<h3>Observing Season: <small>(Alt = 20°)</small></h3>
+					<h3>
+						Observing Season: 
+						<small>
+						(Alt = 20°; Max Alt: {{ max_altitude|floatformat:1 }}°)
+						</small>
+					</h3>
 					{% if observing_date_grid.no_grid_reason %}
 						{{ observing_date_grid.no_grid_reason }}
 					{% else %}
@@ -139,7 +134,13 @@
 						</table>
 					{% endif %}
 				</td>
-				<td></td>
+				<td>
+					<h3>On Atlas Plates:</h3>
+					{% for plate in object.atlasplate_set.all %}
+					<a href="{% url 'atlas-detail' plate.slug %}" target="_new">{{ plate.plate_id }}<a>
+					{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+				</td>
 			</tr>
 		</table>
 	</td>

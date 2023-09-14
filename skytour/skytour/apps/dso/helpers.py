@@ -1,6 +1,6 @@
 import math
 from .atlas_utils import plate_list, get_sep
-from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion
+from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion, AtlasPlateSpecial, AtlasPlateSpecialVersion
 from .plot import create_atlas_plot
 
 def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
@@ -15,19 +15,21 @@ def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
     x.save()
     return x
 
-def deal_with_version(fn, plate, shapes=False, reversed=False):
+def deal_with_version(fn, plate, shapes=False, reversed=False, special=False):
     """
     Create/Update an AtlasPlateVersion instance for a given plate whose image is located at fn.
     """
-    v = AtlasPlateVersion.objects.filter(
+    model = AtlasPlateSpecialVersion if special else AtlasPlateVersion
+    path = 'atlas_images_special' if special else 'atlas_images' 
+    v = model.objects.filter(
         plate = plate, shapes = shapes, reversed = reversed
     ).first()
     if v is None:
-        v = AtlasPlateVersion()
+        v = model()
         v.plate = plate
         v.shapes = shapes
         v.reversed = reversed
-    v.image.name = 'atlas_images/' + fn
+    v.image.name = f'{path}/{fn}'
     v.save()
 
 def create_atlas_plate(plate_id, shapes=False, reversed=False):
@@ -49,6 +51,30 @@ def create_atlas_plate(plate_id, shapes=False, reversed=False):
 
     # Store everything in AtlasPlateVersion
     v = deal_with_version(fn, x, shapes=shapes, reversed=reversed)
+    # Add DSO list
+    x.dso.add(*dso_list)
+    x.save()
+    return x
+
+def create_special_atlas_plate(plate_id, shapes=False, reversed=False):
+    """
+    Create/Update an AtlasPlate instance with a newly-generated image.
+    """
+    x = AtlasPlateSpecial.objects.filter(plate_id=plate_id).first()
+    if x is None:
+        print(f"Plate ID: {plate_id} invalid")
+        return None
+    x.plate_id = plate_id
+
+    fn, dso_list = create_atlas_plot(
+        x.center_ra, x.center_dec, plate_id, fov=x.radius*2., 
+        shapes=shapes, reversed=reversed,
+        model=AtlasPlateSpecial
+    )
+    x.save()
+
+    # Store everything in AtlasPlateVersion
+    v = deal_with_version(fn, x, shapes=shapes, reversed=reversed, special=True)
     # Add DSO list
     x.dso.add(*dso_list)
     x.save()
