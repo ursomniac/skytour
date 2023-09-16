@@ -9,6 +9,7 @@
             <th>Longitude</th>
             <th>Elev.</th>
             <th>Bortle</th>
+            <th>Eff.</th>
             <th>Bright</th>
             <th>SQM</th>
         </tr>
@@ -28,7 +29,17 @@
             <td class="number-column">{{ obj.latitude|floatformat:5 }}</td>
             <td class="number-column">{{ obj.longitude|floatformat:5 }}</td>
             <td>{{ obj.elevation|floatformat:0 }} m</td>
-            <td style="text-align: center">{{ obj.effective_bortle|floatformat:2 }}</td>
+            <td style="text-align: center">
+                {{ obj.effective_bortle|floatformat:2 }}
+            </td>
+            <td>
+                {% if obj.mean_obs_bortle.0 %}
+                    {{ obj.mean_obs_bortle.0|floatformat:2 }}
+                    {% if obj.mean_obs_bortle.1 %}
+                    &nbsp;± {{ obj.mean_obs_bortle.1|floatformat:2 }}
+                    {% endif %}
+                {% endif %}
+            </td>
             <td class="number-column">{{ obj.brightness|floatformat:3 }}</td>
             <td class="number-column">{{ obj.sqm|floatformat:2 }}</td>
         </tr>

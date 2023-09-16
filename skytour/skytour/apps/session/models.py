@@ -82,15 +82,28 @@ class ObservingSession(models.Model):
         if conditions.count() < 1:
             return None
         y = []
+        xy = []
         for c in conditions:
-            if c.sqm and c.use_sqm:
-                y.append(c.sqm)
-        avg = np.average(y)
-        rms = np.std(y)
-        s = f"{avg:.2f}"
-        if rms > 0:
-            s += f' ± {rms:.2f}'
-        return s
+            if c.sqm:
+                if c.use_sqm:
+                    y.append(c.sqm)
+                else:
+                    xy.append(c.sqm) # in case there are no good obs.
+        if len(y) > 0:
+            avg = np.average(y)
+            rms = np.std(y)
+            s = f"{avg:.2f}"
+            if rms > 0:
+                s += f' ± {rms:.2f}'
+            return s
+        elif len(xy) > 0:
+            avg = np.average(xy)
+            rms = np.std(xy)
+            s = f"{avg:.2f}"
+            if rms > 0:
+                s += f" ± {rms:.2f}"
+            # return s # not sure what to do here since it's a property...
+        return None
 
     @property
     def seeing_range(self):

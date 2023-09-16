@@ -48,7 +48,16 @@
 			</tr>
 			<tr>
 
-				<td>Bortle: {{ object.bortle }} ({{ object.effective_bortle|floatformat:2 }})</td>
+				<td>
+					Bortle: {{ object.effective_bortle|floatformat:2 }}
+					{% if object.mean_obs_bortle.0 %}
+						( Obs: {{ object.mean_obs_bortle.0|floatformat:2 }}
+						{% if object.mean_obs_bortle.1 %}
+						&nbsp;± {{ object.mean_obs_bortle.1|floatformat:2 }}
+						{% endif %}
+						)
+					{% endif %}
+				</td>
 				<td>
 					SQM: {{ object.sqm }}
 					{% if object.mean_obs_sqm.0 %}

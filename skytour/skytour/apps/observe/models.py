@@ -234,9 +234,12 @@ class ObservingLocation(models.Model):
         if sqm is None:
             return (None, None)
         b_avg = get_effective_bortle(sqm)
-        b_low = get_effective_bortle(sqm - rms)
-        b_high = get_effective_bortle(sqm + rms)
-        b_rms = abs(b_high - b_low) / 2. # crude, but it'll work
+        if rms is not None:
+            b_low = get_effective_bortle(sqm - rms)
+            b_high = get_effective_bortle(sqm + rms)
+            b_rms = abs(b_high - b_low) / 2. # crude, but it'll work
+        else:
+            b_rms = None
         return (b_avg, b_rms)
 
     @property

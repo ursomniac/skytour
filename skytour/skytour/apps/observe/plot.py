@@ -93,37 +93,68 @@ def plot_sqm_history(loc, reversed=False):
         return None
     sqm = loc.sqm if loc.sqm is not None else None
     lines = [loc.sqm] if loc.sqm is not None else []
-    x = []
-    y = []
-    e = []
-    y_total = 0.
+    x_use = []
+    y_use = []
+    e_use = []
+    s_use = []
+    c_use = []
+    y_use_total = 0.
+    x_ignore = []
+    y_ignore = []
+    e_ignore = []
+    s_ignore = []
+    c_ignore = []
+    y_ignore_total = 0.
+
+    marker_color = '#999' if reversed else '#000'
 
     for s in sessions:
         sx = s.ut_date
         sy = []
+        si = []
         obs = s.observingcircumstances_set.all()
         for o in obs:
             if o.sqm is not None and o.use_sqm:
                 sy.append(o.sqm)
-        if len(sy) == 0:
-            continue
-        avg = np.average(sy)
-        rms = np.std(sy)
-        x.append(sx)
-        y.append(avg)
-        y_total += avg
-        e.append(rms)
+            elif o.sqm is not None and not o.use_sqm:
+                si.append(o.sqm)
+        if len(sy) > 0:            
+            avg = np.average(sy)
+            rms = np.std(sy)
+            x_use.append(sx)
+            y_use.append(avg)
+            y_use_total += avg
+            e_use.append(rms)
+            s_use.append('o')
+            c_use.append(marker_color)
+        if len(si) > 0:
+            avg = np.average(si)
+            rms = np.std(si)
+            x_ignore.append(sx)
+            y_ignore.append(avg)
+            y_ignore_total += avg
+            e_ignore.append(rms)
+            s_ignore.append('x')
+            c_ignore.append('#f00')
         #print(f"X: {sx}  Y: {avg}  E: {rms}")
 
-    if len(x) > 0 and len(y) > 0:
-        sqm_avg = y_total / len(y)
+    x_all = x_use + x_ignore
+    y_all = y_use + y_ignore
+    e_all = e_use + e_ignore
+    s_all = s_use + s_ignore
+    c_all = c_use + c_ignore
+
+    if len(x_use) > 0 and len(y_use) > 0:
+        sqm_avg = y_use_total / len(y_use)
         lines.append(sqm_avg)
         image = create_plot(
-            x=x, 
-            y=y, 
+            x=x_all, 
+            y=y_all, 
             grid=True, 
-            error=e, 
+            error=e_all, 
             lines=lines, 
+            markers=s_all,
+            colors=c_all,
             xpad=0.1, 
             ypad=-0.2,
             ylim = sqm,
