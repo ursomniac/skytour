@@ -16,6 +16,7 @@
 	table.info_box { border: 2px solid black }
 	tr.bottom { height: 150px; }
     img.constrained { width: 100%; max-width: 500px; }
+	img.library_image { display: block; }
     td.hvcenter { vertical-align: middle!important; text-align: center!important; }
 	table.short {  display:inline-block; border-style: none; }
 	table.short td { margin-right: 4px; }
@@ -236,8 +237,27 @@
 		{% endif %}
 	</td>
 </tr>
+<table>
+
+{% if other_library_images|length > 0 %}
+<table>
+	<tr><td colspan=3><h2>Other Library Images</h2></td></tr>
+	{% for lib_image in other_library_images %}
+	{% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
+		<td class="dso_image" width="33%">
+			<a href="{{ lib_image.image.url }}" target="_blank">
+			<img src="{{ lib_image.image.url }}" width="100%" class="library-image ">
+			</a>
+		</td>
+	{% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
+	{% endfor %}
+	{% if not forloop.counter|divisibleby:3 %}</tr>{% endif %}
+</table>
+{% endif %}
+
 
 {% if image_list.0 %}
+<table>
 <tr><td colspan="6"><h2>Images</h2></td></tr>
 <tr class="bottom">
 
@@ -263,8 +283,8 @@
 		{% endif %}
 	</td>
 </tr>
-{% endif %}
 </table>
+{% endif %}
 
 {# include 'includes/performance_time.html' #}
 {% endblock content %}

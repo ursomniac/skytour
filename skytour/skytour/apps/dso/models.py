@@ -501,6 +501,10 @@ class DSOList(models.Model):
         null = True, blank = True,
         upload_to = 'dso_pdf'
     )
+    map_scaling_factor = models.FloatField (
+        _('Map Scaling Factor'),
+        default = 2.4
+    )
 
     def get_absolute_url(self):
         return '/dso/list/{}'.format(self.pk)

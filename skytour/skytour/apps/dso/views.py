@@ -17,6 +17,7 @@ from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
+from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
@@ -78,6 +79,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['max_altitude'] = get_max_altitude(object, location=location)
         context['observing_date_grid'] = make_observing_date_grid(object)
         context['image_list'] = self.object.images.order_by('order_in_list')
+        context['other_library_images'] = self.object.image_library.all() # [1:]
         return context
 
 class PriorityListView(TemplateView):
@@ -112,10 +114,16 @@ class DSOListDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
-        
+        object = self.get_object()
         # Make a map
         dso_list = self.object.dso.all()
-        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list) #, mag=1.8)
+        mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
+        #center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, mag=mag)
+        center_ra, center_dec, max_dist = get_circle_center(dso_list)
+
+        max_dist *= 2.
+        fov = max_dist * 1.1
+
         star_mag_limit = get_star_mag_limit(max_dist)
 
         map = plot_dso_list(

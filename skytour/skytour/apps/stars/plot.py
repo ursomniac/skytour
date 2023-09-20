@@ -19,12 +19,14 @@ def get_skymap(
         utdt_start, 
         location, 
         planets=None,
+        dso_list=None,
         asteroid_list=None, 
         comet_list=None,
         moon = None,
         sun = None,
         reversed=True,
         milky_way=False,
+        simple=False,
         sky_limit = 70.,
         slew_limit=None,
         local_time = None,
@@ -40,6 +42,7 @@ def get_skymap(
 
     # Parameters that might be in the SiteParameter apps/models
     star_mag_limit = find_site_parameter('skymap-magnitude-limit-stars', default=5.5, param_type='float')
+    star_mag_limit = 4.8 if simple else star_mag_limit
     # TODO: should this be set from the limiting magnitude at the location based on its Bortle value?
     
     # Set up SkyField
@@ -81,10 +84,12 @@ def get_skymap(
     times.append((time.perf_counter(), 'Lines'))
     if milky_way:
         ax = map_milky_way(ax, earth, t, projection, line_width=2., colors=['#099', '#099'])
-        ax = map_equ(ax, earth, t, projection, type='gal', reversed=reversed)
+        if not simple:
+            ax = map_equ(ax, earth, t, projection, type='gal', reversed=reversed)
         times.append((time.perf_counter(), 'Milky Way'))
     
-    ax = map_special_points(ax, earth, t, projection, colors=['#0cc', '#099'])
+    if not simple:
+        ax = map_special_points(ax, earth, t, projection, colors=['#0cc', '#099'])
     
     # 1. stars and constellation lines
     ax, stars = map_hipparcos(ax, earth, t, star_mag_limit, projection, mag_offset=0.1, reversed=reversed)
@@ -93,6 +98,9 @@ def get_skymap(
         ax, earth, t, projection, mag_limit=3.0, points=False, annotations=True, reversed=reversed
     )
     times.append((time.perf_counter(), 'Stars and Constellations'))
+    # 1a. Constellation labels
+    if simple:
+        ax = map_constellation_labels(ax, earth, t, projection)
 
     # 2. Sun - only matters if the plot is during the day
     ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
@@ -111,17 +119,19 @@ def get_skymap(
         center = (center_ra, center_dec),
         label_size='xx-small',
         reversed=reversed,
+        dso_list=dso_list,
         ignore_setting = True,
         product = 'skymap'
     )
     times.append((time.perf_counter(), 'DSOs'))
 
     # 6. Active Meteor Showers
-    ax, interesting['meteor_showers'] = map_meteor_showers(
-        ax, utdt, earth, t, projection, 
-        center=(center_ra, center_dec), size=250, color='#ffaa00'
-    )
-    times.append((time.perf_counter(), 'Meteor Showers'))
+    if not simple:
+        ax, interesting['meteor_showers'] = map_meteor_showers(
+            ax, utdt, earth, t, projection, 
+            center=(center_ra, center_dec), size=250, color='#ffaa00'
+        )
+        times.append((time.perf_counter(), 'Meteor Showers'))
 
     # 7. Asteroids
     if asteroid_list:
@@ -140,10 +150,11 @@ def get_skymap(
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)
-    sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
-    ax.add_patch(sky_limit)
+    if not simple:
+        sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
+        ax.add_patch(sky_limit)
     # Slew limit
-    if slew_limit:
+    if slew_limit and not simple:
         slew_limit_circle = plt.Circle((0,0), (90.-slew_limit)/90., color='#660', fill=False, ls='--')
         ax.add_patch(slew_limit_circle)
     

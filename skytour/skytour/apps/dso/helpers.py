@@ -2,6 +2,7 @@ import math
 from .atlas_utils import plate_list, get_sep
 from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion, AtlasPlateSpecial, AtlasPlateSpecialVersion
 from .plot import create_atlas_plot
+from .vocabs import SIMPLE_DSO_LIST
 
 def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
     """
@@ -113,12 +114,17 @@ def get_map_parameters(dso_list, mag=2.4, debug=False):
     xm = xx / n
     ym = yy / n
     zm = zz / n
+
+    hyp = math.sqrt(xm * xm + ym * ym)
+    # Dec in degrees
+    dec = math.degrees(math.atan2(zm, hyp))
+    # Dec in radians
+    zdec = math.radians(dec)
+    # RA in hours
     ra = math.degrees(math.atan2(ym, xm)) / 15.
     ra %= 24.
-    hyp = math.sqrt(xm * xm + ym * ym)
-    dec = math.degrees(math.atan2(zm, hyp))
+    # RA in radians
     zra = math.radians(ra * 15.)
-    zdec = math.radians(dec)
 
     if debug: 
         print(f"RA: {ra}  DEC: {dec}")
@@ -145,3 +151,7 @@ def get_star_mag_limit(radius):
     elif radius < 30:
         return 6
     return 5
+
+def get_simple_dso_list():
+    dso_list = DSO.objects.filter(pk__in=SIMPLE_DSO_LIST)
+    return dso_list

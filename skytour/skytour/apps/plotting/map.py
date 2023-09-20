@@ -7,16 +7,17 @@ from matplotlib.patches import Wedge, Ellipse
 from skyfield.api import Star, load
 from skyfield.data import hipparcos, stellarium
 
+from ..astro.astro import get_altitude
 from ..astro.markers import generate_equator, SPECIAL_POINTS
+from ..dso.atlas_utils import assemble_neighbors, find_neighbors
 from ..dso.milky_way import get_list_of_segments
 from ..dso.models import DSO
-from ..dso.atlas_utils import assemble_neighbors, find_neighbors
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
 from ..solar_system.saturn import saturn_ring
 from ..solar_system.vocabs import UNICODE
 from ..stars.models import BrightStar
-from ..astro.astro import get_altitude
+from ..stars.vocabs import CONSTELLATION_LABELS
 
 matplotlib.use('Agg') # This gets around some of Matplotlib's oddities
 
@@ -795,3 +796,24 @@ def map_constellation_names(ax, plate, earth, t, projection, reversed=reversed):
             )
         )
     return ax
+
+def map_constellation_labels(ax, earth, t, projection):
+    d = {'x': [], 'y': [], 'label': []}
+    for k in CONSTELLATION_LABELS.keys():
+        ra, dec = CONSTELLATION_LABELS[k]
+        #ra = v[0]
+        #dec = v[1]
+        x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
+        if abs(x) > 1 or abs(y) > 1:
+            continue
+        print(f"K: {k} X: {x} Y: {y}")
+        d['x'].append(x)
+        d['y'].append(y)
+        d['label'].append(k)
+    for x, y, z in zip(d['x'], d['y'], d['label']):
+        ax.text(x, y, z, color='#9009', fontsize='xx-small', 
+            fontstyle='italic', ha='center', va='center',
+            bbox = dict(facecolor='#FFF', edgecolor='#fff', pad=1.0)
+        )
+    return ax
+        

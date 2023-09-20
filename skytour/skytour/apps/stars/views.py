@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..dso.helpers import get_simple_dso_list
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
@@ -23,6 +24,7 @@ class SkyView(CookieMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SkyView, self).get_context_data(**kwargs)
         hours = float(self.request.GET.get('hours', 0))
+        simple = bool(self.request.GET.get('simple', False))
         reversed = context['color_scheme'] == 'dark'
         milky_way = context['show_milky_way'] == 'Yes'
         slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
@@ -39,10 +41,22 @@ class SkyView(CookieMixin, TemplateView):
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
         title = f"Skymap: {context['local_time_str']} - {location.name_for_header}"
+
+        if simple:
+            dso_list = get_simple_dso_list()
+            asteroid_list = None
+            comet_list = None
+            reversed = False
+            # TODO: change default location!
+            title = f"Skymap: {context['local_time_str']}"
+        else:
+            dso_list = None # Get from DSO table
+
         map, interesting, last, times = get_skymap(
             utdt_start, 
             location, 
             planets = planets,
+            dso_list = dso_list,
             asteroid_list = asteroid_list,
             comet_list=comet_list,
             moon = moon,
@@ -51,7 +65,8 @@ class SkyView(CookieMixin, TemplateView):
             slew_limit = slew_limit,
             reversed=reversed,
             hours=hours,
-            title=title
+            title=title,
+            simple=simple
         )
 
         context['skymap'] = map
