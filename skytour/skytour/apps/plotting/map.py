@@ -806,12 +806,12 @@ def map_constellation_labels(ax, earth, t, projection):
         x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
         if abs(x) > 1 or abs(y) > 1:
             continue
-        print(f"K: {k} X: {x} Y: {y}")
+        #print(f"K: {k} X: {x} Y: {y}")
         d['x'].append(x)
         d['y'].append(y)
         d['label'].append(k)
     for x, y, z in zip(d['x'], d['y'], d['label']):
-        ax.text(x, y, z, color='#9009', fontsize='xx-small', 
+        ax.text(x, y, z, color='#9009', fontsize='x-small', 
             fontstyle='italic', ha='center', va='center',
             bbox = dict(facecolor='#FFF', edgecolor='#fff', pad=1.0)
         )

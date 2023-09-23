@@ -120,9 +120,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
         #center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, mag=mag)
         center_ra, center_dec, max_dist = get_circle_center(dso_list)
-
-        max_dist *= 2.
-        fov = max_dist * 1.1
+        fov = max_dist * 1.2
 
         star_mag_limit = get_star_mag_limit(max_dist)
 
