@@ -30,6 +30,10 @@
                 <tr><td>
                     <a href="/admin/solar_system/asteroid/{{object.pk}}/change" target="_new"><button>Admin</button></a>
                     <a href="{% url 'sso-pdf' 'asteroid' object.slug %}" target="_new"><button>PDF View</button></a>
+                    <br>
+                    <button onclick="return realtimePopup('/asteroid/real-time/{{ object.slug }}')")>
+                        Real Time
+                    </button>
                 </td></tr>
             </table>
         </td>
@@ -107,3 +111,6 @@
 {% endwith %}
 
 {% endblock content %}
+{% block extra-js %}
+{% include 'includes/realtime_script.html' %}
+{% endblock extra-js %}

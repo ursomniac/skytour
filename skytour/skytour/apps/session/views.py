@@ -316,6 +316,9 @@ class SessionAddView(CookieMixin, FormView):
         elif object_type == 'dso':
             dso_id = d['id_in_catalog'].strip()
             shown_name = f"{d['catalog'].abbreviation} {d['id_in_catalog']}"
+            if d['catalog'].abbreviation == 'Sh2':
+                shown_name = shown_name.replace(' ', '-')
+            print("SHOWN NAME: ", shown_name)
             object = lookup_dso(shown_name)
             if object is None:
                 raise ValidationError(f"Failed to look up DSO {d['catalog']} {dso_id}")

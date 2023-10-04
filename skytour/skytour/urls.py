@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
+
 admin.autodiscover()
 urlpatterns = [
     path('', include('skytour.apps.site.urls')),
@@ -37,6 +38,7 @@ urlpatterns = [
     path('planet/', include('skytour.apps.solar_system.urls')),
     path('priority/', include('skytour.apps.dso.urls_priority')),
     path('session/', include('skytour.apps.session.urls')),
+    path('site/', include('skytour.apps.site_parameter.urls')),
     path('solar_system/', include('skytour.apps.solar_system.urls_features')),
     path('sso_pdf/', include('skytour.apps.solar_system.urls_pdf')),
     path('stars/', include('skytour.apps.stars.urls')),

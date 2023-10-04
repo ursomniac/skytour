@@ -6,17 +6,22 @@ def make_observing_date_grid(dso):
     # TODO: Make this use the cookie, if available
     grid = {}
     no_grid_reason = None
-    delta_days, cos_hh = dso.hour_angle_min_alt
+    delta_days, cos_hh, alt = dso.hour_angle_min_alt
     if delta_days is None:
         no_grid_reason = 'Circumpolar' if cos_hh < 0 else 'Too far South'
         opposition_date = None
     else:
         opposition_date = dso.opposition_date
         for k, v in TIMES_TO_RUN.items():
-            d1, d2 = dso.shift_observing_dates(delta=v)
+            d1, d2, alt = dso.shift_observing_dates(delta=v)
             dz = dso.shift_opposition_date(delta=v)
             grid[k] = (d1, dz, d2)
-    return dict(opp = opposition_date, grid = grid, no_grid_reason=no_grid_reason)
+    return dict(
+        opp = opposition_date, 
+        grid = grid, 
+        no_grid_reason=no_grid_reason,
+        alt=alt
+    )
     
 def get_max_altitude(dso, location=None):
     if location is None: # Get the default location

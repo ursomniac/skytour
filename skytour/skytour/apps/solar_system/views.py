@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..abstract.utils import get_real_time_conditions
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from .forms import TrackerForm
@@ -384,3 +385,38 @@ class OrreryView(TemplateView):
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict)
         return context
 
+class PlanetRealTimeView(DetailView):
+    model = Planet
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PlanetRealTimeView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['object_type'] = 'Planet'
+        context['object'] = object
+        context['real_time'] = get_real_time_conditions(object)
+        return context
+    
+class AsteroidRealTimeView(DetailView):
+    model = Asteroid
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AsteroidRealTimeView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['object_type'] = 'Asteroid'
+        context['object'] = object
+        context['real_time'] = get_real_time_conditions(object)
+        return context
+    
+class CometRealTimeView(DetailView):
+    model = Comet
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CometRealTimeView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['object_type'] = 'Comet'
+        context['object'] = object
+        context['real_time'] = get_real_time_conditions(object)
+        return context

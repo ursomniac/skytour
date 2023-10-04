@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}External Links: Skytour{% endblock %}
+{% block content %}
+<h1>Helpful Links</h1>
+
+<table id="link-list">
+<thead>
+    <tr>
+        <th>Title</th>
+        <th>URL</th>
+    </tr>
+</thead>
+<tbody>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.title }}</td>
+        <td>
+            <a 
+                href="{{ obj.value }}" 
+                {% if obj.new_window %} target="_blank"{% endif %}
+            >
+                {{ obj.value }}
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

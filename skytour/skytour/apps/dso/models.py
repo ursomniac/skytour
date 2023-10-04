@@ -181,22 +181,26 @@ class DSO(Coordinates, FieldView, ObservableObject):
     
     @property
     def hour_angle_min_alt(self):
+        alt = 20.
         delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
         # if delta_days is None
         #   if cos_hh < -1 this is circumpolar for alt=20.
         #   if cos_hh >  1 this object never rises or reaches alt=20.
-        return delta_days, cos_hh
+        if delta_days is None:
+            alt = 10.
+            delta_days, cos_hh = get_delta_hour_for_altitude(self.dec, alt=alt)
+        return delta_days, cos_hh, alt
     
     @property
     def observing_date_range(self):
         # These are the dates where the object is above 20° altitude at midnight
-        delta_days, cos_hh = self.hour_angle_min_alt
+        delta_days, cos_hh, alt = self.hour_angle_min_alt
         if delta_days:
             date_min = self.opposition_date - dt.timedelta(days=round(delta_days))
             date_max = self.opposition_date + dt.timedelta(days=round(delta_days))
-            return date_min, date_max
+            return date_min, date_max, alt
         else:
-            return None, None
+            return None, None, None
 
     @property
     def nearby_dsos(self):
@@ -306,13 +310,13 @@ class DSO(Coordinates, FieldView, ObservableObject):
     
     def shift_observing_dates(self, delta=0.):
         # delta is in hours:  -2 = 10PM
-        start_date, end_date = self.observing_date_range
+        start_date, end_date, alt = self.observing_date_range
         if start_date is None:
             return None, None
         day_shift = round(-1 * 365. * delta / 24.) # earlier times are later in the calendar!
         new_start_date = start_date + dt.timedelta(days=day_shift)
         new_end_date = end_date + dt.timedelta(days=day_shift)
-        return new_start_date, new_end_date
+        return new_start_date, new_end_date, alt
     
     def shift_opposition_date(self, delta=0.):
         day_shift = round(-1 * 365 * delta / 24.)

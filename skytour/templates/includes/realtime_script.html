@@ -1,0 +1,11 @@
+<script>
+    function realtimePopup(url) {
+        newWindow = window.open(
+            url, 
+            'Real Time', 
+            'height=400, width=600'
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>

@@ -1,0 +1,67 @@
+{% load static skytour_filters %}
+<!doctype html>
+<html lang="end">
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %}RealTime: Skytour{% endblock title %}</title>
+
+	<link rel="stylesheet" href="/media/css/jquery-ui.min.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="/media/css/datatables.css" type="text/css">
+	<link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+
+	<script type="text/javascript" src="/media/js/jquery-3.6.0.min.js"></script>
+	<script src="/media/js/jquery-ui/external/jquery/jquery.js"></script>
+	<script src="/media/js/jquery-ui/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/media/js/datatables.min.js"></script>
+
+{% block styles %}{% endblock styles %}
+</head>
+<body>
+{% block header  %}{% endblock header  %}
+{% block content %}
+<h2>{{ real_time.display_name }}</h2>
+<table>
+    <tr>
+        <td>
+            JD: {{ real_time.julian_date|floatformat:3 }}<br>
+            Sid. Time: {{ real_time.sidereal_time|to_hm }}<br>
+            <br>
+            RA: {{ real_time.ra|to_hms }}<br>
+            Dec: {{ real_time.dec|to_dms }}<br>
+            Constellation: {{ real_time.constellation }}<br>
+            Distance: 
+                {% if object_type != 'DSO' %}
+                {{ real_time.distance|floatformat:3 }} 
+                {% else %}
+                {{ real_time.distance|floatformat:1 }} 
+                {% endif %}
+                {{ real_time.distance_units }}
+                <br>
+        </td>
+        <td>
+            Magnitude: {{ real_time.apparent_magnitude|floatformat:1 }}<br>
+            {% if real_time.angular_diameter %}
+            Ang. Diam: {{ real_time.angular_diameter|floatformat:1 }}&quot;<br>
+            {% else %}
+            <br>
+            {% endif %}
+            <br>
+            Azimuth: {{ real_time.azimuth|to_dms }}<br>
+            Hour Angle: {{ real_time.hour_angle|to_hms }}<br>
+            Altitude: {{ real_time.altitude|to_dms}}<br>
+            Air Mass: {{ real_time.sec_z|floatformat:2 }}<br>
+        </td>
+    </tr>
+</table>
+{% endblock content %}
+{% block footer  %}
+<footer>
+<div class="footer2">
+	<br clear="all"/>
+	<p>© {% now 'Y' %} - Skepsis Interplanetary</p>
+</div>
+</footer>
+{% endblock footer  %}
+{% block extra-js %}{% endblock extra-js %}
+</body>
+</html>

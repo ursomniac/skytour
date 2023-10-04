@@ -455,7 +455,7 @@ class Comet(ObservableObject):
         return '/comet/{}'.format(self.pk)
 
     def __str__(self):
-        return f"{self.pk}: {self.name}"
+        return f"{self.name}"
 
 class CometLibraryImage(ObjectImage):
     object = models.ForeignKey(

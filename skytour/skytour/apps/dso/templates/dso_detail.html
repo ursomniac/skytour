@@ -60,7 +60,13 @@
 					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
 					<br>
 					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>
-					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button>
+					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button></a>
+					<br>
+
+					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')")>
+					Real Time
+					</button>
+
 				</td>
 			</tr>
 			{% if object.alias_list %}
@@ -114,8 +120,12 @@
 					<h3>
 						Observing Season: 
 						<small>
-						(Alt = 20°; Max Alt: {{ max_altitude|floatformat:1 }}°)
-						</small>
+						{% if observing_date_grid.no_grid_reason %}
+							(Max Alt: {{ max_altitude|floatformat:1 }}°)
+						{% else %}
+							(Alt = {{ observing_date_grid.alt }}°; Max Alt: {{ max_altitude|floatformat:1 }}°)
+						{% endif %}
+					</small>
 					</h3>
 					{% if observing_date_grid.no_grid_reason %}
 						{{ observing_date_grid.no_grid_reason }}
@@ -288,3 +298,7 @@
 
 {# include 'includes/performance_time.html' #}
 {% endblock content %}
+
+{% block extra-js %}
+{% include 'includes/realtime_script.html' %}
+{% endblock extra-js %}

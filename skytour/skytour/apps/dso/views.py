@@ -10,6 +10,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from reportlab.pdfgen import canvas
+from ..abstract.utils import get_real_time_conditions
 from ..astro.culmination import get_opposition_date_at_time
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
@@ -320,3 +321,14 @@ class DSOChecklistView(ListView):
         context['table_id'] = 'dsos-on-list'
         return context
     
+class DSORealTimeView(DetailView):
+    model = DSO
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSORealTimeView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['object_type'] = 'DSO'
+        context['object'] = object
+        context['real_time'] = get_real_time_conditions(object)
+        return context

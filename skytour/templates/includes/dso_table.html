@@ -54,7 +54,7 @@
             <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
+        <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d H:i' }} UT{% endif %}</td>
     </tr>
 {% endfor %}
 </tbody>

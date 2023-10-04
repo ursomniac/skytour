@@ -23,6 +23,10 @@
             {% if planet.name != 'Moon' %}
             <a href="/admin/solar_system/planet/{{instance.pk}}/change" target="_new"><button>Admin</button></a>
             <a href="{% url 'sso-pdf' 'planet' planet.slug %}" target="_new"><button>PDF View</button></a>
+            <br>
+            <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')")>
+                Real Time
+            </button>
             {% endif %}
         </td>
         <td width="25%">
@@ -178,3 +182,7 @@
 {% include 'includes/observation_section.html' %}
 {% endwith %}
 {% endblock content %}
+
+{% block extra-js %}
+{% include 'includes/realtime_script.html' %}
+{% endblock extra-js %}

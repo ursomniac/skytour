@@ -468,6 +468,7 @@ def plot_track(
         else:
             mag_limit = 9.0
 
+    print("MAG LIMIT: ", mag_limit)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
