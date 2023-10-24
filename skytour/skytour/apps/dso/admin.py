@@ -4,7 +4,8 @@ from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagMode
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
     DSOLibraryImage, DSOImagingChecklist, \
-    AtlasPlateSpecial, AtlasPlateSpecialVersion
+    AtlasPlateSpecial, AtlasPlateSpecialVersion, \
+    DSOInField
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -38,6 +39,10 @@ class DSOLibraryImageAdmin(admin.StackedInline):
             ]
         }),
     )
+
+class DSOImagingChecklistInline(admin.TabularInline):
+    model = DSOImagingChecklist
+    extra = 0
     
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias
@@ -46,6 +51,46 @@ class DSOAliasAdmin(admin.TabularInline):
 
 class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation
+
+class DSOInFieldInline(admin.StackedInline):
+    model = DSOInField
+    extra = 0
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('catalog', 'id_in_catalog', 'constellation'),
+                ('object_type', 'morphological_type', 'nickname'),
+                ('ra_h', 'ra_m', 'ra_s'),
+                ('dec_sign', 'dec_d', 'dec_m', 'dec_s'),
+                'magnitude', 
+                 ('angular_size', 'major_axis_size', 'minor_axis_size'), 
+                ('surface_brightness', 'contrast_index', 'orientation_angle'),
+                ('distance', 'distance_units'),
+                'notes',
+            ]
+        }),
+    )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(DSOInFieldInline, self).get_form(request, obj, **kwargs)
+        for field in ['constellation', 'object_type', 'catalog']:
+            form.base_fields[field].widget.can_add_related = False
+            form.base_fields[field].widget.can_change_related = False
+            form.base_fields[field].widget.can_delete_related = False
+        return form
+
+    def get_formset(self, request, obj=None, **kwargs):
+        """
+        This just removes some of the widgets in the admin because you'll never
+        add a new constellation, etc.
+        """
+        formset = super().get_formset(request, obj, **kwargs)
+        for field_name in ['constellation', 'object_type', 'catalog']:
+            field = formset.form.base_fields[field_name]
+            field.widget.can_add_related = False
+            field.widget.can_change_related = False
+            field.widget.can_delete_related = False
+        return formset
 
 class DSOAdmin(ObservableObjectAdmin):
     list_display = [
@@ -85,27 +130,31 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type', 'priority'),
                 'library_image_checklist_param',
-                'tags',
+                ('tags', 'map_label'),
             ]
         }),
         ('Coordinates', {
             'fields': [
                 ('ra_h', 'ra_m', 'ra_s'),
-                ('dec_sign', 'dec_d', 'dec_m', 'dec_s')
+                ('dec_sign', 'dec_d', 'dec_m', 'dec_s'),
             ]
         }),
         ('Attributes', {
             'fields': [
-                ('magnitude', 'angular_size', 'major_axis_size', 'minor_axis_size'), 
-                ('distance', 'distance_units'),
+                'magnitude', 
+                ('angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
+                ('distance', 'distance_units'),
+                #
+                ('dso_imaging_chart', 'dso_imaging_chart_tag'),
+                #
                 'notes',
             ]
         }),
         ('Charts', {
             'classes': ['collapse'],
             'fields': [
-                ('dso_imaging_chart', 'dso_imaging_chart_tag'),
+                #('dso_imaging_chart', 'dso_imaging_chart_tag'),
                 ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
                 ('finder_chart', 'finder_chart_tag'),
@@ -115,7 +164,15 @@ class DSOAdmin(ObservableObjectAdmin):
             ]
         })
     )
-    inlines = [DSOAliasAdmin, DSOLibraryImageAdmin, DSOImageAdmin, DSOObservationAdmin]
+    inlines = [
+        DSOAliasAdmin, 
+        DSOInFieldInline,
+        DSOImagingChecklistInline,
+        
+        DSOLibraryImageAdmin, 
+        DSOImageAdmin,  
+        DSOObservationAdmin
+    ]
     save_on_top = True
 
     # This is because stupid properties don't have short_description
@@ -157,17 +214,11 @@ class DSOAdmin(ObservableObjectAdmin):
     has_dso_imaging_chart.boolean = True
     
     def get_form(self, request, obj=None, **kwargs):
-        """
-        This just removes some of the widgets in the admin because you'll never
-        add a new constellation, etc.
-        """
         form = super(DSOAdmin, self).get_form(request, obj, **kwargs)
-        field = form.base_fields['constellation']
-        field.widget.can_add_related = False
-        field.widget.can_change_related = False
-        field.widget.can_delete_related = False
-        field = form.base_fields['object_type']
-        field.widget.can_delete_related = False
+        for field in ['constellation', 'object_type', 'catalog']:
+            form.base_fields[field].widget.can_add_related = False
+            form.base_fields[field].widget.can_change_related = False
+            form.base_fields[field].widget.can_delete_related = False
         return form
 
 @admin.action(description='Show on Plan PDF')
@@ -186,7 +237,6 @@ class DSOListAdmin(TagModelAdmin):
     readonly_fields = ['dso_count']
     actions = [add_to_plan, remove_from_plan]
     save_on_top = True
-
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'dso':
@@ -350,6 +400,35 @@ class AtlasPlateSpecialAdmin(TagModelAdmin):
         return ', '.join(tlist)
     tag_list.short_description = 'Tags'
 
+class DSOInFieldAdmin(admin.ModelAdmin):
+    model = DSOInField
+    autocomplete_fields = ['parent_dso']
+    search_fields = ['nickname', 'shown_name', 'parent_dso__shown_name']
+
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('catalog', 'id_in_catalog', 'constellation'),
+                ('object_type', 'morphological_type', 'nickname'),
+                'parent_dso'
+            ]
+        }),
+        ('Coordinates', {
+            'fields': [
+                ('ra_h', 'ra_m', 'ra_s'),
+                ('dec_sign', 'dec_d', 'dec_m', 'dec_s')
+            ]
+        }),
+        ('Attributes', {
+            'fields': [
+                ('magnitude', 'angular_size', 'major_axis_size', 'minor_axis_size'), 
+                ('surface_brightness', 'contrast_index', 'orientation_angle'),
+                ('distance', 'distance_units'),
+                'notes',
+            ]
+        }),
+    )
+
 class DSOImagingChecklistAdmin(admin.ModelAdmin):
     model = DSOImagingChecklist
     search_fields = ['dso__nickname', 'dso__shown_name', 'dso__aliases__shown_name']
@@ -357,6 +436,8 @@ class DSOImagingChecklistAdmin(admin.ModelAdmin):
 
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
+# admin.site.register(DSOAlias)
+admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOImagingChecklist, DSOImagingChecklistAdmin)

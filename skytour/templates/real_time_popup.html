@@ -14,7 +14,17 @@
 	<script src="/media/js/jquery-ui/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/media/js/datatables.min.js"></script>
 
-{% block styles %}{% endblock styles %}
+{% block styles %}
+<style>
+    h2 { color: #f96; font-size: 30px; margin-left: 10px; }
+    label { color: #ff9;  font-weight: 400; }
+    span.form_label { color: #39f; font-weight: 600; } 
+    td { padding: 5px; line-height: 1.4; font-size: 20px; }
+    form { padding: 18px 4px 8px 20px; }
+    table.loc td { line-height: 1.2; font-size: 14px; }
+    table.loc td label { color: #6f6; font-weight: 400; }
+</style>
+{% endblock styles %}
 </head>
 <body>
 {% block header  %}{% endblock header  %}
@@ -23,13 +33,14 @@
 <table>
     <tr>
         <td>
-            JD: {{ real_time.julian_date|floatformat:3 }}<br>
-            Sid. Time: {{ real_time.sidereal_time|to_hm }}<br>
+            <label>UTDT:</label> {{ real_time.utdt|date:"Y-M-d H:i:s" }}<br>
+            <label>JD:</label> {{ real_time.julian_date|floatformat:5 }}<br>
+            <label>Sid. Time:</label> {{ real_time.sidereal_time|to_hms }}<br>
             <br>
-            RA: {{ real_time.ra|to_hms }}<br>
-            Dec: {{ real_time.dec|to_dms }}<br>
-            Constellation: {{ real_time.constellation }}<br>
-            Distance: 
+            <label>RA:</label> {{ real_time.ra|to_hms }}<br>
+            <label>Dec:</label> {{ real_time.dec|to_dms }}<br>
+            <label>Constellation:</label> {{ real_time.constellation }}<br>
+            <label>Distance: </label>
                 {% if object_type != 'DSO' %}
                 {{ real_time.distance|floatformat:3 }} 
                 {% else %}
@@ -39,20 +50,59 @@
                 <br>
         </td>
         <td>
-            Magnitude: {{ real_time.apparent_magnitude|floatformat:1 }}<br>
+            <label>Local Time:</label> {{ real_time.local_time_str }}<br/>
+            <label>Magnitude:</label> {{ real_time.apparent_magnitude|floatformat:1 }}<br>
             {% if real_time.angular_diameter %}
-            Ang. Diam: {{ real_time.angular_diameter|floatformat:1 }}&quot;<br>
+            <label>Ang. Diam:</label> {{ real_time.angular_diameter|floatformat:1 }}{{ real_time.angular_diameter_units}}<br>
             {% else %}
             <br>
             {% endif %}
             <br>
-            Azimuth: {{ real_time.azimuth|to_dms }}<br>
-            Hour Angle: {{ real_time.hour_angle|to_hms }}<br>
-            Altitude: {{ real_time.altitude|to_dms}}<br>
-            Air Mass: {{ real_time.sec_z|floatformat:2 }}<br>
+            <label>Azimuth:</label> {{ real_time.azimuth|to_dms }}<br>
+            <label>Hour Angle:</label> {{ real_time.hour_angle|to_hms }}<br>
+            <label>Altitude:</label> {{ real_time.altitude|to_dms}}<br>
+            <label>Air Mass:</label> {{ real_time.sec_z|floatformat:2 }}<br>
         </td>
     </tr>
 </table>
+<form action="" method="GET">
+    <span class="form_label">Time:</span>
+    <input 
+        type="radio" 
+        name="utdt_base" 
+        value="cookie" 
+        {% if use_date == 'cookie' %} checked{% endif %}
+    /> Cookie
+    <input 
+        type="radio" 
+        name="utdt_base" 
+        value="now"
+        {% if use_date == 'now' %} checked{% endif %}
+    /> Now
+    &nbsp;|&nbsp;
+    <span class="form_label">UT Offset (hours): </span>
+    <input name="offset" value="{{ use_offset }}" size="4"> 
+    &nbsp;|&nbsp;
+    <input type="submit" value="Reload">
+</form>
+
+<hr>
+<table class="loc">
+    <tr>
+        <td colspan=2>
+            <label>Location:</label> {{ real_time.location.placename }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Longitude:</label> {{ real_time.location.longitude|to_dms }}
+        </td>
+        <td>
+            <label>Latitude:</label> {{ real_time.location.latitude|to_dms }}
+        </td>
+    </tr>
+</table>
+
 {% endblock content %}
 {% block footer  %}
 <footer>

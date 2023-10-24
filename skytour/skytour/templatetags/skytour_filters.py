@@ -60,7 +60,7 @@ def to_hm(d, n=2):
         x = abs(d)
         h = int(x)
         m = (x-h) * 60.
-        w = n + 2
+        w = n + 3
         return f"{h:02d}h {m:0{w}.{n}f}m"
     except:
         return None

@@ -28,3 +28,44 @@ def get_apparent_magnitude(h, r_sun_target, r_earth_target, beta, g=0.15):
     m2 = 2.5 * math.log10((1 - g) * phi_1 + g * phi_2)
     mag = m1 - m2
     return mag
+
+def get_sep(ra1, dec1, ra2, dec2):
+    """
+    Return angular separation (degrees) between two coordinates.
+    This will NOT WORK for small angular separations (cos d ---> 1 - tiny number).
+    """
+    dra = ra1 - ra2
+    dt1 = math.sin(dec1) * math.sin(dec2)
+    dt2 = math.cos(dec1) * math.cos(dec2) * math.cos(dra)
+    cos_d = dt1 + dt2
+    sep = math.degrees(math.acos(cos_d))
+    return sep
+
+def get_small_sep(ra1, dec1, ra2, dec2):
+    """
+    for small separations
+    """
+    dra = (ra2 - ra1) * 15.
+    ddec = (dec2 - dec1)
+    x = dra * math.cos(math.radians(ddec))
+    y = x*x + ddec*ddec
+    return math.sqrt(y)
+
+def get_position_angle(ra1, dec1, ra2, dec2):
+    """
+    Return the position angle between two coordinates and North.
+
+    We're using this to sort out the direction a neighboring plate is at.
+    For plates centered at the poles (where PA is indeterminate), return
+    the direction as it would appear on the plate (i.e., a clock-face direction).
+    """
+    if abs(dec1) < math.radians(90.):
+        dra = ra1 - ra2
+        pa1 = math.sin(dra)
+        pa2 = math.cos(dec2) * math.tan(dec1) 
+        pa3 = math.sin(dec2) * math.cos(dra)
+        pa = math.degrees(math.atan2(pa1, pa2-pa3))
+    else:
+        pa = (270. - math.degrees(ra2)) % 360.
+        
+    return pa

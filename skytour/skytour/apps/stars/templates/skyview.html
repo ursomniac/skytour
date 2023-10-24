@@ -59,6 +59,8 @@
                 <b><span style="color: #ff0;">
                     Reload Offset from Cookie UT: &nbsp;
                 </span>
+                <a href="/stars/skyview?hours=-4">  <button>-4.0h</button></a>
+                <a href="/stars/skyview?hours=-3.5"><button>-3.5h</button></a>
                 <a href="/stars/skyview?hours=-3">  <button>-3.0h</button></a>
                 <a href="/stars/skyview?hours=-2.5"><button>-2.5h</button></a>
                 <a href="/stars/skyview?hours=-2">  <button>-2.0h</button></a>
@@ -72,6 +74,8 @@
                 <a href="/stars/skyview?hours=2">   <button>+2.0h</button></a>
                 <a href="/stars/skyview?hours=2.5"> <button>+2.5h</button></a>
                 <a href="/stars/skyview?hours=3">   <button>+3.0h</button></a>
+                <a href="/stars/skyview?hours=3.5"> <button>+3.5h</button></a>
+                <a href="/stars/skyview?hours=4">   <button>+4.0h</button></a>
                 </td></tr>
             </table>
             <img src="{{ skymap }}">
@@ -85,11 +89,6 @@
             (No visible planets or Moon)
             {% endif %}
 
-            {% if interesting.asteroids|length > 0 %}
-            <h4>Asteroids</h4>
-            {% with object_list=interesting.asteroids url_type='asteroid-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            {% endif %}
-            
             <h4>DSOs</h4>
             {% with object_list=interesting.dsos url_type='dso-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
             
@@ -97,6 +96,12 @@
             <h4>Meteor Showers</h4>
                 {% for shower in interesting.meteor_showers %}{{ shower.name }}<br>{% endfor %}
             {% endif %}
+
+            {% if interesting.asteroids|length > 0 %}
+            <h4>Asteroids</h4>
+            {% with object_list=interesting.asteroids url_type='asteroid-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
+            {% endif %}
+            
 
             {% if interesting.comets|length > 0 %}
             <h4>Comets</h4>

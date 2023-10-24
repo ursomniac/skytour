@@ -22,6 +22,8 @@
 	table.short td { margin-right: 4px; }
 	table.short td.hour { margin-right: 8px; }
 	div.no-library-image { font-size: 20px; line-height: 2.5 }
+	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
+	tr.dif th { background-color: #006; }
 </style>
 {% endblock styles %}
 
@@ -37,7 +39,7 @@
 			<tr>
 				<td width=60% class="object_name">
 					<h1>
-						{{ object.shown_name }}
+						{{ object.label_on_chart }}
 						{% if object.nickname %}
 						&nbsp;&mdash;&nbsp;
 						{{ object.nickname }}
@@ -183,6 +185,29 @@
 <table>
 <tr>
 	<td>
+		<a name="dsos_in_field"></a>
+		{% if object.dsoinfield_set.all %}
+		<h3>DSOs in Field</h3>
+		<table>
+		<tr class='dif'><th>Name</th><th>Type</th><th>Location</th><th>Mag.</th><th>Size</th><th>Surf.Br.</th></tr>
+		{% for fdso in object.dsoinfield_set.all %}
+		<tr>
+			<td>
+				{{ fdso.shown_name }}
+				{% if fdso.nickname %}<span class="nickname"> - {{ fdso.nickname }}</span>{% endif %}
+			</td>
+			<td>
+				{{ fdso.object_type.short_name }} 
+				{% if dso.morphological_type %}&nbsp;({{ fdso.morphological_type }}){% endif %}
+			</td>
+			<td>{{ fdso.primary_distance|floatformat:1 }}' at {{ fdso.primary_angle|floatformat:0 }}°</td>
+			<td>{{ fdso.magnitude|floatformat:2 }}</td>
+			<td>{{ fdso.angular_size }}</td>
+			<td>{{ fdso.surface_brightness|floatformat:2 }}</td>
+		</tr>
+		{% endfor %}
+		</table>
+		{% endif %}
 		<a name="nearby_dsos"></a>
 		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h2>
 			<small>

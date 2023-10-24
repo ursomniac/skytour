@@ -99,7 +99,7 @@ summary::-webkit-details-marker {
         <td>
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
             {% if dso.nickname %} - {{ dso.nickname }}{% endif %}
-            {% if dso.ngc_alias %} ({{ dso.ngc_alias }}){% endif %}
+            {% if dso.alias_list %} ({{ dso.alias_list }}){% endif %}
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>

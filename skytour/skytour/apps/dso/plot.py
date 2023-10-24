@@ -181,7 +181,7 @@ def create_atlas_plot(
                 continue # not on the plot
             other_dsos['x'].append(x)
             other_dsos['y'].append(y)
-            other_dsos['label'].append(other.shown_name)
+            other_dsos['label'].append(other.label_on_chart)
             other_dsos['marker'].append(other.object_type.marker_type)
             ax = plot_dso(ax, x, y, other, 
                 alpha=0.6, 

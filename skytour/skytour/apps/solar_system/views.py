@@ -1,5 +1,5 @@
 import datetime, pytz
-import time
+from dateutil.parser import isoparse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
@@ -385,7 +385,7 @@ class OrreryView(TemplateView):
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict)
         return context
 
-class PlanetRealTimeView(DetailView):
+class PlanetRealTimeView(CookieMixin, DetailView):
     model = Planet
     template_name = 'real_time_popup.html'
 
@@ -394,10 +394,10 @@ class PlanetRealTimeView(DetailView):
         object = self.get_object()
         context['object_type'] = 'Planet'
         context['object'] = object
-        context['real_time'] = get_real_time_conditions(object)
+        context = get_real_time_conditions(object, self.request, context)
         return context
     
-class AsteroidRealTimeView(DetailView):
+class AsteroidRealTimeView(CookieMixin, DetailView):
     model = Asteroid
     template_name = 'real_time_popup.html'
 
@@ -406,10 +406,10 @@ class AsteroidRealTimeView(DetailView):
         object = self.get_object()
         context['object_type'] = 'Asteroid'
         context['object'] = object
-        context['real_time'] = get_real_time_conditions(object)
+        context = get_real_time_conditions(object, self.request, context)
         return context
     
-class CometRealTimeView(DetailView):
+class CometRealTimeView(CookieMixin, DetailView):
     model = Comet
     template_name = 'real_time_popup.html'
 
@@ -418,5 +418,5 @@ class CometRealTimeView(DetailView):
         object = self.get_object()
         context['object_type'] = 'Comet'
         context['object'] = object
-        context['real_time'] = get_real_time_conditions(object)
+        context = get_real_time_conditions(object, self.request, context, debug=True)
         return context

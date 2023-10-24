@@ -1,8 +1,12 @@
 <form action="" method="GET">
     <table>
         <tr>
+            <td colspan=1><b>Name:</b>&nbsp;
+              <input size=20 name="search_name"
+                {% if search_name %}value="{{ search_name }}"{% endif %}>
+            </td>
             <td colspan=1><b>Constellations:</b> &nbsp; 
-            <input size="40" name="constellation" 
+            <input size="20" name="constellation" 
                 {% if constellation %}value="{{ constellation }}"{% endif %}>
             </td>
             <td colspan=1>
@@ -60,7 +64,7 @@
             {% endcomment %}
             
           </td>
-          <td colspan=1>
+          <td colspan=2>
             <b>Subset: </b>
             <input name="imaged" value="imaged" type="radio" 
                 {% if imaged == 'imaged' %}checked="checked"{% endif %}>Has Images
@@ -90,7 +94,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan=3>
+            <td colspan=5>
               <input type="submit" value="Filter">
             </td>
           </tr>

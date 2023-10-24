@@ -31,7 +31,10 @@ def create_pdf_page(dso, fn=None):
     priority = 'None' if dso.priority is None else dso.priority
     p, y = label_and_text(p, 370, y, 'Priority: ', priority)
     # Aliases
-    p.drawString(X0, y, dso.alias_list)
+    try:
+        p.drawString(X0, y, dso.alias_list)
+    except:
+        pass
     y -= 25
 
     # RA/Dec

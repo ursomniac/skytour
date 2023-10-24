@@ -370,7 +370,8 @@ def map_dsos(ax, earth, t, projection,
         ignore_setting = False, # for Skymap, not finder charts
         product = 'skymap',
         label_weight = 'bold',
-        colors=None
+        colors=None,
+        sort_list=True
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -462,6 +463,9 @@ def map_dsos(ax, earth, t, projection,
             fontsize=label_size,
             fontweight=label_weight
         )
+    if sort_list:
+        zz = sorted(interesting, key=lambda t: (t.catalog.abbreviation, t.id_in_catalog))
+        interesting = zz
     return ax, interesting
 
 

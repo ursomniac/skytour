@@ -22,13 +22,47 @@ def r2d(a): # a is a numpy.array
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
 
+def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False):
+    other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
+    default_size = 0.5 if in_field else 1.0
+    for other in other_dso_records:
+        x, y = projection(earth.at(t).observe(other.skyfield_object))
+        if abs(x) > limit or abs(y) > limit:
+            continue # not on the plot
+        other_dsos['x'].append(x)
+        other_dsos['y'].append(y)
+        other_dsos['label'].append(other.label_on_chart)
+        other_dsos['marker'].append(other.object_type.marker_type)
+        ax = plot_dso(ax, x, y, other, alpha=0.6, default_size=default_size)
+    xxx = np.array(other_dsos['x'])
+    yyy = np.array(other_dsos['y'])
+    for x, y, z in zip(xxx, yyy, other_dsos['label']):
+        if not in_field:
+            plt.annotate(
+                z, (x, y), 
+                textcoords='offset points',
+                xytext=(5, 5),
+                ha='left'
+            )
+        else:
+            plt.annotate(
+                z, (x, y),
+                textcoords='offset points',
+                xytext=(-5, -5),
+                ha='right',
+                fontsize='xx-small'
+            )
+    times.append((time.perf_counter(), 'Other DSOs'))
+    return ax, times
+
 def plot_dso(ax, x, y, dso, 
         color='r', 
         reversed=True, 
         size_limit=0.0005, 
         alpha=.7, 
         min_size=3., 
-        max_size=60.
+        max_size=35.,
+        default_size = None
     ):
     """
     Put a DSO on the map with custom markers related to the object type.
@@ -39,25 +73,29 @@ def plot_dso(ax, x, y, dso,
     ft = dso.object_type.map_symbol_type
 
     # Get the major/minor axis sizes
-    # 1. For very large DSOs, constrain the symbol to a max size.
-    # 2. For very small DSOs, use a minimum size.
-    # 3. For medium-sized DSOs, scale it.
-    # 4. For DSOs that aren't round (e.g., galaxies), use the major/minor axis values
-    # 5. Also, rotate by the position angle where appropriate.
+    # 1. For DSOs that aren't round (e.g., galaxies), use the major/minor axis values
     aminor = dso.minor_axis_size # total width
     amajor = dso.major_axis_size # total length
+    # 2. For very small DSOs, use a minimum size.
+    amajor = amajor if amajor else default_size # default size
     aminor = aminor if aminor else amajor
+    # 3. For medium-sized DSOs, scale it.
     if aminor == 0:
         aminor = amajor
     ratio = aminor / amajor
+    # 4. For very large DSOs, constrain the symbol to a max size.
     if amajor > max_size:
         amajor = max_size
         aminor = ratio * amajor
-    if amajor < min_size:
-        amajor = min_size
-        aminor = ratio * amajor
+    # 5. For DSOs with no size that are small use a min_size
+    if default_size is None:
+        if amajor < min_size:
+            amajor = min_size
+            aminor = ratio * amajor
+
     amajor *= 2.909e-4
     aminor *= 2.909e-4
+    # 6. Also, rotate by the position angle where appropriate.
     angle = oangle
 
     #if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
@@ -137,7 +175,9 @@ def create_dso_finder_chart(
         comet_list = None,
         utdt = None,
         show_other_dsos = True,
+        show_in_field_dsos = False,
         now = False,
+        chart_type = 'wide',
         axes = False,  # not generally used
         test = False,   # not generally used
         path = 'media/dso_charts'
@@ -178,29 +218,24 @@ def create_dso_finder_chart(
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
     times.append((time.perf_counter(), 'Bright Stars'))
 
+    ##### this object
+    object_x, object_y = projection(center)
+    ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
+    this_dso_color = '#ffc' if reversed else 'k'
+    my_label = dso.label_on_chart if chart_type == 'wide' else dso.shown_name
+    plt.annotate(
+        my_label, (object_x, object_y), 
+        textcoords='offset points', xytext=(5,5), 
+        ha='left', color=this_dso_color, weight='bold'
+    )
     ##### other dsos
     if show_other_dsos:
         other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
-        other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
-        for other in other_dso_records:
-            x, y = projection(earth.at(t).observe(other.skyfield_object))
-            if abs(x) > limit or abs(y) > limit:
-                continue # not on the plot
-            other_dsos['x'].append(x)
-            other_dsos['y'].append(y)
-            other_dsos['label'].append(other.shown_name)
-            other_dsos['marker'].append(other.object_type.marker_type)
-            ax = plot_dso(ax, x, y, other, alpha=0.6)
-        xxx = np.array(other_dsos['x'])
-        yyy = np.array(other_dsos['y'])
-        for x, y, z in zip(xxx, yyy, other_dsos['label']):
-            plt.annotate(
-                z, (x, y), 
-                textcoords='offset points',
-                xytext=(5, 5),
-                ha='left'
-            )
-        times.append((time.perf_counter(), 'Other DSOs'))
+        ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False)
+
+    if show_in_field_dsos and dso.dsoinfield_set.count() > 0:
+        in_field_dsos = dso.dsoinfield_set.all()
+        ax, times = plot_other_dsos(ax, in_field_dsos, projection, earth, t, limit, times, in_field=True)
 
     ### Planets, Asteroids
     if planets_dict is not None and utdt is not None and now:
@@ -214,15 +249,7 @@ def create_dso_finder_chart(
     if comet_list is not None and utdt is not None and now:
         ax, _ = map_comets(ax, comet_list, earth, t, projection, reversed=reversed)
 
-    ##### this object
-    object_x, object_y = projection(center)
-    ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
-    this_dso_color = '#ffc' if reversed else 'k'
-    plt.annotate(
-        dso.shown_name, (object_x, object_y), 
-        textcoords='offset points', xytext=(5,5), 
-        ha='left', color=this_dso_color, weight='bold'
-    )
+
     #ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
     ecolor = 'cyan' if reversed else "#999"
     eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
@@ -251,7 +278,7 @@ def create_dso_finder_chart(
     ax.set_aspect(1.0)
 
     # title
-    title = "{}: {} in {}".format(dso.shown_name, dso.object_type, dso.constellation)
+    title = "{}: {} in {}".format(dso.label_on_chart, dso.object_type, dso.constellation)
     if dso.nickname:
         title = "{} = ".format(dso.nickname) + title
     ax.set_title(title)

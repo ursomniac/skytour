@@ -41,9 +41,15 @@ class Command(BaseCommand):
                 continue
             
             # Otherwise operate!
-            print("Creating/Updating Finder Chart for {}: {}".format(dso.pk, dso.shown_name))
+            print("Creating/Updating Finder Chart for {}: {}".format(dso.pk, dso.label_on_chart))
 
-            fn = create_dso_finder_chart(dso, test=options['test'], reversed=False, save_file=True)
+            fn = create_dso_finder_chart(
+                dso, 
+                test=options['test'],
+                show_in_field_dsos = False, 
+                reversed=False, 
+                save_file=True
+            )
             if not options['test']:
                 dso.dso_finder_chart = 'dso_charts/{}'.format(fn)
                 #print ("\tFN: ", fn)

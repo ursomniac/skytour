@@ -57,9 +57,11 @@ def run_dso(dso, which='both', save=True):
             planets_dict = None, 
             asteroid_list = None,
             show_other_dsos = True,
+            show_in_field_dsos = False,
             comet_list = None,
             now = False,
             save_file = save,
+            chart_type = 'wide',
             path = '/Users/robertdonahue/Temp/dso_wide'
         )
     else:
@@ -70,14 +72,16 @@ def run_dso(dso, which='both', save=True):
         finder_narrow = create_dso_finder_chart(
             dso,
             utdt = None,
-            fov = 2.,
+            fov = 1.5,
             mag_limit = 11.,
             show_other_dsos = True,
+            show_in_field_dsos = True,
             now = False,
             planets_dict=None,
             asteroid_list=None,
             comet_list=None,
             save_file = save,
+            chart_type = 'narrow',
             path = '/Users/robertdonahue/Temp/dso_narrow'
         )
     else:

@@ -13,22 +13,14 @@ from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
+from ..astro.utils import get_sep, get_position_angle, get_small_sep
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
 from .observing import get_max_altitude
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
 
-class DSO(Coordinates, FieldView, ObservableObject):
-    """
-    Basically everything we want:
-        Name and Aliases
-            - botn are in the Object Alias abstract class:
-                the primary name is in this model, the other
-                is in a FK to this model from DSOAlias.
-        Images
-        Field View (https://astronomy.tools/calculators/field_of_view/)
-    """
+class DSOAbstract(Coordinates):
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
     id_in_catalog = models.CharField (
         _('ID'),
@@ -84,6 +76,44 @@ class DSO(Coordinates, FieldView, ObservableObject):
         _('Notes'),
         null = True, blank = True
     )
+    # From Stellarium DSO model and SIMBAD
+    orientation_angle = models.PositiveIntegerField (
+        _('Orientation Angle'),
+        null = True, blank = True,
+        help_text = 'Degrees'
+    )
+    major_axis_size = models.FloatField (
+        _('Size: Major Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
+    )
+    minor_axis_size = models.FloatField (
+        _('Size: Minor Axis'),
+        null = True, blank = True,
+        help_text = 'arcmin'
+    )
+
+    @property
+    def skyfield_object(self):
+        """
+        This is handy when pointing at this DSO
+        """
+        return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+
+    class Meta:
+        abstract = True
+
+class DSO(DSOAbstract, FieldView, ObservableObject):
+    """
+    Basically everything we want:
+        Name and Aliases
+            - botn are in the Object Alias abstract class:
+                the primary name is in this model, the other
+                is in a FK to this model from DSOAlias.
+        Images
+        Field View (https://astronomy.tools/calculators/field_of_view/)
+    """
+
     finder_chart = models.ImageField (
         _('Finder Chart'),
         upload_to = 'finder_chart/',
@@ -120,31 +150,20 @@ class DSO(Coordinates, FieldView, ObservableObject):
         default = 0,
         choices = INT_YES_NO
     )
-    # From Stellarium DSO model and SIMBAD
-    orientation_angle = models.PositiveIntegerField (
-        _('Orientation Angle'),
-        null = True, blank = True,
-        help_text = 'Degrees'
-    )
-    major_axis_size = models.FloatField (
-        _('Size: Major Axis'),
-        null = True, blank = True,
-        help_text = 'arcmin'
-    )
-    minor_axis_size = models.FloatField (
-        _('Size: Minor Axis'),
-        null = True, blank = True,
-        help_text = 'arcmin'
-    )
     pdf_page = models.FileField (
         _('PDF Page'),
         null = True, blank = True,
         upload_to = 'dso_pdf'
     )
+    map_label = models.CharField (
+        _('Map Label'),
+        max_length = 40,
+        null = True, blank = True
+    )
     tags = TaggableManager(blank=True)
     object_class = 'dso'
-    
     detail_view = 'dso-detail'
+
 
     @property
     def instance_id(self):
@@ -167,13 +186,26 @@ class DSO(Coordinates, FieldView, ObservableObject):
             if aa is not None:
                 return aa.shown_name
         return None
-
+    
     @property
-    def skyfield_object(self):
-        """
-        This is handy when pointing at this DSO
-        """
-        return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+    def h400_alias(self):
+        aa = self.aliases.filter(catalog__abbreviation='H400').first()
+        if aa is not None:
+            return aa.shown_name
+        return None
+    
+    @property
+    def old_alias_list(self):
+        aa = []
+        ngc = self.ngc_alias
+        h400 = self.h400_alias
+        if ngc is not None:
+            aa.append(ngc)
+        if h400 is not None:
+            aa.append(h400)
+        if len(aa) > 0:
+            return ', '.join(aa)
+        return None
 
     @property
     def opposition_date(self):
@@ -230,12 +262,19 @@ class DSO(Coordinates, FieldView, ObservableObject):
     def num_library_images(self):
         return self.image_library.count()
     
+    @property
+    def imaging_checklist_priority(self):
+        c = self.dsoimagingchecklist_set.first()
+        if c and c.priority and c.priority >= 0:
+            return c.priority
+        return None
+    
     @property 
     def color_imaging_checklist_priority(self):
         colors = ['#666', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
-        c = self.dsoimagingchecklist_set.first()
-        if c and c.priority and c.priority >= 0:
-            return colors[c.priority]
+        p = self.imaging_checklist_priority
+        if p is not None:
+            return colors[p]
         return None
     
     @property
@@ -280,6 +319,15 @@ class DSO(Coordinates, FieldView, ObservableObject):
     @property
     def is_on_imaging_checklist(self):
         return self.dsoimagingchecklist_set.count() > 0
+    
+    @property
+    def label_on_chart(self):
+        in_fov = self.dsoinfield_set.all()
+        n_in_fov = in_fov.count()
+        label = self.shown_name if self.map_label is None else self.map_label
+        if n_in_fov > 0 and self.map_label is None:
+            label += '+'
+        return label
 
     def max_altitude(self, location=None): # no location = default
         return get_max_altitude(self)
@@ -364,6 +412,40 @@ class DSO(Coordinates, FieldView, ObservableObject):
         if self.shown_name is None:
             return 'FOO'
         return self.shown_name
+    
+class DSOInField(DSOAbstract, models.Model):
+    parent_dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
+
+    @property
+    def label_on_chart(self):
+        return self.shown_name
+    
+    @property
+    def primary_distance(self):
+        # angular separation in arcseconds
+        sep = get_small_sep(self.ra, self.dec, self.parent_dso.ra, self.parent_dso.dec)
+        return sep * 60.
+    
+    @property
+    def primary_angle(self):
+        pa = get_position_angle(self.parent_dso.ra, self.parent_dso.dec, self.ra, self.dec)
+        return pa
+
+    def save(self, *args, **kwargs):
+        self.ra = self.ra_float # get from property
+        self.dec = self.dec_float # get from property
+        self.ra_text = self.format_ra # get from property
+        self.dec_text = self.format_dec # get from property
+        self.shown_name = create_shown_name(self)
+        super(DSOInField, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Deep Sky Object in Field'
+        verbose_name_plural = 'Deep Sky Objects in Field'
+        ordering = ['ra', 'dec']
+
+    def __str__(self):
+        return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
 
 class DSOAlias(models.Model):
     """

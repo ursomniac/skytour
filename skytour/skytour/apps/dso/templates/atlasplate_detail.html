@@ -10,7 +10,7 @@
         <td style="vertical-align: top;">
             <h1>Atlas - Plate {{ object.plate_id }}</h1>
             <h2>Details</h2>
-            <b>Center RA/Dec:</b> {{ object.center_ra }}h  {{ object.center_dec }}°
+            <b>Center RA/Dec:</b> {{ object.center_ra|floatformat:2 }}h  {{ object.center_dec }}°
             <br><br><b>Constellations</b> 
             {% for con in object.constellation.all %}
             <a href="{% url 'constellation-detail' con.abbreviation %}" target="_new">{{ con.abbreviation }}</a>

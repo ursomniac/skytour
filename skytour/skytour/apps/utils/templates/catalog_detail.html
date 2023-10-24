@@ -116,7 +116,7 @@
             {% endif %}
             {% if thing.catalog != object %}
                 <i><small>{{ thing.shown_name }}</small></i>
-            {% else %}
+            {% elif thing.alias_list %}
                 <i><small>{{ thing.alias_list }}</small></i>
             {% endif %}
 

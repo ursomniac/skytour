@@ -1,6 +1,7 @@
 {% load skytour_filters %}
 <style>
     span.light-yellow { color: #ffc; font-weight: bold; }
+    span.infield { float: right; font-size: 80%; }
 </style>
 <small>
 <table width="100%" id="{{ table_id }}">
@@ -15,8 +16,8 @@
         <th>Mag.</th>
         <th>Surf.</th>
         <th>Size</th>
-        <th> Priority</th>
-        <th># Obs/Img</th>
+        <th>Img</th>
+        <th>Obs</th>
         <th>Last Obs.</th>
     </tr>
 </thead>
@@ -24,37 +25,54 @@
 {% for dso in dso_list %}
     <tr>
         <td>
-            <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
+            <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - {{ dso.nickname }}{% endif %}
-            {% if dso.ngc_alias %} ({{ dso.ngc_alias }}){% endif %}
+            {% if dso.alias_list %} ({{ dso.alias_list }}){% endif %}
+            {% if dso.dsoinfield_set.count > 0 %}
+            <span class="infield">+{{ dso.dsoinfield_set.count }} in FOV</span>
+            {% endif %}
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>
         {% endif %}
-        {% if not hide_type %}<td><a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new">{{ dso.object_type.name }}</a></td>{% endif %}
+        {% if not hide_type %}
+            <td>
+                <!--a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new"-->
+                    {{ dso.object_type.short_name }}
+                <!--/a-->
+            </td>
+        {% endif %}
         <td>{{ dso.morphological_type }}</td>
-        <td>{{ dso.ra|to_hms:1 }}</td>
+        <td>{{ dso.ra|to_hm:1 }}</td>
         <td>{{ dso.dec|to_dm:1 }}</td>
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         <td>
-            <a href="{% url 'priority-detail' dso.priority %}" target="_new">
-                {{ dso.get_priority_display }}</a>
-                {% if dso.is_on_imaging_checklist %} 
-                    &nbsp; 
-                    <span style="float: right; color: {{ dso.color_imaging_checklist_priority }}">
+            {% if dso.is_on_imaging_checklist %} 
+                <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
                     {{ dso.library_image_priority }}
-                    </span>
+                </span>
+                {# dso.num_library_images #}
+                {% if dso.library_image_camera %}
+                    <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
                 {% endif %}
-        </td>
-        <td>
-            {{ dso.number_of_observations }} / {{ dso.num_library_images }}
-            {% if dso.library_image_camera %}
-            <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d H:i' }} UT{% endif %}</td>
+        <td>
+            <a href="{% url 'priority-detail' dso.priority %}" target="_new">
+                {{ dso.get_priority_display }}</a>
+
+        </td>
+        <td>
+            {{ dso.number_of_observations }}
+            {% if dso.last_observed %}
+                &nbsp;
+                <small>
+                {{ dso.last_observed|date:'Y-m-d' }}
+                </small>
+            {% endif %}
+        </td>
     </tr>
 {% endfor %}
 </tbody>

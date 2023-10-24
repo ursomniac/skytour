@@ -1,3 +1,4 @@
+import datetime as dt
 from collections import Counter
 from dateutil.parser import isoparse
 from django.db.models import Q, Count
@@ -321,7 +322,7 @@ class DSOChecklistView(ListView):
         context['table_id'] = 'dsos-on-list'
         return context
     
-class DSORealTimeView(DetailView):
+class DSORealTimeView(CookieMixin, DetailView):
     model = DSO
     template_name = 'real_time_popup.html'
 
@@ -330,5 +331,5 @@ class DSORealTimeView(DetailView):
         object = self.get_object()
         context['object_type'] = 'DSO'
         context['object'] = object
-        context['real_time'] = get_real_time_conditions(object)
+        context = get_real_time_conditions(object, self.request, context)
         return context
