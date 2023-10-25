@@ -328,6 +328,47 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         if n_in_fov > 0 and self.map_label is None:
             label += '+'
         return label
+    
+    @property
+    def dsoinfield_table(self):
+        print("COUNT: ", self.dsoinfield_set.count())
+        if self.dsoinfield_set.count() == 0:
+            return "None"
+    
+        out = '<table style="border: 2px solid #666;">'
+        out += '<tr style="bgcolor: #333">'
+        out += '<th>Name</th><th>Type</th><th>Distance</th>'
+        out += '<th>Mag.</th><th>Size</th><th>Surf. Br.</th><th>Admin</th>'
+        out += '</tr>'
+        fdsos = self.dsoinfield_set.order_by('ra')
+        print("GOT: ", fdsos)
+        for f in fdsos:
+            print("F: ", f)
+            mag = f"{f.magnitude:.2f}" if f.magnitude else ''
+            dist = f"{f.primary_distance:.2f}\'" if f.primary_distance else ''
+            pa = f" at {f.primary_angle:.0f}°" if f.primary_angle else ''
+            sbr = f"{f.surface_brightness:.2f}" if f.surface_brightness else ''
+            size = f.angular_size if f.angular_size else ''
+            admin_url = f"/admin/dso/dsoinfield/{f.pk}/change"
+            
+            out += '<tr>'
+            out += f"<td>{ f.shown_name }"
+            if f.nickname:
+                out += f" <span style\"font-size: 80%; font-style: italic; color: #ff6;\">{ f.nickname }</span>"
+            out += f"</td>"
+
+            out += f"<td>{ f.object_type.short_name }"
+            if f.morphological_type:
+                out += f" ({ f.morphological_type })"
+            out += "</td>"
+            out += f"<td>{ dist }\' { pa }</td>"
+            out += f"<td>{ mag }</td>"
+            out += f"<td>{ size }</td>"
+            out += f"<td>{ sbr }</td>"
+            out += f"<td><a href='{admin_url}' target='_new'><button>Admin</button></a> {admin_url}</td>"
+            out += "</tr>"
+        out += "</table>"
+        return mark_safe(out)
 
     def max_altitude(self, location=None): # no location = default
         return get_max_altitude(self)

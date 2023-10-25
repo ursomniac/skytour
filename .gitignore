@@ -15,6 +15,7 @@ IGNORE
 hip_main.dat
 MPCORB.DAT*
 *.bsp
+STEL_*
 
 # C extensions
 *.so

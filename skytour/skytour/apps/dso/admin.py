@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
@@ -118,7 +119,8 @@ class DSOAdmin(ObservableObjectAdmin):
         'dso_imaging_chart_tag',
         'atlas_plate_list',
         'library_image_checklist_param',
-        'has_dso_imaging_chart'
+        'has_dso_imaging_chart',
+        'dsoinfield_table'
     ]
     list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', ]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
@@ -151,6 +153,11 @@ class DSOAdmin(ObservableObjectAdmin):
                 'notes',
             ]
         }),
+        ('DSOs in Field', {
+            'fields': [
+                'dsoinfield_table',
+            ]
+        }),
         ('Charts', {
             'classes': ['collapse'],
             'fields': [
@@ -166,7 +173,7 @@ class DSOAdmin(ObservableObjectAdmin):
     )
     inlines = [
         DSOAliasAdmin, 
-        DSOInFieldInline,
+        #DSOInFieldInline,
         DSOImagingChecklistInline,
         
         DSOLibraryImageAdmin, 

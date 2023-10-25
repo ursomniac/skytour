@@ -198,7 +198,7 @@
 			</td>
 			<td>
 				{{ fdso.object_type.short_name }} 
-				{% if dso.morphological_type %}&nbsp;({{ fdso.morphological_type }}){% endif %}
+				{% if fdso.morphological_type %}&nbsp;({{ fdso.morphological_type }}){% endif %}
 			</td>
 			<td>{{ fdso.primary_distance|floatformat:1 }}' at {{ fdso.primary_angle|floatformat:0 }}°</td>
 			<td>{{ fdso.magnitude|floatformat:2 }}</td>
