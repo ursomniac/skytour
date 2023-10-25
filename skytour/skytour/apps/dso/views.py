@@ -4,9 +4,9 @@ from dateutil.parser import isoparse
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.urls import reverse
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
@@ -21,8 +21,9 @@ from .finder import create_dso_finder_chart, plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
-from .models import DSO, DSOList, AtlasPlate, DSOObservation, DSOImagingChecklist
+from .models import DSO, DSOList, AtlasPlate, DSOAlias, DSOInField, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
+from .search import search_dso_name
 from .utils import select_atlas_plate
 from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
     filter_dsos, get_filter_params, update_dso_filter_context
@@ -333,3 +334,13 @@ class DSORealTimeView(CookieMixin, DetailView):
         context['object'] = object
         context = get_real_time_conditions(object, self.request, context)
         return context
+    
+class DSOSearchView(View):
+
+    def get(self, request):
+        query = request.GET.get('query', None).lower()
+        cat, id = query.split(' ')
+        target = search_dso_name(cat, id)
+        if target is not None:
+            return redirect(target)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

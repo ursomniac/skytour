@@ -5,20 +5,29 @@
         <td class="click"><a href="{% url 'observing-plan' %}">Plan</a></td>
         <td class="click"><a href="{% url 'object-track' %}">Track</a></td>
         <td class="click"><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
-        <td colspan=4>DSOs:  &nbsp;&nbsp;
+        <td colspan=4>DSOs:  &nbsp;
             <a href="{% url 'dso-list' %}">All</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            &nbsp;|&nbsp;
             <a href="{% url 'object-type-list' %}">Types</a>
+            {% comment %}
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'priority-list' %}">Priorities</a>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
             <a href="{% url 'dsolist-list' %}">Lists</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
+            {% endcomment %}
+            &nbsp;|&nbsp;
             <a href="{% url 'dso-filter' %}">Filter</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
+            &nbsp;|&nbsp;
             <a href="{% url 'dso-observed' %}">Obs.</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
+            &nbsp;|&nbsp;
             <a href="{% url 'dso-checklist' %}">Checklist</a>
+        </td>
+        <td colspan=1>
+            <form action="/dso/search" method="GET">
+                <b>Search DSO:</b>
+                <input name="query" size="5">
+                <input type="submit" value="Search">
+            </form>
         </td>
         <td colspan=3>Sessions: &nbsp;&nbsp;
             <a href="{% url 'session-list' %}">List</a>
