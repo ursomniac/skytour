@@ -99,7 +99,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
       row = mps.loc[a.mpc_lookup_designation]
       target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
       mag = fast_asteroid(a, target, t, earth, sun, r_earth_sun)
-      if mag <= mag_limit or a.always_include:
+      if mag is not None and mag <= mag_limit or a.always_include:
          x = get_object_metadata(
             utdt, 
             target, 

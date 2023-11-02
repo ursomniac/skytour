@@ -33,7 +33,7 @@ def fast_asteroid(asteroid, eph, t, earth, sun, r_earth_sun):
       phase_angle = math.acos(cos_beta) # RADIANS
    
    # Magnitude
-      mag = None
+   mag = None
    # This is apparently in Skyfield v1.42 as-yet not released.
    if phase_angle:
       rpa = math.radians(phase_angle) # Assuming this is the same phase angle

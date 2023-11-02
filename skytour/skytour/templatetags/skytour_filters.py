@@ -60,6 +60,9 @@ def to_hm(d, n=2):
         x = abs(d)
         h = int(x)
         m = (x-h) * 60.
+        if m >= 60.0:
+            m -= 60.
+            h += 1
         w = n + 3
         return f"{h:02d}h {m:0{w}.{n}f}m"
     except:

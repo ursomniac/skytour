@@ -115,7 +115,13 @@
 				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
 
 			<tr>
-				<td>Contrast Index: {{ object.contrast_index }}</td>
+				<td>
+					Contrast Index: {{ object.contrast_index }}
+					{% if object.orientation_angle %}
+					&nbsp;&nbsp;
+					Orientation Angle: {{ object.orientation_angle }}°
+					{% endif %}
+				</td>
 				<td>Morphological Type: {{ object.morphological_type }}</td>
 			<tr>
 				<td>
@@ -216,7 +222,7 @@
 			{% if forloop.counter0|modulus:5 == 0 %}<tr>{% endif %}
 				<td width="20%">
 					{% if x is not None %}
-						<a href="{% url 'dso-detail' x.pk %}">{{ x.shown_name }}</a>
+						<a href="{% url 'dso-detail' x.pk %}">{{ x.label_on_chart }}</a>
 						({{ x.object_type.short_name }}, 
 						<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>
 						{% if x.library_image_priority %}

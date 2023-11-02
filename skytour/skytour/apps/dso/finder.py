@@ -24,7 +24,9 @@ def d2r(a): # a us a numpy.array
 
 def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False):
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
-    default_size = 0.5 if in_field else 1.0
+    default_size = 1.0 if in_field else 5.0
+    min_size = 1.0 if in_field else 8.0
+    max_size = 30
     for other in other_dso_records:
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         if abs(x) > limit or abs(y) > limit:
@@ -33,7 +35,7 @@ def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, i
         other_dsos['y'].append(y)
         other_dsos['label'].append(other.label_on_chart)
         other_dsos['marker'].append(other.object_type.marker_type)
-        ax = plot_dso(ax, x, y, other, alpha=0.6, default_size=default_size)
+        ax = plot_dso(ax, x, y, other, alpha=0.6, default_size=default_size, max_size=max_size, min_size=min_size)
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
@@ -42,7 +44,8 @@ def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, i
                 z, (x, y), 
                 textcoords='offset points',
                 xytext=(5, 5),
-                ha='left'
+                ha='left',
+                fontsize='x-small'
             )
         else:
             plt.annotate(
@@ -60,9 +63,10 @@ def plot_dso(ax, x, y, dso,
         reversed=True, 
         size_limit=0.0005, 
         alpha=.7, 
-        min_size=3., 
-        max_size=35.,
-        default_size = None
+        min_size=1., 
+        max_size=40.,
+        default_size = None,
+        debug = False
     ):
     """
     Put a DSO on the map with custom markers related to the object type.
@@ -72,26 +76,55 @@ def plot_dso(ax, x, y, dso,
     oangle = dso.orientation_angle or 0
     ft = dso.object_type.map_symbol_type
 
+    default_size = default_size if default_size else min_size
+    amajor = dso.major_axis_size if dso.major_axis_size is not None else default_size
+    aminor = amajor if dso.minor_axis_size is None or dso.minor_axis_size == 0 else dso.minor_axis_size
+    if debug:
+        print(f"DSO: {dso} {dso.major_axis_size} x {dso.minor_axis_size} D: {default_size} 0: {min_size}")
+
+    ratio = aminor / amajor
+    if amajor < min_size:
+        if debug:
+            print("\t TOO SMALL")
+        amajor = min_size
+        aminor = min_size * ratio
+    if amajor > max_size:
+        if debug:
+            print("\t TOO BIG")
+        amajor = max_size
+        aminor = max_size * ratio
+    if debug:
+        print(f"\t finally {amajor} x {aminor}")
+
     # Get the major/minor axis sizes
     # 1. For DSOs that aren't round (e.g., galaxies), use the major/minor axis values
-    aminor = dso.minor_axis_size # total width
-    amajor = dso.major_axis_size # total length
+    #amajor = dso.major_axis_size # total length
+    #aminor = dso.minor_axis_size # total width
     # 2. For very small DSOs, use a minimum size.
-    amajor = amajor if amajor else default_size # default size
-    aminor = aminor if aminor else amajor
+    #amajor = amajor if amajor else default_size # default size
+    #aminor = aminor if aminor else amajor
+    #ratio = aminor / amajor
+    # 
+    # 3. Unless that's too small
     # 3. For medium-sized DSOs, scale it.
-    if aminor == 0:
-        aminor = amajor
-    ratio = aminor / amajor
-    # 4. For very large DSOs, constrain the symbol to a max size.
-    if amajor > max_size:
-        amajor = max_size
-        aminor = ratio * amajor
+    #if amajor is None:
+    #    amajor = default_size if default_size else min_size
+    #if aminor == 0 or aminor is None:
+    #    aminor = amajor
+    #
+    #if amajor and aminor:
+    #    ratio = aminor / amajor
+    #else:
+    #    ratio = 1.
+    ## 4. For very large DSOs, constrain the symbol to a max size.
+    #if amajor > max_size:
+    #    amajor = max_size
+    #    aminor = ratio * amajor
     # 5. For DSOs with no size that are small use a min_size
-    if default_size is None:
-        if amajor < min_size:
-            amajor = min_size
-            aminor = ratio * amajor
+    #if default_size is None:
+    #    if amajor < min_size:
+    #        amajor = min_size
+    #        aminor = ratio * amajor
 
     amajor *= 2.909e-4
     aminor *= 2.909e-4
@@ -110,10 +143,12 @@ def plot_dso(ax, x, y, dso,
     #('gray-square', 'Gray Square'),                     # Dark Nebulae
     #('circle-gray-square', 'Circle in Gray Square')     # cluster w/ nebulosity
     #print (f'{ft}: X: {x:.3f} Y: {y:.3f}    A: {amajor:.4f}  B: {aminor:.4f}  O: {angle:3d} T: {alpha:.1f}')
+    umajor = amajor / 2.
+    uminor = aminor / 2.
     if ft == 'ellipse': # galaxies
         color = '#63f' if 'barred' in dso.object_type.slug.lower() else '#f00'
-        e1 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=True, color=color, alpha=alpha)
-        e2 = patches.Ellipse((x, y), aminor, amajor, angle=angle, fill=False, color='#999')
+        e1 = patches.Ellipse((x, y), uminor, umajor, angle=angle, fill=True, color=color, alpha=alpha)
+        e2 = patches.Ellipse((x, y), uminor, umajor, angle=angle, fill=False, color='#999')
         ax.add_patch(e1)
         ax.add_patch(e2)
     elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
@@ -130,19 +165,19 @@ def plot_dso(ax, x, y, dso,
     elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square']: # UGH - the center point is the lower-left corner
         # angle of the rectangle, rotated by the orientation angle + 180 degrees to get its opposite
         theta = angle + math.degrees(math.atan2(aminor, amajor)) + 180.
-        r = math.sqrt(amajor*amajor + aminor*aminor)/2.
+        r = math.sqrt(umajor*umajor + uminor*uminor)/2.
         dx = r * math.cos(math.radians(theta))
         dy = r * math.sin(math.radians(theta))
         if ft in ['square', 'gray-square']:
             color = '#6f6' if ft == 'square' else '#999'
-            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
-            r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='#000', angle=angle)
+            r1 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha)
+            r2 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=False, color='#000', angle=angle)
             ax.add_patch(r1)
             ax.add_patch(r2)
         else:
             color = '#6f6' if ft == 'circle-square' else '#999'
-            r1 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=True, color=color, angle=angle, alpha=alpha)
-            r2 = patches.Rectangle((x + dx, y + dy), amajor, aminor, fill=False, color='k', angle=angle)
+            r1 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha)
+            r2 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=False, color='k', angle=angle)
             c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff', alpha=alpha*.5)
             c2 = patches.Circle((x, y), aminor/2., fill=False, color='#000')
             ax.add_patch(r1)
@@ -220,7 +255,10 @@ def create_dso_finder_chart(
 
     ##### this object
     object_x, object_y = projection(center)
-    ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
+    if chart_type == 'wide':
+        ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed, min_size=8)
+    else:
+        ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
     this_dso_color = '#ffc' if reversed else 'k'
     my_label = dso.label_on_chart if chart_type == 'wide' else dso.shown_name
     plt.annotate(

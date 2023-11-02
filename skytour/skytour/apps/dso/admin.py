@@ -133,6 +133,9 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('object_type', 'morphological_type', 'priority'),
                 'library_image_checklist_param',
                 ('tags', 'map_label'),
+                #
+                ('dso_imaging_chart', 'dso_imaging_chart_tag'),
+                #
             ]
         }),
         ('Coordinates', {
@@ -147,9 +150,6 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
-                #
-                ('dso_imaging_chart', 'dso_imaging_chart_tag'),
-                #
                 'notes',
             ]
         }),
@@ -173,7 +173,7 @@ class DSOAdmin(ObservableObjectAdmin):
     )
     inlines = [
         DSOAliasAdmin, 
-        #DSOInFieldInline,
+        DSOInFieldInline,
         DSOImagingChecklistInline,
         
         DSOLibraryImageAdmin, 
