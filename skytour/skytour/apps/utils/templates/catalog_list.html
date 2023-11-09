@@ -16,7 +16,9 @@
     <tr>
         <td><a href="{% url 'catalog-detail' obj.pk %}">{{ obj.name }}</a></td>
         <td style="text-align: center">{{ obj.abbreviation }}</td>
-        <td style="text-align: right; padding-right: 10px;">{{ obj.dso_count }}</td>
+        <td style="text-align: right; padding-right: 10px;">
+            {{ obj.dso_count }}
+        </td>
         <td><small>{{ obj.description }}</small></td>
     </tr>
 {% endfor %}

@@ -51,21 +51,17 @@ def get_small_sep(ra1, dec1, ra2, dec2):
     y = x*x + ddec*ddec
     return math.sqrt(y)
 
-def get_position_angle(ra1, dec1, ra2, dec2):
-    """
-    Return the position angle between two coordinates and North.
+def get_simple_position_angle(ra1, dec1, ra2, dec2):
+    # Positive east
+    xra1 = math.radians(ra1 * 15.)
+    xra2 = math.radians(ra2 * 15.)
+    dra = xra1 - xra2
+    xdec1 = math.radians(dec1)
+    xdec2 = math.radians(dec2)
 
-    We're using this to sort out the direction a neighboring plate is at.
-    For plates centered at the poles (where PA is indeterminate), return
-    the direction as it would appear on the plate (i.e., a clock-face direction).
-    """
-    if abs(dec1) < math.radians(90.):
-        dra = ra1 - ra2
-        pa1 = math.sin(dra)
-        pa2 = math.cos(dec2) * math.tan(dec1) 
-        pa3 = math.sin(dec2) * math.cos(dra)
-        pa = math.degrees(math.atan2(pa1, pa2-pa3))
-    else:
-        pa = (270. - math.degrees(ra2)) % 360.
-        
+    pa1 = math.sin(dra)
+    pa2 = math.cos(xdec2) * math.tan(xdec1) 
+    pa3 = math.sin(xdec2) * math.cos(dra)
+    pa = (math.degrees(math.atan2(pa1, pa2-pa3)) + 180.)
+    pa %= 360.
     return pa

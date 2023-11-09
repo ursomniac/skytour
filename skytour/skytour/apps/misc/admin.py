@@ -26,7 +26,7 @@ class CalendarAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
     inlines = [CalendarEventReferenceInline]
     list_display = ['pk',  'date', 'time', 'title', 'event_type', 'reference_list']
-    list_filter = ['date']
+    list_filter = ['date', 'event_type']
     readonly_fields = ['reference_list']
     fieldsets = (
         (None, {
@@ -38,6 +38,7 @@ class CalendarAdmin(admin.ModelAdmin):
             ]
         }),
     )
+    #search_fields = ['title',]
 
 class WebsiteAdmin(admin.ModelAdmin):
     model = Website

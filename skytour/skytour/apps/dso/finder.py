@@ -15,6 +15,9 @@ from skyfield.projections import build_stereographic_projection
 from ..plotting.map import *
 from ..site_parameter.helpers import find_site_parameter
 from .models import DSO
+# Circular import issue...  Sigh.
+#from .const_utils import get_boundary_lines
+#from .plot import map_constellation_boundaries
 
 ### These are used to create a secondary axis on the plot.
 def r2d(a): # a is a numpy.array
@@ -22,7 +25,7 @@ def r2d(a): # a is a numpy.array
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
 
-def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False):
+def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, reversed=False, in_field=False):
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
     default_size = 1.0 if in_field else 5.0
     min_size = 1.0 if in_field else 8.0
@@ -35,7 +38,10 @@ def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, i
         other_dsos['y'].append(y)
         other_dsos['label'].append(other.label_on_chart)
         other_dsos['marker'].append(other.object_type.marker_type)
-        ax = plot_dso(ax, x, y, other, alpha=0.6, default_size=default_size, max_size=max_size, min_size=min_size)
+        ax = plot_dso(ax, x, y, other, alpha=0.6, 
+            default_size=default_size, max_size=max_size, min_size=min_size,
+            reversed=reversed
+        )
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])
     for x, y, z in zip(xxx, yyy, other_dsos['label']):
@@ -96,41 +102,14 @@ def plot_dso(ax, x, y, dso,
     if debug:
         print(f"\t finally {amajor} x {aminor}")
 
-    # Get the major/minor axis sizes
-    # 1. For DSOs that aren't round (e.g., galaxies), use the major/minor axis values
-    #amajor = dso.major_axis_size # total length
-    #aminor = dso.minor_axis_size # total width
-    # 2. For very small DSOs, use a minimum size.
-    #amajor = amajor if amajor else default_size # default size
-    #aminor = aminor if aminor else amajor
-    #ratio = aminor / amajor
-    # 
-    # 3. Unless that's too small
-    # 3. For medium-sized DSOs, scale it.
-    #if amajor is None:
-    #    amajor = default_size if default_size else min_size
-    #if aminor == 0 or aminor is None:
-    #    aminor = amajor
-    #
-    #if amajor and aminor:
-    #    ratio = aminor / amajor
-    #else:
-    #    ratio = 1.
-    ## 4. For very large DSOs, constrain the symbol to a max size.
-    #if amajor > max_size:
-    #    amajor = max_size
-    #    aminor = ratio * amajor
-    # 5. For DSOs with no size that are small use a min_size
-    #if default_size is None:
-    #    if amajor < min_size:
-    #        amajor = min_size
-    #        aminor = ratio * amajor
-
+    # Deal with size
     amajor *= 2.909e-4
     aminor *= 2.909e-4
     # 6. Also, rotate by the position angle where appropriate.
     angle = oangle
-
+    umajor = amajor / 2.
+    uminor = aminor / 2.
+    
     #if amajor < size_limit or aminor < size_limit: # if it's too small put the marker there instead
     #    ft = 'marker'
 
@@ -142,26 +121,33 @@ def plot_dso(ax, x, y, dso,
     #('square', 'Open Square'),                          # Emission Nebulae
     #('gray-square', 'Gray Square'),                     # Dark Nebulae
     #('circle-gray-square', 'Circle in Gray Square')     # cluster w/ nebulosity
-    #print (f'{ft}: X: {x:.3f} Y: {y:.3f}    A: {amajor:.4f}  B: {aminor:.4f}  O: {angle:3d} T: {alpha:.1f}')
-    umajor = amajor / 2.
-    uminor = aminor / 2.
+
     if ft == 'ellipse': # galaxies
-        color = '#63f' if 'barred' in dso.object_type.slug.lower() else '#f00'
+        color = '#99f' if 'barred' in dso.object_type.slug.lower() else '#f00'
+        color = '#c6f' if 'ellip' in dso.object_type.slug.lower() else color
+        color = '#c6f' if 'lenti' in dso.object_type.slug.lower() else color
+        color = '#09f' if 'dwarf' in dso.object_type.slug.lower() else color
+        color = '#c69' if 'irreg' in dso.object_type.slug.lower() else color
         e1 = patches.Ellipse((x, y), uminor, umajor, angle=angle, fill=True, color=color, alpha=alpha)
         e2 = patches.Ellipse((x, y), uminor, umajor, angle=angle, fill=False, color='#999')
         ax.add_patch(e1)
         ax.add_patch(e2)
+
     elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
         color = '#999' if ft == 'gray-circle' else '#ff0'
-        c1 = patches.Circle((x, y), amajor/2., fill=True, color=color, alpha=alpha)
+        radius = umajor / 2.  # Why?  I don't know but the circles are always to large
+        c1 = patches.Circle((x, y), radius, fill=True, color=color, alpha=alpha)
         r_color = '#fff' if reversed else '#000'
-        c2 = patches.Circle((x, y), amajor/2., fill=False, color=r_color)
+        c2 = patches.Circle((x, y), radius, fill=False, color=r_color)
         if ft == 'circle-plus':
-            cp_color = '#999' if reversed else '#000'
-            ax.vlines(x, y-amajor/2, y+amajor/2, color=cp_color)
-            ax.hlines(y, x-amajor/2, x+amajor/2, color=cp_color)
+            cp_color = '#ccc' if reversed else '#000'
+            #ax.vlines(x, y-amajor/2, y+amajor/2, color=cp_color)
+            #ax.hlines(y, x-amajor/2, x+amajor/2, color=cp_color)
+            ax.vlines(x, y-radius, y+radius, color=cp_color)
+            ax.hlines(y, x-radius, x+radius, color=cp_color)
         ax.add_patch(c1)
         ax.add_patch(c2)
+
     elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square']: # UGH - the center point is the lower-left corner
         # angle of the rectangle, rotated by the orientation angle + 180 degrees to get its opposite
         theta = angle + math.degrees(math.atan2(aminor, amajor)) + 180.
@@ -178,18 +164,21 @@ def plot_dso(ax, x, y, dso,
             color = '#6f6' if ft == 'circle-square' else '#999'
             r1 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha)
             r2 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=False, color='k', angle=angle)
-            c1 = patches.Circle((x, y), aminor/2., fill=True, color='#fff', alpha=alpha*.5)
-            c2 = patches.Circle((x, y), aminor/2., fill=False, color='#000')
+            c1 = patches.Circle((x, y), uminor, fill=True, color='#fff', alpha=alpha*.5)
+            c2 = patches.Circle((x, y), uminor, fill=False, color='#000')
             ax.add_patch(r1)
             ax.add_patch(r2)
             ax.add_patch(c1)
             ax.add_patch(c2)
+
     elif ft in ('two-circles'):
         ccolor = '#3fc' if reversed else '#3c9'
-        c1 = patches.Circle((x, y), amajor/2., fill=False, color=ccolor)
-        c2 = patches.Circle((x, y), 0.75 * amajor/2., fill=False, color=ccolor)
+        radius = umajor / 2.
+        c1 = patches.Circle((x, y), radius, fill=False, color=ccolor)
+        c2 = patches.Circle((x, y), 0.75 * radius, fill=False, color=ccolor)
         ax.add_patch(c1)
         ax.add_patch(c2)
+
     else: # marker
         test = ax.scatter(
             [x], [y],
@@ -239,7 +228,6 @@ def create_dso_finder_chart(
     plt.style.use(style)
     fig, ax = plt.subplots(figsize=[8,8])
     angle = np.pi - field_of_view_degrees  / 360.0 * np.pi
-    #angle = math.radians(field_of_view_degrees)
     limit = np.sin(angle) / (1.0 - np.cos(angle))
     times.append((time.perf_counter(), 'Start Plot'))
 
@@ -250,13 +238,18 @@ def create_dso_finder_chart(
     times.append((time.perf_counter(), 'Hipparcos'))
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     times.append((time.perf_counter(), 'Constellation Lines'))
+    # circular import... ugh
+    #lines, _ = get_boundary_lines(dso.constellation.abbreviation, 'constellation')
+    #ax = map_constellation_boundaries(ax, dso.constellation.abbreviation, earth, t, projection, reversed=False)
+
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
     times.append((time.perf_counter(), 'Bright Stars'))
 
     ##### this object
     object_x, object_y = projection(center)
     if chart_type == 'wide':
-        ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed, min_size=8)
+        ax = plot_dso(
+            ax, object_x, object_y, dso, reversed=reversed, min_size=8)
     else:
         ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
     this_dso_color = '#ffc' if reversed else 'k'
@@ -269,9 +262,10 @@ def create_dso_finder_chart(
     ##### other dsos
     if show_other_dsos:
         other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
-        ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False)
+        ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False, reversed=reversed)
 
     if show_in_field_dsos and dso.dsoinfield_set.count() > 0:
+        # TODO: check nearby DSOs to see if their in-field objects overlap with this field!
         in_field_dsos = dso.dsoinfield_set.all()
         ax, times = plot_other_dsos(ax, in_field_dsos, projection, earth, t, limit, times, in_field=True)
 

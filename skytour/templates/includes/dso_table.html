@@ -2,9 +2,12 @@
 <style>
     span.light-yellow { color: #ffc; font-weight: bold; }
     span.infield { float: right; font-size: 80%; }
+    span.nickname { font-style: italic; color: #ff9; }
+    table.dso_table tbody th, 
+    table.dso_table tbody td { padding: 4px 10px 2px 10px; }
 </style>
 <small>
-<table width="100%" id="{{ table_id }}">
+<table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
         <th>Name</th>
@@ -26,11 +29,15 @@
     <tr>
         <td>
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.label_on_chart }}</a>
-            {% if dso.nickname %} - {{ dso.nickname }}{% endif %}
-            {% if dso.alias_list %} ({{ dso.alias_list }}){% endif %}
+            {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
             {% if dso.dsoinfield_set.count > 0 %}
             <span class="infield">+{{ dso.dsoinfield_set.count }} in FOV</span>
             {% endif %}
+            <br>
+            <small>
+            {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
+            </small>
+
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>

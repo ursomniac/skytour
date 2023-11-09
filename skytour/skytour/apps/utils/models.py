@@ -212,6 +212,10 @@ class Constellation(models.Model):
         for p in self.atlasplate_set.order_by('plate_id'):
             pp.append(str(p.plate_id))
         return ', '.join(pp)
+    
+    @property
+    def dso_in_field_count(self):
+        return self.dsoinfield_set.count()
 
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)

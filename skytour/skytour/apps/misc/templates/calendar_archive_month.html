@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ month|date:"M Y" }} Events: Skytour{% endblock %}
+{% block content %}
+
+<h1>Events</h1>
+<h2>
+    <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
+        {{ previous_month|date:"M Y"}}</a>
+    &nbsp; | &nbsp; {{ month|date:"M Y"}} &nbsp; | &nbsp;
+    <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
+        {{ next_month|date:"M Y"}}</a>
+</h2>
+
+{# include 'inc_calendar_table.html' #}
+{% include 'inc_calendar_grid.html' %}
+
+<h2>
+    <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
+        {{ previous_month|date:"M Y"}}
+    </a>
+    &nbsp; | &nbsp; {{ month|date:"M Y"}} &nbsp; | &nbsp;
+    <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
+        {{ next_month|date:"M Y"}}
+    </a>
+</h2>
+
+{% endblock %}

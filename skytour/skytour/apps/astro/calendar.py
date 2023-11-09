@@ -7,6 +7,15 @@ from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.moon import simple_lunar_phase
 from ..misc.models import Calendar
 
+def is_leap_year(year):
+    if year % 4 != 0:   # not divisible by 4 ---> False
+        return False
+    if year % 100 != 0: # divisible by 4 but not divisible by 100 ---> True
+        return True
+    if year % 400 != 0: # divisible by 100 but not divisible by 400 ---> False
+        return False
+    return True         # divisible by 400 ---> True
+
 def get_upcoming_calendar(now, range=[-2, 5]):
     """
     Find records in the Calendar model within a range of dates around a target date.

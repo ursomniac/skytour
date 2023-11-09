@@ -150,4 +150,4 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TIME_FORMAT = 'H:i'
 
-SESSION_COOKIE_AGE = 86400
+SESSION_COOKIE_AGE = 86400 * 7

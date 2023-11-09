@@ -2,7 +2,6 @@ import base64
 import datetime, pytz
 from re import X
 import io
-from django.db.models import Q
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from scipy import spatial
@@ -11,13 +10,13 @@ from skyfield.projections import build_stereographic_projection
 
 from ..astro.angdist import chord_length
 from ..astro.transform import get_cartesian
-from ..dso.models import DSO
 from ..plotting.map import *
 from ..utils.format import to_hm, to_dm
-from ..utils.models import ConstellationBoundaries, ConstellationVertex
+#from ..utils.models import ConstellationBoundaries, ConstellationVertex, Constellation
 
+from .const_utils import get_boundary_lines
 from .finder import plot_dso
-from .models import AtlasPlate
+from .models import AtlasPlate, DSO
 from .vocabs import MILKY_WAY_CONTOUR_COLORS
 
 # These are used to create a secondary axis on the plot.
@@ -25,8 +24,6 @@ def r2d(a): # a is a numpy.array
     return a * (180.*2) / math.pi # Why times 2?  I have no idea, but it's the only way it works...
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
-
-
 
 def get_fn(ra, dec, plate_id, shapes=False, reversed=reversed):
     """
@@ -70,37 +67,10 @@ def get_dsos_on_plate(ra, dec, fov=20):
         neighbor_objects.append(dsos[idx])
     return neighbor_objects
 
-def get_boundary_lines(plate_id):
-    """
-    Get all of the constellation boundaries seen on a plate.
-    This is slightly optimized: it uses the list of known constellations on the plate,
-    and only returns the lines relevant to them.   
-    """
-    plate = AtlasPlate.objects.get(plate_id=plate_id)
-    # get constellations on plate
-    const_list = plate.constellation.all()
-    # get vertices for these constellations
-    verts = ConstellationVertex.objects.filter(constellation__in=const_list)
-    vert_list = verts.values_list('pk', flat=True)
-    # get boundary line segments
-    segments = ConstellationBoundaries.objects.filter(Q(start_vertex__in=vert_list) | Q(end_vertex__in=vert_list))
-    lines = {}
-    p = 0
-    for seg in segments:
-        v1 = seg.start_vertex
-        v2 = seg.end_vertex
-        t = tuple([v1, v2])
-        if t not in lines.keys():
-            lines[t] = []
-        lines[t].append(tuple([seg.ra, seg.dec]))
-        p += 1
-    return lines, p
-
-def map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=False):
+def map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False):
     """
     Map the constellation boundaries.
     """
-    lines, _ = get_boundary_lines(plate_id)
     line_color = '#9907' if reversed else '#999' # constellation-boundary
     line_width = 1.5
     line_type = '--'
@@ -166,7 +136,8 @@ def create_atlas_plot(
     ax = map_milky_way(ax, earth, t, projection, reversed=reversed, contour=2, colors=MILKY_WAY_CONTOUR_COLORS[2])
     ax = map_special_points(ax, earth, t, projection, reversed=reversed)
     if model == AtlasPlate:
-        ax = map_constellation_boundaries(ax, plate_id, earth, t, projection, reversed=reversed)
+        lines, _ = get_boundary_lines(plate_id, 'plate')
+        ax = map_constellation_boundaries(ax, lines, earth, t, projection, reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed, mag_offset=mag_offset)
     line_color = '#99f' if reversed else "#00f4" # constellation-line
     ax = map_constellation_lines(ax, stars, reversed=reversed, line_color=line_color)
@@ -186,7 +157,9 @@ def create_atlas_plot(
             ax = plot_dso(ax, x, y, other, 
                 alpha=0.6, 
                 reversed=reversed, 
-                min_size=10.
+                #min_size=10.
+                min_size=15.,
+                default_size=10.
             )
         xxx = np.array(other_dsos['x'])
         yyy = np.array(other_dsos['y'])

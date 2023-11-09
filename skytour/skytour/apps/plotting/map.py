@@ -421,7 +421,7 @@ def map_dsos(ax, earth, t, projection,
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)
         other_dsos['y'].append(y)
-        other_dsos['label'].append(other.shown_name)
+        other_dsos['label'].append(other.label_on_chart)
         other_dsos['marker'].append(other.object_type.marker_type)
     xxx = np.array(other_dsos['x'])
     yyy = np.array(other_dsos['y'])

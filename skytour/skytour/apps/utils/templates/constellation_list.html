@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 {% block title %}Constellation List: Skytour{% endblock %}
 {% block content %}
+<style>
+    td.number { width: 4.5em; text-align: right; padding-right: 5px; }
+</style>
 <h1>Constellation List</h1>
 <table id="{{ table_id }}">
     <thead>
         <tr>
             <th>Name</th>
             <th>Abbr.</th>
-            <th>Plate List</th>
+            <th>Atlas Plate List</th>
             <th>DSO Count</th>
+            <th>DSO In Field</th>
+            <th>DSO Total</th>
         </tr>
     </thead>
     <tbody>
@@ -16,8 +21,16 @@
         <tr class="even">
             <td><a href="{% url 'constellation-detail' obj.slug %}">{{ obj.name }}</a></td>
             <td style="text-align: center">{{ obj.slug }}</td>
-            <td>{{ obj.atlas_plate_list}}</td>
-            <td style="text-align: right; padding-right: 20px">{{ obj.dso_count }}</td>
+            <td><small>{{ obj.atlas_plate_list}}</small></td>
+            <td class="number">
+                {{ obj.dso_count }}
+            </td>
+            <td class="number">
+                {{ obj.dso_in_field_count }}
+            </td>
+            <td class="number">
+                {{ obj.dso_count|add:obj.dso_in_field_count }}
+            </td>
         </tr>
     {% endfor %}
     </tbody>

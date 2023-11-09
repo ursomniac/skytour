@@ -13,7 +13,7 @@ from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
-from ..astro.utils import get_sep, get_position_angle, get_small_sep
+from ..astro.utils import get_small_sep, get_simple_position_angle
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
@@ -265,13 +265,13 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     @property
     def imaging_checklist_priority(self):
         c = self.dsoimagingchecklist_set.first()
-        if c and c.priority and c.priority >= 0:
+        if c and c.priority is not None:
             return c.priority
         return None
     
     @property 
     def color_imaging_checklist_priority(self):
-        colors = ['#666', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
+        colors = ['#888', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
         p = self.imaging_checklist_priority
         if p is not None:
             return colors[p]
@@ -302,7 +302,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         c = self.dsoimagingchecklist_set.first()
         if c:
             my_priority = c.priority
-            if c.priority >= 0:
+            if c.priority is not None and c.priority >= 0:
                 return use[my_priority]
         # No priority or < 0
         return None
@@ -469,7 +469,7 @@ class DSOInField(DSOAbstract, models.Model):
     
     @property
     def primary_angle(self):
-        pa = get_position_angle(self.parent_dso.ra, self.parent_dso.dec, self.ra, self.dec)
+        pa = get_simple_position_angle(self.parent_dso.ra, self.parent_dso.dec, self.ra, self.dec)
         return pa
 
     def save(self, *args, **kwargs):

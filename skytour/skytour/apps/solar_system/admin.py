@@ -100,7 +100,7 @@ class CometAdmin(ObservableObjectAdmin):
     list_display_links = ['pk', 'name']
     inlines = [CometLibraryImageAdmin, CometObservationAdmin]
     save_on_top = True
-
+    search_fields = ['name']
     def peri_date(self, obj):
         return obj.perihelion_date
 

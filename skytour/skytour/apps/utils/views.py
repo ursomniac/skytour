@@ -51,7 +51,7 @@ class ConstellationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstellationListView, self).get_context_data(**kwargs)
-        object_list = Constellation.objects.annotate(dso_count=Count('dso'))
+        object_list = Constellation.objects.annotate(dso_count=Count('dso')) 
         context['object_list'] = object_list
         context['include_zero'] = False
         context['table_id'] = 'constellation_list'
