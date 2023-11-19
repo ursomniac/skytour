@@ -107,9 +107,8 @@ def get_real_time_conditions(target, request, context, debug=False):
     utdt = dt.datetime.now().replace(tzinfo=pytz.utc) if dt_base == 'now' else context['utdt_start']
     utdt += dt.timedelta(hours=offset)
 
-    # LOCAL TIME STILL BROKEN
     if dt_base == 'cookie':
-        local_time = context['local_time']
+        local_time = context['local_time'] + dt.timedelta(hours=offset)
         time_zone = 'UTC'
     else:
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
@@ -143,6 +142,7 @@ def get_real_time_conditions(target, request, context, debug=False):
         angular_diameter = target.major_axis_size  # arcsec
         angular_diameter_units = '\''
         apparent_magnitude = target.magnitude
+        surface_brightness = target.surface_brightness
     else:
         eph_label =  target.target if object_type == 'planet' else None
         ephem = get_object_metadata(
@@ -165,6 +165,7 @@ def get_real_time_conditions(target, request, context, debug=False):
                 angular_diameter = None
                 angular_diameter_units = None
             apparent_magnitude = ephem['observe']['apparent_magnitude']
+            surface_brightness = None
         except:
             errors = True
 
@@ -187,6 +188,7 @@ def get_real_time_conditions(target, request, context, debug=False):
             angular_diameter = angular_diameter,
             angular_diameter_units = angular_diameter_units,
             apparent_magnitude = apparent_magnitude,
+            surface_brightness = surface_brightness,
             altitude = altitude,
             azimuth = azimuth,
             sec_z = airmass,

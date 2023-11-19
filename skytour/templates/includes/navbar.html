@@ -8,13 +8,13 @@
         <td colspan=4>DSOs:  &nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;|&nbsp;
-            <a href="{% url 'object-type-list' %}">Types</a>
+            <a href="{% url 'home-objects' %}">@Home</a>
             {% comment %}
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'priority-list' %}">Priorities</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp; 
-            <a href="{% url 'dsolist-list' %}">Lists</a>
             {% endcomment %}
+            &nbsp;|&nbsp;
+            <a href="{% url 'dsolist-list' %}">Lists</a>
             &nbsp;|&nbsp;
             <a href="{% url 'dso-filter' %}">Filter</a>
             &nbsp;|&nbsp;
@@ -22,7 +22,7 @@
             &nbsp;|&nbsp;
             <a href="{% url 'dso-checklist' %}">Checklist</a>
         </td>
-        <td colspan=1>
+        <td colspan=2>
             <form action="/dso/search" method="GET">
                 <b>Search DSO:</b>
                 <input name="query" size="5">
@@ -55,7 +55,9 @@
         </td>
         <td>
             <a href="{% url 'link-list' %}">Links</a>
-        <td class="click"><a href="{% url 'observing-location-list' %}">Locations</a></td>
+        <td class="click" colspan=2>
+            <a href="{% url 'observing-location-list' %}">Locations</a>
+        </td>
         <td colspan="2">
             Lists:
             <a href="{% url 'observed-objects' %}">Obs.</a>
@@ -81,8 +83,8 @@
                 <span style="color: #fff;">Longitude: </span>
                 <span style="color: #ff0;">{{ location.longitude|to_dms:0 }}</span>
         </td>
-
         <td class="click"><a href="/admin" target="_new">Admin</a></td>
+        <td class="click"><a href="{% url 'calendar-current' %}">Calendar</a></td>
         <td>
             Session: 
             <a href="{% url 'session-set' %}"><button>Reset Session</button></a> 

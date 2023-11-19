@@ -330,8 +330,12 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return label
     
     @property
+    def dsos_in_field_count(self):
+        return self.dsoinfield_set.count()
+    
+    @property
     def dsoinfield_table(self):
-        print("COUNT: ", self.dsoinfield_set.count())
+        #print("COUNT: ", self.dsoinfield_set.count())
         if self.dsoinfield_set.count() == 0:
             return "None"
     
@@ -341,11 +345,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         out += '<th>Mag.</th><th>Size</th><th>Surf. Br.</th><th>Admin</th>'
         out += '</tr>'
         fdsos = self.dsoinfield_set.order_by('ra')
-        print("GOT: ", fdsos)
+        #print("GOT: ", fdsos)
         for f in fdsos:
-            print("F: ", f)
             mag = f"{f.magnitude:.2f}" if f.magnitude else ''
-            dist = f"{f.primary_distance:.2f}\'" if f.primary_distance else ''
+            dist = f"{f.primary_distance:.2f}" if f.primary_distance else ''
             pa = f" at {f.primary_angle:.0f}°" if f.primary_angle else ''
             sbr = f"{f.surface_brightness:.2f}" if f.surface_brightness else ''
             size = f.angular_size if f.angular_size else ''

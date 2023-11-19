@@ -10,6 +10,18 @@
     <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
         {{ next_month|date:"M Y"}}</a>
 </h2>
+<form target="" method="GET">
+    <select name="month">
+        <option>Jan</option>  <option>Feb</option>  <option>Mar</option>
+        <option>Apr</option>  <option>May</option>  <option>Jun</option>
+        <option>Jul</option>  <option>Aug</option>  <option>Sep</option>
+        <option>Oct</option>  <option>Nov</option>  <option>Dec</option>
+    </select>
+    <select name="year">
+        <option>2024</option> <option>2023</option> <option>2022</option>
+    </select>
+    <input type="submit">
+</form>
 
 {# include 'inc_calendar_table.html' #}
 {% include 'inc_calendar_grid.html' %}

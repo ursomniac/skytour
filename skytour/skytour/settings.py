@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'taggit',
     
     'skytour.apps.abstract',
+    'skytour.apps.custom',
     'skytour.apps.dso',
     'skytour.apps.misc',
     'skytour.apps.plotting',

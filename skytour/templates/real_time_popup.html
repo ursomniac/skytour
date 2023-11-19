@@ -51,7 +51,12 @@
         </td>
         <td>
             <label>Local Time:</label> {{ real_time.local_time_str }}<br/>
-            <label>Magnitude:</label> {{ real_time.apparent_magnitude|floatformat:1 }}<br>
+            <label>Magnitude:</label> 
+            {{ real_time.apparent_magnitude|floatformat:1 }}
+            {% if real_time.surface_brightness %}
+            ({{ real_time.surface_brightness|floatformat:2 }})
+            {% endif %}
+            <br>
             {% if real_time.angular_diameter %}
             <label>Ang. Diam:</label> {{ real_time.angular_diameter|floatformat:1 }}{{ real_time.angular_diameter_units}}<br>
             {% else %}
