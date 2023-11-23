@@ -23,7 +23,7 @@ from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOAlias, DSOInField, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
-from .search import search_dso_name
+from .search import search_dso_name, find_cat_id_in_string
 from .utils import select_atlas_plate
 from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
     filter_dsos, get_filter_params, update_dso_filter_context
@@ -339,8 +339,8 @@ class DSOSearchView(View):
 
     def get(self, request):
         query = request.GET.get('query', None).lower()
-        cat, id = query.split(' ')
-        target = search_dso_name(cat, id)
+        words, name = find_cat_id_in_string(query)
+        target = search_dso_name(words, name)
         if target is not None:
             return redirect(target)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

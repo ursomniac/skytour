@@ -390,7 +390,8 @@ def map_dsos(ax, earth, t, projection,
         product = 'skymap',
         label_weight = 'bold',
         colors=None,
-        sort_list=True
+        sort_list=True,
+        min_alt = 20. # degrees
     ):
     """
     Like the star mapping methods above, put down symbols for DSOs.
@@ -432,11 +433,16 @@ def map_dsos(ax, earth, t, projection,
                     # UGH - this fails in the NW because of the HA,
                     #   SO, allow for circumpolar objects to always appear
                     #   ... for now
-                    ha = center[0] - other.ra
-                    ha_limit = find_site_parameter('hour-angle-range', 6, 'float')
-                    dec_limit = find_site_parameter('declination-limit', -30, 'float')
-                    if other.dec >= dec_limit and (ha < ha_limit or other.dec > center[1]):
-                        interesting.append(other) 
+                    #ha = center[0] - other.ra
+                    #ha_limit = find_site_parameter('hour-angle-range', 6, 'float')
+                    #dec_limit = find_site_parameter('declination-limit', -30, 'float')
+                    #if other.dec >= dec_limit and (ha < ha_limit or other.dec > center[1]):
+                    #    interesting.append(other) 
+                    #
+                    # NEW WAY - more straightforward:
+                    my_alt = math.degrees(math.asin(sin_dist))
+                    if my_alt > min_alt:
+                        interesting.append(other)
         x, y = projection(earth.at(t).observe(other.skyfield_object))
         other_dsos['x'].append(x)
         other_dsos['y'].append(y)
@@ -574,7 +580,6 @@ def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
 
     TODO: replace the Moon's unicode with a scaled Moon phase.
     """
-    #ra, dec, dist = obj['target'].radec()
     ra = obj['apparent']['equ']['ra']
     dec = obj['apparent']['equ']['dec']
     x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
