@@ -13,7 +13,7 @@ def get_boundary_lines(identifier, model_type='plate'):
         # get constellations on plate
         const_list = plate.constellation.all()
     else:
-        constellation = Constellation.objects.get(abbeviation=identifier.upper())
+        constellation = Constellation.objects.get(abbreviation=identifier.upper())
         const_list = constellation.neighbors.all()
 
     # get vertices for these constellations

@@ -196,7 +196,7 @@
 	<td>
 		<a name="dsos_in_field"></a>
 		{% if object.dsoinfield_set.all %}
-		<h3>DSOs in Field</h3>
+		<h3>DSOs in Field ({{ object.dsos_in_field_count }})</h3>
 		<table>
 		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th><th>Mag.</th><th>Size</th><th>Surf.Br.</th></tr>
 		{% for fdso in object.dsoinfield_set.all %}

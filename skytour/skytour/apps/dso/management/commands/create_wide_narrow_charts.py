@@ -10,9 +10,10 @@ class Command(BaseCommand):
         #parser.add_argument('--dso_list', dest='dso_list', nargs='+', type=int)
         parser.add_argument('--all', dest='all', action='store_true')
         parser.add_argument('--test', action='store_true')
-        parser.add_argument('--wide', action='store_true')
-        parser.add_argument('--narrow', action='store_true')
-        parser.add_argument('--nosave', action='store_true')
+        parser.add_argument('--wide', action='store_true', help='make wide chart only')
+        parser.add_argument('--narrow', action='store_true', help='make narrow chart only')
+        parser.add_argument('--nosave', action='store_true', help='do not update /media')
+        parser.add_argument('--local', action='store_true', help='just save local copy')
         parser.add_argument('--start', nargs='?', const=0, type=int)
         parser.add_argument('--num', nargs='?', const=100 ,type=int)
         parser.add_argument('--dso_list', dest='dso_list', nargs='+', type=int)
@@ -29,6 +30,7 @@ class Command(BaseCommand):
         num = options['num']
         save = not options['nosave']
         dso_opt = options['dso_list']
+        save_local = options['local']
         dso_list = [] if not dso_opt else dso_opt
 
         both = options['wide'] == options['narrow']
@@ -45,12 +47,13 @@ class Command(BaseCommand):
             print("DSO LIST: ", dso_list)
             print("SAVE: ", save)
         else:
-            run_set(start=start, dso_list=dso_list, length=num, save=save, all=all, which=which)
+            run_set(start=start, dso_list=dso_list, length=num, save=save, all=all, which=which, save_local=save_local)
 
 MEDIA_PATH = 'media'
 
-def run_dso(dso, which='both', save=True):
+def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
     if which in ['both', 'wide']:
+        path = base_dir + 'dso_finder_wide/' if not save_local else ''
         finder_wide = create_dso_finder_chart(
             dso,
             utdt = None, 
@@ -62,13 +65,14 @@ def run_dso(dso, which='both', save=True):
             now = False,
             save_file = save,
             chart_type = 'wide',
-            path = '/Users/robertdonahue/Temp/dso_wide'
+            path = path
         )
     else:
         finder_wide = None
-        print("skipped?")
+        #print("skipped?")
 
     if which in ['both', 'narrow']:
+        path = base_dir + 'dso_finder_narrow/' if not save_local else ''
         finder_narrow = create_dso_finder_chart(
             dso,
             utdt = None,
@@ -82,20 +86,20 @@ def run_dso(dso, which='both', save=True):
             comet_list=None,
             save_file = save,
             chart_type = 'narrow',
-            path = '/Users/robertdonahue/Temp/dso_narrow'
+            path = path
         )
     else:
         finder_narrow = None
-        print("skipped?")
+        #print("skipped?")
 
     if save:
         if finder_narrow is not None:
-            with open(f"/Users/robertdonahue/Temp/dso_narrow/{finder_narrow}", 'rb') as f:
+            with open(f"/Users/robertdonahue/Temp/dso_finder_narrow/{finder_narrow}", 'rb') as f:
                 data = f.read()
                 f.close()
             dso.dso_finder_chart_narrow.save(f'{finder_narrow}', ContentFile(data))
         if finder_wide is not None:
-            with open(f"/Users/robertdonahue/Temp/dso_wide/{finder_wide}", 'rb') as f:
+            with open(f"/Users/robertdonahue/Temp/dso_finder_wide/{finder_wide}", 'rb') as f:
                 data = f.read()
                 f.close()
             dso.dso_finder_chart_wide.save(f'{finder_wide}', ContentFile(data))
@@ -104,7 +108,7 @@ def run_dso(dso, which='both', save=True):
 
     return finder_wide, finder_narrow, dso
 
-def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both'):
+def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both', save_local=False):
     dsos = DSO.objects.order_by('pk')
     if len(dso_list) == 0: 
         subset = dsos if all else dsos[start:(start+length)]
@@ -114,8 +118,9 @@ def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both'
     total = subset.count()
     print(f"Running {total} DSOs")
     n = 0
+    base_dir = '/Users/robertdonahue/Temp/' if not save_local else ''
     for dso in subset:
         n += 1
         print(f"Doing {n} of {total}:  PK #{dso.pk} = {dso}")
-        fw, fn, new = run_dso(dso, which=which, save=save)
+        fw, fn, new = run_dso(dso, which=which, save=save, base_dir=base_dir, save_local=save_local)
         print("\t... Done")

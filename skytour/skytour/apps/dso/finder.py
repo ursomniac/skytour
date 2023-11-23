@@ -16,8 +16,7 @@ from ..plotting.map import *
 from ..site_parameter.helpers import find_site_parameter
 from .models import DSO
 # Circular import issue...  Sigh.
-#from .const_utils import get_boundary_lines
-#from .plot import map_constellation_boundaries
+from .const_utils import get_boundary_lines
 
 ### These are used to create a secondary axis on the plot.
 def r2d(a): # a is a numpy.array
@@ -25,10 +24,23 @@ def r2d(a): # a is a numpy.array
 def d2r(a): # a us a numpy.array
     return a * math.pi / (180.*2)
 
-def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, reversed=False, in_field=False):
+def plot_other_dsos(
+        ax, other_dso_records, projection, earth, t, 
+        limit, times, reversed=False, in_field=False, fov_type='narrow'):
+    
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
-    default_size = 1.0 if in_field else 5.0
-    min_size = 1.0 if in_field else 8.0
+
+    if fov_type == 'wide':
+        #default_size = 1.0 if in_field else 5.0
+        #min_size = 1.0 if in_field else 8.0
+        default_size = 8.0
+        min_size = 8.0
+    else:
+        default_size = 1.0
+        min_size = 1.0
+
+    #print(f"Other DSOs: {fov_type} plot DS: {default_size} MIN: {min_size}")
+
     max_size = 30
     for other in other_dso_records:
         x, y = projection(earth.at(t).observe(other.skyfield_object))
@@ -67,7 +79,6 @@ def plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, r
 def plot_dso(ax, x, y, dso, 
         color='r', 
         reversed=True, 
-        size_limit=0.0005, 
         alpha=.7, 
         min_size=1., 
         max_size=40.,
@@ -204,13 +215,14 @@ def create_dso_finder_chart(
         chart_type = 'wide',
         axes = False,  # not generally used
         test = False,   # not generally used
-        path = 'media/dso_charts'
+        path = 'media/dso_charts/'
     ):
     """
     Create a finder chart for a DSO for a given date.
     Overlay planets and asteroids to this chart.
     """
-    path = 'media/dso_charts' if path is None else path
+    #print(f"Still doing {chart_type}")
+    path = 'media/dso_charts/' if path is None else path
     times = [(time.perf_counter(), 'Start')]
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
@@ -239,8 +251,8 @@ def create_dso_finder_chart(
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     times.append((time.perf_counter(), 'Constellation Lines'))
     # circular import... ugh
-    #lines, _ = get_boundary_lines(dso.constellation.abbreviation, 'constellation')
-    #ax = map_constellation_boundaries(ax, dso.constellation.abbreviation, earth, t, projection, reversed=False)
+    lines, _ = get_boundary_lines(dso.constellation.abbreviation, 'constellation')
+    ax = new_map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False)
 
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
     times.append((time.perf_counter(), 'Bright Stars'))
@@ -248,10 +260,10 @@ def create_dso_finder_chart(
     ##### this object
     object_x, object_y = projection(center)
     if chart_type == 'wide':
-        ax = plot_dso(
-            ax, object_x, object_y, dso, reversed=reversed, min_size=8)
+        ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed, min_size=8)
     else:
         ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
+
     this_dso_color = '#ffc' if reversed else 'k'
     my_label = dso.label_on_chart if chart_type == 'wide' else dso.shown_name
     plt.annotate(
@@ -261,13 +273,22 @@ def create_dso_finder_chart(
     )
     ##### other dsos
     if show_other_dsos:
+        # TODO: This is inefficient: should use the dso.nearby_dsos property to get a list
+        # unless the FOV for "wide" is so wide that that won't work?
         other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
-        ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False, reversed=reversed)
+        ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False, reversed=reversed, fov_type=chart_type)
 
-    if show_in_field_dsos and dso.dsoinfield_set.count() > 0:
-        # TODO: check nearby DSOs to see if their in-field objects overlap with this field!
-        in_field_dsos = dso.dsoinfield_set.all()
-        ax, times = plot_other_dsos(ax, in_field_dsos, projection, earth, t, limit, times, in_field=True)
+    if show_in_field_dsos:
+        if dso.dsoinfield_set.count() > 0:
+            # My infield DSOs
+            in_field_dsos = dso.dsoinfield_set.all()
+            ax, times = plot_other_dsos(ax, in_field_dsos, projection, earth, t, limit, times, in_field=True, reversed=reversed)
+        # Neighbor infield DSOs
+        nearby_dsos = dso.nearby_dsos
+        for ndso in nearby_dsos:
+            if ndso is not None and ndso.dsoinfield_set.count() > 0:
+                nin_field_dsos = ndso.dsoinfield_set.all()
+                ax, times = plot_other_dsos(ax, nin_field_dsos, projection, earth, t, limit, times, in_field=True, reversed=reversed)
 
     ### Planets, Asteroids
     if planets_dict is not None and utdt is not None and now:
@@ -328,10 +349,10 @@ def create_dso_finder_chart(
             fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
 
         try:
-            fig.savefig('{}/{}'.format(path, fn), bbox_inches='tight')
+            fig.savefig('{}{}'.format(path, fn), bbox_inches='tight')
         except: # sometimes there's UTF-8 in the name
             fn = 'dso_chart_{}.png'.format(dso.pk)
-            fig.savefig('{}/{}'.format(path, fn), bbox_inches='tight')
+            fig.savefig('{}{}'.format(path, fn), bbox_inches='tight')
 
         plt.cla()
         plt.close(fig)
@@ -358,7 +379,7 @@ def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9,
         title='DSO List',
         star_mag_limit = 11,
         symbol_size=40,
-        label_size='xx-small'
+        label_size='xx-small',
     ):
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))

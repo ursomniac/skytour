@@ -50,6 +50,25 @@ def map_constellation_lines(ax, stars, reversed=False, line_color=None):
     ax.add_collection(LineCollection(lines_xy, colors=line_color))
     return ax
 
+def new_map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False):
+    """
+    Map the constellation boundaries.
+    """
+    line_color = '#9907' if reversed else '#999' # constellation-boundary
+    line_width = 1.5
+    line_type = '--'
+    for k, v in lines.items():
+        # k is the key, v is the list of coordinates
+        d = dict(x =[], y = [])
+        for point in v:
+            ra = point[0]
+            dec = point[1]
+            x, y = projection(earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec)))
+            d['x'].append(x)
+            d['y'].append(y)
+        w = ax.plot(d['x'], d['y'], ls=line_type, lw=line_width, alpha=0.7, color=line_color)
+    return ax
+
 def map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=0.25, reversed=False):
     """
     Put down sized points for stars.

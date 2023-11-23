@@ -1,4 +1,4 @@
-python manage.py create_wide_narrow_charts --dso_list  1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 21
+#python manage.py create_wide_narrow_charts --dso_list  1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17 18 19 20 21
 python manage.py create_wide_narrow_charts --dso_list  22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 38 39 41 42 43
 python manage.py create_wide_narrow_charts --dso_list  44 45 46 47 48 49 50 51 52 53 54 56 57 58 59 60 61 62 63 64
 python manage.py create_wide_narrow_charts --dso_list  65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84
@@ -133,3 +133,4 @@ python manage.py create_wide_narrow_charts --dso_list 2740 2741 2742 2743 2744 2
 python manage.py create_wide_narrow_charts --dso_list 2760 2761 2762 2763 2764 2765 2766 2767 2768 2769 2770 2771 2772 2773 2774 2775 2776 2777 2778 2779 
 python manage.py create_wide_narrow_charts --dso_list 2780 2781 2782 2783 2784 2785 2786 2787 2788 2789 2790 2791 2792 2793 2794 2795 2796 2797 2798 2799 
 python manage.py create_wide_narrow_charts --dso_list 2800 2801 2802 2803 2804 2805 2806 2807 2808 2809 2810 2811 2812 2813 2814 2815 2816 2817
+python manage.py create_wide_narrow_charts --dso_list 2818 2819	2820 2821 2822 2823 2824 2825 2826 2827 2828 2829 2830
