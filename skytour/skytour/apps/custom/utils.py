@@ -33,6 +33,8 @@ def find_objects_at_home(
     for d in dsos:
 
         # Filter based on existing images
+        if d.imaging_checklist_priority is None:
+            continue
         if d.imaging_checklist_priority < min_priority:
             continue
         if imaged == True and d.library_image is None:

@@ -169,6 +169,9 @@ class DSOFilterView(FormView):
             dso_list = dso_list.exclude(magnitude__gte=d['mag_max'])
         if d['surface_max'] is not None:
             dso_list = dso_list.exclude(surface_brightness__gte=d['surface_max'])
+        if d['filter_imaged']:
+            unimaged_ids = [d.pk for d in dso_list if d.num_library_images == 0]
+            dso_list = DSO.objects.filter(pk__in=unimaged_ids)
         context['dso_count'] = dso_list.count()
         context['dso_found'] = dso_list.order_by('ra')
         context['add_form'] = DSOAddForm(dso_list)
