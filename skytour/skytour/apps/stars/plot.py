@@ -31,7 +31,8 @@ def get_skymap(
         slew_limit=None,
         local_time = None,
         title = None,
-        hours = 0.
+        hours = 0.,
+        house=False
     ):
     """
     Create a full map of the sky for a given UTDT and location.
@@ -146,6 +147,10 @@ def get_skymap(
             ax, comet_list, earth, t, projection, center=(center_ra, center_dec), reversed=reversed
         )
     times.append((time.perf_counter(), 'Comets'))
+
+    # 8a. House Mask
+    if house:
+        ax = map_house(ax, earth, t, projection, center=(center_ra, center_dec))
         
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)

@@ -2,14 +2,15 @@
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
-from numpy import True_
 from skyfield.api import Star
 from ..abstract.models import Coordinates
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation
- 
 from .utils import create_star_name, parse_designation
 from .vocabs import ENTITY
+
+#class StarAlias(models.Model):
+#    pass
 
 class DoubleStar(Coordinates):
     catalog = models.ForeignKey('utils.StarCatalog', on_delete = models.CASCADE)
@@ -169,3 +170,44 @@ class BrightStar(Coordinates):
         if self.proper_name:
             name += " = {}".format(self.proper_name)
         return mark_safe("HR {} = {}".format(self.hr_id, name))
+    
+class VariableStar(Coordinates):
+    pass
+    # min_mag, max_mag
+    # period, period_type (var, etc.), epoch (for eclipsing vars, etc.)
+    # amplitude
+    # var_type
+    # light_curve_image
+    # finding_chart (pref with comparison star mags)
+    # spectral_type, color_indexes
+    # GCVS <--- use as primary?
+    # catalog designations: Bayer/Flamsteed, V*, HD, SAO, BD, HR
+    #   - set one alias as "canonical"
+    # common name (e.g., Algol)
+    # Bright Star 1:1 - can overlap with it.
+    # Notes
+
+    ### USE http://www.sai.msu.su/gcvs/gcvs/gcvs5/htm/ as a guide!
+
+    def save(self, *args, **kwargs):
+        self.ra = self.ra_float # get from property
+        self.dec = self.dec_float # get from property
+        self.ra_text = self.format_ra # get from property
+        self.dec_text = self.format_dec # get from property
+        #self.name = create_star_name(self)
+        super(VariableStar, self).save(*args, **kwargs)
+
+class StellarObject(Coordinates):
+    """
+    This is for stars that don't fit into the BrightStar, DoubleStar, or VariableStar models.
+    """
+    pass
+    # mag, colors, notes
+
+    def save(self, *args, **kwargs):
+        self.ra = self.ra_float # get from property
+        self.dec = self.dec_float # get from property
+        self.ra_text = self.format_ra # get from property
+        self.dec_text = self.format_dec # get from property
+        #self.name = create_star_name(self)
+        super(StellarObject, self).save(*args, **kwargs)

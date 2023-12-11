@@ -844,4 +844,24 @@ def map_constellation_labels(ax, earth, t, projection):
             bbox = dict(facecolor='#FFF', edgecolor='#fff', pad=1.0)
         )
     return ax
+
+HOME_COORDS = [
+    [(20., 120.), (70., 120.)],
+    [(20., 160.), (70., 230.)],
+]
+
+def map_house(ax, earth, t, projection, center):
+    def get_xy(alt, az):
+        rad = (90 - alt)/90.
+        x = rad * math.cos(math.radians(az+90.))
+        y = rad * math.sin(math.radians(az+90.))
+        return x, y
+    
+    for group in HOME_COORDS:
+        start, end = group
+        x0, y0 = get_xy(start[0], start[1])
+        x1, y1 = get_xy(end[0], end[1])
+        ax.plot([x0, x1], [y0, y1], color='#3ff', linewidth=2)
+    return ax
+        
         

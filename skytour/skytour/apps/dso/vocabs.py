@@ -4,7 +4,8 @@ DISTANCE_UNIT_CHOICES = [
     ('Mly', 'Mega-Light Year'),
     ('pc', 'Parsec'),
     ('kpc', 'Kiloparsec'),
-    ('Mpc', 'Megaparsec')
+    ('Mpc', 'Megaparsec'),
+    ('z', 'Redshift')
 ]
 
 PRIORITY_CHOICES = [

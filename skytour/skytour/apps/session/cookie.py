@@ -25,7 +25,8 @@ def get_all_cookies(request):
         asteroids = asteroids,
         comets = comets,
         moon = moon,
-        sun = sun
+        sun = sun,
+        user_pref = user_pref
     )
     return cookies
 

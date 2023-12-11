@@ -74,14 +74,15 @@ summary::-webkit-details-marker {
 <h2>{{ dso_count }} DSOs available at:</h2>
 <h3>&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
 <h4>&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
+<h4>&nbsp;&nbsp;&nbsp;{{ location }}</h4>
         </td>
         <td>
             <form target="" method="GET">
                 <table class="filter_form">
                     <tr>
                         <td>
-                            <label for="utdu">UT:&nbsp;</label> 
-                            <input name="utdt" value="{{ utdt }}">
+                            <label for="utdt">UT:&nbsp;</label> 
+                            <input name="utdt" value="{{ format_utdt }}">
                         </td>
                         <td>
                             <label form="ut_offset">UT Offset:&nbsp;</label> 

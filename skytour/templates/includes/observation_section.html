@@ -53,7 +53,7 @@
             <td>
                 Constellation: <b>{{ m.constellation|upper }}</b><br/>
                 Dist: {{ m.distance|floatformat:2 }} {{ m.distance_units }}<br/>
-                Ang. Size: {{ m.angular_diameter|floatformat:3 }}<br/>
+                Ang. Size: {{ m.angular_diameter|floatformat:3 }}{{ m.ang_diam_units }}<br/>
                 Mag: {{ m.apparent_magnitude|floatformat:2 }}<br/>
             </td>
             <td>

@@ -2,6 +2,27 @@ import datetime as dt, pytz
 from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 
+def parse_imaged_value(v):
+    if v == 'All':
+        return None
+    return v == 'Yes'
+
+def parse_utdt(s):
+    utdt = None
+    if s is None or len(s.strip()) == 0:
+        #print(f"GOT NOTHING: [{s}]")
+        return None
+    has_sec = len(s.split(':')) == 3
+    fmt = '%Y-%m-%d %H:%M' 
+    fmt += ':%S' if has_sec else ''
+    try:
+        utdt = dt.datetime.strptime(s, fmt).replace(tzinfo=pytz.utc)
+        #print("GOT: ", utdt)
+        return utdt
+    except:
+        print("PARSE ERROR: ", s)
+        return None
+    
 def find_objects_at_home(
         utdt = None, # set to now if none 
         offset_hours = 0., 
@@ -21,7 +42,10 @@ def find_objects_at_home(
         2. sidereal time at any point.
     """
     # 1. sort out time
-    utdt = dt.datetime.now().replace(tzinfo=pytz.utc) if utdt is None else utdt
+    if utdt is None:
+        utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
+    else:
+        utdt = parse_utdt(utdt)
     utdt += dt.timedelta(hours=offset_hours)
     # 2. get latitude/longitude
     loc =  ObservingLocation.objects.get(pk=location_id)
@@ -68,5 +92,63 @@ def find_objects_at_home(
         d.azimuth = az
         d.altitude = alt
         d.airmass = secz
-    return dict(utdt=utdt, dsos=dsos)
+    return dict(utdt=utdt, dsos=dsos, location=loc)
 
+def find_objects_at_cookie(        
+        utdt = None, # set to now if none 
+        offset_hours = 0., 
+        imaged = False,
+        min_priority = 0,
+        #
+        location = None,
+        min_dec = -20.,
+        min_alt = 30.
+    ):
+    # 1. sort out time
+    if utdt is None:
+        utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
+    else:
+        if type(utdt) == str:
+            utdt = parse_utdt(utdt)
+    utdt += dt.timedelta(hours=offset_hours)
+    # 2. get latitude/longitude
+    if location is None:
+        loc = ObservingLocation.objects.get(pk=1)
+    else:
+        loc = location
+    # 3. get DSOs
+    dsos = DSO.objects.filter(dec__gte=min_dec)
+
+    candidate_pks = []
+    for d in dsos:
+        # Filter based on existing images
+        if d.imaging_checklist_priority is None:
+            continue
+        if d.imaging_checklist_priority < min_priority:
+            continue
+        if imaged == True and d.library_image is None:
+            continue
+        elif imaged == False and d.library_image is not None:
+            continue
+
+        (az, alt, _) = d.alt_az(loc, utdt)
+
+        # There is no filter on horizon blocking --- this IS something we can add
+        # for each Observing Location!
+        # TODO: Write this method
+        # if horizon_block_filter(location_id, alt, az):
+        #   continue
+
+        if alt < min_alt: 
+            continue
+
+        candidate_pks.append(d.pk)
+
+    dsos = DSO.objects.filter(pk__in=candidate_pks)
+    for d in dsos:
+        (az, alt, secz) = d.alt_az(loc, utdt)
+        d.azimuth = az
+        d.altitude = alt
+        d.airmass = secz
+
+    return dict(utdt=utdt, dsos=dsos, location=loc)

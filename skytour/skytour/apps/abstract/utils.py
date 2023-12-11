@@ -55,12 +55,14 @@ def get_metadata(observation):
             location=location
         )
         try:
+            raw_ang = ephem['observe']['angular_diameter']
+            angular_diameter = raw_ang * 3600. # arcsec
+            ang_diam_units = '\"'
             ra = ephem['apparent']['equ']['ra']
             dec = ephem['apparent']['equ']['dec']
             distance = ephem['apparent']['distance']['au']
             distance_units = 'AU'
             constellation = ephem['observe']['constellation']['abbr']
-            angular_diameter = ephem['observe']['angular_diameter']
             apparent_magnitude = ephem['observe']['apparent_magnitude']
         except:
             return None
@@ -70,7 +72,8 @@ def get_metadata(observation):
         distance = target.distance
         distance_units = target.distance_units
         constellation = target.constellation.abbreviation
-        angular_diameter = target.major_axis_size * 60. # arcsec
+        angular_diameter = target.major_axis_size # arcmin
+        ang_diam_units = '\''
         apparent_magnitude = target.magnitude
 
     azimuth, altitude, airmass = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
@@ -84,6 +87,7 @@ def get_metadata(observation):
         distance_units = distance_units,
         constellation = constellation,
         angular_diameter = angular_diameter,
+        ang_diam_units = ang_diam_units,
         apparent_magnitude = apparent_magnitude,
         altitude = altitude,
         azimuth = azimuth,
