@@ -100,6 +100,8 @@ class Catalog(AbstractCatalog):
 
     class Meta:
         ordering = ['abbreviation']
+        verbose_name = 'DSO Catalog'
+        verbose_name_plural = 'DSO Catalogs'
 
     def get_absolute_url(self):
         return '/catalog/{}'.format(self.pk)
@@ -205,6 +207,20 @@ class Constellation(models.Model):
         'self',
         blank = True
     )
+    center_ra = models.FloatField ('Center RA')
+    center_dec = models.FloatField('Center Dec.')
+    area = models.FloatField('Area', help_text='sq. Deg.')
+
+    @property
+    def abbr_case(self):
+        exceptions = {
+            'CMA': 'CMa', 'CMI': 'CMi', 'CRA': 'CrA', 'CRB': 'CrB',
+            'CVN': 'CVn', 'LMI': 'LMi', 'PSA': 'PsA', 'TRA': 'TrA',
+            'UMA': 'UMa', 'UMI': 'UMi'
+        }
+        if self.abbreviation in exceptions.keys():
+            return exceptions[self.abbreviation]
+        return self.abbreviation.title()
 
     @property
     def atlas_plate_list(self):

@@ -15,6 +15,8 @@ from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
     get_angular_size_string,
+    rectify_float,
+    get_relation_to_planet,
     get_plotting_phase_angle,
     get_constellation,
     get_elongation,
@@ -232,6 +234,11 @@ def get_object_metadata(
                         m = galilean_magnitude(moon, moon_instance.h, phase_angle, earth_dist, sun_dist)
                     mdict['sun_distance'] = sun_dist
                     mdict['earth_distance'] = earth_dist
+                    mdict['au_to_planet'] = earth_dist - r_earth_target
+                    mdict['au_to_planet_str'] = rectify_float(mdict['au_to_planet'])
+                    rel_str, rel_letter = get_relation_to_planet(mdict['au_to_planet'], ang_sep, angular_diameter)
+                    mdict['relation_to_planet'] = rel_str
+                    mdict['rel_to_planet_str'] = rel_letter
                     #mdict['g_mag'] = moon_instance.g
                     mdict['abs_mag'] = moon_instance.h
                     #mdict['term1'] = math.log10(sun_dist * earth_dist)

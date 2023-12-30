@@ -147,6 +147,7 @@ def get_real_time_conditions(target, request, context, debug=False):
         angular_diameter_units = '\''
         apparent_magnitude = target.magnitude
         surface_brightness = target.surface_brightness
+        max_alt = target.max_altitude
     else:
         eph_label =  target.target if object_type == 'planet' else None
         ephem = get_object_metadata(
@@ -159,6 +160,8 @@ def get_real_time_conditions(target, request, context, debug=False):
         try:
             ra = ephem['apparent']['equ']['ra']
             dec = ephem['apparent']['equ']['dec']
+            max_alt = 90. - location.latitude + dec
+            max_alt = 180 - max_alt if max_alt > 90 else max_alt
             distance = ephem['apparent']['distance']['au']
             distance_units = 'AU'
             constellation = ephem['observe']['constellation']['abbr']
@@ -199,7 +202,8 @@ def get_real_time_conditions(target, request, context, debug=False):
             hour_angle = hour_angle,
             julian_date = julian_date,
             sidereal_time = last,
-            display_name = target.__str__()
+            display_name = target.__str__(),
+            max_alt = max_alt
         )
         context['real_time'] = d
         context['use_date'] = dt_base

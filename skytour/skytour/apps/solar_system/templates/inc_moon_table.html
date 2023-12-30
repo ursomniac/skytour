@@ -1,11 +1,18 @@
+<style>
+    table.moon_table td { font-size: 80%; }
+</style>
 <h3>Moons</h3>
-<table>
-    <tr><th>Name</th><th>Mag.</th><th>Sep.</th></tr>
+<table class="moon_table">
+    <tr><th>Name</th><th>Mag.</th><th>Sep.</th><th>Loc.</th></tr>
     {% for moon in planet.moons %}
     <tr>
         <td>{{ moon.name }}</td>
         <td>{{ moon.apparent_magnitude|floatformat:2 }}</td>
         <td>{{ moon.planet_sep_str }}</td>
+        <td>
+            {{ moon.rel_to_planet_str }}&nbsp;
+            {{ moon.au_to_planet_str }}
+        </td>
     </tr>
     {% endfor %}
 </table>

@@ -260,9 +260,11 @@ class LibraryCatalogView(TemplateView):
         catalog_slug = self.request.GET.get('catalog_slug', 'messier') # or 'caldwell'
         all = self.request.GET.get('scope') == 'all'
 
+        # This only works when the catalog request is the primary ID for the DSO
+        # So, only Messier and Caldwell.
+        # TODO: Have it check aliases too. 
         raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug).exclude(priority='None')
         raw_dso_list = raw_dso_list.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
-
         # deal with C14 = NGC 869 and NGC 884 - both are C 14 but they have two separate
         #   records in the DSO table because the primary IDs have to be unique.
         if catalog_slug == 'caldwell': 

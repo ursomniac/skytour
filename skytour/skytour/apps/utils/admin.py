@@ -13,7 +13,10 @@ class StarCatalogAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'abbreviation']
 
 class ConstellationAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'name', 'abbreviation']
+    list_display = [
+        'pk', 'name', 'abbreviation', 
+        'center_ra', 'center_dec', 'area'
+    ]
     list_display_links = ['pk', 'name', 'abbreviation']
     search_fields = ['name', 'abbreviation']
     inlines = [ConstellationNeighborInline]
@@ -21,6 +24,7 @@ class ConstellationAdmin(admin.ModelAdmin):
         (None, {
             'fields': [
                 ('name', 'abbreviation', 'genitive'),
+                ('center_ra', 'center_dec', 'area'),
                 ('map', 'other_map', 'historical_image'),
                 'background',
             ]

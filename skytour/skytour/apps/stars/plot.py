@@ -103,13 +103,14 @@ def get_skymap(
     if simple:
         ax = map_constellation_labels(ax, earth, t, projection)
 
+    if not simple:
     # 2. Sun - only matters if the plot is during the day
-    ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
-    times.append((time.perf_counter(), 'Sun'))
+        ax = map_single_object(ax, 'Sun', sun, earth, t, projection, color='red')
+        times.append((time.perf_counter(), 'Sun'))
 
     # 3. Moon
-    ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
-    times.append((time.perf_counter(), 'Moon'))
+        ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
+        times.append((time.perf_counter(), 'Moon'))
 
     # 4. Planets
     ax, interesting['planets'] = map_planets(ax, None, planets, earth, t, projection, center=(center_ra, center_dec))

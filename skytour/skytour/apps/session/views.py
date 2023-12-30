@@ -318,6 +318,8 @@ class SessionAddView(CookieMixin, FormView):
             shown_name = f"{d['catalog'].abbreviation} {d['id_in_catalog']}"
             if d['catalog'].abbreviation == 'Sh2':
                 shown_name = shown_name.replace(' ', '-')
+            if d['catalog'].abbreviation == 'OTHER':
+                shown_name = shown_name.replace('OTHER ','')
             print("SHOWN NAME: ", shown_name)
             object = lookup_dso(shown_name)
             if object is None:

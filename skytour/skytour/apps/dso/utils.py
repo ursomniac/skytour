@@ -13,6 +13,11 @@ def create_shown_name(obj):
                 pass
     if obj.catalog.name == 'Sharpless':
         return f"{obj.catalog.abbreviation}-{obj.id_in_catalog}"
+    if obj.catalog.name == 'Var':
+        try:
+            return f"{obj.id_in_catalog} {obj.constellation.abbreviation}"
+        except:
+            pass
     if obj.catalog.use_abbr:
         things.append(obj.catalog.abbreviation)
         things.append(obj.id_in_catalog)

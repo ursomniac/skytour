@@ -183,6 +183,7 @@ summary::-webkit-details-marker {
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         <td>
             {% if dso.is_on_imaging_checklist %} 
+                <span hidden>{{ dso.imaging_checklist_priority }} </span>
                 <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
                     {{ dso.library_image_priority }}
                 </span>

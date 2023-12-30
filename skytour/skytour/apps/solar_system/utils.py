@@ -5,6 +5,27 @@ from skyfield.api import (
     load_constellation_names
 )
 
+def rectify_float(delta, unit='AU'):
+    d = {
+        'n': (-9, 1.e9), 'µ': (-6, 1.e6), 'm': (-3, 1000.),
+        '_': (0, 1.), 'k': (3, 0.001), 'M': (6, 1.e-6), 
+        'G': (9, 1.e-9)
+    }
+    units = {-3: 'n', -2: 'µ', -1: 'm', 0: '', 1: 'k', 2: 'M', 3: 'G'}
+
+    sign = 1.0 if delta >= 0. else -1.0
+    adelta = abs(delta)
+    order = math.log10(adelta)
+    index = order // 3
+    if index in units.keys():
+        u = units[index]
+        e = 10. ** (index * 3)
+        f = sign * adelta / e
+        return f"{f:.3f} {u}{unit}"
+    else:
+        return f"{delta:.3e} {unit}"
+
+
 def get_angular_size(diameter, distance, units='arcsec'):  # text name, e.g., 'Mars'
     """
     Skinny triangle formula.  Diameter/Distance.
@@ -94,3 +115,11 @@ def get_meeus_phase_angle(sun_earth, earth_obj, sun_obj):
     if abs(cos_i) > 1.0:
         return None
     return math.degrees(math.acos(cos_i))
+
+def get_relation_to_planet(delta, angsep, diam):
+    if delta < 0.: # in front of
+        t =  ('Transit', 'T') if angsep < diam/2. else ('Front', 'F')
+    else:
+        t = ('Occulted', 'O') if angsep < diam/2. else ('Behind', 'B')
+    #print(f'DEL: {delta} SEP: {angsep}, DIAM: {diam} T: {t}')
+    return t
