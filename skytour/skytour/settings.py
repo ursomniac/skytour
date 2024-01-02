@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'skytour.apps.misc',
     'skytour.apps.plotting',
     'skytour.apps.observe',
+    'skytour.apps.science',
     'skytour.apps.session',
     'skytour.apps.site',
     'skytour.apps.site_parameter',
