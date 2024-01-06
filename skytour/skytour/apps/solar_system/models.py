@@ -5,7 +5,7 @@ from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from skyfield.api import Star
-from ..abstract.models import ObservingLog, ObservableObject, ObjectImage
+from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
 from .comets import get_comet_object
@@ -84,7 +84,7 @@ class Planet(ObservableObject):
     class Meta:
         ordering = ['semi_major_axis']
 
-class PlanetLibraryImage(ObjectImage):
+class PlanetLibraryImage(LibraryAbstractImage):
     object = models.ForeignKey(
         Planet,
         on_delete = models.CASCADE,
@@ -346,7 +346,7 @@ class Asteroid(ObservableObject):
     class Meta:
         ordering = ['number']
 
-class AsteroidLibraryImage(ObjectImage):
+class AsteroidLibraryImage(LibraryAbstractImage):
     object = models.ForeignKey(
         Asteroid,
         on_delete = models.CASCADE,
@@ -457,7 +457,7 @@ class Comet(ObservableObject):
     def __str__(self):
         return f"{self.name}"
 
-class CometLibraryImage(ObjectImage):
+class CometLibraryImage(LibraryAbstractImage):
     object = models.ForeignKey(
         Comet,
         on_delete = models.CASCADE,

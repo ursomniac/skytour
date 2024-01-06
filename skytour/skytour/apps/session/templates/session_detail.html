@@ -82,7 +82,7 @@
     </h3>
     {% endif %}
         <table class="internal">
-            <tr><td>UT:</td><td>{{ target.ut_datetime|date:"Y-m-d h:i" }}</td></tr>
+            <tr><td>UT:</td><td>{{ target.ut_datetime|date:"Y-m-d H:i" }}</td></tr>
             {% if target.object_type != 'Condition' %}
             <tr><td>Julian Date:</td><td>{{ e.julian_date|floatformat:5 }}</td></tr>
             <tr><td>Sidereal Time:</td><td>{{ e.sidereal_time|to_hms }}</td></tr>
@@ -91,6 +91,26 @@
             <tr><td>Sidereal Time:</td><td>{{ target.sidereal_time|to_hms }}</td></tr>
             {% endif %}
         </table>
+    </td>
+    <td>
+        {% if target.object_type == 'DSO' %}
+        <h4>Location:</h4>
+
+        <table class="internal">
+            <tr><td>RA: {{ target.object.ra|to_hm }}</td></tr>
+            <tr><td>Dec: {{ target.object.dec|to_dm }}</td></tr>
+            {% if target.object.magnitude or target.object.surface_brightness %}
+            <tr><td>
+                {% if target.object.surface_brightness %}
+                Mag/SB: {{ target.object.magnitude }} ({{ target.object.surface_brightness }})
+                {% else %}
+                Mag: {{ target.object.magnitude}}
+                {% endif %}
+            </td></tr>
+            {% endif %}
+            <tr><td>Size: {{ target.object.angular_size }}</td></tr>
+        </table>
+        {% endif %}
     </td>
     <td width="20%">
         {% if target.object_type == 'Condition' %}
@@ -136,7 +156,6 @@
         </table>
         {% endif %}
     </td>
-
     <td>
         <h4>Notes:</h4>
         {{ target.notes|linebreaks }}

@@ -83,6 +83,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['observing_date_grid'] = make_observing_date_grid(object)
         context['image_list'] = self.object.images.order_by('order_in_list')
         context['other_library_images'] = self.object.image_library.all() # [1:]
+        context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         return context
 
 class PriorityListView(TemplateView):

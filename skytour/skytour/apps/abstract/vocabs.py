@@ -14,6 +14,8 @@ IMAGING_STATUS_CHOICES = (
 
 IMAGING_PROCESSING_CHOICES = (
     ('None', 'Not Yet Started'),
+    ('Default', 'Default Unistellar Image'),
+    ('3-Step', '3-Step: Dark, Stretched, Cleaned'),
     ('DB', 'Processed image added to DB'),
     ('Rejected', 'Image Rejected'),
     ('Unknown', 'Unknown')

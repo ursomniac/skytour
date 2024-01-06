@@ -92,6 +92,7 @@ class PlanetDetailView(CookieMixin, DetailView):
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
+        context['library_slideshow'] = obj.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['instance'] = obj
         return context
 
@@ -195,6 +196,7 @@ class AsteroidDetailView(CookieMixin, DetailView):
                     moon = context['cookies']['moon']
                 )
         context['in_cookie'] = True if pdict else False
+        context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         return context
 
 class CometListView(CookieMixin, ListView):
@@ -277,6 +279,7 @@ class CometDetailView(CookieMixin, DetailView):
             sun = context['cookies']['sun'],
             moon = context['cookies']['moon']
         )
+        context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         return context
 
 class TrackerView(FormView):

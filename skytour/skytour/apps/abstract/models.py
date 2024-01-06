@@ -187,6 +187,16 @@ class ObjectImage(models.Model):
     class Meta:
         abstract = True
 
+class LibraryAbstractImage(ObjectImage):
+    use_in_carousel = models.PositiveIntegerField (
+        _('Use in Slideshow'),
+        choices = YES_NO,
+        default = 1,
+        help_text = 'Set to YES/1 show on the image carousel'
+    )
+
+    class Meta:
+        abstract = True
 
 class ObservingLog(models.Model):
     session = models.ForeignKey(ObservingSession, null=True, on_delete=models.CASCADE)

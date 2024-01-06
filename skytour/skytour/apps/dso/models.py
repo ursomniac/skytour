@@ -7,7 +7,7 @@ from skyfield.api import Star
 from taggit.managers import TaggableManager
 from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
-from ..abstract.models import Coordinates, ObjectImage, FieldView, ObservingLog, ObservableObject
+from ..abstract.models import Coordinates, LibraryAbstractImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
 from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
@@ -262,6 +262,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def num_library_images(self):
         return self.image_library.count()
     
+    # TODO: Add support for multiple telescopes
     @property
     def imaging_checklist_priority(self):
         c = self.dsoimagingchecklist_set.first()
@@ -269,6 +270,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             return c.priority
         return None
     
+    # TODO: Add support for multiple telescopes
     @property 
     def color_imaging_checklist_priority(self):
         colors = ['#888', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
@@ -277,6 +279,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             return colors[p]
         return None
     
+    # TODO: Add support for multiple telescopes
     @property
     def library_image_camera(self):
         return '📷' if self.num_library_images > 0 else None
@@ -299,6 +302,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         ]
         use = light_circle_numbers
 
+        # TODO: Add support for multiple telescopes
         c = self.dsoimagingchecklist_set.first()
         if c:
             my_priority = c.priority
@@ -529,7 +533,7 @@ class DSOAlias(models.Model):
         self.shown_name = create_shown_name(self)
         super(DSOAlias, self).save(*args, **kwargs)
 
-class DSOImage(ObjectImage):
+class DSOImage(LibraryAbstractImage):
     """
     M:1 between uploaded images and a DSO
     """
@@ -545,7 +549,7 @@ class DSOImage(ObjectImage):
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
 
-class DSOLibraryImage(ObjectImage):
+class DSOLibraryImage(LibraryAbstractImage):
     object = models.ForeignKey(
         DSO,
         on_delete = models.CASCADE,
@@ -553,6 +557,15 @@ class DSOLibraryImage(ObjectImage):
     )
     ut_datetime = models.DateTimeField()
 
+    @property
+    def caption(self):
+        x = self.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
+        if self.exposure is not None:
+            x += f', {self.exposure}min'
+        if self.processing_status not in [None, 'None']:
+            x += f', {self.get_processing_status_display()}'
+        return x
+    
     def __str__(self):
         return self.object.shown_name
     
@@ -867,6 +880,7 @@ class DSOImagingChecklist(models.Model):
         null = True, blank = True
     )
     dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
+    # TODO: Add Telescope so we can have different imaging priorities for different scopes
 
     def get_absolute_url(self):
         return '/dso/{}'.format(self.dso.pk)

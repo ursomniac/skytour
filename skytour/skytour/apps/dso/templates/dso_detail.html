@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load skytour_filters %}
+{% load skytour_filters static %}
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
@@ -7,6 +7,7 @@
 	table.lite td { border-style: none;}
 	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; }
 	h2.nickname { font-size: 125%; margin-top: 5px; color: #ffd; }
+	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
@@ -18,7 +19,8 @@
 	tr.bottom { height: 150px; }
     img.constrained { width: 100%; max-width: 500px; }
 	img.library_image { display: block; }
-    td.hvcenter { vertical-align: middle!important; text-align: center!important; }
+    .hvcenter { vertical-align: middle!important; text-align: center!important; }
+	.hcenter { text-align: center!important; }
 	table.short {  display:inline-block; border-style: none; }
 	table.short td { margin-right: 4px; }
 	table.short td.hour { margin-right: 8px; }
@@ -79,9 +81,20 @@
 			{% endif %}
 		</table>
 	</td>
-	<td width="500px" rowspan=2 class="hvcenter">
+	<td 
+			width="500px" height="600px" rowspan=2 
+			{% if library_slideshow|length > 1 %}
+			class="hcenter"
+			{% else %}
+			class="hvcenter"
+			{% endif %}
+			style="position:relative;"
+	>
+		{% if library_slideshow|length > 1 %}
+		<h2 class="short">Library Images</h2>
+			{% include "includes/library_slideshow.html" %}
+		{% elif object.library_image %}
 		<h2>Library Image</h2>
-		{% if object.library_image %}
 		<a href="{{ object.library_image.image.url }}" target="_blank"><img 
 			src="{{ object.library_image.image.url }}" class="constrained" 
 			style="display:block;"></a>
@@ -336,4 +349,6 @@
 
 {% block extra-js %}
 {% include 'includes/realtime_script.html' %}
+<script src="/media/js/bootstrap.js">
+<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script-->
 {% endblock extra-js %}
