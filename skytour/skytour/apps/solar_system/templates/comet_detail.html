@@ -36,8 +36,12 @@
             <p>No description.</p>
             {% endif %}
         </td>
-        {% if object.library_image %}
-        <td width="35%">
+        {% if library_slideshow|length > 1 %}
+        <td width="500px" height="600px" style="position:relative;">
+            {% include "includes/library_slideshow.html" %}
+        </td>
+            {% elif object.library_image %}
+        <td width="500px">
             <a href="{{ object.library_image.image.url }}" target="_blank"><img 
                 src="{{ object.library_image.image.url }}" class="constrained"></a>
         </td>

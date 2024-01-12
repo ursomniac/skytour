@@ -15,6 +15,19 @@ from ..stars.models import BrightStar
 from .helpers import get_objects_from_cookie
 from .models import ObjectType
 
+def get_list_of_primary_library_images(qs):
+    distinct_objects = qs.values('object').distinct()
+    model = qs.first().object.__class__ # this is the model
+    pk_list = []
+    for o in distinct_objects:
+        pk_list.append(o['object'])
+    object_list = model.objects.filter(pk__in=pk_list)
+    image_list = []
+    for obj in object_list:
+        image_list.append(obj.image_library.order_by('order_in_list').first())
+    
+    return sorted(image_list, key = lambda img: img.ut_datetime, reverse = True)
+
 def try_int(x):
     try:
         return int(x)
@@ -199,29 +212,34 @@ class LibraryImageView(TemplateView):
         sso_object_types = ['asteroid', 'comet', 'planet', 'solar-system']
         # Asteroid
         if object_type in ['asteroid', 'solar-system', None]:
-            asteroid_image_list = AsteroidLibraryImage.objects.order_by('-ut_datetime')
-            object_count += asteroid_image_list.values('object').distinct().count()
+            asteroid_images = AsteroidLibraryImage.objects.order_by('-ut_datetime')
+            asteroid_image_list = get_list_of_primary_library_images(asteroid_images)
+            object_count += asteroid_images.values('object').distinct().count()
         # Comet
         if object_type in ['comet', 'solar-system', None]:
-            comet_image_list = CometLibraryImage.objects.order_by('-ut_datetime')
-            object_count += comet_image_list.values('object').distinct().count()
+            comet_images = CometLibraryImage.objects.order_by('-ut_datetime')
+            comet_image_list = get_list_of_primary_library_images(comet_images)
+            object_count += comet_images.values('object').distinct().count()
+
         # Planet
         if object_type in ['planet', 'solar-system', None]:
-            planet_image_list = PlanetLibraryImage.objects.order_by('-ut_datetime')
-            object_count += planet_image_list.values('object').distinct().count()
+            planet_images = PlanetLibraryImage.objects.order_by('-ut_datetime')
+            planet_image_list = get_list_of_primary_library_images(planet_images)
+            object_count += planet_images.values('object').distinct().count()
         # DSOs
         if object_type not in sso_object_types or object_type is None:
             if object_type is None:
-                dso_image_list = DSOLibraryImage.objects.order_by('-ut_datetime')
+                dso_images = DSOLibraryImage.objects.order_by('-ut_datetime', 'order_in_list')
             elif object_type == 'galaxy':
-                dso_image_list = DSOLibraryImage.objects.filter(object__object_type__slug__in=GALAXY_TYPES)
+                dso_images = DSOLibraryImage.objects.filter(object__object_type__slug__in=GALAXY_TYPES)
             elif object_type == 'nebula':
-                dso_image_list = DSOLibraryImage.objects.filter(object__object_type__slug__in=NEBULA_TYPES)
+                dso_images = DSOLibraryImage.objects.filter(object__object_type__slug__in=NEBULA_TYPES)
             elif object_type == 'cluster':
-                dso_image_list = DSOLibraryImage.objects.filter(object__object_type__slug__in=CLUSTER_TYPES)
+                dso_images = DSOLibraryImage.objects.filter(object__object_type__slug__in=CLUSTER_TYPES)
             else:
-                dso_image_list = DSOLibraryImage.objects.filter(object__object_type__slug=object_type).order_by('-ut_datetime')
-            object_count += dso_image_list.values('object').distinct().count()
+                dso_images = DSOLibraryImage.objects.filter(object__object_type__slug=object_type).order_by('-ut_datetime')
+            dso_image_list = get_list_of_primary_library_images(dso_images)
+            object_count += dso_images.values('object').distinct().count()
 
         #all_image_list = list(chain(dso_image_list, asteroid_image_list, comet_image_list, planet_image_list))
         all_image_list = sorted(

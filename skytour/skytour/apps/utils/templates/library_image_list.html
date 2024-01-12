@@ -14,6 +14,10 @@
     div.object_header { margin-bottom: 2px; }
     div.object_type { margin-top: 2px; }
     h3 { margin-bottom: 3px; }
+    span.special_tagline { 
+        text-align: center; color: #000; background-color: #fc0; font-style: italic;
+        padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -93,6 +97,13 @@
                                 {{ object.name }}
                                 </a>
                                 {% endif %}
+
+                                {% if object.num_slideshow_images >  1 %}
+                                <span class="special_tagline">SLIDES</span>
+                                {% else %}
+                                &nbsp;
+                                {% endif %}
+                                <br>
                         </h3>
                         {% if object.nickname %}
                             <span class="nickname">{{ object.nickname }}</span>
@@ -116,7 +127,7 @@
                     </div>
                     <br/>
                     <span class="label">Date:</span>
-                    <span class="value">{{ image.ut_datetime|date:'d-M-Y h:m' }} UT</span>
+                    <span class="value">{{ image.ut_datetime|date:'d-M-Y H:i' }} UT</span>
                     <br>
                     <span class="label">Exposure:</span> 
                     <span class="value">{{ image.exposure }} min</span>

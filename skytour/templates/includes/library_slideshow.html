@@ -5,6 +5,11 @@
         height: 530px;
         position: relative;
         margin 0 auto;
+        /*
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        */
     }
     .navigation-buttons .previous {
         position: absolute;
@@ -44,6 +49,13 @@
         width: 100%;
         transition: all 0.3s ease;
         border: 0;
+
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .foo {
+        display: table-cell;
+        vertical-align: middle;  
     }
     .images {
         position: absolute;
@@ -52,7 +64,7 @@
     .main {
         display: block;
     }
-      .image-text {
+    .image-text {
         position: absolute;
         bottom: -30px;
         width: 100%;
@@ -63,7 +75,7 @@
         color: rgb(255, 255, 255);
         background: rgba(0, 0, 0, 0.3);
         height: 35px;
-      }
+    }
 </style>
 
 <div id="parent-container">
@@ -74,12 +86,14 @@
     <div class="slider-carousel">
         {% for item in library_slideshow %}
         <div class="images {% if forloop.first%}main{% endif %}">
+
             <a href="{{ item.image.url }}" target="_blank>">
-                <img 
+                <img
                     src="{{ item.image.url }}"  
                     alt="add data here"
                 />
             </a>
+
             <div class="image-text">Image {{ forloop.counter }}: {{ item.caption }}</div>
         </div>
         {% endfor %}
@@ -120,30 +134,3 @@
         images[currentIndex].classList.add('main');
     }
 </script>
-
-{% comment %}
-<div id="carouselExample" class="carousel slide">
-    <div class="carousel-inner">
-      {% for item in library_slideshow %}
-      <div class="carousel-item active">
-        <a href="{{ item.image.url }}" target="_blank>">
-            <img 
-                src="{{ item.image.url }}" 
-                class="d-block w-100 constrained" 
-                alt="add data here"
-                {# style="display:block;" #}
-            />
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-{% endcomment %}

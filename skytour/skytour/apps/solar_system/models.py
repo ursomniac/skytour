@@ -74,7 +74,11 @@ class Planet(ObservableObject):
     @property
     def library_image(self):
         return self.image_library.order_by('order_in_list').first() # returns None if none
-
+    
+    @property
+    def num_slideshow_images(self):
+        return self.image_library.filter(use_in_carousel=True).count()
+    
     def get_absolute_url(self):
         return '/planet/{}'.format(self.slug)
 
@@ -336,7 +340,11 @@ class Asteroid(ObservableObject):
     @property
     def library_image(self):
         return self.image_library.order_by('order_in_list').first() # returns None if none
-
+    
+    @property
+    def num_slideshow_images(self):
+        return self.image_library.filter(use_in_carousel=True).count()
+    
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
 
@@ -443,6 +451,10 @@ class Comet(ObservableObject):
     def library_image(self):
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
+    @property
+    def num_slideshow_images(self):
+        return self.image_library.filter(use_in_carousel=True).count()
+    
     @property
     def test_light_curve_graph(self):
         if self.light_curve_url is None:

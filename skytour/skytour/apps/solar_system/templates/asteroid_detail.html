@@ -47,7 +47,11 @@
         <td width="20%">
             <p>{{ object.description|safe }}</p>
         </td>
-        {% if object.library_image %}
+        {% if library_slideshow|length > 1 %}
+        <td width="500px" height="600px" style="position:relative;">
+        {% include "includes/library_slideshow.html" %}
+        </td>
+        {% elif object.library_image %}
         <td width="35%">
             <a href="{{ object.library_image.image.url }}"><img 
                 src="{{ object.library_image.image.url }}" class="constrained"></a>

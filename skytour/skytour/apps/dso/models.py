@@ -262,6 +262,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def num_library_images(self):
         return self.image_library.count()
     
+    @property
+    def num_slideshow_images(self):
+        return self.image_library.filter(use_in_carousel=True).count()
+    
     # TODO: Add support for multiple telescopes
     @property
     def imaging_checklist_priority(self):

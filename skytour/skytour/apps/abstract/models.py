@@ -102,6 +102,11 @@ class Coordinates(models.Model):
         if self.ra_s:
             x += self.ra_s/3600. 
         return x
+    
+    @property
+    def ra_deg_float(self):
+        return self.ra_float * 15.
+    
     @property
     def dec_float(self):
         x = self.dec_d + self.dec_m/60. 
