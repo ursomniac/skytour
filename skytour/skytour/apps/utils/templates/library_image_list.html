@@ -18,6 +18,10 @@
         text-align: center; color: #000; background-color: #fc0; font-style: italic;
         padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
     }
+    span.redo_line { 
+        text-align: center; color: #0cc; font-style: italic;
+        padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -109,6 +113,11 @@
                             <span class="nickname">{{ object.nickname }}</span>
                         {% endif %}
                         <br>
+                        {% if object.reimage %}
+                        <br><span class="redo_line">REDO</span>
+                        {% else %}
+                        <br>OK
+                        {% endif %}
                         {% if object.object_class == 'dso' %}
                             {{ object.object_type.short_name }}
                             {% if object.morphological_type %}: 

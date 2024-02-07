@@ -33,8 +33,8 @@ def select_atlas_plate(plates, context):
     Final back up is 'default'
     """
     k = ''
-    reversed = False
-    shapes = False
+    reversed = True
+    shapes = True
     if 'color_scheme' in context.keys():
         reversed = context['color_scheme'] == 'dark'
     if 'atlas_dso_marker' in context.keys():
@@ -47,3 +47,12 @@ def select_atlas_plate(plates, context):
     if k == '':
         k = find_site_parameter('atlas-plate-version-key', 'default', 'char')
     return plates[k]
+
+def select_other_atlas_plates(plate_list, primary):
+    plates = []
+    k = 'shapes' if primary.shapes else ''
+    k += 'reversed' if primary.reversed else ''
+    for key in plate_list.keys():
+        if key != k:
+            plates.append(plate_list[key])
+    return plates

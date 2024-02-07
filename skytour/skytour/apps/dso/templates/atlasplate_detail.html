@@ -5,7 +5,9 @@
 <table>
     <tr>
         <td>
+            <a href="{{ selected_atlas_plate.image.url }}" target="_new_atlas">
             <img src="{{ selected_atlas_plate.image.url }}">
+            </a>
         </td>
         <td style="vertical-align: top;">
             <h1>Atlas - Plate {{ object.plate_id }}</h1>
@@ -32,6 +34,20 @@
             </tr>
             {% endfor %}
             </table>
+            <h3>Other Renditions</h3>
+            <table>
+                <tr>
+                {% for plate in other_atlas_plates %}
+                    <td width="30%">
+                        <a href="{{ plate.image.url }}" target="_new_atlas">
+                        <img src="{{ plate.image.url }}" style="display:block; width:100%; height:auto;">
+                        </a>
+                    </td>
+                {% empty %}
+                <td>There are no other atlas plates?</td>
+                {% endfor %}
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
@@ -41,4 +57,5 @@
 {% with object.dso.all as dso_list %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}
+
 {% endblock %}

@@ -24,7 +24,7 @@ from .helpers import get_map_parameters, get_star_mag_limit
 from .models import DSO, DSOList, AtlasPlate, DSOAlias, DSOInField, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
-from .utils import select_atlas_plate
+from .utils import select_atlas_plate, select_other_atlas_plates
 from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
     filter_dsos, get_filter_params, update_dso_filter_context
 from .vocabs import PRIORITY_CHOICES
@@ -263,6 +263,7 @@ class AtlasPlateDetailView(CookieMixin, DetailView):
         obj = self.get_object()
         context['table_id'] = f"atlas_dso_{obj.plate_id}"
         context['selected_atlas_plate'] = select_atlas_plate(obj.plate_images, context)
+        context['other_atlas_plates'] = select_other_atlas_plates(obj.plate_images, context['selected_atlas_plate'])
         neighbors = find_neighbors(obj.center_ra, obj.center_dec)
         context['assembled_neighbors'] = assemble_neighbors(neighbors)
         return context

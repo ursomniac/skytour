@@ -23,6 +23,33 @@ def parse_utdt(s):
         print("PARSE ERROR: ", s)
         return None
     
+def is_in_window(location_id, az, alt, min_alt=10.):
+    if location_id is None:
+        return True
+    if location_id != 1:
+        return alt >= min_alt
+    
+    # check against home
+    if alt > 70.:
+        return True
+    if alt < min_alt:
+        return False
+    
+    if az < 120.:
+        return False
+    if az >= 120. and az <= 160. and alt < 30.:
+        return False
+    if az >= 160. and az <= 210. and alt < 48.:
+        return False
+    if az >= 210. and az < 230.:
+        if alt >= 15. and alt <= 30.:
+            return True
+        elif alt >= 30. and alt <= 50.:
+            return False
+    elif az > 230.:
+        return False
+    return True
+    
 def find_objects_at_home(
         utdt = None, # set to now if none 
         offset_hours = 0., 
@@ -63,27 +90,36 @@ def find_objects_at_home(
             continue
         if imaged == True and d.library_image is None:
             continue
-        elif imaged == False and d.library_image is not None:
+        elif imaged == False and d.library_image is not None and d.reimage == False:
+            # TODO: What about re-imaging?
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
+        if is_in_window(location_id, az, alt):
+            candidate_pks.append(d.pk)
+
+        """
         if alt > 70.: # keep!
             #candidates.append(d)
             candidate_pks.append(d.pk)
-        elif alt < min_alt: 
             continue
         elif az < 120.:
             continue
         elif az > 230.: 
             continue
-        elif az > 160.: # Kim's house
-            skim = 30. + 20. * (az - 160.) / 70.
+        elif az > 160. and az <= 210.: # Kim's house
+            #skim = 30. + 15. * (az - 160.) / 70.
+            skim = 45.
             if alt < skim:
                 continue
-            else:
-                candidate_pks.append(d.pk)
-        else: # in the window!
-            candidate_pks.append(d.pk)
+        elif az > 210 and az <= 230: # window in the SE
+            if alt < 15. or (alt >= 30. and alt <= 60.):
+                continue
+        elif alt < min_alt: 
+            continue
+        # in the window!
+        candidate_pks.append(d.pk)
+        """
     # Return as a queryset 
     # Ideally this should ALSO contain alt/az!
     dsos = DSO.objects.filter(pk__in=candidate_pks)
@@ -101,8 +137,8 @@ def find_objects_at_cookie(
         min_priority = 0,
         #
         location = None,
-        min_dec = -20.,
-        min_alt = 30.
+        min_dec = -30.,
+        min_alt = 30.,
     ):
     # 1. sort out time
     if utdt is None:
@@ -128,21 +164,12 @@ def find_objects_at_cookie(
             continue
         if imaged == True and d.library_image is None:
             continue
-        elif imaged == False and d.library_image is not None:
+        elif imaged == False and d.library_image is not None and d.reimage == False:
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-
-        # There is no filter on horizon blocking --- this IS something we can add
-        # for each Observing Location!
-        # TODO: Write this method
-        # if horizon_block_filter(location_id, alt, az):
-        #   continue
-
-        if alt < min_alt: 
-            continue
-
-        candidate_pks.append(d.pk)
+        if is_in_window(loc.id, az, alt):
+            candidate_pks.append(d.pk)
 
     dsos = DSO.objects.filter(pk__in=candidate_pks)
     for d in dsos:

@@ -134,7 +134,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('constellation', 'show_on_skymap'),
                 ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type', 'priority'),
-                'library_image_checklist_param',
+                ('library_image_checklist_param', 'reimage'),
                 ('tags', 'map_label'),
                 #
                 #('dso_imaging_chart', 'dso_imaging_chart_tag'),
@@ -172,7 +172,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('dso_finder_chart_narrow', 'dso_finder_chart_narrow_tag'),
                 'pdf_page'
             ]
-        })
+        }),
     )
     inlines = [
         DSOAliasAdmin, 

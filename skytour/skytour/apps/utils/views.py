@@ -17,6 +17,8 @@ from .models import ObjectType
 
 def get_list_of_primary_library_images(qs):
     distinct_objects = qs.values('object').distinct()
+    if qs.first() is None:
+        return []
     model = qs.first().object.__class__ # this is the model
     pk_list = []
     for o in distinct_objects:

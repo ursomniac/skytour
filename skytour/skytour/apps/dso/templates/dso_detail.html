@@ -180,6 +180,11 @@
 					<a href="{% url 'atlas-detail' plate.slug %}" target="_new">{{ plate.plate_id }}<a>
 					{% if not forloop.last %}, {% endif %}
 					{% endfor %}
+
+					<br>
+					<h3>Target Viability:</h3>
+					{{ object.targetdso.viability_chart }}
+
 				</td>
 			</tr>
 		</table>

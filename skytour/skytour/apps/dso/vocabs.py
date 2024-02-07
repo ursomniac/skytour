@@ -66,6 +66,7 @@ ATLAS_COLORS = {
     'atlas-plate-reference': { 'label': ('#fff', '#777'), 'background': ('#ccc', '#444') },
 }
 
+
 SIMPLE_DSO_LIST = [
     19,   # C 22 (And)
     9,    # NGC 891 (And)

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}DSO Target List: Skytour{% endblock %}
+{% block content %}
+<style>
+    a.buttoned {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<h1>DSO Target List</h1>
+
+<table id="bright-star">
+<thead>
+    <tr>
+        <th>PK</th>
+        <th>Status</th>
+        <th>Name</th>
+        <th>Nickname</th>
+        <th>Seed</th>
+        <th>Modes</th>
+        <th>Mag.</th>
+        <th>SB</th>
+        <th>CI</th>
+        <th>Size</th>
+        <th>#iF</th>
+    </tr>
+</thead>
+<tbody>
+    {% for target in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'target-detail' target.pk %}" target="_new">
+            {{ target.pk }}
+            </a>
+        </td>
+        <td>
+            {% if target.ready_to_go %}
+            Done
+            {% else %}
+            <button>
+                <a href="/admin/dso_observing/targetdso/{{ target.pk }}/change/" class="buttoned">
+                Process
+                </a>
+            </button>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'dso-detail' target.dso.pk %}" target=_new">
+            {{ target.dso.shown_name }}
+            </a>
+        </td>
+        <td>{% if target.dso.nickname %}{{ target.dso.nickname }}{% endif %}</td>
+        <td>{{ target.seed_entry }}</td>
+        <td>{{ target.mode_list }}</td>
+        <td>{{ target.dso.magnitude }}</td>
+        <td>{{ target.dso.surface_brightness }}</td>
+        <td>{{ target.dso.contrast_index }}</td>
+        <td>{{ target.dso.angular_size }}</td>
+        <td>{{ target.dso.dsos_in_field_count }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

@@ -93,6 +93,7 @@ class DSOAbstract(Coordinates):
         help_text = 'arcmin'
     )
 
+
     @property
     def skyfield_object(self):
         """
@@ -164,6 +165,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     object_class = 'dso'
     detail_view = 'dso-detail'
 
+    reimage = models.BooleanField(
+        default = False,
+        help_text = "Check to override image filtering."
+    )
 
     @property
     def instance_id(self):
