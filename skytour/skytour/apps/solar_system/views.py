@@ -246,8 +246,10 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['n_obs'] = object.number_of_observations
                 pdict['last_observed'] = object.last_observed
                 mag = pdict['observe']['apparent_magnitude']
+                pdict['mag_offset'] = object.mag_offset
+                pdict['est_mag'] = mag + object.mag_offset
                 break
-        #if mag:
+        #if mag: 
         #    mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
         #mag_limit = 8.0 if mag_limit < 8.0 else mag_limit
 

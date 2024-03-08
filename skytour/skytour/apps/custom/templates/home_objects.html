@@ -119,7 +119,13 @@ summary::-webkit-details-marker {
                             <input name="min_alt" size=5 {% if alt %}value="{{ alt }}"{% endif %}>
                         </td>
                     </tr>
-                    <tr><td colspan="2"><input type="submit"></td></tr>
+                    <tr>
+                        <td>
+                            <label for="house">At Home:&nbsp;</label>
+                            <input name="house" type="checkbox" value="on">
+                        </td>
+                        <td><input type="submit"></td>
+                    </tr>
                 </table>
             </form>
         </td>

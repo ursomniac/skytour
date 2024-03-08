@@ -422,7 +422,9 @@ class DSOInFieldAdmin(admin.ModelAdmin):
     model = DSOInField
     autocomplete_fields = ['parent_dso']
     search_fields = ['nickname', 'shown_name', 'parent_dso__shown_name']
-
+    list_display = ['pk', 'shown_name', 'parent_dso', 'object_type', 'morphological_type', 'magnitude', 'angular_size', 'distance_to_primary']
+    readonly_fields = ['distance_to_primary']
+    save_on_top = True
     fieldsets = (
         (None, {
             'fields': [
@@ -446,6 +448,9 @@ class DSOInFieldAdmin(admin.ModelAdmin):
             ]
         }),
     )
+    @admin.display(description='From Primary')
+    def distance_to_primary(self, obj):
+        return f"{obj.primary_distance:5.1f}\' at {obj.primary_angle:5.1f}°"
 
 class DSOImagingChecklistAdmin(admin.ModelAdmin):
     model = DSOImagingChecklist

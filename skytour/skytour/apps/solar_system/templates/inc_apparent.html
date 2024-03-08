@@ -2,8 +2,13 @@
 
 <h4>Apparent</h4>
 
-Mag: {{ obj.observe.apparent_magnitude|floatformat:2 }}<br>
+Mag: {{ obj.observe.apparent_magnitude|floatformat:2 }}
+{% if obj.mag_offset != 0.0 %}
+&nbsp; (est. {{ obj.est_mag|floatformat:2 }})
+{% endif %}
+<br>
 
 {% if obj.observe.angular_diameter %}
-    Ang Size: {{ obj.observe.angular_diameter_str }}<br/>
+    Ang Size: {{ obj.observe.angular_diameter_str }}
+    <br/>
 {% endif %}         

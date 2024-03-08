@@ -28,3 +28,4 @@ def get_comet_magnitude(mg, mk, r_earth_target, r_sun_target, offset=0.):
         + offset
     )
     return mag
+

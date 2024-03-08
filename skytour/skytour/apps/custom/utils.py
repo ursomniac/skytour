@@ -23,7 +23,7 @@ def parse_utdt(s):
         print("PARSE ERROR: ", s)
         return None
     
-def is_in_window(location_id, az, alt, min_alt=10.):
+def is_in_window(location_id, az, alt, min_alt=10., house=False):
     if location_id is None:
         return True
     if location_id != 1:
@@ -41,13 +41,17 @@ def is_in_window(location_id, az, alt, min_alt=10.):
         return False
     if az >= 160. and az <= 210. and alt < 48.:
         return False
-    if az >= 210. and az < 230.:
-        if alt >= 15. and alt <= 30.:
-            return True
-        elif alt >= 30. and alt <= 50.:
+    if house:
+        if az >= 210. and az < 230. and house:
+            if alt >= 15. and alt <= 30.:
+                return True
+            elif alt >= 30. and alt <= 50.:
+                return False
+        elif az > 230.:
             return False
-    elif az > 230.:
-        return False
+    else:
+        if az >= 210.:
+            return False
     return True
     
 def find_objects_at_home(
@@ -58,7 +62,8 @@ def find_objects_at_home(
         #
         location_id = 1,
         min_dec = -20.,
-        min_alt = 30.
+        min_alt = 30.,
+        house = False
     ):
     """
     This really only works for my back yard, but the logic would pertain for anyone who 
@@ -95,7 +100,7 @@ def find_objects_at_home(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(location_id, az, alt):
+        if is_in_window(location_id, az, alt, house=house):
             candidate_pks.append(d.pk)
 
         """
@@ -139,6 +144,7 @@ def find_objects_at_cookie(
         location = None,
         min_dec = -30.,
         min_alt = 30.,
+        house = False
     ):
     # 1. sort out time
     if utdt is None:
@@ -168,7 +174,7 @@ def find_objects_at_cookie(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(loc.id, az, alt):
+        if is_in_window(loc.id, az, alt, house=house):
             candidate_pks.append(d.pk)
 
     dsos = DSO.objects.filter(pk__in=candidate_pks)

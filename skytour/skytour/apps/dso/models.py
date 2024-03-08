@@ -13,7 +13,7 @@ from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
-from ..astro.utils import get_small_sep, get_simple_position_angle
+from ..astro.utils import alt_get_small_sep, get_simple_position_angle
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
@@ -480,8 +480,11 @@ class DSOInField(DSOAbstract, models.Model):
     @property
     def primary_distance(self):
         # angular separation in arcseconds
-        sep = get_small_sep(self.ra, self.dec, self.parent_dso.ra, self.parent_dso.dec)
-        return sep * 60.
+        sep = alt_get_small_sep(self.ra, self.dec, 
+                self.parent_dso.ra, self.parent_dso.dec,
+                unit='arcmin'
+            )
+        return sep
     
     @property
     def primary_angle(self):

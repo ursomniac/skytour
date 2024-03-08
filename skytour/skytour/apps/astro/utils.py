@@ -51,6 +51,44 @@ def get_small_sep(ra1, dec1, ra2, dec2):
     y = x*x + ddec*ddec
     return math.sqrt(y)
 
+def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', debug=False):
+
+    r1 = math.radians(ra1*15)
+    r2 = math.radians(ra2*15)
+    d1 = math.radians(dec1)
+    d2 = math.radians(dec2)
+
+    cd1 = math.cos(d1)
+    cd2 = math.cos(d2)
+    cdr = math.cos(r2 - r1)
+    sdr = math.sin(r2 - r1)
+    sd1 = math.sin(d1)
+    sd2 = math.sin(d2)
+
+    x = (cd1 * sd2) - (sd1 * cd2 * cdr)
+    y = cd2 * sdr
+    z = (sd1 * sd2) + (cd1 * cd2 * cdr)
+
+    xy = math.sqrt((x * x) + (y * y))
+    tand = xy/z
+    dd = math.atan2(xy, z)
+    dd0 = math.degrees(dd)
+
+    if debug:
+        print(f"X: {x:.4f}  Y: {y:.4f}  Z: {z:.4f}")
+        print(f"tan d: {tand:.4f}")
+        print(f" = {xy:.4f} / {z:.4f} ")
+        print(f"d: {dd:.4f} rad = {math.degrees(dd):.4f} deg")
+
+    if unit in ['deg', 'd', '°']:
+        return dd0
+    elif unit in ['arcmin', 'm', '\'']:
+        return dd0 * 60.
+    elif unit in ['arcsec', 's', '\"']:
+        return dd0 * 3600.
+    else: # return radians
+        return dd
+
 def get_simple_position_angle(ra1, dec1, ra2, dec2):
     # Positive east
     xra1 = math.radians(ra1 * 15.)
@@ -65,3 +103,28 @@ def get_simple_position_angle(ra1, dec1, ra2, dec2):
     pa = (math.degrees(math.atan2(pa1, pa2-pa3)) + 180.)
     pa %= 360.
     return pa
+
+def get_size_from_logd25(x, ratio=0., raw=False):
+    """
+    LEDA, etc. stores angular size as log d25 in 0.1 arcmins.
+    """
+    major = 10. ** (x - 1.)
+    minor = major / (10. ** ratio)
+    if raw:
+        return (major, minor)
+    else:
+        return f"{major:.3f}\' x {minor:.3f}\'"
+
+def get_distance_from_modulus(mu, units='mly'):
+    mult = {'pc': 1, 'kpc': 1.e-3, 'mpc': 1.e-6, 'ly': 3.26, 'kly': 3.26e-3, 'mly': 3.26e-6}
+    x = 1. + mu / 5.
+    d = 10. ** x # parsecs
+    if units in mult.keys():
+        d *= mult[units]
+    return d
+
+def sqs_to_sqm(sqs):
+    return sqs - 8.89
+
+def sqm_to_sqs(sqm):
+    return sqm + 8.89
