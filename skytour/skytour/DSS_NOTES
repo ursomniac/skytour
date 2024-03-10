@@ -1,0 +1,29 @@
+Sample get
+
+https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=12+21+40.55&d=%2B11+29+59.7&e=J2000&h=15.0&w=15.0&f=gif&c=none&fov=SM97&v3=
+
+https://archive.stsci.edu/cgi-bin/dss_search
+    ?v=poss2ukstu_red
+    &r=12+21+40.55
+    &d=%2B11+29+59.7
+    &e=J2000
+    &h=15.0&w=15.0
+    &f=gif
+    &c=none
+    &fov=SM97
+    &v3=
+    
+<img style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);" src="https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=00+25+14.88&d=%2B61+19+33.6&e=J2000&h=15.0&w=15.0&f=gif&c=none&fov=NONE&v3=" width="699" height="701">slot
+https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=00+25+14.88&d=%2B61+19+33.6&e=J2000&h=15.0&w=15.0&f=gif&c=none&fov=NONE&v3=
+
+https://archive.stsci.edu/cgi-bin/dss_search
+    ?v=poss2ukstu_red
+    &r=00+25+14.88
+    &d=%2B61+19+33.6
+    &e=J2000
+    &h=15.0
+    &w=15.0
+    &f=gif
+    &c=none
+    &fov=NONE
+    &v3=

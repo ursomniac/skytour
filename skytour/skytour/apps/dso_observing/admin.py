@@ -47,7 +47,7 @@ class TargetDSOAdmin(admin.ModelAdmin):
             ]
         }),
     )
-    search_fields = ['get_constellation', 'get_dso_name']
+    search_fields = ['dso__shown_name']
     list_filter = ['dso__constellation__abbreviation']
     save_on_top = True
 
