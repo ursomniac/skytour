@@ -122,7 +122,6 @@ class DSOListDetailView(CookieMixin, DetailView):
         # Make a map
         dso_list = self.object.dso.all()
         mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
-        #center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list, mag=mag)
         center_ra, center_dec, max_dist = get_circle_center(dso_list)
         fov = max_dist * 1.2
 

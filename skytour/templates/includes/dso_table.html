@@ -21,6 +21,7 @@
         <th>Size</th>
         <th>Img</th>
         <th>Obs</th>
+        <th>Mode</th>
         <th>Last Obs.</th>
     </tr>
 </thead>
@@ -71,6 +72,9 @@
             <a href="{% url 'priority-detail' dso.priority %}" target="_new">
                 {{ dso.get_priority_display }}</a>
 
+        </td>
+        <td>
+            {{ dso.targetdso.mode_set }}
         </td>
         <td>
             {{ dso.number_of_observations }}

@@ -19,6 +19,7 @@ django-ckeditor = "*"
 scipy = "*"
 django-taggit = "*"
 django-ajax-selects = "*"
+jsonfield = "*"
 
 [dev-packages]
 

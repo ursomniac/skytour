@@ -108,6 +108,7 @@ def get_size_from_logd25(x, ratio=0., raw=False):
     """
     LEDA, etc. stores angular size as log d25 in 0.1 arcmins.
     """
+    ratio = 0. if ratio is None else ratio
     major = 10. ** (x - 1.)
     minor = major / (10. ** ratio)
     if raw:

@@ -27,3 +27,9 @@ https://archive.stsci.edu/cgi-bin/dss_search
     &c=none
     &fov=NONE
     &v3=
+
+Simbad query:
+https://simbad.cds.unistra.fr/simbad/sim-id?Ident=Cl+Collinder+121
+
+Text:
+https://simbad.cds.unistra.fr/simbad/sim-id?Ident=Cl%20Collinder%20121&NbIdent=1&Radius=2&Radius.unit=arcmin&submit=submit%20id&output.format=ASCII

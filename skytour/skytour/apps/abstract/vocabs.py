@@ -14,8 +14,9 @@ IMAGING_STATUS_CHOICES = (
 
 IMAGING_PROCESSING_CHOICES = (
     ('None', 'Not Yet Started'),
-    ('Default', 'Default Unistellar Image'),
+    ('Default', 'Default Unistellar/Seestar Image'),
     ('3-Step', '3-Step: Dark, Stretched, Cleaned'),
+    ('Pix+RCA', 'Pixinsight + RC Astro'),
     ('DB', 'Processed image added to DB'),
     ('Rejected', 'Image Rejected'),
     ('Unknown', 'Unknown')
@@ -24,6 +25,7 @@ IMAGING_PROCESSING_CHOICES = (
 IMAGE_TYPE_CHOICES = (
     ('e-crop', 'eQuinox 2: Cropped'),
     ('e-full', 'eQuinox 2: Full'),
+    ('s-full', 'Seestar S50: Full')
 )
 
 IMAGE_POST_OPTIONS = (

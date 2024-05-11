@@ -123,7 +123,8 @@ class DSOAdmin(ObservableObjectAdmin):
         'has_dso_imaging_chart',
         'dsoinfield_table',
         'img_pri',
-        'num_dsos_in_field'
+        'num_dsos_in_field',
+        'metadata'
     ]
     list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', ]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
@@ -173,6 +174,14 @@ class DSOAdmin(ObservableObjectAdmin):
                 'pdf_page'
             ]
         }),
+        ('Metadata', {
+            'classes': ['collapse'],
+            'fields': [
+                ('hyperleda_name', 'simbad_name'),
+                'metadata',
+                'simbad'
+            ]
+        })
     )
     inlines = [
         DSOAliasAdmin, 
@@ -447,6 +456,14 @@ class DSOInFieldAdmin(admin.ModelAdmin):
                 'notes',
             ]
         }),
+        ('Metadata', {
+            'classes': ['collapse'],
+            'fields': [
+                ('hyperleda_name', 'simbad_name'),
+                'metadata',
+                'simbad'
+            ]
+        })
     )
     @admin.display(description='From Primary')
     def distance_to_primary(self, obj):

@@ -1,0 +1,2673 @@
+D02832	UGC 12914 PEG	barred-spiral	SBc	G	5.3 ± 1.5	5.3	SBc	B	R
+D02845	PGC 143 CET	dwarf-galaxy	IB	G	9.9 ± 0.3	9.9	IB	B	
+D00298	C 43	galaxy--spiral	SA(S)ab	G	2.0 ± 0.3	2.0	Sab		
+D00783	NGC 7817	galaxy--spiral	SAbc	G	4.1 ± 0.4	4.1	Sbc		
+D01847	NGC 16	galaxy--spiral	S0	G	-2.7 ± 0.6	-2.7	E-S0	B	
+D01848	NGC 23	barred-spiral	SBa	G	1.2 ± 0.5	1.2	Sa	B	
+D00786	NGC 24	galaxy--spiral	Sc	G	5.1 ± 0.4	5.1	Sc		
+D00784	NGC 45	galaxy--spiral	SA(s)dm	G	7.8 ± 0.7	7.8	SABd	B	
+D00787	NGC 50	galaxy--lenticular	S0	G	-3.1 ± 0.6	-3.1	E-S0		
+D00319	C 72	barred-spiral	SB(s)m	G	8.8 ± 0.8	8.8	SBm	B	
+D01849	NGC 57	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D01850	NGC 63	galaxy--lenticular	E/S0	G	-3.4 ± 3.3	-3.4	E-S0		
+D00170	IC 10	irregular-galaxy	Im	G	9.9 ± 0.6	9.9	IB	B	
+D01851	NGC 132	barred-spiral	SBc/Sc	G	4.0 ± 0.1	4.0	SABb	B	
+D00790	NGC 134	barred-spiral	Sbc	G	4.0 ± 0.2	4.0	SABb	B	
+D00289	C 17	dwarf-galaxy	dSph/dE5	G	-4.8 ± 0.6	-4.8	E		
+D00789	NGC 151	galaxy--spiral	SAbc	G	3.9 ± 0.6	3.9	Sbc	B	R
+D00981	NGC 150	barred-spiral	SB(rs)b?	G	3.5 ± 1.0	3.5	SBbc	B	
+D01852	NGC 148	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+D00321	NGC 157	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.2	4.0	SABb	B	
+D02554	IC 1558	galaxy--spiral	SABm	G	9.0 ± 0.5	9.0	SABm	B	
+D01854	NGC 163	galaxy--elliptical	E3	G	-4.4 ± 1.3	-4.4	E		
+D01855	NGC 175	barred-spiral	SBb:r	G	2.2 ± 0.5	2.2	Sab	B	R
+D02858	PGC 2248 SCL	galaxy--lenticular	E/S0:r	G	-3.1 ± 0.7	-3.1	E-S0		R
+D01856	NGC 180	barred-spiral	SBc	G	4.6 ± 0.9	4.6	Sc	B	
+D00290	C 18	dwarf-galaxy	dSph/dE3, Sy2	G	-4.8 ± 0.6	-4.8	E		
+D01858	NGC 191	galaxy--spiral	SAc	G	4.9 ± 0.8	4.9	Sc	B	
+D01859	NGC 192	galaxy--spiral	SAa	G	1.1 ± 0.7	1.1	Sa	B	R
+D02676	NGC 200	galaxy--spiral	SAbc	G	4.0 ± 0.3	4.0	Sbc	B	
+D00054	M 110	galaxy--elliptical	E5 pec	G	-4.8 ± 0.4	-4.8	E		
+D01860	NGC 210	galaxy--spiral	Sb	G	3.1 ± 0.8	3.1	SABb	B	
+D01861	NGC 214	galaxy--spiral	Sc	G	5.0 ± 0.6	5.0	SABc	B	R
+D01862	NGC 217	galaxy--spiral	S0a	G	0.7 ± 1.5	0.7	SBa	B	
+D00053	M 32	galaxy--elliptical	cE2	G	-4.8 ± 0.4	-4.8	E		
+D00052	M 31	galaxy--spiral	SA(s)b	G	3.0 ± 0.4	3.0	Sb		
+D00313	C 62	galaxy--spiral	SAB(s)d	G	6.9 ± 0.5	6.9	SABc	B	
+D00991	NGC 254	galaxy--lenticular	S0	G	-1.2 ± 1.0	-1.2	S0-a	B	R
+D00058	C 65	galaxy--spiral	SAB(s)c	G	5.1 ± 0.4	5.1	SABc	B	
+D01865	NGC 255	barred-spiral	SBc	G	4.1 ± 0.6	4.1	Sbc	B	
+D01864	NGC 252	galaxy--lenticular	S0	G	-1.2 ± 0.7	-1.2	S0-a		R
+D01867	NGC 266	barred-spiral	SBabrs	G	1.6 ± 0.7	1.6	Sab	B	
+D01868	NGC 275	barred-spiral	SBcd	G	6.0 ± 0.3	6.0	SBc	B	
+D00322	NGC 278	galaxy--spiral	SAB(rs)b	G	3.0 ± 0.9	3.0	SABb	B	
+D00984	NGC 292	dwarf-galaxy	SBmp	G	8.9 ± 0.3	8.9	SBm	B	
+D00060	C 70	galaxy--spiral	SA(s)d	G	6.9 ± 0.4	6.9	Scd		
+D01870	NGC 304	galaxy--lenticular	S0	G	-1.7 ± 1.2	-1.7	S0		
+D01871	NGC 307	galaxy--elliptical	E/S0	G	-1.9 ± 1.2	-1.9	S0		
+D01872	NGC 315	galaxy--elliptical	E3	G	-4.1 ± 0.7	-4.1	E		
+D00585	NGC 337	barred-spiral	SB(s)d	G	6.7 ± 0.8	6.7	SBcd	B	
+D02857	PGC 3589 SCL	dwarf-galaxy	dSph/dE3	G	-4.8 ± 0.5	-4.8	E		
+D01874	NGC 352	barred-spiral	SBb	G	3.4 ± 1.1	3.4	SBb	B	R
+D01875	NGC 357	barred-spiral	SB0ar	G	-0.2 ± 0.8	-0.2	S0-a	B	R
+D00306	C 51	irregular-galaxy	IB(s)m	G	9.9 ± 0.3	9.9	I	B	
+D02555	IC 1616	galaxy--spiral	Sbc	G	3.9 ± 0.4	3.9	Sbc	B	R
+D01877	NGC 383	galaxy--lenticular	S0	G	-2.9 ± 0.6	-2.9	E-S0		
+D01878	NGC 392	galaxy--elliptical	E/S0	G	-3.0 ± 0.5	-3.0	E-S0		
+D00323	NGC 404	galaxy--elliptical	dE/S0	G	-2.8 ± 0.7	-2.8	E-S0		
+D02556	IC 1633	galaxy--lenticular	S0	G	-3.9 ± 0.6	-3.9	E		
+D00791	NGC 410	galaxy--elliptical	E3	G	-4.3 ± 0.8	-4.3	E	B	
+D01881	NGC 434	galaxy--spiral	SAB(s)ab	G	2.0 ± 0.4	2.0	Sab	B	
+D00798	NGC 428	barred-spiral	Sc pec	G	8.6 ± 1.0	8.6	SABm	B	
+D01880	NGC 430	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D01882	NGC 439	galaxy--elliptical	E/S0	G	-3.2 ± 0.9	-3.2	E-S0	B	R
+D00795	NGC 470	galaxy--spiral	Sbc	G	3.1 ± 0.4	3.1	Sb		R
+D01883	NGC 473	galaxy--lenticular	S0	G	-0.3 ± 1.8	-0.3	S0-a	B	R
+D01884	NGC 491	galaxy--spiral	Sb	G	3.2 ± 0.6	3.2	SBb	B	R
+D00324	NGC 488	galaxy--spiral	Sab	G	2.9 ± 0.4	2.9	Sb		R
+D01885	NGC 493	galaxy--spiral	SAc	G	5.9 ± 0.4	5.9	Sc	B	
+D02677	NGC 503	galaxy--lenticular	S0	G	-1.6 ± 1.8	-1.6	S0		
+D00793	NGC 514	galaxy--spiral	SAB(rs)c	G	5.2 ± 0.5	5.2	SABc	B	
+D01890	NGC 521	barred-spiral	SBb	G	4.0 ± 0.2	4.0	Sbc	B	R
+D00794	NGC 520	galaxy--spiral	Sb pec	G	1.3 ± 3.4	1.3	Sa		
+D00325	NGC 524	galaxy--lenticular	S0+s	G	-1.2 ± 0.6	-1.2	S0-a		
+D01888	NGC 541	galaxy--elliptical	E3	G	-3.6 ± 1.6	-3.6	E		
+D01887	NGC 536	barred-spiral	SBb	G	3.1 ± 0.2	3.1	Sb	B	R
+D01889	NGC 550	barred-spiral	SBa	G	1.2 ± 0.8	1.2	SBa	B	
+D01891	NGC 568	galaxy--lenticular	S0	G	-3.0 ± 0.7	-3.0	E-S0		
+D00800	IC 127	galaxy--spiral	SAb	G	3.2 ± 0.8	3.2	Sb		
+D00799	NGC 578	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc	B	
+D00326	NGC 584	galaxy--elliptical	S0	G	-4.7 ± 0.9	-4.7	E		
+D00327	NGC 596	galaxy--elliptical	E2	G	-4.3 ± 0.5	-4.3	E		
+D00020	M 33	galaxy--spiral	SA(s)cd	G	5.9 ± 0.4	5.9	Sc		
+D00328	NGC 613	barred-spiral	SBb	G	4.0 ± 0.2	4.0	Sbc	B	
+D00329	NGC 615	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		R
+D00021	M 74	galaxy--spiral	SA(s)c	G	5.2 ± 0.5	5.2	Sc		
+D01892	NGC 636	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E		
+D00802	NGC 660	barred-spiral	SBa	G	1.2 ± 1.3	1.2	Sa	B	
+D01893	NGC 669	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+D01894	NGC 670	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D00992	NGC 685	galaxy--spiral	Sc	G	5.4 ± 0.6	5.4	Sc	B	R
+D00801	NGC 672	galaxy--spiral	SB(s)cd	G	6.0 ± 0.3	6.0	SBc	B	
+D01895	NGC 673	galaxy--spiral	Sc	G	5.3 ± 0.6	5.3	SABc	B	
+D01897	NGC 676	galaxy--lenticular	S0a	G	0.1 ± 0.7	0.1	S0-a		
+D01898	NGC 681	galaxy--spiral	Sb	G	2.0 ± 0.7	2.0	SABa	B	R
+D01899	NGC 691	galaxy--spiral	Sb/Sc	G	4.0 ± 0.2	4.0	Sbc		R
+D01901	NGC 701	barred-spiral	SB(rs)(c)	G	5.0 ± 0.5	5.0	SBc	B	
+D01896	NGC 697	galaxy--spiral	SAB(r)(c)	G	5.0 ± 0.8	5.0	SABc	B	R
+D01900	NGC 706	galaxy--spiral	Sc	G	4.6 ± 1.0	4.6	Sc		
+D00331	NGC 720	galaxy--elliptical	E5	G	-4.9 ± 0.5	-4.9	E		
+D00803	NGC 718	galaxy--spiral	SAB(s)a	G	1.0 ± 0.3	1.0	Sa	B	
+D01902	NGC 731	galaxy--elliptical	E0	G	-4.0 ± 0.7	-4.0	E		
+D01904	NGC 748	galaxy--spiral	Sc	G	3.2 ± 0.8	3.2	Sb		R
+D01903	NGC 755	barred-spiral	SBbc	G	3.6 ± 1.2	3.6	SBbc	B	
+D01905	NGC 750	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D01906	NGC 753	galaxy--spiral	Sc	G	4.9 ± 1.0	4.9	SABc	B	
+D01907	NGC 782	barred-spiral	SBb	G	3.0 ± 0.4	3.0	SBb	B	R
+D00022	NGC 772	galaxy--spiral	SBb	G	3.1 ± 0.4	3.1	Sb		
+D00332	NGC 779	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	SABb	B	R
+D00806	NGC 777	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D01909	NGC 788	galaxy--lenticular	S0a	G	0.0 ± 0.5	0.0	S0-a		
+D01908	NGC 784	galaxy--spiral	Sdm	G	7.9 ± 0.6	7.9	SBd	B	
+D01910	NGC 812	galaxy--spiral	S	G	5.9 ± 2.1	5.9	Sc		
+D00805	NGC 821	galaxy--elliptical	E6	G	-4.8 ± 0.4	-4.8	E		
+D01911	NGC 818	barred-spiral	SB:bc	G	4.4 ± 0.5	4.4	Sbc	B	
+D00804	NGC 839	galaxy--lenticular	S0a	G	-1.2 ± 2.7	-1.2	S0-a		
+D01913	NGC 842	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0	B	R
+D01912	NGC 841	barred-spiral	SBa/Sb	G	2.0 ± 0.3	2.0	Sab	B	
+D01914	NGC 855	galaxy--spiral	Sp	G	-4.8 ± 0.7	-4.8	E		
+D01915	NGC 864	galaxy--spiral	SAB(rs)(c)	G	5.1 ± 0.6	5.1	SABc	B	
+D01916	NGC 873	galaxy--spiral	Sc	G	4.8 ± 1.0	4.8	Sc		
+D01917	NGC 877	galaxy--spiral	Sc	G	4.8 ± 1.0	4.8	SABc	B	
+D01918	NGC 881	galaxy--spiral	SAbc	G	5.0 ± 0.5	5.0	SABc	B	R
+D00810	NGC 894	galaxy--spiral	Sc	h					
+D00809	NGC 890	galaxy--lenticular	S0	G	-2.6 ± 0.6	-2.6	E-S0	B	R
+D00009	C 23	galaxy--spiral	SA(s)b?	G	3.1 ± 0.4	3.1	Sb		
+D00333	NGC 908	galaxy--spiral	SA(s)c	G	5.1 ± 0.4	5.1	SABc	B	
+D01921	NGC 922	barred-spiral	SBc:r	G	6.0 ± 0.6	6.0	SBc	B	R
+D01919	NGC 906	barred-spiral	SBa	G	1.7 ± 0.7	1.7	Sab	B	
+D01920	NGC 917	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+D00587	NGC 925	galaxy--spiral	SAB(s)d	G	7.0 ± 0.3	7.0	Scd	B	
+D00334	NGC 936	barred-spiral	SB(rs)0+	G	-1.2 ± 0.6	-1.2	S0-a	B	R
+D01922	NGC 930	galaxy--spiral	Sa	G	1.0 ± 0.3	1.0	Sa		R
+D01923	NGC 935	galaxy--spiral	Sc	G	6.0 ± 0.9	6.0	Sc		
+D00812	NGC 945	barred-spiral	SBc	G	4.8 ± 1.2	4.8	SBc	B	R
+D00811	NGC 942	galaxy--lenticular	S0	G	-1.2 ± 0.6	-1.2	S0-a		
+D01924	NGC 955	galaxy--spiral	Sb	G	2.0 ± 0.3	2.0	Sab		
+D01925	NGC 958	galaxy--spiral	Sbc	G	4.9 ± 0.5	4.9	SBc	B	
+D00808	NGC 949	galaxy--spiral	Sb	G	3.4 ± 1.1	3.4	Sb		
+D00589	NGC 959	galaxy--spiral	Sd	G	7.9 ± 0.8	7.9	Sd		
+D00993	NGC 986	barred-spiral	SBb	G	2.4 ± 0.6	2.4	Sab	B	R
+D01928	NGC 976	galaxy--spiral	Sb	G	4.1 ± 0.6	4.1	Sbc		
+D01926	NGC 969	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D01927	NGC 972	galaxy--spiral	Sab	G	2.1 ± 0.4	2.1	Sab		
+D01929	NGC 988	galaxy--spiral	SBc	G	5.9 ± 0.5	5.9	Sc	B	
+D01930	NGC 991	galaxy--spiral	SAB(rc)s	G	5.2 ± 0.8	5.2	SABc	B	R
+D02540	IC 239	galaxy--spiral	Sc	G	6.0 ± 0.3	6.0	SABc	B	
+D01735	Sh2-191	galaxy--spiral	S0pec/E3						
+D01932	NGC 1015	barred-spiral	SBa	G	1.0 ± 0.4	1.0	Sa	B	R
+D00335	NGC 1022	barred-spiral	(R')SB(s)a	G	1.1 ± 0.4	1.1	SBa	B	
+D02557	IC 1826	barred-spiral	SB0	G	-0.3 ± 1.9	-0.3	S0-a	B	
+D01931	NGC 1003	galaxy--spiral	SA(s)cd	G	6.0 ± 0.3	6.0	Sc		
+D01933	NGC 1032	galaxy--lenticular	S0-Aa	G	0.3 ± 0.7	0.3	S0-a	B	
+D01934	NGC 1035	galaxy--spiral	SA(s)c	G	4.8 ± 0.8	4.8	Sc		
+D02851	PGC 10074 FOR	dwarf-galaxy	dSph	G	-4.8 ± 0.5	-4.8	E		
+D00336	NGC 1023	galaxy--lenticular	SB(rs)0-	G	-2.6 ± 0.6	-2.6	E-S0	B	
+D00588	NGC 1042	galaxy--spiral	SAB(rs)cd	G	6.0 ± 0.4	6.0	SABc	B	
+D00071	NGC 1055	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	SBb	B	
+D01935	NGC 1050	barred-spiral	SBa	G	1.1 ± 0.6	1.1	SBa	B	
+D00070	M 77	barred-spiral	(R)SA(rs)b	G	3.0 ± 0.3	3.0	Sb		
+D00816	NGC 1060	galaxy--lenticular	E/S0	G	-3.0 ± 0.5	-3.0	E-S0		
+D01936	NGC 1070	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+D00817	NGC 1058	galaxy--spiral	SA(rs)c	G	5.1 ± 0.9	5.1	Sc		
+D00815	NGC 1073	barred-spiral	SB(rs)c	G	5.3 ± 0.7	5.3	SBc	B	R
+D00813	NGC 1079	galaxy--spiral	Sa	G	0.6 ± 1.1	0.6	SABa	B	R
+D00338	NGC 1084	galaxy--spiral	SA(s)c	G	4.8 ± 0.5	4.8	Sc		
+D00315	C 67	barred-spiral	SBb	G	3.3 ± 0.5	3.3	SBb	B	R
+D00814	NGC 1087	galaxy--spiral	SAB(rs)c	G	5.2 ± 0.8	5.2	Sc	B	R
+D01937	NGC 1085	galaxy--spiral	Sb	G	3.6 ± 0.6	3.6	Sbc		
+D01938	NGC 1132	galaxy--elliptical	E3	G	-4.8 ± 0.8	-4.8	E		
+D01939	NGC 1137	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+D01940	NGC 1140	seyfert-galaxy	Sb	G	9.2 ± 2.2	9.2	SBm	B	
+D02834	Dwingeloo 1 CAS	dwarf-galaxy	SB(s)cd	G	4.0 ± 1.8	4.0	SBbc	B	
+D02558	IC 1870	barred-spiral	SBm	G	8.9 ± 0.7	8.9	Sm	B	
+D00819	NGC 1156	irregular-galaxy	Sm	G	9.8 ± 0.5	9.8	IB	B	
+D01941	NGC 1161	galaxy--lenticular	S0	G	-2.0 ± 0.9	-2.0	S0		
+D01943	NGC 1172	galaxy--elliptical	E3	G	-3.8 ± 0.7	-3.8	E		
+D01942	NGC 1167	galaxy--lenticular	S0	G	-2.4 ± 0.6	-2.4	S0		
+D00820	NGC 1187	barred-spiral	SB(r)c	G	5.0 ± 0.5	5.0	Sc	B	R
+D01944	NGC 1179	galaxy--spiral	SAc	G	5.9 ± 0.3	5.9	Sc	B	R
+D01948	NGC 1199	galaxy--elliptical	E2	G	-4.8 ± 0.6	-4.8	E		
+D00821	NGC 1201	galaxy--lenticular	S0	G	-2.6 ± 0.9	-2.6	E-S0	B	R
+D01946	NGC 1186	barred-spiral	SB(r)bc	G	4.5 ± 0.8	4.5	SBc	B	R
+D01949	NGC 1209	galaxy--elliptical	E5	G	-4.5 ± 1.0	-4.5	E		
+D01950	NGC 1211	barred-spiral	SB0ar	G	0.0 ± 0.5	0.0	S0-a	B	R
+D01951	NGC 1218	galaxy--lenticular	S0-Aa	G	-0.1 ± 0.4	-0.1	S0-a		
+D00023	NGC 1232	galaxy--spiral	SAB(rs)c	G	5.0 ± 0.4	5.0	SABc	B	
+D01954	NGC 1249	barred-spiral	SBc	G	6.0 ± 0.5	6.0	SBc	B	
+D01953	NGC 1241	barred-spiral	SBb	G	3.1 ± 0.4	3.1	SBb	B	
+D00822	NGC 1255	barred-spiral	SAB(rs)bc	G	4.0 ± 0.3	4.0	SABb	B	
+D01955	NGC 1253	galaxy--spiral	Scd	G	5.9 ± 0.4	5.9	SABc	B	
+D00998	NGC 1291	barred-spiral	SBa	G	0.1 ± 0.4	0.1	S0-a	B	R
+D01945	NGC 1184	galaxy--spiral	S0a	G	-0.1 ± 0.7	-0.1	S0-a		
+D01957	NGC 1288	galaxy--spiral	Sc	G	4.5 ± 0.9	4.5	SABc	B	
+D01956	NGC 1285	galaxy--spiral	Sb	G	3.4 ± 1.0	3.4	Sb	B	R
+D00995	NGC 1313	barred-spiral	SB(s)d	G	7.0 ± 0.4	7.0	SBcd	B	
+D01958	NGC 1292	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc		
+D00024	NGC 1300	barred-spiral	SB(rs)bc	G	4.0 ± 0.2	4.0	Sbc	B	
+D00291	C 24	seyfert-galaxy	cD pec, NLRG	G	-2.2 ± 1.6	-2.2	S0		
+D00999	NGC 1302	galaxy--spiral	Sa	G	0.1 ± 0.4	0.1	S0-a	B	R
+D00591	NGC 1309	galaxy--spiral	SA(s)bc	G	3.9 ± 0.6	3.9	Sbc		
+D01011	NGC 1316	galaxy--lenticular	S0	G	-1.8 ± 0.7	-1.8	S0	B	
+D01003	NGC 1326	galaxy--lenticular	SBa	G	-0.7 ± 0.5	-0.7	S0-a	B	R
+D00590	NGC 1325	galaxy--spiral	Sb	G	4.0 ± 0.3	4.0	SBbc	B	
+D01960	NGC 1324	galaxy--spiral	SAb	G	3.0 ± 0.7	3.0	Sb		
+D02559	IC 1933	galaxy--spiral	Sb	G	6.1 ± 0.8	6.1	Sc	B	
+D00826	NGC 1332	galaxy--elliptical	S0	G	-2.9 ± 0.6	-2.9	E-S0		
+D01963	NGC 1341	barred-spiral	SB:b:	G	1.4 ± 1.1	1.4	Sa	B	
+D01961	NGC 1337	galaxy--spiral	Sc	G	6.0 ± 0.6	6.0	SBc	B	
+D01962	NGC 1339	galaxy--elliptical	E2	G	-4.3 ± 0.5	-4.3	E		
+D01001	NGC 1340	galaxy--elliptical	E4	G	-4.0 ± 1.4	-4.0	E	B	
+D01964	NGC 1351	galaxy--lenticular	S0	G	-3.1 ± 0.7	-3.1	E-S0		
+D01002	NGC 1350	galaxy--spiral	R'SB(r)ab	G	1.9 ± 0.6	1.9	Sab	B	R
+D02561	IC 1954	galaxy--spiral	Sc	G	3.3 ± 0.9	3.3	Sb	B	
+D00825	NGC 1353	barred-spiral	Sb	G	3.2 ± 0.6	3.2	Sb	B	
+D01965	NGC 1357	galaxy--spiral	Sa	G	1.9 ± 0.7	1.9	Sab		R
+D00597	NGC 1365	barred-spiral	SB(s)b	G	3.2 ± 0.7	3.2	Sb	B	
+D02560	IC 1953	galaxy--spiral	Sc	G	6.2 ± 0.9	6.2	Sc	B	R
+D01966	NGC 1359	barred-spiral	SBc	G	8.5 ± 1.4	8.5	Sd	B	
+D01967	NGC 1366	galaxy--lenticular	S0	G	-2.2 ± 0.7	-2.2	S0		
+D00830	NGC 1367	galaxy--spiral	Sa	G	1.1 ± 0.3	1.1	Sa	B	
+D02562	IC 335	galaxy--spiral	Sab	G	-2.1 ± 1.4	-2.1	S0		
+D01007	NGC 1379	galaxy--elliptical	E0	G	-4.8 ± 0.5	-4.8	E		
+D01004	NGC 1380	galaxy--lenticular	S0	G	-2.3 ± 0.7	-2.3	S0	B	
+D02563	IC 1970	galaxy--spiral	Sab	G	3.0 ± 0.5	3.0	Sb		
+D01010	NGC 1386	seyfert-galaxy	Sa	G	-0.7 ± 1.0	-0.7	S0-a	B	
+D01968	NGC 1376	galaxy--spiral	SAc	G	5.8 ± 0.7	5.8	Sc		R
+D01009	NGC 1389	galaxy--lenticular	S0	G	-2.8 ± 0.7	-2.8	E-S0	B	
+D00829	NGC 1385	barred-spiral	SBc	G	5.9 ± 0.5	5.9	Sc	B	
+D01013	NGC 1399	galaxy--elliptical	E1	G	-4.6 ± 0.5	-4.6	E		
+D00828	NGC 1395	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D01969	NGC 1393	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	R
+D01972	NGC 1411	galaxy--lenticular	S0	G	-3.0 ± 0.4	-3.0	E-S0		R
+D00596	NGC 1398	barred-spiral	SBab	G	2.0 ± 0.3	2.0	SBab	B	R
+D01970	NGC 1406	galaxy--spiral	Sc	G	4.4 ± 0.7	4.4	SBbc	B	
+D00341	NGC 1407	galaxy--elliptical	E0	G	-4.5 ± 0.7	-4.5	E		
+D01973	NGC 1415	galaxy--spiral	(R)SAB0/a(s)	G	0.5 ± 1.2	0.5	S0-a	B	R
+D01974	NGC 1417	galaxy--spiral	Sb	G	3.2 ± 0.7	3.2	SABb	B	
+D01017	NGC 1433	seyfert-galaxy	(R)SB(r)ab	G	1.5 ± 0.7	1.5	SBa	B	R
+D01000	NGC 1425	galaxy--spiral	Sb	G	3.3 ± 0.8	3.3	Sb		
+D01015	NGC 1427	galaxy--elliptical	E5	G	-4.0 ± 0.9	-4.0	E		
+D01975	NGC 1421	galaxy--spiral	Sc	G	4.1 ± 0.5	4.1	Sbc	B	
+D00827	NGC 1426	galaxy--elliptical	E2	G	-4.9 ± 0.5	-4.9	E		
+D01976	NGC 1436	galaxy--spiral	Sc	G	2.1 ± 1.6	2.1	Sab	B	
+D01016	NGC 1448	galaxy--spiral	SAcd?	G	6.0 ± 0.3	6.0	Sc		
+D01977	NGC 1439	galaxy--elliptical	E1	G	-4.8 ± 0.5	-4.8	E		
+D01978	NGC 1440	barred-spiral	SB0	G	-2.0 ± 0.6	-2.0	S0	B	
+D00823	IC 334	irregular-galaxy	I	G	2.0 ± 5.0	2.0	S?		
+D01979	NGC 1452	barred-spiral	SBa:r	G	0.4 ± 0.7	0.4	S0-a	B	R
+D00075	C 5	galaxy--spiral	SAB(rs)cd	G	6.0 ± 0.3	6.0	SABc	B	
+D02564	IC 1993	galaxy--spiral	Sbc	G	3.0 ± 0.6	3.0	SABb	B	R
+D01980	NGC 1461	galaxy--spiral	S0	G	-2.0 ± 0.4	-2.0	S0		R
+D02565	IC 2000	barred-spiral	SBc	G	6.3 ± 0.8	6.3	SBc	B	
+D02568	IC 2051	galaxy--spiral	Sc:r	G	4.2 ± 1.0	4.2	SBbc	B	R
+D02566	IC 2006	galaxy--elliptical	E1	G	-4.2 ± 0.9	-4.2	E		R
+D01981	NGC 1482	galaxy--spiral	SA0+pec	G	-0.8 ± 0.9	-0.8	S0-a		
+D01023	NGC 1487	irregular-galaxy	S	M3	7.2 ± 3.1	7.2			
+D01022	NGC 1493	galaxy--spiral	SBcd	G	6.0 ± 0.3	6.0	SBc	B	R
+D01982	NGC 1484	galaxy--spiral	Sc/Irr	G	3.4 ± 1.2	3.4	SBb	B	
+D01031	NGC 1511	irregular-galaxy	S/Ir	G	2.0 ± 2.0	2.0	Sab		
+D01026	NGC 1512	barred-spiral	SBb:r	G	1.2 ± 0.5	1.2	Sa	B	R
+D01021	NGC 1515	barred-spiral	SABb	G	4.0 ± 0.2	4.0	SABb	B	
+D01983	NGC 1507	galaxy--spiral	Sc	G	8.5 ± 1.5	8.5	SBd	B	
+D00831	NGC 1518	barred-spiral	SBd/Ir	G	8.1 ± 0.8	8.1	SBd	B	
+D01027	NGC 1527	galaxy--spiral	S0:r	G	-2.9 ± 0.5	-2.9	E-S0	B	R
+D02567	IC 2035	galaxy--lenticular	SB0p	G	-2.6 ± 1.2	-2.6	E-S0	B	
+D01020	NGC 1533	galaxy--elliptical	E/S0	G	-2.5 ± 0.6	-2.5	E-S0	B	
+D01019	NGC 1543	barred-spiral	SB0	G	-2.0 ± 0.8	-2.0	S0	B	R
+D01025	NGC 1532	barred-spiral	Sbc	G	3.2 ± 0.9	3.2	SBb	B	
+D01024	NGC 1537	galaxy--elliptical	E4	G	-3.6 ± 0.9	-3.6	E	B	
+D01028	NGC 1546	galaxy--spiral	Sa:	G	-0.4 ± 1.7	-0.4	S0-a		
+D01029	NGC 1553	galaxy--lenticular	S0	G	-2.3 ± 0.6	-2.3	S0		R
+D02569	IC 2056	galaxy--spiral	Sc:	G	3.9 ± 1.7	3.9	Sbc	B	R
+D01018	NGC 1559	seyfert-galaxy	SB(s)cd	G	5.9 ± 0.3	5.9	SBc	B	
+D01033	NGC 1566	galaxy--spiral	SABbc	G	4.0 ± 0.2	4.0	SABb	B	
+D01984	NGC 1574	galaxy--lenticular	S0	G	-2.9 ± 0.5	-2.9	E-S0	B	
+D01034	NGC 1596	galaxy--spiral	S0:	G	-2.0 ± 0.5	-2.0	S0		
+D02570	IC 2082	galaxy--lenticular	E/S0	G	-2.9 ± 1.1	-2.9	E-S0		
+D01985	NGC 1589	galaxy--spiral	Sb	G	2.4 ± 0.7	2.4	Sab		
+D00833	NGC 1569	irregular-galaxy	dIm	G	9.6 ± 1.0	9.6	IB	B	
+D00602	NGC 1600	galaxy--elliptical	E3	G	-4.6 ± 1.0	-4.6	E		
+D01035	NGC 1617	galaxy--spiral	Sa	G	1.1 ± 0.3	1.1	SBa	B	
+D00605	NGC 1560	galaxy--spiral	Sd	G	7.0 ± 0.3	7.0	Scd		
+D01986	NGC 1620	galaxy--spiral	Sc	G	4.5 ± 0.8	4.5	SABc	B	
+D00835	NGC 1637	galaxy--spiral	SAB(rs)c	G	5.0 ± 0.4	5.0	Sc	B	
+D01988	NGC 1638	barred-spiral	SB0rs	G	-1.9 ± 1.3	-1.9	S0	B	
+D00836	NGC 1640	barred-spiral	SB(r)b	G	3.0 ± 0.3	3.0	Sb	B	R
+D01989	NGC 1642	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	Sc		
+D01037	NGC 1672	galaxy--spiral	SAb	G	3.3 ± 0.6	3.3	Sb	B	
+D01991	NGC 1653	galaxy--elliptical	E0	G	-4.5 ± 0.6	-4.5	E		
+D01993	NGC 1688	barred-spiral	SBb	G	6.1 ± 1.4	6.1	SBc	B	
+D01992	NGC 1666	galaxy--spiral	S0-a	G	-1.0 ± 0.5	-1.0	S0-a	B	R
+D01055	NGC 1679	barred-spiral	SBm	G	9.4 ± 0.9	9.4	SBm	B	
+D01997	NGC 1703	galaxy--spiral	Sc	G	3.2 ± 0.8	3.2	SBb	B	R
+D01998	NGC 1705	galaxy--spiral	S0:	G	-2.7 ± 0.8	-2.7	E-S0		
+D01996	NGC 1700	galaxy--elliptical	E4	G	-4.7 ± 0.9	-4.7	E		
+D02541	IC 391	galaxy--spiral	SAc	G	5.0 ± 0.4	5.0	Sc		
+D01999	NGC 1723	galaxy--spiral	Sa	G	1.2 ± 0.8	1.2	Sa	B	R
+D00609	NGC 1744	barred-spiral	SBd	G	6.8 ± 1.4	6.8	SBcd	B	
+D00607	NGC 1792	galaxy--spiral	Sc	G	4.0 ± 0.2	4.0	Sbc	B	
+D00610	NGC 1784	barred-spiral	SB(r)c	G	4.8 ± 0.7	4.8	Sc	B	R
+D02001	NGC 1800	galaxy--spiral	Sa:	G	8.0 ± 4.1	8.0	S?	B	
+D00608	NGC 1808	barred-spiral	(R)SAB(s)a	G	1.2 ± 0.5	1.2	Sa	B	R
+D02002	NGC 1832	barred-spiral	SBb	G	4.0 ± 0.1	4.0	Sbc	B	R
+D02003	NGC 1843	galaxy--spiral	Sc	G	6.0 ± 0.5	6.0	SABc	B	
+D02649	NGC 1892	galaxy--spiral	SAc	G	5.3 ± 1.3	5.3	Sc		
+D02004	NGC 1888	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	SBc	B	
+D01057	NGC 1947	galaxy--lenticular	S0p	G	-2.8 ± 0.5	-2.8	E-S0		
+D02542	IC 421	barred-spiral	SBb	G	4.0 ± 0.6	4.0	Sbc	B	R
+D00614	NGC 1954	galaxy--spiral	Sc	G	4.4 ± 0.6	4.4	Sbc		
+D00613	NGC 1964	barred-spiral	Sb	G	3.4 ± 0.7	3.4	SABb	B	
+D02005	NGC 1979	galaxy--lenticular	S0	G	-2.9 ± 0.5	-2.9	E-S0		
+D00349	NGC 1961	galaxy--spiral	Sb	G	4.2 ± 1.0	4.2	SABb	B	
+D02007	NGC 2076	galaxy--lenticular	S0	G	-0.8 ± 1.1	-0.8	S0-a		
+D02009	NGC 2090	galaxy--spiral	Sb	G	4.5 ± 1.8	4.5	Sbc		
+D02008	NGC 2089	galaxy--lenticular	S0	G	-2.9 ± 0.5	-2.9	E-S0	B	
+D02544	IC 438	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	SABc	B	R
+D00617	NGC 2139	galaxy--spiral	SAB(rs)cd	G	5.9 ± 0.4	5.9	Sc	B	
+D02572	IC 2158	galaxy--spiral	Sa	G	2.0 ± 0.5	2.0	SBab	B	R
+D02010	NGC 2179	galaxy--spiral	Sa	G	0.1 ± 0.8	0.1	S0-a	B	
+D01175	NGC 2188	barred-spiral	SBm	G	8.9 ± 0.3	8.9	SBm	B	
+D02011	NGC 2196	galaxy--spiral	Sab	G	1.2 ± 0.7	1.2	Sa		R
+D02012	NGC 2206	galaxy--spiral	Sc	G	4.3 ± 0.7	4.3	Sbc	B	
+D00845	NGC 2207	galaxy--spiral	SAB(rs)bc	G	4.6 ± 0.7	4.6	SABc	B	R
+D00622	NGC 2146	barred-spiral	Sc	G	2.3 ± 0.7	2.3	SBab	B	
+D02046	NGC 2565	galaxy--spiral	SAbc	G	3.7 ± 0.7	3.7	Sbc	B	R
+D00844	NGC 2217	barred-spiral	SBa	G	-0.6 ± 0.6	-0.6	S0-a	B	R
+D02013	NGC 2208	galaxy--spiral	S0	G	-1.9 ± 0.5	-1.9	S0		
+D02014	NGC 2223	barred-spiral	SBbc	G	3.8 ± 1.0	3.8	Sbc	B	R
+D00630	IC 2166	galaxy--spiral	Scd	G	4.7 ± 0.9	4.7	SABc	B	R
+D02017	NGC 2263	galaxy--spiral	Sa:r	G	2.2 ± 0.9	2.2	SBab	B	R
+D00852	NGC 2272	galaxy--lenticular	S0	G	-3.0 ± 0.4	-3.0	E-S0	B	
+D00635	NGC 2280	galaxy--spiral	SA(s)cd	G	5.9 ± 0.4	5.9	Sc		
+D02019	NGC 2283	galaxy--spiral	Sc	G	5.9 ± 0.4	5.9	Sc	B	
+D00853	NGC 2293	galaxy--lenticular	E/S0	G	-1.0 ± 0.6	-1.0	S0-a	B	
+D02020	NGC 2305	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E		
+D01178	NGC 2310	galaxy--spiral	S0	G	-2.0 ± 0.5	-2.0	S0		
+D02862	1E 0657-558 CAR	galaxy--unclassified		G					
+D02546	IC 456	barred-spiral	SB0	G	-1.8 ± 0.9	-1.8	S0	B	
+D02021	NGC 2325	galaxy--elliptical	E4	G	-4.8 ± 0.5	-4.8	E	B	
+D02023	NGC 2339	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.1	4.0	Sbc	B	R
+D02024	NGC 2341	galaxy--spiral	SAc	G	4.9 ± 1.9	4.9	Sc		
+D00856	NGC 2314	galaxy--elliptical	E/S0	G	-4.7 ± 0.7	-4.7	E		
+D02838	UGC 3697 CAM	galaxy--spiral	Scd	G	6.6 ± 1.0	6.6	Scd		
+D02025	NGC 2344	galaxy--spiral	SABb	G	4.3 ± 1.1	4.3	SABb	B	
+D00631	NGC 2268	galaxy--spiral	Sc	G	4.0 ± 0.3	4.0	Sbc	B	R
+D02026	NGC 2347	galaxy--spiral	Sb	G	3.1 ± 0.6	3.1	Sb		R
+D02029	NGC 2397	barred-spiral	SBsb	G	3.0 ± 0.6	3.0	SBb	B	
+D02022	NGC 2336	barred-spiral	SBc	G	4.0 ± 0.3	4.0	Sbc	B	R
+D02018	NGC 2276	galaxy--spiral	Sc	G	5.4 ± 0.6	5.4	SABc	B	R
+D00863	NGC 2366	irregular-galaxy	IB	G	9.8 ± 0.6	9.8	IB	B	
+D02547	IC 467	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	SABc	B	R
+D01181	NGC 2442	barred-spiral	SAB(s)bcpec	G	3.7 ± 0.6	3.7	Sbc	B	
+D01187	NGC 2427	galaxy--spiral	Sc	G	7.7 ± 0.9	7.7	SABd	B	
+D00285	C 7	galaxy--spiral	SAB(s)cd	G	6.0 ± 0.3	6.0	SABc	B	
+D02031	NGC 2435	galaxy--spiral	Sb	G	1.0 ± 0.4	1.0	SABa	B	
+D02032	NGC 2441	barred-spiral	SBc/Sc	G	3.3 ± 0.9	3.3	SABb	B	R
+D02033	NGC 2460	galaxy--spiral	Sb	G	1.9 ± 1.0	1.9	Sab		
+D02034	NGC 2487	galaxy--spiral	SAb	G	3.1 ± 0.5	3.1	Sb	B	R
+D02036	NGC 2501	galaxy--lenticular	SB0	G	-2.0 ± 0.5	-2.0	S0	B	R
+D02035	NGC 2493	barred-spiral	SBa	G	-1.9 ± 0.4	-1.9	S0	B	
+D00646	NGC 2500	galaxy--spiral	SBd	G	7.0 ± 0.3	7.0	Scd	B	
+D02037	NGC 2513	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D00864	NGC 2525	barred-spiral	SBc	G	5.1 ± 0.5	5.1	Sc	B	
+D02039	NGC 2535	galaxy--spiral	SA(r)c pec	G	5.0 ± 0.4	5.0	SBc	B	R
+D02040	NGC 2543	barred-spiral	SBcr	G	3.0 ± 0.3	3.0	Sb	B	R
+D00647	NGC 2537	dwarf-galaxy	SBm	G	8.8 ± 1.1	8.8	SBm	B	
+D02041	NGC 2545	barred-spiral	SBbcr	G	2.3 ± 0.9	2.3	Sab	B	R
+D00866	NGC 2541	galaxy--spiral	SBc	G	6.0 ± 0.4	6.0	SABc	B	
+D02038	NGC 2523	barred-spiral	SBb	G	4.0 ± 0.2	4.0	Sbc	B	R
+D01203	NGC 2559	galaxy--spiral	Sc	G	4.5 ± 0.8	4.5	SBc	B	
+D00865	NGC 2566	barred-spiral	SBa	G	2.7 ± 0.7	2.7	Sb	B	
+D02042	NGC 2549	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D02044	NGC 2552	galaxy--spiral	SAm	G	9.0 ± 0.6	9.0	SABm	B	R
+D02045	NGC 2563	galaxy--lenticular	S0	G	-2.2 ± 0.8	-2.2	S0		
+D02047	NGC 2577	galaxy--spiral	S0	G	-2.9 ± 0.5	-2.9	E-S0		
+D02574	IC 2367	galaxy--spiral	Sc	G	3.1 ± 0.7	3.1	Sb	B	R
+D02043	NGC 2551	galaxy--lenticular	S0-a	G	0.5 ± 1.1	0.5	S0-a		
+D02050	NGC 2592	galaxy--spiral	Sa	G	-4.8 ± 0.7	-4.8	E		
+D02051	NGC 2599	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	Sa		R
+D00384	NGC 2613	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	Sb		
+D02052	NGC 2618	galaxy--spiral	Sab	G	1.5 ± 0.6	1.5	Sab		R
+D02049	NGC 2591	galaxy--spiral	Sc	G	5.9 ± 0.5	5.9	Sc		
+D02053	NGC 2619	barred-spiral	SBcr	G	4.1 ± 0.6	4.1	Sbc	B	
+D00868	NGC 2648	galaxy--spiral	Sa	G	1.1 ± 0.6	1.1	Sa		
+D00867	NGC 2639	galaxy--spiral	Sa(r)	G	0.8 ± 0.8	0.8	Sa		R
+D02056	NGC 2649	galaxy--spiral	SABb	G	3.9 ± 0.5	3.9	SABb	B	R
+D02059	NGC 2663	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02060	NGC 2665	barred-spiral	SBa:r	G	1.0 ± 0.4	1.0	Sa	B	R
+D02054	NGC 2629	galaxy--elliptical	E3	G	-3.2 ± 1.4	-3.2	E-S0		R
+D02055	NGC 2633	barred-spiral	SBb	G	3.0 ± 0.3	3.0	Sb	B	R
+D02057	NGC 2654	barred-spiral	SBab	G	2.0 ± 0.3	2.0	SBab	B	
+D00869	NGC 2672	galaxy--elliptical	E+cG	G	-4.8 ± 0.4	-4.8	E		
+D00165	NGC 2683	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+D00387	NGC 2681	galaxy--lenticular	(R')SAB(rs)0/a	G	0.4 ± 0.6	0.4	S0-a	B	R
+D02548	IC 520	galaxy--spiral	Sa	G	1.7 ± 0.7	1.7	SABa	B	R
+D00652	NGC 2685	galaxy--lenticular	0	G	-1.0 ± 1.0	-1.0	S0-a	B	R
+D00386	NGC 2655	galaxy--lenticular	S0/Sa	G	0.1 ± 0.5	0.1	S0-a	B	
+D02063	NGC 2708	galaxy--spiral	SABb	G	3.1 ± 0.7	3.1	SABb	B	
+D00870	NGC 2693	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D02065	NGC 2713	barred-spiral	SBb	G	2.6 ± 0.7	2.6	SBb	B	R
+D02062	NGC 2701	galaxy--spiral	SAc	G	5.3 ± 0.6	5.3	Sc	B	
+D02064	NGC 2712	barred-spiral	SB(r)b:	G	3.1 ± 0.5	3.1	SBb	B	R
+D02067	NGC 2750	galaxy--spiral	SAbc	G	5.2 ± 0.7	5.2	SABc	B	
+D02069	NGC 2763	galaxy--spiral	Sc	G	5.7 ± 0.6	5.7	SBc	B	R
+D00650	NGC 2742	galaxy--spiral	SAc	G	5.2 ± 0.6	5.2	Sc		
+D02070	NGC 2765	barred-spiral	SB0	G	-1.8 ± 0.9	-1.8	S0	B	
+D00658	NGC 2715	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+D02068	NGC 2756	galaxy--spiral	SAb	G	3.0 ± 0.4	3.0	Sb	B	
+D02071	NGC 2770	galaxy--spiral	Sd	G	5.2 ± 0.6	5.2	Sc	B	
+D00304	C 48	galaxy--spiral	SA(r)ab	G	1.6 ± 0.6	1.6	Sab		R
+D02072	NGC 2781	galaxy--lenticular	S0	G	-1.0 ± 0.9	-1.0	S0-a	B	R
+D00651	NGC 2768	galaxy--lenticular	S0	G	-4.4 ± 1.1	-4.4	E		
+D00653	NGC 2776	barred-spiral	SABc	G	5.1 ± 0.6	5.1	SABc	B	
+D00654	NGC 2784	galaxy--spiral	SA(s)	?	-2.1 ± 0.4	-2.1	S0		
+D02066	NGC 2732	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D02073	NGC 2783	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D00657	NGC 2748	galaxy--spiral	Sbc	G	4.0 ± 0.1	4.0	Sbc		
+D02078	NGC 2836	galaxy--spiral	SAbc	G	4.0 ± 0.4	4.0	Sbc		
+D02077	NGC 2822	galaxy--elliptical	E3	G	-4.5 ± 1.2	-4.5	E		
+D00390	NGC 2782	galaxy--spiral	SABa	G	1.1 ± 0.4	1.1	SABa	B	
+D02074	NGC 2795	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D00392	NGC 2811	galaxy--spiral	Sa	G	1.1 ± 0.4	1.1	SBa	B	
+D00656	NGC 2815	galaxy--spiral	Sb	G	2.9 ± 0.7	2.9	SBb	B	R
+D02076	NGC 2809	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		
+D02075	NGC 2798	barred-spiral	SBa	G	1.1 ± 0.4	1.1	Sa	B	
+D00655	NGC 2835	galaxy--spiral	SBc	G	5.0 ± 0.4	5.0	Sc	B	
+D00648	IC 529	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	Sc		
+D00391	NGC 2787	galaxy--lenticular	SB(r)0+	G	-1.0 ± 0.9	-1.0	S0-a	B	R
+D02079	NGC 2848	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	SABc	B	
+D00649	NGC 2805	galaxy--spiral	SABc	G	6.9 ± 0.3	6.9	SABc	B	R
+D02081	NGC 2855	galaxy--spiral	S0a	G	-0.2 ± 1.1	-0.2	S0-a		
+D00158	NGC 2841	galaxy--spiral	SA(s)b	G	2.9 ± 0.5	2.9	SBb	B	R
+D02575	IC 2469	galaxy--spiral	Sc	G	2.3 ± 1.4	2.3	SBab	B	
+D02088	NGC 2887	galaxy--lenticular	E/S0	G	-3.1 ± 0.5	-3.1	E-S0		
+D02085	NGC 2865	galaxy--elliptical	E4	G	-4.2 ± 1.3	-4.2	E	B	
+D00393	NGC 2859	galaxy--lenticular	(R)SB(r)0	G	-1.2 ± 0.6	-1.2	S0-a	B	R
+D02082	NGC 2857	galaxy--spiral		G	5.2 ± 0.5	5.2	Sc		R
+D02084	NGC 2862	barred-spiral	SBbc	G	3.9 ± 0.9	3.9	SBbc	B	R
+D02086	NGC 2872	galaxy--elliptical	E2	G	-4.8 ± 0.4	-4.8	E		
+D02092	NGC 2915	dwarf-galaxy	dG	G	1.6 ± 3.7	1.6	SBab	B	
+D02089	NGC 2889	galaxy--spiral	Sb	G	4.8 ± 0.8	4.8	SABc	B	R
+D02087	NGC 2880	barred-spiral	SB0-	G	-2.6 ± 0.6	-2.6	E-S0	B	R
+D02091	NGC 2907	galaxy--lenticular	S0	G	1.0 ± 0.7	1.0	Sa		
+D02090	NGC 2906	galaxy--spiral	Sc	G	5.7 ± 0.8	5.7	Sc		
+D00119	NGC 2903	barred-spiral	SAB(rs)bc	G	4.0 ± 0.1	4.0	Sbc	B	
+D02095	NGC 2921	galaxy--spiral	SABa	G	1.1 ± 0.5	1.1	SABa	B	R
+D02093	NGC 2916	galaxy--spiral	Sb	G	3.1 ± 0.6	3.1	Sb		
+D02094	NGC 2918	galaxy--elliptical	E3	G	-4.7 ± 0.9	-4.7	E		
+D00660	NGC 2935	barred-spiral	SBb	G	3.2 ± 0.7	3.2	Sb	B	R
+D02096	NGC 2943	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D02097	NGC 2954	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D02099	NGC 2962	galaxy--spiral	(R)SAB(rs)0+	G	-1.0 ± 0.7	-1.0	S0-a	B	R
+D02100	NGC 2967	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	Sc		
+D00396	NGC 2974	galaxy--lenticular	E4	G	-4.3 ± 1.2	-4.3	E		
+D00394	NGC 2950	galaxy--lenticular	(R)SB(r)0	G	-1.9 ± 0.4	-1.9	S0	B	R
+D00395	NGC 2964	galaxy--spiral	SAB(r)bc	G	4.0 ± 0.9	4.0	Sbc	B	R
+D00873	NGC 2983	galaxy--lenticular	SB0	G	-0.8 ± 1.1	-0.8	S0-a	B	
+D02101	NGC 2977	galaxy--spiral	SAb	G	3.0 ± 0.7	3.0	Sb		
+D00872	NGC 2986	galaxy--elliptical	E1	G	-4.7 ± 0.6	-4.7	E		
+D02098	NGC 2959	barred-spiral	SBab	G	1.6 ± 0.6	1.6	Sab	B	R
+D00661	NGC 2997	galaxy--spiral	SAB(rs)c	G	5.1 ± 0.5	5.1	SABc	B	
+D00662	NGC 2992	seyfert-galaxy	Sa	G	0.9 ± 0.5	0.9	Sa		
+D02102	NGC 2990	galaxy--spiral	SABc	G	5.0 ± 0.5	5.0	SABc	B	
+D00871	NGC 3001	galaxy--spiral	SBbc	G	4.0 ± 0.6	4.0	Sbc	B	R
+D00397	NGC 2976	galaxy--spiral	SAcp	G	5.2 ± 1.1	5.2	Sc		
+D02104	NGC 3003	galaxy--spiral	SAbc	G	4.4 ± 0.8	4.4	Sbc	B	
+D02105	NGC 3023	barred-spiral	SBc	G	5.6 ± 0.8	5.6	SABc	B	
+D01218	NGC 3059	barred-spiral	SBc	G	4.0 ± 0.2	4.0	SBbc	B	
+D00398	NGC 2985	galaxy--spiral	Sb	G	2.4 ± 0.7	2.4	Sab		
+D02103	NGC 3021	galaxy--spiral	SAbc	G	4.0 ± 0.2	4.0	Sbc		
+D01238	NGC 3038	galaxy--spiral	Sb	G	2.8 ± 1.1	2.8	Sb		
+D02108	NGC 3044	barred-spiral	SB(s)c?sp	G	5.5 ± 0.7	5.5	SBc	B	
+D02109	NGC 3052	galaxy--spiral	Sc	G	5.0 ± 0.3	5.0	SABc	B	R
+D02110	NGC 3054	barred-spiral	SBbc	G	3.4 ± 0.6	3.4	Sb	B	R
+D02112	NGC 3056	galaxy--lenticular	S0	G	-1.2 ± 0.6	-1.2	S0-a	B	
+D02576	IC 2522	galaxy--spiral	Sc	G	5.1 ± 0.4	5.1	Sc	B	
+D02111	NGC 3055	galaxy--spiral		G	5.2 ± 0.7	5.2	Sc	B	
+D00123	M 81	galaxy--spiral	SA(s)ab, LINER	G	2.4 ± 0.6	2.4	Sab		
+D02106	NGC 3027	barred-spiral	SBc	G	6.4 ± 0.8	6.4	Sc	B	
+D00124	M 82	irregular-galaxy	I0	G	7.2 ± 4.1	7.2	S?		
+D02113	NGC 3067	galaxy--spiral	SABa	G	2.1 ± 0.4	2.1	SABa	B	
+D00875	NGC 3078	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D01237	NGC 3087	galaxy--elliptical	E	G	-4.3 ± 0.5	-4.3	E		
+D01239	NGC 3095	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc	B	R
+D00874	NGC 3091	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D02577	IC 2533	galaxy--elliptical	E/S0	G	-3.1 ± 0.5	-3.1	E-S0		
+D00400	NGC 3079	barred-spiral	SB(s)c	G	6.4 ± 1.1	6.4	SBc	B	
+D02107	NGC 3066	galaxy--spiral	SABb	G	4.0 ± 0.1	4.0	SABb	B	
+D02114	NGC 3108	galaxy--lenticular	S0	G	-1.1 ± 0.6	-1.1	S0-a		
+D00663	NGC 3109	irregular-galaxy	SB(s)m	G	9.1 ± 0.4	9.1	SBm	B	
+D00399	NGC 3077	irregular-galaxy	I0pec	G	6.1 ± 5.5	6.1	S?		
+D02120	NGC 3149	galaxy--spiral	Sb	G	3.4 ± 0.6	3.4	Sb		
+D02578	IC 2537	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc	B	
+D02115	NGC 3106	galaxy--lenticular	S0	G	-1.8 ± 0.8	-1.8	S0		R
+D00162	C 53	galaxy--spiral	S0	G	-2.9 ± 0.6	-2.9	E-S0		
+D01230	NGC 3136	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02116	NGC 3111	galaxy--lenticular	E/S0	G	-3.2 ± 0.8	-3.2	E-S0		
+D02117	NGC 3124	galaxy--spiral	Sc	G	4.0 ± 0.5	4.0	Sbc	B	R
+D02850	UGC 5470 LEO	dwarf-galaxy	dE3	G	-4.7 ± 1.0	-4.7	E		
+D02118	NGC 3137	galaxy--spiral	Sc	G	5.9 ± 0.4	5.9	SABc	B	
+D02119	NGC 3145	barred-spiral	SBbc	G	4.0 ± 0.1	4.0	SBbc	B	
+D02121	NGC 3156	galaxy--lenticular	S0:	G	-2.4 ± 1.1	-2.4	S0		
+D02123	NGC 3162	galaxy--spiral	Sc	G	4.5 ± 0.9	4.5	SABc	B	R
+D02122	NGC 3158	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00403	NGC 3169	galaxy--spiral	Sa	G	1.2 ± 0.5	1.2	Sa		R
+D02124	NGC 3175	galaxy--spiral	Sb	G	2.0 ± 1.6	2.0	Sab	B	
+D02125	NGC 3177	galaxy--spiral	Sb	G	3.0 ± 0.3	3.0	Sb		
+D00401	NGC 3147	galaxy--spiral	SA(rs)bc	G	3.9 ± 0.5	3.9	Sbc		
+D00405	NGC 3189	galaxy--spiral	Sa	PG					
+D00404	NGC 3184	galaxy--spiral	Sc	G	5.9 ± 0.4	5.9	SABc	B	
+D02126	NGC 3200	galaxy--spiral	Sc	G	4.6 ± 1.0	4.6	Sc	B	
+D00167	NGC 3198	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	Sc	B	R
+D01259	NGC 3223	galaxy--spiral	Sb	G	3.4 ± 0.8	3.4	Sb		
+D02128	NGC 3183	barred-spiral	SBb	G	3.8 ± 0.5	3.8	SBbc	B	
+D02127	NGC 3206	barred-spiral	SBc	G	6.0 ± 0.4	6.0	SBc	B	
+D00407	NGC 3226	galaxy--elliptical	E2 pec	G	-4.8 ± 0.5	-4.8	E		
+D02129	NGC 3241	galaxy--spiral	Sa	G	2.4 ± 0.7	2.4	SABa	B	R
+D01254	NGC 3250	galaxy--elliptical	E...	G	-4.9 ± 0.4	-4.9	E		
+D00409	NGC 3245	galaxy--lenticular	SBb	G	-2.1 ± 0.6	-2.1	S0	B	R
+D01253	NGC 3256	galaxy--spiral	Sb	G	4.0 ± 1.8	4.0	Sbc		
+D00664	IC 2574	dwarf-galaxy	SABm	G	8.9 ± 0.3	8.9	SABm	B	
+D01256	NGC 3258	galaxy--elliptical	E1	G	-4.3 ± 0.9	-4.3	E		
+D01251	NGC 3261	barred-spiral	SBbc	G	3.6 ± 0.9	3.6	Sbc	B	
+D00666	NGC 3254	galaxy--spiral	Sb	G	4.0 ± 0.2	4.0	Sbc		R
+D02579	IC 2584	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D01258	NGC 3268	galaxy--elliptical	E2	G	-4.3 ± 0.9	-4.3	E		
+D02131	NGC 3275	barred-spiral	SBab	G	1.9 ± 0.5	1.9	Sab	B	R
+D02580	IC 2587	galaxy--lenticular	S0	G	-2.7 ± 0.6	-2.7	E-S0	B	
+D02132	NGC 3283	galaxy--lenticular	S0	G	-1.9 ± 0.6	-1.9	S0		
+D00410	NGC 3277	galaxy--spiral	Sa/Sb	G	1.8 ± 0.8	1.8	Sab		R
+D02130	NGC 3266	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D02133	NGC 3285	galaxy--spiral	Sa	G	1.2 ± 0.6	1.2	Sa	B	
+D02134	NGC 3287	barred-spiral	SBd	G	7.6 ± 1.5	7.6	SBd	B	
+D02142	NGC 3366	galaxy--spiral	Sb	G	3.1 ± 0.6	3.1	SBb	B	R
+D02135	NGC 3305	galaxy--elliptical	E0	G	-4.9 ± 0.4	-4.9	E		
+D00411	NGC 3294	galaxy--spiral	Sr...	G	5.1 ± 0.6	5.1	SABc	B	
+D00877	NGC 3311	galaxy--elliptical	S0	G	-3.3 ± 1.0	-3.3	E-S0		
+D02188	NGC 3301	barred-spiral	SB0	G	-0.4 ± 1.0	-0.4	S0-a	B	R
+D01261	NGC 3318	barred-spiral	SBbc	G	3.7 ± 1.0	3.7	Sbc	B	
+D02136	NGC 3313	barred-spiral	SBcr	G	2.4 ± 1.2	2.4	Sab	B	R
+D00412	NGC 3310	galaxy--spiral	SAB(r)bcpec	G	4.0 ± 0.2	4.0	SABb	B	R
+D00665	NGC 3319	barred-spiral	SBc	G	6.0 ± 0.4	6.0	SBc	B	
+D02139	NGC 3336	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	SABc	B	
+D02138	NGC 3332	galaxy--lenticular	E/S0	G	-2.7 ± 1.0	-2.7	E-S0		
+D00667	NGC 3338	galaxy--spiral	Sc	G	5.0 ± 0.6	5.0	Sc		
+D01273	NGC 3347	barred-spiral	SBb	G	3.6 ± 0.8	3.6	SBbc	B	
+D00413	NGC 3344	barred-spiral	Sbc	G	4.0 ± 0.3	4.0	Sbc	B	R
+D00112	M 95	barred-spiral	SB(r)b	G	3.1 ± 0.4	3.1	Sb	B	R
+D02137	NGC 3329	galaxy--spiral	Sa:	G	2.9 ± 0.6	2.9	Sb		R
+D02141	NGC 3353	galaxy--spiral	SABb	G	4.1 ± 2.5	4.1	SABb	B	
+D00879	NGC 3367	barred-spiral	SBcdr	G	5.1 ± 0.6	5.1	Sc	B	
+D00876	NGC 3359	barred-spiral	SBc	G	5.2 ± 0.5	5.2	Sc	B	
+D00111	M 96	galaxy--spiral	SAB(rs)ab	G	2.1 ± 0.7	2.1	Sab	B	R
+D02143	NGC 3370	galaxy--spiral		G	5.1 ± 1.1	5.1	SABc	B	
+D02140	NGC 3348	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00117	NGC 3377	galaxy--elliptical	E6	G	-4.8 ± 0.5	-4.8	E		
+D00113	M 105	galaxy--elliptical	E1	G	-4.8 ± 0.4	-4.8	E		
+D02151	NGC 3450	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	Sb	B	R
+D02144	NGC 3381	barred-spiral	SB	G	3.6 ± 1.2	3.6	SBbc	B	
+D00414	NGC 3395	galaxy--spiral	3	G	5.8 ± 0.8	5.8	Sc	B	
+D00878	NGC 3411	galaxy--lenticular	S0	G	-3.9 ± 0.6	-3.9	E		
+D00116	NGC 3412	galaxy--lenticular	SB(s)0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D02145	NGC 3423	galaxy--spiral	SA(s)cd	G	6.0 ± 0.3	6.0	Sc		
+D00415	NGC 3414	galaxy--lenticular	S0p	G	-2.0 ± 0.6	-2.0	S0	B	
+D02146	NGC 3430	galaxy--spiral	Sb	G	5.1 ± 0.7	5.1	Sc	B	
+D00416	NGC 3432	galaxy--spiral	Irr	G	8.9 ± 0.5	8.9	SBm	B	
+D00880	NGC 3437	galaxy--spiral	SABc	G	5.2 ± 0.5	5.2	SABc	B	
+D02150	NGC 3449	galaxy--spiral	Sa	G	2.2 ± 1.0	2.2	SABa	B	R
+D02147	NGC 3455	galaxy--spiral	SABb	G	3.1 ± 0.8	3.1	SABb	B	
+D02148	NGC 3445	galaxy--spiral		G	8.8 ± 0.9	8.8	SABm	B	
+D02149	NGC 3448	irregular-galaxy	S?	G	3.8 ± 4.2	3.8	S?		
+D02154	NGC 3464	galaxy--spiral	Sc	G	4.9 ± 0.5	4.9	Sc	B	R
+D02152	NGC 3457	galaxy--lenticular	S0gas	G	-4.4 ± 1.5	-4.4	E		
+D02153	NGC 3462	galaxy--lenticular	S0 pec	G	-2.0 ± 0.5	-2.0	S0		R
+D02155	NGC 3471	barred-spiral	SBa	G	1.1 ± 0.5	1.1	SBa	B	R
+D02156	NGC 3485	galaxy--spiral	SAb	G	3.2 ± 0.6	3.2	Sb	B	R
+D00118	NGC 3489	galaxy--lenticular	SAB(rs)0+	G	-1.2 ± 0.9	-1.2	S0-a	B	
+D00155	NGC 3486	barred-spiral	SABc	G	5.2 ± 0.7	5.2	Sc	B	R
+D02157	NGC 3495	galaxy--spiral	Sb	G	6.2 ± 0.9	6.2	SABc	B	
+D00156	NGC 3504	barred-spiral	(R)SAB(s)ab	G	2.1 ± 0.4	2.1	Sab	B	R
+D00669	NGC 3511	galaxy--spiral	Sc	G	5.1 ± 0.4	5.1	SABc	B	
+D00881	NGC 3507	barred-spiral	SB(s)b	G	3.1 ± 0.4	3.1	SBb	B	
+D02840	Arp 148 UMA	galaxy--unclassified		G	10.0 ± 2.0	10.0	I		R
+D00417	NGC 3521	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.2	4.0	SABb	B	
+D02159	NGC 3516	barred-spiral	SB0	G	-1.9 ± 0.5	-1.9	S0	B	R
+D02158	NGC 3497	galaxy--spiral	S0a	G	-1.8 ± 1.4	-1.8	S0		
+D02581	IC 2627	galaxy--spiral	Sc	G	4.6 ± 0.7	4.6	SABc	B	
+D02161	NGC 3547	galaxy--spiral	SAb	G	3.4 ± 1.1	3.4	Sb	B	
+D01274	NGC 3557	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02162	NGC 3549	barred-spiral	SBc	G	5.1 ± 0.6	5.1	SBc	B	
+D02163	NGC 3573	galaxy--lenticular	S0	G	-0.4 ± 0.9	-0.4	S0-a		
+D02160	NGC 3544	galaxy--spiral	Sa	G	1.0 ± 0.5	1.0	Sa	B	
+D00125	M 108	barred-spiral	SB(s)cd	G	5.9 ± 0.5	5.9	Sc	B	
+D02165	NGC 3585	galaxy--elliptical	E7/S0	G	-4.8 ± 0.6	-4.8	E	B	
+D02164	NGC 3583	galaxy--spiral	SAb	G	3.1 ± 0.4	3.1	Sb	B	
+D00418	NGC 3593	galaxy--spiral	SA(s)	G	-0.4 ± 0.9	-0.4	S0-a		
+D00882	NGC 3596	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+D02166	NGC 3600	barred-spiral	SBa	G	1.4 ± 1.4	1.4	SBa	B	
+D00419	NGC 3607	galaxy--spiral	SA(s)	G	-3.2 ± 1.4	-3.2	E-S0		
+D02167	NGC 3604	galaxy--spiral	SAa	M3					
+D00424	NGC 3621	galaxy--spiral	SAd	G	6.9 ± 0.5	6.9	SBcd	B	
+D02168	NGC 3614	galaxy--spiral	Scdr	G	5.2 ± 0.6	5.2	SABc	B	R
+D00421	NGC 3610	galaxy--elliptical	E2	G	-3.9 ± 1.6	-3.9	E	B	R
+D00108	M 65	galaxy--spiral	SAB(rs)a, LINER	G	1.0 ± 0.5	1.0	Sa	B	
+D00423	NGC 3619	galaxy--lenticular	S0	G	-1.0 ± 0.6	-1.0	S0-a		
+D00296	C 40	galaxy--lenticular	(R)SA(rs)0+	G	-0.8 ± 1.1	-0.8	S0-a		R
+D00109	M 66	galaxy--spiral	SAB(s)b	G	3.1 ± 0.4	3.1	Sb	B	
+D02170	NGC 3630	barred-spiral	SB0	G	-1.5 ± 1.1	-1.5	S0	B	
+D00110	NGC 3628	galaxy--spiral	SBb	G	3.1 ± 0.3	3.1	SBb	B	
+D02169	NGC 3629	galaxy--spiral	Sc	G	5.9 ± 0.6	5.9	SABc	B	
+D00425	NGC 3631	galaxy--spiral	SA(s)c	G	5.1 ± 0.5	5.1	Sc		
+D00426	NGC 3640	galaxy--spiral	Sa	G	-4.7 ± 0.7	-4.7	E		
+D02550	IC 676	barred-spiral	(R)SB(r)0+	G	-1.2 ± 0.7	-1.2	S0-a	B	R
+D00883	NGC 3646	galaxy--spiral	Sc	G	4.6 ± 0.9	4.6	Sc		
+D02171	NGC 3648	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		
+D02172	NGC 3652	galaxy--spiral	SAc	G	5.8 ± 0.8	5.8	Sc	B	
+D00427	NGC 3655	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc		
+D02173	NGC 3656	galaxy--spiral	S?(r)	G	3.3 ± 4.9	3.3	S?		R
+D02175	NGC 3659	galaxy--spiral	SAd	G	7.7 ± 2.2	7.7	Sd	B	
+D02176	NGC 3666	barred-spiral	SBc	G	5.1 ± 0.6	5.1	SBc	B	
+D00428	NGC 3665	galaxy--lenticular	E2	G	-2.1 ± 0.6	-2.1	S0		
+D00886	NGC 3672	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc		
+D02178	NGC 3673	barred-spiral	SB(rs)b	G	3.1 ± 0.6	3.1	Sb	B	
+D02177	NGC 3669	galaxy--spiral	SAcd	G	6.9 ± 1.6	6.9	Scd	B	
+D00429	NGC 3675	galaxy--spiral	SAb	G	3.0 ± 0.5	3.0	Sb		R
+D02636	NGC 3684	galaxy--spiral	Sc	G	4.0 ± 0.3	4.0	Sbc		
+D02181	NGC 3683	barred-spiral	SBc	G	4.8 ± 0.7	4.8	SBc	B	
+D02180	NGC 3682	galaxy--spiral	Sc	G	-0.1 ± 0.5	-0.1	S0-a		
+D02182	NGC 3687	galaxy--spiral	Sb	G	3.8 ± 0.7	3.8	Sbc	B	R
+D02183	NGC 3689	galaxy--spiral	Sc	G	5.3 ± 0.5	5.3	SABc	B	
+D02184	NGC 3692	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		R
+D00674	NGC 3690	galaxy--spiral	SAm	G	8.5 ± 1.5	8.5	Sm	B	
+D01286	NGC 3706	galaxy--lenticular	SA(rs)	G	-3.2 ± 0.8	-3.2	E-S0		
+D00885	NGC 3705	barred-spiral	SABa	G	2.4 ± 0.6	2.4	SABa	B	R
+D02185	NGC 3717	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	Sb		
+D00670	NGC 3718	barred-spiral	SBa	G	1.1 ± 0.6	1.1	Sa	B	
+D00431	NGC 3726	galaxy--spiral	SAc	G	5.1 ± 0.5	5.1	Sc	B	R
+D02187	NGC 3742	galaxy--spiral	Sa	G	2.0 ± 0.5	2.0	Sab	B	R
+D02186	NGC 3735	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	Sc		
+D00884	NGC 3756	galaxy--spiral	SAB(rs)bc	G	4.1 ± 0.3	4.1	SABb	B	
+D00676	NGC 3769	barred-spiral	SAb	G	3.4 ± 0.8	3.4	Sb	B	R
+D02848	NGC 3753	galaxy--spiral	Sc	G	2.1 ± 0.6	2.1	SBab	B	
+D02189	NGC 3780	galaxy--spiral	Scdr	G	5.2 ± 0.5	5.2	Sc		
+D02190	NGC 3788	galaxy--spiral	SAab	G	2.3 ± 0.8	2.3	Sab	B	R
+D02192	NGC 3801	galaxy--spiral	S0:	G	-1.7 ± 1.2	-1.7	S0		
+D02193	NGC 3805	galaxy--elliptical	E/S0	G	-2.9 ± 0.5	-2.9	E-S0		
+D00433	NGC 3810	galaxy--spiral	SA(rs)c	G	5.1 ± 0.6	5.1	Sc		
+D02191	NGC 3812	galaxy--elliptical	E3	G	-4.8 ± 0.8	-4.8	E		
+D02194	NGC 3811	barred-spiral	SBcr	G	5.7 ± 0.7	5.7	SBc	B	R
+D00434	NGC 3813	galaxy--spiral	3	G	3.3 ± 0.8	3.3	Sb		
+D00890	NGC 3831	barred-spiral	SB0a	G	-0.6 ± 1.5	-0.6	S0-a	B	R
+D02195	NGC 3835	galaxy--spiral	Sc	G	2.0 ± 0.2	2.0	Sab		R
+D02196	NGC 3838	galaxy--spiral		G	-0.3 ± 0.8	-0.3	S0-a		
+D02197	NGC 3860	galaxy--spiral	Sab	G	2.0 ± 0.6	2.0	Sab		
+D02198	NGC 3872	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D02199	NGC 3882	galaxy--spiral	Sc	G	4.0 ± 0.4	4.0	SBbc	B	
+D00435	NGC 3877	galaxy--spiral	SA(s)c?	G	5.1 ± 0.6	5.1	Sc		
+D02200	NGC 3884	galaxy--spiral	SAa	G	0.6 ± 0.8	0.6	Sa		R
+D00889	NGC 3885	galaxy--spiral	SA(s)0/a	G	0.3 ± 0.9	0.3	S0-a	B	
+D02847	Arp 248 VIR	barred-spiral	SBb	?					
+D00677	NGC 3887	galaxy--spiral	Sc	G	3.9 ± 0.5	3.9	Sbc	B	R
+D02202	NGC 3892	barred-spiral	SB0	G	-1.1 ± 0.6	-1.1	S0-a	B	
+D02201	NGC 3891	galaxy--spiral	Sb/Sc	G	3.7 ± 0.5	3.7	Sbc		
+D00436	NGC 3893	galaxy--spiral	SABc	G	5.1 ± 0.9	5.1	SABc	B	
+D02203	NGC 3894	galaxy--elliptical	E3	G	-4.1 ± 1.4	-4.1	E		
+D00438	NGC 3900	galaxy--spiral	Sa	G	-0.2 ± 1.0	-0.2	S0-a		R
+D00887	NGC 3904	galaxy--elliptical	E2	G	-4.8 ± 0.5	-4.8	E		
+D00437	NGC 3898	galaxy--spiral	SAab	G	1.7 ± 0.8	1.7	Sab		R
+D00439	NGC 3912	barred-spiral	SBb	G	3.0 ± 0.7	3.0	Sb	B	
+D02204	NGC 3917	galaxy--spiral	Sc	G	5.8 ± 0.6	5.8	Sc		
+D00888	NGC 3923	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E	B	
+D02205	NGC 3921	galaxy--lenticular	S0/a pec	G	0.1 ± 0.5	0.1	S0-a		
+D02206	NGC 3922	barred-spiral	SB0/a	G	-0.2 ± 0.6	-0.2	S0-a	B	R
+D00675	NGC 3928	galaxy--lenticular	S0?	G	-3.9 ± 2.1	-3.9	E		R
+D02207	NGC 3936	galaxy--spiral	Sc	G	4.4 ± 0.9	4.4	SBbc	B	
+D00440	NGC 3938	galaxy--spiral	SA(s)c	G	5.1 ± 0.5	5.1	Sc		
+D00441	NGC 3941	barred-spiral	SB(s)0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D00442	NGC 3945	galaxy--lenticular	(R)SB(rs)0+	G	-1.2 ± 0.6	-1.2	S0-a	B	R
+D00443	NGC 3949	galaxy--spiral	SA(s)bc	G	4.0 ± 0.1	4.0	Sbc		
+D00444	NGC 3953	barred-spiral	SB(r)bc	G	4.0 ± 0.2	4.0	Sbc	B	R
+D00678	NGC 3955	galaxy--spiral	Sab	G	0.3 ± 0.9	0.3	S0-a		
+D02208	NGC 3956	galaxy--spiral	SBc	G	5.2 ± 0.5	5.2	SBc	B	
+D00445	NGC 3962	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D02209	NGC 3963	galaxy--spiral	SAbc	G	4.0 ± 0.2	4.0	Sbc	B	R
+D02689	NGC 3972	galaxy--spiral	SABb	G	4.0 ± 0.3	4.0	SABb	B	
+D02210	NGC 3976	galaxy--spiral	SAb	G	3.2 ± 0.7	3.2	Sb	B	
+D00164	NGC 3981	galaxy--spiral	Sbc	G	4.1 ± 0.4	4.1	Sbc	B	
+D02211	NGC 3994	galaxy--spiral		G	4.8 ± 1.1	4.8	Sc		R
+D00126	M 109	barred-spiral	SB(rs)bc, LINER/HII	G	4.0 ± 0.2	4.0	Sbc	B	
+D02212	NGC 4006	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02639	NGC 4005	galaxy--spiral		G	0.0 ± 2.0	0.0	S0-a		R
+D02213	NGC 4013	galaxy--spiral	SAb	G	3.1 ± 0.5	3.1	SABb	B	
+D02214	NGC 4024	galaxy--spiral	S0	G	-3.0 ± 1.4	-3.0	E-S0	B	
+D02215	NGC 4014	galaxy--lenticular	S0-Aa	G	0.0 ± 0.6	0.0	S0-a		
+D02551	IC 750	galaxy--spiral	SAab	G	2.1 ± 0.7	2.1	Sab	B	
+D00448	NGC 4026	galaxy--lenticular	S0	G	-1.8 ± 0.9	-1.8	S0	B	
+D00449	NGC 4027	barred-spiral	Sc	G	7.8 ± 0.7	7.8	SBd	B	
+D00450	NGC 4030	galaxy--spiral	SAbc	G	4.0 ± 0.2	4.0	Sbc		
+D02216	NGC 4032	galaxy--spiral	Sb	G	9.4 ± 1.7	9.4	Sm		
+D02217	NGC 4033	galaxy--lenticular	S0	G	-4.5 ± 1.1	-4.5	E		
+D00311	C 60	barred-spiral	SB(s)m pec	G	8.9 ± 0.5	8.9	SBm	B	
+D00312	C 61	barred-spiral	SB(s)m pec	G	8.9 ± 0.2	8.9	SBm	B	
+D00452	NGC 4041	galaxy--spiral	SA(rs)bc	G	4.0 ± 0.3	4.0	Sbc		
+D02218	NGC 4045	galaxy--spiral	SAB(r)a	G	1.3 ± 0.9	1.3	Sa	B	R
+D02219	NGC 4047	galaxy--spiral	Sb	G	3.3 ± 0.9	3.3	Sb		
+D02220	NGC 4050	galaxy--spiral	Sb	G	2.2 ± 0.6	2.2	Sab	B	R
+D00453	NGC 4051	galaxy--spiral	SABbc	G	4.0 ± 0.1	4.0	SABb	B	
+D02221	NGC 4055	galaxy--elliptical	E3	G	-5.0 ± 0.5	-5.0	E		
+D00679	NGC 4062	barred-spiral	SABc	G	5.2 ± 0.5	5.2	SABc	B	
+D02222	NGC 4064	barred-spiral	SBa	G	1.2 ± 1.8	1.2	SBa	B	
+D02691	NGC 4073	galaxy--elliptical	E3	G	-4.1 ± 0.7	-4.1	E		
+D00455	NGC 4088	galaxy--spiral	SAB(rs)bc	G	4.7 ± 0.9	4.7	SABc	B	
+D02223	NGC 4094	galaxy--spiral	Sbc	G	5.5 ± 0.7	5.5	Sc	B	
+D02224	NGC 4095	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+D00682	NGC 4096	galaxy--spiral	Sc	G	5.3 ± 0.6	5.3	SABc	B	
+D00680	NGC 4100	galaxy--spiral	Sb/Sc	G	4.1 ± 0.6	4.1	Sbc		
+D00456	NGC 4102	galaxy--spiral	SAB(s)b	G	3.0 ± 0.6	3.0	SABb	B	R
+D01293	NGC 4106	galaxy--elliptical	E0	G	-1.2 ± 0.9	-1.2	S0-a	B	
+D00457	NGC 4111	galaxy--lenticular	S0	G	-1.3 ± 1.0	-1.3	S0-a		R
+D02225	NGC 4112	galaxy--spiral	Sa	G	3.2 ± 0.7	3.2	Sb	B	
+D00893	NGC 4116	barred-spiral	SBcd	G	7.3 ± 1.2	7.3	SBcd	B	R
+D00892	NGC 4125	galaxy--elliptical	E6	G	-4.8 ± 0.6	-4.8	E		
+D02226	NGC 4124	galaxy--spiral	S0-a	G	-1.2 ± 0.7	-1.2	S0-a		R
+D02227	NGC 4128	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+D00900	NGC 4138	galaxy--elliptical	E4	G	-0.8 ± 1.1	-0.8	S0-a		R
+D00458	NGC 4143	galaxy--lenticular	SAB(s)0	G	-2.0 ± 0.5	-2.0	S0	B	
+D02228	NGC 4144	galaxy--spiral	SAbc	G	6.1 ± 0.9	6.1	SABc	B	
+D02229	NGC 4145	galaxy--spiral	Sb	G	6.9 ± 0.4	6.9	Scd	B	
+D00460	NGC 4151	seyfert-galaxy	(R')SAB(rs)ab:	G	1.9 ± 0.5	1.9	Sab	B	R
+D00459	NGC 4150	galaxy--elliptical	S0	G	-2.1 ± 0.7	-2.1	S0		R
+D00681	NGC 4157	barred-spiral	SAB(s)b?	G	3.3 ± 0.7	3.3	SABb	B	
+D02230	NGC 4162	galaxy--spiral	Sc	G	4.0 ± 0.3	4.0	Sbc		
+D00895	NGC 4168	galaxy--elliptical	E2	G	-4.9 ± 0.4	-4.9	E		
+D00154	NGC 4169	galaxy--spiral	S0a	G	-2.0 ± 0.6	-2.0	S0		
+D00461	NGC 4179	galaxy--lenticular	S0	G	-1.9 ± 0.9	-1.9	S0	B	
+D02231	NGC 4185	galaxy--spiral	Sb	G	3.7 ± 0.6	3.7	SBbc	B	R
+D00896	NGC 4189	galaxy--spiral	Sc	G	5.9 ± 0.9	5.9	Sc	B	
+D00136	M 98	galaxy--spiral	SAB(s)ab	G	2.6 ± 0.8	2.6	SABb	B	
+D00462	NGC 4203	galaxy--lenticular	SAB0-	G	-2.7 ± 0.7	-2.7	E-S0	B	
+D02232	NGC 4210	galaxy--spiral	SAb	G	3.1 ± 0.4	3.1	Sb	B	R
+D00897	NGC 4208	galaxy--spiral	Sb	PG					
+D00463	NGC 4228	irregular-galaxy		G	9.8 ± 0.5	9.8	I	B	
+D02233	NGC 4217	galaxy--spiral	SAb	G	3.0 ± 0.4	3.0	Sb		
+D00464	NGC 4216	galaxy--spiral	SABb	G	3.0 ± 0.5	3.0	SABb	B	R
+D02234	NGC 4220	galaxy--spiral	S0-Aa	G	-0.2 ± 1.0	-0.2	S0-a		R
+D01299	NGC 4219	galaxy--spiral	Sb	G	4.0 ± 0.4	4.0	Sbc		
+D00166	C 3	barred-spiral	SB(s)dm	G	8.0 ± 0.3	8.0	SBd	B	
+D02235	NGC 4237	galaxy--spiral	SABb	G	4.0 ± 0.5	4.0	SABb	B	R
+D00901	NGC 4242	galaxy--spiral	Sb?	G	7.9 ± 0.5	7.9	Sd	B	
+D00135	C 26	galaxy--spiral	Sc	G	6.0 ± 0.6	6.0	Sc		
+D00465	NGC 4245	galaxy--lenticular	SB(r)0/a	G	0.1 ± 0.4	0.1	S0-a	B	R
+D00466	NGC 4251	galaxy--spiral	S0	G	-1.8 ± 0.7	-1.8	S0	B	R
+D02582	IC 3104	irregular-galaxy	dIrr	G	9.9 ± 0.5	9.9	IB	B	
+D00137	M 99	galaxy--spiral	SA(s)c	G	5.2 ± 0.7	5.2	Sc		
+D00132	M 106	galaxy--spiral	SAB(s)bc	G	4.0 ± 0.2	4.0	Sbc	B	
+D02236	NGC 4260	galaxy--spiral		G	1.0 ± 0.5	1.0	SBa	B	R
+D00467	NGC 4261	galaxy--elliptical	E2	G	-4.8 ± 0.4	-4.8	E		
+D00898	NGC 4262	galaxy--elliptical	E1	G	-2.6 ± 0.7	-2.6	E-S0	B	
+D00894	NGC 4267	galaxy--lenticular	SB(s)0-?	G	-2.7 ± 0.7	-2.7	E-S0	B	
+D00469	NGC 4274	barred-spiral	(R)SB(r)ab	G	1.7 ± 0.6	1.7	SBab	B	R
+D00468	NGC 4273	galaxy--elliptical	3	G	5.2 ± 0.6	5.2	Sc	B	
+D00470	NGC 4278	galaxy--elliptical	E1-2	G	-4.8 ± 0.4	-4.8	E		
+D00472	NGC 4293	galaxy--lenticular	(R)SB(s)0/a	G	0.3 ± 0.8	0.3	S0-a	B	R
+D02237	NGC 4294	barred-spiral	SBc	G	5.9 ± 0.5	5.9	SBc	B	
+D02255	NGC 4319	barred-spiral	SB(r)ab	G	2.5 ± 0.7	2.5	SBab	B	R
+D00685	NGC 4302	galaxy--spiral	SAc	G	5.3 ± 0.8	5.3	Sc		
+D00279	M 61	galaxy--spiral	SAB(rs)bc, HIISy2	G	4.0 ± 0.1	4.0	Sbc	B	R
+D02241	NGC 4305	galaxy--spiral	SAa	G	1.2 ± 0.9	1.2	Sa		R
+D02240	NGC 4304	barred-spiral	SBb	G	4.0 ± 0.6	4.0	Sbc	B	
+D02242	NGC 4312	galaxy--spiral	SAab	G	2.1 ± 0.9	2.1	Sab		R
+D00153	NGC 4314	barred-spiral	SB(rs)a	G	1.0 ± 0.3	1.0	Sa	B	R
+D02238	NGC 4313	galaxy--spiral	SAab	G	2.1 ± 0.4	2.1	Sab		
+D02244	NGC 4332	galaxy--spiral	SBa	G	1.1 ± 0.5	1.1	SBa	B	R
+D00138	M 100	galaxy--spiral	SAB(s)bc	G	4.0 ± 0.3	4.0	SABb	B	
+D02245	NGC 4335	galaxy--elliptical	E3	G	-4.4 ± 1.1	-4.4	E		
+D02243	NGC 4324	galaxy--lenticular	S0	G	-0.8 ± 1.2	-0.8	S0-a	B	R
+D02239	NGC 4330	galaxy--spiral	SAc	G	6.1 ± 0.6	6.1	Sc		
+D00473	NGC 4346	galaxy--elliptical	E6	G	-2.0 ± 0.4	-2.0	S0	B	
+D02246	NGC 4344	galaxy--lenticular	S0:	G	-2.1 ± 0.6	-2.1	S0	B	R
+D00910	IC 3253	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	Sc		
+D02249	NGC 4357	galaxy--spiral	Scd	G	3.7 ± 0.6	3.7	Sbc		R
+D00474	NGC 4350	galaxy--spiral	S0	G	-1.8 ± 0.9	-1.8	S0	B	
+D02248	NGC 4351	barred-spiral	SBb	G	2.8 ± 1.7	2.8	SBb	B	R
+D00475	NGC 4365	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00899	NGC 4369	galaxy--spiral	(R)SA(rs)a	G	1.0 ± 0.9	1.0	SBa	B	R
+D00476	NGC 4371	barred-spiral	SB(r)0+	G	-1.3 ± 0.6	-1.3	S0-a	B	R
+D00141	M 84	galaxy--elliptical	E1	G	-4.4 ± 1.2	-4.4	E		
+D02250	NGC 4377	galaxy--elliptical	E1	G	-2.6 ± 0.6	-2.6	E-S0		
+D01300	NGC 4373	galaxy--elliptical	E/S0	G	-3.3 ± 0.9	-3.3	E-S0	B	
+D02252	NGC 4380	galaxy--spiral	SABa	G	2.4 ± 0.9	2.4	SABa	B	R
+D00139	M 85	galaxy--elliptical	SA(s)0+ pec/E2	G	-1.3 ± 0.6	-1.3	S0-a		
+D02253	NGC 4383	galaxy--spiral	Sa	G	0.8 ± 0.8	0.8	Sa		
+D02256	NGC 4389	barred-spiral	SBbc	G	4.0 ± 0.6	4.0	SBbc	B	
+D00683	NGC 4395	galaxy--spiral	SA(s)m	G	8.8 ± 0.5	8.8	Sm	B	R
+D02251	NGC 4396	galaxy--spiral	SAcd	G	6.8 ± 0.8	6.8	Scd		
+D02254	NGC 4405	galaxy--spiral	Sa	G	0.3 ± 1.1	0.3	S0-a	B	R
+D00140	M 86	galaxy--elliptical	S0(3)/E3	G	-4.8 ± 0.5	-4.8	E		
+D00151	NGC 4414	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	Sc		
+D02257	NGC 4413	galaxy--spiral	Sa	G	2.1 ± 1.1	2.1	Sab	B	R
+D00906	NGC 4416	galaxy--spiral	SAc	G	5.9 ± 0.5	5.9	Sc	B	R
+D02258	NGC 4420	barred-spiral	SBc	G	4.7 ± 0.9	4.7	SBc	B	R
+D00478	NGC 4419	galaxy--elliptical	E pec	G	1.2 ± 0.9	1.2	Sa	B	
+D02259	NGC 4424	galaxy--spiral	Sb	G	1.3 ± 1.6	1.3	Sa	B	
+D00479	NGC 4429	galaxy--lenticular	SA(r)0+	G	-0.8 ± 1.5	-0.8	S0-a	B	R
+D02583	IC 3370	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E	B	
+D00185	NGC 4438	galaxy--spiral	Sa	G	0.6 ± 1.5	0.6	Sa		
+D00903	NGC 4440	galaxy--spiral	SAa	G	1.1 ± 0.6	1.1	Sa	B	R
+D00481	NGC 4442	galaxy--lenticular	S0	G	-1.9 ± 0.4	-1.9	S0	B	
+D00133	C 21	irregular-galaxy	IBm	G	9.8 ± 0.5	9.8	IB	B	
+D00482	NGC 4448	barred-spiral	Sa	G	1.8 ± 0.6	1.8	SBab	B	R
+D00483	NGC 4450	galaxy--spiral	SA(s)ab	G	2.4 ± 0.7	2.4	Sab		
+D00691	NGC 4452	galaxy--lenticular	S0	G	-1.9 ± 0.8	-1.9	S0	B	
+D02584	IC 3392	galaxy--spiral	SAab	G	2.4 ± 0.8	2.4	Sab		
+D02260	NGC 4460	barred-spiral	SB0	G	-1.0 ± 1.4	-1.0	S0-a	B	
+D00686	NGC 4454	galaxy--lenticular	S0-Aa	G	0.2 ± 0.5	0.2	S0-a	B	R
+D00907	NGC 4457	galaxy--lenticular	S0-Aa	G	0.3 ± 1.1	0.3	S0-a	B	R
+D00484	NGC 4459	galaxy--lenticular	S0+r	G	-1.6 ± 1.1	-1.6	S0		R
+D00186	NGC 4461	galaxy--lenticular	SB(s)0+	G	-0.7 ± 1.3	-0.7	S0-a	B	R
+D00909	NGC 4462	galaxy--spiral	SB(r)ab	G	2.1 ± 0.6	2.1	SBab	B	R
+D02261	NGC 4469	galaxy--lenticular	S0-Aa	G	0.3 ± 0.7	0.3	S0-a	B	
+D00278	M 49	galaxy--elliptical	E2	G	-4.8 ± 0.5	-4.8	E		
+D00188	NGC 4477	galaxy--lenticular	SB(s)0:?	G	-1.7 ± 0.7	-1.7	S0	B	R
+D00134	NGC 4490	barred-spiral	SB(s)dpec	G	7.0 ± 0.4	7.0	SBcd	B	
+D02262	NGC 4483	galaxy--lenticular	S0-Aa	G	-1.4 ± 0.7	-1.4	S0-a	B	R
+D00178	M 87	galaxy--elliptical	E+0-1 pec, NLRG Sy	G	-4.3 ± 0.6	-4.3	E		
+D02263	NGC 4489	galaxy--elliptical	E3	G	-4.7 ± 0.9	-4.7	E		R
+D02264	NGC 4491	barred-spiral	SBa	G	1.0 ± 1.1	1.0	SBa	B	
+D00908	NGC 4487	galaxy--spiral	SAB(rs)cd	G	6.0 ± 0.3	6.0	Sc	B	
+D00486	NGC 4494	galaxy--elliptical	E1-2	G	-4.8 ± 0.4	-4.8	E		
+D00281	M 88	galaxy--spiral	SA(rs)b, HIISy2	G	3.3 ± 0.6	3.3	Sb		
+D02265	NGC 4503	galaxy--lenticular	S0	G	-1.7 ± 1.8	-1.7	S0	B	R
+D02266	NGC 4504	galaxy--spiral	Sc	G	6.0 ± 0.6	6.0	SABc	B	
+D02268	NGC 4521	barred-spiral	SB0	G	-0.2 ± 0.7	-0.2	S0-a	B	
+D00687	NGC 4517	galaxy--spiral	Scd	G	6.0 ± 0.3	6.0	Sc		
+D02267	NGC 4515	galaxy--elliptical	E/S0	G	-3.2 ± 0.7	-3.2	E-S0		
+D00905	NGC 4519	galaxy--spiral	SAcd	G	6.9 ± 0.4	6.9	Scd	B	R
+D02269	NGC 4522	galaxy--spiral		G	5.9 ± 0.6	5.9	Sc	B	
+D00487	NGC 4526	galaxy--lenticular	SB0s	G	-1.9 ± 0.4	-1.9	S0	B	
+D02270	NGC 4528	galaxy--spiral		G	-2.0 ± 0.5	-2.0	S0	B	
+D00488	NGC 4527	galaxy--spiral	SAB(s)bc	G	4.0 ± 0.2	4.0	SABb	B	
+D02271	NGC 4531	galaxy--lenticular	SB0+	G	-0.1 ± 2.4	-0.1	S0-a	B	
+D02272	NGC 4532	irregular-galaxy	Im	G	9.7 ± 0.8	9.7	I	B	
+D00489	NGC 4535	barred-spiral	SAB(s)c	G	5.0 ± 0.4	5.0	Sc	B	
+D00490	NGC 4536	galaxy--spiral	SAB(rs)bc	G	4.3 ± 0.7	4.3	SABb	B	
+D02274	NGC 4545	galaxy--spiral	SAc	G	5.6 ± 0.6	5.6	Sc	B	
+D02585	IC 3521	irregular-galaxy	Im	G	9.8 ± 0.4	9.8	IB	B	
+D02273	NGC 4540	galaxy--spiral	SAB(rs)cd	G	6.2 ± 0.9	6.2	SABc	B	
+D00282	M 91	barred-spiral	SBb(rs)	G	3.1 ± 0.5	3.1	Sb	B	R
+D00492	NGC 4550	galaxy--lenticular	SB0:sp	G	-2.0 ± 0.7	-2.0	S0	B	
+D00491	NGC 4546	galaxy--lenticular	SB0	G	-2.7 ± 0.6	-2.7	E-S0	B	
+D00181	M 89	galaxy--elliptical	E, LINER, HIISy2	G	-4.6 ± 0.9	-4.6	E		
+D02275	NGC 4555	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00145	C 36	galaxy--spiral	Sa:	G	6.0 ± 0.4	6.0	Sc	B	
+D02276	NGC 4561	barred-spiral	SBc	G	7.2 ± 1.2	7.2	SBcd	B	
+D00144	C 38	galaxy--spiral	Sc	G	3.2 ± 0.7	3.2	Sb		
+D00688	NGC 4568	galaxy--spiral	SA(rs)bc	G	4.1 ± 0.3	4.1	Sbc		
+D00180	M 90	galaxy--spiral	SAB(rs)ab, LINER, Sy	G	2.4 ± 0.7	2.4	Sab	B	
+D00493	NGC 4570	galaxy--lenticular	S0	G	-1.9 ± 1.0	-1.9	S0	B	
+D00692	NGC 4571	galaxy--spiral	Sc	G	6.4 ± 0.8	6.4	Sc		R
+D02279	NGC 4589	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D02277	NGC 4578	galaxy--elliptical	E3	G	-2.1 ± 0.6	-2.1	S0		R
+D00177	M 58	barred-spiral	SAB(rs)b	G	2.8 ± 0.6	2.8	Sb	B	
+D02278	NGC 4581	galaxy--elliptical	E3	G	-4.2 ± 0.8	-4.2	E	B	
+D02280	NGC 4592	galaxy--spiral	SAd	G	7.9 ± 0.5	7.9	Sd		
+D02284	NGC 4593	barred-spiral	(R)SB(rs)b	G	3.0 ± 0.4	3.0	Sb	B	
+D02281	NGC 4595	galaxy--spiral	Sc	G	4.0 ± 1.9	4.0	SABb	B	
+D00494	NGC 4596	barred-spiral	SB(r)0+	G	-0.8 ± 0.8	-0.8	S0-a	B	R
+D00693	NGC 4605	barred-spiral	SBc	G	5.0 ± 1.5	5.0	SBc	B	
+D00283	M 104	galaxy--spiral	SA(s)a	G	1.1 ± 0.4	1.1	Sa		
+D02283	NGC 4598	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+D02282	NGC 4597	barred-spiral	SBm	G	8.7 ± 1.1	8.7	Sm	B	
+D01302	NGC 4603	galaxy--spiral	Sc	G	5.0 ± 0.3	5.0	SABc	B	
+D02285	NGC 4606	barred-spiral	SBa	G	0.6 ± 1.4	0.6	SBa	B	
+D00912	NGC 4612	galaxy--lenticular	(R)SAB0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D00495	NGC 4618	barred-spiral	SB(rs)m	G	8.6 ± 1.1	8.6	SBm	B	
+D02286	NGC 4619	barred-spiral	SBcr	G	3.1 ± 0.5	3.1	Sb	B	R
+D02287	NGC 4620	galaxy--lenticular	S0	G	-1.8 ± 0.9	-1.8	S0	B	R
+D00175	M 59	galaxy--elliptical	E5	G	-4.8 ± 0.4	-4.8	E		
+D00148	C 32	barred-spiral	SB(s)d	G	6.5 ± 0.7	6.5	SBcd	B	
+D02288	NGC 4623	galaxy--elliptical	SB0+E7	G	-1.5 ± 1.7	-1.5	S0-a	B	
+D02289	NGC 4632	galaxy--spiral	SAc	G	5.0 ± 0.7	5.0	Sc		
+D02291	NGC 4635	galaxy--spiral	SABc	G	6.6 ± 0.7	6.6	SABc	B	
+D01303	NGC 4622	galaxy--spiral	Sb	G	1.1 ± 0.8	1.1	Sa		R
+D02290	NGC 4634	barred-spiral	SBcd	G	5.8 ± 0.5	5.8	SBc	B	
+D00496	NGC 4636	galaxy--elliptical	E/S0-1(E1)	G	-4.8 ± 0.5	-4.8	E		
+D00497	NGC 4643	galaxy--lenticular	SB(rs)0/a	G	-0.5 ± 0.9	-0.5	S0-a	B	R
+D00173	M 60	galaxy--elliptical	E2	G	-4.6 ± 0.9	-4.6	E		
+D00498	NGC 4654	galaxy--spiral	SAc	G	5.9 ± 0.5	5.9	Sc	B	R
+D00696	NGC 4651	galaxy--spiral	SA(rs)c	G	5.1 ± 0.6	5.1	Sc		
+D00150	NGC 4656	barred-spiral	Sc	G	9.0 ± 0.7	9.0	SBm	B	
+D01305	NGC 4645	galaxy--elliptical	E3	G	-3.9 ± 0.7	-3.9	E		
+D01304	NGC 4650	barred-spiral	SBa	G	0.3 ± 0.7	0.3	S0-a	B	
+D02292	NGC 4659	galaxy--spiral	S0-Aa	G	-0.1 ± 0.6	-0.1	S0-a	B	R
+D00499	NGC 4660	galaxy--elliptical	E5	G	-4.6 ± 0.7	-4.6	E	B	
+D00911	NGC 4664	barred-spiral	SB(s)0/a	G	-0.6 ± 1.0	-0.6	S0-a	B	R
+D00501	NGC 4666	galaxy--spiral	SABc:	G	5.0 ± 0.8	5.0	SABc	B	
+D02294	NGC 4670	galaxy--spiral	S0	G	0.7 ± 2.4	0.7	SBa	B	
+D02868	NGC 4676	barred-spiral	SBb(x)	M2					
+D02296	NGC 4680	barred-spiral	SBc	G	0.3 ± 1.5	0.3	S0-a	B	
+D02295	NGC 4677	galaxy--spiral	Sa	G	-1.0 ± 0.8	-1.0	S0-a	B	
+D02297	NGC 4682	galaxy--spiral	Sc	G	5.7 ± 0.7	5.7	SABc	B	
+D01318	NGC 4679	barred-spiral	SBc	G	4.9 ± 0.6	4.9	SBc	B	
+D00502	NGC 4689	galaxy--spiral	Sb	G	4.7 ± 0.9	4.7	Sc		
+D00699	NGC 4691	barred-spiral	(R)SB0/a(s)pec	G	0.3 ± 0.9	0.3	S0-a	B	
+D00503	NGC 4698	barred-spiral	1	G	1.6 ± 1.0	1.6	Sab		R
+D00307	C 52	galaxy--elliptical	E6	G	-4.5 ± 0.8	-4.5	E		
+D00504	NGC 4699	galaxy--spiral	SAB(rs)b	G	2.9 ± 0.4	2.9	SABb	B	
+D00914	NGC 4710	galaxy--spiral	S0	G	-0.9 ± 0.8	-0.9	S0-a	B	R
+D02298	NGC 4713	barred-spiral	SBcd	G	6.8 ± 0.5	6.8	Scd	B	
+D01316	NGC 4709	galaxy--elliptical	E3	G	-4.5 ± 0.7	-4.5	E		
+D00694	NGC 4750	galaxy--spiral	(R)SA(rs)ab	G	2.4 ± 0.6	2.4	Sab		
+D00505	NGC 4725	barred-spiral	SAB(r)sbpec	G	2.2 ± 0.6	2.2	SABa	B	R
+D00131	M 94	galaxy--spiral	(R)SA(r)ab, LINER	G	2.3 ± 0.8	2.3	SABa	B	R
+D02299	NGC 4731	barred-spiral	SBc	G	5.9 ± 0.5	5.9	SBc	B	
+D00913	NGC 4733	galaxy--elliptical	E3	G	-3.6 ± 1.3	-3.6	E	B	
+D02633	NGC 4729	galaxy--elliptical	E3	G	-3.9 ± 0.6	-3.9	E		
+D00506	NGC 4753	galaxy--lenticular	S0-Aa	G	-1.3 ± 1.1	-1.3	S0-a		
+D02301	NGC 4751	galaxy--lenticular	S0	G	-2.8 ± 0.6	-2.8	E-S0		
+D00171	NGC 4762	galaxy--lenticular	S0	G	-1.8 ± 0.9	-1.8	S0	B	R
+D02692	NGC 4760	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E		
+D02302	NGC 4771	galaxy--spiral	SAc	G	6.0 ± 1.2	6.0	Sc		
+D02305	NGC 4785	galaxy--spiral	Sa	G	3.1 ± 0.9	3.1	SBb	B	R
+D00698	NGC 4772	galaxy--spiral	SA(s)a	G	1.2 ± 0.7	1.2	SABa	B	R
+D02303	NGC 4775	galaxy--spiral	Sc	G	6.9 ± 0.4	6.9	Scd		
+D01319	NGC 4767	galaxy--elliptical	E3	G	-4.0 ± 1.2	-4.0	E		
+D02306	NGC 4789	galaxy--elliptical	E/S0	G	-2.3 ± 0.7	-2.3	S0		
+D00507	NGC 4781	barred-spiral	Sc	G	7.0 ± 0.3	7.0	Scd	B	
+D02304	NGC 4782	galaxy--elliptical	E0	G	-4.7 ± 1.0	-4.7	E		
+D00508	NGC 4800	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+D00695	NGC 4793	galaxy--spiral	Sc	G	5.0 ± 0.7	5.0	Sc	B	
+D02307	NGC 4790	barred-spiral	SB(rs)c?	G	4.8 ± 1.5	4.8	SBc	B	
+D02310	NGC 4814	galaxy--spiral	SAb	G	3.1 ± 0.5	3.1	Sb		
+D02309	NGC 4808	galaxy--spiral	SAbc	G	5.9 ± 0.5	5.9	SABc	B	
+D02308	NGC 4802	galaxy--spiral	S0	G	-2.1 ± 0.5	-2.1	S0		R
+D02311	NGC 4816	galaxy--elliptical	E/S0	G	-3.0 ± 0.5	-3.0	E-S0		
+D02312	NGC 4827	galaxy--lenticular	S0	G	-3.0 ± 0.7	-3.0	E-S0	B	
+D00146	M 64	galaxy--spiral	(R)SA(rs)ab, HIISy2	G	2.2 ± 0.6	2.2	SABa	B	
+D01313	IC 3896	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D00701	NGC 4818	galaxy--spiral	Sab	G	2.0 ± 0.5	2.0	SABa	B	
+D00700	NGC 4825	galaxy--lenticular	S0	G	-3.1 ± 0.7	-3.1	E-S0		
+D02314	NGC 4839	galaxy--elliptical	E3	G	-3.9 ± 0.8	-3.9	E		
+D02313	NGC 4830	galaxy--elliptical	E3	G	-2.8 ± 0.8	-2.8	E-S0	B	
+D00509	NGC 4845	galaxy--spiral	SA(s)ab	G	2.2 ± 0.8	2.2	SABa	B	R
+D01314	NGC 4835	galaxy--spiral	SAbc	G	4.0 ± 0.1	4.0	Sbc	B	
+D02315	NGC 4861	galaxy--spiral	SB(s)m/Im(BCD)	G	9.0 ± 0.6	9.0	Sm	B	
+D00510	NGC 4856	galaxy--lenticular	SB0a	G	-0.7 ± 1.2	-0.7	S0-a	B	
+D00511	NGC 4866	galaxy--lenticular	S0-Aa	G	0.0 ± 1.3	0.0	S0-a		R
+D00294	C 35	galaxy--elliptical	E4	G	-4.3 ± 0.5	-4.3	E		
+D00512	NGC 4900	galaxy--spiral	SAc	G	5.1 ± 0.5	5.1	Sc	B	
+D02316	NGC 4914	galaxy--elliptical	E2p	G	-4.1 ± 0.7	-4.1	E		
+D02317	NGC 4897	barred-spiral	SBbc	G	4.0 ± 0.4	4.0	Sbc	B	R
+D02318	NGC 4899	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	SABc	B	
+D02319	NGC 4902	barred-spiral	SBb	G	3.0 ± 0.4	3.0	Sb	B	R
+D02635	NGC 4921	galaxy--spiral	Sa	G	1.9 ± 0.6	1.9	Sab	B	R
+D01321	NGC 4930	galaxy--spiral	SAbc	G	3.9 ± 1.0	3.9	Sbc	B	R
+D02321	NGC 4941	galaxy--spiral	(R)SAB(r)ab:	G	2.1 ± 0.6	2.1	SABa	B	R
+D02320	NGC 4936	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D02322	NGC 4951	galaxy--spiral	Sc	G	6.0 ± 0.3	6.0	SABc	B	
+D01320	NGC 4947	galaxy--spiral	Sc	G	3.4 ± 1.4	3.4	Sb	B	R
+D01323	C 83	barred-spiral	SB(s)cd	G	6.1 ± 0.6	6.1	SBc	B	
+D00513	NGC 4958	galaxy--lenticular	S0	G	-1.9 ± 1.0	-1.9	S0	B	R
+D02323	NGC 4955	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D02324	NGC 4965	galaxy--spiral	Sc	G	6.7 ± 0.9	6.7	SABc	B	
+D01324	NGC 4976	galaxy--elliptical	E3	G	-4.5 ± 1.1	-4.5	E	B	
+D02325	NGC 4981	barred-spiral	SBbc	G	4.0 ± 0.1	4.0	Sbc	B	R
+D02326	NGC 4984	galaxy--spiral	Sa	G	-0.8 ± 0.9	-0.8	S0-a	B	
+D02327	NGC 4999	barred-spiral	SBcr	G	3.1 ± 0.4	3.1	Sb	B	R
+D00514	NGC 4995	galaxy--spiral	SAB(r)b	G	3.1 ± 0.4	3.1	SABb	B	
+D00292	C 29	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.2	4.0	SABb	B	
+D02328	NGC 5012	barred-spiral	SBc	G	5.1 ± 0.5	5.1	Sc	B	R
+D02330	NGC 5016	galaxy--spiral	SABb	G	4.4 ± 0.5	4.4	SABb	B	
+D02329	NGC 5015	galaxy--spiral	SAa	G	1.4 ± 1.1	1.4	Sa	B	R
+D01322	NGC 5011	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D02331	NGC 5018	galaxy--elliptical	E3	G	-4.4 ± 1.0	-4.4	E	B	
+D00515	NGC 5033	galaxy--spiral	SA(s)c	G	5.0 ± 0.8	5.0	Sc		
+D00921	NGC 5044	galaxy--elliptical	E0	G	-4.8 ± 0.4	-4.8	E		
+D02332	NGC 5042	galaxy--spiral	SABc	G	5.0 ± 0.4	5.0	SABc	B	
+D00130	M 63	galaxy--spiral	SA(rs)bc	G	4.0 ± 0.2	4.0	Sbc		
+D00516	NGC 5054	galaxy--spiral	Sb	G	4.2 ± 0.9	4.2	Sbc		
+D01342	IC 4214	barred-spiral	SBa	G	1.4 ± 1.4	1.4	SBa	B	R
+D01336	NGC 5064	galaxy--spiral	SAb	G	2.7 ± 0.9	2.7	Sb		
+D00918	NGC 5061	galaxy--elliptical	E2	G	-4.3 ± 0.9	-4.3	E		
+D02586	IC 4219	galaxy--spiral	Sb	G	3.1 ± 0.6	3.1	SBb	B	
+D00702	NGC 5068	barred-spiral	SAc	G	6.0 ± 0.4	6.0	Sc	B	
+D02333	NGC 5077	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00917	NGC 5078	galaxy--spiral	Sa	G	0.9 ± 0.9	0.9	Sa		
+D02334	NGC 5084	galaxy--spiral		G	-2.0 ± 0.4	-2.0	S0		
+D00919	NGC 5085	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc		
+D02335	NGC 5087	galaxy--lenticular	E/S0	G	-2.9 ± 0.5	-2.9	E-S0	B	
+D01338	NGC 5090	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+D00916	NGC 5101	barred-spiral	SBa(r)	G	0.2 ± 0.5	0.2	S0-a	B	R
+D02336	NGC 5112	galaxy--spiral	Sb	G	5.8 ± 0.6	5.8	SBc	B	
+D01341	NGC 5102	galaxy--spiral	SA0	G	-2.8 ± 0.8	-2.8	E-S0		
+D02337	NGC 5123	galaxy--spiral	SAc	G	5.8 ± 0.7	5.8	Sc		
+D02338	NGC 5127	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D01340	NGC 5121	galaxy--spiral	Sa	G	0.7 ± 1.0	0.7	Sa		
+D02341	NGC 5145	galaxy--lenticular	S0-Aa	G	0.0 ± 2.4	0.0	S0-a	B	
+D02339	NGC 5134	galaxy--spiral	SABb	G	2.9 ± 1.0	2.9	SABb	B	R
+D01339	C 77	galaxy--lenticular	S0 pec	G	-2.1 ± 0.6	-2.1	S0		
+D02344	NGC 5135	barred-spiral	SBb	G	2.4 ± 0.6	2.4	Sab	B	
+D02342	NGC 5147	galaxy--spiral		G	7.9 ± 0.6	7.9	Sd	B	
+D02340	NGC 5140	galaxy--elliptical	E/S0	G	-3.0 ± 0.4	-3.0	E-S0	B	
+D02345	NGC 5157	galaxy--spiral	SAa	G	1.1 ± 0.6	1.1	Sa	B	R
+D02343	NGC 5150	barred-spiral	SBbc	G	3.7 ± 0.7	3.7	SBbc	B	R
+D01335	NGC 5156	galaxy--spiral	Sc	G	3.5 ± 1.0	3.5	SBb	B	R
+D01343	NGC 5161	galaxy--spiral	Sc	G	5.5 ± 0.6	5.5	Sc		
+D02346	NGC 5172	galaxy--spiral	Sc	G	4.7 ± 1.1	4.7	SABc	B	
+D00922	NGC 5204	galaxy--spiral	SA(s)m	G	8.9 ± 0.4	8.9	Sm		
+D00703	NGC 5170	galaxy--spiral	Sc	G	4.9 ± 0.6	4.9	Sc		
+D00129	M 51	galaxy--spiral	SA(s)bc pec	G	4.0 ± 0.3	4.0	SABb	B	
+D02347	NGC 5183	galaxy--spiral		G	3.2 ± 0.8	3.2	Sb		
+D01346	NGC 5188	galaxy--spiral	Sa...	G	3.0 ± 0.5	3.0	Sb	B	
+D01345	NGC 5193	galaxy--elliptical	E3	G	-4.1 ± 1.1	-4.1	E	B	
+D02348	NGC 5218	barred-spiral	SBb	G	3.1 ± 0.5	3.1	SBb	B	
+D01347	NGC 5206	galaxy--lenticular	E/S0	G	-2.9 ± 0.6	-2.9	E-S0	B	
+D02587	IC 4296	galaxy--elliptical	E1	G	-4.9 ± 0.3	-4.9	E		
+D00122	M 83	galaxy--spiral	SAB(s)c	G	5.0 ± 0.3	5.0	Sc	B	
+D00300	C 45	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.3	4.0	SABb	B	
+D02349	NGC 5237	galaxy--elliptical	E/S0	G	-3.5 ± 1.3	-3.5	E-S0		
+D00707	NGC 5247	galaxy--spiral	Sc	G	4.1 ± 0.3	4.1	SABb	B	
+D02350	NGC 5254	galaxy--spiral	Sc	G	5.0 ± 0.3	5.0	Sc		R
+D02351	NGC 5257	galaxy--spiral	SABb	G	3.2 ± 0.6	3.2	SABb	B	
+D00923	NGC 5253	barred-spiral	SBm	G	8.9 ± 2.9	8.9	SBm	B	
+D02352	NGC 5264	irregular-galaxy	IrrB	G	9.7 ± 0.9	9.7	IB	B	
+D00518	NGC 5273	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0		
+D01348	NGC 5266	galaxy--lenticular	S0	G	-2.5 ± 0.6	-2.5	S0		
+D02354	NGC 5297	galaxy--spiral	Sb	G	4.9 ± 0.7	4.9	Sc	B	
+D00710	NGC 5308	galaxy--lenticular	S0	G	-2.1 ± 1.4	-2.1	S0	B	
+D02353	NGC 5292	galaxy--spiral	Sa	G	1.8 ± 0.9	1.8	Sab		
+D02355	NGC 5298	galaxy--spiral	Sb	G	2.7 ± 1.3	2.7	SBb	B	R
+D00519	NGC 5322	galaxy--elliptical	E2	G	-4.8 ± 0.4	-4.8	E		
+D02356	NGC 5313	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	SABb	B	
+D02358	NGC 5326	galaxy--spiral	Sa	G	0.8 ± 0.6	0.8	Sa		
+D02359	NGC 5327	barred-spiral	SBcdr	G	3.2 ± 0.6	3.2	Sb	B	
+D02357	NGC 5324	galaxy--spiral	Sbc	G	4.9 ± 0.5	4.9	Sc		
+D02361	NGC 5329	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02360	NGC 5328	galaxy--elliptical	E1	G	-4.7 ± 1.0	-4.7	E		
+D02363	NGC 5334	galaxy--spiral	SAc	G	5.3 ± 0.7	5.3	Sc	B	
+D02365	NGC 5347	galaxy--spiral	SAab	G	2.0 ± 0.3	2.0	Sab	B	R
+D00704	NGC 5353	galaxy--spiral	S0	G	-2.1 ± 0.9	-2.1	S0		
+D02364	NGC 5345	galaxy--spiral	SAa	G	1.1 ± 0.8	1.1	Sa		R
+D02362	NGC 5333	galaxy--spiral	S0	G	-1.8 ± 0.8	-1.8	S0	B	R
+D02366	NGC 5356	galaxy--spiral	SAbc	G	3.8 ± 0.6	3.8	Sbc	B	
+D00705	NGC 5371	galaxy--spiral	Sbc	G	4.0 ± 0.2	4.0	Sbc	B	
+D02690	NGC 5389	galaxy--lenticular	S0/a	G	-0.4 ± 1.0	-0.4	S0-a	B	R
+D00521	NGC 5364	galaxy--spiral	5	G	4.0 ± 0.2	4.0	Sbc		R
+D00709	NGC 5377	barred-spiral	(R)SB(s)a	G	1.0 ± 0.3	1.0	Sa	B	R
+D02368	NGC 5378	galaxy--spiral	SAa	G	1.0 ± 0.4	1.0	Sa	B	R
+D00708	NGC 5396	barred-spiral	SBab	M3					
+D02369	NGC 5383	galaxy--spiral	SAb	G	3.1 ± 0.5	3.1	Sb	B	
+D01357	NGC 5365	galaxy--lenticular	S0	G	-2.4 ± 0.9	-2.4	S0	B	R
+D02588	IC 4351	galaxy--spiral	Sc	G	3.3 ± 0.7	3.3	Sb		
+D00706	NGC 5395	galaxy--spiral	SABb	G	3.2 ± 0.7	3.2	SABb	B	
+D02371	NGC 5406	galaxy--spiral	SAbc	G	3.8 ± 0.6	3.8	Sbc	B	
+D02374	NGC 5430	galaxy--spiral	Sb(s)b	G	3.1 ± 0.4	3.1	SBb	B	
+D02370	NGC 5398	galaxy--spiral	SAd	G	7.9 ± 0.8	7.9	Sd	B	
+D02376	NGC 5448	galaxy--spiral	(R)SAB(r)a	G	1.4 ± 0.8	1.4	Sa	B	R
+D02375	NGC 5440	galaxy--spiral	SAa	G	1.0 ± 0.5	1.0	Sa		
+D00193	M 101	galaxy--spiral	SAB(rs)cd	G	5.9 ± 0.3	5.9	SABc	B	
+D02372	NGC 5408	irregular-galaxy	IB	G	9.9 ± 0.5	9.9	IB	B	
+D02373	NGC 5426	galaxy--spiral	Sbc	G	5.0 ± 0.5	5.0	Sc		
+D01359	NGC 5419	galaxy--elliptical	E3	G	-4.1 ± 1.2	-4.1	E		
+D00522	NGC 5473	galaxy--lenticular	E/SB0	G	-2.6 ± 0.7	-2.6	E-S0	B	
+D00523	NGC 5474	dwarf-galaxy	SA(s)cd pec	G	6.1 ± 0.6	6.1	Sc		
+D02379	NGC 5480	galaxy--spiral	Sc	G	4.9 ± 0.5	4.9	Sc		
+D02378	NGC 5468	galaxy--spiral	Sc	G	6.0 ± 0.3	6.0	SABc	B	
+D02377	NGC 5464	barred-spiral	SBm	G	9.5 ± 1.8	9.5	SBm	B	
+D02380	NGC 5485	galaxy--lenticular	S0	G	-2.0 ± 0.6	-2.0	S0		
+D01360	NGC 5483	galaxy--spiral	Sc	G	4.9 ± 0.5	4.9	Sc	B	
+D02641	NGC 5494	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc		
+D02381	NGC 5495	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	Sc	B	R
+D02382	NGC 5507	galaxy--lenticular	S0	G	-2.3 ± 0.7	-2.3	S0	B	R
+D02589	IC 4386	barred-spiral	SBc	G	8.0 ± 0.5	8.0	Sd	B	
+D02849	PGC 3110345 VIR	galaxy--unclassified		G	-5.0 ± 2.0	-5.0	E		
+D00196	NGC 5529	galaxy--spiral	SAbc	G	5.1 ± 0.8	5.1	SABc	B	
+D02383	NGC 5525	galaxy--lenticular	S0	G	-1.7 ± 1.1	-1.7	S0	B	
+D02384	NGC 5532	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0		
+D00197	NGC 5557	galaxy--elliptical	E3	G	-4.7 ± 0.7	-4.7	E		
+D01368	NGC 5530	galaxy--spiral	SA(rs)bc	G	4.2 ± 0.5	4.2	SABb	B	
+D02385	NGC 5549	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D00711	NGC 5585	galaxy--spiral	SAB(s)d	G	6.9 ± 0.5	6.9	SABc	B	
+D00524	NGC 5566	barred-spiral	1	G	1.6 ± 0.7	1.6	SBab	B	R
+D01369	NGC 5556	galaxy--spiral	SBc	G	6.7 ± 0.7	6.7	Scd	B	
+D00525	NGC 5576	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02590	IC 4402	galaxy--spiral	Sb	G	3.2 ± 0.6	3.2	Sb		
+D02387	NGC 5587	galaxy--lenticular	S0-a	G	0.1 ± 0.7	0.1	S0-a	B	
+D02386	NGC 5584	galaxy--spiral	SABc	G	5.9 ± 0.3	5.9	SABc	B	
+D00712	NGC 5600	galaxy--spiral	SABc	G	4.8 ± 0.6	4.8	SABc	B	
+D02388	NGC 5592	galaxy--spiral	Sb	G	3.9 ± 0.5	3.9	Sbc	B	
+D02392	NGC 5614	galaxy--spiral	SAab	G	1.7 ± 0.7	1.7	Sab		R
+D02389	NGC 5595	galaxy--spiral	Sc	G	4.9 ± 0.6	4.9	SABc	B	
+D02390	NGC 5605	galaxy--spiral	Sbc	G	4.9 ± 0.5	4.9	SABc	B	
+D00526	NGC 5631	galaxy--lenticular	S0	G	-2.0 ± 0.7	-2.0	S0		
+D02393	NGC 5623	galaxy--elliptical	E3	G	-4.7 ± 0.8	-4.7	E	B	
+D02394	NGC 5633	galaxy--spiral	Sb	G	3.2 ± 0.6	3.2	Sb		R
+D00925	NGC 5638	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D02398	NGC 5660	galaxy--spiral	SABc	G	5.2 ± 0.5	5.2	SABc	B	
+D02396	NGC 5653	galaxy--spiral	Sb	G	3.0 ± 0.7	3.0	Sb		R
+D02397	NGC 5656	galaxy--spiral	SAab	G	2.0 ± 0.5	2.0	Sab		
+D02395	NGC 5645	barred-spiral	SBcd	G	6.6 ± 0.9	6.6	SBcd	B	
+D01370	IC 4444	galaxy--spiral	SABb	G	4.0 ± 0.2	4.0	SABb	B	
+D00713	NGC 5678	barred-spiral	SABb	G	3.3 ± 0.8	3.3	SABb	B	
+D02399	NGC 5665	galaxy--spiral	SAc	G	5.0 ± 0.4	5.0	Sc	B	R
+D02552	IC 1029	galaxy--spiral	SABb	G	3.0 ± 0.4	3.0	SABb	B	
+D00198	NGC 5676	galaxy--spiral	Sc	G	4.6 ± 0.9	4.6	Sc		
+D02400	NGC 5668	galaxy--spiral	SAcd	G	6.9 ± 0.4	6.9	Scd		R
+D02391	NGC 5612	galaxy--spiral	Sa:	G	2.2 ± 0.6	2.2	Sab		
+D02402	NGC 5687	galaxy--lenticular	S0	G	-3.2 ± 1.0	-3.2	E-S0		
+D00199	NGC 5689	galaxy--lenticular	S0	G	0.4 ± 0.6	0.4	S0-a	B	
+D02401	NGC 5670	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	
+D02404	NGC 5691	galaxy--spiral	SAa	G	1.2 ± 0.7	1.2	Sa	B	
+D00924	NGC 5701	galaxy--spiral	(R)SB(rs)0/a	G	-0.3 ± 0.9	-0.3	S0-a	B	R
+D02403	NGC 5688	barred-spiral	SBc	G	5.0 ± 0.4	5.0	Sc	B	
+D00926	NGC 5713	galaxy--spiral	SAB(rs)bc	G	4.0 ± 0.3	4.0	SABb	B	R
+D02405	NGC 5718	galaxy--lenticular	E/S0	G	-2.9 ± 0.5	-2.9	E-S0		
+D02406	NGC 5729	galaxy--spiral	SAb	G	3.2 ± 0.7	3.2	Sb		
+D02407	NGC 5740	galaxy--spiral	SAB(rs)b	G	3.0 ± 0.4	3.0	Sb	B	R
+D00528	NGC 5746	barred-spiral	SAb	G	3.0 ± 0.4	3.0	Sb	B	
+D02410	NGC 5772	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		R
+D02409	NGC 5770	galaxy--lenticular	S0	G	-1.9 ± 0.4	-1.9	S0	B	R
+D00714	NGC 5775	galaxy--spiral	Sbc	G	5.1 ± 0.7	5.1	SBc	B	
+D02415	NGC 5832	barred-spiral	SB(rs)b?	G	3.3 ± 1.3	3.3	Sb	B	
+D02413	NGC 5792	galaxy--spiral	SAb	G	3.0 ± 0.3	3.0	Sb	B	R
+D02411	NGC 5791	galaxy--elliptical	E3	G	-4.2 ± 1.3	-4.2	E		
+D01375	NGC 5786	galaxy--spiral	Sc	G	4.2 ± 0.7	4.2	Sbc	B	
+D02412	NGC 5812	galaxy--elliptical	E0	G	-4.8 ± 0.4	-4.8	E		
+D00716	NGC 5813	galaxy--elliptical	E1...	G	-4.9 ± 0.4	-4.9	E		
+D02414	NGC 5831	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D00928	NGC 5838	galaxy--lenticular	E/S0	G	-2.6 ± 0.6	-2.6	E-S0	B	
+D00529	NGC 5846	galaxy--elliptical	E0-1/S0	G	-4.8 ± 0.7	-4.8	E		
+D00194	M 102	galaxy--lenticular	S0-a	G	-1.3 ± 0.6	-1.3	S0-a	B	
+D02417	NGC 5859	barred-spiral	SBb	G	4.0 ± 0.2	4.0	SBbc	B	
+D02416	NGC 5854	galaxy--lenticular	S0-Aa	G	-1.1 ± 0.6	-1.1	S0-a	B	R
+D02421	NGC 5874	galaxy--spiral	SAbc	G	5.0 ± 0.7	5.0	SABc	B	
+D02422	NGC 5875	galaxy--spiral	Sb	G	3.2 ± 0.6	3.2	Sb		R
+D02418	NGC 5861	galaxy--spiral	Sc	G	5.0 ± 0.5	5.0	SABc	B	R
+D02419	NGC 5864	galaxy--lenticular	S0	G	-1.6 ± 1.0	-1.6	S0	B	R
+D02420	NGC 5869	galaxy--elliptical		G	-2.2 ± 0.9	-2.2	S0		
+D00927	NGC 5879	galaxy--spiral	SA(rs)bc	G	3.6 ± 0.6	3.6	Sbc	B	
+D02426	NGC 5912	galaxy--elliptical	E/S0	G	-3.2 ± 1.7	-3.2	E-S0		
+D01378	NGC 5833	galaxy--spiral	Sc	G	4.3 ± 0.7	4.3	SBbc	B	
+D02423	NGC 5878	galaxy--spiral	Sb	G	3.2 ± 0.5	3.2	Sb		
+D02424	NGC 5892	barred-spiral	SBc	G	7.0 ± 0.3	7.0	SABc	B	
+D00717	NGC 5885	galaxy--spiral	SBc	G	5.0 ± 0.4	5.0	SABc	B	R
+D02425	NGC 5905	barred-spiral	SB(r)b	G	3.2 ± 0.6	3.2	Sb	B	R
+D00530	NGC 5907	galaxy--spiral	SABc	G	5.2 ± 0.7	5.2	SABc	B	
+D02836	PGC 54559 SER	galaxy--spiral	(RP)SA0/a	G	-0.4 ± 3.8	-0.4	S0-a		R
+D00930	NGC 5898	galaxy--elliptical	E0	G	-4.3 ± 0.9	-4.3	E	B	
+D02591	IC 4538	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	SABc	B	
+D02427	NGC 5921	barred-spiral	SB(r)bc	G	4.0 ± 0.2	4.0	Sbc	B	R
+D02429	NGC 5949	galaxy--spiral	Sc	G	4.0 ± 0.3	4.0	Sbc		R
+D02428	NGC 5936	barred-spiral	SBb	G	3.2 ± 0.6	3.2	SBb	B	R
+D02431	NGC 5965	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	SABb	B	
+D02430	NGC 5953	galaxy--lenticular	S0	G	0.1 ± 1.6	0.1	S0-a		
+D02592	IC 4562	galaxy--elliptical	E3	G	-5.0 ± 0.4	-5.0	E		
+D01379	NGC 5938	galaxy--spiral	E	G	4.3 ± 0.6	4.3	SBbc	B	
+D00719	NGC 5962	galaxy--spiral	Sc	G	5.1 ± 0.7	5.1	Sc		R
+D00718	NGC 5964	barred-spiral	SBcd	G	6.9 ± 0.5	6.9	SBcd	B	
+D02432	NGC 5970	barred-spiral	SBbc	G	5.0 ± 0.6	5.0	SBc	B	R
+D00531	NGC 5982	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D02433	NGC 5980	galaxy--spiral	Sbc	G	4.4 ± 1.6	4.4	Sbc		
+D00720	NGC 6015	barred-spiral	SBcd	G	5.9 ± 0.4	5.9	Sc		
+D02436	NGC 6012	barred-spiral	(R)SB(r)ab:	G	1.7 ± 0.8	1.7	SBab	B	R
+D02435	NGC 6010	galaxy--lenticular	S0-a	G	0.3 ± 0.8	0.3	S0-a		
+D02842	NGC 6027	galaxy--lenticular	S0pec	G	-1.5 ± 1.2	-1.5	S0-a		
+D02844	NGC 6047	galaxy--unclassified	E4	G	-3.6 ± 0.7	-3.6	E		
+D02438	NGC 6060	galaxy--spiral	SAbc	G	4.8 ± 0.7	4.8	SABc	B	R
+D02861	Arp 188 DRA	barred-spiral	SB	G	4.9 ± 0.5	4.9	Sc	B	
+D02439	NGC 6070	galaxy--spiral	Sc	G	5.9 ± 0.4	5.9	Sc		
+D02440	NGC 6140	barred-spiral	SBc	G	5.6 ± 0.6	5.6	Sc	B	
+D00532	NGC 6118	galaxy--spiral	Sc	G	6.0 ± 0.3	6.0	Sc		
+D02441	NGC 6146	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+D02442	NGC 6155	galaxy--spiral	Sc	G	4.1 ± 1.9	4.1	SBbc	B	R
+D00932	NGC 6166	galaxy--elliptical	E2p	G	-4.3 ± 0.5	-4.3	E		
+D02444	NGC 6181	galaxy--spiral	SA(rs)c	G	5.1 ± 0.7	5.1	SABc	B	
+D02447	NGC 6251	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D00534	NGC 6217	barred-spiral	(R)SB(rs)bc	G	4.0 ± 0.2	4.0	Sbc	B	R
+D02443	NGC 6156	galaxy--spiral	Sc	G	5.0 ± 0.5	5.0	Sc	B	
+D00201	NGC 6207	galaxy--spiral	SA(s)c	G	5.0 ± 0.6	5.0	Sc		
+D02445	NGC 6236	barred-spiral	SBc/Sc	G	5.9 ± 0.5	5.9	SABc	B	
+D02446	NGC 6239	barred-spiral	SBb	G	3.4 ± 0.8	3.4	SBb	B	
+D02837	NGC 6241	galaxy--unclassified	Sbc	G	4.4 ± 1.6	4.4	Sbc		
+D01411	NGC 6215	galaxy--spiral	Sc	G	4.9 ± 0.4	4.9	Sc		
+D00724	NGC 6340	galaxy--spiral	Sa	G	0.4 ± 0.6	0.4	S0-a		R
+D02596	IC 4633	galaxy--spiral	Sc	G	6.0 ± 0.5	6.0	Sc	B	R
+D02449	NGC 6338	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0		
+D02451	NGC 6359	galaxy--unclassified	E/S0	G	-2.8 ± 0.7	-2.8	E-S0		
+D02448	NGC 6305	galaxy--spiral	S	G	-2.9 ± 0.5	-2.9	E-S0	B	
+D02450	NGC 6350	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		
+D02452	NGC 6370	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+D02597	IC 4646	galaxy--spiral	Sb	G	4.7 ± 0.8	4.7	Sc		
+D02456	NGC 6395	galaxy--spiral	Sc	G	5.8 ± 0.5	5.8	SBc	B	
+D02459	NGC 6412	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+D02453	NGC 6384	galaxy--spiral	SAB(r)bc	G	3.6 ± 0.6	3.6	Sbc	B	R
+D02454	NGC 6389	galaxy--spiral	Sbc	G	3.7 ± 0.6	3.7	Sbc		
+D02458	NGC 6411	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D02455	NGC 6392	galaxy--spiral	S0a	G	1.7 ± 0.8	1.7	SABa	B	
+D02457	NGC 6407	galaxy--lenticular	S0	G	-2.3 ± 1.0	-2.3	S0		
+D01453	IC 4662	dwarf-galaxy	dIrr	G	9.7 ± 0.4	9.7	IB	B	
+D00206	NGC 6503	galaxy--spiral	SA(s)cd	G	5.8 ± 0.5	5.8	Sc		
+D00944	NGC 6482	galaxy--elliptical	E3p	G	-4.9 ± 0.4	-4.9	E		
+D02461	NGC 6500	galaxy--spiral	Sa	G	1.7 ± 0.7	1.7	Sab		
+D02462	NGC 6524	galaxy--elliptical	E/S0	G	-3.0 ± 0.5	-3.0	E-S0		
+D02460	NGC 6492	galaxy--spiral	Sb	G	3.9 ± 0.5	3.9	Sbc		
+D02463	NGC 6555	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+D02464	NGC 6574	galaxy--spiral	Sbc	G	4.0 ± 0.5	4.0	SABb	B	
+D02465	NGC 6599	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D00725	NGC 6643	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	Sc		
+D01395	NGC 6438	galaxy--lenticular	E/S0	G	-2.2 ± 0.9	-2.2	S0		
+D02466	NGC 6654	barred-spiral	(R)SB(s)0/a	G	-0.6 ± 1.0	-0.6	S0-a	B	R
+D02600	IC 4704	galaxy--lenticular	E/S0	G	-3.0 ± 0.4	-3.0	E-S0		
+D01459	IC 4721	galaxy--spiral	Sb	G	5.9 ± 0.5	5.9	SBc	B	
+D02468	NGC 6689	galaxy--spiral	Sc	G	6.4 ± 0.8	6.4	SABc	B	
+D02469	NGC 6701	barred-spiral	SBa	G	1.0 ± 0.4	1.0	Sa	B	R
+D02467	NGC 6673	galaxy--elliptical	E3	G	-3.8 ± 0.8	-3.8	E	B	
+D01461	IC 4765	galaxy--elliptical	E3	G	-3.9 ± 0.6	-3.9	E		
+D00744	NGC 6703	galaxy--spiral	S0	G	-2.8 ± 0.6	-2.8	E-S0		
+D01462	NGC 6684	galaxy--lenticular	SB0	G	-1.9 ± 0.7	-1.9	S0	B	
+D01465	NGC 6699	galaxy--spiral	SABb	G	3.5 ± 0.6	3.5	SABb	B	
+D02470	NGC 6708	galaxy--spiral	Sa	G	2.6 ± 1.5	2.6	Sb		
+D01466	IC 4797	galaxy--elliptical	E5	G	-3.9 ± 0.9	-3.9	E		
+D02471	NGC 6721	galaxy--elliptical	E3	G	-4.3 ± 0.7	-4.3	E		
+D02601	IC 4813	galaxy--spiral	Sc?	G					
+D01464	IC 4820	galaxy--spiral	SAcd	G	7.2 ± 0.6	7.2	Scd	B	
+D01463	C 101	galaxy--spiral	SAB(r)bc	G	4.0 ± 0.2	4.0	Sbc	B	R
+D01469	NGC 6753	galaxy--spiral	(R)SA(r)b	G	3.0 ± 0.3	3.0	Sb		R
+D02472	NGC 6754	galaxy--spiral	Sc	G	3.2 ± 0.7	3.2	Sb	B	
+D01468	NGC 6758	galaxy--elliptical	E1	G	-4.2 ± 0.5	-4.2	E		
+D02602	IC 4831	galaxy--spiral	Sa	G	2.0 ± 0.6	2.0	SBab	B	
+D02604	IC 4837	galaxy--spiral	Sc:	G	6.0 ± 0.4	6.0	SBc	B	
+D02603	IC 4836	barred-spiral	SBc	G	5.2 ± 1.0	5.2	SBc	B	
+D01471	NGC 6769	galaxy--spiral	SABb	G	3.0 ± 0.3	3.0	SABb	B	R
+D01475	NGC 6782	barred-spiral	SBa	G	0.9 ± 0.9	0.9	Sa	B	R
+D01474	NGC 6776	galaxy--elliptical	E3	G	-4.2 ± 0.7	-4.2	E		
+D02605	IC 4852	barred-spiral	SBb	G	4.7 ± 0.6	4.7	SBc	B	
+D02473	NGC 6788	galaxy--spiral	Sb	G	2.2 ± 0.7	2.2	Sab		
+D02854	PGC 63287 SGR	dwarf-galaxy	dIrr	G	10.0 ± 0.4	10.0	IB	B	
+D01478	NGC 6810	galaxy--spiral	Sb	G	2.2 ± 0.7	2.2	Sab		
+D02474	NGC 6808	galaxy--spiral	Sa	G	1.5 ± 0.8	1.5	Sa		R
+D00234	C 57	irregular-galaxy	IB(s)m	G	9.8 ± 0.4	9.8	IB	B	
+D01477	IC 4889	galaxy--elliptical	E5	G	-4.7 ± 0.9	-4.7	E		
+D02606	IC 4901	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	SABc	B	
+D02481	NGC 6869	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D02607	IC 4931	galaxy--lenticular	S0	G	-3.8 ± 0.7	-3.8	E		
+D02475	NGC 6845	barred-spiral	SBbc	G	4.0 ± 2.0	4.0	SBbc	B	
+D02608	IC 4933	barred-spiral	SBbc	G	4.0 ± 0.4	4.0	SBbc	B	R
+D01483	NGC 6851	galaxy--elliptical	E3	G	-4.5 ± 1.1	-4.5	E		
+D02480	NGC 6854	galaxy--lenticular	S0	G	-3.4 ± 1.0	-3.4	E-S0	B	
+D02479	NGC 6849	galaxy--elliptical	E3	G	-3.3 ± 0.7	-3.3	E-S0	B	
+D01484	NGC 6861	galaxy--spiral	S0	G	-2.7 ± 1.0	-2.7	E-S0	B	
+D01485	NGC 6868	galaxy--elliptical	E2	G	-4.9 ± 0.5	-4.9	E		
+D02609	IC 4956	galaxy--lenticular	S0	G	-4.6 ± 1.1	-4.6	E		
+D01482	NGC 6875	galaxy--lenticular	S0	G	-2.6 ± 0.8	-2.6	E-S0	B	
+D02482	NGC 6878	galaxy--spiral	Sc	G	3.4 ± 0.7	3.4	SABb	B	
+D01480	NGC 6872	barred-spiral	SB	G	3.3 ± 0.6	3.3	SBb	B	
+D01487	NGC 6887	galaxy--spiral	Sab	G	3.7 ± 0.8	3.7	Sbc		
+D02610	IC 4991	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		R
+D01489	NGC 6893	galaxy--lenticular	S0:r	G	-2.0 ± 0.4	-2.0	S0	B	R
+D02483	NGC 6903	galaxy--elliptical	E/S0	G	-3.3 ± 0.8	-3.3	E-S0	B	
+D01491	IC 4946	galaxy--spiral	Sa	G	0.3 ± 0.7	0.3	S0-a	B	
+D01492	NGC 6902	galaxy--spiral	Sa	G	2.3 ± 1.1	2.3	SBab	B	R
+D00758	NGC 6907	galaxy--spiral	Sbc	G	4.0 ± 0.5	4.0	Sbc	B	
+D01490	NGC 6909	galaxy--elliptical	E6	G	-4.3 ± 0.7	-4.3	E		
+D02611	IC 5013	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+D02612	IC 5020	galaxy--spiral	Sc	G	3.4 ± 1.8	3.4	Sb		
+D02484	NGC 6923	barred-spiral	SBbc	G	3.1 ± 0.5	3.1	SBb	B	R
+D00763	NGC 6925	galaxy--spiral	Sbc	G	4.0 ± 0.2	4.0	Sbc		
+D00269	C 12	galaxy--spiral	SAB(rs)cd	G	5.9 ± 0.3	5.9	SABc	B	
+D00762	NGC 6951	barred-spiral	SAB(rs)bc	G	3.9 ± 0.6	3.9	SABb	B	
+D02485	NGC 6935	galaxy--spiral	Sa:r	G	1.1 ± 0.3	1.1	SABa	B	R
+D02487	NGC 6945	galaxy--unclassified		G	-3.0 ± 0.8	-3.0	E-S0	B	
+D02486	NGC 6942	barred-spiral	SBa	G	-0.3 ± 1.2	-0.3	S0-a	B	
+D02613	IC 5039	galaxy--spiral	Sc	G	4.0 ± 1.0	4.0	Sbc		
+D01488	NGC 6943	galaxy--spiral	Sbc	G	5.9 ± 0.4	5.9	Sc	B	R
+D02488	NGC 6962	galaxy--unclassified		G	1.7 ± 0.6	1.7	SABa	B	R
+D01495	NGC 6958	galaxy--lenticular	S0	G	-3.7 ± 1.1	-3.7	E		R
+D01493	IC 5052	galaxy--spiral	Sc/Ir	G	7.0 ± 0.5	7.0	SBcd	B	
+D02489	NGC 6970	galaxy--spiral	Sa	G	1.5 ± 0.8	1.5	SBa	B	
+D02490	NGC 6984	galaxy--spiral	Sc	G	4.9 ± 0.5	4.9	Sc	B	R
+D02614	IC 5078	galaxy--spiral	Sbc	G	5.0 ± 0.6	5.0	Sc		
+D02497	NGC 7013	galaxy--spiral	Sa	G	0.5 ± 1.0	0.5	Sa		R
+D02492	NGC 7007	galaxy--lenticular	S0	G	-2.9 ± 0.6	-2.9	E-S0		
+D02493	NGC 7014	galaxy--elliptical	E/S0	G	-4.2 ± 0.6	-4.2	E		
+D01494	NGC 7020	barred-spiral	(R)SB(r)0+	G	-1.2 ± 0.7	-1.2	S0-a	B	R
+D01496	NGC 7029	galaxy--lenticular	S0	G	-4.6 ± 1.0	-4.6	E		
+D02494	NGC 7038	galaxy--spiral	Sc	G	4.9 ± 0.4	4.9	SABc	B	
+D02615	IC 5092	barred-spiral	SBc	G	5.5 ± 0.6	5.5	SBc	B	
+D01501	NGC 7041	galaxy--lenticular	S0	G	-3.0 ± 0.5	-3.0	E-S0	B	
+D01500	NGC 7049	galaxy--lenticular	S0	G	-1.9 ± 0.4	-1.9	S0		
+D01502	IC 5105	galaxy--elliptical	E3	G	-3.9 ± 0.7	-3.9	E		
+D02495	NGC 7059	galaxy--spiral	Sc	G	5.6 ± 1.0	5.6	SABc	B	
+D02496	NGC 7064	galaxy--spiral	Sc	G	5.1 ± 0.6	5.1	SBc	B	
+D02498	NGC 7080	galaxy--spiral	SAb	G	3.0 ± 0.4	3.0	Sb	B	R
+D02499	NGC 7070	galaxy--spiral	Sc	G	6.0 ± 0.3	6.0	Sc	B	
+D02616	IC 5110	galaxy--spiral	Sc	G	5.0 ± 2.0	5.0	Sc		
+D01504	NGC 7079	barred-spiral	SBa	G	-1.8 ± 0.7	-1.8	S0	B	
+D01498	NGC 7083	galaxy--spiral	Sb	G	4.0 ± 0.2	4.0	SBbc	B	
+D01505	NGC 7090	barred-spiral	SBc	G	5.0 ± 0.5	5.0	Sc	B	
+D01503	NGC 7097	galaxy--elliptical	E5	G	-4.9 ± 0.4	-4.9	E		
+D01499	NGC 7096	galaxy--spiral	Sa	G	1.1 ± 0.3	1.1	Sa		
+D01497	NGC 7098	galaxy--spiral	SB0/Sa	G	1.1 ± 0.2	1.1	Sa	B	R
+D02617	IC 5131	barred-spiral	SB0	G	-2.9 ± 0.5	-2.9	E-S0	B	
+D02501	NGC 7124	galaxy--spiral	Sc	G	4.0 ± 0.2	4.0	SBbc	B	
+D02502	NGC 7125	galaxy--spiral	Sc	G	5.0 ± 0.3	5.0	SABc	B	
+D02500	NGC 7095	galaxy--spiral	Sa	G	-2.0 ± 0.5	-2.0	S0		
+D01510	NGC 7144	galaxy--elliptical	E0	G	-4.8 ± 0.7	-4.8	E		
+D01511	NGC 7145	galaxy--lenticular	S0	G	-4.8 ± 0.6	-4.8	E		
+D02504	NGC 7156	galaxy--spiral	Sc	G	6.0 ± 0.4	6.0	SABc	B	
+D02503	NGC 7154	barred-spiral	SBd	G	9.5 ± 1.0	9.5	Sm	B	
+D01509	NGC 7155	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	R
+D00965	NGC 7158	galaxy--spiral	S0-a	G	0.0 ± 1.7	0.0	S0-a		
+D01512	NGC 7166	galaxy--lenticular	S0	G	-2.9 ± 0.4	-2.9	E-S0		
+D00771	NGC 7177	galaxy--spiral	SAB(r)b	G	2.5 ± 0.5	2.5	SABb	B	R
+D02505	NGC 7171	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	SBb	B	
+D01514	NGC 7173	irregular-galaxy	E3	G	-4.3 ± 0.6	-4.3	E		
+D01507	NGC 7168	galaxy--lenticular	E/S0	G	-4.8 ± 0.7	-4.8	E		
+D02506	NGC 7183	galaxy--spiral	Sa:	G	-0.8 ± 0.7	-0.8	S0-a		
+D01508	IC 5152	dwarf-galaxy	IAB	G	9.7 ± 0.7	9.7	IAB	B	
+D00770	NGC 7184	barred-spiral	Sb:r	G	4.5 ± 1.0	4.5	SBc	B	R
+D02618	IC 5156	galaxy--spiral	Sb	G	2.2 ± 0.8	2.2	SBab	B	
+D01516	NGC 7196	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+D01506	NGC 7192	galaxy--lenticular	S0	G	-4.0 ± 0.7	-4.0	E		
+D00578	NGC 7217	galaxy--spiral	(R)SA(r)ab	G	2.5 ± 0.6	2.5	Sab		R
+D01517	NGC 7205	galaxy--spiral	Sb	G	4.0 ± 0.2	4.0	Sbc		
+D02508	NGC 7213	galaxy--spiral	SA(s)	G	0.9 ± 0.7	0.9	Sa		
+D02507	NGC 7218	galaxy--spiral	Sc	G	5.6 ± 1.2	5.6	Sc	B	
+D02509	NGC 7221	galaxy--spiral	SAbc	G	3.9 ± 0.6	3.9	Sbc	B	
+D02619	IC 5181	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D01515	NGC 7232	galaxy--lenticular	S0a	G	0.4 ± 1.0	0.4	S0-a	B	
+D01520	IC 5179	galaxy--spiral	Sc	G	4.0 ± 0.2	4.0	Sbc		
+D02553	IC 1438	galaxy--spiral	Sa:r	G	1.2 ± 0.7	1.2	Sa	B	R
+D02510	NGC 7248	galaxy--lenticular	S0	G	-2.5 ± 0.6	-2.5	E-S0		
+D01521	IC 5186	galaxy--spiral	Sa	G	2.8 ± 0.7	2.8	Sb	B	
+D01522	NGC 7252	galaxy--spiral	E	G	-1.9 ± 0.7	-1.9	S0	B	R
+D01519	IC 5201	barred-spiral	SB(rs)cd	G	6.1 ± 0.6	6.1	Sc	B	
+D02511	NGC 7267	barred-spiral	SBa	G	1.0 ± 0.5	1.0	SBa	B	
+D02512	NGC 7284	galaxy--spiral	Sa	G	-1.9 ± 0.6	-1.9	S0	B	
+D02513	NGC 7307	galaxy--spiral	Scd	G	6.0 ± 0.6	6.0	Sc	B	
+D02515	NGC 7311	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+D02514	NGC 7309	galaxy--spiral	Sc	G	5.0 ± 0.4	5.0	SABc	B	
+D01838	NGC 7320	barred-spiral	E2 / SB(s)bc	G	6.5 ± 0.9	6.5	Scd		
+D00018	C 30	galaxy--spiral	SA(s)b	G	3.9 ± 0.3	3.9	Sbc		
+D01841	NGC 7332	galaxy--spiral	S0 + Sbc	G	-1.9 ± 0.6	-1.9	S0	B	
+D01518	NGC 7329	barred-spiral	SBc:r	G	3.6 ± 1.0	3.6	SBbc	B	R
+D01523	IC 5240	barred-spiral	SB(r)a	G	1.1 ± 0.3	1.1	SBa	B	R
+D02516	NGC 7361	galaxy--spiral	Sc	G	4.7 ± 1.0	4.7	Sc		R
+D02517	NGC 7364	galaxy--unclassified		G	0.2 ± 1.1	0.2	S0-a		R
+D02518	NGC 7371	barred-spiral	SBa	G	0.1 ± 0.5	0.1	S0-a	B	R
+D01524	IC 5250	galaxy--lenticular	S0/S0:	M2					
+D02519	NGC 7377	galaxy--spiral	Sa	G	-1.0 ± 0.7	-1.0	S0-a	B	
+D02520	NGC 7385	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D00967	NGC 7392	galaxy--spiral	Sb	G	3.8 ± 0.7	3.8	SBbc	B	
+D01528	NGC 7410	barred-spiral	SBa	G	1.0 ± 0.6	1.0	SBa	B	
+D01526	NGC 7412	galaxy--spiral	Sc	G	3.3 ± 0.9	3.3	SBb	B	
+D01530	NGC 7418	galaxy--spiral	Sc	G	5.8 ± 0.5	5.8	Sc	B	R
+D01531	NGC 7421	galaxy--spiral	Sbc	G	3.7 ± 1.1	3.7	Sbc	B	R
+D01529	IC 1459	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+D01525	IC 5267	galaxy--spiral	SA0/a(s)	G	-1.1 ± 1.4	-1.1	S0-a		
+D01527	NGC 7424	barred-spiral	SAB(rs)cd	G	6.0 ± 0.3	6.0	Sc	B	
+D02620	IC 5271	galaxy--spiral	Sb	G	3.0 ± 0.6	3.0	Sb		
+D02621	IC 5273	galaxy--spiral	Sb	G	5.6 ± 1.0	5.6	SBc	B	
+D00580	NGC 7448	galaxy--spiral	SA(rs)bc	G	5.0 ± 1.2	5.0	Sc		
+D00968	NGC 7457	galaxy--lenticular	SA(rs)0	G	-2.7 ± 0.6	-2.7	E-S0		
+D02521	NGC 7456	galaxy--spiral	Sb	G	6.0 ± 0.3	6.0	Sc		
+D02522	NGC 7462	galaxy--spiral	Sbc	G	3.6 ± 2.1	3.6	SBbc	B	
+D02523	NGC 7469	barred-spiral	SBa	G	1.1 ± 0.3	1.1	Sa	B	
+D00299	C 44	barred-spiral	SB(s)c	G	4.3 ± 0.9	4.3	SBbc	B	
+D02524	NGC 7484	galaxy--lenticular	S0	G	-4.8 ± 0.8	-4.8	E		
+D00969	NGC 7507	galaxy--elliptical	E0	G	-4.5 ± 0.8	-4.5	E		
+D02525	NGC 7539	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+D00970	NGC 7541	barred-spiral	SB(rs)bcpec	G	4.7 ± 0.9	4.7	SBc	B	
+D01532	NGC 7531	galaxy--spiral	Sbc	G	4.0 ± 0.2	4.0	SABb	B	R
+D01534	NGC 7552	barred-spiral	SB(s)ab	G	2.4 ± 0.7	2.4	Sab	B	
+D02526	NGC 7563	galaxy--spiral	SAa	G	1.0 ± 0.5	1.0	Sa	B	
+D02527	NGC 7587	galaxy--spiral	Sa	G	1.6 ± 0.6	1.6	SBab	B	
+D01535	NGC 7582	barred-spiral	R'1SB(s)ab	G	2.1 ± 0.5	2.1	SBab	B	
+D00581	NGC 7606	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+D00778	NGC 7619	galaxy--elliptical	E2	G	-4.8 ± 0.5	-4.8	E		
+D00972	NGC 7625	galaxy--spiral	Sa	G	1.0 ± 1.1	1.0	Sa		
+D02528	NGC 7634	barred-spiral	SB0	G	-2.1 ± 0.7	-2.1	S0	B	
+D00266	NGC 7640	barred-spiral	SBc	G	5.3 ± 0.7	5.3	Sc	B	
+D00971	NGC 7653	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	Sb		
+D02529	NGC 7673	galaxy--spiral	Sc	G	4.9 ± 0.9	4.9	Sc		
+D02530	NGC 7678	barred-spiral	SBc/Sc	G	4.9 ± 0.5	4.9	Sc	B	
+D01537	IC 5325	galaxy--spiral	Sc	G	4.2 ± 0.5	4.2	Sbc	B	
+D01533	NGC 7690	galaxy--spiral	Sb	G	2.9 ± 0.6	2.9	Sb		R
+D01541	IC 5328	galaxy--elliptical	E4	G	-4.2 ± 1.1	-4.2	E	B	
+D02531	NGC 7689	galaxy--spiral	Sc	G	5.9 ± 0.3	5.9	SABc	B	
+D00780	IC 5332	galaxy--spiral	Sc	G	6.8 ± 0.4	6.8	SABc	B	
+D02532	NGC 7702	galaxy--lenticular	S0:r	G	-1.1 ± 0.7	-1.1	S0-a	B	R
+D01539	NGC 7713	barred-spiral	SBcd	G	6.7 ± 0.8	6.7	Scd	B	R
+D02533	NGC 7715	irregular-galaxy	Im	G	9.6 ± 1.4	9.6	I		
+D02534	NGC 7716	galaxy--spiral	SAb	G	3.0 ± 0.5	3.0	Sb	B	R
+D02535	NGC 7721	galaxy--spiral	Sbc	G	4.9 ± 0.5	4.9	Sc		
+D00583	NGC 7723	barred-spiral	SBb	G	3.1 ± 0.5	3.1	SBb	B	R
+D00584	NGC 7727	galaxy--spiral	Sa	G	1.1 ± 0.5	1.1	SABa	B	
+D00782	NGC 7741	barred-spiral	SBc	G	5.9 ± 0.4	5.9	SBc	B	
+D00781	NGC 7742	galaxy--spiral	Sb(r)	G	2.8 ± 0.7	2.8	Sb		R
+D01540	NGC 7744	galaxy--lenticular	SB0	G	-2.5 ± 0.7	-2.5	E-S0	B	
+D01840	NGC 7753	galaxy--spiral	Sb	G	3.8 ± 0.6	3.8	SABb	B	R
+D00973	NGC 7755	barred-spiral	SBbc	G	5.0 ± 0.6	5.0	Sc	B	
+D02536	NGC 7764	irregular-galaxy	I	G	9.4 ± 0.7	9.4	SBm	B	
+D02537	NGC 7769	galaxy--spiral	Sab	G	3.0 ± 0.9	3.0	Sb		
+D00974	NGC 7761	galaxy--elliptical	E...	G	-2.0 ± 0.5	-2.0	S0		
+D02870	NGC 7764A	galaxy--spiral	SAc	G	6.2 ± 3.6	6.2	Sc		R
+D02538	NGC 7782	galaxy--spiral	Sb	G	3.0 ± 0.3	3.0	Sb		R
+D00059	NGC 7793	galaxy--spiral	SA(s)d	G	7.4 ± 0.6	7.4	Scd		
+D00977	NGC 7796	galaxy--elliptical	E2	G	-4.0 ± 0.7	-4.0	E		
+D02539	NGC 7798	barred-spiral	SBc	G	5.1 ± 1.6	5.1	SBc	B	
+F01661	UGC 12915 PEG	barred-spiral	SBc	G	4.8 ± 1.4	4.8	SBc	B	
+F00828	IC 5381	galaxy--unclassified		G	2.0 ± 0.6	2.0	SABa	B	
+F01426	NGC 1	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	Sb		
+F01427	NGC 2	galaxy--spiral	Sab	G	2.0 ± 0.4	2.0	Sab		
+F01428	NGC 22	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+F01429	NGC 26	galaxy--spiral	Sb	G	2.4 ± 0.6	2.4	Sab		R
+F00614	NGC 47	galaxy--unclassified		G	4.0 ± 0.5	4.0	SBbc	B	
+F00615	NGC 54	galaxy--unclassified		G	1.2 ± 1.3	1.2	SBa	B	R
+F00876	NGC 131	galaxy--spiral	Sa:	G	3.0 ± 0.3	3.0	SBb	B	
+F00613	NGC 165	galaxy--spiral	SAbc	G	4.1 ± 0.5	4.1	Sbc	B	
+F01435	NGC 182	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	SABa	B	
+F01436	NGC 186	barred-spiral	SB0a	G	-0.7 ± 0.6	-0.7	S0-a	B	
+F01076	NGC 196	galaxy--unclassified		G	-2.0 ± 0.5	-2.0	S0	B	
+F01437	NGC 194	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F01077	NGC 197	galaxy--unclassified		G	-1.4 ± 2.1	-1.4	S0-a	B	
+F01438	NGC 198	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	Sc		R
+F01440	NGC 199	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01078	NGC 201	barred-spiral	SBb	G	5.0 ± 0.6	5.0	Sc	B	R
+F01075	NGC 195	galaxy--spiral	SAa	G	1.1 ± 1.6	1.1	Sa	B	R
+F01439	NGC 208	galaxy--spiral	SAa	G	1.0 ± 0.5	1.0	Sa		R
+F01039	IC 1584	galaxy--unclassified		G	4.0 ± 2.0	4.0	SABb	B	
+F01705	PGC 2791 CET	barred-spiral	SBb	G	3.4 ± 1.6	3.4	SBb	B	
+F01704	PGC 2794 CET	barred-spiral	SBbc	G	3.9 ± 0.6	3.9	SBbc	B	
+F01703	PGC 2796 CET	barred-spiral	SBc	G	4.9 ± 0.7	4.9	SBc	B	
+F01040	NGC 258	galaxy--unclassified		G	3.9 ± 2.5	3.9	Sbc		
+F01041	NGC 260	galaxy--unclassified	S/I	G	5.6 ± 0.6	5.6	Sc		
+F00006	NGC 273	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00005	NGC 274	galaxy--elliptical	E/S0	G	-2.8 ± 0.5	-2.8	E-S0	B	R
+F00008	NGC 311	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01441	NGC 318	galaxy--lenticular	S0	G	-1.9 ± 0.7	-1.9	S0		
+F01079	NGC 355	galaxy--unclassified		G	-1.9 ± 0.5	-1.9	S0	B	
+F01442	IC 1618	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01443	NGC 373	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F01444	NGC 375	galaxy--elliptical	E3	G	-5.0 ± 0.5	-5.0	E		
+F01445	NGC 379	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		
+F01446	NGC 380	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+F01455	IC 1619	galaxy--unclassified		G	-2.0 ± 2.0	-2.0	S0		
+F01447	NGC 382	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+F01448	NGC 384	galaxy--lenticular	S0	G	-4.2 ± 1.3	-4.2	E		
+F01449	NGC 385	galaxy--elliptical	E3	G	-3.7 ± 0.9	-3.7	E		
+F01450	NGC 386	galaxy--elliptical	E3	G	-5.0 ± 0.5	-5.0	E		
+F01451	NGC 388	galaxy--elliptical	E3	G	-4.8 ± 0.8	-4.8	E		
+F00496	IC 1627	galaxy--spiral	Sc	G	3.6 ± 1.0	3.6	SBbc	B	
+F01456	NGC 394	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F01457	NGC 397	galaxy--elliptical		G	-2.0 ± 2.0	-2.0	S0		
+F01453	NGC 398	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F01454	NGC 399	barred-spiral	SBa	G	0.9 ± 0.4	0.9	Sa	B	R
+F00857	NGC 407	galaxy--spiral	S0a	G	-0.2 ± 1.0	-0.2	S0-a		
+F00859	IC 1636	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		
+F01081	IC 1643	barred-spiral	SBa	G	1.0 ± 2.0	1.0	SBa	B	R
+F00860	IC 1638	galaxy--elliptical	E3	G	-4.7 ± 1.5	-4.7	E		
+F01716	NGC 434A	galaxy--spiral	SB0a	G	0.2 ± 0.8	0.2	S0-a	B	
+F01529	NGC 440	galaxy--spiral	Sbc	G	4.0 ± 0.5	4.0	Sbc		
+F01082	NGC 426	galaxy--elliptical	E3	G	-4.3 ± 0.8	-4.3	E		R
+F01083	NGC 429	galaxy--lenticular	S0	G	-1.8 ± 1.0	-1.8	S0	B	
+F01497	NGC 441	barred-spiral	SB0a	G	-0.1 ± 0.7	-0.1	S0-a	B	
+F01080	IC 87	barred-spiral	SBc	G	4.0 ± 2.0	4.0	Sbc	B	
+F01458	NGC 463	galaxy--unclassified		G	-0.3 ± 1.0	-0.3	S0-a		
+F00861	NGC 467	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00862	NGC 474	galaxy--elliptical	S0	G	-2.0 ± 0.4	-2.0	S0		R
+F01459	IC 1679	galaxy--spiral	S0a	G	0.0 ± 2.0	0.0	S0-a		
+F01460	IC 1680	galaxy--spiral	S0a	G	-0.3 ± 0.6	-0.3	S0-a		
+F01461	NGC 483	galaxy--spiral	S0a	G	2.5 ± 2.9	2.5	Sb		
+F00863	NGC 490	galaxy--elliptical		G	3.0 ± 2.0	3.0	Sb		
+F00864	NGC 486	galaxy--unclassified		G					
+F01462	IC 1682	galaxy--spiral	Sab	G	1.5 ± 2.1	1.5	Sab		
+F00865	NGC 492	galaxy--unclassified		G	4.2 ± 3.0	4.2	SABb	B	
+F00866	NGC 500	galaxy--unclassified		G	-4.3 ± 1.8	-4.3	E		
+F00009	NGC 494	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+F01463	NGC 495	barred-spiral	SB0/Sa	G	0.2 ± 0.9	0.2	S0-a	B	
+F01465	NGC 498	galaxy--unclassified		G					
+F01466	NGC 499	galaxy--lenticular	S0	G	-2.9 ± 0.7	-2.9	E-S0		
+F01464	NGC 496	galaxy--spiral	Sbc	G	4.0 ± 0.3	4.0	Sbc		
+F01468	IC 1687	galaxy--lenticular	S0-a	G	-1.0 ± 2.0	-1.0	S0-a		
+F01467	NGC 501	galaxy--elliptical	E3	G	-5.0 ± 1.4	-5.0	E		
+F00867	NGC 509	galaxy--lenticular	S0:	G	-1.3 ± 1.7	-1.3	S0-a	B	
+F01469	NGC 504	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00010	NGC 507	galaxy--elliptical	E/S0	G	-3.3 ± 1.4	-3.3	E-S0		R
+F01470	NGC 508	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F01471	IC 1689	galaxy--lenticular	S0	G	-2.0 ± 3.3	-2.0	S0		
+F01472	IC 1690	galaxy--lenticular	S0	G	-2.0 ± 1.4	-2.0	S0		
+F00868	NGC 516	galaxy--lenticular	S0	G	-1.5 ± 1.5	-1.5	S0	B	
+F00869	NGC 518	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	Sa		
+F01085	NGC 519	galaxy--lenticular	S0	G	-3.7 ± 0.9	-3.7	E		
+F01474	NGC 515	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01473	IC 1692	galaxy--lenticular	S0	G	-2.0 ± 2.0	-2.0	S0		
+F01086	NGC 530	galaxy--spiral	Sa	G	-0.2 ± 1.1	-0.2	S0-a	B	
+F01475	NGC 517	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0		
+F01084	IC 1694	galaxy--unclassified		G	-5.0 ± 2.0	-5.0	E		
+F01087	IC 1696	galaxy--elliptical		G	-3.9 ± 0.9	-3.9	E	B	
+F00870	NGC 525	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00871	NGC 532	galaxy--spiral	Sa:	G	1.9 ± 0.6	1.9	Sab		
+F01088	NGC 538	galaxy--spiral	Sa	G	1.6 ± 0.8	1.6	SBab	B	
+F01090	NGC 535	galaxy--lenticular	S0	G	-1.2 ± 0.6	-1.2	S0-a		
+F00014	NGC 533	galaxy--elliptical	E	G	-4.9 ± 0.4	-4.9	E		
+F00011	NGC 529	galaxy--elliptical	E/S0	G	-3.2 ± 0.7	-3.2	E-S0		
+F01091	NGC 543	galaxy--lenticular	S0	G	-2.8 ± 1.3	-2.8	E-S0		
+F00012	NGC 545	galaxy--lenticular	S0	G	-2.8 ± 0.7	-2.8	E-S0		
+F00013	NGC 547	galaxy--elliptical	E	G	-4.8 ± 0.5	-4.8	E		
+F01092	NGC 548	galaxy--unclassified		G	-3.8 ± 0.6	-3.8	E		R
+F01042	NGC 531	barred-spiral	SB:0a	G	0.1 ± 1.2	0.1	S0-a	B	
+F01089	NGC 557	galaxy--spiral	S0a	G	-0.6 ± 0.8	-0.6	S0-a	B	
+F01043	NGC 542	galaxy--spiral	Scd	G	3.6 ± 3.9	3.6	Sbc		
+F01498	NGC 574	barred-spiral	SBb	G	3.1 ± 0.6	3.1	SBb	B	
+F00616	NGC 586	galaxy--spiral	Sa	G	0.7 ± 1.0	0.7	Sa		
+F00617	NGC 600	barred-spiral	SBd	G	7.0 ± 0.4	7.0	Scd	B	R
+F00904	IC 1727	barred-spiral	SBm	G	8.9 ± 0.6	8.9	SBm	B	
+F01061	NGC 678	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	SBb	B	
+F01056	NGC 683	galaxy--unclassified		G	3.1 ± 2.3	3.1	Sb		
+F01060	NGC 680	galaxy--elliptical		?	-4.1 ± 0.7	-4.1	E		
+F01059	IC 1730	galaxy--unclassified		G	1.0 ± 5.0	1.0	S?		
+F01650	IC 1731	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+F00015	NGC 693	galaxy--spiral	S	G	0.2 ± 0.8	0.2	S0-a		
+F01058	NGC 694	galaxy--spiral	Sc	G	-1.8 ± 0.9	-1.8	S0	B	
+F01057	IC 187	barred-spiral	SBc	G	1.0 ± 0.4	1.0	Sa	B	
+F01062	NGC 695	galaxy--spiral	Sc	G	-1.7 ± 1.3	-1.7	S0		
+F01093	NGC 713	galaxy--spiral	Sc	G	3.3 ± 0.9	3.3	Sb		
+F01507	NGC 736	galaxy--elliptical	E3	G	-4.0 ± 0.7	-4.0	E		
+F01508	NGC 738	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F01509	NGC 739	galaxy--spiral	S0a	G	-0.6 ± 1.4	-0.6	S0-a		
+F01510	NGC 740	barred-spiral	SBb	G	3.2 ± 0.7	3.2	SBb	B	
+F00016	NGC 751	galaxy--elliptical	E3	G	-4.8 ± 0.5	-4.8	E		
+F01511	NGC 760	barred-spiral	SB0a	S2					
+F01512	NGC 761	barred-spiral	SBa	G	0.7 ± 0.9	0.7	SBa	B	
+F00571	NGC 770	galaxy--spiral	Sb	G	-4.2 ± 2.4	-4.2	E		
+F01094	IC 184	galaxy--spiral	Sb	G	1.1 ± 1.1	1.1	SBa	B	R
+F00905	NGC 778	galaxy--lenticular	S0	G	-1.9 ± 0.7	-1.9	S0		
+F01095	NGC 829	galaxy--unclassified		G	5.2 ± 0.8	5.2	SBc	B	
+F00020	NGC 830	galaxy--spiral	-3	G	-3.2 ± 0.7	-3.2	E-S0	B	
+F00018	NGC 833	galaxy--spiral	1	G	0.8 ± 1.0	0.8	SABa	B	R
+F00017	NGC 835	galaxy--spiral	1	G	1.9 ± 0.8	1.9	Sab	B	R
+F00618	NGC 838	galaxy--unclassified		G	-1.1 ± 2.7	-1.1	S0-a		
+F00619	NGC 848	barred-spiral	SB	G	2.0 ± 0.6	2.0	SBab	B	
+F00019	NGC 834	galaxy--spiral	S	G	2.5 ± 1.5	2.5	Sb		
+F01044	NGC 845	barred-spiral	SBa/Sb	G	3.1 ± 0.2	3.1	Sb		
+F01064	NGC 870	galaxy--unclassified		G					
+F01063	NGC 871	galaxy--spiral		G	4.7 ± 1.4	4.7	SBc	B	
+F01657	NGC 876	galaxy--spiral		G	4.8 ± 0.7	4.8	Sc		
+F01096	IC 219	galaxy--unclassified		G	-5.0 ± 0.5	-5.0	E		
+F00021	NGC 883	galaxy--spiral	S0	G	-3.1 ± 0.7	-3.1	E-S0		
+F01045	NGC 898	galaxy--spiral	Sa	G	1.6 ± 0.6	1.6	Sab		
+F01046	NGC 909	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F01047	NGC 910	galaxy--elliptical		G	-4.1 ± 0.7	-4.1	E		
+F01048	NGC 911	galaxy--elliptical		G	-4.8 ± 0.6	-4.8	E		
+F01049	NGC 912	galaxy--elliptical		G	-0.7 ± 2.6	-0.7	S0-a		
+F01050	NGC 913	galaxy--unclassified		G					
+F01051	NGC 914	galaxy--unclassified	S...	G	5.3 ± 0.6	5.3	Sc		
+F01065	NGC 924	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0		
+F01067	IC 1801	barred-spiral	SBb	G	3.1 ± 0.4	3.1	Sb	B	
+F00022	NGC 941	galaxy--spiral	9	G	5.3 ± 0.8	5.3	SABc	B	
+F01066	NGC 938	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00620	NGC 948	barred-spiral	SB	G	4.9 ± 0.5	4.9	Sc	B	
+F01097	IC 230	galaxy--unclassified		G	-1.0 ± 2.0	-1.0	S0-a		
+F01098	NGC 943	galaxy--unclassified		G	-2.0 ± 1.4	-2.0	S0		
+F01099	NGC 950	galaxy--unclassified		G	3.1 ± 0.7	3.1	SBb	B	
+F01513	NGC 970	galaxy--unclassified		?					
+F00023	NGC 974	galaxy--spiral	SABb	G	3.0 ± 0.5	3.0	SABb	B	
+F00024	NGC 978	galaxy--elliptical	E/S0	G	-3.0 ± 0.4	-3.0	E-S0		
+F00609	IC 242	galaxy--unclassified		G	0.6 ± 1.6	0.6	Sa	B	
+F00025	NGC 1047	galaxy--spiral		G	-0.6 ± 1.7	-0.6	S0-a		
+F00612	NGC 1048	galaxy--spiral	Sa	G	0.2 ± 2.0	0.2	S0-a	B	
+F00611	NGC 1052	galaxy--elliptical	E4	G	-4.7 ± 0.7	-4.7	E		
+F01665	Sh2-197	galaxy--spiral	SAB(rs)bc						
+F00906	NGC 1057	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0		
+F00907	NGC 1061	galaxy--unclassified	SAb	G	3.0 ± 3.4	3.0	Sb		
+F00909	NGC 1062	galaxy--spiral	Sc	S					
+F00908	NGC 1066	galaxy--elliptical	E3	G	-5.0 ± 0.4	-5.0	E		
+F00910	NGC 1067	galaxy--spiral	Sc	G	5.2 ± 0.6	5.2	SABc	B	
+F00026	NGC 1090	barred-spiral	SBbc	G	3.8 ± 0.7	3.8	Sbc	B	
+F00027	NGC 1094	galaxy--spiral		G	2.1 ± 0.5	2.1	SABa	B	R
+F00595	Sh2-193	galaxy--elliptical	2, 1, 1						
+F00028	NGC 1126	galaxy--spiral		G	2.9 ± 0.5	2.9	Sb		
+F00030	NGC 1160	barred-spiral	SBc	G	5.9 ± 0.5	5.9	SBc	B	R
+F01332	NGC 1181	galaxy--unclassified		G	3.0 ± 0.5	3.0	Sb		
+F01331	NGC 1180	galaxy--unclassified		G	-2.9 ± 0.7	-2.9	E-S0		
+F00032	NGC 1189	barred-spiral	SBcd	G	7.9 ± 1.1	7.9	Sd	B	
+F01333	NGC 1190	galaxy--spiral	Sa	G	-1.3 ± 1.6	-1.3	S0-a		
+F01334	NGC 1191	galaxy--elliptical		G	-3.1 ± 0.6	-3.1	E-S0	B	
+F01335	NGC 1192	galaxy--elliptical		G	-4.7 ± 1.0	-4.7	E		
+F00031	NGC 1188	galaxy--spiral		G	-1.6 ± 1.7	-1.6	S0	B	R
+F01336	NGC 1231	galaxy--unclassified		G	5.0 ± 0.5	5.0	Sc		
+F00033	NGC 1242	galaxy--spiral	SBc	G	4.9 ± 0.9	4.9	SBc	B	
+F00837	NGC 1264	barred-spiral	SBab	G	2.0 ± 0.3	2.0	SBab	B	
+F00838	IC 312	galaxy--elliptical	E3	G	-4.8 ± 0.8	-4.8	E		
+F00840	NGC 1267	galaxy--elliptical	E3	G	-3.6 ± 0.6	-3.6	E		
+F00839	NGC 1268	galaxy--spiral	S...	G	3.1 ± 0.4	3.1	SABb	B	R
+F00841	NGC 1270	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+F00842	NGC 1271	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00843	NGC 1272	galaxy--elliptical	E3	G	-4.0 ± 0.8	-4.0	E		
+F00844	NGC 1273	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		R
+F00845	NGC 1274	galaxy--spiral	Sa/S0	G	-4.9 ± 0.4	-4.9	E		
+F00846	NGC 1277	galaxy--lenticular	S0	G	-0.8 ± 1.0	-0.8	S0-a		
+F00847	NGC 1278	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+F00848	NGC 1279	galaxy--lenticular	S0	G	-2.0 ± 2.0	-2.0	S0		
+F00849	NGC 1281	galaxy--lenticular	S0	G	-4.9 ± 0.4	-4.9	E		
+F00850	NGC 1282	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00851	NGC 1283	galaxy--elliptical	E3	G	-5.0 ± 0.5	-5.0	E		
+F01344	NGC 1310	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	Sc	B	
+F00852	NGC 1293	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+F00853	NGC 1294	galaxy--lenticular	S0:	G	-3.0 ± 0.4	-3.0	E-S0		
+F00755	NGC 1317	barred-spiral	S0a:r	G	0.8 ± 0.5	0.8	SABa	B	R
+F00745	NGC 1315	galaxy--lenticular	S0	G	-1.2 ± 0.9	-1.2	S0-a	B	
+F00744	NGC 1319	galaxy--spiral	Sa	G	-1.6 ± 1.3	-1.6	S0		
+F00497	IC 1920	galaxy--unclassified		G	2.1 ± 1.6	2.1	Sab		
+F00746	NGC 1331	galaxy--elliptical	E/S0	G	-4.7 ± 0.8	-4.7	E		
+F00498	IC 1938	galaxy--spiral	Sc	G	3.2 ± 1.6	3.2	Sb		
+F01337	IC 1928	galaxy--spiral	Sa:	G	2.0 ± 0.5	2.0	Sab		
+F00499	IC 1942	galaxy--elliptical		G	-4.4 ± 1.2	-4.4	E		
+F00761	NGC 1373	galaxy--spiral	Sa	G	-3.6 ± 1.7	-3.6	E		
+F00763	NGC 1374	galaxy--elliptical	E3	G	-4.5 ± 1.0	-4.5	E		
+F00762	NGC 1375	barred-spiral	SAB0	G	-2.2 ± 0.8	-2.2	S0	B	
+F00760	NGC 1381	galaxy--spiral	S0	G	-2.1 ± 0.7	-2.1	S0		
+F00747	NGC 1369	galaxy--spiral	Sc	G	0.1 ± 1.2	0.1	S0-a	B	
+F00758	NGC 1387	galaxy--lenticular	S0	G	-2.8 ± 0.5	-2.8	E-S0	B	
+F00759	NGC 1382	galaxy--lenticular	S0	?	-2.8 ± 0.6	-2.8	E-S0	B	
+F00757	NGC 1382	galaxy--lenticular	S0	?	-2.8 ± 0.6	-2.8	E-S0	B	
+F00037	NGC 1383	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00765	NGC 1396	galaxy--elliptical		G	-3.1 ± 0.6	-3.1	E-S0	B	
+F00764	NGC 1404	galaxy--elliptical	E1	G	-4.8 ± 0.5	-4.8	E		
+F00038	NGC 1391	galaxy--spiral	Sa	G	-1.7 ± 1.0	-1.7	S0	B	
+F00039	NGC 1394	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01339	NGC 1401	galaxy--lenticular	S0	G	-1.9 ± 1.1	-1.9	S0	B	
+F00040	NGC 1402	barred-spiral	SB0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00748	NGC 1400	galaxy--elliptical	E1/S0	G	-3.7 ± 1.0	-3.7	E		
+F00041	IC 343	barred-spiral	SB0	G	-1.1 ± 0.7	-1.1	S0-a	B	
+F00042	NGC 1416	galaxy--lenticular	S0	G	-4.4 ± 1.3	-4.4	E		
+F01338	IC 345	galaxy--spiral	S0a	G	-1.9 ± 2.6	-1.9	S0		
+F01340	IC 344	galaxy--unclassified		G	4.0 ± 0.8	4.0	SBbc	B	
+F00043	NGC 1418	galaxy--spiral		G	3.1 ± 0.7	3.1	SBb	B	
+F00756	NGC 1428	galaxy--lenticular	S0	G	-3.0 ± 0.8	-3.0	E-S0	B	
+F00044	NGC 1424	galaxy--spiral		G	3.4 ± 0.9	3.4	SABb	B	
+F01341	NGC 1455	galaxy--spiral	Sa:	G	0.4 ± 0.7	0.4	S0-a	B	R
+F00047	NGC 1481	galaxy--lenticular	S0:	G	-3.0 ± 0.4	-3.0	E-S0		
+F00773	NGC 1510	galaxy--lenticular	S0	G	-1.8 ± 1.8	-1.8	S0		
+F00048	NGC 1521	galaxy--elliptical	E	G	-4.2 ± 1.3	-4.2	E	B	
+F01158	IC 2038	galaxy--spiral	Sd	G	7.0 ± 0.5	7.0	Scd		
+F01159	IC 2039	galaxy--spiral		G	-3.1 ± 0.7	-3.1	E-S0		
+F00749	NGC 1531	galaxy--spiral		G	-2.5 ± 1.5	-2.5	E-S0		
+F00750	IC 2041	galaxy--lenticular	S0	G	-2.1 ± 0.8	-2.1	S0	B	
+F01160	NGC 1549	galaxy--elliptical	E/S0	G	-4.3 ± 0.9	-4.3	E	B	
+F01161	IC 2058	galaxy--spiral	Sc	G	6.5 ± 0.9	6.5	Scd		
+F01162	NGC 1602	irregular-galaxy	Ir	G	9.5 ± 0.6	9.5	SBm	B	
+F01163	IC 2079	barred-spiral	SB:b	G	2.1 ± 0.5	2.1	Sab	B	
+F00500	IC 2081	galaxy--lenticular	S0	G	-3.0 ± 0.6	-3.0	E-S0	B	
+F00049	NGC 1587	galaxy--elliptical	E	G	-4.8 ± 0.4	-4.8	E		
+F01342	IC 373	galaxy--unclassified		G	-0.8 ± 1.1	-0.8	S0-a	B	
+F00050	NGC 1588	galaxy--elliptical	cG	G	-4.8 ± 0.7	-4.8	E		
+F00501	IC 2083	barred-spiral	SBb	G	0.4 ± 1.1	0.4	S0-a	B	
+F01164	IC 2085	galaxy--unclassified		G	-1.0 ± 2.3	-1.0	S0-a	B	
+F00502	IC 2086	galaxy--elliptical		G	-4.1 ± 1.1	-4.1	E		
+F00751	NGC 1601	galaxy--lenticular	S0	G	-1.7 ± 1.3	-1.7	S0		
+F00752	NGC 1603	galaxy--elliptical		G	-1.9 ± 1.5	-1.9	S0		
+F00753	NGC 1604	galaxy--unclassified		G	-2.1 ± 0.7	-2.1	S0		
+F00896	NGC 1633	barred-spiral	SBa/Sb	G	2.1 ± 0.7	2.1	SABa	B	
+F00897	NGC 1634	galaxy--elliptical		G	-3.6 ± 1.5	-3.6	E		
+F00051	NGC 1654	galaxy--spiral		G	1.0 ± 0.5	1.0	SBa	B	R
+F01343	IC 2093	galaxy--unclassified		G	2.0 ± 2.0	2.0	Sab		
+F00052	NGC 1667	galaxy--spiral	Sc	G	5.0 ± 0.5	5.0	SABc	B	R
+F00055	IC 2105	galaxy--elliptical		?					
+F00057	NGC 1699	galaxy--spiral	Sb	G	3.1 ± 0.6	3.1	Sb		
+F00061	NGC 1721	barred-spiral	SBb	G	-2.0 ± 0.8	-2.0	S0	B	R
+F00062	NGC 1725	galaxy--lenticular	S0	G	-2.6 ± 0.6	-2.6	E-S0		
+F00063	NGC 1728	galaxy--spiral	Sa	G	1.1 ± 0.9	1.1	Sa		
+F01199	NGC 1809	galaxy--unclassified		G	5.0 ± 0.5	5.0	Sc		
+F01315	NGC 1847	seyfert-galaxy		gc					
+F00071	NGC 1889	galaxy--elliptical	E	G	-4.1 ± 0.6	-4.1	E		
+F00802	IC 2132	galaxy--unclassified		G	0.9 ± 0.7	0.9	SABa	B	
+F00801	NGC 1957	galaxy--unclassified		G	-3.0 ± 2.0	-3.0	E-S0		
+F00072	IC 2138	galaxy--spiral	Sa:	G	1.6 ± 1.7	1.6	SABa	B	R
+F00484	IC 2151	galaxy--spiral	Sb	G	3.9 ± 0.5	3.9	Sbc	B	
+F01306	NGC 2150	galaxy--unclassified		G	1.9 ± 0.6	1.9	Sab	B	R
+F01325	NGC 2178	galaxy--lenticular	S0	G	-4.7 ± 0.9	-4.7	E		
+F01385	IC 2164	galaxy--spiral	Sb	G	2.2 ± 0.8	2.2	Sab		
+F00503	IC 2163	galaxy--spiral	Sc:	G	5.2 ± 0.8	5.2	Sc	B	
+F01068	NGC 2146A	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+F00078	NGC 2295	galaxy--spiral	S0a	G	1.9 ± 0.7	1.9	Sab		
+F00077	NGC 2292	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00079	NGC 2307	barred-spiral	SBa	G	2.9 ± 0.6	2.9	SBb	B	
+F00584	IC 2174	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	SBa	B	R
+F00081	NGC 2342	galaxy--spiral	Spec	G	5.9 ± 1.6	5.9	Sc		
+F00082	IC 2179	galaxy--elliptical	E	G	-4.8 ± 0.6	-4.8	E		
+F00585	NGC 2363	irregular-galaxy	Im	h	9.7 ± 0.8	9.7	I		
+F00075	NGC 2300	galaxy--elliptical	E	G	-3.4 ± 1.4	-3.4	E-S0		
+F00946	NGC 2442	galaxy--elliptical	E0/1	G	3.7 ± 0.6	3.7	Sbc	B	
+F00076	IC 455	galaxy--spiral	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00083	IC 2209	galaxy--spiral		G	3.0 ± 0.5	3.0	SBb	B	
+F00084	NGC 2486	galaxy--spiral		G	1.2 ± 0.7	1.2	SBa	B	R
+F01346	NGC 2498	galaxy--unclassified		G	1.2 ± 0.7	1.2	Sa	B	R
+F01345	IC 482	galaxy--unclassified		G	3.0 ± 2.0	3.0	SABb	B	
+F00810	NGC 2495	galaxy--unclassified		G	7.5 ± 3.0	7.5	Sd		
+F01100	NGC 2510	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		R
+F01101	NGC 2511	galaxy--unclassified		G	2.0 ± 2.0	2.0	Sab		
+F00087	IC 497	galaxy--spiral	Sa	G	0.7 ± 2.2	0.7	Sa		
+F00086	NGC 2536	galaxy--spiral		G	5.0 ± 0.7	5.0	Sc	B	
+F00085	NGC 2523B	galaxy--elliptical		G	3.0 ± 0.3	3.0	Sb		
+F00505	IC 2233	galaxy--spiral	Sd	G	6.5 ± 0.8	6.5	SBc	B	
+F01069	NGC 2523C	galaxy--elliptical		G	-4.9 ± 0.6	-4.9	E		
+F00506	IC 2311	galaxy--elliptical	E3	G	-4.8 ± 0.7	-4.8	E		
+F01102	NGC 2560	galaxy--unclassified		G	-0.1 ± 0.7	-0.1	S0-a		
+F00088	NGC 2562	galaxy--spiral		G	-0.1 ± 0.6	-0.1	S0-a	B	R
+F01103	NGC 2569	galaxy--elliptical		G	-4.4 ± 1.2	-4.4	E		
+F01104	NGC 2570	galaxy--unclassified		G	2.0 ± 0.5	2.0	Sab		R
+F01105	NGC 2594	galaxy--unclassified		G	-2.5 ± 1.5	-2.5	S0	B	
+F00628	IC 2388	galaxy--unclassified		G	-1.0 ± 2.0	-1.0	S0-a		R
+F00626	NGC 2637	galaxy--unclassified		G	5.2 ± 3.0	5.2	SBc	B	
+F00627	NGC 2643	galaxy--unclassified		G	-1.0 ± 2.0	-1.0	S0-a		
+F00089	NGC 2614	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	Sc		R
+F01535	NGC 2630	galaxy--spiral	Sbc	u					
+F00630	IC 2399	galaxy--unclassified		G	5.1 ± 2.6	5.1	SBc	B	R
+F01536	NGC 2641	galaxy--spiral	S0:	G	-2.0 ± 0.5	-2.0	S0		
+F00486	NGC 2636	galaxy--unclassified	cG	G	-5.0 ± 0.5	-5.0	E		
+F00090	NGC 2634A	galaxy--elliptical		G	4.0 ± 0.4	4.0	SBbc	B	
+F00631	NGC 2667	galaxy--unclassified		G	1.0 ± 2.0	1.0	Sa		
+F00632	IC 2411	galaxy--unclassified		G	2.3 ± 3.8	2.3	Sab		
+F00091	NGC 2634B	galaxy--spiral							
+F00629	NGC 2673	galaxy--elliptical	E+cG	G	-4.8 ± 0.6	-4.8	E		
+F00633	IC 2414	galaxy--unclassified		G	-5.0 ± 2.6	-5.0	E		
+F00634	NGC 2677	galaxy--unclassified		G	-1.2 ± 4.8	-1.2	E?		
+F00485	NGC 2646	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	R
+F00635	IC 523	galaxy--spiral		G	2.1 ± 0.5	2.1	Sab		
+F00092	NGC 2698	galaxy--spiral		G	-1.1 ± 1.3	-1.1	S0-a		
+F00093	NGC 2699	galaxy--elliptical		G	-5.0 ± 0.5	-5.0	E		
+F01347	NGC 2709	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F00917	NGC 2694	galaxy--unclassified	E3	G	-4.8 ± 0.7	-4.8	E		
+F00094	NGC 2716	galaxy--spiral		G	-1.2 ± 0.6	-1.2	S0-a	B	R
+F01348	IC 2426	galaxy--unclassified		G	-2.0 ± 2.0	-2.0	S0		
+F01106	NGC 2753	galaxy--unclassified		G	1.5 ± 1.5	1.5	SBab	B	
+F00624	NGC 2773	galaxy--spiral	Sc	G	0.7 ± 3.2	0.7	Sa		
+F00625	NGC 2777	galaxy--spiral	Sbcr	G	2.8 ± 2.4	2.8	Sb		
+F01108	IC 2444	galaxy--lenticular	S0	G	0.0 ± 1.1	0.0	S0-a	B	R
+F01107	NGC 2783B	barred-spiral	SBb	G	3.4 ± 0.7	3.4	SBb	B	
+F01109	NGC 2789	galaxy--unclassified		G	-0.2 ± 0.8	-0.2	S0-a	B	R
+F00095	NGC 2794	galaxy--spiral		G	4.0 ± 2.0	4.0	SABb	B	R
+F00097	IC 2454	galaxy--spiral	Sa:	G	1.1 ± 0.5	1.1	Sa		R
+F01110	NGC 2791	galaxy--elliptical		G	-1.0 ± 2.0	-1.0	S0-a		R
+F00096	NGC 2797	galaxy--spiral		G	2.0 ± 2.0	2.0	Sab		
+F01111	NGC 2801	galaxy--spiral	Sc	G	5.3 ± 0.6	5.3	Sc		
+F00099	NGC 2804	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		R
+F01112	NGC 2806	galaxy--unclassified		S					
+F01113	NGC 2807	galaxy--unclassified		G	-2.0 ± 2.0	-2.0	S0		
+F01114	IC 2457	barred-spiral	SBbc:	G	0.5 ± 4.2	0.5	S?	B	R
+F00098	NGC 2799	barred-spiral	SBd	G	8.5 ± 1.4	8.5	SBd	B	
+F01115	NGC 2812	galaxy--spiral	S0/Sb	G	2.3 ± 4.4	2.3	S?		
+F01116	NGC 2813	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		
+F01349	NGC 2851	galaxy--unclassified		G	-1.9 ± 0.6	-1.9	S0		
+F00918	NGC 2814	barred-spiral	SBb	G	3.1 ± 1.5	3.1	SBb	B	
+F00919	NGC 2820	barred-spiral	SBc	G	5.3 ± 0.6	5.3	SBc	B	
+F00100	NGC 2854	barred-spiral	SBb	G	3.1 ± 0.4	3.1	SBb	B	
+F00101	NGC 2856	galaxy--spiral	SBbc	G	3.8 ± 1.6	3.8	SBbc	B	
+F00102	NGC 2874	barred-spiral	SBbc	G	4.4 ± 0.9	4.4	Sbc	B	R
+F01352	NGC 2873	barred-spiral	SBab	G	1.5 ± 2.5	1.5	Sab	B	
+F00103	NGC 2884	galaxy--spiral		G	0.2 ± 0.9	0.2	S0-a		
+F00104	NGC 2920	galaxy--spiral		G	0.9 ± 0.7	0.9	Sa		
+F00779	NGC 2928	barred-spiral	SBa	G	1.0 ± 2.4	1.0	SBa	B	
+F00780	NGC 2933	galaxy--spiral	SAab	G	4.2 ± 2.2	4.2	Sbc		
+F00781	NGC 2941	galaxy--lenticular	S0-Aa	G	0.0 ± 2.0	0.0	S0-a		R
+F00782	NGC 2946	barred-spiral	SBb	G	3.0 ± 1.4	3.0	SBb	B	
+F00783	NGC 2949	galaxy--spiral	S	M2					
+F00784	NGC 2958	galaxy--unclassified		G	3.9 ± 0.5	3.9	Sbc	B	R
+F00785	NGC 2968	galaxy--spiral	SAB(r)bc	G	0.6 ± 3.6	0.6	Sa	B	
+F00786	NGC 2970	galaxy--elliptical	E3	G	-4.5 ± 0.8	-4.5	E	B	
+F01537	NGC 2961	galaxy--unclassified		G	2.9 ± 0.9	2.9	SABb	B	
+F00105	NGC 2993	galaxy--spiral	Sab	G	1.2 ± 0.7	1.2	Sa		
+F01375	IC 2508	galaxy--spiral	Sa	G	-5.0 ± 2.6	-5.0	E		
+F00559	IC 2512	galaxy--spiral	Sc	G	1.9 ± 1.8	1.9	SABa	B	
+F00106	NGC 3018	barred-spiral	SB	G	3.5 ± 1.7	3.5	SBbc	B	
+F00558	IC 2513	galaxy--spiral	Sbc	G	2.1 ± 0.6	2.1	Sab		
+F01376	NGC 3013	barred-spiral	SBabr	G	0.4 ± 4.2	0.4	S?		R
+F00108	NGC 3045	galaxy--spiral	Sb	G	2.9 ± 1.1	2.9	SBb	B	R
+F00507	IC 2523	galaxy--spiral	Sbc	G	4.0 ± 0.8	4.0	SBbc	B	
+F00774	NGC 3084	galaxy--spiral	Sa:r	G	2.0 ± 0.5	2.0	Sab	B	R
+F00109	NGC 3085	galaxy--lenticular	S0	G	-1.8 ± 1.2	-1.8	S0		
+F00560	IC 2532	galaxy--spiral	Sa:r	G	1.1 ± 0.5	1.1	Sa	B	R
+F00111	HGC 42c HYA	galaxy--elliptical							
+F00110	NGC 3096	barred-spiral	SB0	G	-1.9 ± 0.5	-1.9	S0	B	
+F00112	NGC 3100	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00920	NGC 3073	galaxy--lenticular	E/S0	G	-2.7 ± 0.6	-2.7	E-S0	B	
+F00107	NGC 3065	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		R
+F00113	NGC 3143	galaxy--spiral		G	3.0 ± 0.4	3.0	SBb	B	
+F01377	NGC 3150	galaxy--spiral	SAc	G	1.8 ± 3.5	1.8	Sab		R
+F01378	NGC 3151	galaxy--lenticular	S0	G	-1.9 ± 0.6	-1.9	S0		R
+F00115	NGC 3165	galaxy--spiral	Sm(r)	G	8.5 ± 0.9	8.5	Sm		R
+F01379	NGC 3152	galaxy--lenticular	S0	G	-1.9 ± 0.6	-1.9	S0	B	R
+F00114	NGC 3166	galaxy--spiral	SAB(rs)0	G	0.3 ± 0.8	0.3	S0-a	B	
+F01380	NGC 3159	galaxy--elliptical	S0	G	-4.9 ± 0.4	-4.9	E		
+F00116	NGC 3160	galaxy--spiral	SAab	G	2.0 ± 1.7	2.0	Sab	B	
+F00117	NGC 3161	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00118	NGC 3163	galaxy--elliptical	E/S0	G	-3.1 ± 0.4	-3.1	E-S0		
+F00124	NGC 3155	galaxy--spiral	Sm(r)	G	3.5 ± 1.5	3.5	Sbc		
+F00120	NGC 3185	barred-spiral	(R)SB(r)a	G	1.2 ± 0.9	1.2	Sa	B	R
+F00121	NGC 3187	galaxy--spiral	Sd	G	5.0 ± 0.7	5.0	SBc	B	
+F00119	NGC 3193	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+F00788	NGC 3222	galaxy--elliptical	E/S0	G	-2.1 ± 0.5	-2.1	S0	B	
+F00122	NGC 3214	galaxy--spiral	S0-Aa	G	-0.4 ± 1.3	-0.4	S0-a		
+F00787	NGC 3227	galaxy--spiral	SAB(s)pec	G	1.5 ± 0.9	1.5	SABa	B	
+F00123	NGC 3220	galaxy--spiral	SAb	G	3.4 ± 1.5	3.4	Sb		
+F00561	NGC 3244	galaxy--spiral	Sbc	G	5.6 ± 0.9	5.6	Sc		
+F00804	NGC 3245B	barred-spiral	SBb						
+F00125	NGC 3257	galaxy--lenticular	S0	G	-2.8 ± 0.6	-2.8	E-S0	B	
+F00126	NGC 3260	galaxy--elliptical		G	-4.9 ± 0.5	-4.9	E		
+F00943	NGC 3262	galaxy--lenticular	SB0	G	-1.6 ± 0.8	-1.6	S0	B	
+F00944	NGC 3263	barred-spiral	SBc	G	6.0 ± 0.4	6.0	SBc	B	
+F00563	NGC 3267	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	R
+F00564	NGC 3269	galaxy--spiral	Sa	G	-0.8 ± 0.7	-0.8	S0-a	B	R
+F00562	NGC 3271	galaxy--lenticular	S0	G	-1.8 ± 0.7	-1.8	S0	B	R
+F00127	NGC 3273	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0	B	R
+F01381	NGC 3272	galaxy--unclassified		?					
+F00131	NGC 3307	galaxy--spiral		G	0.2 ± 0.7	0.2	S0-a	B	R
+F00130	NGC 3308	galaxy--lenticular	S0	G	-3.0 ± 0.6	-3.0	E-S0	B	
+F00135	NGC 3309	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00132	NGC 3312	galaxy--spiral	Sab	G	2.9 ± 0.4	2.9	Sb		R
+F00133	NGC 3314	galaxy--spiral	S+S	M2					
+F00128	NGC 3315	galaxy--lenticular	S0	G	-2.9 ± 0.5	-2.9	E-S0		
+F00134	NGC 3316	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	
+F01382	NGC 3304	galaxy--unclassified		G	1.0 ± 0.3	1.0	Sa	B	R
+F00129	IC 2597	galaxy--lenticular	S0	G	-3.9 ± 0.7	-3.9	E		
+F00565	NGC 3354	galaxy--unclassified		G	5.0 ± 2.0	5.0	Sc		
+F00566	NGC 3358	galaxy--spiral	Sa	G	0.3 ± 0.9	0.3	S0-a	B	
+F00789	NGC 3377B	galaxy--unclassified							
+F00791	NGC 3384	galaxy--lenticular	E7	G	-2.6 ± 0.8	-2.6	E-S0	B	
+F00792	NGC 3389	galaxy--spiral	SAc	G	5.3 ± 0.6	5.3	Sc		
+F00790	NGC 3391	galaxy--spiral	Sdm	G	3.3 ± 3.4	3.3	Sb		
+F00807	IC 2604	seyfert-galaxy		G	9.0 ± 0.9	9.0	SBm	B	
+F00136	NGC 3396	galaxy--spiral		G	9.3 ± 1.5	9.3	Sm	B	
+F00806	IC 2608	galaxy--unclassified		G	5.0 ± 2.0	5.0	SBc	B	
+F00775	IC 647	galaxy--unclassified	S0-a	G	-1.0 ± 2.0	-1.0	S0-a		
+F00138	NGC 3413	galaxy--spiral	Scd	G	-1.1 ± 2.4	-1.1	S0-a		
+F00808	NGC 3418	galaxy--spiral	S0/Sa	G	0.2 ± 1.0	0.2	S0-a	B	
+F00137	NGC 3424	galaxy--spiral		G	3.1 ± 0.5	3.1	SBb	B	
+F00141	NGC 3440	galaxy--spiral	SAbc	G	3.6 ± 1.9	3.6	Sbc	B	
+F00139	NGC 3454	barred-spiral	SBc	G	5.4 ± 0.8	5.4	SBc	B	
+F00140	NGC 3458	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00142	NGC 3501	galaxy--spiral	Sc	G	5.8 ± 0.5	5.8	Sc		
+F00143	NGC 3513	barred-spiral	SBc	G	5.1 ± 0.4	5.1	SBc	B	
+F00809	NGC 3512	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	Sc	B	
+F01149	NGC 3529	galaxy--spiral	S0a	G	3.0 ± 0.5	3.0	SBb	B	
+F00144	NGC 3564	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0		
+F00145	NGC 3568	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	Sc	B	
+F01538	NGC 3577	galaxy--spiral	SAa	G	1.5 ± 0.9	1.5	Sa	B	R
+F00147	NGC 3599	galaxy--spiral	SA0	G	-2.0 ± 0.5	-2.0	S0		
+F00146	NGC 3605	galaxy--elliptical	E/S0	G	-4.4 ± 1.1	-4.4	E		R
+F00793	NGC 3608	galaxy--elliptical	E2	G	-4.8 ± 0.4	-4.8	E		
+F01353	IC 2694	galaxy--unclassified		G	4.2 ± 3.0	4.2	SBbc	B	
+F00921	NGC 3613	galaxy--elliptical	E3	G	-4.5 ± 0.9	-4.5	E		
+F00922	NGC 3625	galaxy--spiral	SAb	G	3.1 ± 0.7	3.1	Sb	B	R
+F00148	NGC 3641	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+F01355	NGC 3643	galaxy--unclassified		G	-1.0 ± 1.0	-1.0	S0-a	B	R
+F01358	IC 683	galaxy--unclassified		G	4.0 ± 0.5	4.0	Sbc		
+F00794	IC 2745	galaxy--unclassified		G	2.5 ± 2.1	2.5	SBb	B	
+F00149	NGC 3644	galaxy--spiral		G	1.2 ± 0.7	1.2	Sa	B	R
+F01354	NGC 3639	galaxy--spiral	S	G	2.0 ± 2.0	2.0	Sab		
+F01357	NGC 3647	galaxy--unclassified		G	-5.0 ± 2.6	-5.0	E		
+F01356	NGC 3645	galaxy--unclassified		G	-1.5 ± 1.1	-1.5	S0	B	
+F00797	NGC 3649	galaxy--lenticular	S0	G	0.8 ± 0.9	0.8	SBa	B	
+F00923	NGC 3658	galaxy--unclassified		G	-2.1 ± 0.7	-2.1	S0	B	R
+F00152	NGC 3674	galaxy--lenticular	S0	G	-1.9 ± 0.4	-1.9	S0		
+F00798	NGC 3681	galaxy--spiral	Sb/Sc	G	4.0 ± 0.2	4.0	Sbc	B	R
+F00800	NGC 3686	galaxy--spiral	SBb/Sc	G	4.1 ± 0.4	4.1	SBbc	B	
+F00799	NGC 3691	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	SBb	B	
+F01359	IC 2853	galaxy--unclassified		G	2.0 ± 0.3	2.0	Sab	B	
+F01540	NGC 3690B	barred-spiral	SBm	MG					
+F00154	IC 696	galaxy--spiral		G	7.4 ± 1.2	7.4	Scd	B	
+F01361	IC 2867	galaxy--unclassified		G	4.5 ± 2.1	4.5	Sc		
+F00153	IC 698	galaxy--spiral		G	-1.4 ± 1.5	-1.4	S0-a		
+F01360	IC 699	galaxy--unclassified		G	2.9 ± 0.7	2.9	SABb	B	R
+F01539	NGC 3683A	galaxy--spiral	SAc	G	5.1 ± 0.5	5.1	Sc	B	
+F01362	IC 2887	galaxy--unclassified		G	5.0 ± 2.0	5.0	Sc		
+F00155	IC 2913	galaxy--spiral		G	-0.6 ± 1.5	-0.6	S0-a		R
+F00924	NGC 3729	barred-spiral	SB(r)apec	G	1.3 ± 0.8	1.3	Sa	B	R
+F00156	NGC 3738	irregular-galaxy	Im	G	9.8 ± 0.7	9.8	I		
+F00157	NGC 3749	galaxy--spiral	Sa	G	1.1 ± 0.5	1.1	Sa		
+F01697	NGC 3746	barred-spiral	SBab	G	2.3 ± 0.6	2.3	Sab	B	R
+F01696	NGC 3745	barred-spiral	SB0	G	-2.9 ± 0.6	-2.9	E-S0	B	
+F01698	NGC 3748	galaxy--spiral	S0a	G	-1.9 ± 0.6	-1.9	S0	B	
+F01717	NGC 3769A	barred-spiral	SBm	G	9.0 ± 0.3	9.0	SBm	B	
+F01699	NGC 3750	galaxy--elliptical	E3	G	-3.2 ± 0.8	-3.2	E-S0	B	
+F01701	NGC 3751	galaxy--elliptical	E/S0	G	-3.0 ± 0.7	-3.0	E-S0		
+F01700	NGC 3754	barred-spiral	SBc	G	3.4 ± 1.1	3.4	SBb	B	
+F01366	NGC 3787	galaxy--elliptical	E/S0	G	-2.0 ± 1.4	-2.0	S0		
+F00159	NGC 3786	galaxy--spiral	SAab	G	1.1 ± 0.5	1.1	SABa	B	R
+F00162	NGC 3790	galaxy--spiral	S0a	G	-0.1 ± 0.4	-0.1	S0-a		
+F00160	NGC 3798	barred-spiral	SB0	G	-1.9 ± 0.6	-1.9	S0	B	R
+F01364	NGC 3803	galaxy--unclassified		G	6.6 ± 2.5	6.6	SBcd	B	
+F01363	NGC 3802	galaxy--unclassified	S	G	3.2 ± 2.1	3.2	Sb		
+F01365	NGC 3806	barred-spiral	SBb/Sb	G	3.0 ± 0.5	3.0	Sb	B	
+F00158	NGC 3804	galaxy--spiral	SABc	G	6.4 ± 0.8	6.4	SABc	B	
+F01367	NGC 3814	galaxy--lenticular	S0	G					
+F00161	NGC 3815	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+F00164	NGC 3816	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		
+F00163	NGC 3821	barred-spiral	SBa	G	0.3 ± 1.8	0.3	S0-a	B	R
+F00171	IC 2951	galaxy--spiral	Sa	G	0.9 ± 0.5	0.9	Sa		
+F00170	NGC 3837	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+F00165	NGC 3840	galaxy--spiral	Sa	G	1.4 ± 1.0	1.4	Sa		
+F00168	NGC 3844	galaxy--spiral	S0a	G	-0.2 ± 1.1	-0.2	S0-a		
+F00167	NGC 3842	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00166	NGC 3841	galaxy--elliptical	E/S0	G	-3.3 ± 2.0	-3.3	E-S0		
+F00169	NGC 3845	galaxy--spiral	S0/a	G	-0.5 ± 2.1	-0.5	S0-a		
+F01368	NGC 3851	galaxy--elliptical	E/S0	G	-3.0 ± 1.7	-3.0	E-S0		
+F01369	NGC 3857	galaxy--lenticular	S0	G	-0.7 ± 1.7	-0.7	S0-a		
+F00172	NGC 3861	galaxy--spiral	Sd	G	3.1 ± 0.6	3.1	Sb	B	R
+F01371	IC 2955	galaxy--elliptical	E/S0	G	-3.3 ± 2.0	-3.3	E-S0		
+F00173	NGC 3862	galaxy--elliptical	E3	G	-4.8 ± 0.6	-4.8	E		
+F00174	NGC 3873	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F01370	NGC 3875	galaxy--spiral	S0a	G	-0.2 ± 0.7	-0.2	S0-a		
+F01372	IC 732	barred-spiral	SB0	M2					
+F01694	PGC 36723 VIR	galaxy--spiral	SABb	G	3.0 ± 0.5	3.0	SABb	B	
+F01373	NGC 3883	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	Sb		
+F01695	PGC 36742 VIR	barred-spiral	SBc	G	5.0 ± 0.4	5.0	SBc	B	
+F00175	NGC 3888	galaxy--spiral		G	5.2 ± 0.7	5.2	SABc	B	
+F00925	NGC 3896	galaxy--unclassified	SBa	G	1.5 ± 3.3	1.5	SBab	B	
+F00176	NGC 3895	barred-spiral	SBa	G	1.1 ± 0.4	1.1	SBa	B	R
+F00926	NGC 3906	barred-spiral	SBcd	G	6.8 ± 1.1	6.8	SBcd	B	
+F00179	NGC 3913	galaxy--spiral	Scd(r)	G	6.6 ± 0.7	6.6	Scd		R
+F00178	NGC 3916	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	Sb		R
+F00177	NGC 3931	galaxy--spiral		G	-3.1 ± 0.7	-3.1	E-S0		
+F00927	NGC 3932	galaxy--unclassified	SBb	G	3.0 ± 1.4	3.0	SBb	B	R
+F01541	UGC 6849 UMA	galaxy--spiral	Sm	G	8.8 ± 0.6	8.8	Sm		
+F01544	NGC 3950	galaxy--elliptical	E3	G	-4.3 ± 2.1	-4.3	E		
+F00180	NGC 3958	galaxy--spiral	SAa	G	1.1 ± 0.3	1.1	Sa	B	
+F01546	NGC 3966	galaxy--lenticular	S0-Aa	G	-0.7 ± 1.6	-0.7	S0-a	B	
+F01542	NGC 3975	galaxy--unclassified		G	3.1 ± 0.6	3.1	SABb	B	R
+F00182	NGC 3977	galaxy--spiral	Scr	G	1.6 ± 0.9	1.6	Sab		R
+F01543	NGC 3978	galaxy--unclassified		G	3.8 ± 0.6	3.8	SABb	B	
+F01545	IC 2978	barred-spiral	SBcd	G	6.7 ± 0.7	6.7	SBcd	B	
+F01548	NGC 3982	galaxy--spiral	SAB(r)b:	G	3.2 ± 0.6	3.2	SABb	B	R
+F01547	NGC 3986	galaxy--lenticular	SB0-a	G	-0.7 ± 1.6	-0.7	S0-a	B	
+F00185	IC 2979	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	R
+F01014	NGC 3987	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	SBb	B	
+F01015	NGC 3989	galaxy--unclassified		G	3.9 ± 2.5	3.9	Sbc		
+F00183	NGC 3991	irregular-galaxy	Im	G	9.8 ± 0.7	9.8	I	B	
+F00928	NGC 3990	galaxy--lenticular	E/S0	G	-2.7 ± 0.7	-2.7	E-S0	B	
+F01016	NGC 3993	galaxy--unclassified		G	3.1 ± 0.6	3.1	Sb		
+F00184	NGC 3995	galaxy--spiral	SABm	G	8.8 ± 0.7	8.8	SABm	B	
+F01017	NGC 3997	barred-spiral	SB	G	3.0 ± 0.5	3.0	SBb	B	
+F01018	NGC 3999	galaxy--lenticular	S0	G	-5.0 ± 2.6	-5.0	E		
+F01019	NGC 4000	galaxy--unclassified		G	4.2 ± 2.5	4.2	SBbc	B	
+F01549	NGC 3998	galaxy--lenticular	SA(r)0	G	-2.2 ± 0.7	-2.2	S0		R
+F01020	NGC 4011	galaxy--unclassified		G	2.1 ± 5.0	2.1	S?		
+F00487	IC 749	galaxy--spiral	Sb	G	5.9 ± 0.5	5.9	Sc	B	R
+F01022	NGC 4018	galaxy--spiral	Sab	G	2.1 ± 0.4	2.1	Sab		
+F01374	NGC 4018	galaxy--spiral	Sab	G	2.1 ± 0.4	2.1	Sab		
+F01021	NGC 4015	galaxy--unclassified	S+E	M2					
+F00488	IC 751	galaxy--spiral	Sb	G	2.9 ± 0.6	2.9	Sb	B	R
+F01024	NGC 4022	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0	B	R
+F01023	NGC 4021	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F01025	NGC 4023	galaxy--unclassified		G	3.4 ± 2.2	3.4	Sb		
+F00489	IC 752	barred-spiral	SBc	G	6.0 ± 2.0	6.0	SBc	B	
+F00929	NGC 4036	galaxy--lenticular	S0	G	-2.4 ± 0.8	-2.4	S0		
+F01124	NGC 4042	galaxy--unclassified		G	-5.0 ± 2.6	-5.0	E		
+F01125	NGC 4060	galaxy--lenticular	S0	G	-2.4 ± 5.1	-2.4	E?		R
+F01550	NGC 4068	irregular-galaxy	Ir	G	9.9 ± 0.3	9.9	I		
+F00186	NGC 4065	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F01126	NGC 4069	galaxy--unclassified		G	-5.0 ± 2.6	-5.0	E		
+F01558	NGC 4063	galaxy--lenticular	S0-Aa	G	-1.4 ± 1.5	-1.4	S0-a	B	R
+F00187	NGC 4066	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00188	NGC 4070	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		R
+F01127	NGC 4072	galaxy--lenticular	S0	G	-2.0 ± 2.0	-2.0	S0		
+F00189	NGC 4074	galaxy--lenticular	S0	G	0.0 ± 2.0	0.0	S0-a		R
+F00190	NGC 4076	galaxy--spiral		G	2.6 ± 1.0	2.6	Sb		
+F01560	NGC 4139	galaxy--lenticular	S0	G	-1.8 ± 0.9	-1.8	S0	B	
+F01559	NGC 4075	galaxy--lenticular	S0-Aa	G	-0.9 ± 0.5	-0.9	S0-a		R
+F01561	NGC 4077	galaxy--lenticular	S0	G	-2.3 ± 0.8	-2.3	S0	B	R
+F00194	NGC 4092	galaxy--spiral		G	1.7 ± 0.9	1.7	Sab		
+F01128	NGC 4057	galaxy--unclassified		G	-4.9 ± 0.4	-4.9	E		
+F00930	NGC 4085	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SABc	B	
+F00191	NGC 4090	galaxy--spiral	Sab	G	2.1 ± 0.5	2.1	Sab		
+F01129	NGC 4086	galaxy--lenticular	S0	G	-2.1 ± 0.6	-2.1	S0		R
+F00192	NGC 4089	galaxy--elliptical		G	-4.3 ± 1.8	-4.3	E		
+F00193	NGC 4091	galaxy--spiral		G	3.5 ± 1.7	3.5	Sb		
+F00198	IC 2996	galaxy--spiral	Sb	G	3.4 ± 1.2	3.4	Sb		
+F00195	NGC 4093	galaxy--elliptical		G	-4.0 ± 2.0	-4.0	E		
+F00196	NGC 4098	galaxy--spiral		G	2.0 ± 2.0	2.0	Sab		
+F00197	NGC 4105	galaxy--elliptical	E2	G	-4.7 ± 0.9	-4.7	E		
+F00732	NGC 4109	galaxy--unclassified		G	1.3 ± 0.9	1.3	Sa		
+F00199	IC 3005	galaxy--spiral	Sb	G	5.5 ± 1.0	5.5	SBc	B	
+F00730	NGC 4117	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00731	NGC 4118	galaxy--unclassified		G	-0.6 ± 2.8	-0.6	S0-a		
+F00736	NGC 4121	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00947	NGC 4123	barred-spiral	SB(r)c	G	5.0 ± 0.7	5.0	Sc	B	R
+F00728	NGC 4156	galaxy--unclassified		G	3.1 ± 0.4	3.1	Sb	B	
+F00641	NGC 4164	galaxy--elliptical	E3	G	-5.0 ± 1.4	-5.0	E		
+F00642	NGC 4165	galaxy--spiral	SABa	G	2.0 ± 1.2	2.0	SABa	B	R
+F00636	NGC 4170	irregular-galaxy	Im	S					
+F00638	NGC 4174	galaxy--lenticular	S0	G	0.0 ± 2.3	0.0	S0-a	B	
+F00637	NGC 4175	galaxy--spiral	Sbc	G	3.2 ± 1.0	3.2	SBb	B	
+F00640	NGC 4192	galaxy--spiral	Sc/dSc	G	2.6 ± 0.8	2.6	SABb	B	
+F01551	NGC 4187	galaxy--unclassified		G	-4.8 ± 0.8	-4.8	E		
+F00201	NGC 4193	galaxy--spiral		G	4.1 ± 1.8	4.1	SABb	B	
+F00639	NGC 4186	galaxy--spiral	Sa	G	1.5 ± 0.7	1.5	Sab		R
+F00200	NGC 4196	galaxy--spiral	S0:	G	-2.0 ± 0.5	-2.0	S0		
+F00202	IC 3059	galaxy--spiral		G	9.7 ± 0.7	9.7	I	B	
+F01130	IC 3061	galaxy--unclassified		G	5.2 ± 0.6	5.2	SBc	B	
+F00643	IC 3062	galaxy--spiral	Sc/I	G	5.4 ± 1.8	5.4	Sc		R
+F01562	IC 771	barred-spiral	SBc	G	5.6 ± 1.3	5.6	SBc	B	
+F00644	IC 3066	galaxy--unclassified		G	5.6 ± 1.7	5.6	Sc		
+F00203	NGC 4206	galaxy--spiral	SAbc	G	4.0 ± 0.3	4.0	Sbc		
+F01150	NGC 4218	galaxy--unclassified		G	2.4 ± 2.9	2.4	SABa	B	
+F01151	NGC 4231	galaxy--unclassified		G	-0.2 ± 1.9	-0.2	S0-a	B	
+F00205	NGC 4221	barred-spiral	SBa	G	-1.1 ± 0.5	-1.1	S0-a	B	R
+F00204	NGC 4222	galaxy--spiral	SAcd	G	6.6 ± 1.1	6.6	Scd		
+F00207	NGC 4226	galaxy--spiral		G	1.3 ± 0.9	1.3	SBa	B	
+F01131	IC 3091	galaxy--lenticular	S0	G	-0.1 ± 2.3	-0.1	S0-a		
+F01152	NGC 4232	galaxy--unclassified		G	2.6 ± 0.9	2.6	Sb	B	
+F00208	NGC 4248	galaxy--spiral		G	9.0 ± 1.4	9.0	SBm	B	
+F00951	NGC 4249	galaxy--lenticular	E/S0	G	-2.7 ± 1.8	-2.7	E-S0		
+F00948	IC 773	galaxy--lenticular	S0-Aa	G	-0.5 ± 1.2	-0.5	S0-a	B	
+F00645	NGC 4253	galaxy--unclassified		G	1.0 ± 0.7	1.0	SBa	B	R
+F00952	NGC 4252	galaxy--spiral	SAbc	G	3.6 ± 1.3	3.6	Sbc		
+F01565	NGC 4252	galaxy--spiral	SAbc	G	3.6 ± 1.3	3.6	Sbc		
+F00206	NGC 4256	galaxy--spiral	SAb	G	2.9 ± 0.6	2.9	Sb		
+F00954	IC 775	galaxy--lenticular	E/S0	G	-3.1 ± 0.5	-3.1	E-S0	B	
+F00949	IC 3136	barred-spiral	SBc	G	5.0 ± 0.4	5.0	SBc	B	
+F00210	NGC 4257	galaxy--spiral	SAab	G	1.6 ± 1.0	1.6	Sab	B	R
+F00959	NGC 4259	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00646	IC 777	barred-spiral	SB	G	2.5 ± 1.6	2.5	SBb	B	R
+F01563	NGC 4264	galaxy--lenticular	S0-Aa	G	-1.1 ± 0.7	-1.1	S0-a	B	R
+F00958	IC 3153	barred-spiral	SBbc	G	4.5 ± 1.7	4.5	SBbc	B	R
+F00648	IC 779	galaxy--elliptical		G	1.7 ± 6.4	1.7	S?	B	R
+F00956	NGC 4266	barred-spiral	SBa	G	1.0 ± 0.9	1.0	SBa	B	
+F00950	IC 3155	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00960	NGC 4268	galaxy--lenticular	S0-Aa	G	-0.3 ± 0.7	-0.3	S0-a	B	R
+F00211	NGC 4269	galaxy--lenticular	S0-Aa	G	-1.1 ± 0.8	-1.1	S0-a	B	
+F00957	NGC 4270	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00647	IC 781	galaxy--lenticular	S0	G	-3.2 ± 1.8	-3.2	E-S0		
+F00961	NGC 4277	galaxy--lenticular	S0-Aa	G	0.1 ± 0.7	0.1	S0-a	B	R
+F01552	NGC 4284	galaxy--spiral	SAbc	G	4.0 ± 0.4	4.0	Sbc		
+F00212	NGC 4283	galaxy--elliptical		G	-4.8 ± 0.4	-4.8	E		
+F00955	NGC 4281	galaxy--lenticular	S0-Aa	G	-1.5 ± 0.7	-1.5	S0-a		
+F01566	NGC 4282	galaxy--lenticular	S0-Aa	G	-0.5 ± 1.6	-0.5	S0-a	B	
+F00962	IC 3173	galaxy--spiral	SAa	G	0.9 ± 2.5	0.9	Sa		
+F00213	NGC 4286	galaxy--spiral	S0:	G	0.9 ± 2.4	0.9	Sa		R
+F00214	NGC 4290	barred-spiral	SBbcr	G	2.5 ± 0.7	2.5	Sb	B	R
+F01564	NGC 4287	galaxy--spiral	SAbc	G	4.3 ± 2.0	4.3	Sbc		
+F00215	NGC 4292	galaxy--lenticular	S0	G	-1.9 ± 0.7	-1.9	S0	B	R
+F00649	NGC 4298	galaxy--spiral		G	5.1 ± 0.6	5.1	Sc		
+F00653	IC 783	galaxy--unclassified		G	-0.2 ± 0.8	-0.2	S0-a	B	R
+F00217	NGC 4299	galaxy--spiral	SABd	G	8.4 ± 1.3	8.4	SABd	B	
+F00220	NGC 4300	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	Sa		R
+F01132	IC 3203	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+F00652	NGC 4308	galaxy--elliptical		G	-4.6 ± 1.0	-4.6	E		
+F00219	NGC 4306	galaxy--elliptical	dE/dI	G	-2.0 ± 0.8	-2.0	S0	B	
+F00964	IC 3209	galaxy--spiral	SAc	G	5.4 ± 1.4	5.4	Sc		
+F01133	IC 3215	galaxy--unclassified		G	8.0 ± 0.5	8.0	Sd		
+F00216	NGC 4301	barred-spiral	SB	G	6.3 ± 1.1	6.3	Sc	B	R
+F01569	IC 3224	irregular-galaxy	Irr	G	10.0 ± 1.2	10.0	I		
+F00963	IC 3233	galaxy--unclassified	S?	G	2.0 ± 4.2	2.0	S?		
+F00654	NGC 4322	galaxy--unclassified		G	-2.4 ± 1.1	-2.4	S0	B	R
+F00650	IC 3238	galaxy--lenticular	S0	G	-2.0 ± 1.7	-2.0	S0		R
+F00965	IC 3239	galaxy--spiral	SAcd	G	7.4 ± 2.0	7.4	Scd		
+F00651	IC 3244	galaxy--unclassified		G	5.2 ± 2.5	5.2	Sc		
+F00655	NGC 4328	galaxy--unclassified		G	-3.2 ± 0.8	-3.2	E-S0		
+F00966	NGC 4334	galaxy--spiral	SAab	G	1.5 ± 1.5	1.5	Sab	B	R
+F00222	NGC 4340	barred-spiral	SB(r)0+	G	-1.2 ± 0.6	-1.2	S0-a	B	R
+F00968	NGC 4342	galaxy--lenticular	E/S0	G	-3.2 ± 1.0	-3.2	E-S0	B	
+F01567	IC 3258	irregular-galaxy	Im	G	9.6 ± 1.0	9.6	IB	B	
+F00967	IC 3259	galaxy--spiral	SABd	G	8.0 ± 1.0	8.0	SABd	B	
+F00969	NGC 4341	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0	B	
+F01553	NGC 4358	galaxy--lenticular	S0	G	-5.0 ± 2.0	-5.0	E		
+F00221	NGC 4364	galaxy--lenticular	S0	G	-2.3 ± 1.0	-2.3	S0		
+F01568	IC 3311	galaxy--unclassified		G	7.5 ± 1.1	7.5	Scd		
+F00218	NGC 4352	galaxy--spiral		G	-2.0 ± 0.4	-2.0	S0	B	
+F00970	IC 3267	galaxy--spiral	SAc	G	5.9 ± 0.5	5.9	Sc		
+F01554	NGC 4362	galaxy--lenticular	S0-Aa	G	0.0 ± 2.0	0.0	S0-a		
+F00226	NGC 4386	galaxy--spiral	SAB0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00971	NGC 4366	galaxy--elliptical	E3	G	-5.0 ± 1.2	-5.0	E		
+F00657	IC 3292	dwarf-galaxy	dG/S0	G	-2.7 ± 1.8	-2.7	E-S0	B	
+F00972	NGC 4370	barred-spiral	SBa	G	0.7 ± 1.1	0.7	SBa	B	
+F00508	IC 3290	barred-spiral	SBb	G	-0.1 ± 1.1	-0.1	S0-a	B	
+F00975	IC 3305	galaxy--spiral		G	-5.0 ± 1.2	-5.0	E		
+F00223	NGC 4379	galaxy--spiral		G	-2.7 ± 0.6	-2.7	E-S0	B	R
+F00229	IC 3303	galaxy--elliptical	E3	G	-4.0 ± 0.9	-4.0	E		
+F00227	NGC 4392	galaxy--spiral		G	-2.0 ± 1.7	-2.0	S0		
+F01135	IC 787	galaxy--spiral	Sa	G	0.6 ± 1.1	0.6	Sa		
+F00509	IC 3313	dwarf-galaxy	dE	G	-4.0 ± 1.8	-4.0	E		
+F00973	IC 3322A	galaxy--spiral	SBc	G	6.0 ± 0.4	6.0	SBc	B	
+F00228	NGC 4387	galaxy--elliptical	E5	G	-4.8 ± 0.6	-4.8	E		
+F00232	NGC 4388	barred-spiral	SBb	G	2.8 ± 0.7	2.8	SBb	B	R
+F00974	IC 3322	galaxy--spiral	SABc	G	6.3 ± 1.1	6.3	SABc	B	
+F00656	NGC 4394	barred-spiral	(R)SB(r)b	G	3.0 ± 0.4	3.0	SBb	B	R
+F01570	IC 3328	dwarf-galaxy	dED	G	-3.8 ± 1.7	-3.8	E		R
+F00658	IC 3327	barred-spiral	SBa	G	0.6 ± 1.1	0.6	SBa	B	
+F00976	IC 3331	galaxy--unclassified	dGs	G	-3.6 ± 1.9	-3.6	E		
+F00230	NGC 4402	galaxy--spiral	SAb	G	3.2 ± 0.8	3.2	Sb		
+F00979	IC 3347	galaxy--spiral	SAc	G	-5.0 ± 1.2	-5.0	E		
+F00233	IC 3349	galaxy--elliptical	E3	G	-5.0 ± 0.9	-5.0	E		
+F00237	NGC 4417	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0	B	
+F00977	IC 3355	irregular-galaxy	Im	G	9.7 ± 1.0	9.7	I	B	
+F01571	IC 3357	galaxy--spiral	Sc	G	4.0 ± 1.7	4.0	Sbc		
+F00224	NGC 4421	galaxy--spiral		G	-0.5 ± 0.8	-0.5	S0-a	B	
+F01572	IC 3363	dwarf-galaxy	E3	G	-5.0 ± 1.0	-5.0	E		
+F01134	IC 792	galaxy--spiral	Sb	G	3.2 ± 1.0	3.2	Sb		
+F00225	IC 3365	galaxy--spiral		G	9.8 ± 0.7	9.8	I	B	
+F00231	NGC 4425	galaxy--lenticular	S0-Aa	G	-0.6 ± 1.2	-0.6	S0-a	B	
+F01136	IC 3369	galaxy--elliptical	dED	G	-3.3 ± 1.9	-3.3	E-S0		
+F00980	IC 3371	galaxy--spiral	SAc	G	6.0 ± 0.6	6.0	Sc		
+F00234	NGC 4431	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0	B	R
+F01573	IC 3374	irregular-galaxy	Im	G	9.9 ± 1.4	9.9	IB	B	
+F00978	NGC 4434	galaxy--unclassified		G	-4.7 ± 0.7	-4.7	E		R
+F00235	NGC 4436	galaxy--lenticular	S0	G	-1.8 ± 0.9	-1.8	S0		
+F00981	NGC 4435	galaxy--lenticular	SB0	G	-2.1 ± 0.5	-2.1	S0	B	
+F00659	IC 3378	galaxy--unclassified		G	4.5 ± 2.2	4.5	Sbc		
+F00660	IC 3379	galaxy--unclassified		G	4.5 ± 2.2	4.5	Sbc		
+F00661	NGC 4446	galaxy--unclassified		G	5.8 ± 0.6	5.8	Sc		
+F00236	IC 794	galaxy--elliptical	E3	G	-4.2 ± 0.7	-4.2	E	B	
+F00662	NGC 4447	galaxy--spiral	S0a	G	-1.6 ± 1.6	-1.6	S0	B	R
+F01575	IC 3381	galaxy--elliptical	E3	G	-4.1 ± 0.8	-4.1	E		
+F00238	NGC 4445	galaxy--spiral	SAab	G	2.0 ± 0.8	2.0	Sab		
+F00983	IC 3388	galaxy--elliptical	E3	G	-5.0 ± 0.9	-5.0	E		
+F00239	NGC 4451	galaxy--spiral	SAb	G	2.5 ± 2.6	2.5	Sb		
+F00982	IC 3393	galaxy--lenticular	S0	G	-1.7 ± 2.0	-1.7	S0		
+F00240	NGC 4458	galaxy--elliptical	E0/E1	G	-4.9 ± 0.4	-4.9	E		
+F01137	IC 3402	galaxy--spiral	Sbc	G	4.1 ± 0.4	4.1	Sbc		
+F00241	NGC 4464	galaxy--elliptical	E3	G	-2.7 ± 3.4	-2.7	E-S0		
+F01581	IC 3413	dwarf-galaxy	dED	G	-4.5 ± 1.0	-4.5	E		R
+F01574	IC 3412	galaxy--spiral	SAm	G	9.4 ± 1.5	9.4	Sm		
+F00996	NGC 4465	galaxy--spiral	Sc	G	5.2 ± 2.5	5.2	Sc		
+F00997	NGC 4467	galaxy--elliptical	E3	G	-4.8 ± 0.7	-4.8	E		
+F01576	NGC 4466	galaxy--spiral	SAb	G	2.7 ± 1.7	2.7	Sb		
+F00245	NGC 4468	galaxy--spiral		G	-2.7 ± 0.8	-2.7	E-S0		R
+F00998	NGC 4471	galaxy--lenticular	S0:	S					
+F00242	NGC 4470	galaxy--spiral	SAab	G	1.9 ± 2.1	1.9	Sab		
+F01582	IC 3418	galaxy--unclassified		G	9.9 ± 0.3	9.9	IB	B	
+F00255	NGC 4481	galaxy--spiral		G	2.0 ± 1.2	2.0	Sab		
+F00249	NGC 4473	galaxy--elliptical	E5	G	-4.7 ± 0.7	-4.7	E		
+F00244	NGC 4474	galaxy--spiral		G	-1.9 ± 0.9	-1.9	S0	B	
+F00247	NGC 4476	galaxy--lenticular	E/S0	G	-2.9 ± 1.0	-2.9	E-S0	B	R
+F01577	IC 3430	galaxy--lenticular	S0-Aa	G	0.0 ± 2.0	0.0	S0-a		
+F00250	NGC 4479	galaxy--spiral		G	-1.9 ± 0.5	-1.9	S0	B	
+F00246	NGC 4478	galaxy--elliptical	E2	G	-4.9 ± 0.4	-4.9	E		
+F00663	IC 3432	galaxy--spiral	Sc	G	5.1 ± 1.6	5.1	Sc		
+F00729	NGC 4485	galaxy--unclassified		G	9.7 ± 1.0	9.7	I	B	
+F01721	NGC 4486B	galaxy--elliptical	E3	G	-5.0 ± 0.8	-5.0	E		
+F01583	IC 3437	dwarf-galaxy	dE	G	-5.0 ± 1.0	-5.0	E		
+F00248	NGC 4486A	galaxy--elliptical	E3	G	-5.0 ± 0.4	-5.0	E		
+F00243	NGC 4492	galaxy--spiral	SAa	G	1.0 ± 0.6	1.0	Sa		
+F01578	IC 3443	galaxy--elliptical	E3	G	-5.0 ± 1.2	-5.0	E		
+F01584	IC 3446	irregular-galaxy	I	G	9.6 ± 1.3	9.6	I		
+F00253	NGC 4497	galaxy--spiral		G	-1.1 ± 1.1	-1.1	S0-a	B	R
+F00251	NGC 4498	barred-spiral	SBc	G	6.4 ± 0.9	6.4	Sc	B	
+F01580	IC 3457	galaxy--elliptical	E3	G	-4.7 ± 1.7	-4.7	E		
+F01579	IC 3459	irregular-galaxy	Im	G	9.8 ± 0.5	9.8	I	B	
+F00252	NGC 4502	galaxy--spiral	Sc	G	5.9 ± 0.9	5.9	Sc	B	
+F01138	IC 3471	irregular-galaxy	Irr	G	9.7 ± 1.2	9.7	I		
+F01585	IC 3470	dwarf-galaxy	dE(N)	G	-4.8 ± 0.9	-4.8	E		
+F01720	NGC 4517A	barred-spiral	SBd	G	7.6 ± 0.9	7.6	Sd	B	R
+F01327	NGC 4512	galaxy--unclassified		G	7.9 ± 0.7	7.9	Sd	B	
+F00985	IC 3474	galaxy--spiral	SAcd	G	6.6 ± 0.6	6.6	Scd		
+F00665	IC 3478	galaxy--unclassified		G	-2.5 ± 1.3	-2.5	E-S0	B	
+F01587	IC 3481	galaxy--lenticular	E/SB0	G	-3.3 ± 0.7	-3.3	E-S0	B	
+F00664	NGC 4516	galaxy--unclassified		G	1.5 ± 1.3	1.5	SBa	B	R
+F01588	IC 3483	galaxy--spiral	SABb	G	3.4 ± 1.5	3.4	SABb	B	
+F00984	NGC 4518	galaxy--unclassified		G	-0.9 ± 2.2	-0.9	S0-a	B	R
+F01590	IC 3487	galaxy--lenticular	S0	G	-3.5 ± 2.1	-3.5	E-S0		
+F01586	IC 3490	galaxy--spiral	S0a	G	-5.0 ± 1.2	-5.0	E		
+F01593	IC 3486	galaxy--elliptical		G	-3.6 ± 2.0	-3.6	E		
+F01594	IC 3492	dwarf-galaxy	dE	G	-3.8 ± 1.6	-3.8	E		
+F00254	NGC 4520	galaxy--elliptical	E/S0	G	-3.1 ± 0.7	-3.1	E-S0		
+F01595	IC 3501	dwarf-galaxy	dE	G	-4.4 ± 1.5	-4.4	E		
+F00256	IC 800	galaxy--spiral		G	5.3 ± 1.0	5.3	Sc	B	
+F00992	IC 3506	galaxy--elliptical	E3	G					
+F01140	IC 3508	galaxy--lenticular	S0	G	-1.3 ± 1.4	-1.3	S0-a	B	R
+F01596	IC 3509	galaxy--elliptical	E3	G	-5.0 ± 1.0	-5.0	E		
+F01592	IC 3510	galaxy--elliptical	E3	G	-5.0 ± 0.8	-5.0	E		
+F00986	NGC 4533	galaxy--unclassified	SAcd	G	7.1 ± 1.3	7.1	Scd		
+F01591	IC 3517	galaxy--spiral	SABd	G	8.5 ± 0.9	8.5	SABd	B	
+F01139	IC 3519	dwarf-galaxy	dE	G	-5.0 ± 1.2	-5.0	E		
+F01719	UGC 7739 VIR	irregular-galaxy	Sm	G	9.8 ± 0.6	9.8	I		
+F00669	IC 3533	galaxy--spiral	Sb	G	1.1 ± 4.1	1.1	S?		R
+F01141	IC 3536	galaxy--unclassified		G	4.9 ± 2.3	4.9	Sc		
+F00993	IC 3540	galaxy--lenticular	S0	G	-2.1 ± 1.1	-2.1	S0		R
+F00668	NGC 4562	galaxy--spiral	Sc	G	7.1 ± 1.4	7.1	SBcd	B	
+F00257	NGC 4551	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F01142	NGC 4565	galaxy--spiral	Sc	G	3.2 ± 0.7	3.2	Sb		
+F01328	NGC 4572	galaxy--unclassified	SAc	G	5.0 ± 2.0	5.0	Sc		
+F01597	IC 3573	galaxy--spiral	SAc	sn					
+F00987	NGC 4564	galaxy--elliptical	E6	G	-4.6 ± 0.7	-4.6	E	B	
+F00995	IC 3574	galaxy--elliptical	E3	G	-5.0 ± 5.0	-5.0	E?		
+F00667	IC 3582	galaxy--spiral	Sab	G	2.0 ± 0.5	2.0	Sab		
+F00988	NGC 4567	galaxy--spiral	SAbc	G	4.0 ± 0.3	4.0	Sbc		
+F00989	IC 3578	galaxy--unclassified	SAc	G	5.2 ± 2.9	5.2	Sc		
+F00999	IC 3583	irregular-galaxy	Im	G	9.6 ± 1.1	9.6	IB	B	
+F00666	NGC 4559	galaxy--spiral	Sa:	G	6.0 ± 0.4	6.0	Sc	B	
+F00994	IC 3586	galaxy--lenticular	S0	G	-3.0 ± 1.8	-3.0	E-S0		
+F01143	IC 3598	galaxy--spiral	Sab	G	1.9 ± 0.5	1.9	Sab		R
+F01000	NGC 4584	galaxy--spiral	SAa	G	1.4 ± 1.2	1.4	Sa	B	
+F01144	IC 3621	galaxy--unclassified		G	-0.2 ± 3.9	-0.2	S0-a		
+F00991	IC 3633	galaxy--elliptical	E3	G	-5.0 ± 1.2	-5.0	E		
+F00259	NGC 4602	galaxy--spiral	Sc	G	4.2 ± 0.6	4.2	SABb	B	
+F00260	NGC 4604	irregular-galaxy	Im	G	10.0 ± 0.5	10.0	IB	B	
+F00597	NGC 4601	galaxy--unclassified		G	-1.1 ± 0.5	-1.1	S0-a	B	R
+F00261	NGC 4607	barred-spiral	SBbc	G	4.0 ± 2.2	4.0	SBbc	B	
+F00990	NGC 4608	barred-spiral	SB(r)0	G	-1.7 ± 0.8	-1.7	S0	B	R
+F01598	IC 3653	galaxy--elliptical	E3	G	-5.0 ± 1.0	-5.0	E		
+F00258	NGC 4648	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		R
+F01002	IC 3665	irregular-galaxy	Im	G	9.8 ± 0.5	9.8	I		
+F00264	NGC 4625	galaxy--spiral	SAB(rs)mpec	G	8.7 ± 0.9	8.7	SABm	B	R
+F00265	NGC 4627	galaxy--spiral		G	-4.7 ± 0.7	-4.7	E		
+F01001	IC 3672	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00262	NGC 4616	galaxy--lenticular	S0	G	-3.9 ± 0.7	-3.9	E		
+F00266	NGC 4633	galaxy--spiral		G	7.9 ± 1.0	7.9	SABd	B	
+F01003	NGC 4638	galaxy--lenticular		G	-2.6 ± 0.7	-2.6	E-S0	B	
+F00267	NGC 4639	galaxy--spiral	SAbc	G	3.6 ± 0.7	3.6	Sbc	B	R
+F01005	NGC 4637	galaxy--unclassified		G	-2.2 ± 0.9	-2.2	S0		
+F01007	IC 3694	galaxy--spiral	Sbc	G	4.3 ± 2.2	4.3	Sbc		
+F01006	IC 3698	galaxy--spiral	Sc	G	5.2 ± 2.5	5.2	Sc		
+F01601	IC 3702	barred-spiral	SBc	G	5.2 ± 2.5	5.2	SBc	B	
+F01004	NGC 4647	galaxy--spiral		G	5.1 ± 0.6	5.1	SABc	B	R
+F01602	NGC 4653	galaxy--spiral	SABc	G	5.9 ± 0.4	5.9	SABc	B	
+F01600	IC 3727	galaxy--unclassified		G	5.2 ± 2.6	5.2	Sc		
+F00598	NGC 4661	barred-spiral	SBa	G	-3.4 ± 1.2	-3.4	E-S0		
+F01145	IC 3735	dwarf-galaxy	dE	G	-3.9 ± 1.7	-3.9	E		
+F00268	IC 3742	barred-spiral	SB	G	5.6 ± 1.4	5.6	SBc	B	
+F01599	IC 3742	barred-spiral	SB	G	5.6 ± 1.4	5.6	SBc	B	
+F01603	NGC 4668	barred-spiral	SB	G	7.5 ± 2.1	7.5	Scd	B	
+F00269	NGC 4673	galaxy--lenticular	S0	G	-4.1 ± 1.4	-4.1	E		
+F01707	NGC 4676B	galaxy--spiral	SABdm(x)	G	-0.5 ± 1.0	-0.5	S0-a	B	
+F00270	NGC 4672	galaxy--spiral	Sa:	G	1.1 ± 0.7	1.1	Sa		
+F00271	NGC 4683	galaxy--spiral		G	-2.9 ± 0.5	-2.9	E-S0	B	
+F00599	NGC 4696	galaxy--elliptical	E3	G	-3.8 ± 0.6	-3.8	E		
+F01146	IC 3806	galaxy--unclassified		G	1.3 ± 1.7	1.3	Sa		
+F00670	NGC 4712	galaxy--spiral	Sc	G	4.0 ± 0.3	4.0	Sbc		
+F00600	NGC 4706	galaxy--unclassified		G	-1.9 ± 0.6	-1.9	S0	B	
+F01147	NGC 4747	galaxy--spiral	Sp	G	7.3 ± 1.9	7.3	SBcd	B	
+F01604	NGC 4742	galaxy--elliptical	E4	G	-4.6 ± 1.0	-4.6	E		
+F00602	NGC 4730	galaxy--lenticular	S0	G	-2.7 ± 0.6	-2.7	E-S0		R
+F01008	NGC 4754	galaxy--lenticular	SB(r)0-:	G	-2.4 ± 1.1	-2.4	S0	B	R
+F00601	NGC 4744	seyfert-galaxy	S0-Aa	G	-0.3 ± 0.6	-0.3	S0-a	B	
+F00272	NGC 4757	galaxy--spiral	S0	G	-2.0 ± 0.4	-2.0	S0		
+F00274	NGC 4766	galaxy--lenticular	S0	G	-1.6 ± 1.5	-1.6	S0		
+F00282	NGC 4789B	galaxy--spiral	dG						
+F00280	NGC 4787	galaxy--spiral	S0a	G	-0.4 ± 1.1	-0.4	S0-a		
+F00281	NGC 4788	galaxy--spiral	Sp	G	-1.3 ± 1.4	-1.3	S0-a	B	R
+F00276	NGC 4786	galaxy--elliptical		G	-4.3 ± 0.5	-4.3	E		
+F00277	NGC 4783	galaxy--elliptical		G	-4.9 ± 0.5	-4.9	E		
+F00275	NGC 4784	galaxy--lenticular	S0	G	-1.6 ± 1.5	-1.6	S0		
+F00278	NGC 4792	galaxy--spiral		G	-1.9 ± 0.5	-1.9	S0		
+F00279	NGC 4794	barred-spiral	SBb	G	1.1 ± 0.4	1.1	Sa	B	
+F00284	NGC 4807	galaxy--spiral		G	-2.8 ± 1.2	-2.8	E-S0	B	
+F00283	IC 3900	galaxy--elliptical	E/S0	G	-2.2 ± 0.7	-2.2	S0	B	
+F01148	NGC 4828	galaxy--elliptical	E/S0	G	-1.9 ± 1.2	-1.9	S0		R
+F00287	NGC 4819	barred-spiral	SBa	G	1.0 ± 0.3	1.0	Sa	B	R
+F00289	IC 3913	galaxy--lenticular	S0	G	6.6 ± 2.4	6.6	SABc	B	
+F00288	NGC 4821	galaxy--lenticular	S0	G	-4.5 ± 1.3	-4.5	E		R
+F00285	NGC 4824	galaxy--elliptical		G	-4.4 ± 1.2	-4.4	E		
+F01009	NGC 4820	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F01010	NGC 4823	galaxy--lenticular	S0-Aa	G	-1.0 ± 0.5	-1.0	S0-a		
+F01011	NGC 4829	galaxy--elliptical	E3	G	-4.8 ± 1.1	-4.8	E		
+F00286	NGC 4840	galaxy--elliptical		G	-4.6 ± 0.7	-4.6	E		R
+F00290	NGC 4842	galaxy--elliptical		G	-4.7 ± 0.8	-4.7	E		
+F00291	NGC 4853	galaxy--elliptical	Ep	G	-2.8 ± 0.6	-2.8	E-S0		R
+F00672	IC 3943	galaxy--spiral	Sa	G	-2.4 ± 2.1	-2.4	S0		
+F01718	UGC 8091 VIR	irregular-galaxy	Irr	G	9.8 ± 0.5	9.8	I		
+F00292	NGC 4854	barred-spiral	SB0	G	-2.1 ± 0.5	-2.1	S0	B	
+F00678	IC 3946	galaxy--lenticular	S0	G	-2.2 ± 0.8	-2.2	S0		
+F00679	IC 3947	galaxy--lenticular	S0	G	-2.2 ± 0.8	-2.2	S0		
+F00677	IC 3949	galaxy--unclassified		G	-1.6 ± 1.1	-1.6	S0		
+F01117	IC 3956	galaxy--elliptical	E2	G	-5.0 ± 2.6	-5.0	E		R
+F00673	NGC 4858	barred-spiral	SBb/I	?	3.0 ± 0.7	3.0	SBb	B	
+F00674	NGC 4860	galaxy--elliptical	E3	G	-4.6 ± 1.2	-4.6	E		
+F00293	IC 3961	galaxy--spiral		G	9.0 ± 0.6	9.0	Sm	B	
+F00696	IC 3955	galaxy--spiral	Sa	G	-2.1 ± 0.5	-2.1	S0	B	
+F00680	IC 3957	galaxy--elliptical	E0	G	-4.4 ± 1.2	-4.4	E		
+F00676	IC 3960	barred-spiral	SB0	G	-2.2 ± 0.7	-2.2	S0	B	
+F00683	IC 3960	barred-spiral	SB0	G	-2.2 ± 0.7	-2.2	S0	B	
+F00681	IC 3959	galaxy--elliptical	E2	G	-4.9 ± 0.5	-4.9	E		
+F01118	NGC 4868	galaxy--unclassified		G	1.8 ± 0.8	1.8	Sab		
+F00695	NGC 4864	galaxy--elliptical	E1	G	-4.9 ± 0.5	-4.9	E		
+F00682	IC 3963	barred-spiral	SBa	G	-2.2 ± 0.8	-2.2	S0	B	
+F00694	NGC 4867	galaxy--elliptical	E5	G	-4.9 ± 0.5	-4.9	E		
+F01119	NGC 4870	galaxy--spiral	Sb	G	1.3 ± 4.6	1.3	S?		
+F01605	NGC 4855	galaxy--lenticular	E/S0	G	-2.7 ± 1.4	-2.7	E-S0	B	
+F00675	NGC 4865	galaxy--lenticular	S0	G	-4.4 ± 1.6	-4.4	E		
+F00686	NGC 4869	barred-spiral	SB0	G	-4.9 ± 0.5	-4.9	E		
+F00693	IC 3968	galaxy--spiral	Sa:	g					
+F00684	IC 3976	galaxy--lenticular	S0	G	-4.2 ± 1.2	-4.2	E		
+F00690	NGC 4871	galaxy--lenticular	S0	G	-1.9 ± 1.1	-1.9	S0		
+F00685	IC 3973	barred-spiral	SBa	G	-1.9 ± 0.5	-1.9	S0	B	R
+F00297	NGC 4862	galaxy--spiral	SAc	G	5.0 ± 0.5	5.0	Sc	B	
+F00692	NGC 4873	galaxy--elliptical	E3	G	-2.1 ± 0.5	-2.1	S0		
+F00689	NGC 4872	barred-spiral	SB0p	G	-2.7 ± 1.2	-2.7	E-S0	B	
+F00687	NGC 4875	galaxy--lenticular	S0	G	-2.2 ± 0.8	-2.2	S0		
+F00671	NGC 4874	galaxy--elliptical	cGD	G	-3.6 ± 0.9	-3.6	E		
+F00298	NGC 4863	galaxy--spiral	Sb	G	-0.9 ± 0.5	-0.9	S0-a	B	
+F00688	NGC 4876	galaxy--lenticular	S0	G	-4.7 ± 0.7	-4.7	E		
+F00691	IC 3998	barred-spiral	SB0	G	-2.1 ± 0.5	-2.1	S0	B	
+F00702	NGC 4883	galaxy--unclassified		G	-2.6 ± 1.1	-2.6	E-S0	B	
+F00697	NGC 4881	galaxy--elliptical	E0	G	-4.1 ± 0.7	-4.1	E		
+F01121	NGC 4893	galaxy--unclassified		G	-5.0 ± 2.0	-5.0	E		
+F01120	IC 4013	galaxy--unclassified		G	-5.0 ± 5.0	-5.0	E?		
+F00710	NGC 4886	galaxy--elliptical	E0	G	-4.9 ± 0.5	-4.9	E		
+F00709	IC 4011	galaxy--elliptical	E1	G	-4.7 ± 0.8	-4.7	E		
+F00701	IC 4012	galaxy--elliptical	E4	G	-4.8 ± 0.8	-4.8	E		
+F00703	IC 4021	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E		
+F00711	NGC 4894	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		
+F00698	NGC 4895	galaxy--spiral	Sa	G	-2.1 ± 0.7	-2.1	S0	B	
+F00704	IC 4026	barred-spiral	SB0	G	-2.4 ± 0.9	-2.4	S0	B	
+F01012	NGC 4877	galaxy--spiral	Sab	G	2.1 ± 0.7	2.1	Sab		
+F00715	IC 4030	barred-spiral	SB0	g					
+F00712	IC 4033	galaxy--unclassified		G	-2.5 ± 1.4	-2.5	S0		R
+F00705	IC 4040	galaxy--spiral	Scd	G	7.3 ± 1.8	7.3	SABc	B	
+F00716	NGC 4906	galaxy--elliptical	E3	G	-4.9 ± 0.5	-4.9	E		
+F01122	NGC 4916	galaxy--unclassified		u					
+F00299	NGC 4887	galaxy--elliptical	S0-Aa	G	-0.7 ± 1.4	-0.7	S0-a		
+F00708	IC 4011	galaxy--lenticular	S0	G	-4.7 ± 0.8	-4.7	E		
+F00713	IC 4041	galaxy--lenticular	S0	G	-4.6 ± 1.1	-4.6	E		
+F00714	IC 4042	barred-spiral	SB0	G	-1.9 ± 0.5	-1.9	S0	B	
+F00700	IC 4045	galaxy--elliptical	E4	G	-4.2 ± 1.9	-4.2	E		
+F00699	NGC 4907	barred-spiral	SBb	G	2.7 ± 0.5	2.7	Sb	B	R
+F00706	NGC 4908	galaxy--elliptical	E5	G	-4.6 ± 0.8	-4.6	E	B	
+F00707	IC 4051	galaxy--elliptical	E3	G	-4.7 ± 0.5	-4.7	E		
+F00719	NGC 4911	galaxy--spiral	Sb	G	4.0 ± 0.2	4.0	SABb	B	R
+F00718	NGC 4919	galaxy--lenticular	S0	G	-1.9 ± 0.9	-1.9	S0		R
+F00717	NGC 4923	galaxy--elliptical		G	-3.1 ± 0.5	-3.1	E-S0	B	R
+F01123	IC 4077	galaxy--unclassified		G	4.3 ± 2.6	4.3	SBbc	B	
+F00720	NGC 4926	galaxy--elliptical	E/S0	G	-3.1 ± 0.5	-3.1	E-S0		
+F00721	NGC 4927	galaxy--elliptical		G	-3.1 ± 0.6	-3.1	E-S0	B	
+F00723	IC 4106	galaxy--spiral	Sp	G	-0.3 ± 1.6	-0.3	S0-a	B	R
+F00722	NGC 4929	galaxy--elliptical		G	-4.5 ± 0.9	-4.5	E		
+F00724	IC 4111	galaxy--lenticular	S0	G	-2.3 ± 1.2	-2.3	S0		
+F00725	NGC 4931	galaxy--lenticular	S0	G	-1.9 ± 1.1	-1.9	S0		
+F00300	IC 844	galaxy--spiral		G	-2.3 ± 0.6	-2.3	S0		
+F01013	NGC 4948	barred-spiral	SBcd	G	7.4 ± 2.0	7.4	SBcd	B	
+F01606	NGC 5006	galaxy--spiral	Sa	G	-0.8 ± 0.8	-0.8	S0-a	B	R
+F00301	NGC 5012B	galaxy--spiral							
+F00302	NGC 5022	galaxy--spiral	Sc	G	3.8 ± 1.1	3.8	Sbc		
+F01026	NGC 5030	barred-spiral	SB0	G	-1.1 ± 0.6	-1.1	S0-a	B	R
+F01027	NGC 5031	galaxy--lenticular	S0	G	-1.2 ± 0.6	-1.2	S0-a		
+F01072	NGC 5026	barred-spiral	SBr	G	0.7 ± 0.7	0.7	Sa	B	R
+F01028	NGC 5035	barred-spiral	SBa	G	-0.9 ± 0.5	-0.9	S0-a	B	R
+F01029	NGC 5037	galaxy--spiral	Sab	G	1.2 ± 0.6	1.2	Sa		
+F01030	NGC 5046	galaxy--elliptical	E3	G	-5.0 ± 0.5	-5.0	E		
+F01031	NGC 5047	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	
+F01032	NGC 5049	galaxy--lenticular	S0	G	-2.1 ± 0.5	-2.1	S0		
+F00776	IC 874	barred-spiral	SB...	G	-2.0 ± 0.4	-2.0	S0	B	
+F00304	NGC 5072	galaxy--lenticular	E/S0	G	-3.1 ± 0.7	-3.1	E-S0		
+F00305	NGC 5076	galaxy--lenticular	S0-Aa	G	-0.7 ± 1.5	-0.7	S0-a	B	
+F00306	NGC 5079	barred-spiral	SB0	G	3.6 ± 1.9	3.6	SBbc	B	R
+F00777	IC 4222	barred-spiral	SBab	G	2.3 ± 1.6	2.3	SBab	B	
+F00307	NGC 5088	galaxy--spiral	Sc	G	4.2 ± 0.8	4.2	SABb	B	
+F00604	NGC 5082	barred-spiral	SBr	G	-1.6 ± 1.0	-1.6	S0	B	R
+F00308	NGC 5097	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F00603	NGC 5091	galaxy--spiral	Sb:	G	3.3 ± 1.4	3.3	Sb		
+F00309	NGC 5107	galaxy--spiral		G	6.8 ± 1.0	6.8	SBcd	B	
+F00310	IC 4237	galaxy--spiral	Sc	G	3.5 ± 0.9	3.5	SBbc	B	R
+F00311	NGC 5148	galaxy--spiral		G	6.9 ± 0.6	6.9	SBcd	B	
+F00315	IC 4248	galaxy--spiral	Sa	G	5.0 ± 3.6	5.0	Sc		
+F00312	IC 4251	galaxy--spiral	S0:r	G	0.7 ± 2.6	0.7	SBa	B	R
+F00313	NGC 5152	galaxy--spiral		G	2.7 ± 1.6	2.7	SBb	B	
+F00314	NGC 5153	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00316	NGC 5166	galaxy--spiral		G	2.9 ± 0.5	2.9	SABb	B	
+F01154	IC 4263	galaxy--unclassified		G	6.6 ± 0.7	6.6	SBcd	B	
+F00317	NGC 5180	galaxy--spiral	S0:	G	-1.9 ± 0.5	-1.9	S0		
+F01555	NGC 5205	barred-spiral	SBbc	G	4.0 ± 1.4	4.0	SBbc	B	R
+F00539	NGC 5195	barred-spiral	SB0	G	0.6 ± 3.8	0.6	SBa	B	
+F00318	NGC 5184	galaxy--spiral	SABb	G	4.1 ± 1.0	4.1	SABb	B	R
+F00319	NGC 5192	galaxy--spiral	Sa	G	1.2 ± 0.7	1.2	Sa		R
+F00320	NGC 5196	galaxy--lenticular	E/S0	G	-3.2 ± 0.8	-3.2	E-S0		
+F00321	NGC 5197	galaxy--lenticular	S0-a	G	-1.0 ± 0.5	-1.0	S0-a		
+F01607	NGC 5202	galaxy--spiral	Sb	G	3.2 ± 0.8	3.2	Sb		R
+F00322	NGC 5216	galaxy--elliptical	E3	G	-4.5 ± 1.1	-4.5	E		
+F00510	IC 4299	galaxy--spiral	Sa	G	1.0 ± 0.4	1.0	Sa	B	
+F01608	IC 904	galaxy--lenticular	S0/a	G	-0.4 ± 1.6	-0.4	S0-a		
+F00323	NGC 5258	barred-spiral	SBb	G	3.2 ± 0.7	3.2	SBb	B	
+F00733	NGC 5276	galaxy--unclassified		G	2.6 ± 1.0	2.6	Sb	B	
+F00324	NGC 5296	galaxy--spiral		G	-1.2 ± 0.7	-1.2	S0-a		
+F00326	NGC 5291	galaxy--spiral		?	-3.4 ± 1.6	-3.4	E-S0		
+F00327	IC 4327	galaxy--spiral		G	4.8 ± 0.7	4.8	Sc	B	
+F00328	NGC 5302	galaxy--spiral	Sa	G	-0.6 ± 1.0	-0.6	S0-a	B	
+F00330	NGC 5311	galaxy--lenticular	S0	G	-0.2 ± 0.6	-0.2	S0-a		
+F00325	IC 4329	galaxy--elliptical	Es	G	-3.0 ± 0.4	-3.0	E-S0	B	
+F00329	NGC 5304	galaxy--spiral		G	-3.2 ± 1.1	-3.2	E-S0		
+F00331	IC 4336	galaxy--spiral	Sb	G	3.1 ± 0.5	3.1	Sb	B	
+F01033	NGC 5331	galaxy--unclassified		M2					
+F00332	NGC 5337	galaxy--spiral	Sab	G	1.7 ± 1.2	1.7	SBab	B	R
+F00333	NGC 5330	galaxy--elliptical		G	-4.5 ± 1.1	-4.5	E		
+F00334	NGC 5350	galaxy--spiral	Sb	G	3.6 ± 0.6	3.6	Sbc	B	R
+F01609	NGC 5338	barred-spiral	SB0:	G	-2.0 ± 0.5	-2.0	S0	B	
+F00335	NGC 5354	galaxy--lenticular	S0	G	-2.1 ± 0.7	-2.1	S0		
+F00336	NGC 5355	galaxy--elliptical		G	-2.0 ± 1.0	-2.0	S0		
+F00337	NGC 5358	galaxy--lenticular	S0	G	-0.4 ± 0.8	-0.4	S0-a	B	
+F00339	NGC 5348	barred-spiral	SBbc	G	3.8 ± 0.7	3.8	SBbc	B	
+F01556	NGC 5376	galaxy--spiral	SABa	G	2.4 ± 0.6	2.4	SABa	B	R
+F00340	NGC 5379	galaxy--lenticular	S0	G	-1.7 ± 0.9	-1.7	S0	B	R
+F01034	NGC 5360	galaxy--lenticular	S0-Aa	G	0.1 ± 1.0	0.1	S0-a	B	
+F00338	NGC 5363	galaxy--lenticular	S0-Aa	G	0.1 ± 2.6	0.1	S0-a		
+F00342	NGC 5380	galaxy--spiral		G	-2.8 ± 0.6	-2.8	E-S0		R
+F01610	NGC 5373	galaxy--elliptical	E/S0	G	-3.5 ± 2.1	-3.5	E-S0		
+F01557	NGC 5402	barred-spiral	SBc	G	5.0 ± 1.4	5.0	SBc	B	
+F01156	NGC 5394	galaxy--unclassified	SBa	G	3.1 ± 0.6	3.1	SBb	B	
+F01157	IC 4356	galaxy--unclassified		G	-2.0 ± 2.0	-2.0	S0		
+F00343	NGC 5407	galaxy--lenticular	S0	G	-5.0 ± 1.4	-5.0	E		
+F00345	NGC 5441	galaxy--spiral		G	4.1 ± 1.9	4.1	Sbc		
+F00346	NGC 5444	galaxy--spiral		G	-4.1 ± 0.7	-4.1	E		
+F00344	NGC 5427	galaxy--spiral	Sbc	G	5.0 ± 0.5	5.0	SABc	B	
+F00347	NGC 5445	galaxy--spiral		G	-1.8 ± 0.7	-1.8	S0	B	R
+F01074	IC 4366	seyfert-galaxy	Sc	G	5.0 ± 0.3	5.0	Sc	B	R
+F00940	NGC 5477	galaxy--unclassified		G	8.9 ± 0.6	8.9	Sm		
+F00349	NGC 5481	galaxy--elliptical	E3	G	-3.9 ± 1.0	-3.9	E		
+F00350	NGC 5484	galaxy--elliptical	E3	G	-4.8 ± 0.9	-4.8	E		
+F00348	NGC 5472	galaxy--spiral	Sab	G	2.1 ± 0.7	2.1	Sab		R
+F00351	NGC 5486	galaxy--spiral	SABm	G	8.7 ± 0.6	8.7	SABm	B	
+F00352	NGC 5506	galaxy--spiral	Sa	G	1.2 ± 1.1	1.2	SABa	B	
+F00575	NGC 5524	galaxy--unclassified		G	2.9 ± 1.3	2.9	Sb	B	
+F00511	IC 4387	galaxy--unclassified		G	9.0 ± 0.5	9.0	SABm	B	
+F00574	NGC 5527	galaxy--unclassified		G	2.9 ± 1.3	2.9	Sb	B	
+F00353	NGC 5531	galaxy--spiral	S0	G	-2.3 ± 1.3	-2.3	S0		
+F00576	NGC 5544	galaxy--unclassified		G	0.4 ± 0.6	0.4	S0-a	B	R
+F00577	NGC 5545	galaxy--unclassified		G	4.0 ± 0.1	4.0	Sbc		
+F00354	NGC 5538	galaxy--spiral	SAbc	G	1.9 ± 4.2	1.9	S?		
+F00355	NGC 5542	galaxy--elliptical	E4	G	-5.0 ± 2.0	-5.0	E		
+F01611	NGC 5543	galaxy--spiral	Sab	G	2.0 ± 2.0	2.0	Sab		
+F00356	NGC 5546	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00357	NGC 5570	barred-spiral	SBa	G	1.1 ± 0.6	1.1	SBa	B	
+F00358	NGC 5560	galaxy--spiral	SAb	G	3.1 ± 0.4	3.1	Sb	B	
+F00359	NGC 5569	galaxy--spiral	SABc	G	6.0 ± 0.8	6.0	SABc	B	
+F00360	NGC 5574	galaxy--lenticular	E/S0	G	-2.7 ± 0.8	-2.7	E-S0	B	
+F00361	NGC 5577	galaxy--spiral	SAbc	G	3.8 ± 0.6	3.8	Sbc		R
+F00578	NGC 5613	galaxy--unclassified		G	-0.7 ± 0.5	-0.7	S0-a	B	R
+F00579	NGC 5615	galaxy--unclassified		G	5.0 ± 5.0	5.0	S?		
+F00362	NGC 5597	barred-spiral	SBc	G	6.0 ± 0.3	6.0	Sc	B	R
+F00363	NGC 5646	galaxy--spiral		G	3.2 ± 0.6	3.2	Sb	B	
+F01612	NGC 5636	galaxy--lenticular	S0-Aa	G	-0.3 ± 1.0	-0.3	S0-a	B	R
+F01383	IC 4441	galaxy--unclassified		G	4.5 ± 2.2	4.5	Sc		
+F01613	IC 1025	galaxy--unclassified		G	4.6 ± 2.6	4.6	SBc	B	
+F00490	NGC 5673	galaxy--unclassified		G	5.2 ± 0.5	5.2	Sc	B	
+F00580	NGC 5682	galaxy--unclassified		G	3.2 ± 0.9	3.2	Sb	B	
+F00581	NGC 5683	galaxy--unclassified	?rs	G	0.1 ± 0.5	0.1	S0-a	B	R
+F00582	NGC 5693	galaxy--unclassified		G	6.9 ± 0.3	6.9	Scd	B	R
+F00583	NGC 5700	barred-spiral	SB	G	3.0 ± 2.0	3.0	SBb	B	
+F00364	IC 1039	galaxy--lenticular	S0	G	-1.6 ± 1.0	-1.6	S0	B	
+F00365	IC 1041	barred-spiral	SBa	G	1.3 ± 2.0	1.3	SBa	B	
+F00366	IC 1042	galaxy--lenticular	S0	G	-2.0 ± 0.6	-2.0	S0	B	
+F00367	IC 1043	galaxy--spiral	SAa	MG					
+F01035	NGC 5719	galaxy--spiral	SABa	G	2.3 ± 0.6	2.3	SABa	B	
+F00368	NGC 5738	galaxy--lenticular	S0	G	-1.9 ± 0.8	-1.9	S0	B	
+F00372	IC 1066	galaxy--spiral	SABb	G	3.2 ± 1.7	3.2	SABb	B	
+F00371	IC 1067	barred-spiral	SB(s)b	G	3.0 ± 0.3	3.0	Sb	B	R
+F00369	NGC 5774	galaxy--spiral	SAcd	G	6.9 ± 0.4	6.9	Scd	B	
+F00370	IC 1070	galaxy--spiral	SAbc	G	4.0 ± 1.4	4.0	Sbc		
+F00373	IC 1077	galaxy--spiral	Sc	G	4.2 ± 0.6	4.2	SBbc	B	
+F00374	IC 1081	galaxy--spiral	Sa	G	0.2 ± 0.7	0.2	S0-a	B	
+F01036	NGC 5806	galaxy--spiral	SAB(s)b	G	3.2 ± 0.8	3.2	Sb	B	R
+F01037	NGC 5811	dwarf-galaxy	SBm	G	9.1 ± 0.6	9.1	SBm	B	
+F00375	IC 1084	galaxy--unclassified		G	-2.7 ± 2.1	-2.7	E-S0		
+F01038	NGC 5814	galaxy--spiral	SAab	G	2.0 ± 1.0	2.0	Sab		
+F00376	NGC 5839	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0	B	
+F00377	NGC 5845	galaxy--elliptical	E3	G	-4.9 ± 0.3	-4.9	E		
+F00740	NGC 5862	galaxy--unclassified		G	-5.0 ± 2.0	-5.0	E		
+F00741	NGC 5826	galaxy--unclassified		G	-2.0 ± 0.5	-2.0	S0		
+F01614	NGC 5848	galaxy--lenticular	S0	G	-1.0 ± 0.6	-1.0	S0-a	B	
+F00378	NGC 5850	barred-spiral	SB(r)b	G	3.1 ± 0.3	3.1	Sb	B	R
+F00379	NGC 5857	galaxy--spiral	Sa	G	2.4 ± 1.0	2.4	SBab	B	
+F00381	IC 1091	galaxy--spiral	SAb	G	3.1 ± 0.5	3.1	Sb	B	
+F00384	NGC 5875B	galaxy--unclassified	cI						
+F00380	NGC 5858	galaxy--elliptical		G	-4.5 ± 1.1	-4.5	E		
+F00383	NGC 5876	galaxy--spiral	S0?	G	1.5 ± 0.6	1.5	SBab	B	R
+F00382	NGC 5865	galaxy--lenticular	E/S0	G	-2.6 ± 0.7	-2.6	E-S0	B	
+F00386	NGC 5909	galaxy--spiral	SAbc	G	3.5 ± 1.4	3.5	Sbc		
+F00385	NGC 5908	galaxy--unclassified		G	3.0 ± 0.4	3.0	SBb	B	
+F00882	IC 4537	galaxy--unclassified		G	-1.0 ± 2.0	-1.0	S0-a		
+F00803	NGC 5903	galaxy--elliptical	E2	G	-4.8 ± 0.5	-4.8	E		
+F00389	NGC 5963	galaxy--spiral	Sbc	G	4.1 ± 1.3	4.1	SABb	B	
+F00388	NGC 5951	galaxy--spiral	Sc	G	5.2 ± 0.5	5.2	SBc	B	
+F00387	NGC 5954	galaxy--spiral	Sc	G	5.9 ± 0.5	5.9	SABc	B	
+F00390	NGC 5969	galaxy--unclassified		G	-4.3 ± 1.8	-4.3	E		
+F00391	NGC 5971	galaxy--unclassified		G	1.1 ± 0.5	1.1	Sa		R
+F00512	IC 4564	galaxy--unclassified		G	5.0 ± 1.2	5.0	Sc		
+F00513	IC 4565	galaxy--unclassified		G	4.9 ± 2.3	4.9	Sc		
+F00514	IC 4566	galaxy--unclassified		G	2.5 ± 0.8	2.5	Sb	B	
+F00737	NGC 5976	galaxy--unclassified	S0(r)	G	-2.0 ± 0.4	-2.0	S0		R
+F00515	IC 4567	galaxy--unclassified		G	5.6 ± 0.9	5.6	Sc		
+F00738	NGC 5981	galaxy--spiral	Sc	G	4.2 ± 0.6	4.2	SBbc	B	
+F00392	IC 1131	galaxy--elliptical		G	-4.8 ± 0.8	-4.8	E		
+F00739	NGC 5985	galaxy--spiral	Sb	G	3.1 ± 0.3	3.1	Sb	B	R
+F00393	IC 1133	galaxy--spiral	Sc	G	5.9 ± 0.4	5.9	SBc	B	
+F01669	NGC 6027C	barred-spiral	SBc	G	5.3 ± 1.2	5.3	SBc	B	
+F01668	NGC 6027B	galaxy--lenticular	S0 pec	G	-2.0 ± 0.4	-2.0	S0		
+F01667	NGC 6027A	galaxy--spiral	Sa pec	G	0.3 ± 2.0	0.3	S0-a		
+F01670	NGC 6027D	barred-spiral	SB(s)bc	G	7.0 ± 2.0	7.0	Scd		
+F01671	NGC 6027E	galaxy--unclassified	tidal tail	G	-1.5 ± 1.1	-1.5	S0-a	B	
+F01673	NGC 6039	galaxy--unclassified		G	-2.9 ± 0.5	-2.9	E-S0		
+F01674	NGC 6040	galaxy--unclassified		G	4.8 ± 0.6	4.8	SABc	B	R
+F01675	IC 1170	galaxy--elliptical	E/S0	G	-2.5 ± 1.1	-2.5	E-S0		
+F01676	NGC 6042	galaxy--unclassified		G	-2.9 ± 0.5	-2.9	E-S0		
+F01678	NGC 6044	galaxy--unclassified		G	-2.4 ± 0.6	-2.4	S0		R
+F01677	NGC 6043	galaxy--unclassified		G	-3.2 ± 1.7	-3.2	E-S0	B	
+F01686	IC 1173	galaxy--unclassified		G	4.8 ± 1.3	4.8	SABc	B	
+F01679	IC 1179	galaxy--unclassified		G	5.8 ± 0.7	5.8	Sc	B	R
+F01680	NGC 6050	galaxy--unclassified		?	4.9 ± 0.5	4.9	Sc	B	
+F01683	NGC 6054	galaxy--unclassified		G	-3.6 ± 1.0	-3.6	E	B	
+F01681	NGC 6056	galaxy--unclassified		G	-0.9 ± 0.7	-0.9	S0-a	B	
+F01684	IC 1178	galaxy--unclassified		G	-3.0 ± 0.5	-3.0	E-S0		
+F01685	IC 1181	galaxy--unclassified		G	-0.2 ± 0.6	-0.2	S0-a	B	
+F01688	IC 1182	galaxy--unclassified		G	-1.2 ± 1.0	-1.2	S0-a		
+F01689	IC 1183	galaxy--unclassified		G	-3.6 ± 1.0	-3.6	E	B	
+F01682	NGC 6053	galaxy--unclassified		G	1.2 ± 1.5	1.2	Sa	B	
+F01687	IC 1186	galaxy--unclassified		G	2.8 ± 0.8	2.8	Sb	B	R
+F01690	IC 1185	galaxy--unclassified		G	1.6 ± 1.0	1.6	Sab		
+F01692	IC 1193	galaxy--unclassified		G	-0.9 ± 0.5	-0.9	S0-a	B	
+F01691	IC 1192	galaxy--unclassified		G	2.7 ± 1.0	2.7	SBb	B	
+F01693	IC 1194	galaxy--unclassified		G	-1.6 ± 1.1	-1.6	S0		
+F01491	IC 4600	galaxy--spiral	S0a	G	-0.2 ± 1.5	-0.2	S0-a		
+F00394	NGC 6138	galaxy--spiral	Sb	G	-4.8 ± 0.6	-4.8	E		
+F00397	NGC 6147	galaxy--unclassified	Sc	G	4.9 ± 2.3	4.9	Sc		
+F00396	NGC 6145	galaxy--unclassified	Sb	G	2.7 ± 1.8	2.7	Sb		
+F00395	NGC 6141	galaxy--unclassified	SB0-a	G	-0.7 ± 3.6	-0.7	S0-a	B	
+F00771	NGC 6158	galaxy--elliptical		G	-4.3 ± 1.8	-4.3	E		
+F00399	NGC 6252	galaxy--spiral	Sab	G	2.0 ± 2.0	2.0	Sab		R
+F00772	IC 4617	galaxy--spiral	Sbc	G	4.0 ± 2.0	4.0	Sbc		R
+F00398	NGC 6232	barred-spiral	SBa	G	1.0 ± 0.4	1.0	Sa	B	R
+F01329	NGC 6245	galaxy--unclassified		G					
+F01663	PGC 59061 HER	galaxy--spiral	Sa	G	0.9 ± 0.5	0.9	Sa		
+F01664	PGC 59102 HER	galaxy--spiral	Sb	G	3.0 ± 0.4	3.0	Sb		
+F01055	NGC 6221	barred-spiral	SB(s)c	G	4.8 ± 0.6	4.8	Sc	B	
+F00742	IC 1251	galaxy--spiral	Sc	G	6.0 ± 0.4	6.0	Sc		
+F00743	IC 1254	galaxy--unclassified	Sb	G	3.4 ± 1.5	3.4	Sb	B	
+F00400	NGC 6345	galaxy--unclassified		G	1.0 ± 1.7	1.0	SBa	B	
+F00401	NGC 6346	galaxy--unclassified		G	-3.0 ± 2.0	-3.0	E-S0		
+F00516	IC 4635	galaxy--unclassified		G	3.4 ± 1.0	3.4	SABb	B	
+F00402	IC 1252	galaxy--spiral	Sab	G	2.0 ± 0.3	2.0	Sab		
+F00403	NGC 6348	galaxy--unclassified	S0-a	G	0.0 ± 2.0	0.0	S0-a	B	R
+F00404	IC 1261	galaxy--elliptical		G	-3.6 ± 1.5	-3.6	E		
+F00405	NGC 6490	galaxy--elliptical	E/S	G	-3.1 ± 0.7	-3.1	E-S0		
+F00406	NGC 6495	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00407	NGC 6501	galaxy--spiral	S0/Sa	G	-1.0 ± 0.8	-1.0	S0-a		
+F00540	NGC 6552	barred-spiral	SB	G	2.0 ± 2.0	2.0	SBab	B	R
+F00517	IC 4681	galaxy--elliptical							
+F00412	NGC 6602	galaxy--spiral	S	G	3.0 ± 2.0	3.0	SABb	B	
+F00520	IC 4705	galaxy--unclassified	SABb	G	1.2 ± 1.0	1.2	SBa	B	
+F00521	IC 4712	galaxy--spiral	Sb	G	3.9 ± 0.6	3.9	Sbc		
+F00825	IC 4720	galaxy--spiral	Sb	G	6.2 ± 1.1	6.2	SBc	B	
+F00413	IC 4751	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00414	IC 4753	galaxy--elliptical		G	-4.5 ± 1.5	-4.5	E		
+F00522	IC 4759	irregular-galaxy	Irr/S0	G	10.0 ± 1.4	10.0	I		
+F00811	NGC 6702	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00523	IC 4764	galaxy--spiral	SAa	G	0.8 ± 2.0	0.8	Sa		
+F00524	IC 4766	galaxy--lenticular	S0	G	-1.1 ± 0.6	-1.1	S0-a		R
+F00525	IC 4767	galaxy--lenticular	S0	G	-1.1 ± 0.6	-1.1	S0-a		
+F00526	IC 4769	barred-spiral	SBc	G	3.7 ± 0.9	3.7	SBbc	B	
+F00527	IC 4770	galaxy--spiral	SAa	G	1.3 ± 1.1	1.3	SABa	B	
+F00528	IC 4771	galaxy--spiral	SAc	G	4.9 ± 0.5	4.9	Sc		
+F01384	IC 1296	barred-spiral	SBb	G	3.6 ± 0.6	3.6	SBbc	B	
+F00415	NGC 6707	galaxy--spiral	Sb	G	4.8 ± 0.8	4.8	SBc	B	
+F00898	IC 4796	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0	B	
+F00416	IC 4806	galaxy--spiral	Sb:	G	3.0 ± 0.5	3.0	Sb		
+F00827	IC 4823	galaxy--unclassified		G	0.0 ± 2.0	0.0	S0-a		
+F00826	IC 4826	galaxy--spiral	Sa	G	1.9 ± 0.5	1.9	Sab		
+F00899	IC 4829	galaxy--unclassified	SAb	G	3.0 ± 0.5	3.0	Sb		
+F00529	IC 4828	galaxy--unclassified		G	4.2 ± 3.0	4.2	Sbc		
+F00531	IC 4839	galaxy--spiral	Sc	G	3.7 ± 0.8	3.7	Sbc	B	R
+F00530	IC 4833	galaxy--unclassified		G	4.0 ± 5.0	4.0	S?		
+F00900	IC 4840	galaxy--spiral	Sb	G	-0.6 ± 1.3	-0.6	S0-a	B	
+F00417	NGC 6770	galaxy--spiral	Sb	G	3.2 ± 0.5	3.2	Sb	B	
+F00418	NGC 6771	galaxy--spiral	SB0a	G	-1.0 ± 0.4	-1.0	S0-a	B	R
+F00420	IC 4842	galaxy--elliptical	E3	G	-4.9 ± 0.6	-4.9	E		
+F00419	IC 4845	barred-spiral	SBb	G	2.9 ± 0.7	2.9	SBb	B	R
+F00421	IC 4856	galaxy--unclassified		G	10.0 ± 0.5	10.0	IB	B	
+F00901	IC 4888	galaxy--lenticular	E/S0	G	-3.0 ± 0.4	-3.0	E-S0		
+F00532	IC 4926	galaxy--elliptical	E3	G	-3.7 ± 1.4	-3.7	E		
+F01715	NGC 6845D	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F01714	NGC 6845C	galaxy--lenticular	S0/a	G	-1.0 ± 0.5	-1.0	S0-a		
+F01713	NGC 6845B	barred-spiral	SBb	G	3.0 ± 0.5	3.0	SBb	B	
+F00533	NGC 6850	barred-spiral	SB:0	G	-1.2 ± 0.6	-1.2	S0-a	B	
+F00902	IC 4943	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00422	IC 4944	galaxy--lenticular	S0	G	-1.1 ± 0.6	-1.1	S0-a		
+F00903	NGC 6870	galaxy--spiral	Sb	G	2.2 ± 0.6	2.2	SABa	B	R
+F00423	IC 4960	galaxy--spiral	S0a:	G	-1.9 ± 0.6	-1.9	S0	B	
+F01504	IC 4984	galaxy--spiral	Sab	G	3.3 ± 1.9	3.3	Sb		
+F00424	IC 4967	galaxy--elliptical	E/S0	G	-5.0 ± 0.5	-5.0	E		
+F00425	IC 4970	galaxy--lenticular	E/S0	G	-3.0 ± 0.5	-3.0	E-S0		
+F01425	IC 4971	galaxy--spiral	Sbc	G	4.2 ± 3.0	4.2	Sbc		
+F00428	IC 4972	galaxy--spiral	S0a	G	2.9 ± 0.7	2.9	Sb		
+F00426	NGC 6876	galaxy--lenticular	S0	G	-4.9 ± 0.3	-4.9	E		
+F00427	NGC 6877	galaxy--elliptical	E/S0	G	-4.8 ± 0.7	-4.8	E		
+F00429	NGC 6880	galaxy--lenticular	S0	G	-1.0 ± 0.5	-1.0	S0-a	B	
+F00430	IC 4981	irregular-galaxy	Im	G	10.0 ± 0.5	10.0	I		
+F01505	IC 4995	galaxy--lenticular	S0	G	-2.0 ± 0.5	-2.0	S0		
+F00431	IC 4982	galaxy--unclassified		G					
+F00432	IC 4985	galaxy--lenticular	S0	G	1.9 ± 4.8	1.9	S?		
+F00433	NGC 6937	galaxy--spiral	Sc:r	G	4.1 ± 1.4	4.1	Sbc	B	R
+F00534	IC 5007	barred-spiral	SBc	G	6.6 ± 1.0	6.6	Scd	B	
+F00434	NGC 6959	galaxy--unclassified		G	-1.9 ± 0.9	-1.9	S0	B	R
+F00435	NGC 6961	galaxy--unclassified		G	-4.1 ± 0.6	-4.1	E		
+F00438	NGC 6965	galaxy--unclassified		G	-2.3 ± 1.1	-2.3	S0		
+F00437	NGC 6964	galaxy--unclassified		G	-4.6 ± 0.5	-4.6	E		
+F00439	NGC 6967	galaxy--unclassified		G	-0.8 ± 0.7	-0.8	S0-a	B	
+F00440	NGC 6982	barred-spiral	SB0	G	0.6 ± 1.1	0.6	SBa	B	
+F00778	NGC 7022	barred-spiral	SB0	G	-2.0 ± 0.4	-2.0	S0	B	
+F00442	NGC 7072	galaxy--spiral	Sc	G	6.8 ± 0.7	6.8	SABc	B	
+F00535	NGC 7130	galaxy--spiral	Sb	G	1.2 ± 0.9	1.2	Sa		
+F00443	NGC 7126	galaxy--spiral	Sa	G	4.5 ± 1.3	4.5	Sc		
+F00767	NGC 7162	galaxy--spiral	Sa	G	4.8 ± 0.7	4.8	Sc		
+F00444	IC 1417	galaxy--spiral	Sab	G	3.1 ± 0.7	3.1	Sb		
+F00445	NGC 7172	galaxy--spiral	SAa	G	0.6 ± 1.2	0.6	Sa		
+F00446	NGC 7174	irregular-galaxy	Im	G	2.5 ± 1.9	2.5	Sb		
+F00447	NGC 7176	galaxy--elliptical	E0p	G	-4.8 ± 0.5	-4.8	E		
+F00568	NGC 7180	galaxy--elliptical		G	-2.6 ± 1.3	-2.6	E-S0		
+F00569	NGC 7185	galaxy--lenticular	S0	G	-2.8 ± 0.7	-2.8	E-S0	B	
+F01350	NGC 7179	galaxy--spiral	Sb	G	3.7 ± 0.6	3.7	SBbc	B	
+F01658	NGC 7191	galaxy--spiral	Sc	G	5.1 ± 0.5	5.1	SABc	B	
+F01351	IC 5165	barred-spiral	SB:c	G	2.0 ± 0.5	2.0	Sab	B	
+F00448	NGC 7233	barred-spiral	SBa	G	0.3 ± 0.6	0.3	S0-a	B	
+F00491	IC 1439	galaxy--spiral	Sa:r	G	1.0 ± 1.0	1.0	SBa	B	R
+F00449	NGC 7250	irregular-galaxy	I	G	7.2 ± 2.0	7.2	Scd		
+F00450	NGC 7285	galaxy--spiral	Sab:	G	1.1 ± 0.7	1.1	SBa	B	
+F00451	NGC 7312	barred-spiral	SBb	G	3.1 ± 0.4	3.1	Sb	B	
+F00829	NGC 7317	galaxy--elliptical	E4	G	-4.6 ± 1.3	-4.6	E		
+F00831	NGC 7318A	galaxy--elliptical	E2 pec	G	-4.8 ± 0.7	-4.8	E	B	
+F00830	NGC 7318B	galaxy--elliptical	SB(s)bc pec	G	4.1 ± 0.4	4.1	SBbc	B	
+F00832	NGC 7319	barred-spiral	SB(s)bc pec	G	4.0 ± 0.7	4.0	Sbc	B	
+F00833	NGC 7320C	galaxy--spiral	(R)SAB(s)0/a	G	0.0 ± 0.5	0.0	S0-a	B	R
+F00541	NGC 7326	galaxy--spiral	Sb	S2					
+F00543	NGC 7335	galaxy--spiral	S0a	G	-0.7 ± 0.6	-0.7	S0-a		
+F00544	NGC 7336	galaxy--spiral	SABa	G	1.5 ± 2.1	1.5	SABa	B	
+F00545	NGC 7337	barred-spiral	SBa	G	1.9 ± 1.1	1.9	SBab	B	
+F00546	NGC 7340	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F00452	NGC 7339	galaxy--spiral	Sbc	G	4.0 ± 0.2	4.0	SABb	B	
+F00915	IC 5235	galaxy--spiral	S0a	G	-0.4 ± 2.2	-0.4	S0-a		
+F00916	IC 5236	galaxy--lenticular	S0	G	-2.2 ± 1.8	-2.2	S0		
+F01533	IC 5245	galaxy--spiral	S0a	G	-0.4 ± 2.2	-0.4	S0-a		
+F01530	NGC 7358	galaxy--lenticular	S0	G	-2.0 ± 0.4	-2.0	S0		
+F01531	IC 5246	galaxy--spiral	SAc	G	4.6 ± 2.2	4.6	Sc		
+F01532	IC 5247	galaxy--spiral	S	G	3.0 ± 2.0	3.0	Sb		
+F01534	IC 5249	barred-spiral	SBcd	G	6.9 ± 0.6	6.9	SBcd	B	
+F00453	NGC 7383	galaxy--lenticular	S0	G	-1.9 ± 0.7	-1.9	S0	B	
+F00455	NGC 7386	galaxy--elliptical	E/S0	G	-2.1 ± 0.5	-2.1	S0		
+F00457	NGC 7389	barred-spiral	SBa	G	1.0 ± 2.0	1.0	SBa	B	
+F00456	NGC 7387	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F00458	NGC 7390	galaxy--spiral	S0?	G					
+F00768	IC 5264	galaxy--spiral	Sb	G	2.4 ± 0.8	2.4	Sab		
+F00459	IC 5283	galaxy--spiral	Sc	G	6.0 ± 0.5	6.0	Sc		R
+F00460	NGC 7513	barred-spiral	SBb	G	3.2 ± 0.6	3.2	SBb	B	
+F00856	NGC 7537	galaxy--spiral	Sb	G	3.6 ± 0.6	3.6	Sbc		
+F00461	NGC 7559	galaxy--elliptical	E/S0	G	-3.2 ± 0.7	-3.2	E-S0		
+F00462	NGC 7570	galaxy--spiral	SAa	G	1.1 ± 0.5	1.1	Sa	B	R
+F00463	NGC 7579	galaxy--unclassified	C	G					
+F00464	NGC 7584	galaxy--unclassified		G					
+F01431	NGC 7595	galaxy--elliptical	E3	G	-5.0 ± 2.0	-5.0	E		
+F00770	NGC 7590	galaxy--spiral	S(r?)bc	G	4.5 ± 1.3	4.5	Sbc		
+F00473	IC 5309	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	Sb		
+F00466	NGC 7608	galaxy--spiral	SAbc	G	3.7 ± 1.3	3.7	Sbc		
+F00769	NGC 7599	barred-spiral	SB(s)c	G	5.3 ± 1.2	5.3	SBc	B	
+F00465	NGC 7609	galaxy--elliptical		G	-4.4 ± 1.3	-4.4	E		
+F00474	NGC 7611	galaxy--lenticular	S0	G	-1.1 ± 1.0	-1.1	S0-a	B	
+F00467	NGC 7615	galaxy--spiral	SAb	G	3.1 ± 0.6	3.1	Sb		
+F00472	NGC 7617	galaxy--lenticular	S0	G	-1.9 ± 1.0	-1.9	S0		
+F00468	NGC 7621	galaxy--lenticular	S0	G					
+F00469	NGC 7623	galaxy--lenticular	S0	G	-1.9 ± 0.5	-1.9	S0		
+F00471	NGC 7626	galaxy--elliptical	E3	G	-4.8 ± 0.4	-4.8	E		
+F00470	NGC 7631	galaxy--spiral	Sb	G	3.1 ± 0.4	3.1	Sb		R
+F00834	IC 1488	galaxy--unclassified		G	3.1 ± 0.5	3.1	Sb		
+F00475	NGC 7677	barred-spiral	SB:b	G	4.0 ± 0.4	4.0	SABb	B	R
+F00476	NGC 7714	barred-spiral	SBb	G	3.1 ± 0.7	3.1	Sb	B	
+F00570	NGC 7724	galaxy--unclassified		G	3.1 ± 0.7	3.1	SBb	B	R
+F01432	NGC 7735	galaxy--elliptical		G	-4.9 ± 0.4	-4.9	E		
+F00835	NGC 7745	galaxy--elliptical		G					
+F01433	NGC 7752	galaxy--unclassified		G	2.4 ± 5.3	2.4	S?		
+F00477	NGC 7770	galaxy--elliptical		G	-0.2 ± 0.9	-0.2	S0-a		
+F00478	NGC 7771	barred-spiral	SBa	G	1.1 ± 0.3	1.1	Sa	B	
+F01054	IC 5361	galaxy--unclassified		G	-2.0 ± 0.5	-2.0	S0		
+F00479	NGC 7778	galaxy--elliptical	E3	G	-4.9 ± 0.4	-4.9	E		
+F00480	NGC 7779	galaxy--spiral	S0/Sa	G	0.0 ± 0.5	0.0	S0-a		
+F00481	NGC 7780	galaxy--spiral	Sab	G	2.0 ± 0.4	2.0	SABa	B	
+F00482	NGC 7781	galaxy--lenticular	S0	G	0.0 ± 2.0	0.0	S0-a		

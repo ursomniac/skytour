@@ -1,0 +1,1 @@
+{"aliases": ["IC1590"], "dec": ["+", "56", "37", "53.8"], "dec_float": 56.63161111111111, "name": "IC 1590", "ra": ["00", "52", "48.00"], "ra_float": 0.88, "values": {"ag": {"description": "Galactic extinction in B-band", "text": "19.96", "unit": "mag", "value": 19.96}, "objtype": {"description": "Type of object (G=galaxy; S=Star ...)", "text": "c", "unit": "", "value": "c  "}}}

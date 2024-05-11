@@ -17,7 +17,7 @@
 	td.coordinates { font-size: 150%; padding: 3px 5px 15px 5px!important; margin-bottom: 5px; }
 	table.info_box { border: 2px solid black }
 	tr.bottom { height: 150px; }
-    img.constrained { width: 100%; max-width: 500px; }
+    img.constrained { max-width: 500px; }
 	img.library_image { display: block; }
     .hvcenter { vertical-align: middle!important; text-align: center!important; }
 	.hcenter { text-align: center!important; }
@@ -89,16 +89,19 @@
 			{% else %}
 			class="hvcenter"
 			{% endif %}
-			style="position:relative;"
+			style="position:relative; overflow: auto; max-height: 600px;"
 	>
 		{% if library_slideshow|length > 1 %}
 		<h2 class="short">Library Images</h2>
 			{% include "includes/library_slideshow.html" %}
 		{% elif object.library_image %}
 		<h2>Library Image</h2>
-		<a href="{{ object.library_image.image.url }}" target="_blank"><img 
-			src="{{ object.library_image.image.url }}" class="constrained" 
-			style="display:block;"></a>
+		<a href="{{ object.library_image.image.url }}" target="_blank">
+			<img 
+				src="{{ object.library_image.image.url }}" 
+				class="constrained" 
+				style="display:block; overflow: auto;">
+			</a>
 		{% else %}
 			<div class="no-library-image">
 			No image in library.
@@ -129,19 +132,44 @@
 				</td>
 			</tr>
 			<tr>
-				<td>V: {{ object.magnitude }}</td>
-				<td>Ang. Size: {{ object.angular_size }}</td>			</tr>
+				<td>
+					{% if object.find_magnitude.1 %}{{ object.find_magnitude.1 }}&nbsp;{% endif %}
+					Mag.: 
+					{{ object.find_magnitude.0|floatformat:2 }}
+					{% comment %}
+					V: {{ object.magnitude }}
+					({{ object.find_magnitude.0|floatformat:2 }} {{ object.find_magnitude.1 }})
+					{% endcomment %}
+				</td>
+				<td>
+					Ang. Size: {{ object.find_angular_size.0 }}
+					{# object.angular_size #}
+				</td>			
+			</tr>
 			<tr>
-				<td>Surf. Bri: {{ object.surface_brightness }}</td>
-				<td>Distance: {{ object.distance }} {{ object.distance_units }}</td>
+				<td>
+					Surf. Bri: {{ object.find_surface_brightness.0|floatformat:2 }}
+					{# object.surface_brightness #}
+				</td>
+				<td>
+					Distance:
+					{{ object.find_distance.0|floatformat:1 }} {{ object.find_distance.1 }}
+					{% comment %}
+					{{ object.distance }} {{ object.distance_units }}
+					{% endcomment %}
+				</td>
 
 			<tr>
 				<td>
-					Contrast Index: {{ object.contrast_index }}
-					{% if object.orientation_angle %}
+					Orientation Angle: {{ object.find_orientation.0|floatformat:0 }}°
+					{% comment %}
+					{{ object.orientation_angle }}°
+					{% endcomment %}
+					{% if object.contrast_index %}
 					&nbsp;&nbsp;
-					Orientation Angle: {{ object.orientation_angle }}°
+					Contrast Index: {{ object.contrast_index }}
 					{% endif %}
+
 				</td>
 				<td>Morphological Type: {{ object.morphological_type }}</td>
 			<tr>

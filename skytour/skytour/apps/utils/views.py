@@ -187,8 +187,8 @@ class ObjectTypeDetailView(DetailView):
         context['table_id'] = 'dso_table_by_type'
         return context
 
-GALAXY_TYPES = ['barred-spiral', 'dwarf-galaxy', 'galaxy--elliptical',
-    'irregular-galaxy', 'galaxy--lenticular', 'seyfert-galaxy',
+GALAXY_TYPES = ['galaxy--barred-spiral', 'galaxy--cluster', 'galaxy--dwarf', 'galaxy--elliptical',
+    'galaxy--intermediate', 'galaxy--irregular', 'galaxy--lenticular', 
     'galaxy--spiral']
 NEBULA_TYPES = ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula',
     'nebula--emission', 'interstellar-matter', 'planetary-nebula',

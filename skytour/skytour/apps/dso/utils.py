@@ -56,3 +56,19 @@ def select_other_atlas_plates(plate_list, primary):
         if key != k:
             plates.append(plate_list[key])
     return plates
+
+def get_hyperleda_value(obj, key):
+    if obj.metadata is None or 'values' not in obj.metadata.keys():
+        return None
+    vals = obj.metadata['values']
+    if key in vals.keys():
+        return vals[key]
+    return None
+
+def get_simbad_value(obj, key):    
+    if obj.simbad is None or 'values' not in obj.simbad.keys():
+        return None
+    vals = obj.simbad['values']
+    if key in vals.keys():
+        return vals[key]
+    return None

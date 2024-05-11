@@ -18,24 +18,60 @@ def find_cat_id_in_string(string):
         else:
             return None, string
 
-def search_dso_name(words, name):
-    target = None
+def search_dso_name(words, name, debug=False):
     if words is not None:
         cat, id = words
+        # Easy lookup
         primary = DSO.objects.filter(catalog__abbreviation__iexact=cat, id_in_catalog__iexact=id)
+        if debug:
+            print(f"{cat}, {id}: primary found {primary}")
         if primary.count() > 0:
             return primary.first()
+
+        # Maybe it's an alias
         aliases = DSOAlias.objects.filter(catalog__abbreviation__iexact=cat, id_in_catalog__iexact=id)
+        if debug:
+            print(f"{cat}, {id}: aliases found {aliases}")
         if aliases.count() > 0:
             return aliases.first().object
+        
+        # Maybe it's a DSO in the field of another DSO
         field_objects = DSOInField.objects.filter(catalog__abbreviation__iexact=cat, id_in_catalog__iexact=id)
+        if debug:
+            print(f"{cat}, {id}: in field found {field_objects}")
         if field_objects.count() > 0:
             return field_objects.first().parent_dso
+        
+        # Maybe it's a map label
+        idstr = ' '.join(words)
+        map_name_objects = DSO.objects.filter(map_label__iexact=idstr)
+        if debug:
+            print(f"{idstr}: map label found {map_name_objects}")
+        if map_name_objects.count() > 0:
+            return map_name_objects.first()
+        
+        # Maybe it's in the other catalog
+        other_objects = DSO.objects.filter(catalog__abbreviation='OTHER', id_in_catalog__iexact=idstr)
+        if debug:
+            print(f"{idstr}: other objects found {other_objects}")
+        if other_objects.count() > 0:
+            return other_objects.first()
     else:
         names = DSO.objects.filter(nickname__icontains=name)
+        if debug:
+            print(f"name {name} found {names}")
         if names.count() > 0:
             return names.first()
+        
         field_names = DSOInField.objects.filter(nickname__icontains=name)
+        if debug:
+            print(f"name {name}: field names found {field_names}")
         if field_names.count() > 0:
             return field_names.first().parent_dso
+        
+        map_name_objects = DSO.objects.filter(map_label__iexact=name)
+        if debug:
+            print(f"name {name}: map names found {map_name_objects}")
+        if map_name_objects.count() > 0:
+            return map_name_objects.first()
     return None

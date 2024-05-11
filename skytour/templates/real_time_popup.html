@@ -48,6 +48,8 @@
                 {% endif %}
                 {{ real_time.distance_units }}
                 <br>
+            <label>Lunar Distance: </label>{{ real_time.lunar_distance|to_dms }}
+        
         </td>
         <td>
             <label>Local Time:</label> {{ real_time.local_time_str }}<br/>

@@ -6,8 +6,8 @@ DSO_TYPE_DICT = {
         'open-cluster', 'stellar-association'],
     'nebula': ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula', 'nebula--emission', 
         'interstellar-matter', 'planetary-nebula', 'reflection-nebula', 'supernova-remnant'],
-    'galaxy': ['barried-spiral', 'dwarf-galaxy', 'galaxy--elliptical', 'irregular-galaxy',
-        'galaxy--lenticular', 'seyfert-galaxy', 'galaxy--spiral']
+    'galaxy': ['galaxy--barred-spiral', 'galaxy--cluster', 'galaxy--dwarf', 'galaxy--elliptical', 'galaxy--irregular',
+        'galaxy--intermediate', 'galaxy--lenticular', 'galaxy--spiral', 'galaxy--unclassified']
 }
 
 def checklist_params(request):

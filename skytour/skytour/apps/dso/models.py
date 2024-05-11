@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Count, Max, Min, Avg
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from jsonfield import JSONField
 from skyfield.api import Star
 from taggit.managers import TaggableManager
 from .utils import create_shown_name
@@ -18,6 +19,7 @@ from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
 from .observing import get_max_altitude
+from .utils import get_hyperleda_value, get_simbad_value
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
 
 class DSOAbstract(Coordinates):
@@ -46,6 +48,11 @@ class DSOAbstract(Coordinates):
     )
     magnitude = models.FloatField (
         _('Mag.'),
+        null = True, blank = True
+    )
+    magnitude_system = models.CharField (
+        _('Mag. System'),
+        max_length = 3, # default = 'V',
         null = True, blank = True
     )
     angular_size = models.CharField (
@@ -92,7 +99,22 @@ class DSOAbstract(Coordinates):
         null = True, blank = True,
         help_text = 'arcmin'
     )
+    metadata = JSONField(null=True, blank=True)
+    simbad = JSONField(null=True, blank=True)
+    archive_metadata = JSONField(null=True, blank=True)
 
+    hyperleda_name = models.CharField (
+        _('HyperLeda Name Override'),
+        max_length = 30,
+        null = True, blank = True,
+        help_text = 'Use this name when querying HyperLeda'
+    )
+    simbad_name = models.CharField (
+        _('SIMBAD Name Override'),
+        max_length = 30,
+        null = True, blank = True,
+        help_text = 'Use this name when querying SIMBAD'
+    )
 
     @property
     def skyfield_object(self):
@@ -100,7 +122,61 @@ class DSOAbstract(Coordinates):
         This is handy when pointing at this DSO
         """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
-
+    
+    @property
+    def find_magnitude(self):
+        mag = self.magnitude
+        hv = get_hyperleda_value(self, 'magnitude')
+        sv = get_simbad_value(self, 'magnitude')
+        if hv is not None:
+            return (hv['value'], hv['system'], 'H')
+        if sv is not None:
+            return (sv['value'], sv['system'], 'S')
+        return (mag, None, 'O')
+    
+    @property
+    def find_surface_brightness(self):
+        sb = self.surface_brightness
+        hv = get_hyperleda_value(self, 'surface_brightness')
+        if hv is not None: # Simbad data doesn't have this
+            return (hv['value'], 'H')
+        return (sb, 'O')
+    
+    @property
+    def find_angular_size(self):
+        size = self.angular_size
+        hv = get_hyperleda_value(self, 'angsize')
+        sv = get_simbad_value(self, 'angsize')
+        # hv or sv or size might work
+        if hv is not None:
+            return (hv, 'H')
+        if sv is not None:
+            return (sv, 'S')
+        return (size, 'O')
+    
+    @property
+    def find_orientation(self):
+        o = self.orientation_angle
+        hv = get_hyperleda_value(self, 'orientation')
+        sv = get_simbad_value(self, 'orientation')
+        if hv is not None:
+            return (hv['value'], 'H')
+        if sv is not None:
+            return (sv['value'], 'S')
+        return (o, 'O')
+    
+    @property
+    def find_distance(self):
+        d = self.distance
+        u = self.distance_units
+        hv = get_hyperleda_value(self, 'distance')
+        sv = get_simbad_value(self, 'distance')
+        if hv is not None:
+            return hv['value'], hv['units']
+        if sv is not None:
+            return sv['value'], sv['units']
+        return (d, u, 'O')
+    
     class Meta:
         abstract = True
 
@@ -358,9 +434,8 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         out += '<th>Mag.</th><th>Size</th><th>Surf. Br.</th><th>Admin</th>'
         out += '</tr>'
         fdsos = self.dsoinfield_set.order_by('ra')
-        #print("GOT: ", fdsos)
         for f in fdsos:
-            mag = f"{f.magnitude:.2f}" if f.magnitude else ''
+            mag = f"{f.find_magnitude[0]:.2f}" if f.magnitude else ''
             dist = f"{f.primary_distance:.2f}" if f.primary_distance else ''
             pa = f" at {f.primary_angle:.0f}°" if f.primary_angle else ''
             sbr = f"{f.surface_brightness:.2f}" if f.surface_brightness else ''
@@ -387,7 +462,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return mark_safe(out)
 
     def max_altitude(self, location=None): # no location = default
-        return get_max_altitude(self)
+        return get_max_altitude(self, location=location)
     
     def finder_chart_tag(self):
         """

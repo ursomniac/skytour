@@ -28,7 +28,7 @@ def is_in_window(location_id, az, alt, min_alt=10., house=False):
         return True
     if location_id != 1:
         return alt >= min_alt
-    
+    print("Location: ", location_id, " Min alt:", min_alt)
     # check against home
     if alt > 70.:
         return True
@@ -100,8 +100,10 @@ def find_objects_at_home(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(location_id, az, alt, house=house):
+
+        if is_in_window(location_id, az, alt, house=house, min_alt=min_alt):
             candidate_pks.append(d.pk)
+
 
         """
         if alt > 70.: # keep!
@@ -146,6 +148,8 @@ def find_objects_at_cookie(
         min_alt = 30.,
         house = False
     ):
+
+
     # 1. sort out time
     if utdt is None:
         utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
@@ -174,8 +178,9 @@ def find_objects_at_cookie(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(loc.id, az, alt, house=house):
-            candidate_pks.append(d.pk)
+        if is_in_window(loc.id, az, alt, house=house, min_alt=min_alt):
+                candidate_pks.append(d.pk)
+
 
     dsos = DSO.objects.filter(pk__in=candidate_pks)
     for d in dsos:

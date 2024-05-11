@@ -4,6 +4,7 @@ import pytz
 from ..astro.time import get_last, get_julian_date
 from ..solar_system.position import get_object_metadata
 from ..astro.transform import get_alt_az
+from ..astro.utils import get_small_sep
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from ..observe.models import ObservingLocation
@@ -104,7 +105,7 @@ def get_real_time_conditions(target, request, context, debug=False):
     dt_base = request.GET.get('utdt_base', 'now')
     text_offset = request.GET.get('offset', '0.')
     offset = float(text_offset) if text_offset else 0.
-
+    lunar_distance = None
     if debug:
         print(f"DT BASE: {dt_base} OFFSET: {offset}")
     # Set up datetimes
@@ -135,6 +136,17 @@ def get_real_time_conditions(target, request, context, debug=False):
         location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
         location = ObservingLocation.objects.filter(pk=location_id[0]).first()
 
+    if dt_base == 'cookie':
+        try:    
+            moon = context['cookies']['moon']
+            moon_ra = moon['apparent']['equ']['ra']
+            moon_dec = moon['apparent']['equ']['dec']
+            (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
+            #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
+            if moon_alt > -10.:
+                lunar_distance = get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float)
+        except:
+            print("Cannot find moon")
     last = get_last(utdt, location.longitude)
     object_type = target._meta.model_name
     if object_type == 'dso':
@@ -147,7 +159,7 @@ def get_real_time_conditions(target, request, context, debug=False):
         angular_diameter_units = '\''
         apparent_magnitude = target.magnitude
         surface_brightness = target.surface_brightness
-        max_alt = target.max_altitude
+        max_alt = target.max_altitude(location=location)
     else:
         eph_label =  target.target if object_type == 'planet' else None
         ephem = get_object_metadata(
@@ -203,7 +215,8 @@ def get_real_time_conditions(target, request, context, debug=False):
             julian_date = julian_date,
             sidereal_time = last,
             display_name = target.__str__(),
-            max_alt = max_alt
+            max_alt = max_alt,
+            lunar_distance = lunar_distance
         )
         context['real_time'] = d
         context['use_date'] = dt_base

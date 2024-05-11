@@ -33,7 +33,7 @@ class ConstellationAdmin(admin.ModelAdmin):
 
 class ObjectTypeAdmin(admin.ModelAdmin):
     model = ObjectType
-    list_display = ['pk', 'name', 'marker_type', 'map_symbol_type', 'marker_color']
+    list_display = ['pk', 'name', 'slug',  'marker_type', 'map_symbol_type', 'marker_color']
 
 admin.site.register(Catalog, CatalogAdmin)
 admin.site.register(Constellation, ConstellationAdmin)
