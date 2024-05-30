@@ -22,7 +22,10 @@ def create_plot(
         ypad = 0.02, 
         ylim = None,
         subplot = (1,1,1),
-        reversed = False
+        reversed = False,
+        xrange = None,
+        yrange = None,
+        other_lines = None
 	):
     """
     Given data, make a scatter plot.
@@ -38,12 +41,20 @@ def create_plot(
     panel.set_title(title)
     panel.set_xlabel(xtitle)
     panel.set_ylabel(ytitle)
+
     # Options
     if grid:
         panel.grid()
 
-    panel.set_xlim(fix_axis(x, xpad))
-    panel.set_ylim(fix_axis(y, ypad, ymax=ylim))
+    if xrange is not None:
+        panel.set_xlim(xrange[0], xrange[1])
+    else:
+        panel.set_xlim(fix_axis(x, xpad))
+    if yrange is not None:
+        panel.set_ylim(yrange[0], yrange[1])
+    else:
+        panel.set_ylim(fix_axis(y, ypad, ymax=ylim))
+
     if not type or type == 'scatter':
         panel = do_scatter_plot(panel, x, y, markers, colors, sizes, reversed=reversed)
         if error:
@@ -55,6 +66,13 @@ def create_plot(
         for line in lines:
             panel.axhline(line, ls = ltype[ll % len(ltype)], color='#333')
             ll += 1
+
+    if other_lines is not None:
+        # [ ([xx], [yy])]
+        for line in other_lines:
+            xx = line[0]
+            yy = line[1]
+            panel.axline((xx[0], yy[0]), (xx[1], yy[1]), ls='-', color='#330')
 
     # Convert to a PNG image
     pngImage = io.BytesIO()

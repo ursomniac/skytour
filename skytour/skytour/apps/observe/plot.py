@@ -87,6 +87,30 @@ def make_location_plot(
     )
     return image
 
+def plot_expect_vs_observed_sqm(locations):
+    xx = []
+    yy = []
+    ee = []
+    for loc in locations:
+        (y, e) = loc.mean_obs_bortle
+        if y is None:
+            continue
+        x = loc.effective_bortle
+        e = 0.0 if e is None else e
+        xx.append(x)
+        yy.append(y)
+        ee.append(e)
+    image = create_plot(
+            x = xx, y = yy, 
+            xpad=0.02, ypad=0.02,
+            error = ee, grid=True,
+            xrange = [min(2.9, min(xx)), max(5, max(xx))],
+            yrange = [min(4, min(yy)), max(6, max(yy))],
+            other_lines = [([3, 6], [3, 6]),],
+            title='Obs. Bortle vs. Expected'
+        )
+    return image
+
 def plot_sqm_history(loc, reversed=False):
     sessions = loc.observingsession_set.all()
     if sessions.count() < 1:

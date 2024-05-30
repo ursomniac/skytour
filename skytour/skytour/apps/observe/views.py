@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from .models import ObservingLocation
-from .plot import make_location_plot, plot_sqm_history
+from .plot import make_location_plot, plot_sqm_history, plot_expect_vs_observed_sqm
 
 class ObservingLocationListView(ListView):
     model = ObservingLocation
@@ -30,6 +30,7 @@ class ObservingLocationListView(ListView):
         plot_locations = all_locations.exclude(travel_distance__gte=max_distance)
         context['sqm_plot'] = make_location_plot(plot_locations, 'sqm')
         context['brightness_plot'] = make_location_plot(plot_locations, 'bright')
+        context['bortle_plot'] = plot_expect_vs_observed_sqm(all_locations)
         context['table_id'] = 'location_table'
         return context
 
