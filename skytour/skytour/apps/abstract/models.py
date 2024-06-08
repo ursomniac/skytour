@@ -8,8 +8,8 @@ from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
-from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, IMAGE_TYPE_CHOICES, \
-    IMAGE_POST_OPTIONS, YES_NO
+from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, \
+    IMAGE_TYPE_CHOICES, IMAGE_POST_OPTIONS, IMAGE_STYLE_CHOICES, YES_NO, YES, NO
 
 class FieldView(models.Model):
     """
@@ -17,7 +17,7 @@ class FieldView(models.Model):
     """
     field_view = models.ImageField (
         _('Field View'),
-        upload_to = 'field_view/',
+        upload_to = 'field_view/', 
         null = True, blank = True
     )
 
@@ -196,12 +196,25 @@ class LibraryAbstractImage(ObjectImage):
     use_in_carousel = models.PositiveIntegerField (
         _('Use in Slideshow'),
         choices = YES_NO,
-        default = 1,
+        default = YES,
         help_text = 'Set to YES/1 show on the image carousel'
+    )
+    image_style = models.CharField (
+        _('Image Class'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_STYLE_CHOICES
+    )
+    use_as_map = models.PositiveIntegerField (
+        _('Use in Map Panel'),
+        choices = YES_NO,
+        default = NO,
+        help_text = 'Set to YES/1 show on the map panel'
     )
 
     class Meta:
         abstract = True
+
 
 class ObservingLog(models.Model):
     session = models.ForeignKey(ObservingSession, null=True, on_delete=models.CASCADE)

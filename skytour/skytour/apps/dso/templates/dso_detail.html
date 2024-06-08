@@ -28,6 +28,18 @@
 	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
 	tr.dif th { background-color: #006; }
 	span.annotation { padding-left: 10px; font-size: 50%; font-style: italic; color: #ff6; }
+    .image-text {
+        position: absolute;
+        bottom: -30px;
+        width: 100%;
+        display: flex;
+        font-size: 12px;
+        justify-content: center;
+        align-items: center;
+        color: rgb(255, 255, 255);
+        background: rgba(0, 0, 0, 0.3);
+        height: 35px;
+    }
 </style>
 {% endblock styles %}
 
@@ -93,7 +105,20 @@
 	>
 		{% if library_slideshow|length > 1 %}
 		<h2 class="short">Library Images</h2>
-			{% include "includes/library_slideshow.html" %}
+		<br>
+		<a class="xprev" onclick="plusSlides(-1, 0)"><button>Previous</button></a>
+		&nbsp; | &nbsp;
+		<a class="xnext" onclick="plusSlides(1, 0)"><button>Next</button></a>
+			<div class="slideshow-container">
+				{% for item in library_slideshow %}
+				<div class="mySlides libslide">
+					<a href="{{ item.image.url }}" target="_blank>">
+						<img src="{{ item.image.url }}" alt="add data here" style="width:100%"/>
+					</a>
+					<div class="image-text">Image {{ forloop.counter }}: {{ item.caption }}</div>
+				</div>
+				{% endfor %}
+			</div>
 		{% elif object.library_image %}
 		<h2>Library Image</h2>
 		<a href="{{ object.library_image.image.url }}" target="_blank">
@@ -226,16 +251,39 @@
 		<a name="charts"></a>
 		<h3>DSO Finder Chart:</h3>
 		{% if object.dso_finder_chart_wide %}
-		<img src = {{ object.dso_finder_chart_wide.url }} width="100%">
+		<img src = "{{ object.dso_finder_chart_wide.url }}" width="100%">
 		{% else %}<p>No Wide image finder (yet)</p>
 		{% endif %}
 	</td>
+
 	<td id="imaging_view" colspan=3 style="width:50%;">
-		<h3>Imaging Chart:</h3>
-		{% if object.dso_imaging_chart %}
-		<img src="{{ object.dso_imaging_chart.url }}" width=100% style="display:block;">
+		{% if map_slideshow|length < 2 %}
+			<h3>Imaging Chart:</h3>
+			{% if object.dso_imaging_chart %}
+			<img src="{{ object.dso_imaging_chart.url }}" width=100% style="display:block;">
+			{% else %}
+			<br>(No imaging view.)
+			{% endif %}
 		{% else %}
-		<br>(No imaging view.)
+			<h3>Imaging Chart and Full View</h3>
+			<br>
+			<a class="xprev" onclick="plusSlides(-1, 1)"><button>Previous</button></a>
+			&nbsp; | &nbsp;
+			<a class="xnext" onclick="plusSlides(1, 1)"><button>Next</button></a>
+			<div class="slideshow-container">
+				{% for item in map_slideshow %}
+				<div class="mySlides mapslide">
+					<a href="{{ item.url }}" target="_blank>">
+						<img
+							src="{{ item.url }}"  
+							alt="add data here"
+							style="width:100%;"
+						/>
+					</a>
+					<div class="image-text">{{ item.caption }}</div>
+				</div>
+				{% endfor %}
+			</div>
 		{% endif %}
 	</td>
 
@@ -383,6 +431,7 @@
 {% endif %}
 
 {# include 'includes/performance_time.html' #}
+{% include 'includes/multiple_slideshows.html' %}
 {% endblock content %}
 
 {% block extra-js %}

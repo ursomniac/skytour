@@ -34,7 +34,8 @@ class DSOLibraryImageAdmin(admin.StackedInline):
         (None, {
             'fields': [
                 ('order_in_list', 'exposure', 'ut_datetime'),
-                ('image_type', 'processing_status', 'use_in_carousel'),
+                ('image_type', 'processing_status'), 
+                ('image_style', 'use_in_carousel', 'use_as_map'),
                 ('image', 'object_image_tag',),
                 'notes'
             ]

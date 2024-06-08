@@ -105,8 +105,8 @@ class TargetDSO(models.Model):
                 continue
             mode = self.targetobservingmode_set.filter(mode=k).first()
             v = mode.viable
-            out += f'<b>{k}</b>: &nbsp;'
-            out += f'{mode.priority} &nbsp;'
+            out += f'<b>{k}</b>: &nbsp;' 
+            out += '0 &nbsp;' if mode.priority is None else f'{mode.priority} &nbsp;'
             for i in range(11):
                 val = 'X' if i == v else '&nbsp;'
                 val = f'&nbsp;{val}&nbsp;'

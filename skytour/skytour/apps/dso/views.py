@@ -84,6 +84,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['image_list'] = self.object.images.order_by('order_in_list')
         context['other_library_images'] = self.object.image_library.all() # [1:]
         context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        context['map_slideshow'] = self.object.map_image_list
         return context
 
 class PriorityListView(TemplateView):

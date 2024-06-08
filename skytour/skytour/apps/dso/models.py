@@ -460,6 +460,26 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             out += "</tr>"
         out += "</table>"
         return mark_safe(out)
+    
+    @property
+    def map_image_list(self):
+        map_images = self.image_library.filter(use_as_map=True).order_by('order_in_list')
+        maps_list = []
+        i = 1
+        for m in map_images:
+            item = {}
+            item['url'] = m.image.url
+            item['caption'] = f"Image {i}: {m.ut_datetime} UT, {m.exposure}min"
+            maps_list.append(item)
+            i += 1
+        if self.dso_imaging_chart:
+            item = {
+                'url': self.dso_imaging_chart.url, 
+                'caption': f"Image {i}: Finding Chart for eQuinox image."
+            }  
+            maps_list.append(item)
+        return maps_list
+
 
     def max_altitude(self, location=None): # no location = default
         return get_max_altitude(self, location=location)

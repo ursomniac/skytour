@@ -22,6 +22,14 @@ IMAGING_PROCESSING_CHOICES = (
     ('Unknown', 'Unknown')
 )
 
+IMAGE_STYLE_CHOICES = (
+    ('square', 'Square Image'), # Use in galleries/carousel
+    ('map', 'Annotated Image'), # Use in field panel
+    ('full', 'Full Frame Image'), # Use in field panel
+    ('other', 'Other'), # Use in carousel?
+    # ('finder', 'Finder'), # Use in field panel
+)
+
 IMAGE_TYPE_CHOICES = (
     ('e-crop', 'eQuinox 2: Cropped'),
     ('e-full', 'eQuinox 2: Full'),

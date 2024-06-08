@@ -255,32 +255,33 @@ class CometDetailView(CookieMixin, DetailView):
 
         context['comet'] = pdict
 
-        context['finder_chart'], ftimes = create_finder_chart (
-            context['utdt_start'],
-            object,
-            planets,
-            asteroids,
-            object_type = 'comet',
-            obj_cookie = pdict,
-            fov = 4.,
-            reversed = reversed,
-            mag_limit = 11.,
-            sun = context['cookies']['sun'],
-            moon = context['cookies']['moon']
-        )
-        context['large_scale_map'], ftimes = create_finder_chart (
-            context['utdt_start'],
-            object,
-            planets,
-            asteroids,
-            object_type = 'comet',
-            obj_cookie = pdict,
-            fov = 10.,
-            reversed = reversed,
-            mag_limit = 9.,
-            sun = context['cookies']['sun'],
-            moon = context['cookies']['moon']
-        )
+        if pdict:
+            context['finder_chart'], ftimes = create_finder_chart (
+                context['utdt_start'],
+                object,
+                planets,
+                asteroids,
+                object_type = 'comet',
+                obj_cookie = pdict,
+                fov = 4.,
+                reversed = reversed,
+                mag_limit = 11.,
+                sun = context['cookies']['sun'],
+                moon = context['cookies']['moon']
+            )
+            context['large_scale_map'], ftimes = create_finder_chart (
+                context['utdt_start'],
+                object,
+                planets,
+                asteroids,
+                object_type = 'comet',
+                obj_cookie = pdict,
+                fov = 10.,
+                reversed = reversed,
+                mag_limit = 9.,
+                sun = context['cookies']['sun'],
+                moon = context['cookies']['moon']
+            )
         context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         return context
 
