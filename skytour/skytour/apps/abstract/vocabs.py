@@ -33,7 +33,8 @@ IMAGE_STYLE_CHOICES = (
 IMAGE_TYPE_CHOICES = (
     ('e-crop', 'eQuinox 2: Cropped'),
     ('e-full', 'eQuinox 2: Full'),
-    ('s-full', 'Seestar S50: Full')
+    ('s-full', 'Seestar S50: Full'),
+    ('s-crop', 'Seestar S50: Cropped')
 )
 
 IMAGE_POST_OPTIONS = (

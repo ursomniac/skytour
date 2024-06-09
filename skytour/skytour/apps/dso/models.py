@@ -468,13 +468,17 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         for m in map_images:
             item = {}
             item['url'] = m.image.url
-            item['caption'] = f"Image {i}: {m.ut_datetime} UT, {m.exposure}min"
+            item['caption'] = ''
+            if m.imaging_telescope is not None:
+                item['caption'] += f"{m.imaging_telescope}: "
+            item['caption'] += f'{m.ut_datetime.strftime("%Y-%m-%d %H:%M")} UT, {m.exposure}min, '
+            item['caption'] += f'{m.get_image_style_display()}'
             maps_list.append(item)
             i += 1
         if self.dso_imaging_chart:
             item = {
                 'url': self.dso_imaging_chart.url, 
-                'caption': f"Image {i}: Finding Chart for eQuinox image."
+                'caption': f"Finding Chart for eQuinox image."
             }  
             maps_list.append(item)
         return maps_list
@@ -491,7 +495,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             if chart.name == '':
                 continue
             finder_images.append(chart.url)
-        print("FINDER IMAGES: ", finder_images)
         return finder_images
 
 
@@ -680,7 +683,10 @@ class DSOLibraryImage(LibraryAbstractImage):
 
     @property
     def caption(self):
-        x = self.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
+        x = ''
+        if self.imaging_telescope is not None:
+            x += f"{self.imaging_telescope}: "
+        x += self.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
         if self.exposure is not None:
             x += f', {self.exposure}min'
         if self.processing_status not in [None, 'None']:

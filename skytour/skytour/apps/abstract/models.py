@@ -188,6 +188,14 @@ class ObjectImage(models.Model):
 
     def object_image_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
+    
+    @property
+    def imaging_telescope(self):
+        t = {'e-': 'eQuinox 2', 's-': 'Seestar S50', 'c-': 'Celestron Origin'}
+        slug = self.image_type[:2]
+        if slug in t.keys():
+            return t[slug]
+        return None
 
     class Meta:
         abstract = True
