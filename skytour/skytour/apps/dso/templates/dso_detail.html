@@ -40,6 +40,27 @@
         background: rgba(0, 0, 0, 0.3);
         height: 35px;
     }
+	.image-text1 {
+		position: absolute;
+		width: 98%;
+		display: flex;
+		font-size: 12px;
+		justify-content: center;
+		align-items: center;
+		color: rgb(255, 255, 255);
+        background: rgba(0, 0, 0, 0.3);
+        height: 35px;
+	}
+	.slide-header {
+		width: 100%;
+		padding-left: 10px;
+		font-size: 12px;
+		display: flex;
+		align-items: center;
+		color: rgb(204, 204, 204);
+		background: rgba(0, 0, 0, 0.3);
+		height: 35px;
+	}
 </style>
 {% endblock styles %}
 
@@ -96,22 +117,27 @@
 	</td>
 	<td 
 			width="500px" height="600px" rowspan=2 
-			{% if library_slideshow|length > 1 %}
-			class="hcenter"
-			{% else %}
+			{% if library_slideshow|length < 2 %}
 			class="hvcenter"
-			{% endif %}
-			style="position:relative; overflow: auto; max-height: 600px;"
+			{% else %}
+			class="hcenter"
+			{% endif %} {# overflow; auto #}
+			style="position:relative; max-height: 600px;"
 	>
-		{% if library_slideshow|length > 1 %}
-		<h2 class="short">Library Images</h2>
-		<br>
-		<a class="xprev" onclick="plusSlides(-1, 0)"><button>Previous</button></a>
-		&nbsp; | &nbsp;
-		<a class="xnext" onclick="plusSlides(1, 0)"><button>Next</button></a>
+		{% if library_slideshow|length > 0 %}
+		<h2 class="short">Library Image(s)</h2>
 			<div class="slideshow-container">
 				{% for item in library_slideshow %}
 				<div class="mySlides libslide">
+					{% if library_slideshow|length > 1 %}
+					<div class="slide-header">
+						<a onclick="plusSlides(-1, 0)"><button>Previous</button></a>
+						&nbsp; | &nbsp; 
+						<a onclick="plusSlides(1, 0)"><button>Next</button></a>
+						&nbsp; | &nbsp; 
+						Image {{ forloop.counter }} of {{ library_slideshow | length }}
+					</div>
+					{% endif %}
 					<a href="{{ item.image.url }}" target="_blank>">
 						<img src="{{ item.image.url }}" alt="add data here" style="width:100%"/>
 					</a>
@@ -119,14 +145,20 @@
 				</div>
 				{% endfor %}
 			</div>
+		{% comment %}
 		{% elif object.library_image %}
-		<h2>Library Image</h2>
+		<h2 style="margin-top: -15px; margin-bottom:10px">Library Image</h2>
 		<a href="{{ object.library_image.image.url }}" target="_blank">
 			<img 
 				src="{{ object.library_image.image.url }}" 
 				class="constrained" 
 				style="display:block; overflow: auto;">
 			</a>
+			<span class="image-text1">
+				{{ object.library_image.ut_datetime }},
+				{{ object.library_image.exposure }}min
+			</span>
+		{% endcomment %}
 		{% else %}
 			<div class="no-library-image">
 			No image in library.
@@ -267,12 +299,19 @@
 		{% else %}
 			<h3>Imaging Chart and Full View</h3>
 			<br>
-			<a class="xprev" onclick="plusSlides(-1, 1)"><button>Previous</button></a>
-			&nbsp; | &nbsp;
-			<a class="xnext" onclick="plusSlides(1, 1)"><button>Next</button></a>
+
 			<div class="slideshow-container">
 				{% for item in map_slideshow %}
 				<div class="mySlides mapslide">
+					{% if map_slideshow|length > 1 %}
+					<div class="slide-header">
+						<a onclick="plusSlides(-1, 1)"><button>Previous</button></a>
+						&nbsp; | &nbsp;
+						<a onclick="plusSlides(1, 1)"><button>Next</button></a>
+						&nbsp; | &nbsp;
+						Image {{ forloop.counter }} of {{ map_slideshow|length }}
+					{% endif %}
+					</div>
 					<a href="{{ item.url }}" target="_blank>">
 						<img
 							src="{{ item.url }}"  
@@ -383,6 +422,7 @@
 </tr>
 <table>
 
+{% comment %}
 {% if other_library_images|length > 1000 %}
 <table>
 	<tr><td colspan=3><h2>Other Library Images</h2></td></tr>
@@ -398,7 +438,7 @@
 	{% if not forloop.counter|divisibleby:3 %}</tr>{% endif %}
 </table>
 {% endif %}
-
+{% endcomment %}
 
 {% if image_list.0 %}
 <table>
