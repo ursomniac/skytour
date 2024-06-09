@@ -190,7 +190,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         Images
         Field View (https://astronomy.tools/calculators/field_of_view/)
     """
-
     finder_chart = models.ImageField (
         _('Finder Chart'),
         upload_to = 'finder_chart/',
@@ -479,6 +478,20 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             }  
             maps_list.append(item)
         return maps_list
+    
+    @property
+    def finder_image_list(self):
+        finder_images = []
+        for chart in [
+            self.dso_finder_chart_narrow,
+            self.dso_finder_chart_wide,
+            self.field_view,
+            self.finder_chart
+        ]:
+            if chart is None:
+                continue
+            finder_images.append(chart.url)
+        return finder_images
 
 
     def max_altitude(self, location=None): # no location = default

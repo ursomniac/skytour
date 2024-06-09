@@ -129,6 +129,7 @@
 			<div class="slideshow-container">
 				{% for item in library_slideshow %}
 				<div class="mySlides libslide">
+					{# just remove the controls if there's only one image #}
 					{% if library_slideshow|length > 1 %}
 					<div class="slide-header">
 						<a onclick="plusSlides(-1, 0)"><button>Previous</button></a>
@@ -145,20 +146,6 @@
 				</div>
 				{% endfor %}
 			</div>
-		{% comment %}
-		{% elif object.library_image %}
-		<h2 style="margin-top: -15px; margin-bottom:10px">Library Image</h2>
-		<a href="{{ object.library_image.image.url }}" target="_blank">
-			<img 
-				src="{{ object.library_image.image.url }}" 
-				class="constrained" 
-				style="display:block; overflow: auto;">
-			</a>
-			<span class="image-text1">
-				{{ object.library_image.ut_datetime }},
-				{{ object.library_image.exposure }}min
-			</span>
-		{% endcomment %}
 		{% else %}
 			<div class="no-library-image">
 			No image in library.
@@ -193,35 +180,23 @@
 					{% if object.find_magnitude.1 %}{{ object.find_magnitude.1 }}&nbsp;{% endif %}
 					Mag.: 
 					{{ object.find_magnitude.0|floatformat:2 }}
-					{% comment %}
-					V: {{ object.magnitude }}
-					({{ object.find_magnitude.0|floatformat:2 }} {{ object.find_magnitude.1 }})
-					{% endcomment %}
 				</td>
 				<td>
 					Ang. Size: {{ object.find_angular_size.0 }}
-					{# object.angular_size #}
 				</td>			
 			</tr>
 			<tr>
 				<td>
 					Surf. Bri: {{ object.find_surface_brightness.0|floatformat:2 }}
-					{# object.surface_brightness #}
 				</td>
 				<td>
 					Distance:
 					{{ object.find_distance.0|floatformat:1 }} {{ object.find_distance.1 }}
-					{% comment %}
-					{{ object.distance }} {{ object.distance_units }}
-					{% endcomment %}
 				</td>
 
 			<tr>
 				<td>
 					Orientation Angle: {{ object.find_orientation.0|floatformat:0 }}°
-					{% comment %}
-					{{ object.orientation_angle }}°
-					{% endcomment %}
 					{% if object.contrast_index %}
 					&nbsp;&nbsp;
 					Contrast Index: {{ object.contrast_index }}
@@ -279,13 +254,31 @@
 
 <table>
 <tr>
-	<td id="finder" width=50%>
-		<a name="charts"></a>
-		<h3>DSO Finder Chart:</h3>
-		{% if object.dso_finder_chart_wide %}
-		<img src = "{{ object.dso_finder_chart_wide.url }}" width="100%">
-		{% else %}<p>No Wide image finder (yet)</p>
-		{% endif %}
+	<td id="field_chart_view" width="50%">
+		<h3>Finder Chart(s):</h3>
+		<div class="finder-chart-container">
+			{% for item in finder_slideshow %}
+			<div class="mySlides finderslide">
+				{% if finder_slideshow|length > 1 %}
+				<div class="slide-header">
+					<a onclick="plusSlides(-1, 2)"><button>Previous</button></a>
+					&nbsp; | &nbsp;
+					<a onclick="plusSlides(1, 2)"><button>Next</button></a>
+					&nbsp; | &nbsp;
+					Image {{ forloop.counter }} of {{ finder_slideshow|length }}
+				</div>
+				{% endif %}
+				<a href="{{ item }}" target="_blank>">
+					<img
+						src="{{ item }}"  
+						alt="add data here"
+						style="width:100%;"
+					/>
+				</a>
+				<!--div class="image-text">{{ item.caption }}</div-->
+			</div>
+			{% endfor %}
+		</div>
 	</td>
 
 	<td id="imaging_view" colspan=3 style="width:50%;">
@@ -298,8 +291,6 @@
 			{% endif %}
 		{% else %}
 			<h3>Imaging Chart and Full View</h3>
-			<br>
-
 			<div class="slideshow-container">
 				{% for item in map_slideshow %}
 				<div class="mySlides mapslide">
@@ -310,8 +301,9 @@
 						<a onclick="plusSlides(1, 1)"><button>Next</button></a>
 						&nbsp; | &nbsp;
 						Image {{ forloop.counter }} of {{ map_slideshow|length }}
-					{% endif %}
 					</div>
+					{% endif %}
+					
 					<a href="{{ item.url }}" target="_blank>">
 						<img
 							src="{{ item.url }}"  
@@ -401,13 +393,13 @@
 </tr>
 </table>
 
+{% comment %}
 <table class="lite">
 <tr>
 	<td id="close_up" width=50%>
 		<h3>Close-Up Finder Chart:</h3>
-		<!--img src="{{ close_up_finder }}" width=100%-->
 		{% if object.dso_finder_chart_narrow %}
-		<img src = {{ object.dso_finder_chart_narrow.url }} width="100%">
+		<img src = "{{ object.dso_finder_chart_narrow.url }}" width="100%">
 		{% else %}<p>No Narrow finder (yet)</p>
 		{% endif %}
 	</td>
@@ -421,23 +413,6 @@
 	</td>
 </tr>
 <table>
-
-{% comment %}
-{% if other_library_images|length > 1000 %}
-<table>
-	<tr><td colspan=3><h2>Other Library Images</h2></td></tr>
-	{% for lib_image in other_library_images %}
-	{% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
-		<td class="dso_image" width="33%">
-			<a href="{{ lib_image.image.url }}" target="_blank">
-			<img src="{{ lib_image.image.url }}" width="100%" class="library-image ">
-			</a>
-		</td>
-	{% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
-	{% endfor %}
-	{% if not forloop.counter|divisibleby:3 %}</tr>{% endif %}
-</table>
-{% endif %}
 {% endcomment %}
 
 {% if image_list.0 %}

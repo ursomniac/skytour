@@ -68,23 +68,16 @@ class DSODetailView(CookieMixin, DetailView):
         context = super(DSODetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         now = self.request.GET.get('now', False)
-        #planets_dict = context['cookies']['planets'] if now else None
-        #asteroid_list = context['cookies']['asteroids'] if now else None
-        #comet_list = context['cookies']['comets'] if now else None
-        #utdt = context['utdt_start']
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
-        #print("local dt type: ", type(local_dt), local_dt)
-        #hours = local_dt.hour + local_dt.minute/60. + local_dt.second/3600.
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
-        #culm_at_time = get_opposition_date_at_time(self.object.ra, hours)
-        #context['culmination_at_time'] = culm_at_time
         context['max_altitude'] = get_max_altitude(object, location=location)
         context['observing_date_grid'] = make_observing_date_grid(object)
         context['image_list'] = self.object.images.order_by('order_in_list')
         context['other_library_images'] = self.object.image_library.all() # [1:]
         context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['map_slideshow'] = self.object.map_image_list
+        context['finder_slideshow'] = self.object.finder_image_list
         return context
 
 class PriorityListView(TemplateView):
