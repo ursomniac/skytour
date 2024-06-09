@@ -488,9 +488,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             self.field_view,
             self.finder_chart
         ]:
-            if chart is None:
+            if chart.name == '':
                 continue
             finder_images.append(chart.url)
+        print("FINDER IMAGES: ", finder_images)
         return finder_images
 
 

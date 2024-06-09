@@ -132,9 +132,9 @@
 					{# just remove the controls if there's only one image #}
 					{% if library_slideshow|length > 1 %}
 					<div class="slide-header">
-						<a onclick="plusSlides(-1, 0)"><button>Previous</button></a>
+						<a onclick="plusSlides(-1, 1)"><button>Previous</button></a>
 						&nbsp; | &nbsp; 
-						<a onclick="plusSlides(1, 0)"><button>Next</button></a>
+						<a onclick="plusSlides(1, 1)"><button>Next</button></a>
 						&nbsp; | &nbsp; 
 						Image {{ forloop.counter }} of {{ library_slideshow | length }}
 					</div>
@@ -261,9 +261,9 @@
 			<div class="mySlides finderslide">
 				{% if finder_slideshow|length > 1 %}
 				<div class="slide-header">
-					<a onclick="plusSlides(-1, 2)"><button>Previous</button></a>
+					<a onclick="plusSlides(-1, 0)"><button>Previous</button></a>
 					&nbsp; | &nbsp;
-					<a onclick="plusSlides(1, 2)"><button>Next</button></a>
+					<a onclick="plusSlides(1, 0)"><button>Next</button></a>
 					&nbsp; | &nbsp;
 					Image {{ forloop.counter }} of {{ finder_slideshow|length }}
 				</div>
@@ -296,9 +296,9 @@
 				<div class="mySlides mapslide">
 					{% if map_slideshow|length > 1 %}
 					<div class="slide-header">
-						<a onclick="plusSlides(-1, 1)"><button>Previous</button></a>
+						<a onclick="plusSlides(-1, 2)"><button>Previous</button></a>
 						&nbsp; | &nbsp;
-						<a onclick="plusSlides(1, 1)"><button>Next</button></a>
+						<a onclick="plusSlides(1, 2)"><button>Next</button></a>
 						&nbsp; | &nbsp;
 						Image {{ forloop.counter }} of {{ map_slideshow|length }}
 					</div>
