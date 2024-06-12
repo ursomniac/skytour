@@ -24,6 +24,10 @@
         text-align: center; color: #0cc; font-style: italic;
         padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
     }
+    div.image_caption {
+        text-align: left; background-color: #333; 
+        padding: 4px; font-size: 80%;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -38,6 +42,18 @@
     <select name="catalog_slug">
         <option value="caldwell">Caldwell</option>
         <option value="messier">Messier</option>
+        <option value="a24-101">Astronomy 2024</option>
+        <option value="barnard">Barnard</option>
+        <option value="collinder">Collinder</option>
+        <option value="h400">Herschel 400</option>
+        <option value="index">Index Catalog</option>        
+        <option value="melotte">Melotte</option>
+        <option value="ngc">NGC</option>
+        <option value="sh2">Sharpless</option>
+        <option value="trumpler">Trumpler</option>
+        <option value="bayer">Bayer</option>
+        <option value="flamsteed">Flamsteed</option>
+        <option value="other">Other</option>
     </select>
     <select name="scope">
         <option value="all">Show all Available Objects</option>
@@ -54,6 +70,7 @@
         <a href="{{ object.library_image.image.url }}" 
             target="_blank"><img src="{{ object.library_image.image.url }}" 
             class="library_image"></a>
+        <div class="image_caption">{{ object.library_image.caption }}</div>
         <br>
         <table>
             <tr>
@@ -61,10 +78,13 @@
                     <div class="object_header">
                         <h3>
                             {# deal with Caldwell 14 being two NGC objects #}
-                            {% if catalog == 'Caldwell' and object.cid == 14 %}
+                            {% if catalog_slug == 'caldwell' and object.cid == 14 %}
                                 <a href="{% url 'dso-detail' object.pk %}" target="_blank">C 14</a>
                                 <small> ({{ object.shown_name }})</small>
                             {% else %}
+                                {% if catalog_slug not in no_alias_catalogs and catalog_slug not in no_number_catalogs %}
+                                # {{ object.cid }}:<br>
+                                {% endif %}
                                 <a href="{% url 'dso-detail' object.pk %}" target="_blank">{{ object.shown_name }}</a>
                             {% endif %}
                             &nbsp;<span class="value">in {{ object.constellation.abbreviation }}</span>

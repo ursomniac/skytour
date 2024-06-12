@@ -20,7 +20,7 @@ from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
-from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO
+from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO, YES, NO
 
 class DSOAbstract(Coordinates):
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
@@ -253,7 +253,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def alias_list(self):
         aliases = []
         for alias in self.aliases.all():
-            aliases.append(alias.shown_name)
+            if alias.alias_in_field:
+                aliases.append(f"{alias.shown_name} (for {alias.in_field_dso})")
+            else:
+                aliases.append(alias.shown_name)
         return ', '.join(aliases)
     
     @property
@@ -640,6 +643,17 @@ class DSOAlias(models.Model):
     id_in_catalog = models.CharField (
         _('ID'),
         max_length = 24
+    )
+    alias_in_field = models.PositiveIntegerField (
+        _('Alias in Field'),
+        default = NO,
+        choices = INT_YES_NO,
+        help_text = "Alias is for a field object."
+    )
+    in_field_dso = models.CharField (
+        _('In Field DSO Name'),
+        max_length = 20,
+        null=True, blank=True
     )
     shown_name = models.CharField (
         _('Shown Name'),

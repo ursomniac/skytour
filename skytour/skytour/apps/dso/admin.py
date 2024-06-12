@@ -49,7 +49,7 @@ class DSOImagingChecklistInline(admin.TabularInline):
 class DSOAliasAdmin(admin.TabularInline):
     model = DSOAlias
     extra = 0
-    fields = ['catalog', 'id_in_catalog']
+    fields = ['catalog', 'id_in_catalog', 'alias_in_field', 'in_field_dso']
 
 class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation

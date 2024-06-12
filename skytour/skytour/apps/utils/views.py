@@ -7,13 +7,13 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from itertools import chain, takewhile
 from operator import attrgetter
+from .assemble import assemble_catalog
+from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
 from .utils import filter_dso_test, get_filter_list
 from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
-from .helpers import get_objects_from_cookie
-from .models import ObjectType
 
 def get_list_of_primary_library_images(qs):
     distinct_objects = qs.values('object').distinct()
@@ -279,12 +279,14 @@ class LibraryCatalogView(TemplateView):
         context = super(LibraryCatalogView, self).get_context_data(**kwargs)
         catalog_slug = self.request.GET.get('catalog_slug', 'messier') # or 'caldwell'
         all = self.request.GET.get('scope') == 'all'
+        catalog = Catalog.objects.filter(slug__iexact=catalog_slug).first()
 
         # This only works when the catalog request is the primary ID for the DSO
         # So, only Messier and Caldwell.
-        # TODO: Have it check aliases too. 
         raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug).exclude(priority='None')
         raw_dso_list = raw_dso_list.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
+        for x in raw_dso_list:
+            x.cat_id = f"{catalog.abbreviation} {x.cid}"
         # deal with C14 = NGC 869 and NGC 884 - both are C 14 but they have two separate
         #   records in the DSO table because the primary IDs have to be unique.
         if catalog_slug == 'caldwell': 
@@ -293,13 +295,18 @@ class LibraryCatalogView(TemplateView):
             for e in extra:
                 e.cid = 14
             dso_list = sorted(chain(raw_dso_list, extra), key = attrgetter('cid'))
-        else:
+        elif catalog_slug == 'messier':
             dso_list = raw_dso_list
-                                                      
+        else:
+            dso_list = assemble_catalog(catalog_slug, raw=raw_dso_list)
+
         imaged_dso_list =  [x  for x in dso_list if x.num_library_images > 0]
+        context['no_alias_catalogs'] = ['caldwell', 'messier']
+        context['no_number_catalogs'] = ['other', 'bayer', 'flamsteed']
         context['object_list'] = dso_list if all else imaged_dso_list
         context['object_count'] = len(dso_list)
         context['image_list_count'] = len(imaged_dso_list)
-        context['image_percent'] = 100. * len(imaged_dso_list) / len(dso_list)
-        context['catalog'] = 'Messier' if catalog_slug == 'messier' else 'Caldwell'
+        context['image_percent'] = 0 if len(dso_list) == 0 else 100. * len(imaged_dso_list) / len(dso_list)
+        context['catalog'] = catalog.name
+        context['catalog_slug'] = catalog.slug
         return context

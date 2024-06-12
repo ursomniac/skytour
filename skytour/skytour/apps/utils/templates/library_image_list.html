@@ -22,6 +22,10 @@
         text-align: center; color: #0cc; font-style: italic;
         padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
     }
+    div.image_caption {
+        text-align: left; width: 100%; background-color: #000; 
+        padding: 4px; font-size: 80%;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -86,6 +90,9 @@
     {% if forloop.counter0|divisibleby:3 %}<tr>{% endif %}
     <td width="33%">
         <a href="{{ image.image.url }}" target="_blank"><img src="{{ image.image.url }}" class="library_image"></a>
+        <div class="image_caption">
+            {{ image.caption }}
+        </div>
         <br>
         <table>
             <tr>
