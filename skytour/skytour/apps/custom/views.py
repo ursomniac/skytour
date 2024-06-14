@@ -11,6 +11,7 @@ class HomeObjectsView(CustomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeObjectsView, self).get_context_data(**kwargs)
         is_house = self.request.GET.get('house', 'off') == 'on'
+
         up_dict = find_objects_at_home(
             utdt = context['utdt'],
             offset_hours = context['ut_offset'], 
@@ -20,6 +21,7 @@ class HomeObjectsView(CustomMixin, TemplateView):
             location_id = 1,
             min_dec = context['min_dec'],
             min_alt = context['min_alt'],
+            max_alt = context['max_alt'],
             house = is_house
         )
 
@@ -39,6 +41,11 @@ class CookieObjectsView(CookieMixin, CustomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CookieObjectsView, self).get_context_data(**kwargs)
         is_house = self.request.GET.get('house', 'off') == 'on'
+
+        min_dec = self.request.GET.get('min_dec', -30.)
+        min_alt = self.request.GET.get('min_alt', context['min_alt'])
+        max_alt = self.request.GET.get('max_alt', 80.)
+
         if context['utdt'] is None:
             context['utdt'] = context['cookies']['user_pref']['utdt_start']
         
@@ -51,6 +58,7 @@ class CookieObjectsView(CookieMixin, CustomMixin, TemplateView):
             location = context['cookies']['user_pref']['location'],
             min_dec = context['min_dec'],
             min_alt = context['min_alt'],
+            max_alt = context['max_alt'],
             house = is_house
         )
         dsos = up_dict['dsos']

@@ -23,25 +23,24 @@ def parse_utdt(s):
         print("PARSE ERROR: ", s)
         return None
     
-def is_in_window(location_id, az, alt, min_alt=10., house=False):
+def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False):
     if location_id is None:
         return True
     if location_id != 1:
         return alt >= min_alt
-    print("Location: ", location_id, " Min alt:", min_alt)
-    # check against home
-    if alt > 70.:
-        return True
+
+    if alt > max_alt:
+        return False
     if alt < min_alt:
         return False
     
-    if az < 120.:
-        return False
-    if az >= 120. and az <= 160. and alt < 30.:
-        return False
-    if az >= 160. and az <= 210. and alt < 48.:
-        return False
     if house:
+        if az < 120.:
+            return False
+        if az >= 120. and az <= 160. and alt < 30.:
+            return False
+        if az >= 160. and az <= 210. and alt < 48.:
+            return False
         if az >= 210. and az < 230. and house:
             if alt >= 15. and alt <= 30.:
                 return True
@@ -63,6 +62,7 @@ def find_objects_at_home(
         location_id = 1,
         min_dec = -20.,
         min_alt = 30.,
+        max_alt = 90.,
         house = False
     ):
     """
@@ -101,9 +101,8 @@ def find_objects_at_home(
 
         (az, alt, _) = d.alt_az(loc, utdt)
 
-        if is_in_window(location_id, az, alt, house=house, min_alt=min_alt):
+        if is_in_window(location_id, az, alt, house=house, min_alt=min_alt, max_alt=max_alt):
             candidate_pks.append(d.pk)
-
 
         """
         if alt > 70.: # keep!
@@ -146,6 +145,7 @@ def find_objects_at_cookie(
         location = None,
         min_dec = -30.,
         min_alt = 30.,
+        max_alt = 90.,
         house = False
     ):
 
@@ -178,8 +178,11 @@ def find_objects_at_cookie(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(loc.id, az, alt, house=house, min_alt=min_alt):
-                candidate_pks.append(d.pk)
+        if is_in_window(
+                loc.id, az, alt, house=house, 
+                min_alt=min_alt, max_alt=max_alt
+            ):
+            candidate_pks.append(d.pk)
 
 
     dsos = DSO.objects.filter(pk__in=candidate_pks)

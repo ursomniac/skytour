@@ -112,11 +112,13 @@ summary::-webkit-details-marker {
                     <tr>
                         <td>
                             <label for="min_dec">Min Dec.:&nbsp;</label> 
-                            <input name="min_dec" size=5 {% if dec %}value="{{ dec }}"{% endif %}>
+                            <input name="min_dec" size=5 {% if min_dec %}value="{{ min_dec }}"{% endif %}>
                         </td>
                         <td>
                             <label for="min_alt">Min Alt.:&nbsp;</label> 
-                            <input name="min_alt" size=5 {% if alt %}value="{{ alt }}"{% endif %}>
+                            <input name="min_alt" size=5 {% if min_alt %}value="{{ min_alt }}"{% endif %}>
+                            <label for="max_alt"> Max. Alt:&nbsp;</label>
+                            <input name="max_alt" size=5 {% if max_alt %}value="{{ max_alt }}"{% endif %}>
                         </td>
                     </tr>
                     <tr>
