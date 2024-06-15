@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Calculations: Skytour{% endblock %}
+{% block content %}
+
+<style>
+  h1, h4 { color: #ff6; }
+  label { color: #cc0; font-weight: bold;}
+  label.calchead { font-size: 120%; }
+  table.calcform td { vertical-align: text-top; }
+</style>
+
+<h1>Calculations</h1>
+<b>{{ message }}</b>
+<br>
+
+<form target="" method="GET">
+
+<table class="calcform">
+    <tr>
+        <td>
+            <input name="calc" value="distance" type="radio" {% if ctype == "distance" %} checked{% endif %}>
+            <label for="distance" class="calchead">Distance from Modulus</label>
+            <br><br>
+            <label for="modulus">Modulus:&nbsp;</label>
+            <input name="modulus" {% if modulus %}value="{{ modulus|floatformat:2 }}"{% endif %}>
+            <br><br>
+            {% if mly %}
+            <h2>{{ mly|floatformat:2 }} Mly</h2>
+            {% endif %}
+        </td>
+        <td>
+            <input name="calc" value="angsize" type="radio" {% if ctype == "angsize" %} checked{% endif %}>
+            <label for="angsize" class="calchead">Angular Size</label>
+            <br><br>
+            <label for="d25">d25:&nbsp;</label>
+            <input name="d25" {% if d25 %}value="{{ d25|floatformat:2 }}"{% endif %}>
+            &nbsp;&nbsp;
+            <label for="r25">r25:&nbsp;</label>
+            <input name="r25" {% if r25 %}value="{{ r25|floatformat:2 }}"{% endif %}>
+            <br><br>
+            {% if angsize %}
+            <h2>{{ angsize }}</h2>
+            {% endif %}
+        </td>
+        <td>
+            <input name="calc" value="sqs" type="radio" {% if ctype == "sqs" %} checked{% endif %}>
+            <label for="sqs" class="calchead">SQS to SQM</label>
+            <br><br>
+            <label for="sqs">SQS:&nbsp;</label>
+            <input name="sqs" {% if sqs %}value="{{ sqs|floatformat:2 }}"{% endif %}>
+            <br><br>
+            {% if sqm %}
+            <h2>SQM: {{ sqm|floatformat:2 }} mag</h2>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" class="submit">
+            <input type="submit">
+        </td>
+    </tr>
+</table>
+
+</form>
+{% endblock %}
