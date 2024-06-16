@@ -218,7 +218,6 @@ class ObservingSessionListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionListView, self).get_context_data(**kwargs)
         context['table_id'] = 'session_table'
-        #context['object_list'] = ObservingSession.objects.order_by('-ut_date')
         return context
 
 class ObservingSessionCreateView(CreateView):

@@ -75,6 +75,19 @@ class ObservingSession(models.Model):
                 return f'{sqm_min:.2f} - {sqm_max:.2f}'
         except:
             return None
+        
+    @property
+    def average_effective_bortle(self):
+        conditions = self.observingcircumstances_set.all()
+        sum = 0.
+        n = 0
+        for c in conditions:
+            if c.sqm is not None:
+                sum += c.sqm
+                n += 1
+        average_sqm = None if n == 0 else sum  / (n+0.)
+        aeb = get_effective_bortle(average_sqm)
+        return None if aeb == -1 else aeb
 
     @property
     def sqm_avg(self):

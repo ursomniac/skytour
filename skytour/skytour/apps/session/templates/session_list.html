@@ -14,6 +14,7 @@
         <th>Location</th>
         <th>Seeing</th>
         <th>SQM</th>
+        <th>Avg. Eff. Bortle</th>
         <th># Objects</th>
     </tr>
 </thead>
@@ -23,7 +24,16 @@
         <td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date|date:"Y-m-d" }}</a></td>
         <td>{{ session.location }}</td>
         <td>{% if session.seeing_range != 'None' %}{{ session.seeing_range }}{% endif %}</td>
-        <td>{{ session.sqm_range }}</td>
+        <td>
+            {% if session.sqm_range %}
+            {{ session.sqm_range }}
+            {% endif %}
+        </td>
+        <td>
+            {% if session.average_effective_bortle %}
+            {{ session.average_effective_bortle|floatformat:2 }}
+            {% endif %}
+        </td>
         <td>{{ session.number_objects_observed }}</td>
     </tr>
     {% endfor %}

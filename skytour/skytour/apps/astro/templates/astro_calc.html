@@ -54,9 +54,19 @@
             <h2>SQM: {{ sqm|floatformat:2 }} mag</h2>
             {% endif %}
         </td>
+        <td>
+            <input name="calc" value="bortle" type="radio" {% if ctype == "bortle" %} checked{% endif %}>
+            <label for="bortle" class="calchead">Bortle</label>
+            <br><br>
+            <label for="bsqm">SQM:&nbsp;</label>
+            <input name="bsqm" {% if bsqm %}value="{{ bsqm|floatformat:2 }}"{% endif %}>
+            <br><br>
+            {% if ebortle %}
+            <h2>Eff. Bortle: {{ ebortle|floatformat:2 }}</h2>
+            {% endif %}
     </tr>
     <tr>
-        <td colspan="3" class="submit">
+        <td colspan="4" class="submit">
             <input type="submit">
         </td>
     </tr>
