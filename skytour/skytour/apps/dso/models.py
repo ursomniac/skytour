@@ -1,4 +1,5 @@
 import datetime as dt
+from collections import OrderedDict
 from django.db import models
 from django.db.models import Count, Max, Min, Avg
 from django.utils.html import mark_safe
@@ -14,7 +15,7 @@ from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
-from ..astro.utils import alt_get_small_sep, get_simple_position_angle
+from ..astro.utils import alt_get_small_sep, get_simple_position_angle, get_atlas_sep
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
@@ -488,10 +489,36 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def finder_image_list(self):
+        myra = self.ra
+        mydec = self.dec
         finder_images = []
+        # Primary field charts
         for chart in [
             self.dso_finder_chart_narrow,
             self.dso_finder_chart_wide,
+        ]:
+            if chart.name == '':
+                continue
+            finder_images.append(chart.url)
+        # Deal with atlas plates!
+        atlas_plates = self.atlasplate_set.all()
+        d = {}
+        for plate in atlas_plates:
+            # 1. get distance from center
+            plate_image = plate.atlasplateversion_set.filter(reversed=True, shapes=True).first()
+            if plate_image is not None and plate_image.image.url != '':
+                mydist = get_atlas_sep(myra, mydec, plate.center_ra, plate.center_dec)
+                if mydist > 15.:
+                    continue
+                d[plate.plate_id] = {
+                    'dist': mydist,
+                    'url': plate_image.image.url
+                }
+        od = OrderedDict(sorted(d.items(), key=lambda x: x[1]['dist']))
+        for k in od.keys():
+            finder_images.append(od[k]['url'])
+        # Secondary field charts
+        for chart in [
             self.field_view,
             self.finder_chart
         ]:

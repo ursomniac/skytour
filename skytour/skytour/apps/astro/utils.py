@@ -41,6 +41,17 @@ def get_sep(ra1, dec1, ra2, dec2):
     sep = math.degrees(math.acos(cos_d))
     return sep
 
+def get_atlas_sep(ra1, dec1, ra2, dec2):
+    dra = math.radians((ra1 - ra2) * 15.)
+    d1 = math.radians(dec1)
+    d2 = math.radians(dec2)
+    dt1 = math.sin(d1) * math.sin(d2)
+    dt2 = math.cos(d1) * math.cos(d2) * math.cos(dra)
+    cos_d = dt1 + dt2
+    sep = math.degrees(math.acos(cos_d))
+    return sep
+    
+
 def get_small_sep(ra1, dec1, ra2, dec2):
     """
     for small separations
