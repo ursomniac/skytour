@@ -137,4 +137,5 @@ python manage.py create_dso_finder_charts --dso_list  2831 2832 2833 2834 2835 2
 python manage.py create_dso_finder_charts --dso_list  2841 2842 2843 2844 2845 2846 2847 2848 2849 2850
 python manage.py create_dso_finder_charts --dso_list  2851 2852 2853 2854 2855 2856 2857 2858 2859 2860
 python manage.py create_dso_finder_charts --dso_list  2861 2862 2863 2864 2865 2866 2867 2868 2869
-python manage.py create_dso_finder_charts --dso_list  2870 2871 2872 2873 2874
+python manage.py create_dso_finder_charts --dso_list  2870 2871 2872 2873 2874 2875 2876 2877 2878 2879
+python manage.py create_dso_finder_charts --dso_list  2880 2881 2882 2883 2884 2885 2886 2887 2888 2889

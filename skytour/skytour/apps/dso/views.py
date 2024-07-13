@@ -78,6 +78,8 @@ class DSODetailView(CookieMixin, DetailView):
         context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['map_slideshow'] = self.object.map_image_list
         context['finder_slideshow'] = self.object.finder_image_list
+        context['other_metadata'] = self.object.other_metadata_text
+        context['other_parameters'] = self.object.other_parameters
         return context
 
 class PriorityListView(TemplateView):
@@ -117,22 +119,26 @@ class DSOListDetailView(CookieMixin, DetailView):
         dso_list = self.object.dso.all()
         mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
         center_ra, center_dec, max_dist = get_circle_center(dso_list)
-        fov = max_dist * 1.2
+        print(f"RA: {center_ra} DEC: {center_dec}  MD: {max_dist}")
+        if (max_dist is None or max_dist < 0.001)  and center_ra is not None:
+            max_dist = 5.
+        if max_dist is not None and max_dist > 0.:
+            fov = max_dist * 1.2
 
-        star_mag_limit = get_star_mag_limit(max_dist)
+            star_mag_limit = get_star_mag_limit(max_dist)
 
-        map = plot_dso_list(
-            center_ra, 
-            center_dec,
-            dso_list,
-            fov=fov,
-            star_mag_limit = star_mag_limit,
-            reversed = False,
-            label_size='small',
-            symbol_size=60,
-            title = f"DSO List: {self.object.name}"
-        )
-        context['map'] = map
+            map = plot_dso_list(
+                center_ra, 
+                center_dec,
+                dso_list,
+                fov=fov,
+                star_mag_limit = star_mag_limit,
+                reversed = False,
+                label_size='small',
+                symbol_size=60,
+                title = f"DSO List: {self.object.name}"
+            )
+            context['map'] = map
         context['table_id'] = 'dsos-on-list'
         return context
 

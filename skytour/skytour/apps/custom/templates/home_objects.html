@@ -103,9 +103,10 @@ summary::-webkit-details-marker {
                         <td>
                         <label for="imaged">Imaged:&nbsp;</label> 
                         <select name="imaged">
-                            <option {% if image_option == 'All' %}selected{% endif %}>All</option>
-                            <option {% if image_option == 'No' %}selected{% endif %}>No</option>
-                            <option {% if image_option == 'Yes' %}selected{% endif %}>Yes</option>
+                            <option {% if imaged == 'All' %}selected{% endif %}>All</option>
+                            <option {% if imaged == 'No' %}selected{% endif %}>No</option>
+                            <option {% if imaged == 'Yes' %}selected{% endif %}>Yes</option>
+                            <option {% if imaged == 'Redo' %}selected{% endif %}>Redo</option>
                         </select>
                         </td>
                     </tr>
@@ -124,7 +125,7 @@ summary::-webkit-details-marker {
                     <tr>
                         <td>
                             <label for="house">At Home:&nbsp;</label>
-                            <input name="house" type="checkbox" value="on">
+                            <input name="house" type="checkbox" {% if house %}checked{% endif %}>
                         </td>
                         <td><input type="submit"></td>
                     </tr>
@@ -151,6 +152,7 @@ summary::-webkit-details-marker {
         <th>Surf.</th>
         <th>Size</th>
         <th>Img</th>
+        <th>Gear</th>
         <!--th>Obs</th-->
         <th>Last Obs.</th>
     </tr>
@@ -200,6 +202,9 @@ summary::-webkit-details-marker {
                     <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
                 {% endif %}
             {% endif %}
+        </td>
+        <td>
+            {{ dso.targetdso.mode_set }}
         </td>
         <!-- td>
             <a href="{% url 'priority-detail' dso.priority %}" target="_new">

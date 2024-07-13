@@ -1,6 +1,6 @@
 import datetime as dt
 import pytz
-from .utils import parse_imaged_value, parse_utdt
+from .utils import parse_utdt
     
 class CustomMixin(object):
 
@@ -25,8 +25,7 @@ class CustomMixin(object):
         min_alt = 30. if not haz(alt0) else float(alt0)
         alt1 = self.request.GET.get('max_alt', None)
         max_alt = 90. if not haz(alt1) else float(alt1)
-        image_option = self.request.GET.get('imaged', 'No')
-        imaged = parse_imaged_value(image_option)
+        imaged = self.request.GET.get('imaged', 'Redo')
 
         if utdt:
             context['utdt'] = utdt.strftime('%Y-%m-%d %H:%M:%S')
@@ -34,7 +33,6 @@ class CustomMixin(object):
             context['utdt'] = None
         context['ut_offset'] = ut_offset
         context['pri'] = priority
-        context['image_option'] = image_option
         context['imaged'] = imaged
         context['min_dec'] = min_dec
         context['min_alt'] = min_alt

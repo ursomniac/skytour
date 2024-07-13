@@ -80,6 +80,11 @@ class DSOAbstract(Coordinates):
         choices = DISTANCE_UNIT_CHOICES,
         null = True, blank = True
     )
+    other_parameters = models.TextField (
+        _('Other Params'),
+        null = True, blank = True,
+        help_text = "Age, etc., in x: y; format"
+    )
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
@@ -177,6 +182,24 @@ class DSOAbstract(Coordinates):
         if sv is not None:
             return sv['value'], sv['units']
         return (d, u, 'O')
+    
+    @property
+    def other_metadata_text(self):
+        orig = self.other_parameters
+        if orig is not None and orig.strip() != '':
+            interim = []
+            first = orig.split(';')
+            for item in first:
+                if item is None or item.strip() == '':
+                    continue
+                (label, value) = item.split(':')
+                t = tuple((label.strip(), value.strip()))
+                interim.append(t)
+            second = sorted(interim, key=lambda x: x[0])
+            out = []
+            for item in second:
+                out.append(f"{item[0]}: {item[1]}")
+            return out
     
     class Meta:
         abstract = True

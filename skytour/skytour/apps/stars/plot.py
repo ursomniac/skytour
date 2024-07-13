@@ -156,9 +156,13 @@ def get_skymap(
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)
+    # 20. ring
     if not simple:
         sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
         ax.add_patch(sky_limit)
+        # 45° ring
+        mid_sky = plt.Circle((0,0), 45./90., color="#660", fill=False, ls='--')
+        ax.add_patch(mid_sky)
     # Slew limit
     if slew_limit and not simple:
         slew_limit_circle = plt.Circle((0,0), (90.-slew_limit)/90., color='#660', fill=False, ls='--')

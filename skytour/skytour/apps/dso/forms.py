@@ -27,7 +27,7 @@ class DSOFilterForm(forms.Form):
         choices = PRIORITY_CHOICES,
         initial = [c for c in ('Highest', 'High', 'Medium')]
     )
-    filter_imaged = forms.BooleanField ()
+    filter_imaged = forms.BooleanField (required=False)
     #catalog = forms.ModelMultipleChoiceField (
     #    required = False,
     #    widget = forms.CheckboxSelectMultiple(),

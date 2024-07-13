@@ -1,0 +1,146 @@
+Cr 140        	30.0 Myr
+Cr 185        	50.0 Myr
+Cr 258        	68.0 Myr
+Cr 268        	240.0 Myr
+Cr 292        	500.0 Myr
+Cr 338        	240.0 Myr
+Cr 394        	93.0 Myr
+Cr 463        	270.0 Myr
+
+IC 1369        	290.0 Myr
+IC 2157        	41.0 Myr
+IC 2391        	36.0 Myr
+IC 2488        	160.0 Myr
+IC 2602        	35.0 Myr
+IC 2714        	350.0 Myr
+IC 4665        	38.0 Myr
+IC 4725        	96.0 Myr
+IC 4756        	970.0 Myr
+
+Mel 20        	87.0 Myr
+Mel 22        	86.0 Myr
+Mel 71        	1300.0 Myr
+
+NGC 188        	7500.0 Myr
+NGC 225        	180.0 Myr
+NGC 381        	500.0 Myr
+NGC 581        	26.0 Myr
+NGC 752        	1500.0 Myr
+NGC 1039        	130.0 Myr
+NGC 1220        	91.0 Myr
+NGC 1528        	390.0 Myr
+NGC 1545        	100.0 Myr
+NGC 1582        	260.0 Myr
+NGC 1662        	910.0 Myr
+NGC 1664        	470.0 Myr
+NGC 1750        	410.0 Myr
+NGC 1758        	550.0 Myr
++ NGC 1901        	830.0 Myr
+NGC 1912        	510.0 Myr
+NGC 1960        	26.0 Myr
+NGC 2168        	400.0 Myr
++ NGC 2184        	870.0 Myr
+NGC 2215        	610.0 Myr
+NGC 2251        	310.0 Myr
+NGC 2281        	600.0 Myr
+NGC 2287        	310.0 Myr
+NGC 2302        	75.0 Myr
+NGC 2323        	94.0 Myr
+NGC 2343        	86.0 Myr
+NGC 2353        	80.0 Myr
++ NGC 2358        	500.0 Myr
+NGC 2374        	390.0 Myr
+NGC 2383        	170.0 Myr
+NGC 2396        	78.0 Myr
+NGC 2420        	1900.0 Myr
+NGC 2422        	130.0 Myr
+NGC 2423        	980.0 Myr
++ NGC 2425        	2200.0 Myr
+NGC 2432        	700.0 Myr
+NGC 2447        	560.0 Myr
++ NGC 2448        	99.0 Myr
+NGC 2451A        	44.0 Myr
+NGC 2451B        	39.0 Myr
+NGC 2482        	350.0 Myr
+NGC 2516        	250.0 Myr
+NGC 2527        	830.0 Myr
+NGC 2546        	92.0 Myr
+NGC 2547        	27.0 Myr
+NGC 2567        	350.0 Myr
+NGC 2632        	750.0 Myr
+NGC 2645        	27.0 Myr
+NGC 2658        	500.0 Myr
+NGC 2659        	27.0 Myr
+NGC 2669        	82.0 Myr
+NGC 2682        	3600.0 Myr
+NGC 2818        	920.0 Myr
+NGC 2866        	52.0 Myr
+NGC 2910        	48.0 Myr
+NGC 2925        	150.0 Myr
+NGC 2972        	440.0 Myr
+NGC 3228        	27.0 Myr
+NGC 3330        	59.0 Myr
+NGC 3496        	440.0 Myr
+NGC 3532        	400.0 Myr
+NGC 4103        	27.0 Myr
+NGC 4349        	280.0 Myr
+NGC 4439        	60.0 Myr
+NGC 4463        	35.0 Myr
+NGC 4609        	33.0 Myr
+NGC 4852        	35.0 Myr
+NGC 5138        	43.0 Myr
+NGC 5281        	47.0 Myr
+NGC 5316        	150.0 Myr
+NGC 5460        	130.0 Myr
+NGC 5617        	140.0 Myr
+NGC 5749        	65.0 Myr
+NGC 5822        	890.0 Myr
+NGC 6005        	970.0 Myr
+NGC 6025        	120.0 Myr
+NGC 6087        	110.0 Myr
+NGC 6152        	170.0 Myr
+NGC 6192        	180.0 Myr
+NGC 6204        	38.0 Myr
+NGC 6208        	1700.0 Myr
+NGC 6242        	58.0 Myr
+NGC 6475        	300.0 Myr
+NGC 6494        	480.0 Myr
+NGC 6249        	21.0 Myr
+NGC 6531        	11.0 Myr
+NGC 6633        	770.0 Myr
+NGC 6704        	170.0 Myr
+NGC 6709        	170.0 Myr
+NGC 6716        	86.0 Myr
++ NGC 6728        	590.0 Myr
+NGC 6791        	8500.0 Myr
++ NGC 6793        	570.0 Myr
++ NGC 6800        	350.0 Myr
+NGC 6811        	860.0 Myr
+NGC 6819        	2000.0 Myr
+NGC 6830        	100.0 Myr
+NGC 6866        	780.0 Myr
+NGC 6940        	1000.0 Myr
+f NGC 6997        	550.0 Myr
+NGC 7092        	310.0 Myr
++ NGC 7058        	40.0 Myr
+NGC 7063        	190.0 Myr
+NGC 7209        	340.0 Myr
+NGC 7235        	10.0 Myr
+NGC 7243        	100.0 Myr
+* NGC 7281        	30.0 Myr
+NGC 7296        	84.0 Myr
+NGC 7788        	19.0 Myr
+
+Tr 1        	33.0 Myr
+Tr 2        	92.0 Myr
+Tr 7        	49.0 Myr
+Tr 9        	31.0 Myr
+Tr 10        	55.0 Myr
+Tr 11        	21.0 Myr
+Tr 12        	790.0 Myr
+Tr 18        	46.0 Myr
+Tr 21        	49.0 Myr
+Tr 22        	24.0 Myr
+Tr 26        	360.0 Myr
+Tr 29        	58.0 Myr
+Tr 30        	370.0 Myr

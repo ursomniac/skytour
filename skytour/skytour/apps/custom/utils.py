@@ -2,11 +2,6 @@ import datetime as dt, pytz
 from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 
-def parse_imaged_value(v):
-    if v == 'All':
-        return None
-    return v == 'Yes'
-
 def parse_utdt(s):
     utdt = None
     if s is None or len(s.strip()) == 0:
@@ -23,7 +18,12 @@ def parse_utdt(s):
         print("PARSE ERROR: ", s)
         return None
     
-def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False):
+def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, house_extra=False):
+    min_alts = dict(
+        neighbor = 40.,
+        street = 30.
+    )
+    
     if location_id is None:
         return True
     if location_id != 1:
@@ -37,17 +37,21 @@ def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False):
     if house:
         if az < 120.:
             return False
-        if az >= 120. and az <= 160. and alt < 30.:
+        if az >= 120. and az <= 160. and alt < min_alts['street']:
             return False
-        if az >= 160. and az <= 210. and alt < 48.:
+        if az >= 160. and az <= 210. and alt < min_alts['neighbor']:
             return False
-        if az >= 210. and az < 230. and house:
-            if alt >= 15. and alt <= 30.:
-                return True
-            elif alt >= 30. and alt <= 50.:
+        if house_extra:
+            if az >= 210. and az < 230.:
+                if alt >= 15. and alt <= 30.:
+                    return True
+                elif alt >= 30. and alt <= 50.:
+                    return False
+            elif az > 230.:
                 return False
-        elif az > 230.:
-            return False
+        else:
+            if az >= 210.:
+                return False
     else:
         if az >= 210.:
             return False
@@ -93,10 +97,13 @@ def find_objects_at_home(
             continue
         if d.imaging_checklist_priority < min_priority:
             continue
-        if imaged == True and d.library_image is None:
+        # always include imaged = 'All'
+        if imaged == 'Yes' and d.library_image is None:
             continue
-        elif imaged == False and d.library_image is not None and d.reimage == False:
-            # TODO: What about re-imaging?
+        elif imaged == 'Redo':
+            if d.library_image is not None and not d.reimage:
+                continue
+        elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
@@ -139,7 +146,7 @@ def find_objects_at_home(
 def find_objects_at_cookie(        
         utdt = None, # set to now if none 
         offset_hours = 0., 
-        imaged = False,
+        imaged = 'No',
         min_priority = 0,
         #
         location = None,
@@ -172,18 +179,22 @@ def find_objects_at_cookie(
             continue
         if d.imaging_checklist_priority < min_priority:
             continue
-        if imaged == True and d.library_image is None:
+        # always include imaged = 'All'
+        if imaged == 'Yes' and d.library_image is None:
             continue
-        elif imaged == False and d.library_image is not None and d.reimage == False:
+        elif imaged == 'Redo':
+            if d.library_image is not None and not d.reimage:
+                continue
+        elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-        if is_in_window(
+        in_window = is_in_window(
                 loc.id, az, alt, house=house, 
                 min_alt=min_alt, max_alt=max_alt
-            ):
+            )
+        if in_window:
             candidate_pks.append(d.pk)
-
 
     dsos = DSO.objects.filter(pk__in=candidate_pks)
     for d in dsos:

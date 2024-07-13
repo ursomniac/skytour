@@ -68,7 +68,7 @@ class DSOInFieldInline(admin.StackedInline):
                  ('angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
-                'notes',
+                ('other_parameters', 'notes'),
             ]
         }),
     )
@@ -108,6 +108,7 @@ class DSOAdmin(ObservableObjectAdmin):
         'maj_axis',
         'num_dsos_in_field',
         'img_pri',
+        'reimage',
         'n_obs',
         'obs_date'
     ]
@@ -127,7 +128,7 @@ class DSOAdmin(ObservableObjectAdmin):
         'num_dsos_in_field',
         'metadata'
     ]
-    list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', ]
+    list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', 'catalog' ]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
     fieldsets = (
         (None, {
@@ -155,7 +156,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
-                'notes',
+                ('other_parameters', 'notes'),
             ]
         }),
         ('DSOs in Field', {
@@ -192,6 +193,8 @@ class DSOAdmin(ObservableObjectAdmin):
         DSOImageAdmin,  
         DSOObservationAdmin
     ]
+    actions = ['turn_on_redo', 'turn_off_redo']
+
     save_on_top = True
 
     # This is because stupid properties don't have short_description
@@ -248,6 +251,14 @@ class DSOAdmin(ObservableObjectAdmin):
             form.base_fields[field].widget.can_change_related = False
             form.base_fields[field].widget.can_delete_related = False
         return form
+    
+    @admin.action(description="Add to REDO image")
+    def turn_on_redo(modeladmin, request, queryset):
+        queryset.update(reimage=True)
+
+    @admin.action(description="Remove from REDO List")
+    def turn_off_redo(modeladmin, request, queryset):
+        queryset.update(reimage=False)
 
 @admin.action(description='Show on Plan PDF')
 def add_to_plan(modeladmin, request, queryset):
@@ -454,7 +465,7 @@ class DSOInFieldAdmin(admin.ModelAdmin):
                 ('magnitude', 'angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
-                'notes',
+                ('other_parameters','notes'),
             ]
         }),
         ('Metadata', {

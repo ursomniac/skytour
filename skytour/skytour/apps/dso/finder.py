@@ -308,13 +308,23 @@ def create_dso_finder_chart(
     eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
     circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color=ecolor, fill=False)
     ax.add_patch(circle1)
-    # TODO: ADD Rectangle for eQuinox2!!!
+
+    # eQuinox2 rectangle
     width = 47. * 2.909e-4 / 2.
     height = 34. * 2.909e-4 / 2.
     x0 = -width / 2.
     y0 = -height / 2.
     rect1 = plt.Rectangle((x0, y0), width, height, color='#f00', fill=False)
     ax.add_patch(rect1)
+
+    # Seestar rectangle
+    h1 = 1.29 * 60 * 2.909e-4 / 2.
+    w1 = 0.73 * 60 * 2.909e-4 / 2.
+    x1 = -w1 / 2.
+    y1 = -h1 / 2.
+    rect2 = plt.Rectangle((x1, y1), w1, h1, color='#fa0', fill=False)
+    ax.add_patch(rect2)
+
     times.append((time.perf_counter(), 'Done Mapping'))
 
     ### Finish up

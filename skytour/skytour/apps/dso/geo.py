@@ -46,6 +46,10 @@ def get_midpoint(x1, y1, z1, x2, y2, z2, debug=False):
 
 def get_circle_center(dso_list, strategy='midxyz', debug=False):
     n = len(dso_list)
+    if n < 1: 
+        return None, None, None
+    elif n == 1:
+        return dso_list[0].ra, dso_list[0].dec, None
     min_cos_d = 1.
     dd1 = None
     dd2 = None
