@@ -97,6 +97,7 @@
 							<th>Date</th>
 							<th># Obj</th>
 							<th>SQM</th>
+							<th>Bortle</th>
 							<th>Seeing</th>
 
 						</tr>
@@ -105,6 +106,7 @@
 							<td><a href="{% url 'session-detail' session.pk %}">{{ session.ut_date }}</td>
 							<td>{{ session.number_objects_observed }}</td>
 							<td>{{ session.sqm_avg }}</td>
+							<td>{{ session.bortle_avg }}</td>
 							<td>
 								{% if session.seeing_range != 'None' %}
 								{{ session.seeing_range }}

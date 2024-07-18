@@ -117,6 +117,24 @@ class ObservingSession(models.Model):
                 s += f" ± {rms:.2f}"
             # return s # not sure what to do here since it's a property...
         return None
+    
+    @property
+    def bortle_avg(self):
+        conditions = self.observingcircumstances_set.all()
+        if conditions.count() < 1:
+            return None
+        y = []
+        for c in conditions:
+            if c.sqm and c.use_sqm:
+                y.append(get_effective_bortle(c.sqm))
+        if len(y) > 0:
+            avg = np.average(y)
+            rms = np.std(y)
+            s = f"{avg:.2f}"
+            if rms > 0:
+                s += f" ± {rms:.2f}"
+            return s
+        return None
 
     @property
     def seeing_range(self):

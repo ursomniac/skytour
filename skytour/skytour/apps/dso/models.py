@@ -192,7 +192,11 @@ class DSOAbstract(Coordinates):
             for item in first:
                 if item is None or item.strip() == '':
                     continue
-                (label, value) = item.split(':')
+                if ':' in item:
+                    (label, value) = item.split(':')
+                else: # this shouldn't happen but...
+                    label = item
+                    value = None
                 t = tuple((label.strip(), value.strip()))
                 interim.append(t)
             second = sorted(interim, key=lambda x: x[0])

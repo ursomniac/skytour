@@ -136,17 +136,18 @@ def get_real_time_conditions(target, request, context, debug=False):
         location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
         location = ObservingLocation.objects.filter(pk=location_id[0]).first()
 
-    if dt_base == 'cookie':
-        try:    
-            moon = context['cookies']['moon']
-            moon_ra = moon['apparent']['equ']['ra']
-            moon_dec = moon['apparent']['equ']['dec']
-            (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
-            #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
-            if moon_alt > -10.:
-                lunar_distance = get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float)
-        except:
-            print("Cannot find moon")
+    #if dt_base == 'cookie':
+    try:    
+        moon = context['cookies']['moon']
+        moon_ra = moon['apparent']['equ']['ra']
+        moon_dec = moon['apparent']['equ']['dec']
+        (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
+        #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
+        if moon_alt > -10.:
+            lunar_distance = get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float)
+    except:
+        print("Cannot find moon")
+        
     last = get_last(utdt, location.longitude)
     object_type = target._meta.model_name
     if object_type == 'dso':
