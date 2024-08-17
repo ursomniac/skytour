@@ -159,7 +159,7 @@ def plot_dso(ax, x, y, dso,
         ax.add_patch(c1)
         ax.add_patch(c2)
 
-    elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square']: # UGH - the center point is the lower-left corner
+    elif ft in ['square', 'gray-square', 'circle-square', 'circle-gray-square', 'two-squares']: # UGH - the center point is the lower-left corner
         # angle of the rectangle, rotated by the orientation angle + 180 degrees to get its opposite
         theta = angle + math.degrees(math.atan2(aminor, amajor)) + 180.
         r = math.sqrt(umajor*umajor + uminor*uminor)/2.
@@ -171,6 +171,11 @@ def plot_dso(ax, x, y, dso,
             r2 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=False, color='#000', angle=angle)
             ax.add_patch(r1)
             ax.add_patch(r2)
+        elif ft == 'two-squares':
+            color = '#c0c'
+            r1 = patches.Rectangle((x + dx, y + dy ), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha/2.)
+            r2 = patches.Rectangle((x + dx, y + dy ), umajor, uminor, fill=False, color=color, angle=angle)
+            ax.add_patch(r1)
         else:
             color = '#6f6' if ft == 'circle-square' else '#999'
             r1 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha)

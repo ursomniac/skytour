@@ -65,8 +65,8 @@
             <br>
             {% endif %}
             <br>
-            <label>Azimuth:</label> {{ real_time.azimuth|to_dms }}<br>
             <label>Hour Angle:</label> {{ real_time.hour_angle|to_hms }}<br>
+            <label>Azimuth:</label> {{ real_time.azimuth|to_dms }}<br>
             <label>Altitude:</label> {{ real_time.altitude|to_dms}}<br>
             <label>Max. Alt:</label> {{ real_time.max_alt|to_dms }}<br>
             <label>Air Mass:</label> {{ real_time.sec_z|floatformat:2 }}<br>

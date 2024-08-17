@@ -647,6 +647,18 @@ class DSOInField(DSOAbstract, models.Model):
         return self.shown_name
     
     @property
+    def name_plus_alias(self):
+        main = self.shown_name
+        full = []
+        if self.aliases.count() > 0:
+            for a in self.aliases.all():
+                full.append(f"{a.catalog.abbreviation} {a.id_in_catalog}")
+        if len(full) > 0:
+            alist = ', '.join(full)
+            main += f" ({alist})"
+        return main
+    
+    @property
     def primary_distance(self):
         # angular separation in arcseconds
         sep = alt_get_small_sep(self.ra, self.dec, 
@@ -676,7 +688,7 @@ class DSOInField(DSOAbstract, models.Model):
     def __str__(self):
         return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
 
-class DSOAlias(models.Model):
+class DSOAbstractAlias(models.Model):
     """
     This has all of the aliases for a DSO.
     There's a slight precedence in catalogs:
@@ -689,10 +701,7 @@ class DSOAlias(models.Model):
     Several search functions check aliases, so you SHOULD always reach the
     desired object.
     """
-    object = models.ForeignKey(DSO, 
-        on_delete=models.CASCADE,
-        related_name='aliases'
-    )
+
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
     id_in_catalog = models.CharField (
         _('ID'),
@@ -715,15 +724,35 @@ class DSOAlias(models.Model):
         null = True, blank = True
     )
     class Meta:
+        abstract = True
         verbose_name = 'Alias'
         verbose_name_plural = 'Aliases'
 
     def __str__(self):
         return self.shown_name
+    
+class DSOAlias(DSOAbstractAlias):
+    object = models.ForeignKey(DSO, 
+        on_delete=models.CASCADE,
+        related_name='aliases'
+    )
 
     def save(self, *args, **kwargs):
         self.shown_name = create_shown_name(self)
         super(DSOAlias, self).save(*args, **kwargs)
+
+class DSOInFieldAlias(DSOAbstractAlias):
+    object = models.ForeignKey(DSOInField,
+        on_delete=models.CASCADE,
+        related_name='aliases'
+    )
+
+    def save(self, *args, **kwargs):
+        self.shown_name = create_shown_name(self)
+        super(DSOInFieldAlias, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.catalog.abbreviation} {self.id_in_catalog}"
 
 class DSOImage(LibraryAbstractImage):
     """

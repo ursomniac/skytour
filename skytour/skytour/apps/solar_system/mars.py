@@ -135,7 +135,8 @@ def get_mars_features(utdt, mars):
     features = [
         dict(name='Olympus Mons', longitude=226, latitude=19),
         dict(name='Valles Marineris', longitude=291, latitude=-12),
-        dict(name='Syrtis Major Planum', longitude=70, latitude=8)
+        dict(name='Syrtis Major Planum', longitude=70, latitude=8),
+        dict(name='Solis Lacus', longitude=275, latitude=-26)
     ]
     meridian = mars['omega'] # degrees
     fdicts = []

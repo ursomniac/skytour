@@ -115,17 +115,21 @@ def get_simple_position_angle(ra1, dec1, ra2, dec2):
     pa %= 360.
     return pa
 
-def get_size_from_logd25(x, ratio=0., raw=False):
+def get_size_from_logd25(x, ratio=0., raw=False, both=False):
     """
     LEDA, etc. stores angular size as log d25 in 0.1 arcmins.
     """
     ratio = 0. if ratio is None else ratio
     major = 10. ** (x - 1.)
     minor = major / (10. ** ratio)
+    str = f"{major:.3f}\' x {minor:.3f}\'"
+
     if raw:
         return (major, minor)
+    elif both:
+        return (major, minor, str)
     else:
-        return f"{major:.3f}\' x {minor:.3f}\'"
+        return str
 
 def get_distance_from_modulus(mu, units='mly'):
     mult = {'pc': 1, 'kpc': 1.e-3, 'mpc': 1.e-6, 'ly': 3.26, 'kly': 3.26e-3, 'mly': 3.26e-6}
@@ -140,3 +144,23 @@ def sqs_to_sqm(sqs):
 
 def sqm_to_sqs(sqm):
     return sqm + 8.89
+
+def radec_from_degrees(ra, dec):
+    # ra
+    ra /= 15.
+    rah = int(ra)
+    ra -= rah
+    ra *= 60.
+    ram = int(ra)
+    ras = (ra - ram) * 60.
+    raout = f"{rah}h {ram}m {ras:.3f}s"
+    # dec
+    dsign = '+' if dec >= 0. else '-'
+    d = abs(dec)
+    dd = int(d)
+    d -= dd
+    d *= 60
+    dm = int(d)
+    ds = (d - dm) * 60.
+    decout = f"{dsign}{dd}° {dm}\' {ds:.2f}\""
+    return f"{raout} {decout}"

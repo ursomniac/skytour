@@ -214,10 +214,18 @@ summary::-webkit-details-marker {
         <td>
             {{ dso.number_of_observations }}
             {% if dso.last_observed %}
-                &nbsp;
-                <small>
+            &nbsp;
+            <small>
+            {% if dso.reimage_flag %}
+            <span style="color: #f60;">
+            {% elif dso.need_to_image_flag %}
+            <span style="color: #0cf;">
+            {% else %}
+            <span style="color: #fff;">
+            {% endif %}
                 {{ dso.last_observed|date:'Y-m-d' }}
-                </small>
+            </span>
+            </small>
             {% endif %}
         </td>
     </tr>

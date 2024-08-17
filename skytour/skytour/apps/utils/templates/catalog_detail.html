@@ -145,7 +145,22 @@
             <span style="float: right;">{{ thing.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        <td>{% if thing.last_observed %}{{ thing.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
+        <td>
+            {% if thing.last_observed %}
+                &nbsp;
+                <small>
+                {% if thing.reimage_flag %}
+                    <span style="color: #f60;">
+                {% elif thing.need_to_image_flag %}
+                    <span style="color: #0cf;">
+                {% else %}
+                    <span style="color: #fff;">
+                {% endif %}
+                {{ thing.last_observed|date:'Y-m-d H:i' }} UT
+                </span>
+                </small>
+            {% endif %}
+        </td>
     </tr>
     {% endwith %}
     {% endfor %}

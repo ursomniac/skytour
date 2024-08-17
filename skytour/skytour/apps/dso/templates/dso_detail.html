@@ -125,7 +125,15 @@
 			style="position:relative; max-height: 600px;"
 	>
 		{% if library_slideshow|length > 0 %}
-		<h2 class="short">Library Image(s)</h2>
+		<h2 class="short">
+			Library Image(s)
+			<span style="color: {{ object.color_imaging_checklist_priority}}">
+				{{ object.library_image_priority }}
+			</span>
+			{% if object.reimage %}
+			<span style="color:#0cc"> - REDO </span>
+			{% endif %}
+		</h2>
 			<div class="slideshow-container">
 				{% for item in library_slideshow %}
 				<div class="mySlides libslide">
@@ -250,7 +258,11 @@
 					{% endfor %}
 
 					<br>
-					<h3>Target Viability:</h3>
+					<h3>
+						Target Viability:
+						<a href="/admin/dso_observing/targetdso/{{ dso.pk }}/change" target="_new">
+							<button>Edit</button></a>
+					</h3>
 					{{ object.targetdso.viability_chart }}
 
 				</td>
@@ -340,7 +352,7 @@
 		{% for fdso in object.dsoinfield_set.all %}
 		<tr>
 			<td>
-				{{ fdso.shown_name }}
+				{{ fdso.name_plus_alias }}
 				{% if fdso.nickname %}<span class="nickname"> - {{ fdso.nickname }}</span>{% endif %}
 			</td>
 			<td>{{ fdso.constellation.abbreviation }}</td>

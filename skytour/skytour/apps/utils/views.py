@@ -120,7 +120,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         primary_dsos = DSO.objects.filter(catalog=object)
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
 
-        if object.slug in ['messier', 'caldwell']: # Override pagination
+        if object.slug in ['messier', 'caldwell', 'hickson']: # Override pagination
             self.paginate_by = None
 
         filters = get_filter_list(self.request)

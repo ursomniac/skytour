@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.utils.html import mark_safe
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
+from ..dso_observing.models import TargetDSO, TargetObservingMode
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
     DSOLibraryImage, DSOImagingChecklist, \
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
-    DSOInField
+    DSOInField, DSOInFieldAlias
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -42,14 +43,25 @@ class DSOLibraryImageAdmin(admin.StackedInline):
         }),
     )
 
+class DSOTargetModeInline(admin.StackedInline):
+    model = TargetDSO
+    extra = 0
+    
+
 class DSOImagingChecklistInline(admin.TabularInline):
     model = DSOImagingChecklist
     extra = 0
     
-class DSOAliasAdmin(admin.TabularInline):
+class DSOAliasInline(admin.TabularInline):
     model = DSOAlias
     extra = 0
     fields = ['catalog', 'id_in_catalog', 'alias_in_field', 'in_field_dso']
+
+class DSOInFieldAliasInline(admin.TabularInline):
+    model = DSOInFieldAlias
+    extra = 0
+    fields = ['catalog', 'id_in_catalog', 'alias_in_field', 'in_field_dso']
+
 
 class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation
@@ -186,8 +198,9 @@ class DSOAdmin(ObservableObjectAdmin):
         })
     )
     inlines = [
-        DSOAliasAdmin, 
-        #DSOInFieldInline,
+        DSOAliasInline, 
+        DSOInFieldInline,
+        DSOTargetModeInline,
         DSOImagingChecklistInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  
@@ -477,6 +490,8 @@ class DSOInFieldAdmin(admin.ModelAdmin):
             ]
         })
     )
+    inlines = [DSOInFieldAliasInline]
+
     @admin.display(description='From Primary')
     def distance_to_primary(self, obj):
         return f"{obj.primary_distance:5.1f}\' at {obj.primary_angle:5.1f}°"

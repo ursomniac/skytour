@@ -26,6 +26,7 @@
         </td>
         <td colspan=2>
             <form action="/dso/search" method="GET">
+                <!--input name="newtab" type="checkbox"-->
                 <b>Search DSO:</b>
                 <input name="query" size="5">
                 <input type="submit" value="Search">
@@ -57,8 +58,11 @@
         </td>
         <td>
             <a href="{% url 'link-list' %}">Links</a>
-        <td class="click" colspan=2>
+        <td class="click" colspan=1>
             <a href="{% url 'observing-location-list' %}">Locations</a>
+        </td>
+        <td class="click">
+            <a href="{% url 'astro-calc' %}">Calc</a>
         </td>
         <td colspan="2">
             Lists:
@@ -96,3 +100,15 @@
     </tr>
 </table>
 
+{% comment %}
+{# https://jsfiddle.net/L47NY/7/ #}
+$('#aLink').attr('target','_blank');
+
+$('#chk').click(function(){
+  if($(this).is(':checked')){
+    $('#aLink').attr('target','_self');    
+  }else{
+    $('#aLink').attr('target','_blank');
+  }
+});
+{% endcomment %}

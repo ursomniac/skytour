@@ -283,6 +283,26 @@ class ObservableObject(models.Model):
         if obs is None:
             return None
         return obs.ut_datetime
+    
+    @property
+    def reimage_flag(self):
+        if self.number_of_observations < 1:
+            return False
+        if self.num_library_images < 1:
+            return False
+        x = datetime.datetime(2023, 12, 1, 0, 0, 0)
+        x = x.replace(tzinfo=datetime.timezone.utc)
+        if self.last_observed < x:
+            return True
+        return False
+    
+    @property
+    def need_to_image_flag(self):
+        if self.number_of_observations < 1:
+            return False
+        if self.num_library_images >= 1:
+            return False
+        return True
 
     @property
     def number_of_observations(self):

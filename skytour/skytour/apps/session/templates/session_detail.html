@@ -48,7 +48,7 @@
 </table>
 
 <h2>&nbsp;Observations</h2>
-
+<h3>&nbsp;# Objects: {{ object.number_objects_observed }}</h3>
 <table class="boxed">
 {% for target in object.session_observations %}
 {% with e=target.observation_metadata %}
@@ -82,6 +82,9 @@
     </h3>
     {% endif %}
         <table class="internal">
+            {% if target.object_type == 'DSO' %}
+            <tr><td>Type:</td><td>{{ target.object.object_type }}</td></tr>
+            {% endif %}
             <tr><td>UT:</td><td>{{ target.ut_datetime|date:"Y-m-d H:i" }}</td></tr>
             {% if target.object_type != 'Condition' %}
             <tr><td>Julian Date:</td><td>{{ e.julian_date|floatformat:5 }}</td></tr>
