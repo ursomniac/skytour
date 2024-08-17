@@ -146,7 +146,7 @@ def get_real_time_conditions(target, request, context, debug=False):
         if moon_alt > -10.:
             lunar_distance = get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float)
     except:
-        print("Cannot find moon")
+        print(f"Cannot find moon - dt_base: {dt_base}")
         
     last = get_last(utdt, location.longitude)
     object_type = target._meta.model_name

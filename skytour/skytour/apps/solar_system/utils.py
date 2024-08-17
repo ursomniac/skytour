@@ -123,3 +123,29 @@ def get_relation_to_planet(delta, angsep, diam):
         t = ('Occulted', 'O') if angsep < diam/2. else ('Behind', 'B')
     #print(f'DEL: {delta} SEP: {angsep}, DIAM: {diam} T: {t}')
     return t
+
+def get_asteroid_from_cookie(cookie, object):
+    for a in cookie['asteroids']:
+        if a['name'] == object.full_name:
+            return a
+    return None
+
+def get_comet_from_cookie(cookie, object):
+    for c in cookie['comets']:
+        if c['pk'] == object.pk:
+            return c
+    return None
+
+def get_planet_from_cookie(cookie, object):
+    planet_cookies = cookie['planets']
+    for k in planet_cookies.keys():
+        if planet_cookies[k]['slug'] == object.slug:
+            return planet_cookies[k]
+    return None
+
+def get_position_from_cookie(cookie):
+    try:
+        x = cookie['apparent']['equ']
+        return x['ra'], x['dec']
+    except:
+        return None, None

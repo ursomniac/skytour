@@ -19,7 +19,13 @@ from .plot import (
     plot_track, 
     get_planet_map
 )
-from .utils import get_constellation
+from .utils import (
+    get_constellation, 
+    get_asteroid_from_cookie, 
+    get_comet_from_cookie,
+    get_planet_from_cookie,
+    get_position_from_cookie
+)
 
 class PlanetListView(CookieMixin, ListView):
     model = Planet 
@@ -164,20 +170,15 @@ class AsteroidDetailView(CookieMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
-        asteroid_cookie = context['cookies']['asteroids']
         planets_cookie = context['cookies']['planets']
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
         mag = None
         pdict = None
-        for a in asteroid_cookie: # Get apparent magnitude
-            if a['name'] == object.full_name:
-                pdict = a
-                mag = a['observe']['apparent_magnitude']
-                break
-        context['asteroid'] = pdict
+        asteroid_cookie = get_asteroid_from_cookie(context['cookies'], object)
+        context['asteroid'] = asteroid_cookie
 
-        if pdict: # This is so you COULD go to an page for something not in the cookie
+        if asteroid_cookie: # This is so you COULD go to an page for something not in the cookie
             for c, sc, mm in [
                 ('finder_chart', 2., 11.), 
                 ('large_scale_map', 10., 9.)
@@ -400,6 +401,9 @@ class PlanetRealTimeView(CookieMixin, DetailView):
         object = self.get_object()
         context['object_type'] = 'Planet'
         context['object'] = object
+        planet_cookie = get_planet_from_cookie(context['cookies'], object)
+        if planet_cookie:
+            object.ra_float, object.dec_float = get_position_from_cookie(planet_cookie)
         context = get_real_time_conditions(object, self.request, context)
         return context
     
@@ -412,6 +416,10 @@ class AsteroidRealTimeView(CookieMixin, DetailView):
         object = self.get_object()
         context['object_type'] = 'Asteroid'
         context['object'] = object
+        asteroid_cookie = get_asteroid_from_cookie(context['cookies'], object)
+        # get ra and dec
+        if asteroid_cookie:
+            object.ra_float, object.dec_float = get_position_from_cookie(asteroid_cookie)
         context = get_real_time_conditions(object, self.request, context)
         return context
     
@@ -424,5 +432,8 @@ class CometRealTimeView(CookieMixin, DetailView):
         object = self.get_object()
         context['object_type'] = 'Comet'
         context['object'] = object
-        context = get_real_time_conditions(object, self.request, context, debug=True)
+        comet_cookie = get_comet_from_cookie(context['cookies'], object)
+        if comet_cookie:
+            object.ra_float, object.dec_float = get_position_from_cookie(comet_cookie)
+        context = get_real_time_conditions(object, self.request, context)
         return context
