@@ -130,7 +130,7 @@ def run_member(line, cat_dict, con_dict):
         # Magnitude
         mag = float(fields[8]) if not_empty(fields[8]) else None
         # Surface Brightness
-        sb = (float(fields[9])+8.89) if not_empty(fields[9]) else None
+        sb = (float(fields[9])-8.89) if not_empty(fields[9]) else None
         # Distance
         dist = get_distance_from_modulus(float(fields[10])) if not_empty(fields[10]) else None
 
@@ -178,11 +178,14 @@ def run_member(line, cat_dict, con_dict):
             alias.save()
     return f
 
-def run_all():
+def run_all(debug=False):
     lines = load_data()
     cat_dict = get_catalog_dict()
     con_dict = get_constellation_dict()
     for line in lines[1:]: # skip header line
+        if debug:
+            id = line.split(',')[0]
+            print("Running: {id}")
         field_object = run_member(line, cat_dict, con_dict)
 
 members="""Member ID,ID,,J2000,type,d25,r25,pa,bt,bri25,mod,,,ra,dec,,SB,CI,Orientration,cz,dist

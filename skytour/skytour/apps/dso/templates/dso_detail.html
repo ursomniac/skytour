@@ -348,7 +348,7 @@
 		{% if object.dsoinfield_set.all %}
 		<h3>DSOs in Field ({{ object.dsos_in_field_count }})</h3>
 		<table>
-		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th><th>Mag.</th><th>Size</th><th>Surf.Br.</th></tr>
+		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th><th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th></tr>
 		{% for fdso in object.dsoinfield_set.all %}
 		<tr>
 			<td>
@@ -362,8 +362,9 @@
 			</td>
 			<td>{{ fdso.primary_distance|floatformat:1 }}' at {{ fdso.primary_angle|floatformat:0 }}°</td>
 			<td>{{ fdso.magnitude|floatformat:2 }}</td>
-			<td>{{ fdso.angular_size }}</td>
 			<td>{{ fdso.surface_brightness|floatformat:2 }}</td>
+			<td>{{ fdso.angular_size }}</td>
+			<td>{{ fdso.find_distance.0|floatformat:1 }} {{ fdso.find_distance.1 }}</td>
 		</tr>
 		{% endfor %}
 		</table>

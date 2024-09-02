@@ -52,7 +52,7 @@ def get_atlas_sep(ra1, dec1, ra2, dec2):
     return sep
     
 
-def get_small_sep(ra1, dec1, ra2, dec2):
+def get_small_sep(ra1, dec1, ra2, dec2, hemi=False):
     """
     for small separations
     """
@@ -60,9 +60,13 @@ def get_small_sep(ra1, dec1, ra2, dec2):
     ddec = (dec2 - dec1)
     x = dra * math.cos(math.radians(ddec))
     y = x*x + ddec*ddec
-    return math.sqrt(y)
+    z = math.sqrt(y)
+    if hemi:
+        z = z if z <= 180. else z - 180.
+        z = z if z >= -180. else z + 180.
+    return z
 
-def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', debug=False):
+def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', hemi=False, debug=False):
 
     r1 = math.radians(ra1*15)
     r2 = math.radians(ra2*15)
@@ -91,6 +95,10 @@ def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', debug=False):
         print(f" = {xy:.4f} / {z:.4f} ")
         print(f"d: {dd:.4f} rad = {math.degrees(dd):.4f} deg")
 
+    if hemi:
+        dd0 = dd0 if dd0 <= 180. else dd0 - 180.
+        dd0 = dd0 if dd0 >= -180. else dd0 + 180.
+        
     if unit in ['deg', 'd', '°']:
         return dd0
     elif unit in ['arcmin', 'm', '\'']:

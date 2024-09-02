@@ -198,7 +198,7 @@ CLUSTER_TYPES = ['asterism', 'globular-cluster', 'open-cluster',
 
 class LibraryImageView(TemplateView):
     template_name = 'library_image_list.html'
-    paginate_by = 15
+    paginate_by = 24
 
     def get_context_data(self, **kwargs):
         context = super(LibraryImageView, self).get_context_data(**kwargs)

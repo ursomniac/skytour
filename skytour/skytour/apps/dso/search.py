@@ -1,5 +1,5 @@
 import re
-from .models import DSO, DSOAlias, DSOInField
+from .models import DSO, DSOAlias, DSOInField, DSOInFieldAlias
 
 
 def find_cat_id_in_string(string):
@@ -41,6 +41,16 @@ def search_dso_name(words, name, debug=False):
             print(f"{cat}, {id}: in field found {field_objects}")
         if field_objects.count() > 0:
             return field_objects.first().parent_dso
+        
+        # Maybe it's a DSOInField alias
+        field_aliases = DSOInFieldAlias.objects.filter(
+            catalog__abbreviation__iexact=cat,
+            id_in_catalog__iexact=id
+        )
+        if debug:
+            print(f"{cat}, {id}: aliases found {field_aliases}")
+        if field_aliases.count() > 0:
+            return field_aliases.first().object.parent_dso
         
         # Maybe it's a map label
         idstr = ' '.join(words)

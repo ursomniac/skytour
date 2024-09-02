@@ -178,9 +178,9 @@ class DSOAbstract(Coordinates):
         hv = get_hyperleda_value(self, 'distance')
         sv = get_simbad_value(self, 'distance')
         if hv is not None:
-            return hv['value'], hv['units']
+            return hv['value'], hv['units'], 'L'
         if sv is not None:
-            return sv['value'], sv['units']
+            return sv['value'], sv['units'], 'S'
         return (d, u, 'O')
     
     @property

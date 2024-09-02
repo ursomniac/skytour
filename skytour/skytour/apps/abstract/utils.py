@@ -4,7 +4,7 @@ import pytz
 from ..astro.time import get_last, get_julian_date
 from ..solar_system.position import get_object_metadata
 from ..astro.transform import get_alt_az
-from ..astro.utils import get_small_sep
+from ..astro.utils import alt_get_small_sep
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from ..observe.models import ObservingLocation
@@ -133,8 +133,11 @@ def get_real_time_conditions(target, request, context, debug=False):
     if dt_base == 'cookie':
         location = context['location']
     else:
-        location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
-        location = ObservingLocation.objects.filter(pk=location_id[0]).first()
+        try:
+            location = context['location']
+        except:
+            location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
+            location = ObservingLocation.objects.filter(pk=location_id[0]).first()
 
     #if dt_base == 'cookie':
     try:    
@@ -143,8 +146,8 @@ def get_real_time_conditions(target, request, context, debug=False):
         moon_dec = moon['apparent']['equ']['dec']
         (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
         #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
-        if moon_alt > -10.:
-            lunar_distance = get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float)
+        if moon_alt is not None: # > -10.:
+            lunar_distance = alt_get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float, hemi=True)
     except:
         print(f"Cannot find moon - dt_base: {dt_base}")
         

@@ -95,6 +95,7 @@ def plot_dso(ax, x, y, dso,
 
     default_size = default_size if default_size else min_size
     amajor = dso.major_axis_size if dso.major_axis_size is not None else default_size
+    amajor = amajor if amajor != 0 else default_size
     aminor = amajor if dso.minor_axis_size is None or dso.minor_axis_size == 0 else dso.minor_axis_size
     if debug:
         print(f"DSO: {dso} {dso.major_axis_size} x {dso.minor_axis_size} D: {default_size} 0: {min_size}")
