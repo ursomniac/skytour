@@ -69,7 +69,11 @@
             <label>Azimuth:</label> {{ real_time.azimuth|to_dms }}<br>
             <label>Altitude:</label> {{ real_time.altitude|to_dms}}<br>
             <label>Max. Alt:</label> {{ real_time.max_alt|to_dms }}<br>
-            <label>Air Mass:</label> {{ real_time.sec_z|floatformat:2 }}<br>
+            <label>Air Mass:</label> {{ real_time.sec_z|floatformat:2 }}
+            {% if real_time.best_airmass %}
+                (best: {{ real_time.best_airmass|floatformat:2}})
+            {% endif %}
+            <br>
         </td>
     </tr>
 </table>

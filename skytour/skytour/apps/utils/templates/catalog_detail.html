@@ -17,21 +17,23 @@
 {# header section #}
 <table class="lite">
     <tr>
-        <td width="50%">
+        <td width="25%">
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
         </td>
         <td>
             <table class="lite">
             <tr>
             {% for cat in catalog_list %}
-            {% if forloop.counter0|divisibleby:3 %}<td>{% endif %}
+            {% if forloop.counter0|divisibleby:4 %}<td>{% endif %}
                 <a href="{% url 'catalog-detail' cat.pk %}"><button style="margin: 5px;">{{ cat.name }}</button></a><br/>
-            {% if forloop.counter0|modulus:3 == 2 or forloop.last %}</td>{% endif %}
+            {% if forloop.counter0|modulus:4 == 3 or forloop.last %}</td>{% endif %}
             {% endfor %}
             </tr>
             </table>
         </td>
     </tr>
+</table>
+<table class="lite">
     <tr>
         <td>
             <table class="stats">

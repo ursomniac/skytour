@@ -116,7 +116,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         """
         #context = super(CatalogDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
-        cat_list = Catalog.objects.all()
+        cat_list = Catalog.objects.order_by('slug')
         primary_dsos = DSO.objects.filter(catalog=object)
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
 

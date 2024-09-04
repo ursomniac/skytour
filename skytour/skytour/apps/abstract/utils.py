@@ -1,4 +1,5 @@
 import datetime as dt
+import math
 import pytz
 
 from ..astro.time import get_last, get_julian_date
@@ -164,6 +165,8 @@ def get_real_time_conditions(target, request, context, debug=False):
         apparent_magnitude = target.magnitude
         surface_brightness = target.surface_brightness
         max_alt = target.max_altitude(location=location)
+        best_airmass = 1./math.cos(math.radians(90. - max_alt)) if max_alt > 0. else None
+
     else:
         eph_label =  target.target if object_type == 'planet' else None
         ephem = get_object_metadata(
@@ -178,6 +181,8 @@ def get_real_time_conditions(target, request, context, debug=False):
             dec = ephem['apparent']['equ']['dec']
             max_alt = 90. - location.latitude + dec
             max_alt = 180 - max_alt if max_alt > 90 else max_alt
+            best_airmass = 1./math.cos(math.radians(90. - max_alt)) if max_alt > 0. else None
+
             distance = ephem['apparent']['distance']['au']
             distance_units = 'AU'
             constellation = ephem['observe']['constellation']['abbr']
@@ -220,6 +225,7 @@ def get_real_time_conditions(target, request, context, debug=False):
             sidereal_time = last,
             display_name = target.__str__(),
             max_alt = max_alt,
+            best_airmass = best_airmass,
             lunar_distance = lunar_distance
         )
         context['real_time'] = d
