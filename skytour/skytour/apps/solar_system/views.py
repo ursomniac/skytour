@@ -171,12 +171,12 @@ class AsteroidDetailView(CookieMixin, DetailView):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         planets_cookie = context['cookies']['planets']
+        asteroid_cookie = context['cookies']['asteroids']
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
         mag = None
-        pdict = None
-        asteroid_cookie = get_asteroid_from_cookie(context['cookies'], object)
-        context['asteroid'] = asteroid_cookie
+        pdict = get_asteroid_from_cookie(context['cookies'], object)
+        context['asteroid'] = pdict
 
         if asteroid_cookie: # This is so you COULD go to an page for something not in the cookie
             for c, sc, mm in [

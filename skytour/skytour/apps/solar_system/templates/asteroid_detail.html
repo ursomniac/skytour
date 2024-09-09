@@ -17,7 +17,7 @@
             <h3> Currently in 
                 <a href="{% url 'constellation-detail' asteroid.observe.constellation.abbr|upper %}">{{ asteroid.observe.constellation.name }}</a></h3>
             {% endif %}
-                <table class="lite">
+            <table class="lite">
                 <tr><td>Class:</td><td>{{ object.classification }}</td></tr>
                 <tr><td>Diameter:</td><td>{{ object.diameter }} km</td></tr>
                 <tr><td>Discovered:</td><td>{{ object.year_of_discovery }}<br/><br/></td></tr>
