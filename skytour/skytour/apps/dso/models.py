@@ -324,13 +324,14 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def hour_angle_min_alt(self):
+        ipri = self.imaging_checklist_priority
         alt = 20.
         delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
         # if delta_days is None
         #   if cos_hh < -1 this is circumpolar for alt=20.
         #   if cos_hh >  1 this object never rises or reaches alt=20.
         if delta_days is None:
-            alt = 10.
+            alt = 5. if (ipri is not None and ipri > 0) else 10.
             delta_days, cos_hh = get_delta_hour_for_altitude(self.dec, alt=alt)
         return delta_days, cos_hh, alt
     

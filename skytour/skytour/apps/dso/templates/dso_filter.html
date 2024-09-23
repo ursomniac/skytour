@@ -60,7 +60,12 @@
             {% endcomment %}
             <td>{{ dso.short_ra_dec }}</td>
             <td>{{ dso.object_type }}</td>
-            <td>{{ dso.priority }}</td>
+            <td>
+                {{ dso.priority }}
+                <span style="color: {{ dso.color_imaging_checklist_priority }}">
+                    {{ dso.library_image_priority }}
+                </span>
+            </td>
             <td>{{ dso.magnitude }}</td>
             <td>{{ dso.angular_size }}</td>
             <td>{{ dso.surface_brightness }}</td>

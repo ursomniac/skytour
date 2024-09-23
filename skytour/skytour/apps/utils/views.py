@@ -309,4 +309,5 @@ class LibraryCatalogView(TemplateView):
         context['image_percent'] = 0 if len(dso_list) == 0 else 100. * len(imaged_dso_list) / len(dso_list)
         context['catalog'] = catalog.name
         context['catalog_slug'] = catalog.slug
+        context['use_title'] = f"{ catalog.name } Images"
         return context

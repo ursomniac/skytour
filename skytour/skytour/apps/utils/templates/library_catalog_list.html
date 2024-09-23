@@ -2,12 +2,18 @@
 {% load skytour_filters %}
 {% block styles %}
 {% endblock styles %}
-{% block title %}{{ object.name }} Library Images: Skytour {% endblock %}
+{% block title %}
+    {% if use_title %}{{ use_title }}
+    {% else %}{{ object.name }} Library Images: Skytour
+    {% endif %}
+{% endblock %}
 {% block content %}
 <style>
     table.library_image_list td { font-size: 14px; }
     table.library_image_list td h3 { margin-top: 0; }
-    img.library_image { display: block; width: 100%; max-width: 600px; }
+    div.library_image { height: 400px; }
+    div.dso_metadata { border: 1px solid #cccccc; vertical-align: top; }
+    img.library_image { display: block; width: 100%; max-width: 600px; max-height: 380px;}
     td.library_image_cell { height: 320px; }
     td.topalign { vertical-align: top; }
     span.nickname { color: #ff9; font-style: italic; margin-bottom: 2px; }
@@ -24,6 +30,10 @@
     span.redo_line {
         text-align: center; color: #0cc; font-style: italic;
         padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
+    }
+    span.admin_link {
+        position: relative;
+        float: right;
     }
     div.image_caption {
         text-align: left; background-color: #333; 
@@ -68,74 +78,86 @@
     {% for object in object_list %}
     {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
     <td width="25%" class="library_image_cell">
-        <a href="{{ object.library_image.image.url }}" 
-            target="_blank"><img src="{{ object.library_image.image.url }}" 
-            class="library_image"></a>
-        <div class="image_caption">{{ object.library_image.caption }}</div>
+        <div class="library_image">
+            <a href="{{ object.library_image.image.url }}" 
+                target="_blank"><img src="{{ object.library_image.image.url }}" 
+                class="library_image"></a>
+            <div class="image_caption">{{ object.library_image.caption }}</div>
+        </div>
         <br>
-        <table>
-            <tr>
-                <td  width="55%" class="topalign">
-                    <div class="object_header">
-                        <h3>
-                            {# deal with Caldwell 14 being two NGC objects #}
-                            {% if catalog_slug == 'caldwell' and object.cid == 14 %}
-                                <a href="{% url 'dso-detail' object.pk %}" target="_blank">C 14</a>
-                                <small> ({{ object.shown_name }})</small>
-                            {% else %}
-                                {% if catalog_slug not in no_alias_catalogs and catalog_slug not in no_number_catalogs %}
-                                # {{ object.cid }}:<br>
+        <div class="dso_metadata">
+            <table class="dso_metadata">
+                <tr>
+                    <td width="55%" class="topalign">
+                        <div class="object_header">
+                            <h3>
+                                {# deal with Caldwell 14 being two NGC objects #}
+                                {% if catalog_slug == 'caldwell' and object.cid == 14 %}
+                                    <a href="{% url 'dso-detail' object.pk %}" target="_blank">C 14</a>
+                                    <small> ({{ object.shown_name }})</small>
+                                {% else %}
+                                    {% if catalog_slug not in no_alias_catalogs and catalog_slug not in no_number_catalogs %}
+                                    # {{ object.cid }}:<br>
+                                    {% endif %}
+                                    <a href="{% url 'dso-detail' object.pk %}" target="_blank">{{ object.shown_name }}</a>
                                 {% endif %}
-                                <a href="{% url 'dso-detail' object.pk %}" target="_blank">{{ object.shown_name }}</a>
+                                &nbsp;<span class="value">in {{ object.constellation.abbreviation }}</span>
+                                <span style="color: {{ object.color_imaging_checklist_priority }}">
+                                    &nbsp;{{ object.library_image_priority }}
+                                </span>
+                                {% if object.num_slideshow_images > 1 %}
+                                <span class="special_tagline">SLIDES</span>
+                                {% else %}
+                                &nbsp;
+                                {% endif %}
+                            </h3>
+                            {% if object.nickname %}
+                                <span class="nickname">{{ object.nickname }}</span>
+                            {% else %}<br>
                             {% endif %}
-                            &nbsp;<span class="value">in {{ object.constellation.abbreviation }}</span>
-                            {% if object.num_slideshow_images >  1 %}
-                            <span class="special_tagline">SLIDES</span>
-                            {% else %}
-                            &nbsp;
+                            {% if object.reimage %}
+                            <span class="redo_line">REDO</span>
                             {% endif %}
-                        </h3>
-                        {% if object.nickname %}
-                            <span class="nickname">{{ object.nickname }}</span>
-                        {% endif %}
-                        {% if object.reimage %}
-                        <span class="redo_line">REDO</span>
-                        {% endif %}
-                        <div class="object_type">
-                            {{ object.object_type.short_name }}{% if object.morphological_type %}: 
-                                <span type="value">{% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
-                                {{ object.morphological_type }}</span>
-                        {% endif %}
+                            <div class="object_type">
+                                {{ object.object_type.short_name }}{% if object.morphological_type %}: 
+                                    <span type="value">{% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}
+                                    {{ object.morphological_type }}</span>
+                            {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <br/>
-                    {% if object.library_image %}
-                    <span class="label">Date:</span> 
-                        <span class="value">{{ object.library_image.ut_datetime|date:'d-M-Y h:m' }} UT</span>
+                        <br/>
+                        {% if object.library_image %}
+                        <span class="label">Date:</span> 
+                            <span class="value">{{ object.library_image.ut_datetime|date:'d-M-Y h:m' }} UT</span>
+                            <br>
+                        <span class="label">Exposure:</span> <span class="value">{{ object.library_image.exposure }} min</span>
+                        {% else %}<br/><br/>
+                        {% endif %}
+                    </td>
+                    <td width="45%" class="topalign">
+                        <span class="label">Mag:</span> 
+                            <span class="value">{{ object.magnitude }}</span>
+                            <br/>
+                        <span class="label">Ang. Size:</span> 
+                            <span class="value">{{ object.angular_size }}</span>
+                            <br/>
+                        <span class="label">Surf. Br.:</span> 
+                            <span class="value">{{ object.surface_brightness }}</span>
+                            <br/>
+                        <span class="label">C.I.:</span> 
+                            <span class="value">{{ object.contrast_index }}</span>
+                            <br/>
                         <br>
-                    <span class="label">Exposure:</span> <span class="value">{{ object.library_image.exposure }} min</span>
-                    {% endif %}
-                </td>
-                <td width="45%" class="topalign">
-                    <span class="label">Mag:</span> 
-                        <span class="value">{{ object.magnitude }}</span>
-                        <br/>
-                    <span class="label">Ang. Size:</span> 
-                        <span class="value">{{ object.angular_size }}</span>
-                        <br/>
-                    <span class="label">Surf. Br.:</span> 
-                        <span class="value">{{ object.surface_brightness }}</span>
-                        <br/>
-                    <span class="label">C.I.:</span> 
-                        <span class="value">{{ object.contrast_index }}</span>
-                        <br/>
-                    <br>
-                    <span class="label">Dist:</span> 
-                        <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
-                        <br/>
-                </td>
-            </tr>
-        </table>
+                        <span class="label">Dist:</span> 
+                            <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
+                            <br/>
+                        <span class="admin_link">
+                            <a href="/admin/dso/dso/{{ object.pk }}" target="_new"><button>Admin</button></a>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </td>  
     {% if forloop.counter|divisibleby:4 %}</tr>{% endif %}
     {% endfor %}
