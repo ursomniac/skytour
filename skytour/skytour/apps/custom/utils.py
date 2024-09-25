@@ -27,7 +27,7 @@ def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, hou
     if location_id is None:
         return True
     if location_id != 1:
-        return alt >= min_alt
+        return alt >= min_alt and alt <= max_alt
 
     if alt > max_alt:
         return False
@@ -155,7 +155,6 @@ def find_objects_at_cookie(
         max_alt = 90.,
         house = False
     ):
-
 
     # 1. sort out time
     if utdt is None:

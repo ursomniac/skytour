@@ -79,18 +79,21 @@
         <td>
             {{ dso.number_of_observations }}
             {% if dso.last_observed %}
-            &nbsp;
-            <small>
-            {% if dso.reimage_flag %}
-            <span style="color: #f60;">
-            {% elif dso.need_to_image_flag %}
-            <span style="color: #0cf;">
-            {% else %}
-            <span style="color: #fff;">
-            {% endif %}
-                {{ dso.last_observed|date:'Y-m-d' }}
-            </span>
+                &nbsp;
+                <small>
+                {% if dso.reimage_flag %}
+                <span style="color: #f60;">
+                {% elif dso.need_to_image_flag %}
+                <span style="color: #0cf;">
+                {% else %}
+                <span style="color: #fff;">
+                {% endif %}
+                    {{ dso.last_observed|date:'Y-m-d' }}
+                </span>
             </small>
+            {% endif %}
+            {% if table_id != 'dsos-on-list' and dso.is_on_active_observing_list %}
+                &nbsp; ✅
             {% endif %}
         </td>
     </tr>

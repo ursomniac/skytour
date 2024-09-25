@@ -554,6 +554,14 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
                 continue
             finder_images.append(chart.url)
         return finder_images
+    
+    @property
+    def active_observing_list_count(self):
+        return self.dsolist_set.filter(active_observing_list=YES).count()
+    
+    @property
+    def is_on_active_observing_list(self):
+        return self.active_observing_list_count > 0
 
 
     def max_altitude(self, location=None): # no location = default
@@ -872,6 +880,11 @@ class DSOList(models.Model):
     map_scaling_factor = models.FloatField (
         _('Map Scaling Factor'),
         default = 2.4
+    )
+    active_observing_list = models.PositiveIntegerField (
+        _('Active List'),
+        choices = INT_YES_NO,
+        default = NO
     )
 
     def get_absolute_url(self):

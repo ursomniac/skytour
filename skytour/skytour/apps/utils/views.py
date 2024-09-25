@@ -83,7 +83,7 @@ class ConstellationDetailView(DetailView):
         context = super(ConstellationDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
         context['dso_list'] = DSO.objects.filter(constellation=object)
-        context['table_id'] = 'dso_table'
+        context['table_id'] = 'constellation_dso_table'
         context['hide_constellation'] = True
         context['bright_stars'] = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
         

@@ -283,7 +283,7 @@ def remove_from_plan(modeladmin, request, queryset):
 
 class DSOListAdmin(TagModelAdmin):
     model = DSOList
-    list_display = ['pk', 'name', 'description', 'tag_list', 'show_on_plan', 'dso_count']
+    list_display = ['pk', 'name', 'description', 'tag_list', 'active_observing_list', 'dso_count']
     list_display_links = ['pk', 'name']
     autocomplete_fields = ['dso']
     readonly_fields = ['dso_count']
