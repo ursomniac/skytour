@@ -287,7 +287,7 @@ class DSOListAdmin(TagModelAdmin):
     list_display_links = ['pk', 'name']
     autocomplete_fields = ['dso']
     readonly_fields = ['dso_count']
-    actions = [add_to_plan, remove_from_plan]
+    actions = ['make_list_active', 'make_list_inactive']
     save_on_top = True
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
@@ -295,6 +295,14 @@ class DSOListAdmin(TagModelAdmin):
             kwargs['queryset'] = DSO.objects.exclude(priority='None')
             #kwargs['queryset'] = DSO.objects.all()
         return super(DSOListAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
+    @admin.action(description='Make List Active')
+    def make_list_active(modeladmin, request, queryset):
+        queryset.update(active_observing_list=True)
+
+    @admin.action(description="Make list inactive")
+    def make_list_inactive(modeladmin, request, queryset):
+        queryset.update(active_observing_list=False)
 
 class AtlasPlateVersionInline(admin.StackedInline):
     model = AtlasPlateVersion

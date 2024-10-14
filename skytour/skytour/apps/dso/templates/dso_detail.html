@@ -94,7 +94,10 @@
 				<td width=20% class="description" rowspan=2>
 					<b>Priority:&nbsp;
 						<a href="{% url 'priority-detail' object.priority %}">{{ object.priority }}</a>
-					<br>
+						{% if object.is_on_active_observing_list %} 
+						&nbsp; 🔭 
+					   {% endif %}
+						<br>
 					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
 					<br>
 					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>

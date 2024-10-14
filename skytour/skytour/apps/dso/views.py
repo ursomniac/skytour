@@ -119,7 +119,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         dso_list = self.object.dso.all()
         mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
         center_ra, center_dec, max_dist = get_circle_center(dso_list)
-        print(f"RA: {center_ra} DEC: {center_dec}  MD: {max_dist}")
+        #print(f"RA: {center_ra} DEC: {center_dec}  MD: {max_dist}")
         if (max_dist is None or max_dist < 0.001)  and center_ra is not None:
             max_dist = 5.
         if max_dist is not None and max_dist > 0.:

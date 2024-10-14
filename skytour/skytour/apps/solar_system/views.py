@@ -218,11 +218,14 @@ class CometListView(CookieMixin, ListView):
             comet_list = []
             comet_cookie = context['cookies']['comets']
             for d in comet_cookie: # get the observation history for each comet on the list
-                comet = comets.get(pk=d['pk'])
-                d['n_obs'] = comet.number_of_observations
-                d['num_library_images'] = comet.num_library_images
-                d['last_observed'] = comet.last_observed
-                comet_list.append(d)
+                try:
+                    comet = comets.get(pk=d['pk'])
+                    d['n_obs'] = comet.number_of_observations
+                    d['num_library_images'] = comet.num_library_images
+                    d['last_observed'] = comet.last_observed
+                    comet_list.append(d)
+                except:
+                    continue
         context['comet_list'] = comet_list
         context['table_id'] = 'obs_comet_list'
         return context

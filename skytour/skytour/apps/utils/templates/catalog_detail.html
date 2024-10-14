@@ -12,6 +12,15 @@
         text-align: center;
     }
     span.light_yellow { color: #ff6; font-weight: bold;  }
+    table.flags {border: 0;}
+    table.flags td {
+        width: 1.5em;
+        text-align: center;
+        padding: 2px!important;
+        margin: 0px 2px!important;
+        background-color: #666;
+        border: 0;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -140,12 +149,23 @@
             </span>
         {% endif %}
         </td>
-        <td>
+        <td style="vertical-align: middle;">
             {{ thing.number_of_observations }} 
             / {{ thing.num_library_images }} 
-            {% if thing.library_image_camera %}
-            <span style="float: right;">{{ thing.library_image_camera }}&nbsp;&nbsp;</span>
+
+            {% if thing.library_image_camera or thing.is_on_active_observing_list %}
+            <span style="float: right;">
+                <table class="flags"><tr>
+                <td>
+                {% if thing.library_image_camera %}{{ thing.library_image_camera }}{% else %}&nbsp;{% endif %}
+                </td>
+                <td>
+                {% if thing.is_on_active_observing_list %}🔭{% else %}&nbsp;{% endif %} 
+                </td>
+                </tr></table>
+            </span>
             {% endif %}
+
         </td>
         <td>
             {% if thing.last_observed %}

@@ -57,16 +57,17 @@
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         <td>
-            {% if dso.is_on_imaging_checklist %} 
-                <span hidden>{{ dso.imaging_checklist_priority }}</span>
-                <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
-                    {{ dso.library_image_priority }}
-                </span>
-                {# dso.num_library_images #}
-                {% if dso.library_image_camera %}
-                    <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
-                {% endif %}
+            {% if dso.is_on_imaging_checklist %}
+            <span hidden>{{ dso.imaging_checklist_priority }}</span>
+            <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
+                {{ dso.library_image_priority }}
             {% endif %}
+            </span>
+            {# dso.num_library_images #}
+            {% if dso.library_image_camera %}
+                <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
+            {% endif %}
+
         </td>
         <td>
             <a href="{% url 'priority-detail' dso.priority %}" target="_new">
@@ -93,7 +94,7 @@
             </small>
             {% endif %}
             {% if table_id != 'dsos-on-list' and dso.is_on_active_observing_list %}
-                &nbsp; ✅
+                &nbsp; 🔭
             {% endif %}
         </td>
     </tr>

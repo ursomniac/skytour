@@ -152,6 +152,9 @@
                             <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
                             <br/>
                         <span class="admin_link">
+                            {% if object.is_on_active_observing_list %}
+                            🔭 &nbsp;
+                            {% endif %}
                             <a href="/admin/dso/dso/{{ object.pk }}" target="_new"><button>Admin</button></a>
                         </span>
                     </td>

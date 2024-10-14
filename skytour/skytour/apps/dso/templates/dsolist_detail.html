@@ -6,7 +6,7 @@
 <h2>Description</h2>
 <p> {{ object.description }} </p>
 <p><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></p>
-<h2>DSOs</h2>
+<h2>{{ object.dso.count}} DSOs</h2>
 {% with object.dso.all as dso_list %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}

@@ -102,7 +102,7 @@ class AsteroidAdmin(ObservableObjectAdmin):
 
 class CometAdmin(ObservableObjectAdmin):
     model = Comet
-    list_display = ['pk', 'name','peri_date', 'status', 'n_obs', 'obs_date']
+    list_display = ['pk', 'name','peri_date', 'status', 'override_limits', 'n_obs', 'obs_date']
     list_display_links = ['pk', 'name']
     inlines = [CometLibraryImageAdmin, CometObservationAdmin]
     save_on_top = True
