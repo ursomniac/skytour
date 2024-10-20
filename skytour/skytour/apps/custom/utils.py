@@ -153,7 +153,8 @@ def find_objects_at_cookie(
         min_dec = -30.,
         min_alt = 30.,
         max_alt = 90.,
-        house = False
+        house = False,
+        gear = None
     ):
 
     # 1. sort out time
@@ -186,7 +187,12 @@ def find_objects_at_cookie(
                 continue
         elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
-
+        if gear is not None and len(d.targetdso.mode_list) > 0:
+            gear_set = set(gear)
+            dso_set = set(d.targetdso.mode_list)
+            n_overlap = len(gear_set.intersection(dso_set))
+            if n_overlap < 1:
+                continue
         (az, alt, _) = d.alt_az(loc, utdt)
         in_window = is_in_window(
                 loc.id, az, alt, house=house, 
@@ -203,3 +209,10 @@ def find_objects_at_cookie(
         d.airmass = secz
 
     return dict(utdt=utdt, dsos=dsos, location=loc)
+
+def assemble_gear_list(request):
+    out = ""
+    for g in 'NBSMI':
+        name = f"gear{g}"
+        out += request.GET.get(name, '')
+    return out if len(out) > 0 else None

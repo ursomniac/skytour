@@ -126,7 +126,22 @@ summary::-webkit-details-marker {
                             <label for="house">At Home:&nbsp;</label>
                             <input name="house" type="checkbox" {% if house %}checked{% endif %}>
                         </td>
-                        <td><input type="submit"></td>
+                        <td>
+                            <label for="gear_N">Gear:&nbsp;</label>
+                            <span style="color: #fff;">
+                            <input type="checkbox" name="gearN" value="N" {% if gearN %}checked{% endif %}>Naked Eye
+                            <input type="checkbox" name="gearB" value="B" {% if gearB %}checked{% endif %}>Binoculars
+                            | <span style="font-weight: bold;">Telescopes</span>: 
+                            <input type="checkbox" name="gearS" value="S" {% if gearS %}checked{% endif %}>Small
+                            <input type="checkbox" name="gearM" value="M" {% if gearM %}checked{% endif %}>Medium/Large
+                            <input type="checkbox" name="gearI" value="I" {% if gearI %}checked{% endif %}>Imaging
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit">
+                        </td>
                     </tr>
                 </table>
             </form>

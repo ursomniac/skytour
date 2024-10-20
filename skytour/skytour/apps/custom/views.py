@@ -2,7 +2,7 @@ import datetime as dt, pytz
 from django.views.generic.base import TemplateView
 from ..session.mixins import CookieMixin
 from .mixins import CustomMixin
-from .utils import find_objects_at_home, find_objects_at_cookie, parse_utdt
+from .utils import find_objects_at_home, find_objects_at_cookie, assemble_gear_list
 
 
 class HomeObjectsView(CustomMixin, TemplateView):
@@ -44,6 +44,8 @@ class CookieObjectsView(CookieMixin, CustomMixin, TemplateView):
         is_house = self.request.GET.get('house', 'off') == 'on'
         context['house'] = is_house
 
+        gear = assemble_gear_list(self.request)
+
         if context['utdt'] is None:
             context['utdt'] = context['cookies']['user_pref']['utdt_start']
         
@@ -57,6 +59,7 @@ class CookieObjectsView(CookieMixin, CustomMixin, TemplateView):
             min_dec = context['min_dec'],
             min_alt = context['min_alt'],
             max_alt = context['max_alt'],
+            gear = gear,
             house = is_house
         )
         dsos = up_dict['dsos']
@@ -67,5 +70,8 @@ class CookieObjectsView(CookieMixin, CustomMixin, TemplateView):
         context['dso_count'] = dsos.count()
         context['table_id'] = 'available_table'
         context['location'] = up_dict['location']
+
+        for g in 'NBSMI':
+            context[f'gear{g}'] = g if gear and g in gear else None
 
         return context

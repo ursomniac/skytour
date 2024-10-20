@@ -136,6 +136,9 @@
 			{% if object.reimage %}
 			<span style="color:#0cc"> - REDO </span>
 			{% endif %}
+			{% if object.is_on_active_observing_list %}
+			🔭
+			{% endif %}
 		</h2>
 			<div class="slideshow-container">
 				{% for item in library_slideshow %}
