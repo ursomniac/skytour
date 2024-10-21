@@ -58,61 +58,26 @@
                 <tr>
                     <td class="subnav_ut">
                         <b><span style="color: #ff0;">Reload: &nbsp;</span>
-                    {% comment %}
-                <a href="/stars/skyview?hours=-4">  <button>-4.0h</button></a>
-                <a href="/stars/skyview?hours=-3.5"><button>-3.5h</button></a>
-                <a href="/stars/skyview?hours=-3">  <button>-3.0h</button></a>
-                <a href="/stars/skyview?hours=-2.5"><button>-2.5h</button></a>
-                <a href="/stars/skyview?hours=-2">  <button>-2.0h</button></a>
-                <a href="/stars/skyview?hours=-1.5"><button>-1.5h</button></a>
-                <a href="/stars/skyview?hours=-1">  <button>-1.0h</button></a>
-                <a href="/stars/skyview?hours=-0.5"><button>-0.5h</button></a>&nbsp;&nbsp;
-                <a href="/stars/skyview?hours=0">   <button>+0.0h</button></a>&nbsp;&nbsp;
-                <a href="/stars/skyview?hours=0.5"> <button>+0.5h</button></a>
-                <a href="/stars/skyview?hours=1">   <button>+1.0h</button></a>
-                <a href="/stars/skyview?hours=1.5"> <button>+1.5h</button></a>
-                <a href="/stars/skyview?hours=2">   <button>+2.0h</button></a>
-                <a href="/stars/skyview?hours=2.5"> <button>+2.5h</button></a>
-                <a href="/stars/skyview?hours=3">   <button>+3.0h</button></a>
-                <a href="/stars/skyview?hours=3.5"> <button>+3.5h</button></a>
-                <a href="/stars/skyview?hours=4">   <button>+4.0h</button></a>
-                </td></tr>
-                <tr>
-                    <td>
-                    {% endcomment %}
+
                         <form method="GET" style="display:inline-block;">
                             &nbsp;&nbsp;&nbsp;
                             <label for="hours">Offset: </label>
                             <select name="hours">
-                                <option value="0.0">------</option>
-                                <option value="-5.0">-5.0</option>
-                                <option value="-4.5">-4.5</option>
-                                <option value="-4.0">-4.0</option>
-                                <option value="-3.5">-3.5</option>
-                                <option value="-3.0">-3.0</option>
-                                <option value="-2.5">-2.5</option>
-                                <option value="-2.0">-2.0</option>
-                                <option value="-1.5">-1.5</option>
-                                <option value="-1.0">-1.0</option>
-                                <option value="-0.5">-0.5</option>
-                                <option value="0.0">+0.0</option>
-                                <option value="0.5">+0.5</option>
-                                <option value="1.0">+1.0</option>
-                                <option value="1.5">+1.5</option>
-                                <option value="2.0">+2.0</option>
-                                <option value="2.5">+2.5</option>
-                                <option value="3.0">+3.0</option>
-                                <option value="3.5">+3.5</option>
-                                <option value="4.0">+4.0</option>
-                                <option value="4.5">+4.5</option>
-                                <option value="5.0">+5.0</option>
+                                {% for z in offset_list %}
+                                <option value="{{ z }}" {% if z == hours %}selected{% endif %}>
+                                    {{ z|floatformat:1 }}
+                                </option>
+                                {% endfor %}
                             </select>
                             &nbsp;&nbsp;&nbsp;
                             <label for="house">House: </label>
-                            <input type="checkbox" name="house">
+                            <input type="checkbox" name="house" {% if house %}checked{% endif %}>
                             &nbsp;&nbsp;&nbsp;
                             <label for="simple">Simple: </label>
-                            <input type="checkbox" name="simple">
+                            <input type="checkbox" name="simple" {% if simple %}checked{% endif %}>
+                            &nbsp;&nbsp;&nbsp;
+                            <label for="min_dso_alt">Min DSO Alt: </label>
+                            <input name="min_dso_alt" size=3 {% if min_dso_alt %}value="{{ min_dso_alt }}"{% endif %}>
                             &nbsp;&nbsp;&nbsp;
                             <input type="submit">
                         </form>

@@ -32,7 +32,8 @@ def get_skymap(
         local_time = None,
         title = None,
         hours = 0.,
-        house=False
+        house=False,
+        min_alt = 20.,
     ):
     """
     Create a full map of the sky for a given UTDT and location.
@@ -123,7 +124,8 @@ def get_skymap(
         reversed=reversed,
         dso_list=dso_list,
         ignore_setting = True,
-        product = 'skymap'
+        product = 'skymap',
+        min_alt = min_alt
     )
     times.append((time.perf_counter(), 'DSOs'))
 

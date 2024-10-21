@@ -239,6 +239,9 @@ summary::-webkit-details-marker {
             {% endif %}
                 {{ dso.last_observed|date:'Y-m-d' }}
             </span>
+            {% if dso.is_on_active_observing_list %}
+            🔭
+            {% endif %}
             </small>
             {% endif %}
         </td>

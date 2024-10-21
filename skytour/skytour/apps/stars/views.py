@@ -26,6 +26,12 @@ class SkyView(CookieMixin, TemplateView):
         hours = float(self.request.GET.get('hours', 0))
         simple = bool(self.request.GET.get('simple', False))
         house = bool(self.request.GET.get('house', False))
+        min_dso_alt_form = self.request.GET.get('min_dso_alt', None)
+        if min_dso_alt_form:
+            min_dso_alt_form.strip()
+            min_dso_alt = float(min_dso_alt_form) if len(min_dso_alt_form) != 0 else 20.
+        else:
+            min_dso_alt = 20.
         reversed = context['color_scheme'] == 'dark'
         milky_way = context['show_milky_way'] == 'Yes'
         slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
@@ -37,10 +43,15 @@ class SkyView(CookieMixin, TemplateView):
         comet_list = context['cookies']['comets']
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
+
         context['show_moon'] =  moon is not None and moon['session']['start']['is_up']
         context['shown_datetime'] = utdt_start + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
+        context['house'] = house
+        context['simple'] = simple
+        context['hours'] = hours
+        context['min_dso_alt'] = min_dso_alt
         title = f"Skymap: {context['local_time_str']} - {location.name_for_header}"
 
         if simple:
@@ -68,8 +79,11 @@ class SkyView(CookieMixin, TemplateView):
             hours=hours,
             title=title,
             simple=simple,
-            house=house
+            house=house,
+            min_alt = min_dso_alt
         )
+
+        context['offset_list'] = [z * 0.5 - 5. for z in range(21)]
 
         context['skymap'] = map
         context['interesting'] = interesting
