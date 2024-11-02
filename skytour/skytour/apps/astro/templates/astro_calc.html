@@ -77,7 +77,7 @@
             <input name="time_equ_s" size="2" {% if time_equ_m %}value="{{ time_equ_s }}"{% endif %}>s
 
             {% if eframes_equ %}
-            <h2>Time: {{ eframes_equ }}</h2>
+            <h2>Frames: {{ eframes_equ }}</h2>
             {% endif %}
         </td>
         <td>
@@ -89,7 +89,25 @@
             &nbsp;&nbsp;
             <input name="time_see_s" size="2" {% if time_see_s %}value="{{ time_see_s }}"{% endif %}>s
             {% if eframes_see %}
-            <h2>Time: {{ eframes_see }}</h2>
+            <h2>Frames: {{ eframes_see }}</h2>
+            {% endif %}
+        </td>
+        <td>
+            <input name="calc" value="time_equ" type="radio" {% if ctype == "time_equ" %} checked{% endif %}>
+            <label for="time_equ" class="calchead">Frames Equinox:</label>
+            <br><br>
+            <input name="frames_equ" size="4" {% if frames_equ %}value="{{ frames_equ }}"{% endif %}>
+            {% if frame_time_equ %}
+            <h2>Time: {{ frame_time_equ }}</h2>
+            {% endif %}
+        </td>
+        <td>
+            <input name="calc" value="time_see" type="radio" {% if ctype == "time_see" %} checked{% endif %}>
+            <label for="time_see" class="calchead">Frames Seestar:</label>
+            <br><br>
+            <input name="frames_see" size="4" {% if frames_see %}value="{{ frames_see }}"{% endif %}>
+            {% if frame_time_see %}
+            <h2>Time: {{ frame_time_see }}</h2>
             {% endif %}
         </td>
         </tr>

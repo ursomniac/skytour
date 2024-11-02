@@ -69,6 +69,24 @@ class AstroCalcView(TemplateView):
                     context['time_see_s'] = ts
                     zs = int(ts)
                 context['eframes_see'] = (zm * 60 + zs)/10.
+        elif ctype == 'time_see':
+            frames = self.request.GET.get('frames_see')
+            if haz(frames):
+                frames = int(frames)
+                context['frames_see'] = frames
+                total_time = frames * 10
+                time_min = int(total_time/60.)
+                time_sec = int(total_time % 60)
+                context['frame_time_see'] = f"{time_min}m {time_sec:02d}s"
+        elif ctype == 'time_equ':
+            frames = self.request.GET.get('frames_equ')
+            if haz(frames):
+                frames = int(frames)
+                context['frames_equ'] = int(frames)
+                total_time = frames * 4
+                time_min = int(total_time/60.)
+                time_sec = int(total_time % 60)
+                context['frame_time_equ'] = f"{time_min}m {time_sec:02d}s"
             
         return context
 
