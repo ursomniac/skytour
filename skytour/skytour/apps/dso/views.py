@@ -103,6 +103,14 @@ class PriorityDetailView(TemplateView):
         context['hide_priority'] = True
         context['table_id'] = 'dso_list_by_priority'
         return context
+    
+class DSOListActiveView (TemplateView):
+    template_name = 'dsolist_active.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOListActiveView, self).get_context_data(**kwargs)
+        context['dso_lists'] = DSOList.objects.filter(active_observing_list=True)
+        return context
 
 class DSOListListView(CookieMixin, ListView):
     model = DSOList

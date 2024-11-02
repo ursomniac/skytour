@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}DSO Lists Active Objects: Skytour{% endblock %}
+
+{% block content %}
+<style>
+    a.adminbutton { color: #000; text-decoration: none; }
+</style>
+<h1>Lists of Deep Sky Objects on Active Lists</h1>
+
+{% for mylist in dso_lists %}
+<h2>List: {{ mylist.name }}</h2>
+<h3>{{ mylist.dso.all|length }} DSOs</h3>
+    <button>
+        <a 
+            href="/admin/dso/dsolist/{{ mylist.pk }}/change/" 
+            class="adminbutton"
+            target="_new"
+        >Admin</a>
+    </button>
+<br/>
+{% with mylist.dso.all as dso_list %}
+{% include 'includes/dso_table.html' %}
+{% endwith %}
+<hr>
+{% endfor %}
+{% endblock %}

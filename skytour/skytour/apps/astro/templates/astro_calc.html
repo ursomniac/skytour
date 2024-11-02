@@ -64,6 +64,35 @@
             {% if ebortle %}
             <h2>Eff. Bortle: {{ ebortle|floatformat:2 }}</h2>
             {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input name="calc" value="frames_equ" type="radio" {% if ctype == "frames_equ" %} checked{% endif %}>
+            <label for="frames_equ" class="calchead">Time Equinox:</label>
+            <br><br>
+            <label for="time_equ_m">Equinox:&nbsp;</label>
+            <input name="time_equ_m" size="3" {% if time_equ_m %}value="{{ time_equ_m }}"{% endif %}>m
+            &nbsp;&nbsp;
+            <input name="time_equ_s" size="2" {% if time_equ_m %}value="{{ time_equ_s }}"{% endif %}>s
+
+            {% if eframes_equ %}
+            <h2>Time: {{ eframes_equ }}</h2>
+            {% endif %}
+        </td>
+        <td>
+            <input name="calc" value="frames_see" type="radio" {% if ctype == "frames_see" %} checked{% endif %}>
+            <label for="frames_see" class="calchead">Time Seestar:</label>
+            <br><br>
+            <label for="time_see_m">Seestar:&nbsp;</label>
+            <input name="time_see_m" size="3" {% if time_see_m %}value="{{ time_see_m }}"{% endif %}>m
+            &nbsp;&nbsp;
+            <input name="time_see_s" size="2" {% if time_see_s %}value="{{ time_see_s }}"{% endif %}>s
+            {% if eframes_see %}
+            <h2>Time: {{ eframes_see }}</h2>
+            {% endif %}
+        </td>
+        </tr>
     </tr>
     <tr>
         <td colspan="4" class="submit">

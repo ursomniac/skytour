@@ -33,6 +33,13 @@
                 <li>Latitude: {{ object.location.latitude|floatformat:5 }}</li>
                 <li>Longitude {{ object.location.longitude|floatformat:5 }}</li>
             </ul>
+            {% if object.sqm_avg %}
+            SQM: {{ object.sqm_avg }} ({{ object.sqm_range }})
+            <br>
+            {% endif %}
+            {% if object.bortle_avg %}
+            Bortle: {{ object.bortle_avg }}
+            {% endif %}
         </td>
         <td style='width=30%; text-align: center;'>
             <br><br><br>
@@ -97,7 +104,7 @@
     </td>
     <td>
         {% if target.object_type == 'DSO' %}
-        <h4>Location:</h4>
+        <h4>Location: in {{ target.object.constellation.abbreviation }}</h4>
 
         <table class="internal">
             <tr><td>RA: {{ target.object.ra|to_hm }}</td></tr>

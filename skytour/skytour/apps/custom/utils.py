@@ -35,6 +35,8 @@ def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, hou
         return False
     
     if house:
+        if alt > 70 and alt < max_alt:
+            return True
         if az < 120.:
             return False
         if az >= 120. and az <= 160. and alt < min_alts['street']:
