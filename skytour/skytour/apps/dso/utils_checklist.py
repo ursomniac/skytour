@@ -79,6 +79,8 @@ def get_filter_params(request):
         dec_low = request.GET.get('dec_low', None),
         ra_high = request.GET.get('ra_high', None),
         dec_high = request.GET.get('dec_high', None),
+        imaging_priority = int(request.GET.get('imaging_priority', 0)),
+        redo_flag = request.GET.get('redo_flag', 'any')
     )
     return params
 
@@ -90,6 +92,21 @@ def filter_dsos(params, dsos):
     if params['priority'] > 0:
         use = params['priority']
         good_ids = [x.pk for x in dsos if x.priority_value >= use]
+        dsos = dsos.filter(pk__in=good_ids)
+
+    if params['imaging_priority'] > 0:
+        use = params['imaging_priority']
+        good_ids = []
+        for x in dsos:
+            if x.dsoimagingchecklist_set.count() > 0:
+                ip = x.dsoimagingchecklist_set.first().priority
+                if ip >= use:
+                    good_ids.append(x.pk)
+        dsos = dsos.filter(pk__in=good_ids)
+
+    if params['redo_flag'] != 'any':
+        use = params['redo_flag'] == 'yes'
+        good_ids = [x.pk for x in dsos if x.reimage == use]
         dsos = dsos.filter(pk__in=good_ids)
 
     if params['dso_type'] != 'all':
@@ -130,4 +147,6 @@ def update_dso_filter_context(context, params):
     context['dec_low'] = params['dec_low']
     context['dec_high'] = params['dec_high']
     context['dso_type'] = params['dso_type']
+    context['redo_flag'] = params['redo_flag']
+    context['imaging_priority'] = params['imaging_priority']
     return context

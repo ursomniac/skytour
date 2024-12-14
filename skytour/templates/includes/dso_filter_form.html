@@ -1,11 +1,11 @@
 <form action="" method="GET">
     <table>
         <tr>
-            <td colspan=1><b>Name:</b>&nbsp;
+            <td colspan=2><b>Name:</b>&nbsp;
               <input size=20 name="search_name"
                 {% if search_name %}value="{{ search_name }}"{% endif %}>
             </td>
-            <td colspan=1><b>Constellations:</b> &nbsp; 
+            <td colspan=2><b>Constellations:</b> &nbsp; 
             <input size="20" name="constellation" 
                 {% if constellation %}value="{{ constellation }}"{% endif %}>
             </td>
@@ -41,7 +41,7 @@
                 size=5>w (hours)
             </td>
         </tr>
-        <td colspan=2>
+        <td colspan=3>
             <b>DSO Type:</b>
             <input name="dso_type" type="radio" value="all" 
               {% if dso_type == 'all' %}checked="checked"{% endif %}>All 
@@ -64,7 +64,25 @@
             {% endcomment %}
             
           </td>
-          <td colspan=2>
+          <td colspan=1>
+            <b>Redo: </b>
+            <select name="redo_flag">
+              <option value="any" {% if redo_flag == 'any' %}selected{% endif %}>Any</option>
+              <option value="yes" {% if redo_flag == 'yes' %}selected{% endif %}>Yes</option>
+              <option value="no" {% if redo_flag == 'no' %}selected{% endif %}>No</option>
+            </select>
+          </td>
+          <td colspan=1>
+            <b>Img. Priority: </b>
+            <select name="imaging_priority">
+              <option value=0 {% if imaging_priority == 0 %}selected{% endif %}>All</option>
+              <option value=4 {% if imaging_priority == 4 %}selected{% endif %}>Highest</option>
+              <option value=3 {% if imaging_priority == 3 %}selected{% endif %}>High</option>
+              <option value=2 {% if imaging_priority == 2 %}selected{% endif %}>Medium</option>
+              <option value=1 {% if imaging_priority == 1 %}selected{% endif %}>Low</option>
+            </select>
+          </td>
+          <td colspan=1>
             <b>Subset: </b>
             <input name="imaged" value="imaged" type="radio" 
                 {% if imaged == 'imaged' %}checked="checked"{% endif %}>Has Images

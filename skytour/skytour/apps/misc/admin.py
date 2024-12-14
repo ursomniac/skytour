@@ -39,6 +39,7 @@ class CalendarAdmin(admin.ModelAdmin):
         }),
     )
     #search_fields = ['title',]
+    save_on_top = True
 
 class WebsiteAdmin(admin.ModelAdmin):
     model = Website

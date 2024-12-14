@@ -69,7 +69,8 @@ def find_objects_at_home(
         min_dec = -20.,
         min_alt = 30.,
         max_alt = 90.,
-        house = False
+        house = False,
+        scheduled = False
     ):
     """
     This really only works for my back yard, but the logic would pertain for anyone who 
@@ -106,6 +107,9 @@ def find_objects_at_home(
             if d.library_image is not None and not d.reimage:
                 continue
         elif imaged == 'No' and d.library_image is not None and d.reimage == False:
+            continue
+        # on active observing list
+        if scheduled and d.active_observing_list_count == 0:
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
@@ -156,7 +160,8 @@ def find_objects_at_cookie(
         min_alt = 30.,
         max_alt = 90.,
         house = False,
-        gear = None
+        gear = None,
+        scheduled = False
     ):
 
     # 1. sort out time
@@ -195,6 +200,8 @@ def find_objects_at_cookie(
             n_overlap = len(gear_set.intersection(dso_set))
             if n_overlap < 1:
                 continue
+        if scheduled and d.active_observing_list_count == 0:
+            continue
         (az, alt, _) = d.alt_az(loc, utdt)
         in_window = is_in_window(
                 loc.id, az, alt, house=house, 

@@ -125,6 +125,9 @@ summary::-webkit-details-marker {
                         <td>
                             <label for="house">At Home:&nbsp;</label>
                             <input name="house" type="checkbox" {% if house %}checked{% endif %}>
+                            &nbsp;&nbsp;
+                            <label for="scheduled">On List:&nbsp;</label>
+                            <input name="scheduled" type="checkbox" {% if scheduled %}checked{% endif %}>
                         </td>
                         <td>
                             <label for="gear_N">Gear:&nbsp;</label>
@@ -228,22 +231,22 @@ summary::-webkit-details-marker {
         <td>
             {{ dso.number_of_observations }}
             {% if dso.last_observed %}
-            &nbsp;
-            <small>
-            {% if dso.reimage_flag %}
-            <span style="color: #f60;">
-            {% elif dso.need_to_image_flag %}
-            <span style="color: #0cf;">
-            {% else %}
-            <span style="color: #fff;">
-            {% endif %}
+                &nbsp;
+                <small>
+                {% if dso.reimage_flag %}
+                <span style="color: #f60;">
+                {% elif dso.need_to_image_flag %}
+                <span style="color: #0cf;">
+                {% else %}
+                <span style="color: #fff;">
+                {% endif %}
                 {{ dso.last_observed|date:'Y-m-d' }}
-            </span>
+                </span>
+            {% endif %}
             {% if dso.is_on_active_observing_list %}
             🔭
             {% endif %}
             </small>
-            {% endif %}
         </td>
     </tr>
 {% endfor %}

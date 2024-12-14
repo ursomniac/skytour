@@ -61,6 +61,11 @@
 		background: rgba(0, 0, 0, 0.3);
 		height: 35px;
 	}
+	ul.nobullet { 
+		list-style-type: none; /* Remove bullets */
+		padding: 0; /* Remove padding */
+		margin: 0; /* Remove margins */
+	}
 </style>
 {% endblock styles %}
 
@@ -270,7 +275,20 @@
 							<button>Edit</button></a>
 					</h3>
 					{{ object.targetdso.viability_chart }}
-
+					{% if object.dsolist_set.count > 0 %}
+					<br>
+					<h3>On Observing Lists</h3>
+					<ul class="nobullet">
+						{% for ol in object.dsolist_set.all %}
+						<li>
+							<a href="{% url 'dsolist-detail' ol.pk %}" target="_new">{{ ol.name }}</a>
+							&nbsp;
+							<a href="/admin/dso/dsolist/{{ ol.pk }}/change/" target="_new">
+								<button>Edit List</button></a>
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 				</td>
 			</tr>
 		</table>
@@ -390,6 +408,8 @@
 							<span style="color: {{ x.color_imaging_checklist_priority }}">{{ x.library_image_priority }}</span>
 						{% endif %}
 						{% if x.library_image_camera %}{{ x.library_image_camera }}{% endif %}
+						{% if x.is_on_active_observing_list %}🔭{% endif %}
+						{% if x.reimage %}↪️{% endif %}
 						)
 						{% if not forloop.last %}, {% endif %}
 					{% endif %}
@@ -418,28 +438,6 @@
 	</td>
 </tr>
 </table>
-
-{% comment %}
-<table class="lite">
-<tr>
-	<td id="close_up" width=50%>
-		<h3>Close-Up Finder Chart:</h3>
-		{% if object.dso_finder_chart_narrow %}
-		<img src = "{{ object.dso_finder_chart_narrow.url }}" width="100%">
-		{% else %}<p>No Narrow finder (yet)</p>
-		{% endif %}
-	</td>
-	<td id="field_view" colspan=3 style="width:50%;">
-		<h3>DSS Field View:</h3>
-		{% if object.field_view %}
-		<img src="{{ object.field_view.url }}" width=100% style="display:block;">
-		{% else %}
-		<br>(No field view.)
-		{% endif %}
-	</td>
-</tr>
-<table>
-{% endcomment %}
 
 {% if image_list.0 %}
 <table>
