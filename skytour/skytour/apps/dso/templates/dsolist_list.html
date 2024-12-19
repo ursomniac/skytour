@@ -16,6 +16,7 @@
         <th># DSOs</th>
         <th>RA Range</th>
         <th>Dec Range</th>
+        <th>Active</th>
         <th>Admin</th>
     </tr>
 {% for object in object_list %}
@@ -26,6 +27,13 @@
         <td>{{ object.dso_count }}</td>
         <td>{{ object.ra_range.0|to_hm:0 }} to {{ object.ra_range.1|to_hm:0 }}</td>
         <td>{{ object.dec_range.0|to_dm:0 }} to {{ object.dec_range.1|to_dm:0 }}</td>
+        <td>
+            {% if object.active_observing_list %}
+            ✅
+            {% else %}
+            ❌
+            {% endif %}
+        </td>
         <td><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></td>
     </tr>
 {% endfor %}

@@ -20,8 +20,8 @@ def parse_utdt(s):
     
 def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, house_extra=False):
     min_alts = dict(
-        neighbor = 40.,
-        street = 30.
+        neighbor = 40., # above neighbor roof
+        street = 30. # in SE hole
     )
     
     if location_id is None:
@@ -34,29 +34,29 @@ def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, hou
     if alt < min_alt:
         return False
     
-    if house:
-        if alt > 70 and alt < max_alt:
+    if house: # observing from backyard
+        if alt > 70 and alt < max_alt: # overhead-ish
             return True
-        if az < 120.:
+        if az < 120.: # house in the way
             return False
-        if az >= 120. and az <= 160. and alt < min_alts['street']:
+        if az >= 120. and az <= 160. and alt < min_alts['street']: # too low
             return False
-        if az >= 160. and az <= 210. and alt < min_alts['neighbor']:
+        if az >= 160. and az <= 210. and alt < min_alts['neighbor']: # behind neighbor
             return False
-        if house_extra:
+        if house_extra: # can we use the SW hole?
             if az >= 210. and az < 230.:
-                if alt >= 15. and alt <= 30.:
+                if alt >= 15. and alt <= 30.: # in hole
                     return True
-                elif alt >= 30. and alt <= 50.:
+                elif alt >= 30. and alt <= 50.: # tree
                     return False
-            elif az > 230.:
+            elif az > 230.: # in trees
                 return False
         else:
-            if az >= 210.:
+            if az >= 210.: # in trees
                 return False
-    else:
-        if az >= 210.:
-            return False
+    #else:
+    #    if az >= 210.:
+    #        return False
     return True
     
 def find_objects_at_home(
@@ -94,7 +94,6 @@ def find_objects_at_home(
     #candidates = []
     candidate_pks = []
     for d in dsos:
-
         # Filter based on existing images
         if d.imaging_checklist_priority is None:
             continue
@@ -113,8 +112,9 @@ def find_objects_at_home(
             continue
 
         (az, alt, _) = d.alt_az(loc, utdt)
-
-        if is_in_window(location_id, az, alt, house=house, min_alt=min_alt, max_alt=max_alt):
+        use = is_in_window(location_id, az, alt, 
+                house=house, min_alt=min_alt, max_alt=max_alt, house_extra=house)
+        if use:
             candidate_pks.append(d.pk)
 
         """
@@ -164,6 +164,8 @@ def find_objects_at_cookie(
         scheduled = False
     ):
 
+    print("GOT HERE AT COOKIE")
+    print("MIN DEC: ", min_dec, " HOUSE: ", house)
     # 1. sort out time
     if utdt is None:
         utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
@@ -181,6 +183,7 @@ def find_objects_at_cookie(
 
     candidate_pks = []
     for d in dsos:
+        
         # Filter based on existing images
         if d.imaging_checklist_priority is None:
             continue
@@ -205,7 +208,7 @@ def find_objects_at_cookie(
         (az, alt, _) = d.alt_az(loc, utdt)
         in_window = is_in_window(
                 loc.id, az, alt, house=house, 
-                min_alt=min_alt, max_alt=max_alt
+                min_alt=min_alt, max_alt=max_alt, house_extra=house
             )
         if in_window:
             candidate_pks.append(d.pk)
