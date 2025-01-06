@@ -463,11 +463,18 @@ def map_dsos(ax, earth, t, projection,
         dso_color = 'c' if reversed else 'b'
     for um in unique_markers:
         mask = mmm == um # note = then == !
-        ax.scatter(
-            xxx[mask], yyy[mask],
-            s=symbol_size, edgecolor=dso_color, facecolors='none',
-            marker=um, alpha=alpha
-        )
+        if um != 'x':
+            ax.scatter(
+                xxx[mask], yyy[mask],
+                s=symbol_size, edgecolor=dso_color, facecolors='none',
+                marker=um, alpha=alpha
+            )
+        else:
+            ax.scatter(
+                xxx[mask], yyy[mask],
+                s=symbol_size, facecolors='none',
+                marker=um, alpha=alpha
+            )
     # Add labels
     if colors is None:
         if product != 'atlas':

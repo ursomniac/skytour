@@ -45,6 +45,9 @@
 <table class="lite">
     <tr>
         <td>
+            {% if object.number_objects %}
+            <h3>Total: {{ object.number_objects }} in catalog</h3>
+            {% endif %}
             <table class="stats">
                 {% with object.observing_stats as x %}
                 <tr>
@@ -86,6 +89,10 @@
 
                 &nbsp;&nbsp;<input type="submit" value="Filter">
             </form>
+            {% if object.notes %}
+            <h3>Notes:</h3>
+                <br>{{ object.notes }}
+            {% endif %}
         </td>
     </tr>
 </table>
@@ -121,9 +128,17 @@
             </a>
         </td>
         <td>
-            {% if thing.nickname %}
-                <span style="color: #ff6;">{{ thing.nickname }}</span>
+            {% if cat_object.in_field %}
+                {{ cat_object.field_dso }}
                 <br>
+            {% else %}
+                {% if thing.nickname %}
+                    <span style="color: #ff6;">{{ thing.nickname }}</span>
+                    <br>
+                {% endif %}
+            {% endif %}
+            {% if cat_object.in_field %}
+            <span style="color: #6f6;">In Field: </span>
             {% endif %}
             {% if thing.catalog != object %}
                 <i><small>{{ thing.shown_name }}</small></i>

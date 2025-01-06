@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
+from ..abstract.vocabs import YES_NO, NO
 from ..plotting.vocabs import MAP_SYMBOL_TYPES
 
 class AbstractCatalog(models.Model):
@@ -20,9 +21,23 @@ class AbstractCatalog(models.Model):
         _('Use Abbr in List'),
         default = True
     )
+    expected_complete = models.PositiveIntegerField (
+        _('Expected Completed'),
+        choices = YES_NO,
+        default = NO
+    )
     description = models.TextField (
         _('Description'),
         null=True, blank=True
+    )
+    number_objects = models.PositiveIntegerField (
+        _('Number of Objects'),
+        null = True, blank = True,
+        help_text = 'Might include missing/invalid objects'
+    )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
     )
 
     class Meta:
@@ -79,6 +94,7 @@ class Catalog(AbstractCatalog):
             if dso.number_of_observations > 0:
                 n_obs += 1
             if dso.priority != 'None':
+                # TODO: make this a method/property on DSO!
                 n_available += 1
             n_imaged += 1 if dso.num_library_images > 0 else 0
         

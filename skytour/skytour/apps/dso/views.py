@@ -80,6 +80,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['finder_slideshow'] = self.object.finder_image_list
         context['other_metadata'] = self.object.other_metadata_text
         context['other_parameters'] = self.object.other_parameters
+        context['active_dsolists'] = self.object.dsolist_set.filter(active_observing_list=True)
         return context
 
 class PriorityListView(TemplateView):
@@ -271,7 +272,7 @@ class AtlasPlateDetailView(CookieMixin, DetailView):
         context['table_id'] = f"atlas_dso_{obj.plate_id}"
         context['selected_atlas_plate'] = select_atlas_plate(obj.plate_images, context)
         context['other_atlas_plates'] = select_other_atlas_plates(obj.plate_images, context['selected_atlas_plate'])
-        neighbors = find_neighbors(obj.center_ra, obj.center_dec)
+        neighbors = find_neighbors(obj.center_ra, obj.center_dec, limit=30.)
         context['assembled_neighbors'] = assemble_neighbors(neighbors)
         return context
 

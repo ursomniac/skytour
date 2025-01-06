@@ -474,11 +474,13 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             admin_url = f"/admin/dso/dsoinfield/{f.pk}/change"
             
             out += '<tr>'
-            out += f"<td>{ f.shown_name }"
+            if f.aliases.count() > 0:
+                out += f"<td>{ f.name_plus_alias }"
+            else:
+                out += f"<td>{ f.shown_name }"
             if f.nickname:
                 out += f" <span style\"font-size: 80%; font-style: italic; color: #ff6;\">{ f.nickname }</span>"
-            out += f"</td>"
-
+            out += "</td>"
             out += f"<td>{ f.object_type.short_name }"
             if f.morphological_type:
                 out += f" ({ f.morphological_type })"
@@ -692,7 +694,8 @@ class DSOInField(DSOAbstract, models.Model):
     class Meta:
         verbose_name = 'Deep Sky Object in Field'
         verbose_name_plural = 'Deep Sky Objects in Field'
-        ordering = ['ra', 'dec']
+        #ordering = ['ra', 'dec']
+        ordering = ['-pk']
 
     def __str__(self):
         return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
@@ -747,7 +750,7 @@ class DSOAlias(DSOAbstractAlias):
     )
 
     def save(self, *args, **kwargs):
-        self.shown_name = create_shown_name(self)
+        self.shown_name = create_shown_name(self, use_con=False)
         super(DSOAlias, self).save(*args, **kwargs)
 
 class DSOInFieldAlias(DSOAbstractAlias):
@@ -757,7 +760,7 @@ class DSOInFieldAlias(DSOAbstractAlias):
     )
 
     def save(self, *args, **kwargs):
-        self.shown_name = create_shown_name(self)
+        self.shown_name = create_shown_name(self, use_con=False)
         super(DSOInFieldAlias, self).save(*args, **kwargs)
 
     def __str__(self):

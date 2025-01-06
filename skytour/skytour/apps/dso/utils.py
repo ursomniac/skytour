@@ -1,6 +1,6 @@
 from ..site_parameter.helpers import find_site_parameter
 
-def create_shown_name(obj):
+def create_shown_name(obj, use_con=True):
     """
     This takes the main name, or if there's a Bayer/Flamsteed designation, 
     assemble a string from that.
@@ -11,19 +11,27 @@ def create_shown_name(obj):
                 return "{} {}".format(obj.id_in_catalog, obj.object.constellation.abbreviation)
             except:
                 pass
-    if obj.catalog.name == 'Sharpless':
+    elif obj.catalog.name == 'Sharpless':
         return f"{obj.catalog.abbreviation}-{obj.id_in_catalog}"
-    if obj.catalog.name == 'Var':
+    elif obj.catalog.name == 'Var':
         try:
             return f"{obj.id_in_catalog} {obj.constellation.abbreviation}"
         except:
             pass
-    if obj.catalog.use_abbr:
-        things.append(obj.catalog.abbreviation)
+    elif obj.catalog.name == '(other)':
         things.append(obj.id_in_catalog)
+        if use_con:
+            things.append(obj.constellation.abbreviation)
     else:
-        things.append(obj.id_in_catalog)
-        things.append(obj.constellation.abbreviation)
+        if obj.catalog.use_abbr:
+            things.append(obj.catalog.abbreviation)
+            things.append(obj.id_in_catalog)
+        else:
+            things.append(obj.id_in_catalog)
+            try:
+                things.append(obj.constellation.abbreviation)
+            except:
+                pass
     return ' '.join(things)
 
 def select_atlas_plate(plates, context):

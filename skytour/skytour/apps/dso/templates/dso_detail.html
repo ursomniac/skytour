@@ -275,19 +275,19 @@
 							<button>Edit</button></a>
 					</h3>
 					{{ object.targetdso.viability_chart }}
-					{% if object.dsolist_set.count > 0 %}
-					<br>
-					<h3>On Observing Lists</h3>
-					<ul class="nobullet">
-						{% for ol in object.dsolist_set.all %}
-						<li>
-							<a href="{% url 'dsolist-detail' ol.pk %}" target="_new">{{ ol.name }}</a>
-							&nbsp;
-							<a href="/admin/dso/dsolist/{{ ol.pk }}/change/" target="_new">
-								<button>Edit List</button></a>
-						</li>
-						{% endfor %}
-					</ul>
+					{% if active_dsolists.count > 0 %}
+						<br>
+						<h3>On Observing Lists</h3>
+						<ul class="nobullet">
+							{% for ol in active_dsolists %}
+							<li>
+								<a href="{% url 'dsolist-detail' ol.pk %}" target="_new">{{ ol.name }}</a>
+								&nbsp;
+								<a href="/admin/dso/dsolist/{{ ol.pk }}/change/" target="_new">
+									<button>Edit List</button></a>
+							</li>
+							{% endfor %}
+						</ul>
 					{% endif %}
 				</td>
 			</tr>

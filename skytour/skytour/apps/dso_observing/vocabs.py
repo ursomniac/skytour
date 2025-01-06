@@ -17,7 +17,7 @@ MODE_VIABILITY_CHOICES = [
     (0, 'Not Viable'),          # typically set as a redetermination
     (1, 'Unlikely Viable'),     # experienced observers, great conditions, with luck
     (2, 'Extreme Difficulty'),  # experienced observers, great conditions
-    (3, '(Very) Difficult'),      # experienced observers
+    (3, '(Very) Difficult'),    # experienced observers
     (4, 'Challenging'),         # generally requires great conditions
     (5, 'Requires Patience'),   # feasible but not particularly easy most of the time
     (6, 'Generally Visible'),   # feasible under decent conditions
@@ -42,7 +42,7 @@ VIABILITY_FOREGROUND_COLORS = [
 ]
 
 MODE_PRIORITY_CHOICES = [
-    (0, 'None'),
+    (0, 'Lowest'),
     (1, 'Low'),
     (2, 'Medium'),
     (3, 'High'),

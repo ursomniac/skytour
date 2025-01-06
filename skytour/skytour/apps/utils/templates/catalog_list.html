@@ -5,9 +5,10 @@
 <table id="{{ table_id }}">
 <thead>
     <tr class="table-header">
-        <th width="25%">Name</th>
-        <th width="15%">Abbr.</th>
-        <th wifth="10%">Count</th>
+        <th width="20%">Name</th>
+        <th width="10%">Abbr.</th>
+        <th width="10%">Count</th>
+        <th width="10%"># in Cat</th>
         <th width="50%">Description</th>
     </tr>
 </thead>
@@ -18,6 +19,9 @@
         <td style="text-align: center">{{ obj.abbreviation }}</td>
         <td style="text-align: right; padding-right: 10px;">
             {{ obj.dso_count }}
+        </td>
+        <td style="text-align: right; padding-right: 10px;">
+            {{ obj.number_objects }}
         </td>
         <td><small>{{ obj.description }}</small></td>
     </tr>

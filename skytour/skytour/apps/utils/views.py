@@ -5,12 +5,13 @@ from django.db.models.functions import Cast
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView, MultipleObjectMixin
-from itertools import chain, takewhile
+from itertools import chain
 from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-from .utils import filter_dso_test, get_filter_list
+#from .utils import filter_dso_test, get_filter_list, make_id_key
+from .utils import original_objects_sort, new_objects_sort, get_filter_list
 from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
@@ -30,14 +31,7 @@ def get_list_of_primary_library_images(qs):
     
     return sorted(image_list, key = lambda img: img.ut_datetime, reverse = True)
 
-def try_int(x):
-    try:
-        return int(x)
-    except:
-        foo = "".join(takewhile(str.isdigit, x)) # "55-57" returns 55, pizza returns 0 
-        if foo[0].isdigit:
-            return int(foo)
-        return 0
+
     
 def assemble_object_types():
     tt = ObjectType.objects.order_by('slug')
@@ -125,29 +119,8 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
 
         filters = get_filter_list(self.request)
 
-        # OK - somehow merge these two.
-        all_objects = []
-        for o in primary_dsos:
-            if filters is not None and filter_dso_test(o, filters) is None:
-                continue
-            entry = {}
-            entry['in_catalog'] = o.id_in_catalog
-            entry['primary_catalog'] = None
-            entry['dso'] = o
-            all_objects.append(entry)
-        for o in alias_dsos:
-            if filters is not None and filter_dso_test(o, filters) is None:
-                continue
-            entry = {}
-            entry['primary_catalog'] = o.shown_name
-            entry['in_catalog'] = o.aliases.filter(catalog = object).first().id_in_catalog
-            entry['dso'] = o
-            all_objects.append(entry)
-        
-        try:
-            all_objects_sort = sorted(all_objects, key=lambda d: try_int(d['in_catalog']))
-        except:
-            all_objects_sort = sorted(all_objects, key=lambda d: str(d['in_catalog']))
+        #all_objects_sort = original_objects_sort(object, primary_dsos, alias_dsos, filters)
+        all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, filters)
         
         context = super(CatalogDetailView, self).get_context_data(
             object_list=all_objects_sort, 
@@ -156,7 +129,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         
         context['catalog_list'] = cat_list
         context['table_id'] = f'cat_dso_{object.slug}'
-        context['object_count'] = len(all_objects)
+        context['object_count'] = len(all_objects_sort)
         return context
 
 class ObjectTypeListView(ListView):
