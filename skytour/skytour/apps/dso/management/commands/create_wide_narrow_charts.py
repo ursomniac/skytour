@@ -65,7 +65,9 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
             now = False,
             save_file = save,
             chart_type = 'wide',
-            path = path
+            path = path,
+            #include_mosaic = False,
+            #gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30']
         )
     else:
         finder_wide = None
@@ -76,7 +78,7 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
         finder_narrow = create_dso_finder_chart(
             dso,
             utdt = None,
-            fov = 1.5,
+            fov = 1.5, # up to 2.5 for S30?
             mag_limit = 11.,
             show_other_dsos = True,
             show_in_field_dsos = True,
@@ -86,7 +88,9 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
             comet_list=None,
             save_file = save,
             chart_type = 'narrow',
-            path = path
+            path = path,
+            #include_mosaic = False,
+            #gear_list = ['eyepiece', 'equinox2', 'seestar50']
         )
     else:
         finder_narrow = None
