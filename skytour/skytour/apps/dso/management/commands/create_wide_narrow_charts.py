@@ -1,5 +1,7 @@
+import datetime, pytz
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
+from skyfield.api import load
 from skytour.apps.dso.models import DSO
 from skytour.apps.dso.finder import create_dso_finder_chart
 
@@ -51,7 +53,15 @@ class Command(BaseCommand):
 
 MEDIA_PATH = 'media'
 
-def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
+def run_dso(
+        dso, 
+        which='both', 
+        save=True, 
+        base_dir='', 
+        save_local=False,
+        t = None, ts=None, eph=None, earth=None
+    ):
+
     if which in ['both', 'wide']:
         path = base_dir + 'dso_finder_wide/' if not save_local else ''
         finder_wide = create_dso_finder_chart(
@@ -66,8 +76,9 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
             save_file = save,
             chart_type = 'wide',
             path = path,
-            #include_mosaic = False,
-            #gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30']
+            include_mosaic = True,
+            gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30'],
+            ts = ts, t = t, eph = eph, earth=earth
         )
     else:
         finder_wide = None
@@ -78,7 +89,7 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
         finder_narrow = create_dso_finder_chart(
             dso,
             utdt = None,
-            fov = 1.5, # up to 2.5 for S30?
+            fov = 2.5, # up to 2.5 for S30?
             mag_limit = 11.,
             show_other_dsos = True,
             show_in_field_dsos = True,
@@ -89,8 +100,9 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
             save_file = save,
             chart_type = 'narrow',
             path = path,
-            #include_mosaic = False,
-            #gear_list = ['eyepiece', 'equinox2', 'seestar50']
+            include_mosaic = False,
+            gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30'],
+            ts = ts, t = t, eph = eph, earth=earth
         )
     else:
         finder_narrow = None
@@ -114,6 +126,12 @@ def run_dso(dso, which='both', save=True, base_dir='', save_local=False):
 
 def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both', save_local=False):
     dsos = DSO.objects.order_by('pk')
+
+    ts = load.timescale() 
+    t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC'))) 
+    eph = load('de421.bsp') 
+    earth = eph['earth'] 
+
     if len(dso_list) == 0: 
         subset = dsos if all else dsos[start:(start+length)]
     else:
@@ -126,5 +144,12 @@ def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both'
     for dso in subset:
         n += 1
         print(f"Doing {n} of {total}:  PK #{dso.pk} = {dso}")
-        fw, fn, new = run_dso(dso, which=which, save=save, base_dir=base_dir, save_local=save_local)
+        fw, fn, new = run_dso(
+            dso, 
+            which=which, 
+            save=save, 
+            base_dir=base_dir, 
+            save_local=save_local,
+            ts=ts, t=t, eph=eph, earth=earth
+        )
         print("\t... Done")

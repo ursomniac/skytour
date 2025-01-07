@@ -222,20 +222,24 @@ def create_dso_finder_chart(
         axes = False,  # not generally used
         test = False,   # not generally used
         path = 'media/dso_charts/',
-        #gear_list = ['eyepiece', 'equinox2', 'seestar50',], # 'seestar30'
-        #include_mosaic = False
+        gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30'],
+        include_mosaic = False,
+        ts = None, eph = None, t = None, earth = None
     ):
     """
     Create a finder chart for a DSO for a given date.
     Overlay planets and asteroids to this chart.
     """
-    #print(f"Still doing {chart_type}")
     path = 'media/dso_charts/' if path is None else path
     times = [(time.perf_counter(), 'Start')]
-    ts = load.timescale()
-    t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
-    eph = load('de421.bsp')
-    earth = eph['earth']
+    if ts is None or t is None or eph is None or earth is None:
+        print("Getting DT metadata!")
+    ts = load.timescale() if ts is None else ts
+    if t is None:
+        t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC'))) 
+    if eph is None:
+        eph = load('de421.bsp') 
+    earth = eph['earth'] if earth is None else earth
 
     # Center the chart on the DSO
     center = earth.at(t).observe(dso.skyfield_object)
@@ -312,56 +316,67 @@ def create_dso_finder_chart(
 
 
     #ax = map_eyepiece(ax, diam=0.0038, reversed=reversed)
-    # if 'eyepiece' in gear_list:
-    ecolor = 'cyan' if reversed else "#999"
-    eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
-    circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color=ecolor, fill=False)
-    ax.add_patch(circle1)
+    if 'eyepiece' in gear_list:
+        ecolor = 'cyan' if reversed else "#999"
+        eyepiece_fov = find_site_parameter('eyepiece-fov', default=60., param_type='float')
+        circle1 = plt.Circle((0, 0), eyepiece_fov * 2.909e-4 / 2. / 2., color=ecolor, fill=False)
+        ax.add_patch(circle1)
 
     # eQuinox2 rectangle
-    # if 'equinox2' in gear_list:
-    width = 47. * 2.909e-4 / 2.
-    height = 34. * 2.909e-4 / 2.
-    x0 = -width / 2.
-    y0 = -height / 2.
-    rect1 = plt.Rectangle((x0, y0), width, height, color='#f00', fill=False)
-    ax.add_patch(rect1)
+    if 'equinox2' in gear_list:
+        width = 47. * 2.909e-4 / 2.
+        height = 34. * 2.909e-4 / 2.
+        x0 = -width / 2.
+        y0 = -height / 2.
+        rect1 = plt.Rectangle((x0, y0), width, height, color='#f00', fill=False)
+        ax.add_patch(rect1)
 
     # Seestar S50 rectangle
-    # if 'seestar50' in gear_list
-    h1 = 1.29 * 60 * 2.909e-4 / 2.
-    w1 = 0.73 * 60 * 2.909e-4 / 2.
-    x1 = -w1 / 2.
-    y1 = -h1 / 2.
-    rect2 = plt.Rectangle((x1, y1), w1, h1, color='#fa0', fill=False)
-    ax.add_patch(rect2)
+    mosaic_linestyle = (0, (3, 2, 1, 2, 1, 2)) # (5, (10,3))
+    if 'seestar50' in gear_list:
+        s50color = '#fa0' if reversed else '#c80'
+        h1 = 1.29 * 60 * 2.909e-4 / 2.
+        w1 = 0.73 * 60 * 2.909e-4 / 2.
+        x1 = -w1 / 2.
+        y1 = -h1 / 2.
+        rect2 = plt.Rectangle((x1, y1), w1, h1, 
+            color=s50color, fill=False
+        )
+        ax.add_patch(rect2)
 
-    # Include S50 mosaic
-    # if include_mosaic:
-    # h1m = 2 * h1
-    # w1m = 2 * w1
-    # x1m = -w1m / 2.
-    # y1m = -h1m / 2.
-    # rect2m = plt.Rectangle((x1m, y1m), w1m, h1m, color='#fa0', fill=False, linestyle='dashed')
-    # ax.add_patch(rect2m)
+        # Include S50 mosaic
+        if include_mosaic:
+            h1m = 2 * h1
+            w1m = 2 * w1
+            x1m = -w1m / 2.
+            y1m = -h1m / 2.
+            rect2m = plt.Rectangle((x1m, y1m), w1m, h1m, 
+                color=s50color, fill=False, linestyle=mosaic_linestyle
+            )
+            ax.add_patch(rect2m)
 
     # Seestar S30 rectangle
-    # if 'seestar30' in gear_list
-    #h2 = 2.17 * 60 * 2.909e-4 / 2.
-    #w2 = 1.22 * 60 * 2.909e-4 / 2.
-    #x2 = -w2 / 2.
-    #y2 = -h2 / 2.
-    #rect3 = plt.Rectangle((x2, y2), w2, h2, color='#0c0', fill=False)
-    #ax.add_patch(rect3)
+    if 'seestar30' in gear_list:
+        s30color = '#3cf' if reversed else '#0ae'
+        h2 = 2.17 * 60 * 2.909e-4 / 2.
+        w2 = 1.22 * 60 * 2.909e-4 / 2.
+        x2 = -w2 / 2.
+        y2 = -h2 / 2.
+        rect3 = plt.Rectangle((x2, y2), w2, h2, 
+            color=s30color, fill=False
+        )
+        ax.add_patch(rect3)
 
-    # Include S30 mosaic
-    # if include_mosaic:
-    # h2m = 2 * h2
-    # w2m = 2 * w2
-    # x2m = -w2m / 2.
-    # y2m = -h2m / 2.
-    # rect3m = plt.Rectangle((x2m, y2m), w2m, h2m, color='#0c0', fill=False, linestyle='dashed')
-    # ax.add_patch(rect3m)
+        # Include S30 mosaic
+        if include_mosaic:
+            h2m = 2 * h2
+            w2m = 2 * w2
+            x2m = -w2m / 2.
+            y2m = -h2m / 2.
+            rect3m = plt.Rectangle((x2m, y2m), w2m, h2m, 
+                color=s30color, fill=False, linestyle=mosaic_linestyle
+            )
+            ax.add_patch(rect3m)
 
     times.append((time.perf_counter(), 'Done Mapping'))
 
@@ -396,6 +411,8 @@ def create_dso_finder_chart(
         else:
             fn = 'dso_chart_{}.png'.format(dso.shown_name.lower().replace(' ', '_'))
 
+        if test:
+            print(f"Saving to {path}{fn}")
         try:
             fig.savefig('{}{}'.format(path, fn), bbox_inches='tight')
         except: # sometimes there's UTF-8 in the name
