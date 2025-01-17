@@ -21,21 +21,29 @@
         background-color: #666;
         border: 0;
     }
+
+    table.cats td {
+        font-size: 80%;
+    }
+
 </style>
 <!-- main -->
 {# header section #}
 <table class="lite">
     <tr>
-        <td width="25%">
+        <td width="33%">
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
         </td>
         <td>
-            <table class="lite">
+            <table class="lite cats">
             <tr>
             {% for cat in catalog_list %}
-            {% if forloop.counter0|divisibleby:4 %}<td>{% endif %}
-                <a href="{% url 'catalog-detail' cat.pk %}"><button style="margin: 5px;">{{ cat.name }}</button></a><br/>
-            {% if forloop.counter0|modulus:4 == 3 or forloop.last %}</td>{% endif %}
+            {% if forloop.counter0|divisibleby:7 %}<td class="cats">{% endif %}
+                <span class="cat-entry" style="line-height:1.6">
+                    <a href="{% url 'catalog-detail' cat.pk %}">{{ cat.name }}</a>
+                    <br>
+                </span>
+            {% if forloop.counter|divisibleby:7 or forloop.last %}</td>{% endif %}
             {% endfor %}
             </tr>
             </table>
@@ -92,6 +100,10 @@
             {% if object.notes %}
             <h3>Notes:</h3>
                 <br>{{ object.notes }}
+            {% endif %}
+            {% if object.description %}
+            <h3>Description:</h3>
+                <br>{{ object.description }}
             {% endif %}
         </td>
     </tr>

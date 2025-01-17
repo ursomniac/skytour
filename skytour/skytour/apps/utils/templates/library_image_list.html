@@ -173,21 +173,35 @@
                     </span>
                     <br/>
                     <span class="label">Mag:</span>
-                    <span class="value">{{ object.magnitude }}</span>
+                    {% if object.find_magnitude.0 %}
+                    <span class="value">{{ object.find_magnitude.0 }}</span>
+                    {% endif %}
+                    </span>
                     <br/>
                     <span class="label">Ang Size:</span>
-                    <span class="value">{{ object.angular_size }}</span>
+                    {% if object.find_angular_size.0 %}
+                    <span class="value">{{ object.find_angular_size.0 }}</span>
+                    {% endif %}
                     <br/>
                     <span class="label">Surf Br:</span>
-                    <span class="value">{{ object.surface_brightness }}</span>
+                    {% if object.find_surface_brightness.0 %}
+                    <span class="value">{{ object.find_surface_brightness.0 }}</span>
+                    {% endif %}
                     <br/>
                     <span class="label">CI:</span> 
+                    {% if object.contrast_index%}
                     <span class="value">{{ object.contrast_index }}</span>
+                    {% endif %}
                     <br/>
                     <br/>
                     <span class="label">Dist:</span>
-                    <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
+                    {% if object.find_distance.0 %}
+                    <span class="value">
+                        {{ object.find_distance.0 }} 
+                        {{ object.find_distance.1 }}
+                    </span>
                     <br/>
+                    XXX
                     {% endif %}
                 </td>
             </tr>

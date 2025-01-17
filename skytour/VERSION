@@ -1,1 +1,1 @@
-V1.62 - added Seestar S30 to wide/narrow/finder charts; added mgtcmd for missing images
+V1.63 - added dso_finder_chart to finder chart gallery in DSODetailView; updated DSO export script; added reference to metadata source (Simbad/Hyperleda) to DSODetail

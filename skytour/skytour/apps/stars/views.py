@@ -60,7 +60,8 @@ class SkyView(CookieMixin, TemplateView):
             comet_list = None
             reversed = False
             # TODO: change default location!
-            title = f"Skymap: {context['local_time_str']}"
+            #title = f"Skymap: {context['local_time_str']}"
+            title = ''
         else:
             dso_list = None # Get from DSO table
 

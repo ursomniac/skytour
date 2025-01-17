@@ -53,6 +53,8 @@
     <select name="catalog_slug">
         <option value="caldwell">Caldwell</option>
         <option value="messier">Messier</option>
+        <option value="abell">Abell PN</option>
+        <option value="arp">Arp Pec. Gal</option>
         <option value="a24-101">Astronomy 2024</option>
         <option value="barnard">Barnard</option>
         <option value="collinder">Collinder</option>
@@ -137,21 +139,34 @@
                     </td>
                     <td width="45%" class="topalign">
                         <span class="label">Mag:</span> 
-                            <span class="value">{{ object.magnitude }}</span>
-                            <br/>
+                        {% if object.find_magnitude.0 %}
+                        <span class="value">{{ object.find_magnitude.0 }}</span>
+                        {% endif %}    
+                        <br/>
                         <span class="label">Ang. Size:</span> 
-                            <span class="value">{{ object.angular_size }}</span>
-                            <br/>
+                        {% if object.find_angular_size.0 %}
+                        <span class="value">{{ object.find_angular_size.0 }}</span>
+                        {% endif %}
+                        <br/>
                         <span class="label">Surf. Br.:</span> 
-                            <span class="value">{{ object.surface_brightness }}</span>
-                            <br/>
+                        {% if object.find_surface_brightness.0 %}
+                        <span class="value">{{ object.find_surface_brightness.0 }}</span>
+                        {% endif %}
+                        <br/>
                         <span class="label">C.I.:</span> 
-                            <span class="value">{{ object.contrast_index }}</span>
-                            <br/>
-                        <br>
+                        {% if object.contrast_index %}
+                            <span class="value">{{ object.contrast_index}}</span>
+                        {% endif %}
+                        <br/><br/>
                         <span class="label">Dist:</span> 
-                            <span class="value">{{ object.distance }} {{ object.distance_units }}</span>
-                            <br/>
+                        {% if object.find_distance.0 %}
+                        <span class="value">
+                            {{ object.find_distance.0 }}
+                            &nbsp;
+                            {{ object.find_distance.1 }}
+                        </span>
+                        {% endif %}
+                        <br/>
                         <span class="admin_link">
                             {% if object.is_on_active_observing_list %}
                             🔭 &nbsp;

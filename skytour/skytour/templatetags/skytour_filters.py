@@ -153,3 +153,12 @@ def get_local_time(x):
     """
     dt = datetime.datetime.fromisoformat(x)
     return dt.strftime("%b %-d, %Y %-I:%M %p %z")
+
+@register.filter(name="show_property_source")
+def show_property_source(code):
+    d = {
+        'S': 'Simbad',
+        'H': 'HyperLeda',
+        'L': 'HyperLeda'
+    }
+    return d[code] if code in d.keys() else ''

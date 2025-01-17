@@ -161,6 +161,17 @@ class DSOAbstract(Coordinates):
         return (size, 'O')
     
     @property
+    def find_major_axis_size(self):
+        size = self.major_axis_size
+        hv = get_hyperleda_value(self, 'amajor')
+        sv = get_simbad_value(self, 'amajor')
+        if hv is not None:
+            return (hv['value'], 'H')
+        if sv is not None:
+            return (sv['value'], 'S')
+        return (size, 'O')
+    
+    @property
     def find_orientation(self):
         o = self.orientation_angle
         hv = get_hyperleda_value(self, 'orientation')
@@ -177,8 +188,9 @@ class DSOAbstract(Coordinates):
         u = self.distance_units
         hv = get_hyperleda_value(self, 'distance')
         sv = get_simbad_value(self, 'distance')
-        if hv is not None:
-            return hv['value'], hv['units'], 'L'
+
+        if hv is not None :
+            return hv['value'], hv['units'], 'H'
         if sv is not None:
             return sv['value'], sv['units'], 'S'
         return (d, u, 'O')
@@ -549,8 +561,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             finder_images.append(od[k]['url'])
         # Secondary field charts
         for chart in [
-            self.field_view,
-            self.finder_chart
+            self.dso_finder_chart,
+            self.finder_chart,
+            self.field_view
         ]:
             if chart.name == '':
                 continue
@@ -682,6 +695,19 @@ class DSOInField(DSOAbstract, models.Model):
     def primary_angle(self):
         pa = get_simple_position_angle(self.parent_dso.ra, self.parent_dso.dec, self.ra, self.dec)
         return pa
+    
+    @property
+    def alias_list(self):
+        aliases = []
+        if self.aliases.count() > 0:
+            for alias in self.aliases.all():
+                if alias.shown_name is None:
+                    name = f"{alias.catalog.abbreviation} {alias.id_in_catalog}"
+                else:
+                    name = alias.shown_name
+                aliases.append(name)
+            return ', '.join(aliases)
+        return ''
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property

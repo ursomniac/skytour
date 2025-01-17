@@ -28,7 +28,16 @@
 	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
 	tr.dif th { background-color: #006; }
 	span.annotation { padding-left: 10px; font-size: 50%; font-style: italic; color: #ff6; }
-    .image-text {
+    span.source { 
+		padding: 0px 5px 0px 5px; 
+		margin-left: 10px;
+		background-color: #393; 
+		color: #000;
+		font-size: 65%; 
+		border: 1px solid #390;
+		vertical-align: middle;
+	}
+	.image-text {
         position: absolute;
         bottom: -30px;
         width: 100%;
@@ -199,10 +208,21 @@
 				<td>
 					{% if object.find_magnitude.1 %}{{ object.find_magnitude.1 }}&nbsp;{% endif %}
 					Mag.: 
-					{{ object.find_magnitude.0|floatformat:2 }}
+					{% if object.find_magnitude.0 %}
+						{{ object.find_magnitude.0|floatformat:2 }}
+						{% if object.find_magnitude.1 != 'O' %}
+						<span class="source">{{ object.find_magnitude.2|show_property_source }}</span>
+						{% endif %}
+					{% endif %}
 				</td>
 				<td>
-					Ang. Size: {{ object.find_angular_size.0 }}
+					Ang. Size: 
+					{% if object.find_angular_size.0 %}
+						{{ object.find_angular_size.0 }}
+						{% if object.find_angular_size.1 != 'O' %}
+						<span class="source">{{ object.find_angular_size.1|show_property_source }}</span>
+						{% endif %}
+					{% endif %}
 				</td>
 				<td rowspan="4" style="padding: 0;">
 					{% for item in other_metadata %}
@@ -212,29 +232,53 @@
 			</tr>
 			<tr>
 				<td>
-					Surf. Bri: {{ object.find_surface_brightness.0|floatformat:2 }}
+					Surf. Bri: 
+					{% if object.find_surface_brightness.0 %}
+						{{ object.find_surface_brightness.0|floatformat:2 }}
+						{% if object.find_surface_brightness.1 != 'O' %}
+						<span class="source">{{ object.find_surface_brightness.1|show_property_source }}</span>
+						{% endif %}
+					{% endif %}
 				</td>
 				<td>
 					Distance:
-					{{ object.find_distance.0|floatformat:1 }} {{ object.find_distance.1 }}
+					{% if object.find_distance.0 %}
+						{{ object.find_distance.0|floatformat:1 }} {{ object.find_distance.1 }}
+						{% if object.find_distance.2 != 'O' %}
+						<span class="source">{{ object.find_distance.2|show_property_source }}</span>
+						{% endif %}
+					{% endif %}
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Orientation Angle: {{ object.find_orientation.0|floatformat:0 }}°
+					Orientation Angle: 
+					{% if object.find_orientation.0 %}
+						{{ object.find_orientation.0|floatformat:0 }}°
+						{% if object.find_orientation.1 != 'O' %}
+						<span class="source">{{ object.find_orientation.1|show_property_source }}</span>
+						{% endif %}
+					{% endif %}
+					</td>
+				<td>Morphological Type: 
+					{% if object.morphological_type %}
+					{{ object.morphological_type }}
+					{% endif %}
 				</td>
-				<td>Morphological Type: {{ object.morphological_type }}</td>
 			</tr>
 			<tr>
 				<td>
-				Contrast Index: {{ object.contrast_index }}
+					Contrast Index: 
+					{% if object.contrast_index %}
+					{{ object.contrast_index }}
+					{% endif %}
 				</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td>
 					<h3>
-						Observing Season: 
+						Obs. Season: 
 						<small>
 						{% if observing_date_grid.no_grid_reason %}
 							(Max Alt: {{ max_altitude|floatformat:1 }}°)

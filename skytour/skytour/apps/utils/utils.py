@@ -58,7 +58,7 @@ def original_objects_sort(catalog, primary_dsos, alias_dsos, filters):
         all_objects_sort = sorted(all_objects, key=lambda d: str(d['in_catalog']))
     return all_objects_sort
 
-def new_objects_sort(catalog, primary_dsos, alias_dsos, filters):
+def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos, filters):
     digits = 3 if catalog.number_objects is None else len(f"{catalog.number_objects}")
     odict = {}
     all_objects_sort = []
@@ -70,6 +70,15 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, filters):
             'dso': o,
             'in_field': False, 
             'field_dso': None
+        }
+    for o in field_dsos:
+        k = make_id_key(o.id_in_catalog, digits=digits)
+        odict[k] = {
+            'in_catalog': o.id_in_catalog,
+            'primary_catalog': None,
+            'dso': o.parent_dso,
+            'in_field': True,
+            'field_dso': o
         }
     for o in alias_dsos:
         for a in o.aliases.all(): # Because you can have multiple entires amongst the aliases

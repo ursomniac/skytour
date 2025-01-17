@@ -103,18 +103,24 @@ def normalize_simbad(vals):
     return v
 
 def norm_distance(x, units):
+    # OK - there's a bug here:
+    #   if x < 1 and units is Mly, then you'll get back
+    fix_units = {'Mpc': 'kpc', 'Mly': 'kly', 'kpc': 'pc', 'kly': 'ly'}
+    if x is None:
+        return x, units
+    if x <= 1. and units in fix_units.keys():
+        x *= 1000.
+        units = fix_units[units]
+
     if units == 'Mpc':
         return norm_float(x * 3.26, 1), 'Mly'
-    elif units == 'Mly':
+    if units == 'Mly':
         return norm_float(x, 1), 'Mly'
-    elif units == 'kpc':
-        x *= 3.26
-        if x < 1.:
-            return norm_float(x * 1000., 2), 'ly'
-        return norm_float(x, 2), 'kly'
-    elif units == 'pc':
+    if units == 'kpc':
+        return norm_float(x * 3.26, 2), 'kly'
+    if units == 'pc':
         return norm_float(x * 3.26, 2), 'ly'
-    elif units == 'ly':
+    if units == 'ly':
         return norm_float(x, 2), 'ly'
     else:
         return x, units

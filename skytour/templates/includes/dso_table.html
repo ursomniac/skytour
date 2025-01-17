@@ -53,9 +53,21 @@
         <td>{{ dso.morphological_type }}</td>
         <td>{{ dso.ra|to_hm:1 }}</td>
         <td>{{ dso.dec|to_dm:1 }}</td>
-        <td>{{ dso.magnitude|floatformat:2 }}</td>
-        <td>{{ dso.surface_brightness|floatformat:1}}</td>
-        <td>{{ dso.major_axis_size|floatformat:1 }}</td>
+        <td>
+            {% if dso.find_magnitude.0 %}
+            {{ dso.find_magnitude.0|floatformat:2 }}
+            {% endif %}
+        </td>
+        <td>
+            {% if dso.find_surface_brightness.0 %}
+            {{ dso.find_surface_brightness.0|floatformat:1}}
+            {% endif %}
+        </td>
+        <td>
+            {% if dso.find_major_axis_size.0 %}
+            {{ dso.find_major_axis_size.0|floatformat:1 }}
+            {% endif %}
+        </td>
         <td>
             {% if dso.is_on_imaging_checklist %}
             <span hidden>{{ dso.imaging_checklist_priority }}</span>
