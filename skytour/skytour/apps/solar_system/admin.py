@@ -100,15 +100,14 @@ class AsteroidAdmin(ObservableObjectAdmin):
     inlines = [AsteroidLibraryImageAdmin, AsteroidObservationAdmin]
     save_on_top = True
 
+
 class CometAdmin(ObservableObjectAdmin):
     model = Comet
-    list_display = ['pk', 'name','peri_date', 'status', 'override_limits', 'n_obs', 'obs_date']
+    list_display = ['pk', 'name','perihelion_date', 'status', 'override_limits', 'n_obs', 'obs_date']
     list_display_links = ['pk', 'name']
     inlines = [CometLibraryImageAdmin, CometObservationAdmin]
     save_on_top = True
     search_fields = ['name']
-    def peri_date(self, obj):
-        return obj.perihelion_date
 
 class PlanetMoonAdmin(admin.ModelAdmin):
     model = PlanetMoon

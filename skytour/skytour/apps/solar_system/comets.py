@@ -29,3 +29,14 @@ def get_comet_magnitude(mg, mk, r_earth_target, r_sun_target, offset=0.):
     )
     return mag
 
+def get_comet_period(obj):
+    p = obj['perihelion_distance_au']
+    e = obj['eccentricity']
+    if e >= 1.:
+        return None
+    a = p / (1. - e)
+    period = math.sqrt(a ** 3.)
+    return period
+
+
+

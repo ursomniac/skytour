@@ -170,6 +170,7 @@
                         &nbsp;
                         {% endif %}
                         <br/>
+                    {% endif %}
                     </span>
                     <br/>
                     <span class="label">Mag:</span>
@@ -189,7 +190,7 @@
                     {% endif %}
                     <br/>
                     <span class="label">CI:</span> 
-                    {% if object.contrast_index%}
+                    {% if object.contrast_index %}
                     <span class="value">{{ object.contrast_index }}</span>
                     {% endif %}
                     <br/>
@@ -201,7 +202,6 @@
                         {{ object.find_distance.1 }}
                     </span>
                     <br/>
-                    XXX
                     {% endif %}
                 </td>
             </tr>

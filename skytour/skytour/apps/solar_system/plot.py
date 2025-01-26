@@ -52,10 +52,12 @@ def create_finder_chart(
         mag_offset = 0.05,
         show_axes = False,      #
         sun = None,
-        moon = None
+        moon = None, 
+        show_dsos=True,
+        times = None
     ):
     # Start timer
-    times = [(time.perf_counter(), 'Start')]
+    times = [(time.perf_counter(), 'Start Create Finder Chart')] if times is None else times
 
     if object_type == 'moon':
         name = 'Moon'
@@ -120,10 +122,11 @@ def create_finder_chart(
         times.append((time.perf_counter(), 'Moon'))
         
     # Add DSOs
-    ax, _ = map_dsos(ax, earth, t, projection, 
-        reversed=reversed, product='finder'
-    )
-    times.append((time.perf_counter(), 'DSOs'))
+    if show_dsos:
+        ax, _ = map_dsos(ax, earth, t, projection, 
+            reversed=reversed, product='finder'
+        )
+        times.append((time.perf_counter(), 'DSOs'))
 
     # Asteroids
     ax, _ = map_asteroids(ax, name, asteroids, earth, t, projection)
@@ -181,9 +184,11 @@ def create_planet_system_view (
         flipped = True,         # Flip X axis for eyepice view
         reversed = True,        # B on W or W on B
         min_sep = None, 
+        times = None
     ):
     # Start timer
-    times = [(time.perf_counter(), 'Start')]
+    times = [] if times is None else times
+    times.append((time.perf_counter(), 'Start Create Planet System View'))
 
     if object_type == 'moon':
         pdict = cookie # Moon 
@@ -233,8 +238,10 @@ def create_planet_system_view (
     # Moon and inferior planets have phases!
     if name in ['Moon', 'Mercury', 'Venus']:
         ax = map_phased_planet(ax, pdict, ang_size_radians)
+        times.append((time.perf_counter(), 'Map Phased Planet'))
     else: # just a regular disk for superior planets
         ax = map_whole_planet(ax, ang_size_radians, reversed=reversed)
+        times.append((time.perf_counter(), 'Map Whole Planet'))
 
     # Plot scaling
     # THIS IS WAY MORE COMPLICATED THAN IT OUGHT TO BE.
@@ -291,7 +298,7 @@ def create_planet_system_view (
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String
+    return pngImageB64String, times
 
 def plot_ecliptic_positions(planets, reversed):
     dmax = 48
@@ -355,6 +362,7 @@ def plot_track(
         fov=None,
         reversed=True,
         return_data = True,
+        times=None,
         debug=False
     ):
     """
@@ -369,9 +377,14 @@ def plot_track(
         target = eph[object.target]
     elif object_type == 'asteroid':
         target = get_asteroid_target(object, ts, sun)
+        if times is not None:
+            times.append((time.perf_counter(), 'Get Asteroid Target'))
+
     elif object_type == 'comet':
         target, comet_row = get_comet_target(object, ts, sun)
-        
+        if times is not None:
+            times.append((time.perf_counter(), 'Get Comet Target'))
+
     t = ts.from_datetime(utdt)
 
     first_projection = earth.at(t).observe(target)
@@ -468,7 +481,7 @@ def plot_track(
         else:
             mag_limit = 9.0
 
-    print("MAG LIMIT: ", mag_limit)
+    #print("MAG LIMIT: ", mag_limit)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
     ax = map_constellation_lines(ax, stars, reversed=reversed)
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, mag_limit=mag_limit, reversed=reversed)
@@ -476,7 +489,8 @@ def plot_track(
     # Add DSOs
     if dsos:
         ax, _ = map_dsos(ax, earth, t, projection, product='finder')
-
+        if times is not None:
+            times.append((time.perf_counter(), 'Plotting DSOs'))
     # TODO: Add (other) planets
     # Would need multiple tracks...
     #if planets:
@@ -510,11 +524,14 @@ def plot_track(
     # Encode PNG to Base64 string
     pngImageB64String = 'data:image/png;base64,'
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
-
+    if times is not None:
+        times.append((time.perf_counter(), 'Encoding PNG'))
     # close things
     plt.cla()
     plt.close(fig)
-    return pngImageB64String, starting_position, data
+    if times is not None:
+        times.append((time.perf_counter(), 'Done'))
+    return pngImageB64String, starting_position, data, times
 
 def get_planet_map(planet, physical):
     try:

@@ -1,4 +1,4 @@
-import datetime, pytz
+import datetime, pytz, time
 from dateutil.parser import isoparse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 from ..abstract.utils import get_real_time_conditions
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
+from ..utils.timer import compile_times
 from .forms import TrackerForm
 from .helpers import compile_nearby_planet_list
 from .models import Comet, Planet, Asteroid
@@ -56,6 +57,8 @@ class PlanetDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PlanetDetailView, self).get_context_data(**kwargs)
+            # Track performance
+        times = [(time.perf_counter(), 'Start')]
         obj = self.get_object()
         planets_cookie = context['cookies']['planets']
         asteroids_cookie = context['cookies']['asteroids']
@@ -67,13 +70,14 @@ class PlanetDetailView(CookieMixin, DetailView):
         pdict = context['planet'] = planets_cookie[obj.name]
         pdict['name'] = obj.name
         
-        context['close_by'] = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start)
+        context['close_by'], times = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start, times=times)
+        times.append((time.perf_counter(), 'Got nearby planets'))
         fov = 2. if obj.name in ['Uranus', 'Neptune'] else 10.
         mag_limit = 10. if obj.name in ['Uranus', 'Neptune'] else 6.
 
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
-        context['finder_chart'], ftimes = create_finder_chart (
+        context['finder_chart'], times = create_finder_chart (
             utdt_start,
             obj, 
             planets_cookie,
@@ -83,15 +87,18 @@ class PlanetDetailView(CookieMixin, DetailView):
             flipped=False,
             fov=fov,
             sun=sun,
-            moon=moon
+            moon=moon,
+            show_dsos=False,
+            times=times
         )
 
-        context['view_image'] = create_planet_system_view(
+        context['view_image'], times = create_planet_system_view(
             utdt_start,
             obj, 
             planets_cookie,
             flipped=flipped,
-            reversed=reversed
+            reversed=reversed,
+            times=times
         )
         
         context['planet_map'] = None
@@ -100,6 +107,7 @@ class PlanetDetailView(CookieMixin, DetailView):
             context['xy'] = dict(px=px, py=py)
         context['library_slideshow'] = obj.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['instance'] = obj
+        context['times'] = compile_times(times)
         return context
 
 class MoonDetailView(CookieMixin, TemplateView):
@@ -126,7 +134,7 @@ class MoonDetailView(CookieMixin, TemplateView):
             fov = 15.
         )
 
-        context['view_image'] = create_planet_system_view(
+        context['view_image'], _ = create_planet_system_view(
             context['utdt_start'],
             None,  # There is no Moon model instance
             pdict, # this is the moon cookie
@@ -145,6 +153,7 @@ class AsteroidListView(CookieMixin, ListView):
         TODO: Table should include rise/set based off of the cookie.
         """
         context = super(AsteroidListView, self).get_context_data(**kwargs)
+        
         # TODO: allow full list of asteroids, but this might be time consuming
         all = self.request.GET.get('all', None) is not None
         asteroids = Asteroid.objects.order_by('number')
@@ -169,6 +178,8 @@ class AsteroidDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AsteroidDetailView, self).get_context_data(**kwargs)
+        # Track performance
+        times = [(time.perf_counter(), 'Start')]
         object = self.get_object()
         planets_cookie = context['cookies']['planets']
         asteroid_cookie = context['cookies']['asteroids']
@@ -183,7 +194,7 @@ class AsteroidDetailView(CookieMixin, DetailView):
                 ('finder_chart', 2., 11.), 
                 ('large_scale_map', 10., 9.)
             ]:
-                context[c], ftimes = create_finder_chart (
+                context[c], times = create_finder_chart (
                     utdt_start, 
                     object,
                     planets_cookie=planets_cookie,
@@ -194,10 +205,13 @@ class AsteroidDetailView(CookieMixin, DetailView):
                     reversed = reversed,
                     mag_limit=11., 
                     sun = context['cookies']['sun'],
-                    moon = context['cookies']['moon']
+                    moon = context['cookies']['moon'],
+                    show_dsos = False,
+                    times=times
                 )
         context['in_cookie'] = True if pdict else False
         context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        context['times'] = compile_times(times)
         return context
 
 class CometListView(CookieMixin, ListView):
@@ -236,6 +250,8 @@ class CometDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CometDetailView, self).get_context_data(**kwargs)
+        # Track performance
+        times = [(time.perf_counter(), 'Start')]
         reversed = context['color_scheme'] == 'dark'
         object = self.get_object()
         planets = context['cookies']['planets']
@@ -260,7 +276,7 @@ class CometDetailView(CookieMixin, DetailView):
         context['comet'] = pdict
 
         if pdict:
-            context['finder_chart'], ftimes = create_finder_chart (
+            context['finder_chart'], times = create_finder_chart (
                 context['utdt_start'],
                 object,
                 planets,
@@ -271,9 +287,12 @@ class CometDetailView(CookieMixin, DetailView):
                 reversed = reversed,
                 mag_limit = 11.,
                 sun = context['cookies']['sun'],
-                moon = context['cookies']['moon']
+                moon = context['cookies']['moon'],
+                show_dsos=False,
+                times=times
             )
-            context['large_scale_map'], ftimes = create_finder_chart (
+            times.append((time.perf_counter(), 'Finished Narrow Finder Chart'))
+            context['large_scale_map'], times = create_finder_chart (
                 context['utdt_start'],
                 object,
                 planets,
@@ -284,9 +303,14 @@ class CometDetailView(CookieMixin, DetailView):
                 reversed = reversed,
                 mag_limit = 9.,
                 sun = context['cookies']['sun'],
-                moon = context['cookies']['moon']
+                moon = context['cookies']['moon'],
+                show_dsos=False,
+                times=times
             )
+            times.append((time.perf_counter(), 'Finished Wide Finder Chart'))
+
         context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        context['times'] = compile_times(times)
         return context
 
 class TrackerView(FormView):
@@ -315,6 +339,8 @@ class TrackerView(FormView):
 
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
+        times = [(time.perf_counter(), 'Start')]
+
         context = deal_with_cookie(self.request, context)
         reversed = context['color_scheme'] == 'dark'
         d = form.cleaned_data
@@ -340,6 +366,7 @@ class TrackerView(FormView):
         mag_limit = d['mag_limit'] or 8.
         fov = d['fov']
         dsos = d['show_dsos'] == '1'
+        reversed = d['reversed'] == 'wob'
         # Planets
         #planets = None
         #print("CONTEXT: ",context.keys())
@@ -349,7 +376,7 @@ class TrackerView(FormView):
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
 
-        context['track_image'], starting_position, track_positions = plot_track(
+        context['track_image'], starting_position, track_positions, times = plot_track(
             utdt,
             object_type=object_type,
             object=object, 
@@ -362,6 +389,7 @@ class TrackerView(FormView):
             reversed=reversed,
             return_data = True,
             dsos=dsos,
+            times=times,
             #planets=planets
         )
         context['form'] = form
@@ -377,7 +405,7 @@ class TrackerView(FormView):
             )
             context['instance'] = object
             context['constellation'] = get_constellation(xra.hours.item(), xdec.degrees.item())
-
+        context['times'] = compile_times(times)
         return self.render_to_response(context)
 
 class TrackerResultView(TemplateView):

@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.db import models
 from django.utils.translation import gettext as _
+from .vocabs import REFERENCE_MODEL_CHOICES
 
 class StateRegion(models.Model):
     """
@@ -119,15 +120,6 @@ class Calendar(models.Model):
         verbose_name_plural = 'Calendar Items'
         ordering = (['-date', '-time'])
 
-REFERENCE_MODEL_CHOICES = [
-    ('Planet', 'Planet'),
-    ('DSO', 'DSO'),
-    ('Asteroid', 'Asteroid'),
-    ('Moon', 'Moon'),
-    ('Sun', 'Sun'),
-    ('Comet', 'Comet'),
-    ('Star', 'Star'),
-]
 class CalendarEventReference(models.Model):
     calendar_event = models.ForeignKey(Calendar, on_delete=models.CASCADE)
     reference_type = models.CharField(
@@ -141,6 +133,9 @@ class CalendarEventReference(models.Model):
         max_length = 100,
         help_text = 'e.g., Jupiter, Io, NGC 7654, Moon, Sun'
     )
+
+    def __str__(self):
+        return f"{self.reference_type} {self.reference}"
 
 class Website(models.Model):
     name = models.CharField (

@@ -9,17 +9,21 @@ from .models import Planet, Asteroid, Comet
 from .position import get_object_metadata
 from .vocabs import PLANETS
 
-def compile_nearby_planet_list(p, pdict, utdt):
+def compile_nearby_planet_list(p, pdict, utdt, times=None):
    near_to_me = []
-   adj_list = get_adjacent_planets(pdict, utdt)
+   
+   adj_list, times = get_adjacent_planets(pdict, utdt, times=times)
+   if times is not None:
+          times.append((time.perf_counter(), 'Get Adjacent Planets'))
+
    for adj in adj_list:
       if p == adj[0]:
          near_to_me.append((adj[1], adj[2]))
       elif p == adj[1]:
          near_to_me.append((adj[0], adj[2]))
-   return near_to_me
+   return near_to_me, times
 
-def get_adjacent_planets(planet_dict, utdt):
+def get_adjacent_planets(planet_dict, utdt, times=None):
    """
    How close are planets to each other?
    Return a tuple of (planet1, planet2, separation) if separated by < min_sep.
@@ -38,6 +42,9 @@ def get_adjacent_planets(planet_dict, utdt):
       dec = planet_dict[planet]['apparent']['equ']['dec']
       target = earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec))
       planet_dict[planet]['target'] = target
+   if times is not None:
+      times.append((time.perf_counter(), 'Seed Planet dict'))
+
    for planet in PLANETS:
       rest = PLANETS[PLANETS.index(planet)+1:]
       p1t = planet_dict[planet]['target']
@@ -47,7 +54,9 @@ def get_adjacent_planets(planet_dict, utdt):
          if sep <= min_sep:
             t = (planet, other_planet, sep)
             close_by.append(t)
-   return close_by
+   if times is not None:
+      times.append((time.perf_counter(), 'Get Planet Separations'))
+   return close_by, times
 
 
 def get_planet_positions(utdt, utdt_end=None, location=None, time_zone=None):

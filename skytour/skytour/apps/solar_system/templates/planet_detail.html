@@ -188,7 +188,11 @@
 {% with admin_dir='solar_system/planet' %}
 {% include 'includes/observation_section.html' %}
 {% endwith %}
+
+{% include 'includes/performance_time.html' %}
 {% endblock content %}
+
+
 
 {% block extra-js %}
 {% include 'includes/realtime_script.html' %}

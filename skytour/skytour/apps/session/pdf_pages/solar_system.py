@@ -40,7 +40,7 @@ def do_planets(p, context):
         p.drawString(160, y, f"Mag: {tp['observe']['apparent_magnitude']:.2f}")
         y -= 15
         p.drawString(160, y, f"Ang. Size: {tp['observe']['angular_diameter_str']}")
-        tel_view = create_planet_system_view(utdt, instance, cookie_dict['planets'], reversed=False)
+        tel_view, _ = create_planet_system_view(utdt, instance, cookie_dict['planets'], reversed=False)
         p.drawInlineImage(tel_view, xp, yp, 180, 180)
         if planet == 'Neptune':
             nft, _ = create_finder_chart(
@@ -180,7 +180,7 @@ def do_moon(p, context):
         p, y = label_and_text(p, 50, y, (l, 12), (t, 12), cr=16) 
     # Phase plot
     cookie_dict['moon']['name'] = 'Moon' # TODO: Fix this bug!
-    moon_tel = create_planet_system_view(
+    moon_tel, _ = create_planet_system_view(
         utdt,
         None,
         cookie_dict['moon'],

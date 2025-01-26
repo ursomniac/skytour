@@ -19,6 +19,11 @@ STATUS_CHOICES = [
     (0, 'Off')
 ]
 
+BACKGROUND_CHOICES = [
+    ('wob', 'White on Black'),
+    ('bow', 'Black on White')
+]
+
 ZODIAC = [
     ('Aries',        15, '\u2648'),
     ('Taurus',       45, '\u2649'),

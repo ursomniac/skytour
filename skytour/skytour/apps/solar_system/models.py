@@ -8,7 +8,7 @@ from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
-from .comets import get_comet_object
+from .comets import get_comet_object, get_comet_period
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -424,24 +424,16 @@ class Comet(ObservableObject):
         choices = YES_NO,
         default = NO
     )
+    perihelion_date = models.DateField (
+        _('Peri.'),
+        null = True, blank = True
+    )
     object_class = 'comet'
     detail_view = 'comet-detail'
-
+    
     @property
     def instance_id(self):
         return self.pk
-    
-    @property
-    def perihelion_date(self):
-        try:
-            object = get_comet_object(self)    
-            year = object['perihelion_year']
-            month = object['perihelion_month']
-            day = int(object['perihelion_day'])
-            pdate = dt.date(year, month, day)
-        except:
-            pdate = None
-        return pdate
 
     @property
     def num_library_images(self):
@@ -462,12 +454,39 @@ class Comet(ObservableObject):
         pieces = self.light_curve_url.split('/')
         x = self.light_curve_url.replace(pieces[-1], 'mag.gif')
         return mark_safe(f'<img src="{x}" width=500>')
+    
+    @property
+    def mpc_object(self):
+        return get_comet_object(self)
+    
+    @property
+    def get_perihelion_date(self):
+        try:
+            object = self.mpc_object   
+            year = object['perihelion_year']
+            month = object['perihelion_month']
+            day = int(object['perihelion_day'])
+            pdate = dt.date(year, month, day)
+        except:
+            pdate = None
+        return pdate
+    
+    @property
+    def comet_period(self):
+        return get_comet_period(self.mpc_object)
 
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)
+    
+    def save(self, *args, **kwargs):
+        self.perihelion_date = self.get_perihelion_date
+        super(Comet, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name}"
+    
+    class Meta:
+        ordering = ['perihelion_date']
 
 class CometLibraryImage(LibraryAbstractImage):
     object = models.ForeignKey(

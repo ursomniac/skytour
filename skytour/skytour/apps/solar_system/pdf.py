@@ -135,7 +135,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     p, newy = add_image(p, y, finder, x=50, size=250)
     # Moon/Phase Chart
     if object_type == 'planet':
-        telview = create_planet_system_view(
+        telview, _ = create_planet_system_view(
             utdt, 
             object, 
             cookies['cookies']['planets'], 
