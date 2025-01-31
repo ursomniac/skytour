@@ -117,14 +117,25 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Got Planets'))
 
         # Asteroids
-        asteroid_list, atimes = get_visible_asteroid_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
+        asteroid_list, atimes = get_visible_asteroid_positions(
+            utdt_start, 
+            utdt_end=utdt_end, 
+            #location=my_location, # This slows it down by 10x
+            time_zone=time_zone
+        )
         context['asteroids'] = asteroid_list
         self.request.session['asteroids'] = asteroid_list
         times += atimes
         times.append((time.perf_counter(), f'Got Asteroids'))
 
         # Comets
-        comet_list = get_comet_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
+        comet_list, times = get_comet_positions(
+            utdt_start, 
+            utdt_end=utdt_end, 
+            #location=my_location,  # This slows it down by 10x
+            time_zone=time_zone,
+            times=times
+        )
         context['comets'] = comet_list
         self.request.session['comets'] = comet_list
         times.append((time.perf_counter(), 'Got Comets'))

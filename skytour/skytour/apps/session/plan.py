@@ -40,20 +40,27 @@ def get_plan(context, debug=False):
     show_asteroids = []
     for v in cookies['asteroids']:
         session = v.get('session', None)
-        go = session is None or v['session']['start']['is_up'] or v['session']['end']['is_up'] 
-        if go:
-            v['object'] = Asteroid.objects.get(slug=v['slug'])
-            show_asteroids.append(v)
+        try:
+            go = session is None or v['session']['start']['is_up'] or v['session']['end']['is_up'] 
+            if go:
+                v['object'] = Asteroid.objects.get(slug=v['slug'])
+        except:
+            pass
+        show_asteroids.append(v)
+
     context['asteroids'] = show_asteroids
     times.append((time.perf_counter(), 'Asteroids'))
 
     # Comets
     show_comets = []
     for c in cookies['comets']:
-        go = c['session']['start']['is_up'] or c['session']['end']['is_up']
-        if go:
-            c['object'] = Comet.objects.get(pk=c['pk'])
-            show_comets.append(c)
+        try:
+            go = c['session']['start']['is_up'] or c['session']['end']['is_up']
+            if go:
+                c['object'] = Comet.objects.get(pk=c['pk'])
+        except:
+            pass
+        show_comets.append(c)
     context['comets'] = show_comets
     times.append((time.perf_counter(), 'Comets'))
 
@@ -66,11 +73,12 @@ def get_plan(context, debug=False):
     for dso in all_dsos:
         if dso.object_is_up(location, context['utdt_start'], min_alt=20.) \
                 or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
-            priority = dso.priority.lower()
-            if priority in targets.keys():
-                targets[priority].append(dso)
-            else:
-                targets[priority] = [dso]
+            if dso.priority:
+                priority = dso.priority.lower()
+                if priority in targets.keys():
+                    targets[priority].append(dso)
+                else:
+                    targets[priority] = [dso]
     context['dso_targets'] = targets
     times.append((time.perf_counter(), 'DSOs'))
 
