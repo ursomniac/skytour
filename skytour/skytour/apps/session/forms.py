@@ -25,6 +25,24 @@ ATLAS_DSO_MARKERS = [
     ('symbols', 'Symbols')
 ]
 
+class SetNewSessionCookieForm(forms.Form):
+    ut_date = forms.DateField(label="UT Date")
+    ut_time = forms.TimeField(label='UT Time')
+    time_zone = forms.ModelChoiceField(
+        queryset = TimeZone.objects.all().order_by('utc_offset'),
+        label = 'Local Time Zone'
+    )
+    location = forms.ModelChoiceField(
+        queryset = get_observing_locations(ObservingLocation.objects.all())
+    )
+    flip_planets = forms.ChoiceField(choices=YES_NO, initial='Yes')
+    color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
+    #atlas_dso_marker = forms.ChoiceField(
+    #    choices=ATLAS_DSO_MARKERS,
+    #    initial='shapes',
+    #    label = 'Atlas DSOs as Symbols or Shapes'
+    #)
+
 class ObservingParametersForm(forms.Form):
     ut_date = forms.DateField(initial=datetime.now, label="UT Date")
     ut_time = forms.TimeField(initial='0:00', label='UT Time')

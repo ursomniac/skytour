@@ -42,7 +42,8 @@ from .forms import (
     ObservingConditionsForm,
     ObservingParametersForm, 
     PDFSelectForm, 
-    SessionAddForm
+    SessionAddForm,
+    SetNewSessionCookieForm
 )
 from .mixins import CookieMixin
 from .models import ObservingSession, ObservingCircumstances
@@ -183,6 +184,42 @@ class SetSessionCookieView(FormView):
         context = super(SetSessionCookieView, self).get_context_data(**kwargs)
         context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return context
+    
+class SetNewSessionCookieView(FormView):
+    form_class = SetNewSessionCookieForm
+    template_name = 'set_new_cookie.html'
+    success_url = '/session/plan' 
+
+    def get_initial(self):
+        initial = super().get_initial() # needed since we override?
+        initial = get_initial_from_cookie(self.request, initial)
+        time_zone = find_site_parameter('default-time-zone-id', None, 'positive')
+        if time_zone is not None:
+            initial['time_zone'] = time_zone
+        # TODO: Add auto-lookup for site_parameter for location
+        return initial
+    
+    def xget(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+    
+    def xpost(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        if form.is_valid():
+            return self.form_valid(form, **kwargs)
+        return self.form_invalid(form, **kwargs)
+    
+    def xform_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+    
+    def get_context_data(self, **kwargs):
+        context = super(SetNewSessionCookieView, self).get_context_data(**kwargs)
+        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        return context
+
 
 @method_decorator(cache_page(0), name='dispatch')
 class ObservingPlanView(CookieMixin, FormView):

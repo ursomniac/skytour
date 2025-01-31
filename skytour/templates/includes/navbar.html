@@ -93,12 +93,18 @@
         <td class="click"><a href="{% url 'calendar-current' %}">Calendar</a></td>
         <td>
             Session: 
-            <a href="{% url 'session-set' %}"><button>Reset Session</button></a> 
+            {% comment %}
+            <a href="{% url 'session-set' %}"><button>Reset Session</button></a>
+            {% endcomment %} 
+            <button onclick="return realtimePopup('/session/set_cookie')")>
+                Set Cookie
+            </button>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
             <a href="{% url 'show-cookies' %}">Cookies</a>
         </td>
     </tr>
 </table>
+{% include 'includes/realtime_script.html' %}
 
 {% comment %}
 {# https://jsfiddle.net/L47NY/7/ #}
