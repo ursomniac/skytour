@@ -150,7 +150,7 @@
                         <br/>
                         <span class="label">Surf. Br.:</span> 
                         {% if object.find_surface_brightness.0 %}
-                        <span class="value">{{ object.find_surface_brightness.0 }}</span>
+                        <span class="value">{{ object.find_surface_brightness.0|floatformat:2 }}</span>
                         {% endif %}
                         <br/>
                         <span class="label">C.I.:</span> 
@@ -161,7 +161,7 @@
                         <span class="label">Dist:</span> 
                         {% if object.find_distance.0 %}
                         <span class="value">
-                            {{ object.find_distance.0 }}
+                            {{ object.find_distance.0|floatformat:1 }}
                             &nbsp;
                             {{ object.find_distance.1 }}
                         </span>
