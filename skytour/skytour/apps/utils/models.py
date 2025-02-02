@@ -82,7 +82,7 @@ class Catalog(AbstractCatalog):
         for dso in dso2:
             dsos.append(dso.object)
         return dsos
-
+    
     @property
     def observing_stats(self):
         n_total = 0
@@ -248,6 +248,15 @@ class Constellation(models.Model):
     @property
     def dso_in_field_count(self):
         return self.dsoinfield_set.count()
+    
+    @property
+    def dsos_with_library_images(self):
+        return self.dso_set.annotate(n=models.Count('image_library')).filter(n__gte=1)
+    
+    @property
+    def count_dsos_with_library_images(self):
+        return self.dsos_with_library_images.count()
+
 
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)

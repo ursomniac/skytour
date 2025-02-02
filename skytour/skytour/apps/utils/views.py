@@ -31,8 +31,6 @@ def get_list_of_primary_library_images(qs):
     
     return sorted(image_list, key = lambda img: img.ut_datetime, reverse = True)
 
-
-    
 def assemble_object_types():
     tt = ObjectType.objects.order_by('slug')
     l = []
@@ -50,6 +48,9 @@ def assemble_object_types():
 
     l.append(dict(label='All', slug='all', spaces=range(12), type=0))
     return l
+
+def assemble_constellation_list():
+    return list(Constellation.objects.values_list('abbreviation', flat=True))
 
 class ConstellationListView(ListView):
     """
@@ -244,6 +245,7 @@ class LibraryImageView(TemplateView):
 
         context['image_list_count'] = len(all_image_list)
         context['object_count'] = object_count
+        context['constellation_list'] = assemble_constellation_list()
         return context
     
 class LibraryCatalogView(TemplateView):
@@ -284,4 +286,23 @@ class LibraryCatalogView(TemplateView):
         context['catalog'] = catalog.name
         context['catalog_slug'] = catalog.slug
         context['use_title'] = f"{ catalog.name } Images"
+        context['constellation_list'] = assemble_constellation_list()
+
+        return context
+    
+class LibraryConstellationView(TemplateView):
+    template_name = 'library_image_list.html'
+    #paginate_by = 24
+
+    def get_context_data(self, **kwargs):
+        context = super(LibraryConstellationView, self).get_context_data(**kwargs)
+        abbr = self.request.GET.get('abbr', 'AND').upper()
+        all = self.request.GET.get('scope') == 'all'
+        dso_images = DSOLibraryImage.objects.filter(object__constellation__abbreviation=abbr).order_by('-ut_datetime', 'order_in_list')
+        dso_image_list = get_list_of_primary_library_images(dso_images)
+        context['image_list'] = dso_image_list
+        context['constellation'] = Constellation.objects.filter(abbreviation=abbr).first()
+        context['object_count'] = len(dso_image_list)
+        context['constellation_list'] = assemble_constellation_list()
+
         return context
