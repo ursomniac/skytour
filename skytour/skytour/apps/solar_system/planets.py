@@ -1,15 +1,16 @@
 import datetime, pytz
 from skyfield.api import load 
 from .vocabs import PLANETS_8
+from ..site_parameter.helpers import get_ephemeris
 
 def get_ecliptic_positions(utdt=None):
     if utdt is None:
-        utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        utdt = datetime.datetime.now(datetime.timezone.utc)
     all_planets = PLANETS_8
     # start
     ts = load.timescale()
     t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     sun = eph['sun']
     points = []
     for planet in all_planets:

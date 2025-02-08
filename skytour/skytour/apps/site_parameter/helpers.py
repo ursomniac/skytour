@@ -45,3 +45,10 @@ def find_site_parameter(slug=None, default=None, param_type=None):
                 pass    # try again
     # I couldn't find anything - sorry.
     return default
+
+def get_ephemeris(dir=None, fn=None):
+    use_dir = dir or find_site_parameter('ephemeris-directory', default='app_data', param_type='string')
+    use_fn = fn or find_site_parameter('ephemeris-filename', default='de442s.bsp', param_type='string')
+    if use_dir is not None and use_fn is not None:
+        return f"{use_dir}/{use_fn}"
+    return None

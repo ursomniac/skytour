@@ -6,6 +6,7 @@ from ..astro.almanac import get_object_rise_set
 from ..astro.angdist import get_small_ang_sep
 from ..astro.astro import solar_system_apparent_magnitude, galilean_magnitude
 from ..astro.local import get_observing_situation
+from ..site_parameter.helpers import get_ephemeris
 from .asteroids import get_asteroid_target
 from .comets import get_comet_target, get_comet_magnitude
 from .jupiter import get_jupiter_physical_ephem
@@ -44,7 +45,7 @@ def get_object_metadata(
     t = ts.utc(utdt)
     jd = t.tt.item()
 
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['Earth']
     sun = eph['Sun']
     if object_type == 'comet':

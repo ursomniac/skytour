@@ -12,6 +12,7 @@ from skyfield.magnitudelib import planetary_magnitude
 from skyfield.projections import build_stereographic_projection
 from ..astro.time import get_t_epoch, get_julian_date
 from ..plotting.map import *
+from ..site_parameter.helpers import get_ephemeris
 from .asteroids import get_asteroid_target, fast_asteroid
 from .comets import get_comet_target, get_comet_magnitude
 from .utils import get_constellation
@@ -77,7 +78,7 @@ def create_finder_chart(
 
     ts = load.timescale()
     t = ts.from_datetime(utdt)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     target = earth.at(t).observe(Star(ra_hours=ra, dec_degrees=dec))
     projection = build_stereographic_projection(target)
@@ -203,7 +204,7 @@ def create_planet_system_view (
     ts = load.timescale()
     t = ts.from_datetime(utdt)
     t0 = get_t_epoch(get_julian_date(utdt))
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     target = earth.at(t).observe(Star(ra_hours=planet_ra, dec_degrees=planet_dec))
     projection = build_stereographic_projection(target)
@@ -370,7 +371,7 @@ def plot_track(
     utdt is the MIDPOINT date.
     """
     ts = load.timescale()
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     sun = eph['sun']
     if object_type == 'planet':

@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from skyfield.api import load
 from skytour.apps.dso.models import DSO
 from skytour.apps.dso.finder import create_dso_finder_chart
+from skytour.apps.site_parameter.helpers import get_ephemeris
 
 class Command(BaseCommand):
     help = 'Create DSO wide/narrow finder charts'
@@ -129,7 +130,7 @@ def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both'
 
     ts = load.timescale() 
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC'))) 
-    eph = load('de421.bsp') 
+    eph = load(get_ephemeris()) 
     earth = eph['earth'] 
 
     if len(dso_list) == 0: 

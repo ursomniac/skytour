@@ -11,7 +11,7 @@ from skyfield.projections import build_stereographic_projection
 
 from ..astro.time import get_t_epoch, get_julian_date, get_last
 from ..plotting.map import *
-from ..site_parameter.helpers import find_site_parameter
+from ..site_parameter.helpers import find_site_parameter, get_ephemeris
 from ..solar_system.plot import r2d, d2r
 from ..utils.format import to_hm, to_dm
 
@@ -50,7 +50,7 @@ def get_skymap(
     # Set up SkyField
     ts = load.timescale()
     t = ts.from_datetime(utdt)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     t0 = get_t_epoch(get_julian_date(utdt))
     last = get_last(utdt, location.longitude)
@@ -218,7 +218,7 @@ def get_zenith_map(
     # Center is LAST, latitude
     ts = load.timescale()
     t = ts.from_datetime(utdt)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     t0 = get_t_epoch(get_julian_date(utdt))
     last = get_last(utdt, location.longitude)

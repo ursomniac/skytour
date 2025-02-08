@@ -9,6 +9,7 @@ from skyfield.almanac import (
     )
 from skyfield.api import wgs84, load
 from .time import get_0h
+from ..site_parameter.helpers import get_ephemeris
 
 def get_astronomical_twilight(times, events, value):
     """
@@ -39,7 +40,7 @@ def dark_time(d, debug=False):
 def get_dark_time(utdt, location, debug=False):
     ts = load.timescale()
     wgs = wgs84.latlon(location.latitude, location.longitude)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     f = dark_twilight_day(eph, wgs)
     if debug:
         print(f"TS: {ts}  F: {f}")
@@ -173,7 +174,7 @@ def get_twilight_begin_end(utdt, loc, time_zone=None):
     ts = load.timescale()
     t0 = ts.from_datetime(ut0)
     t1 = ts.from_datetime(ut1)
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     wgs = wgs84.latlon(loc.latitude, loc.longitude)
     f = dark_twilight_day(eph, wgs)
     times, events = find_discrete(t0, t1, f)

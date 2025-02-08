@@ -3,7 +3,7 @@ from django.db.models import Q
 from skyfield.api import load, Star
 from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
 from skyfield.data import mpc
-from ..site_parameter.helpers import find_site_parameter
+from ..site_parameter.helpers import find_site_parameter, get_ephemeris
 from .asteroids import fast_asteroid
 from .models import Planet, Asteroid, Comet
 from .position import get_object_metadata
@@ -31,7 +31,7 @@ def get_adjacent_planets(planet_dict, utdt, times=None):
    min_sep = find_site_parameter('adjacent-planets-separation', default=10., param_type='float')
 
    ts = load.timescale()
-   eph = load('de421.bsp')
+   eph = load(get_ephemeris())
    earth = eph['earth']
    t = ts.utc(utdt)
 
@@ -89,7 +89,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
    cutoff = find_site_parameter('asteroid-cutoff', default=10.0, param_type='float')
 
    ts = load.timescale()
-   eph = load('de421.bsp')
+   eph = load(get_ephemeris())
    sun = eph['sun']
 
    t = ts.utc(utdt)

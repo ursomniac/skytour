@@ -3,6 +3,7 @@ import math
 from skyfield.api import load
 from ..apps.astro.altaz import get_obliquity
 from ..apps.astro.time import get_julian_date, estimate_delta_t
+from ..apps.site_parameter.helpers import get_ephemeris
 
 def _cosd(d):
     return math.cos(math.radians(d))
@@ -36,7 +37,7 @@ def get_mars_physical_ephem(utdt, planet, debug=False):
     if not debug:
         ts = load.timescale()
         t = ts.utc(utdt.year, utdt.month, utdt.day, utdt.hour, utdt.minute)
-        eph = load('de421.bsp')
+        eph = load(get_ephemeris())
         earth = eph['earth']
         sun = eph['sun']
         mars = eph[planet.target]

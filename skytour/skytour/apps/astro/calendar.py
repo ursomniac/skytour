@@ -1,9 +1,9 @@
 import datetime
 from skyfield import api
 from .almanac import get_sun_rise_set, get_moon_rise_set, get_twilight_begin_end
-from ..observe.models import ObservingLocation
 from .time import get_julian_date
-from ..site_parameter.helpers import find_site_parameter
+from ..observe.models import ObservingLocation
+from ..site_parameter.helpers import find_site_parameter, get_ephemeris
 from ..solar_system.moon import simple_lunar_phase
 from ..misc.models import Calendar
 
@@ -60,7 +60,7 @@ def create_calendar_grid(start_date, location_pk = None, days_out=30, time_zone=
 
     # Set up rise/set, AT start/end
     ts = api.load.timescale()
-    eph = api.load('de421.bsp')
+    eph = api.load(get_ephemeris())
     if location_pk is None:
         location_pk = find_site_parameter('default-location-id', 43, 'positive')
     location = ObservingLocation.objects.get(pk=location_pk)

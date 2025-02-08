@@ -13,7 +13,7 @@ from skyfield.api import Star, load
 from skyfield.projections import build_stereographic_projection
 
 from ..plotting.map import *
-from ..site_parameter.helpers import find_site_parameter
+from ..site_parameter.helpers import find_site_parameter, get_ephemeris
 from .models import DSO
 # Circular import issue...  Sigh.
 from .const_utils import get_boundary_lines
@@ -238,7 +238,7 @@ def create_dso_finder_chart(
     if t is None:
         t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC'))) 
     if eph is None:
-        eph = load('de421.bsp') 
+        eph = load(get_ephemeris()) 
     earth = eph['earth'] if earth is None else earth
 
     # Center the chart on the DSO
@@ -448,7 +448,7 @@ def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9,
     ):
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
 
     # Center the chart on the DSO

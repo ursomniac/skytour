@@ -11,6 +11,7 @@ from skyfield.projections import build_stereographic_projection
 from ..astro.angdist import chord_length
 from ..astro.transform import get_cartesian
 from ..plotting.map import *
+from ..site_parameter.helpers import get_ephemeris
 from ..utils.format import to_hm, to_dm
 #from ..utils.models import ConstellationBoundaries, ConstellationVertex, Constellation
 
@@ -105,7 +106,7 @@ def create_atlas_plot(
     ts = load.timescale()
     # Datetime is arbitrary
     t = ts.from_datetime(datetime.datetime(2022, 1, 1, 0, 0).replace(tzinfo=pytz.utc)) # Arbitrary time
-    eph = load('de421.bsp')
+    eph = load(get_ephemeris())
     earth = eph['earth']
     zenith = earth.at(t).observe(Star(ra_hours=center_ra, dec_degrees=center_dec))
 
