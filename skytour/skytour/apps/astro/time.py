@@ -167,3 +167,6 @@ def get_last(utdt, longitude):
     last = gast + longitude/15.
     last %= 24.
     return last
+
+def utc_now():
+    return datetime.datetime.now(datetime.timezone.utc)

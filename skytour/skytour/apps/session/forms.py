@@ -1,6 +1,7 @@
-from datetime import datetime
+import datetime
 from django import forms
 from ..abstract.vocabs import IMAGING_STATUS_CHOICES
+from ..astro.time import utc_now
 from ..dso.models import DSOList
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
@@ -25,9 +26,26 @@ ATLAS_DSO_MARKERS = [
     ('symbols', 'Symbols')
 ]
 
+def get_next_utc(hours_split=10):
+    utc = utc_now()
+    if utc.hour >= hours_split:
+        return utc + datetime.timedelta(days=1)
+    return utc
+
+def get_default_start_time():
+    """
+    This is crude but...
+    """
+    #           J   F   M   A   M   J   J   A   S   O   N   D
+    H = [None,  0,  0,  0,  1,  2,  3,  2,  1,  0,  0,  0,  0]
+    M = [None,  0,  0, 30, 30,  0,  0, 30, 30, 30,  0,  0,  0]
+    utc = utc_now()
+    month = utc.month
+    return utc.replace(hour=H[month], minute=M[month], second=0, microsecond=0)
+
 class SetNewSessionCookieForm(forms.Form):
-    ut_date = forms.DateField(label="UT Date")
-    ut_time = forms.TimeField(label='UT Time')
+    ut_date = forms.DateField(label="UT Date", initial=get_next_utc)
+    ut_time = forms.TimeField(label='UT Time', initial=get_default_start_time)
     time_zone = forms.ModelChoiceField(
         queryset = TimeZone.objects.all().order_by('utc_offset'),
         label = 'Local Time Zone'
@@ -44,8 +62,8 @@ class SetNewSessionCookieForm(forms.Form):
     #)
 
 class ObservingParametersForm(forms.Form):
-    ut_date = forms.DateField(initial=datetime.now, label="UT Date")
-    ut_time = forms.TimeField(initial='0:00', label='UT Time')
+    ut_date = forms.DateField(initial=get_next_utc, label="UT Date")
+    ut_time = forms.TimeField(initial=get_default_start_time, label='UT Time')
     time_zone = forms.ModelChoiceField(
         queryset = TimeZone.objects.all().order_by('utc_offset'),
         label = 'Local Time Zone'
@@ -125,7 +143,7 @@ class SessionAddForm(forms.Form):
     session = forms.ModelChoiceField (
         queryset = ObservingSession.objects.all()
     )
-    ut_date = forms.DateField(required=False, label='UT Date', initial=datetime.utcnow)
+    ut_date = forms.DateField(required=False, label='UT Date', initial=utc_now)
     location = forms.ModelChoiceField (
         queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
     )
@@ -150,8 +168,8 @@ class SessionAddForm(forms.Form):
     
     # Required
     ut_time = forms.TimeField(
-        label='UT Time',
-        initial=datetime.utcnow # utc
+        label='UTX Time',
+        initial=utc_now
     )
     object_type = forms.ChoiceField(
         choices = OBSERVE_TYPES, initial='DSO'

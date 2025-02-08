@@ -41,8 +41,7 @@ def test_comets(utdt):
     time_objects(utdt, 'comet', objects)
 
 def run_tests():
-    utdt = datetime.datetime.now()
-    utdt = utdt.replace(tzinfo=utc)
+    utdt = datetime.datetime.now(datetime.timezone.utc)
     test_asteroids(utdt)
     test_comets(utdt)
 

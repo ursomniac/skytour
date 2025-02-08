@@ -110,7 +110,7 @@ def get_real_time_conditions(target, request, context, debug=False):
     if debug:
         print(f"DT BASE: {dt_base} OFFSET: {offset}")
     # Set up datetimes
-    utdt = dt.datetime.now().replace(tzinfo=pytz.utc) if dt_base == 'now' else context['utdt_start']
+    utdt = dt.datetime.now(dt.timezone.utc) if dt_base == 'now' else context['utdt_start']
     utdt += dt.timedelta(hours=offset)
 
     if dt_base == 'cookie':

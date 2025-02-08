@@ -1,21 +1,13 @@
 import datetime
 from django import forms
-#from matplotlib.pyplot import show
-#from ..session.cookie import deal_with_cookie
+from ..astro.time import utc_now
 from .models import Asteroid, Planet, Comet
 from .vocabs import STATUS_CHOICES, BACKGROUND_CHOICES
 
-def date_plus_10():
-    today = datetime.datetime.now(datetime.timezone.utc)
-    return today + datetime.timedelta(days=10)
 
 class TrackerForm(forms.Form):
-    start_date = forms.DateField(
-        initial=datetime.datetime.now
-    )
-    end_date = forms.DateField(
-        initial=date_plus_10
-    )
+    start_date = forms.DateField()
+    end_date = forms.DateField()
     object = forms.ChoiceField(choices=[])
     date_step = forms.IntegerField(
         initial=1,

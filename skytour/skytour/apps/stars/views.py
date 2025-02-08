@@ -108,7 +108,8 @@ class ZenithMagView(FormView):
         utdt = c.get('utdt_start', None)
         utdt += datetime.timedelta(hours = c.get('session_length', 3.)/2.)
         if not utdt:
-            utdt = datetime.datetime.utcnow().replace(hour=21, minute=0, tzinfo=pytz.utc)
+            #utdt = datetime.datetime.utcXnow().replace(hour=21, minute=0, tzinfo=pytz.utc)
+            utdt = datetime.datetime.now(datetime.timezone.utc).replace(hour=1, minute=0 )
 
         initial['ut_date'] = utdt.date()
         initial['ut_time'] = utdt.time()

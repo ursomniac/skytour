@@ -82,7 +82,7 @@ def find_objects_at_home(
     """
     # 1. sort out time
     if utdt is None:
-        utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
+        utdt = dt.datetime.now(dt.timezone.utc)
     else:
         utdt = parse_utdt(utdt)
     utdt += dt.timedelta(hours=offset_hours)
@@ -164,11 +164,9 @@ def find_objects_at_cookie(
         scheduled = False
     ):
 
-    print("GOT HERE AT COOKIE")
-    print("MIN DEC: ", min_dec, " HOUSE: ", house)
     # 1. sort out time
     if utdt is None:
-        utdt = dt.datetime.now().replace(tzinfo=pytz.utc)
+        utdt = dt.datetime.now(dt.timezone.utc)
     else:
         if type(utdt) == str:
             utdt = parse_utdt(utdt)

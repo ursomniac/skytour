@@ -331,7 +331,7 @@ class TrackerView(FormView):
     def get_initial(self):
         initial = super(TrackerView, self).get_initial()
         c = deal_with_cookie(self.request, {})
-        start_date = c.get('utdt_start', datetime.datetime.utcnow())
+        start_date = c.get('utdt_start', datetime.datetime.now(datetime.timezone.utc))
         end_date = start_date + datetime.timedelta(days=10)
         initial['start_date'] = start_date
         initial['end_date'] = end_date

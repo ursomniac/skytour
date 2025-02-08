@@ -182,7 +182,7 @@ class SetSessionCookieView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(SetSessionCookieView, self).get_context_data(**kwargs)
-        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['now'] = datetime.datetime.now(datetime.timezone.utc)
         return context
     
 class SetNewSessionCookieView(FormView):
@@ -217,7 +217,7 @@ class SetNewSessionCookieView(FormView):
     
     def get_context_data(self, **kwargs):
         context = super(SetNewSessionCookieView, self).get_context_data(**kwargs)
-        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['now'] = datetime.datetime.now(datetime.timezone.utc)
         return context
 
 
@@ -234,7 +234,7 @@ class ObservingPlanView(CookieMixin, FormView):
         ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
         ztime += datetime.timedelta(hours=context['session_length']/2.)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
-        context['now'] = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        context['now'] = datetime.datetime.now(datetime.timezone.utc)
         context['form'] = PDFSelectForm()
         return context
 
@@ -367,7 +367,7 @@ class SessionAddView(CookieMixin, FormView):
                 shown_name = shown_name.replace(' ', '-')
             if d['catalog'].abbreviation == 'OTHER':
                 shown_name = shown_name.replace('OTHER ','')
-            print("SHOWN NAME: ", shown_name)
+            #print("SHOWN NAME: ", shown_name)
             object = lookup_dso(shown_name)
             if object is None:
                 raise ValidationError(f"Failed to look up DSO {d['catalog']} {dso_id}")

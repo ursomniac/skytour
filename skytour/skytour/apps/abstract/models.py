@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from ..astro.time import utc_now
 from ..observe.models import ObservingLocation
 from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
@@ -228,7 +229,7 @@ class ObservingLog(models.Model):
     session = models.ForeignKey(ObservingSession, null=True, on_delete=models.CASCADE)
     ut_datetime = models.DateTimeField (
         _('UTDT of Obs.'),
-        default = datetime.datetime.utcnow,
+        default = utc_now, 
         help_text = 'Date/Time (UT)'
     )
     # telescope

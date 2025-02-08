@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from itertools import chain
 from ..observe.models import ObservingLocation
-from ..astro.time import get_last, get_julian_date
+from ..astro.time import get_last, get_julian_date, utc_now
 from ..astro.utils import get_limiting_magnitude
 from ..observe.utils import get_effective_bortle
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
@@ -165,7 +165,7 @@ class ObservingCircumstances(models.Model):
     )
     ut_datetime = models.DateTimeField (
         _('UTDT'),
-        default=datetime.datetime.utcnow  # Deprecated - fix = ???
+        default=utc_now  # Deprecated - fix = ???
     )
     session_stage = models.CharField(
         _('Session Stage'),
