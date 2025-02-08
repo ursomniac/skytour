@@ -98,7 +98,7 @@ def get_visible_asteroid_positions(utdt, utdt_end=None, location=None, time_zone
 
    asteroids = Asteroid.objects.filter(Q(est_brightest__lte=cutoff) | Q(always_include=True))
 
-   with load.open('bright_asteroids.txt') as f:
+   with load.open('app_data/bright_asteroids.txt') as f:
       mps = mpc.load_mpcorb_dataframe(f)
    mps = mps.set_index('designation', drop=False)
 

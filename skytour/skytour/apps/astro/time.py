@@ -1,4 +1,4 @@
-import datetime, pytz
+import datetime
 import math
 from ..utils.format import to_sex
 from .altaz import get_nutation, get_obliquity
@@ -9,8 +9,8 @@ def get_utdt(utdt=None):
     Take a non-TZ aware datetime and return an aware one.
     """
     if not utdt:
-        utdt = datetime.datetime.utcnow()
-    return utdt.replace(tzinfo=pytz.utc)
+        utdt = datetime.datetime.now(datetime.timezone.utc)
+    return utdt
 
 def get_0h(utdt):
     """

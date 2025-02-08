@@ -86,7 +86,7 @@ class SetSessionCookieView(FormView):
         location_pk = d['location'].pk
         my_location = ObservingLocation.objects.get(pk=location_pk)
         if d['set_to_now'] == 'Yes':
-            utdt_start = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+            utdt_start = datetime.datetime.now(datetime.timezone.utc)
         else:
             utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
         local_time_zone = d['time_zone'].name

@@ -202,7 +202,7 @@ def get_object_metadata(
     if object_type == 'planet' and instance is not None:
         if instance.moon_list:
             moon_obs = []
-            moonsys = load(instance.load)
+            moonsys = load(instance.bsp_file)
             earth_s = moonsys['earth']
             sun_s = moonsys['sun']
             for moon in instance.moon_list:

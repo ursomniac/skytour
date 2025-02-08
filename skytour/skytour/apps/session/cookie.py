@@ -31,7 +31,7 @@ def get_all_cookies(request):
     return cookies
 
 def get_cookie_defaults():
-    ut0 = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    ut0 = datetime.datetime.now(datetime.timezone.utc)
     session_length = find_site_parameter('observing-session-length', default=3.0, param_type='float')
     ut1 = ut0 + datetime.timedelta(hours=session_length)
     julian_date = get_julian_date(ut0)

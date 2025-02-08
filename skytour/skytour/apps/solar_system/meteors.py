@@ -1,10 +1,10 @@
-import datetime, pytz
+import datetime
 from ..astro.time import get_julian_date
 from .models import MeteorShower
 
 def get_meteor_showers(utdt=None):
     if not utdt:
-        utdt = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        utdt = datetime.datetime.now(datetime.timezone.utc)
     active = []
     jd = get_julian_date(utdt)
     meteor_showers = MeteorShower.objects.all()

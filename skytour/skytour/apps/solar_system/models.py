@@ -79,6 +79,10 @@ class Planet(ObservableObject):
     def num_slideshow_images(self):
         return self.image_library.filter(use_in_carousel=True).count()
     
+    @property
+    def bsp_file(self):
+        return f"app_data/{self.load}"
+    
     def get_absolute_url(self):
         return '/planet/{}'.format(self.slug)
 
