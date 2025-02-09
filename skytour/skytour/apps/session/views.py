@@ -155,7 +155,6 @@ class SetSessionCookieView(FormView):
             dec_limit = d['dec_limit'],
             slew_limit = d['slew_limit'],
             mag_limit = d['mag_limit'],
-            hour_angle_range = d['hour_angle_range'],
             show_planets = d['show_planets'],
             flip_planets = d['flip_planets'],
             color_scheme = d['color_scheme'],
