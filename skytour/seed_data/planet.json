@@ -1,0 +1,93 @@
+[
+  {
+    "model": "solar_system.planet",
+    "pk": 1,
+    "fields": {
+      "name": "Mercury",
+      "slug": "mercury",
+      "load": null,
+      "diameter": 4879.0,
+      "semi_major_axis": 0.3871,
+      "moon_names": null,
+      "planet_map": ""
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 2,
+    "fields": {
+      "name": "Venus",
+      "slug": "venus",
+      "load": null,
+      "diameter": 12104.0,
+      "semi_major_axis": 0.7233,
+      "moon_names": null,
+      "planet_map": ""
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 3,
+    "fields": {
+      "name": "Mars",
+      "slug": "mars",
+      "load": "mar_excerpt.bsp",
+      "diameter": 6792.0,
+      "semi_major_axis": 1.5273,
+      "moon_names": "Phobos, Deimos",
+      "planet_map": "planet_maps/mars_1k_color.jpg"
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 4,
+    "fields": {
+      "name": "Jupiter",
+      "slug": "jupiter",
+      "load": "jup_excerpt.bsp",
+      "diameter": 142984.0,
+      "semi_major_axis": 5.2028,
+      "moon_names": "Io, Europa, Ganymede, Callisto",
+      "planet_map": "planet_maps/jupiter_2020-09-04_720px.png"
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 5,
+    "fields": {
+      "name": "Saturn",
+      "slug": "saturn",
+      "load": "sat_excerpt.bsp",
+      "diameter": 120536.0,
+      "semi_major_axis": 9.5388,
+      "moon_names": "Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus",
+      "planet_map": ""
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 6,
+    "fields": {
+      "name": "Uranus",
+      "slug": "uranus",
+      "load": "ura_excerpt.bsp",
+      "diameter": 51118.0,
+      "semi_major_axis": 19.1914,
+      "moon_names": "Miranda, Ariel, Umbriel, Oberon, Titania",
+      "planet_map": ""
+    }
+  },
+  {
+    "model": "solar_system.planet",
+    "pk": 7,
+    "fields": {
+      "name": "Neptune",
+      "slug": "neptune",
+      "load": "nep_excerpt.bsp",
+      "diameter": 49526.0,
+      "semi_major_axis": 30.0611,
+      "moon_names": "Triton",
+      "planet_map": ""
+    }
+  }
+]

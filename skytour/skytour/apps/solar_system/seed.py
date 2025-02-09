@@ -14,7 +14,7 @@ def tr(line, col, length, type):
     return str.strip()
 
 def load_asteroids():
-    with open('app_data/bright_asteroids.txt') as f:
+    with open('generated_data/bright_asteroids.txt') as f:
         lines = f.readlines()
 
     for line in lines:

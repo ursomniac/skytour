@@ -38,6 +38,7 @@ class TimeZone(models.Model):
     """
     This is to get around the observing location hard-coded time zone.
     """
+    ### TODO V2: Need to seed this!
     name = models.CharField(
         _('Name'),
         max_length = 40

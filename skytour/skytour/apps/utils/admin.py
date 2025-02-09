@@ -27,6 +27,7 @@ class ConstellationAdmin(admin.ModelAdmin):
                 ('center_ra', 'center_dec', 'area'),
                 ('map', 'other_map', 'historical_image'),
                 'background',
+                'description'
             ]
         }),
     )

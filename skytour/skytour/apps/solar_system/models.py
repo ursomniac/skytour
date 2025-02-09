@@ -81,7 +81,7 @@ class Planet(ObservableObject):
     
     @property
     def bsp_file(self):
-        return f"app_data/{self.load}"
+        return f"generated_data/{self.load}"
     
     def get_absolute_url(self):
         return '/planet/{}'.format(self.slug)

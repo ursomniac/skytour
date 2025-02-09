@@ -4,7 +4,7 @@ from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
 from skyfield.data import mpc
 
 def get_asteroid_target(asteroid, ts, sun):
-   with load.open('app_data/bright_asteroids.txt') as f:
+   with load.open('generated_data/bright_asteroids.txt') as f:
       mps = mpc.load_mpcorb_dataframe(f)
    mps = mps.set_index('designation', drop=False)
    try:

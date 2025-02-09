@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
 from ..abstract.vocabs import YES_NO, NO
 from ..plotting.vocabs import MAP_SYMBOL_TYPES
@@ -210,10 +209,13 @@ class Constellation(models.Model):
         upload_to = 'constellation_maps',
         null=True, blank=True
     )
-    background = RichTextField (
-        _('Background'),
-        null = True, blank = True
-    )
+
+    description = models.TextField (
+        _('Description'),
+        null = True, blank = True,
+        help_text = 'Can contain raw HTML'
+    )    
+
     historical_image = models.ImageField (
         _('Historical Map'),
         upload_to = 'historical_constellation_maps',

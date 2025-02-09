@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'colorfield',
     #'django_bootstrap5',
     'djangoyearlessdate',
-    'ckeditor',
     'taggit',
     
     'skytour.apps.abstract',
