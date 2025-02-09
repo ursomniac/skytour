@@ -30,11 +30,6 @@ class TrackerForm(forms.Form):
         choices = BACKGROUND_CHOICES,
         label = 'Display'
     )
-    #show_planets = forms.ChoiceField( 
-    #    initial = 0, 
-    #    choices = STATUS_CHOICES,
-    #    label = 'Show (other) Planets'
-    #)
     show_dsos = forms.ChoiceField(
         initial = 0,
         choices = STATUS_CHOICES,

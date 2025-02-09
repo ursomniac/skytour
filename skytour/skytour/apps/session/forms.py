@@ -80,7 +80,6 @@ class ObservingParametersForm(forms.Form):
         initial = find_site_parameter('slew-limit', default=70.0, param_type='float'),
         label = 'Alt. Slew Limit',
     )
-    show_planets = forms.ChoiceField(choices=PLANET_CHOICES, initial=find_site_parameter('poll-planets', default='visible', param_type='string'))
     flip_planets = forms.ChoiceField(choices=YES_NO, initial='Yes')
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     atlas_dso_marker = forms.ChoiceField(

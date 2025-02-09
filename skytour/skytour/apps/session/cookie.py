@@ -40,7 +40,6 @@ def get_cookie_defaults():
         utdt_start = ut0.isoformat(),
         location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
         dec_limit = find_site_parameter('declination-limit', default=-25., param_type='float'),
-        show_planets = find_site_parameter('poll-planets', default='visible', param_type='string'),
         color_scheme = 'dark',
         julian_date = julian_date,
         t = t

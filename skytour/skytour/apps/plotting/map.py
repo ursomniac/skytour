@@ -426,20 +426,6 @@ def map_dsos(ax, earth, t, projection,
                 if not ignore_setting:
                     interesting.append(other)
                 else:
-                    # TODO: a better way might be:
-                    #   1. if altitude > -90 + latitude + 25
-                    #   2. AND HA < HA_limit
-                    #   then add to interesting...
-                    # UGH - this fails in the NW because of the HA,
-                    #   SO, allow for circumpolar objects to always appear
-                    #   ... for now
-                    #ha = center[0] - other.ra
-                    #ha_limit = find_site_parameter('hour-angle-range', 6, 'float')
-                    #dec_limit = find_site_parameter('declination-limit', -30, 'float')
-                    #if other.dec >= dec_limit and (ha < ha_limit or other.dec > center[1]):
-                    #    interesting.append(other) 
-                    #
-                    # NEW WAY - more straightforward:
                     my_alt = math.degrees(math.asin(sin_dist))
                     if my_alt > min_alt:
                         interesting.append(other)

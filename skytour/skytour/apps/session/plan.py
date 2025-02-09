@@ -9,12 +9,12 @@ def get_plan(context, debug=False):
     """
     cookies = context['cookies']
     times = [(time.perf_counter(), 'Start')]
-    show_all = context.get('show_planets', 'visible') == 'all'
+    show_all = context.get('show_planets', 'visible') == 'all' # redundant? remove?
     location = context['location']
 
     # Moon
     moon_session = cookies['moon']['session']
-    go = show_all or moon_session['start']['is_up'] or moon_session['end']['is_up']
+    go = show_all or moon_session['start']['is_up'] # or moon_session['end']['is_up']
     if go:
         show_moon = moon_session
     else:
@@ -29,7 +29,7 @@ def get_plan(context, debug=False):
         pd = cookies['planets'][k]
         session = pd.get('session')
         # RAD 12 Jan 2022 - don't get planet images to save time
-        go = show_all or session['start']['is_up'] or session['end']['is_up']
+        go = show_all or session['start']['is_up'] # or session['end']['is_up']
         if go:
             pd['object'] = Planet.objects.get(slug=pd['slug'])
             show_planets.append(pd)
@@ -41,7 +41,7 @@ def get_plan(context, debug=False):
     for v in cookies['asteroids']:
         session = v.get('session', None)
         try:
-            go = session is None or v['session']['start']['is_up'] or v['session']['end']['is_up'] 
+            go = session is None or v['session']['start']['is_up'] # or v['session']['end']['is_up'] 
             if go:
                 v['object'] = Asteroid.objects.get(slug=v['slug'])
         except:
@@ -55,7 +55,7 @@ def get_plan(context, debug=False):
     show_comets = []
     for c in cookies['comets']:
         try:
-            go = c['session']['start']['is_up'] or c['session']['end']['is_up']
+            go = c['session']['start']['is_up'] # or c['session']['end']['is_up']
             if go:
                 c['object'] = Comet.objects.get(pk=c['pk'])
         except:

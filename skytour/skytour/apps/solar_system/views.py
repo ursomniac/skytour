@@ -367,12 +367,6 @@ class TrackerView(FormView):
         fov = d['fov']
         dsos = d['show_dsos'] == '1'
         reversed = d['reversed'] == 'wob'
-        # Planets
-        #planets = None
-        #print("CONTEXT: ",context.keys())
-        #if d['show_planets'] == '1':
-        #    pass
-    
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
 
@@ -390,7 +384,6 @@ class TrackerView(FormView):
             return_data = True,
             dsos=dsos,
             times=times,
-            #planets=planets
         )
         context['form'] = form
         context['track_positions'] = track_positions
