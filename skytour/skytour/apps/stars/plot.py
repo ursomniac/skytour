@@ -25,7 +25,7 @@ def get_skymap(
         moon = None,
         sun = None,
         reversed=True,
-        milky_way=False,
+        milky_way=True,
         simple=False,
         sky_limit = 70.,
         slew_limit=None,

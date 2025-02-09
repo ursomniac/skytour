@@ -87,7 +87,6 @@ class ObservingParametersForm(forms.Form):
         choices=ATLAS_DSO_MARKERS,
         initial='shapes',
         label = 'Atlas DSOs as Symbols or Shapes')
-    show_milky_way = forms.ChoiceField(choices=YES_NO, initial='Yes')
     set_to_now = forms.ChoiceField(choices=YES_NO, initial='No')
 
 PAGE_CHOICES = [

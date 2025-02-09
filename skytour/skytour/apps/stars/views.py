@@ -33,7 +33,6 @@ class SkyView(CookieMixin, TemplateView):
         else:
             min_dso_alt = 20.
         reversed = context['color_scheme'] == 'dark'
-        milky_way = context['show_milky_way'] == 'Yes'
         slew_limit = None if 'slew_limit' not in context.keys() else context['slew_limit']
         utdt_start = context['utdt_start']
         location = context['location']
@@ -76,7 +75,6 @@ class SkyView(CookieMixin, TemplateView):
             comet_list=comet_list,
             moon = moon,
             sun = sun,
-            milky_way=milky_way,
             slew_limit = slew_limit,
             reversed=reversed,
             hours=hours,

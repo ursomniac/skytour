@@ -21,7 +21,6 @@ def do_skymap(p, context):
         moon = cookie_dict['moon'],
         sun = cookie_dict['sun'],
         reversed = False,
-        milky_way = context['show_milky_way'] == 'Yes',
         slew_limit = slew_limit,
         local_time = context['local_time']
     ) 
