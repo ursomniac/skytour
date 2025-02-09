@@ -45,10 +45,24 @@ summary {
 summary::-webkit-details-marker {
   display: none;
 }
+
+.now-button {
+  color: #000;
+  margin-left: 20px;
+  margin-bottom: 2px;
+  padding: 5px;
+  border: solid 2px #FF0;
+}
+.now-button a {
+  color: #000;
+}
 </style>
 
 <h1>Set Session Parameters</h1>
-<h2>Current UT: {{ now|date:"D Y-M-d H:i" }}</h2>
+<h2>
+  Current UT: {{ now|date:"D Y-M-d H:i" }}         
+  <button class="now-button"><a href="#" onClick="autoFill(); return true;">Set Date/Time to Now</a></button>
+</h2>
 <div class="plan_form">
     {% if form %}
     <form method="post">
@@ -87,4 +101,15 @@ summary::-webkit-details-marker {
 {% endif %}
   <br><br><br><br clear="all">
   <hr>
+{% endblock %}
+
+{% block extra-js %}
+<script>
+  function autoFill() {
+    const UTDate = document.getElementById('id_ut_date');
+    const UTTime = document.getElementById('id_ut_time');
+    UTDate.value = '{{ now_date }}';
+    UTTime.value = '{{ now_time }}';
+  }
+</script>
 {% endblock %}

@@ -170,3 +170,21 @@ def get_last(utdt, longitude):
 
 def utc_now():
     return datetime.datetime.now(datetime.timezone.utc)
+
+def utc_round_up_minutes(dt=None, window=15):
+    dt = dt if dt is not None else datetime.datetime.now(datetime.timezone.utc)
+    new_hour = dt.hour
+    minute = dt.minute
+    increase_date = False
+
+    new_minute = window * math.ceil(minute/window)
+    if new_minute > 59: 
+        new_minute = 0
+        new_hour += 1
+    if new_hour > 23:
+        new_hour = 0
+        increase_date = True
+    dt = dt.replace(minute=new_minute, hour=new_hour, second=0, microsecond=0)
+    if increase_date:
+        dt = dt + datetime.timedelta(days=1)
+    return dt

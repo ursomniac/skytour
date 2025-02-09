@@ -39,6 +39,7 @@ def get_cookie_defaults():
     cookie_dict = dict (
         utdt_start = ut0.isoformat(),
         location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
+        # TODO: remove and set dec limit based on latitude of location
         dec_limit = find_site_parameter('declination-limit', default=-25., param_type='float'),
         color_scheme = 'dark',
         julian_date = julian_date,
@@ -58,6 +59,7 @@ def deal_with_cookie(request, context):
     # Override these three values from the cookie where they're encoded
     context['utdt_start'] = isoparse(cookie['utdt_start'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
+    # TODO V2: set time zone from location
     if 'time_zone' not in context.keys(): # context['time_zone'] is not None:
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
         context['time_zone'] = TimeZone.objects.get(pk=time_zone_id).name

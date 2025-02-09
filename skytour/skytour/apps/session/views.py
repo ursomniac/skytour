@@ -1,5 +1,6 @@
 import datetime, pytz
 import io
+import math
 import numpy as np
 import pandas as pd
 import time
@@ -18,7 +19,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from ..astro.almanac import get_dark_time
-from ..astro.time import get_julian_date
+from ..astro.time import get_julian_date, utc_round_up_minutes
 from ..dso.helpers import lookup_dso
 from ..dso.models import DSOObservation, DSO
 from ..observe.models import ObservingLocation
@@ -60,15 +61,21 @@ class SetSessionCookieView(FormView):
     def get_initial(self):
         initial = super().get_initial() # needed since we override?
         initial = get_initial_from_cookie(self.request, initial)
+        # TODO V2 - remove - get time zone from location
         time_zone = find_site_parameter('default-time-zone-id', None, 'positive')
         if time_zone is not None:
             initial['time_zone'] = time_zone
         return initial
 
     def get(self, request, *args, **kwargs):
+        WINDOW = 15 # 0, 15, 30, 45
         form = self.get_form(self.get_form_class())
         context = self.get_context_data(**kwargs)
         context['form'] = form
+        # set up the "set to now" button on the form
+        now = utc_round_up_minutes()
+        context['now_date'] = now.strftime("%Y-%m-%d")
+        context['now_time'] = now.strftime("%H:%M")
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -85,10 +92,7 @@ class SetSessionCookieView(FormView):
         d = form.cleaned_data
         location_pk = d['location'].pk
         my_location = ObservingLocation.objects.get(pk=location_pk)
-        if d['set_to_now'] == 'Yes':
-            utdt_start = datetime.datetime.now(datetime.timezone.utc)
-        else:
-            utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
+        utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
         local_time_zone = d['time_zone'].name
         try:
             time_zone = pytz.timezone(local_time_zone)
