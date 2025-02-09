@@ -1,0 +1,55 @@
+skytour/apps/misc/models.py:    ### TODO V2: Need to seed this!
+skytour/apps/stars/plot.py:    # TODO: should this be set from the limiting magnitude at the location based on its Bortle value?
+skytour/apps/stars/views.py:        # TODO: figure out if moon is on the plot
+skytour/apps/stars/views.py:            # TODO: change default location!
+skytour/apps/dso/finder.py:        # TODO: This is inefficient: should use the dso.nearby_dsos property to get a list
+skytour/apps/dso/plot.py:    # TODO: MOVE this to .plotting.map - I think that will handle the circular import problem...
+skytour/apps/dso/plot.py:    TODO: Change annontation font weight to be BOLD for high/highest priority!
+skytour/apps/dso/plot.py:    TODO: write this.
+skytour/apps/dso/plot.py:    TODO: put all the colors together in a single dictionary!
+skytour/apps/dso/models.py:    # TODO: Add support for multiple telescopes
+skytour/apps/dso/models.py:    # TODO: Add support for multiple telescopes
+skytour/apps/dso/models.py:    # TODO: Add support for multiple telescopes
+skytour/apps/dso/models.py:        # TODO: Add support for multiple telescopes
+skytour/apps/dso/models.py:    TODO: Bright Star Lists
+skytour/apps/dso/models.py:    TODO: Double Stars?
+skytour/apps/dso/models.py:    TODO: "Special" plates for things like the LMC/SMC/Virgo, etc. - These will need a different FOV, or 
+skytour/apps/dso/models.py:    # TODO: Add Telescope so we can have different imaging priorities for different scopes
+skytour/apps/dso/README.md:* Object Type (TODO: make a better list?)
+skytour/apps/dso/seed.py:### TODO V2:  make this a standalone script used in DB seeding!
+skytour/apps/dso/observing.py:    # TODO: Make this use the cookie, if available
+skytour/apps/dso/vocabs.py:TODO: move all of the code reference to plot color choices to point to this dict.
+skytour/apps/utils/models.py:                # TODO: make this a method/property on DSO!
+skytour/apps/plotting/map.py:    TODO: make this more realistic
+skytour/apps/plotting/map.py:    TODO: I THINK We want to ALWAYS send a center value, even when this is
+skytour/apps/plotting/map.py:    TODO: IF you are creating a plot that has a center + radius or FOV, 
+skytour/apps/plotting/map.py:    TODO: replace the Moon's unicode with a scaled Moon phase.
+skytour/apps/plotting/map.py:            # TODO: test if xx, yy near the plot to speed this up
+skytour/apps/solar_system/plot.py:    # TODO: deal with having the ring in front of the planet and then behind it.
+skytour/apps/solar_system/plot.py:    # TODO: Add (other) planets
+skytour/apps/solar_system/pdf.py:            # TODO: 404?
+skytour/apps/solar_system/utils.py:    TODO: I'm not sure if the call to Skyfield handles the precession
+skytour/apps/solar_system/position.py:        # TODO: Support comets here.
+skytour/apps/solar_system/position.py:                try: # TODO: Add additional code for Iapetus (somehow)
+skytour/apps/solar_system/saturn.py:    # TODO: factor in the tilt of the axis projected to the earth
+skytour/apps/solar_system/views.py:        TODO: Table should include rise/set based off of the cookie.
+skytour/apps/solar_system/views.py:        # TODO: allow full list of asteroids, but this might be time consuming
+skytour/apps/solar_system/views.py:        TODO: List should include rise/set info from the cookie.
+skytour/apps/solar_system/views.py:        # TODO: allow for full set of comets but this might be time consumind
+skytour/apps/astro/altaz.py:### TODO: replace these with Skyfield calls, since I think there are them now.
+skytour/apps/astro/culmination.py:# TODO: 
+skytour/apps/astro/culmination.py:        delta_days += YEAR_OFFSET # TODO: IS THIS RIGHT?
+skytour/apps/astro/almanac.py:    # TODO: Add transit times!
+skytour/apps/session/pdf_pages/solar_system.py:    cookie_dict['moon']['name'] = 'Moon' # TODO: Fix this bug!
+skytour/apps/session/pdf_pages/dso.py:    ### TODO: 1. get rid of dso_mag_limit;  2. get rid of priority__in...
+skytour/apps/session/cookie.py:        # TODO: remove and set dec limit based on latitude of location
+skytour/apps/session/cookie.py:    # TODO V2: set time zone from location
+skytour/apps/session/forms.py:    # TODO V2: remove time_zone - get from location's time_zone value
+skytour/apps/session/forms.py:    # TODO V2: replace with "min altitude" and set based on location's latitude
+skytour/apps/session/forms.py:    # TODO V2: needed? If mode = I, then yes - used?
+skytour/apps/session/forms.py:    # TODO V2: set default based on observing mode: Yes if S or M;  No otherwise.
+skytour/apps/session/forms.py:    # TODO V2: keep
+skytour/apps/session/forms.py:    # TODO V2: used?
+skytour/apps/session/forms.py:    # TODO V2: set default session based on most recent session value
+skytour/apps/session/views.py:        # TODO V2 - remove - get time zone from location
+skytour/apps/session/views.py:        # TODO: Add auto-lookup for site_parameter for location
