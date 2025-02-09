@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 temp/
 .swp
+*.sqlite3
 
 CometEls2.txt
 Atlases/
