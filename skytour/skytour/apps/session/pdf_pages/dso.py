@@ -11,11 +11,12 @@ def do_dso_long_list(p, context):
     This makes the very long list of DSOs.
     """
     location = context['location']
-
+    ### TODO: 1. get rid of dso_mag_limit;  2. get rid of priority__in...
+    dso_mag_limit = 13. if 'mag_limit' not in context.keys() else context['mag_limit']
     targets = []
     all_dsos = DSO.objects.filter(
         dec__gt=context['dec_limit'], 
-        magnitude__lt=context['mag_limit'],
+        magnitude__lte=dso_mag_limit,
         priority__in=['Highest', 'High']
     ).order_by('constellation__abbreviation')
     

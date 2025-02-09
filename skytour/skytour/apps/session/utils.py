@@ -10,7 +10,7 @@ def get_initial_from_cookie(request, initial):
         date = isoparse(cookie['utdt_start']).date(),
         time = isoparse(cookie['utdt_start']).time()
     )
-    copy_fields = ['location', 'mag_limit', 'show_planets']
+    copy_fields = ['location', 'show_planets']
     for k in copy_fields:
         initial[k] = cookie[k]
     return initial

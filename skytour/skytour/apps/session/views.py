@@ -154,7 +154,6 @@ class SetSessionCookieView(FormView):
             julian_date = get_julian_date(utdt_start),
             dec_limit = d['dec_limit'],
             slew_limit = d['slew_limit'],
-            mag_limit = d['mag_limit'],
             show_planets = d['show_planets'],
             flip_planets = d['flip_planets'],
             color_scheme = d['color_scheme'],
