@@ -25,7 +25,12 @@ def time_objects(utdt, objtype, objects):
     n = 1
     for obj in objects:
         label = f"{n}: {obj}"
-        d = get_object_metadata(utdt, 'None', objtype, None, obj, None, None)
+        d = get_object_metadata(
+            utdt, 'None', objtype, 
+            instance=obj, 
+            location=None, 
+            time_zone=None
+        )
         t1 = t2
         t2 = time.perf_counter()
         show_time(t0, t1, t2, f"{label}\t{get_metadata(d)}")

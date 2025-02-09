@@ -185,8 +185,8 @@ class AsteroidDetailView(CookieMixin, DetailView):
         asteroid_cookie = context['cookies']['asteroids']
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
-        mag = None
         pdict = get_asteroid_from_cookie(context['cookies'], object)
+
         context['asteroid'] = pdict
 
         if asteroid_cookie: # This is so you COULD go to an page for something not in the cookie
@@ -203,7 +203,7 @@ class AsteroidDetailView(CookieMixin, DetailView):
                     obj_cookie = pdict,
                     fov=sc, 
                     reversed = reversed,
-                    mag_limit=11., 
+                    mag_limit=mm, 
                     sun = context['cookies']['sun'],
                     moon = context['cookies']['moon'],
                     show_dsos = False,

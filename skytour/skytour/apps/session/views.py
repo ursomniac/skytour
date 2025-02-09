@@ -94,25 +94,24 @@ class SetSessionCookieView(FormView):
             time_zone = pytz.timezone(local_time_zone)
         except:
             time_zone = None
-        utdt_end = utdt_start + datetime.timedelta(hours=d['session_length'])
         local_time_start = utdt_start.astimezone(time_zone) if time_zone is not None else None
         times.append((time.perf_counter(), f'Processed Form'))
 
         # ADD TWILIGHT!
         # Sun
-        sun = get_object_metadata(utdt_start, 'Sun', 'sun', utdt_end=utdt_end, location=my_location, time_zone=time_zone)
+        sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location, time_zone=time_zone)
         context['sun'] = sun 
         self.request.session['sun'] = sun
         times.append((time.perf_counter(), f'Got Sun'))
 
         # Moon
-        moon = get_object_metadata(utdt_start, 'Moon', 'moon', utdt_end=utdt_end, location=my_location, time_zone=time_zone)
+        moon = get_object_metadata(utdt_start, 'Moon', 'moon', location=my_location, time_zone=time_zone)
         context['moon'] = moon 
         self.request.session['moon'] = moon
         times.append((time.perf_counter(), f'Got Moon'))
 
         # Planets
-        planets = get_planet_positions(utdt_start, utdt_end=utdt_end, location=my_location, time_zone=time_zone)
+        planets = get_planet_positions(utdt_start, location=my_location, time_zone=time_zone)
         context['planets'] = planets
         self.request.session['planets'] = planets
         times.append((time.perf_counter(), f'Got Planets'))
@@ -120,7 +119,6 @@ class SetSessionCookieView(FormView):
         # Asteroids
         asteroid_list, atimes = get_visible_asteroid_positions(
             utdt_start, 
-            utdt_end=utdt_end, 
             #location=my_location, # This slows it down by 10x
             time_zone=time_zone
         )
@@ -132,7 +130,6 @@ class SetSessionCookieView(FormView):
         # Comets
         comet_list, times = get_comet_positions(
             utdt_start, 
-            utdt_end=utdt_end, 
             #location=my_location,  # This slows it down by 10x
             time_zone=time_zone,
             times=times
@@ -151,7 +148,6 @@ class SetSessionCookieView(FormView):
         # Set primary cookie
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start = utdt_start.isoformat(),
-            utdt_end = utdt_end.isoformat(),
             local_time_start = local_time_start.astimezone(time_zone).isoformat(),
             location = location_pk,
             time_zone = local_time_zone,
@@ -160,7 +156,6 @@ class SetSessionCookieView(FormView):
             slew_limit = d['slew_limit'],
             mag_limit = d['mag_limit'],
             hour_angle_range = d['hour_angle_range'],
-            session_length = d['session_length'],
             show_planets = d['show_planets'],
             flip_planets = d['flip_planets'],
             color_scheme = d['color_scheme'],
@@ -229,10 +224,8 @@ class ObservingPlanView(CookieMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanView, self).get_context_data(**kwargs)
         context = get_plan(context)
-        # Get the mid-point time from the local_time_start + 0.5 * session_length
         local_time = context['local_time_start']
         ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
-        ztime += datetime.timedelta(hours=context['session_length']/2.)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
         context['now'] = datetime.datetime.now(datetime.timezone.utc)
         context['form'] = PDFSelectForm()

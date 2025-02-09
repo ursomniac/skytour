@@ -20,8 +20,8 @@ def do_dso_long_list(p, context):
     ).order_by('constellation__abbreviation')
     
     for dso in all_dsos:
-        if dso.object_is_up(location, context['utdt_start'], min_alt=20.) \
-                or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
+        if dso.object_is_up(location, context['utdt_start'], min_alt=20.): # \
+            #or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
             targets.append(dso)
     n_lines = 0
     dx = 0

@@ -44,7 +44,9 @@ class SkyView(CookieMixin, TemplateView):
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
 
-        context['show_moon'] =  moon is not None and moon['session']['start']['is_up']
+        # TODO: figure out if moon is on the plot
+        context['show_moon'] =  moon is not None 
+        
         context['shown_datetime'] = utdt_start + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
@@ -106,7 +108,6 @@ class ZenithMagView(FormView):
         initial = super(ZenithMagView, self).get_initial()
         c = deal_with_cookie(self.request, {})
         utdt = c.get('utdt_start', None)
-        utdt += datetime.timedelta(hours = c.get('session_length', 3.)/2.)
         if not utdt:
             #utdt = datetime.datetime.utcXnow().replace(hour=21, minute=0, tzinfo=pytz.utc)
             utdt = datetime.datetime.now(datetime.timezone.utc).replace(hour=1, minute=0 )

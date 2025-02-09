@@ -15,7 +15,7 @@ def is_object_up(utdt, location, ra, dec, min_alt=0.):
     up = alt > min_alt
     return az, alt, up, airmass
 
-def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
+def get_observing_situation(ra, dec, utdt_start, location):
     """
     Given:
         1. ra, dec
@@ -25,7 +25,7 @@ def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
     Return as a dict where the key is "start"/"end" (for the observing session).
     """
     d = {}
-    for k, v in [('start', utdt_start), ('end', utdt_end)]:
+    for k, v in [('start', utdt_start), ]:
         d[k] = {}
         az, alt, is_up, airmass = is_object_up(v, location, ra, dec, min_alt=0.)
         d[k]['azimuth'] = az
@@ -33,3 +33,6 @@ def get_observing_situation(ra, dec, utdt_start, utdt_end, location):
         d[k]['is_up'] = is_up
         d[k]['airmass'] = airmass
     return d
+
+def get_rise_set(ra, dec, utdt, location):
+    pass

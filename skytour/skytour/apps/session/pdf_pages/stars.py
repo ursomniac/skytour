@@ -67,8 +67,8 @@ def do_zenith(p, context):
     p.setFont('Helvetica-Bold', 24)
     p.drawCentredString(PAGE_WIDTH/2, 700, 'Zenith Chart')
     p.setFont('Helvetica', 12)
-    utdt_mid = context['utdt_start'] + datetime.timedelta(hours=context['session_length']/2.)
-    local_mid = context['local_time'] + datetime.timedelta(hours=context['session_length']/2.)
+    utdt_mid = context['utdt_start'] 
+    local_mid = context['local_time'] 
     p.drawString(50, 670, f"{local_mid.strftime('%b %-d, %Y %-I:%M %p %z')}")
     zenith_chart, _ = get_zenith_map(
         utdt_mid,

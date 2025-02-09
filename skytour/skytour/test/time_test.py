@@ -18,17 +18,16 @@ def get_information():
     # Get the primary metadata: UT, location
     cookie = get_cookie_defaults()
     utdt_start = isoparse(cookie['utdt_start'])
-    utdt_end = isoparse(cookie['utdt_end'])
     location = ObservingLocation.objects.get(pk=cookie['location'])
     times.append((time.perf_counter(), f'Created Default Cookie'))
 
     # Get the Planets
-    planet_dict = get_planet_dict(utdt_start, utdt_end=utdt_end, location=location)
+    planet_dict = get_planet_dict(utdt_start, location=location)
     cookie['planet_dict'] = planet_dict
     times.append((time.perf_counter(), f'Got Planets'))
 
     # Get Asteroids
-    asteroid_list = get_visible_asteroids(utdt_start, utdt_end=utdt_end, location=location)
+    asteroid_list = get_visible_asteroids(utdt_start, location=location)
     cookie['asteroid_list'] = asteroid_list
     times.append((time.perf_counter(), f'Got Asteroids'))
 

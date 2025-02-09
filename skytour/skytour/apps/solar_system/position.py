@@ -28,7 +28,6 @@ def get_object_metadata(
         utdt, 
         eph_label, 
         object_type, 
-        utdt_end=None, 
         instance=None, 
         location=None,
         time_zone=None
@@ -91,8 +90,9 @@ def get_object_metadata(
         almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone)
     else: 
         almanac = None
-    session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
-
+    #session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
+    session = None
+    
     # Special Cases --- ADD to observe dict
     if object_type == 'moon':
         lunar_phase = simple_lunar_phase(jd) # this is a DICT!

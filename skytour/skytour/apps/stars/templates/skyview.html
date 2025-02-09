@@ -6,6 +6,35 @@
     td.subnav_ut {
         background: #303;
     }
+    td.side {
+        width: 20%;
+    }
+    .accordion {
+        background-color: #333;
+        color: #999;
+        cursor: pointer;
+        padding: 4px;
+        width: 100%;
+        text-align: left;
+        border: solid 1px #999;
+        outline: none;
+        transition: 0.4s;
+        font-weight: bold;
+        font-size: 12px;
+        margin-top: 12px;
+      }
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active, .accordion:hover {
+        background-color: #ccc;
+      }
+  
+  /* Style the accordion panel. Note: hidden by default */
+    .panel {
+        padding: 0 18px;
+        background-color: #333;
+        display: none;
+        overflow: hidden;
+      }
 </style>
 <div class="skymap">
 <table class="lite splash">
@@ -88,35 +117,73 @@
         </td>
         <td class="side">
 
-            <h4> Moon and Planets </h4>
+            <button class="accordion">Moon and Planets</button>
             {% if interesting.planets|length > 0 or show_moon %}
             {% with object_list=interesting.planets url_type='planet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
             {% else %}
             (No visible planets or Moon)
             {% endif %}
 
-            <h4>DSOs</h4>
+            <button class="accordion">DSOs</button>
+            <div class="panel">
             {% with object_list=interesting.dsos url_type='dso-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            
-            {% if interesting.meteor_showers|length > 0 %}
-            <h4>Meteor Showers</h4>
-                {% for shower in interesting.meteor_showers %}{{ shower.name }}<br>{% endfor %}
-            {% endif %}
+            </div>
+
 
             {% if interesting.asteroids|length > 0 %}
-            <h4>Asteroids</h4>
+            <button class="accordion">Asteroids</button>
+            <div class="panel">
             {% with object_list=interesting.asteroids url_type='asteroid-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
+            </div>
             {% endif %}
             
 
             {% if interesting.comets|length > 0 %}
-            <h4>Comets</h4>
+            <button class="accordion">Comets</button>
+            <div class="panel">
             {% with object_list=interesting.comets url_type='comet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
+            </div>
             {% endif %}
-            
+
+            {% if interesting.meteor_showers|length > 0 %}
+            <button class="accordion">Meteor Showers</button>
+            <div class="panel">
+                <br><br>
+                <table>
+                    <tbody>
+                    {% for shower in interesting.meteor_showers %}
+                    <tr><td>{{ shower.name }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
         </td>
     </tr>
 </table>
 </div>
 {% include 'includes/performance_time.html' %}
 {% endblock content %}
+
+{% block extra-js %}
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+    this.classList.toggle("active");
+
+    /* Toggle between hiding and showing the active panel */
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+{% endblock %}

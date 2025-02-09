@@ -32,16 +32,12 @@ def get_all_cookies(request):
 
 def get_cookie_defaults():
     ut0 = datetime.datetime.now(datetime.timezone.utc)
-    session_length = find_site_parameter('observing-session-length', default=3.0, param_type='float')
-    ut1 = ut0 + datetime.timedelta(hours=session_length)
     julian_date = get_julian_date(ut0)
     t = get_t_epoch(julian_date)
     default_location_pk = ObservingLocation.objects.first().pk
 
     cookie_dict = dict (
         utdt_start = ut0.isoformat(),
-        utdt_end = ut1.isoformat(),
-        session_length = session_length,
         location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
         dec_limit = find_site_parameter('declination-limit', default=-25., param_type='float'),
         mag_limit = find_site_parameter('dso-magnitude-limit', default=12.0, param_type='float'),
@@ -64,7 +60,6 @@ def deal_with_cookie(request, context):
         context[k] = v
     # Override these three values from the cookie where they're encoded
     context['utdt_start'] = isoparse(cookie['utdt_start'])
-    context['utdt_end'] = isoparse(cookie['utdt_end'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
     if 'time_zone' not in context.keys(): # context['time_zone'] is not None:
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')

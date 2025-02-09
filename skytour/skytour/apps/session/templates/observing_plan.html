@@ -81,7 +81,6 @@ td.normal {
       <small>(Will run for <b><span style="color: #fff">{{ zenith_time }}</span></b>)</small>
       <br/><br>
       Start: {{ utdt_start|date:"D Y M d  H:i"}} UT<br/>
-      End: {{ utdt_end|date:"D Y M d  H:i"}} UT<br/><br/>
       Julian Date: {{ julian_date|floatformat:5 }}<br>
       Twilight Ends: {{ twilight.end|get_datetime|date:"Y M d H:i" }} UT <br/>
       Twilight Begins: {{ twilight.begin|get_datetime|date:"Y M d H:i" }} UT

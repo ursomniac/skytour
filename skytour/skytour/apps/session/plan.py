@@ -71,8 +71,8 @@ def get_plan(context, debug=False):
         magnitude__lt=context['mag_limit']
     ).order_by('ra')
     for dso in all_dsos:
-        if dso.object_is_up(location, context['utdt_start'], min_alt=20.) \
-                or dso.object_is_up(location, context['utdt_end'], min_alt=0.):
+        if dso.object_is_up(location, context['utdt_start'], min_alt=20.):
+            #or dso.object_is_up(location, context['utdt_X_end'], min_alt=0.):
             if dso.priority:
                 priority = dso.priority.lower()
                 if priority in targets.keys():
