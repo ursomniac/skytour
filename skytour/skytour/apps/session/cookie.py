@@ -59,13 +59,9 @@ def deal_with_cookie(request, context):
     # Override these three values from the cookie where they're encoded
     context['utdt_start'] = isoparse(cookie['utdt_start'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()
-    # TODO V2: set time zone from location
-    if 'time_zone' not in context.keys(): # context['time_zone'] is not None:
-        time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
-        context['time_zone'] = TimeZone.objects.get(pk=time_zone_id).name
+    context['time_zone'] = context['location'].time_zone.name
     context['local_time'] = context['utdt_start'].astimezone(pytz.timezone(context['time_zone']))
     context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
-
     return context
 
 def get_cookie(request, slug):

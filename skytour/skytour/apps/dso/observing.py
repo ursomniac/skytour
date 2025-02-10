@@ -3,7 +3,6 @@ from ..site_parameter.helpers import find_site_parameter
 
 TIMES_TO_RUN = {'8 PM': -4, '10 PM': -2, '12 AM': 0, '2 AM': 2}
 def make_observing_date_grid(dso):
-    # TODO: Make this use the cookie, if available
     grid = {}
     no_grid_reason = None
     delta_days, cos_hh, alt = dso.hour_angle_min_alt

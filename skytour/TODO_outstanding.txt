@@ -17,7 +17,6 @@ skytour/apps/dso/models.py:    TODO: "Special" plates for things like the LMC/SM
 skytour/apps/dso/models.py:    # TODO: Add Telescope so we can have different imaging priorities for different scopes
 skytour/apps/dso/README.md:* Object Type (TODO: make a better list?)
 skytour/apps/dso/seed.py:### TODO V2:  make this a standalone script used in DB seeding!
-skytour/apps/dso/observing.py:    # TODO: Make this use the cookie, if available
 skytour/apps/dso/vocabs.py:TODO: move all of the code reference to plot color choices to point to this dict.
 skytour/apps/utils/models.py:                # TODO: make this a method/property on DSO!
 skytour/apps/plotting/map.py:    TODO: make this more realistic

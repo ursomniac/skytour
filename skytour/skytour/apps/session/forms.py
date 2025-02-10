@@ -3,6 +3,7 @@ from django import forms
 from ..abstract.vocabs import IMAGING_STATUS_CHOICES
 from ..astro.time import utc_now
 from ..dso.models import DSOList
+from ..dso_observing.vocabs import OBSERVING_MODE_TYPES
 from ..observe.models import ObservingLocation
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
@@ -43,48 +44,31 @@ def get_default_start_time():
     month = utc.month
     return utc.replace(hour=H[month], minute=M[month], second=0, microsecond=0)
 
-class SetNewSessionCookieForm(forms.Form):
-    ut_date = forms.DateField(label="UT Date", initial=get_next_utc)
-    ut_time = forms.TimeField(label='UT Time', initial=get_default_start_time)
-    time_zone = forms.ModelChoiceField(
-        queryset = TimeZone.objects.all().order_by('utc_offset'),
-        label = 'Local Time Zone'
-    )
-    location = forms.ModelChoiceField(
-        queryset = get_observing_locations(ObservingLocation.objects.all())
-    )
-    flip_planets = forms.ChoiceField(choices=YES_NO, initial='Yes')
-    color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
-    #atlas_dso_marker = forms.ChoiceField(
-    #    choices=ATLAS_DSO_MARKERS,
-    #    initial='shapes',
-    #    label = 'Atlas DSOs as Symbols or Shapes'
-    #)
-
 class ObservingParametersForm(forms.Form):
+    # Date and Time
     ut_date = forms.DateField(initial=get_next_utc, label="UT Date")
     ut_time = forms.TimeField(initial=get_default_start_time, label='UT Time')
-    # TODO V2: remove time_zone - get from location's time_zone value
-    time_zone = forms.ModelChoiceField(
-        queryset = TimeZone.objects.all().order_by('utc_offset'),
-        label = 'Local Time Zone'
-    )
+    # Location
     location = forms.ModelChoiceField(
         queryset = get_observing_locations(ObservingLocation.objects.all())
         #queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
     )
-    # TODO V2: replace with "min altitude" and set based on location's latitude
-    dec_limit = forms.FloatField(
-        initial = find_site_parameter('declination-limit', default=-20.0, param_type='float'),
-        label = 'Dec. Limit (to S)'
+    # Override Altitude and Slew
+    min_object_altitude = forms.FloatField(
+        initial = find_site_parameter('minimum-object-altitude', default=10.0, param_type='float'),
+        label = 'Min. Altitude Limit',
     )
-    # TODO V2: needed? If mode = I, then yes - used?
     slew_limit = forms.FloatField(
         initial = find_site_parameter('slew-limit', default=70.0, param_type='float'),
-        label = 'Alt. Slew Limit',
+        label = 'Max. Altitude/Slew Limit',
     )
-    # TODO V2: set default based on observing mode: Yes if S or M;  No otherwise.
-    flip_planets = forms.ChoiceField(choices=YES_NO, initial='Yes')
+    # Set Observing Mode
+    observing_mode = forms.ChoiceField(
+        choices=OBSERVING_MODE_TYPES, 
+        initial = find_site_parameter('default-observing-mode', default='S', param_type='string'),
+        label = "Observing Mode",
+    )
+    # Misc Overrides
     # TODO V2: keep
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
     # TODO V2: used?

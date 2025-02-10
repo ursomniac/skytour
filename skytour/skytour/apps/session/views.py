@@ -20,6 +20,7 @@ from reportlab.pdfgen import canvas
 
 from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date, utc_round_up_minutes
+from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
 from ..dso.models import DSOObservation, DSO
 from ..observe.models import ObservingLocation
@@ -44,7 +45,6 @@ from .forms import (
     ObservingParametersForm, 
     PDFSelectForm, 
     SessionAddForm,
-    SetNewSessionCookieForm
 )
 from .mixins import CookieMixin
 from .models import ObservingSession, ObservingCircumstances
@@ -68,7 +68,7 @@ class SetSessionCookieView(FormView):
         return initial
 
     def get(self, request, *args, **kwargs):
-        WINDOW = 15 # 0, 15, 30, 45
+        WINDOW = 15 # 0, 15, 30, 45 = interval for "now" UT for form
         form = self.get_form(self.get_form_class())
         context = self.get_context_data(**kwargs)
         context['form'] = form
@@ -78,26 +78,25 @@ class SetSessionCookieView(FormView):
         context['now_time'] = now.strftime("%H:%M")
         return self.render_to_response(context)
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form(self.get_form_class())
-        if form.is_valid():
-            return self.form_valid(form, **kwargs)
-        return self.form_invalid(form, **kwargs)
-
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
 
         # Start timer
         times = [(time.perf_counter(), 'Start')]
         d = form.cleaned_data
+
+        # Deal with location and all that entails
         location_pk = d['location'].pk
         my_location = ObservingLocation.objects.get(pk=location_pk)
-        utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
-        local_time_zone = d['time_zone'].name
         try:
-            time_zone = pytz.timezone(local_time_zone)
+            time_zone = pytz.timezone(my_location.time_zone.name)
         except:
             time_zone = None
+        min_dec, max_dec = get_declination_range(my_location, min_altitude=d['min_object_altitude'])
+        dec_limit = min_dec if my_location.latitude >= 0. else max_dec
+
+        # Deal with time/date
+        utdt_start = datetime.datetime.combine(d['ut_date'], d['ut_time']).replace(tzinfo=pytz.utc)
         local_time_start = utdt_start.astimezone(time_zone) if time_zone is not None else None
         times.append((time.perf_counter(), f'Processed Form'))
 
@@ -149,19 +148,35 @@ class SetSessionCookieView(FormView):
             begin=twi_begin.utc_datetime().isoformat()
         )
 
+        # Misc.
+        flip_planets = 'Yes' if d['observing_mode'] in 'SM' else 'No' # Make boolean
+        observing_mode = d['observing_mode']
+
         # Set primary cookie
         context['cookie'] = self.request.session['user_preferences'] = dict(
             utdt_start = utdt_start.isoformat(),
             local_time_start = local_time_start.astimezone(time_zone).isoformat(),
             location = location_pk,
-            time_zone = local_time_zone,
+            time_zone = my_location.time_zone.name,
             julian_date = get_julian_date(utdt_start),
-            dec_limit = d['dec_limit'],
+            dec_limit = dec_limit, # TODO V2: replace with dec_range 
+            dec_range = (min_dec, max_dec),
             slew_limit = d['slew_limit'],
-            flip_planets = d['flip_planets'],
+            flip_planets = flip_planets,
             color_scheme = d['color_scheme'],
             atlas_dso_marker = d['atlas_dso_marker'],
             twilight = twilight
+        )
+
+        context['val'] = dict(
+            ut_date = utdt_start.strftime("%Y-%m-%d"),
+            ut_time = utdt_start.strftime("%H:%M"),
+            location = my_location,
+            min_alt = f"{d['min_object_altitude']}° = {min_dec:.1f}-{max_dec:.1f}",
+            slew_limit = f"{d['slew_limit']}°",
+            observing_mode = observing_mode,
+            color_scheme = d['color_scheme'],
+            atlas_dso_marker = d['atlas_dso_marker']
         )
 
         context['completed'] = True
@@ -179,42 +194,6 @@ class SetSessionCookieView(FormView):
         context = super(SetSessionCookieView, self).get_context_data(**kwargs)
         context['now'] = datetime.datetime.now(datetime.timezone.utc)
         return context
-    
-class SetNewSessionCookieView(FormView):
-    form_class = SetNewSessionCookieForm
-    template_name = 'set_new_cookie.html'
-    success_url = '/session/plan' 
-
-    def get_initial(self):
-        initial = super().get_initial() # needed since we override?
-        initial = get_initial_from_cookie(self.request, initial)
-        time_zone = find_site_parameter('default-time-zone-id', None, 'positive')
-        if time_zone is not None:
-            initial['time_zone'] = time_zone
-        # TODO: Add auto-lookup for site_parameter for location
-        return initial
-    
-    def xget(self, request, *args, **kwargs):
-        form = self.get_form(self.get_form_class())
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
-        return self.render_to_response(context)
-    
-    def xpost(self, request, *args, **kwargs):
-        form = self.get_form(self.get_form_class())
-        if form.is_valid():
-            return self.form_valid(form, **kwargs)
-        return self.form_invalid(form, **kwargs)
-    
-    def xform_valid(self, form, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
-    
-    def get_context_data(self, **kwargs):
-        context = super(SetNewSessionCookieView, self).get_context_data(**kwargs)
-        context['now'] = datetime.datetime.now(datetime.timezone.utc)
-        return context
-
 
 @method_decorator(cache_page(0), name='dispatch')
 class ObservingPlanView(CookieMixin, FormView):

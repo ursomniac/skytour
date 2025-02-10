@@ -1,51 +1,8 @@
 {% extends 'base.html' %}
 {% load skytour_filters humanize %}
-{% block title %}Set Date/Time: Skytour{% endblock %}
+{% block title %}Set Session Cookie: Skytour{% endblock %}
 {% block content %}
 <style>
-.plan td {
-    vertical-align: top;
-    padding: 1em;
-}
-table .inner {
-  border: 0;
-  padding: 0 0;
-}
-td {
-  border: 0; padding: 0 1em;
-}
-
-.td-center td {
-  vertical-align: middle;
-}
-details {
-  user-select: none;
-}
-
-details>summary span.icon {
-  width: 24px;
-  height: 24px;
-  transition: all 0.3s;
-  margin-left: auto;
-}
-
-details[open] summary span.icon {
-  transform: rotate(180deg);
-}
-
-summary {
-  display: flex;
-  cursor: pointer;
-  background-color: #666;
-  color: #fff;
-  padding: 4px 10px;
-  margin: 0px 10px 20px 10px;
-}
-
-summary::-webkit-details-marker {
-  display: none;
-}
-
 .now-button {
   color: #000;
   margin-left: 20px;
@@ -56,6 +13,31 @@ summary::-webkit-details-marker {
 .now-button a {
   color: #000;
 }
+
+.cookie_form  {
+  margin: 0px 20px 10px 40px;
+  width: 80%;
+}
+.cookie_form td.values { 
+  min-width: 30%;
+}
+
+th {
+  background-color: #999;
+  color: #000;
+}
+
+td {
+  padding: 5px 15px;
+}
+
+td.field_column {
+  text-align: right;
+}
+
+.submit_line td {
+  background-color: #666;
+}
 </style>
 
 <h1>Set Session Parameters</h1>
@@ -63,6 +45,7 @@ summary::-webkit-details-marker {
   Current UT: {{ now|date:"D Y-M-d H:i" }}         
   <button class="now-button"><a href="#" onClick="autoFill(); return true;">Set Date/Time to Now</a></button>
 </h2>
+{% comment %}
 <div class="plan_form">
     {% if form %}
     <form method="post">
@@ -77,29 +60,65 @@ summary::-webkit-details-marker {
     There is no form!
     {% endif %}
 </div>
+{% endcomment %}
+
+<div class="cookie_form">
+  {% if form %}
+  {{ form.media }}
+  <form method="post">{% csrf_token %}
+    {% if form.non_field_errors %}
+    <ul>{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% for hidden_field in form.hidden_fields %}
+    {% if hidden_field.errors %}
+      <ul>
+        {% for error in hidden_field.errors %}
+          <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {{ hidden_field }}
+    {% endfor %}
+    <table class='session_form'>
+      <tr>
+        <th>Parameter</th><th>Value</th><th>Set Value</th>
+      </tr>
+      <tr>{% with field=form.ut_date set_value=val.ut_date %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.ut_time set_value=val.ut_time %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.location set_value=val.location %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.min_object_altitude set_value=val.min_alt %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.slew_limit set_value=val.slew_limit %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.observing_mode set_value=val.observing_mode %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.color_scheme set_value=val.color_scheme %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr>{% with field=form.atlas_dso_marker set_value=val.atlas_dso_marker %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
+      <tr class="submit_line">
+        <td></td>
+        <td><input type="submit" value="Submit"/></td>
+        <td><small>This may take ~10s to run</small></td>
+      </tr>
+    </table>
+  </form>
+
+  {% else %}
+  There is no foem!
+  {% endif %}
+</div>
 
 {% if completed %}
 <h2>Session Cookie Updated</h2>
 
+<small>
 <table>
   <tr>
-    <td>
-      <h3>Metadata</h3>
-      <table class="lite">
-        <tr><td>UT Date/Time:</td><td>{{ cookie.utdt_start }}</td></tr>
-        <tr><td>Location:</td><td> {{ cookie.location }}</td></tr>
-        <tr><td>Dec. Limit:</td><td>{{ cookie.dec_limit }}</td></tr>
-        <tr><td>Color Scheme:</td><td>{{ cookie.color_scheme }}</td></tr>
-      </table>
-    </td>
     <td>
       <small>(<a href="{% url 'show-cookies' %}">Show Cookies</a>)</small><br>
       {% include 'includes/performance_time.html' %}
     </td>
   </tr>
 </table>
+</small>
 {% endif %}
-  <br><br><br><br clear="all">
+  <br><br clear="all">
   <hr>
 {% endblock %}
 

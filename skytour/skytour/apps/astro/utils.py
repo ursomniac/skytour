@@ -1,4 +1,5 @@
 import math
+from ..site_parameter.helpers import find_site_parameter
 
 def get_limiting_magnitude(bortle):
     """
@@ -172,3 +173,20 @@ def radec_from_degrees(ra, dec):
     ds = (d - dm) * 60.
     decout = f"{dsign}{dd}° {dm}\' {ds:.2f}\""
     return f"{raout} {decout}"
+
+def get_declination_range(location, min_altitude=None):
+    min_altitude = min_altitude if min_altitude is not None else find_site_parameter('minimim-object-altitude', default=10., param_type='float')
+    try:
+        latitude = location.latitude
+        if latitude > 0.: # Northern hemisphere
+            max_dec = 90.
+            min_dec = -90. + latitude + min_altitude
+        elif latitude == 0.: # Equator
+            max_dec = 90. - min_altitude
+            min_dec = -90. + min_altitude
+        else: # Southern hemisphere
+            max_dec = 90. + latitude - min_altitude
+            min_dec = -90.
+        return min_dec, max_dec
+    except:
+        return None, None
