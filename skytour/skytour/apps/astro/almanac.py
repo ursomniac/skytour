@@ -141,7 +141,6 @@ def get_sun_rise_set(utdt, loc, ts, eph, time_zone=None):
             if time_zone is not None:
                 local = ut.astimezone(time_zone)
             sunset = dict(ut = ut, local = local, local_str = local.strftime("%I:%M %p"))
-    #print("UTDT: ", sunrise['ut'].date(), "SET: ", sunset, "RISE: ", sunrise['ut'].time(), sunrise['local'].time(), sunrise['local_str'])
     return sunrise, sunset
 
 def get_moon_rise_set(utdt0, loc, eph, time_zone=None):
@@ -161,10 +160,9 @@ def get_moon_rise_set(utdt0, loc, eph, time_zone=None):
     return moonrise, moonset
             
 def get_twilight_begin_end(utdt, loc, time_zone=None):
-    # Initialize
-
     twi_list = ['night', 'astro', 'nautical', 'civil', 'day']
     twilight = {}
+    
     for tw in twi_list:
         twilight[tw] = dict(start=None, end=None)
 
@@ -179,14 +177,10 @@ def get_twilight_begin_end(utdt, loc, time_zone=None):
     f = dark_twilight_day(eph, wgs)
     times, events = find_discrete(t0, t1, f)
 
-    previous_e = f(t0).item()
     for t, e in zip(times, events):
         local_time = t.astimezone(time_zone)
         side = 'am' if local_time.hour < 12 else 'pm'
-        #print (f'T: {t} E: {e} L: {local_time} S: {local_time.strftime("%I:%M %p")}')
-        #skey = 'start' if previous_e < e else 'end'
         skey = 'start' if side == 'pm' else 'end'
         twilight[twi_list[e]][skey] = local_time.strftime("%I:%M %p")
-        previous_e = e
 
     return twilight

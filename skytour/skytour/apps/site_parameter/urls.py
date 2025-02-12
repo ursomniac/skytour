@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import SiteParameterLinkList
+from .views import SiteParameterListView
 
 urlpatterns = (
-    path('links', SiteParameterLinkList.as_view(), name='link-list'),
+    path('', SiteParameterListView.as_view(), name='site-parameter-list' ),
 )

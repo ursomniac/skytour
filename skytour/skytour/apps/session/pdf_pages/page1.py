@@ -98,7 +98,7 @@ def do_page1(p, context):
     p.drawString(50, y, 'Planets Close Together:')
     p.setFont('Helvetica', 10)
     y -= 24
-    adj_planets = get_adjacent_planets(cookie_dict['planets'], utdt)
+    adj_planets, _ = get_adjacent_planets(cookie_dict['planets'], utdt)
     if len(adj_planets) > 0:
         for ap in adj_planets:
             z = f'{ap[0]} is {ap[2]:.1f}° from {ap[1]}'

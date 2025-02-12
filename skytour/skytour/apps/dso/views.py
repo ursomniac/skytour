@@ -45,7 +45,7 @@ class DSOListView(ListView):
         params = get_filter_params(self.request)
         context = update_dso_filter_context(context, params)
         dso_list = filter_dsos(params, DSO.objects.all())
-        context['total_returned'] = len(dso_list)
+        context['total_count'] = len(dso_list)
         context['default_dec_limit'] = dec_limit = find_site_parameter('declination-limit', -30, 'float')
         # Pagination
         page_no = self.request.GET.get('page', 1)
@@ -279,11 +279,23 @@ class AtlasPlateDetailView(CookieMixin, DetailView):
 class DSOObservationLogView(CookieMixin, ListView):
     model = DSO
     template_name = 'dsoobservation_list.html'
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super(DSOObservationLogView, self).get_context_data(**kwargs)
         context['dso_list'] = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
         context['dso_table'] = 'dsos-observed'
+        context['total_count'] = context['dso_list'].count()
+        
+        # Pagination
+        page_no = self.request.GET.get('page', 1)
+        num_on_page = self.request.GET.get('page_size', self.paginate_by)
+        context['num_on_page'] = num_on_page
+        p = Paginator(context['dso_list'], num_on_page)
+        this_page = p.page(page_no)
+        context['page_obj'] = this_page
+        context['dso_list'] = this_page.object_list # Just this page of objects.
+        context['is_paginated'] = True
         return context
     
 class DSOChecklistView(ListView):

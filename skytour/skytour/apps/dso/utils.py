@@ -53,7 +53,7 @@ def select_atlas_plate(plates, context):
     if reversed:
         k += 'reversed'
     if k == '':
-        k = find_site_parameter('atlas-plate-version-key', 'default', 'char')
+        k = find_site_parameter('atlas-plate-version-key', 'default', 'string')
     return plates[k]
 
 def select_other_atlas_plates(plate_list, primary):

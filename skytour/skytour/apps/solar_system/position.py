@@ -25,21 +25,12 @@ from .utils import (
 )
 
 def get_object_metadata(
-        utdt, 
-        eph_label, 
-        object_type, 
-        instance=None, 
-        location=None,
-        time_zone=None
+        utdt,               # UTDT (datetime)
+        eph_label,          # string for ephemeris lookup
+        object_type,        # moon|planet|asteroid|comet
+        instance=None,      # model object instance
+        location=None,      # ObservingLocation instance
     ):
-    """
-    Get the serialized metadata for an object at a given utdt and location.
-        1. UTDT
-        2. eph_label = the string for eph
-        3. object_type = moon|planet|asteroid|comet
-        4. Instance = the model Instance
-        5. Location = observing location
-    """
     ts = load.timescale()
     t = ts.utc(utdt)
     jd = t.tt.item()
@@ -69,10 +60,12 @@ def get_object_metadata(
     
     apparent = serialize_astrometric(target)
     r_earth_target = apparent['distance']['au'] # Earth-Target distance
+
     # Sun-Object
     sun_target = sun.at(t).observe(eph_body) # sun to target
     r_sun_target = sun_target.radec()[2].au.item()
     apparent['sun_distance'] = r_sun_target
+
     # Earth-Sun
     sun_apparent = serialize_astrometric(earth.at(t).observe(sun).apparent())
     r_earth_sun = sun_apparent['distance']['au']
@@ -84,14 +77,11 @@ def get_object_metadata(
     sun_long = sun_apparent['ecl']['longitude']
 
     # Get rise/set and session parameters
+    almanac = None
     if location:
-        time_zone = location.my_time_zone
-        # TODO: Support comets here.
-        almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone)
-    else: 
-        almanac = None
-    #session = get_observing_situation(ra, dec, utdt, utdt_end, location) if utdt_end and location else None
-    session = None
+        if object_type != 'comet': # TODO: support comets here
+            time_zone = location.my_time_zone
+            almanac = get_object_rise_set(utdt, eph, eph_body, location, serialize=True, time_zone=time_zone)
     
     # Special Cases --- ADD to observe dict
     if object_type == 'moon':
@@ -105,18 +95,7 @@ def get_object_metadata(
     # Elongation - this is just target.longitude - sun.longitude
     elongation = get_elongation(longitude, sun_long)
 
-    # Phase Angle and phase
-    # For some reason this gives the wrong answer.
-    #if object_type in ['comet', 'asteroid']:
-    #    cos_beta = (r_sun_target**2 + r_earth_target**2 - r_earth_sun**2)/(2. * r_sun_target * r_earth_target)
-    #    # For some reason this doesn't always work.
-    #    if abs(cos_beta) <= 1.:
-    #        phase_angle = math.degrees(math.acos(cos_beta))
-    #    else:
-    #        phase_angle = None
-    #else:
-    #    skyfield_phase_angle = get_phase_angle(eph, eph_label, t).degrees.item() # degrees
-
+    # Phase Angle
     if object_type == 'sun':
         phase_angle = 0.
     elif object_type == 'moon':
@@ -124,6 +103,7 @@ def get_object_metadata(
     else:
         phase_angle = get_meeus_phase_angle(r_earth_sun, r_earth_target, r_sun_target)
 
+    # Plotting Phase angle (for planetary disk)
     plotting_phase_angle = None
     if object_type == 'planet' and instance is not None:
         plotting_phase_angle = get_plotting_phase_angle(instance.name, phase_angle, elongation)
@@ -155,12 +135,6 @@ def get_object_metadata(
         mk = row['magnitude_k']
         offset = instance.mag_offset if instance is not None else 0.
         mag = get_comet_magnitude(mg, mk, r_earth_target, r_sun_target, offset=offset)
-        #print (f"MG: {mg} MK: {mk} EPH: {eph_label}")
-        #mag = mg + 5. * math.log10(r_earth_target) + mk * math.log10(r_sun_target)
-        #if instance is not None:
-        #    mag += instance.mag_offset
-    elif object_type == 'planet':
-        pass
     else:
         mag = None
     apparent_magnitude = mag
@@ -185,13 +159,12 @@ def get_object_metadata(
     observe = dict (
             constellation = constellation, 
             phase_angle = phase_angle,                   # degrees
-            #meeus_phase_angle = meeus_phase_angle,      # degrees
             plotting_phase_angle = plotting_phase_angle, # degrees
             fraction_illuminated = fraction_illuminated, # percent
             elongation = elongation,                     # degrees
             angular_diameter = angular_diameter,         # degrees
-            angular_diameter_str = angular_diameter_str,
-            apparent_magnitude = apparent_magnitude
+            angular_diameter_str = angular_diameter_str, # string
+            apparent_magnitude = apparent_magnitude      # float
         )
     if object_type == 'moon':
         observe['lunar_phase'] = lunar_phase
@@ -241,10 +214,7 @@ def get_object_metadata(
                     rel_str, rel_letter = get_relation_to_planet(mdict['au_to_planet'], ang_sep, angular_diameter)
                     mdict['relation_to_planet'] = rel_str
                     mdict['rel_to_planet_str'] = rel_letter
-                    #mdict['g_mag'] = moon_instance.g
                     mdict['abs_mag'] = moon_instance.h
-                    #mdict['term1'] = math.log10(sun_dist * earth_dist)
-                    #mdict['phase_angle'] = phase_angle
                     mdict['apparent_magnitude'] = m
 
                 moon_obs.append(mdict)
@@ -260,7 +230,6 @@ def get_object_metadata(
     return_dict = dict(
             apparent = apparent,
             almanac = almanac,
-            session = session,
             observe = observe,
             moons = moon_obs,
             physical = physical

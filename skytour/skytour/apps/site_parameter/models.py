@@ -23,7 +23,8 @@ class AbstractSiteParameter(models.Model):
     )
 
     class Meta:
-        abstract=True
+        abstract = True
+        ordering = ['slug']
 
 class SiteParameterPositiveInteger (AbstractSiteParameter):
     value = models.PositiveIntegerField (

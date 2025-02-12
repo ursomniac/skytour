@@ -6,13 +6,19 @@
         text-align: center;
         color: #fff;
     }
-    table.pagenav td.sides { width: 200px; }
-    table.pagenav td.center { width: 400px; }
+    table.pagenav td.sides { width: 20%; }
+    table.pagenav td.center { width: 50%; }
+    table.pagenav td.extra { 
+        width: 10%;
+        background-color: #333;
+        font-size: 80%;
+        color: #999;
+    }
 </style>
 
 <div class="pagination">
     <span class="page-links">
-        <table class="pagenav" style="width: 500px">
+        <table class="pagenav" style="width: 800px">
             <tr>
                 <td class="sides">
                 {% if page_obj.has_previous %}
@@ -37,10 +43,19 @@
                     <a href="?page={{ page_obj.next_page_number }}"><button>Next Page</button></a>
                 {% endif %}
                 </td>
+                {% if total_count %}
+                <td class="extra">
+                    {{ total_count }} DSOs
+                </td>
+                {% endif %}
+                {% if num_on_page %}
+                <td class="extra">
+                    {% if num_on_page %}<small># entries on page: {{ num_on_page }}</small>{% endif %}
+                </td>
+                {% endif %}
             </tr>
             {% if page_error %}<tr><td colspan=3>{{ page_error }}</td></tr>{% endif %}
         </table>
-        {% if num_on_page %}<small># entries on page: {{ num_on_page }}</small>{% endif %}
     </span>
 </div>
 {% endif %}

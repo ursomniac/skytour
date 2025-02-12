@@ -19,6 +19,7 @@ scipy = "*"
 django-taggit = "*"
 django-ajax-selects = "*"
 jsonfield = "*"
+requests = "*"
 
 [dev-packages]
 

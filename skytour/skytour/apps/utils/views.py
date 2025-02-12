@@ -10,7 +10,6 @@ from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-#from .utils import filter_dso_test, get_filter_list, make_id_key
 from .utils import original_objects_sort, new_objects_sort, get_filter_list
 from ..dso.models import DSO, DSOLibraryImage, DSOInField
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
@@ -253,9 +252,10 @@ class LibraryCatalogView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LibraryCatalogView, self).get_context_data(**kwargs)
-        catalog_slug = self.request.GET.get('catalog_slug', 'messier') # or 'caldwell'
+        catalog_slug = self.request.GET.get('catalog_slug', 'messier') 
         all = self.request.GET.get('scope') == 'all'
         catalog = Catalog.objects.filter(slug__iexact=catalog_slug).first()
+        catalog_list = Catalog.objects.all()
 
         # This only works when the catalog request is the primary ID for the DSO
         # So, only Messier and Caldwell.
@@ -285,6 +285,7 @@ class LibraryCatalogView(TemplateView):
         context['image_percent'] = 0 if len(dso_list) == 0 else 100. * len(imaged_dso_list) / len(dso_list)
         context['catalog'] = catalog.name
         context['catalog_slug'] = catalog.slug
+        context['catalog_list'] = catalog_list
         context['use_title'] = f"{ catalog.name } Images"
         context['constellation_list'] = assemble_constellation_list()
 

@@ -23,7 +23,7 @@ class HomePageView(CookieMixin, TemplateView):
         context['utdt'] = utdt
         planets = context['cookies']['planets']
         if planets:
-            context['adjacent_planets'] = get_adjacent_planets(planets, context['utdt_start'])
+            context['adjacent_planets'], _ = get_adjacent_planets(planets, context['utdt_start'])
         else:
             context['adjacent_planets'] = None
         if 'time_zone' in context.keys():

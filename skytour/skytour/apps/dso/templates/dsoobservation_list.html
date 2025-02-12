@@ -2,9 +2,10 @@
 {% load skytour_filters humanize %}
 {% block title %}Observing Plan: Skytour{% endblock %}
 {% block content %}
-
-<h1>Observed Deep Sky Objects</h1>
-{% with table_id=dso_table %}
-{% include 'includes/dso_table.html' %}
-{% endwith %}
+    <h1>Observed Deep Sky Objects</h1>
+    {% with table_id=dso_table %}
+        {% include 'includes/paginate.html' %}
+        {% include 'includes/dso_table.html' %}
+        {% include 'includes/paginate.html' %}
+    {% endwith %}
 {% endblock %}

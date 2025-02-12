@@ -31,9 +31,7 @@ class FieldView(models.Model):
 ##### Abstract Models
 class Coordinates(models.Model):
     """
-    For now I'm storing them as separate fields.
-    I had thought maybe as a string that I could parse.
-    Might still try that.
+
     """
     ra_h = models.PositiveIntegerField ( 
         _('RA: hr'),

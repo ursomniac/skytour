@@ -74,10 +74,6 @@ def do_asteroids(p, context):
         fcy_start = y - n_asteroids * 15
         p, y = show_table_header(p, y)
         for a in cookie_dict['asteroids']:
-            ses = a['session']
-            is_up = ses['start']['is_up'] or ses['end']['is_up']
-            if not is_up:
-                continue
             instance = Asteroid.objects.get(slug=a['slug'])
             p, y = show_object_table(a, p, y, instance)
             # Finder Charts
@@ -118,10 +114,8 @@ def do_comets(p, context):
         fcy_start = y - n_comets * 15 - 20
         p, y = show_table_header(p, y, xoff=40)
         for comet in cookie_dict['comets']:
-            ses = comet['session']
-            is_up = ses['start']['is_up'] or ses['end']['is_up']
             bright_enough = comet['observe']['apparent_magnitude'] <= 12.0
-            if not is_up or not bright_enough:
+            if not bright_enough:
                 continue
             nc += 1
             instance = Comet.objects.get(pk=comet['pk']) 
@@ -192,7 +186,8 @@ def do_moon(p, context):
     y =  200
 
     map = find_site_parameter('simple-moon-map', None, 'image')
-    p.drawImage(map.file.name, 250, 450, width=300, height=300, mask=None)
+    if map:
+        p.drawImage(map.file.name, 250, 450, width=300, height=300, mask=None)
 
     sqm = find_site_parameter('moon-vs-sqm', None, 'image')
     y -= 150

@@ -61,10 +61,6 @@ class SetSessionCookieView(FormView):
     def get_initial(self):
         initial = super().get_initial() # needed since we override?
         initial = get_initial_from_cookie(self.request, initial)
-        # TODO V2 - remove - get time zone from location
-        time_zone = find_site_parameter('default-time-zone-id', None, 'positive')
-        if time_zone is not None:
-            initial['time_zone'] = time_zone
         return initial
 
     def get(self, request, *args, **kwargs):
@@ -72,6 +68,7 @@ class SetSessionCookieView(FormView):
         form = self.get_form(self.get_form_class())
         context = self.get_context_data(**kwargs)
         context['form'] = form
+        
         # set up the "set to now" button on the form
         now = utc_round_up_minutes()
         context['now_date'] = now.strftime("%Y-%m-%d")
@@ -102,19 +99,19 @@ class SetSessionCookieView(FormView):
 
         # ADD TWILIGHT!
         # Sun
-        sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location, time_zone=time_zone)
+        sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location)
         context['sun'] = sun 
         self.request.session['sun'] = sun
         times.append((time.perf_counter(), f'Got Sun'))
 
         # Moon
-        moon = get_object_metadata(utdt_start, 'Moon', 'moon', location=my_location, time_zone=time_zone)
+        moon = get_object_metadata(utdt_start, 'Moon', 'moon', location=my_location)
         context['moon'] = moon 
         self.request.session['moon'] = moon
         times.append((time.perf_counter(), f'Got Moon'))
 
         # Planets
-        planets = get_planet_positions(utdt_start, location=my_location, time_zone=time_zone)
+        planets = get_planet_positions(utdt_start, location=my_location)
         context['planets'] = planets
         self.request.session['planets'] = planets
         times.append((time.perf_counter(), f'Got Planets'))
@@ -123,7 +120,6 @@ class SetSessionCookieView(FormView):
         asteroid_list, atimes = get_visible_asteroid_positions(
             utdt_start, 
             #location=my_location, # This slows it down by 10x
-            time_zone=time_zone
         )
         context['asteroids'] = asteroid_list
         self.request.session['asteroids'] = asteroid_list
@@ -134,7 +130,6 @@ class SetSessionCookieView(FormView):
         comet_list, times = get_comet_positions(
             utdt_start, 
             #location=my_location,  # This slows it down by 10x
-            time_zone=time_zone,
             times=times
         )
         context['comets'] = comet_list

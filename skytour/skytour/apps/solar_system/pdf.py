@@ -109,10 +109,11 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     #   - Almanac (rise/set)
     xnow = 425
     y = ynow
-    orise, oset, otrans = get_rise_set(session['almanac'])
-    p, y = label_and_text(p, xnow, y, ("Rise: ", FS), (orise, FS), cr=15)
-    p, y = label_and_text(p, xnow, y, ("Trans: ", FS), (otrans, FS), cr=15)
-    p, y = label_and_text(p, xnow, y, ("Set: ", FS), (oset, FS), cr=15)
+    if 'almanac' in session.keys() and session['almanac'] is not None:
+        orise, oset, otrans = get_rise_set(session['almanac'])
+        p, y = label_and_text(p, xnow, y, ("Rise: ", FS), (orise, FS), cr=15)
+        p, y = label_and_text(p, xnow, y, ("Trans: ", FS), (otrans, FS), cr=15)
+        p, y = label_and_text(p, xnow, y, ("Set: ", FS), (oset, FS), cr=15)
  
     # Planets section
     if object_type == 'planet':
@@ -217,8 +218,6 @@ class SSOPDFView(View):
         object_id = kwargs.get('object_id', None)
         object = get_object(object_type, object_id)
         session = get_cookie_value(context['cookies'], object_type, object)
-        obj_rise, obj_set = get_rise_set(session['almanac'])
-        #location = ObservingLocation.objects.get(pk=context['location'])
         if object:
             # Start file.
             buffer = io.BytesIO()

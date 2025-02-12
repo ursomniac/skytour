@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 from colorfield.fields import ColorField
 from ..abstract.vocabs import YES_NO, NO
 from ..plotting.vocabs import MAP_SYMBOL_TYPES
+from .vocabs import CATALOG_PRECEDENCE
 
 class AbstractCatalog(models.Model):
     name = models.CharField (
@@ -37,6 +38,11 @@ class AbstractCatalog(models.Model):
     notes = models.TextField (
         _('Notes'),
         null = True, blank = True
+    )
+    precedence = models.PositiveIntegerField (
+        _('Precedence in Catalog Lists'),
+        null = True, blank = True,
+        choices = CATALOG_PRECEDENCE
     )
 
     class Meta:
@@ -114,7 +120,7 @@ class Catalog(AbstractCatalog):
         )
 
     class Meta:
-        ordering = ['abbreviation']
+        ordering = ['precedence', 'abbreviation']
         verbose_name = 'DSO Catalog'
         verbose_name_plural = 'DSO Catalogs'
 
@@ -127,6 +133,8 @@ class Catalog(AbstractCatalog):
 class StarCatalog(AbstractCatalog):
     pass
 
+    def __str__(self):
+        return f"{self.abbreviation} = {self.name}"
 
 class ObjectType(models.Model):
     """

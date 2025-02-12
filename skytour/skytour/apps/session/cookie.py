@@ -39,8 +39,6 @@ def get_cookie_defaults():
     cookie_dict = dict (
         utdt_start = ut0.isoformat(),
         location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
-        # TODO: remove and set dec limit based on latitude of location
-        dec_limit = find_site_parameter('declination-limit', default=-25., param_type='float'),
         color_scheme = 'dark',
         julian_date = julian_date,
         t = t

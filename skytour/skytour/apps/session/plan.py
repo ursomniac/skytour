@@ -3,6 +3,15 @@ from ..dso.models import DSO
 from ..solar_system.models import Comet, Planet, Asteroid
 from ..utils.timer import compile_times
 
+def start_v2_issue(x):
+    if x is None:
+        return False
+    if 'start' not in x.keys():
+        return False
+    if 'is_up' not in x.keys():
+        return False
+    return True 
+
 def get_plan(context, debug=False):
     """
     This creates an observing plan for a UTDT and location.
@@ -14,7 +23,7 @@ def get_plan(context, debug=False):
 
     # Moon
     moon_session = cookies['moon']['session']
-    go = show_all or moon_session['start']['is_up'] # or moon_session['end']['is_up']
+    go = show_all or start_v2_issue(moon_session)
     if go:
         show_moon = moon_session
     else:
@@ -29,7 +38,7 @@ def get_plan(context, debug=False):
         pd = cookies['planets'][k]
         session = pd.get('session')
         # RAD 12 Jan 2022 - don't get planet images to save time
-        go = show_all or session['start']['is_up'] # or session['end']['is_up']
+        go = show_all or start_v2_issue(session)
         if go:
             pd['object'] = Planet.objects.get(slug=pd['slug'])
             show_planets.append(pd)
@@ -41,7 +50,7 @@ def get_plan(context, debug=False):
     for v in cookies['asteroids']:
         session = v.get('session', None)
         try:
-            go = session is None or v['session']['start']['is_up'] # or v['session']['end']['is_up'] 
+            go = session is None or start_v2_issue(v)
             if go:
                 v['object'] = Asteroid.objects.get(slug=v['slug'])
         except:
@@ -55,7 +64,7 @@ def get_plan(context, debug=False):
     show_comets = []
     for c in cookies['comets']:
         try:
-            go = c['session']['start']['is_up'] # or c['session']['end']['is_up']
+            go = start_v2_issue(c)
             if go:
                 c['object'] = Comet.objects.get(pk=c['pk'])
         except:
@@ -66,10 +75,8 @@ def get_plan(context, debug=False):
 
     # DSOs
     targets = {}
-    all_dsos = DSO.objects.filter(
-        dec__gt=context['dec_limit'], 
-        magnitude__lt=context['mag_limit']
-    ).order_by('ra')
+    ### BUG: this won't work for latitude < 0!
+    all_dsos = DSO.objects.filter(dec__gt=context['dec_limit'], ).order_by('ra')
     for dso in all_dsos:
         if dso.object_is_up(location, context['utdt_start'], min_alt=20.):
             #or dso.object_is_up(location, context['utdt_X_end'], min_alt=0.):

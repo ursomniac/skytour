@@ -59,7 +59,7 @@ def get_adjacent_planets(planet_dict, utdt, times=None):
    return close_by, times
 
 
-def get_planet_positions(utdt, location=None, time_zone=None):
+def get_planet_positions(utdt, location=None):
    """
    Create the dict for all the planet positions at a given UTDT
    """
@@ -72,14 +72,13 @@ def get_planet_positions(utdt, location=None, time_zone=None):
          'planet', 
          instance=p, 
          location=location,
-         time_zone=time_zone
       )
       d['slug'] = p.slug
       d['name'] = p.name
       planet_dict[p.name] = d
    return planet_dict
 
-def get_visible_asteroid_positions(utdt, location=None, time_zone=None, pluto=True):
+def get_visible_asteroid_positions(utdt, location=None, pluto=True):
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
@@ -114,7 +113,6 @@ def get_visible_asteroid_positions(utdt, location=None, time_zone=None, pluto=Tr
             'asteroid', 
             instance=a, 
             location=location,
-            time_zone=time_zone 
          )
          if x is None:
             continue
@@ -125,7 +123,7 @@ def get_visible_asteroid_positions(utdt, location=None, time_zone=None, pluto=Tr
          times.append((time.perf_counter(), x['name']))
    return asteroid_list, times
 
-def get_comet_positions(utdt, location=None, time_zone=None, times=None):
+def get_comet_positions(utdt, location=None, times=None):
    mag_limit = find_site_parameter('comet-magnitude-limit', 12.0, 'float')
    comets = Comet.objects.filter(status=1)
    comet_list = []
@@ -136,7 +134,6 @@ def get_comet_positions(utdt, location=None, time_zone=None, times=None):
          'comet', 
          instance=c, 
          location=location,
-         time_zone=time_zone
       )
       if d is None:
          continue

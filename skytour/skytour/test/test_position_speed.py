@@ -29,7 +29,6 @@ def time_objects(utdt, objtype, objects):
             utdt, 'None', objtype, 
             instance=obj, 
             location=None, 
-            time_zone=None
         )
         t1 = t2
         t2 = time.perf_counter()

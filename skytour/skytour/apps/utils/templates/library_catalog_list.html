@@ -51,23 +51,9 @@
 
 <form action="" method="GET">
     <select name="catalog_slug">
-        <option value="caldwell">Caldwell</option>
-        <option value="messier">Messier</option>
-        <option value="abell">Abell PN</option>
-        <option value="arp">Arp Pec. Gal</option>
-        <option value="a24-101">Astronomy 2024</option>
-        <option value="barnard">Barnard</option>
-        <option value="collinder">Collinder</option>
-        <option value="h400">Herschel 400</option>
-        <option value="hickson">Hickson Compact Group</option>
-        <option value="index">Index Catalog</option>        
-        <option value="melotte">Melotte</option>
-        <option value="ngc">NGC</option>
-        <option value="sh2">Sharpless</option>
-        <option value="trumpler">Trumpler</option>
-        <option value="bayer">Bayer</option>
-        <option value="flamsteed">Flamsteed</option>
-        <option value="other">Other</option>
+        {% for this_cat in catalog_list %}
+        <option value="{{ this_cat.slug }}"{% if this_cat.slug == catalog_slug %} selected{% endif %}>{{ this_cat.name }}</option>
+        {% endfor %}
     </select>
     <select name="scope">
         <option value="all">Show all Available Objects</option>

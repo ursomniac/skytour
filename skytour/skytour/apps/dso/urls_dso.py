@@ -7,7 +7,6 @@ from .views import (
     DSOListActiveView,
     DSOListDetailView,
     DSOListListView,
-    #DSOListPDFView,
     DSOObservationLogView,
     DSORealTimeView,
     DSOSearchView
@@ -18,7 +17,6 @@ urlpatterns = (
     path('filter', DSOFilterView.as_view(), name='dso-filter'),
     path('list/<int:pk>', DSOListDetailView.as_view(), name='dsolist-detail'),
     path('list/dsoactive', DSOListActiveView.as_view(), name='dsolist-active'),
-    #path('list/pdf/<int:pk>', DSOListPDFView.as_view(), name='dsolist-pdf'),
     path('list', DSOListListView.as_view(), name='dsolist-list'),
     path('observe', DSOObservationLogView.as_view(), name='dso-observed'),
     path('real-time/<int:pk>', DSORealTimeView.as_view(), name='dso-real-time'),
