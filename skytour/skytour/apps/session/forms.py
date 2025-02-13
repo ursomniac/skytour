@@ -123,7 +123,7 @@ class SessionAddForm(forms.Form):
         queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
     )
     telescope = forms.ModelChoiceField (
-        queryset = Telescope.objects.all()
+        queryset = Telescope.objects.order_by('order_in_list')
     )
     eyepiece = forms.ModelMultipleChoiceField (
         queryset = Eyepiece.objects.all(),

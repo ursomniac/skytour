@@ -6,6 +6,10 @@ class EyepieceAdmin(admin.ModelAdmin):
     readonly_fields = ['magnification', 'fov_display']
     list_display = ['pk', 'focal_length', 'telescope', 'magnification', 'fov_display']
 
-admin.site.register(Telescope)
+class TelescopeAdmin(admin.ModelAdmin):
+    model = Telescope
+    list_display = ['pk', 'name', 'aperture', 'focal_length', 'order_in_list']
+
+admin.site.register(Telescope, TelescopeAdmin)
 admin.site.register(Eyepiece, EyepieceAdmin)
 admin.site.register(Filter)

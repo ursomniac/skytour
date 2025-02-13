@@ -1,0 +1,41 @@
+
+<style>
+    table.parameter_table th {
+        background-color: #666;
+        color: #fff;
+    }
+    table.parameter_table {
+        width: 80%;
+        margin-left: 30px;
+    }
+</style>
+<table class="parameter_table">
+    <tr>
+        <th style="width: 20%">Name</th>
+        <th style="width: 20%">Slug</th>
+        <th style="width: 45%">Value</th>
+        <th style="width: 10%">Admin
+            &nbsp;
+            <a href="/admin/site_parameter/siteparameter{{ submodel }}/add/" target="_new">
+                <button>New</button>
+            </a>
+        </th>
+    </tr>
+    {% for item in itemlist %}
+    <tr>
+        <td>{{ item.title }}</td>
+        <td>{{ item.slug }}</td>
+        <td>
+            {% if submodel == 'link' %}
+            <a href="{{ item.value }}" target="_new">{{ item.value }}</a>
+            {% elif submodel == 'pdffile' %}
+            <a href="/media/{{ item.value }}" target="_new">{{ item.value }}</a>
+            {% else %}
+            {{ item.value }}
+            {% endif %}
+        </td>
+        <td><a href="/admin/site_parameter/siteparameter{{ submodel }}/{{ item.pk }}/change/" target="_new"><button>Admin</button></a></td>
+    </tr>
+    {% endfor %}
+</table>
+<br>

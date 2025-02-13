@@ -75,6 +75,7 @@ summary::-webkit-details-marker {
 
 <small>
 <h2># Matching DSOs: {{ list_count }}</h2>
+{% include 'includes/paginate.html' %}
 <table width="100%" id="dsos-on-list">
 <thead>
     <tr class="table-header">
@@ -135,6 +136,8 @@ summary::-webkit-details-marker {
 {% endfor %}
 </tbody>
 </table>
+{% include 'includes/paginate.html' %}
+
 </small>
 
 {% if map %}

@@ -1,6 +1,0 @@
-[
-	{"model": "misc.timezone", "pk": 1, "fields": {"name": "UTC", "utc_offset": 0}}, 
-	{"model": "misc.timezone", "pk": 2, "fields": {"name": "US/Eastern", "utc_offset": -5}}, 
-	{"model": "misc.timezone", "pk": 3, "fields": {"name": "US/Central", "utc_offset": -6}}, 
-	{"model": "misc.timezone", "pk": 4, "fields": {"name": "US/Mountain", "utc_offset": -7}}
-]

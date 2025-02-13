@@ -8,13 +8,14 @@
     td.op-app  { background-color:  #600; }  /* Application  */
     td.op-site { background-color:  #666; }  /* Site         */
     td.op-set  { background-color:  #222; }  /* Cookie Data  */
-
+    td.logo { background-color: #999; color: #000; font-size: 16px; font-weight: bold; }
     /* topnav */
     table.navbar { background-color: #444; }
     table.navbar table { border: 1px solid black; }
     table.navbar td { 
-        text-align: center; vertical-align: middle !important; font-size: 14px; 
-        border: 1px solid black;
+        text-align: center; 
+        vertical-align: middle !important; 
+        font-size: 14px; 
     }
     table.navbar th, table.navbar td {
         padding: 5px !important;
@@ -25,31 +26,79 @@
         font-weight: 800; 
         text-decoration: none;
     }
+    .dropbtn {
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .dropbtn:hover, .dropbtn:focus { 
+        xbackground-color: #ccc; 
+        xcolor: #000;
+        border: 1px solid white;
+    }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #333;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        text-align: left;
+    }
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    .dropdown-content a:hover { background-color: #ccc; color: #000; }
+    .show { display: block; }
 </style>
 <table width="100%" class="navbar">
     <tr>
-        <td class="click"><a href="{% url 'home' %}">Home - Now</a></td>
-        <td class="click"><a href="{% url 'observing-plan' %}">Plan</a></td>
+        <td rowspan=3 class="logo">
+            Skytour<br><small>V 2.0</small>
+        </td>
+        <td class="click">
+            <span onClick="myFunctionHome()" class="dropbtn">Home 🔽</span>
+            <div id="myDropdownHome" class="dropdown-content">
+                <a href="{% url 'home' %}">Home -- Now</a>
+                <a href="{% url 'home' %}?cookie">Home - Cookie</a>
+            </div>
+        </td>
+        <td class="click">
+            <span onClick="myFunctionMisc()" class="dropbtn">Misc 🔽</span>
+            <div id="myDropdownMisc" class="dropdown-content">
+                <a href="{% url 'observing-plan' %}">Plan</a>
+                <a href="{% url 'zenith-view' %}">Zenith Finding Chart</a>
+            </div>
+        </td>
         <td class="click op-site" colspan=1>
             <a href="{% url 'observing-location-list' %}">Locations</a>
         </td>
         <td class="op-site">
-            <a href="{% url 'site-parameter-list' %}">Site Params</a>
+            <a href="{% url 'site-parameter-list' %}">Settings</a>
+            &nbsp; | &nbsp;
+            <a href="/admin" target="_new"><button>Admin</button></a>
         </td>
-        <td colspan=4 class="op-dso">DSOs:  &nbsp;
+        <td colspan=3 class="op-dso">DSOs:  &nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;|&nbsp;
             <a href="{% url 'home-objects' %}">@Now</a>
             &nbsp;|&nbsp;
             <a href="{% url 'cookie-objects' %}">@Cookie</a>
             &nbsp;|&nbsp;
-            <a href="{% url 'dsolist-list' %}">Lists</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'dso-filter' %}">Filter</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'dso-observed' %}">Obs.</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'dso-checklist' %}">Checklist</a>
+            <a href="{% url 'dsolist-list' %}">Obs. Lists</a>
+        </td>
+        <td class="op-dso">
+            <span onClick="myFunctionDSO()" class="dropbtn">DSO Filters 🔽</span>
+            <div id="myDropdownDSO" class="dropdown-content">
+                <a href="{% url 'dso-filter' %}">Filter All DSOs</a>
+                <a href="{% url 'dso-observed' %}">Observed DSOs</a>
+                <a href="{% url 'dso-checklist' %}">Create DSO List</a>
+            </div>
         </td>
         <td class="op-dso">
             <a href="{% url 'catalog-list' %}">Catalogs</a>
@@ -59,7 +108,6 @@
         <td class="click op-dso"><a href="{% url 'atlas-list' %}">Atlas</a></td>
         <td colspan=2 class="op-dso">
             <form action="/dso/search" method="GET">
-                <!--input name="newtab" type="checkbox"-->
                 <b>Search DSO:</b>
                 <input name="query" size="8">
                 &nbsp;&nbsp;
@@ -68,17 +116,19 @@
         </td>
     </tr>
     <tr>
-        <td class="click"><a href="{% url 'home' %}?cookie">Home - Cookie</a></td>
-
         <td class="click op-info"><a href="{% url 'calendar-current' %}">Calendar</a></td>
-        <td class="click op-sky"><a href="{% url 'skymap-detail' %}">SkyMap</a></td>
-        <td class="click op-sky"><a href="{% url 'constellation-list' %}">Constellations</a></td>
-        <td colspan="2" class="op-sky">
-            Lists:
-            <a href="{% url 'observed-objects' %}">Obs.</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-            <a href="{% url 'library-image-list' %}">Library Images</a>
+        <td class="click op-sky" colspan="2">
+            <span onClick="myFunctionSkyMap()" class="dropbtn">SkyMap  🔽</span>
+                <div id="myDropdownSkyMap" class="dropdown-content">
+                    <a href="{% url 'skymap-detail' %}">At Cookie Date/Time</a>
+                    <a href="{% url 'skymap-detail' %}?utdt_now=on">Now</a>
+                    <a href="{% url 'skymap-detail' %}?house=on">With Location Mask</a>
+                    <a href="{% url 'skymap-detail' %}?simple=on">Simple (for Printing)</a>
+                    <a href="{% url 'skymap-detail' %}?simple=on&utdt_now=on">Simple (for Printing)</a>
+                </div>
         </td>
+        <td class="click op-sky"><a href="{% url 'constellation-list' %}">Constellations</a></td>
+        <td colspan="2" class="op-sky"><a href="{% url 'library-image-list' %}">Image Library</a></td>
         <td class="click op-sso"><a href="{% url 'planet-list' %}">Planets/Moon</a></td>
         <td class="click op-sso"><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
         <td class="click op-sso"><a href="{% url 'comet-list' %}">Comets</a></td>
@@ -86,7 +136,7 @@
         <td colspan=3 class="op-ses">Sessions: &nbsp;&nbsp;
             <a href="{% url 'session-list' %}">List</a>
             &nbsp;|&nbsp;
-            <a href="{% url 'session-create' %}">Create</a>
+            <a href="{% url 'session-create' %}">Create New</a>
             &nbsp;|&nbsp;
             <a href="{% url 'session-add' %}">Observe</a>
             &nbsp;|&nbsp;
@@ -94,7 +144,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2" class='op-set'>
+        <td colspan="3" class='op-set'>
             <span style="color: #fff; font-weight: bold;">Date:</span>
             <span style="color: #ff0;"><small>{{ utdt_str }}</small></span>
             <br>
@@ -111,34 +161,42 @@
                 <span style="color: #fff;">Longitude: </span>
                 <span style="color: #ff0;">{{ location.longitude|to_dms:0 }}</span>
         </td>
-        <td class="click op-app"><a href="/admin" target="_new">Admin</a></td>
         <td class="click op-app">
-            <a href="{% url 'astro-calc' %}">Calc</a>
+            <a href="{% url 'astro-calc' %}">Calculators</a>
         </td>
         <td class="op-ses">
-            Session: 
-            <a href="{% url 'session-set' %}"><button>Reset Session</button></a>
-            {% comment %}
-            <button onclick="return realtimePopup('/session/set_cookie')")>
-                Set Cookie
-            </button>
-            {% endcomment %}
+            Settings:
+            <a href="{% url 'session-set' %}"><button>Set Date/Time/Location</button></a>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
-            <a href="{% url 'show-cookies' %}">Cookies</a>
+            <a href="{% url 'show-cookies' %}">Show Cookie</a>
         </td>
     </tr>
 </table>
 {% include 'includes/realtime_script.html' %}
 
-{% comment %}
-{# https://jsfiddle.net/L47NY/7/ #}
-$('#aLink').attr('target','_blank');
-
-$('#chk').click(function(){
-  if($(this).is(':checked')){
-    $('#aLink').attr('target','_self');    
-  }else{
-    $('#aLink').attr('target','_blank');
-  }
-});
-{% endcomment %}
+<script>
+    function myFunctionMisc() {
+        document.getElementById("myDropdownMisc").classList.toggle("show");
+    }
+    function myFunctionHome() {
+        document.getElementById("myDropdownHome").classList.toggle("show");
+    }
+    function myFunctionDSO() {
+        document.getElementById("myDropdownDSO").classList.toggle("show");
+    }
+    function myFunctionSkyMap() {
+        document.getElementById("myDropdownSkyMap").classList.toggle("show");
+    }
+    window.onclick = function(event) {
+        if(!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>

@@ -368,6 +368,18 @@ class ObservingConditionsFormView(CreateView):
     form_class = ObservingConditionsForm
     template_name = 'obs_circumstance.html'
 
+    def get_initial(self):
+        initial = super().get_initial() # needed since we override?
+        # Apparently get_context_data comes after get_initial...
+        deal = deal_with_cookie(self.request, {})
+        ut_date = deal.get('utdt_start', None)
+        if ut_date is not None:
+            initial['ut_date'] = ut_date.date()
+            session = ObservingSession.objects.filter(ut_date=ut_date).first()
+            if session:
+                initial['session'] = session
+        return initial
+
     def get_success_url(self):
         if self.session_id:
             return reverse(
@@ -382,6 +394,9 @@ class ObservingConditionsFormView(CreateView):
         return super().form_valid(form)
 
 class ObservingLogView(TemplateView):
+    """
+    TODO: V2 --- this is no longer useful!   All the content is on other pages.
+    """
     template_name = 'observed_objects_list.html'
 
     def get_context_data(self, **kwargs):

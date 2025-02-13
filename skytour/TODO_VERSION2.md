@@ -9,12 +9,6 @@
         * Can we get away with MODE defining limits ALONE?
             - OR make SiteParameter overrides for this!   <--- I like this
 
-2. Default Observing Location 
-    a. Sets up Declination Limits
-    b. Set Time Zone in this model!   (eliminates having it on the cookie!)
-
-* Will auto-populate on the Cookie setting form
-
 ## Gear Model
 
 1. Let's auto-populate for imagers

@@ -105,6 +105,9 @@
                             <label for="simple">Simple: </label>
                             <input type="checkbox" name="simple" {% if simple %}checked{% endif %}>
                             &nbsp;&nbsp;&nbsp;
+                            <label for="utdt_now">Now: </label>
+                            <input type="checkbox" name="utdt_now" {% if utdt_now %}checked{% endif %}>
+                            &nbsp;&nbsp;&nbsp;
                             <label for="min_dso_alt">Min DSO Alt: </label>
                             <input name="min_dso_alt" size=3 {% if min_dso_alt %}value="{{ min_dso_alt }}"{% endif %}>
                             &nbsp;&nbsp;&nbsp;

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Site Links: Skytour{% endblock %}
+{% block content %}
+<h1>Site Parameters</h1>
+
+<h2>Links</h2>
+{% with itemlist=parameters.link submodel='link' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>PDF Files</h2>
+{% with itemlist=parameters.pdf submodel='pdffile' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>Positive Integers</h2>
+{% with itemlist=parameters.positive submodel='positiveinteger' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>Strings</h2>
+{% with itemlist=parameters.string submodel='string' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>Floats</h2>
+{% with itemlist=parameters.float submodel='float' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>Images</h2>
+{% with itemlist=parameters.image submodel='image' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+<h2>Numbers</h2>
+{% with itemlist=parameters.number submodel='number' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+
+{% endblock %}

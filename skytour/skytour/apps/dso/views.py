@@ -301,6 +301,7 @@ class DSOObservationLogView(CookieMixin, ListView):
 class DSOChecklistView(ListView):
     model = DSOImagingChecklist
     template_name = 'imaging_checklist.html'
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super(DSOChecklistView, self).get_context_data(**kwargs)
@@ -344,8 +345,19 @@ class DSOChecklistView(ListView):
                 )
                 context['map'] = map
         else:
+            dso_list = context['dso_list']
             context['map'] = None
         context['table_id'] = 'dsos-on-list'
+
+        # Pagination
+        page_no = self.request.GET.get('page', 1)
+        num_on_page = self.request.GET.get('page_size', self.paginate_by)
+        context['num_on_page'] = num_on_page
+        p = Paginator(context['dso_list'], num_on_page)
+        this_page = p.page(page_no)
+        context['page_obj'] = this_page
+        context['dso_list'] = this_page.object_list # Just this page of objects.
+        context['is_paginated'] = True
         return context
     
 class DSORealTimeView(CookieMixin, DetailView):

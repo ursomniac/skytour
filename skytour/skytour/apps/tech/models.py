@@ -17,6 +17,10 @@ class Telescope(models.Model):
         ('Focal Length'),
         help_text = 'mm'
     )
+    order_in_list = models.PositiveIntegerField (
+        ('Order in List'),
+        default = 0
+    )
 
     @property
     def f_ratio(self):
@@ -41,6 +45,9 @@ class Telescope(models.Model):
         theta = 116 / self.aperture
         return theta
 
+    class Meta:
+        ordering = ['order_in_list']
+        
     def __str__(self):
         return self.name
 
