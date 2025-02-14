@@ -92,7 +92,7 @@
             <form type="GET" action="/library/constellation">
             <b>By Constellation:</b>
             <select name="abbr">
-            {% for c in constellation_list %}<option>{{ c }}</option>{% endfor %}
+            {% for c in constellation_list %}<option {% if c == abbreviation %} selected{% endif %}>{{ c }}</option>{% endfor %}
             </select>
             <input type="submit"/>
             </form>

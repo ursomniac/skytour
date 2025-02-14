@@ -293,17 +293,19 @@ class LibraryCatalogView(TemplateView):
     
 class LibraryConstellationView(TemplateView):
     template_name = 'library_image_list.html'
-    #paginate_by = 24
 
     def get_context_data(self, **kwargs):
         context = super(LibraryConstellationView, self).get_context_data(**kwargs)
-        abbr = self.request.GET.get('abbr', 'AND').upper()
-        all = self.request.GET.get('scope') == 'all'
+        # Parse abbr from path or from form
+        abbr = None
+        if 'abbr' in self.kwargs.keys():
+            abbr = self.kwargs['abbr']
+        abbr = abbr if abbr is not None else self.request.GET.get('abbr', 'AND').upper()
         dso_images = DSOLibraryImage.objects.filter(object__constellation__abbreviation=abbr).order_by('-ut_datetime', 'order_in_list')
         dso_image_list = get_list_of_primary_library_images(dso_images)
+        context['abbreviation'] = abbr
         context['image_list'] = dso_image_list
         context['constellation'] = Constellation.objects.filter(abbreviation=abbr).first()
         context['object_count'] = len(dso_image_list)
         context['constellation_list'] = assemble_constellation_list()
-
         return context

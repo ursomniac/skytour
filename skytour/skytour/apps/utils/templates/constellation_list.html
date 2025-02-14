@@ -14,7 +14,7 @@
             <th>DSO Count</th>
             <th>DSO In Field</th>
             <th>DSO Total</th>
-            <th>Image List</th>
+            <th>DSO Imaged</th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +35,7 @@
             <td>
                 {% if obj.count_dsos_with_library_images > 0 %}
                 <a href="{% url 'library-by-constellation' obj.abbreviation %}">
-                    <button>Image List ({{ obj.count_dsos_with_library_images }})</button>
+                    <button>Image Gallery ({{ obj.count_dsos_with_library_images }} DSOs)</button>
                 </a>
                 {% endif %}
             </td>

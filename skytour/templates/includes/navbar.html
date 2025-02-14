@@ -15,11 +15,11 @@
     table.navbar td { 
         text-align: center; 
         vertical-align: middle !important; 
-        font-size: 14px; 
+        font-size: 13px; 
     }
     table.navbar th, table.navbar td {
         padding: 5px !important;
-        border: 1px solid white !important; 
+        border: 1px solid white; 
     }
     table.navbar a { 
         color: #fff; 
@@ -28,7 +28,7 @@
     }
     .dropbtn {
         color: white;
-        font-size: 14px;
+        xfont-size: 14px;
         font-weight: bold;
         cursor: pointer;
     }
@@ -55,11 +55,16 @@
     }
     .dropdown-content a:hover { background-color: #ccc; color: #000; }
     .show { display: block; }
+    td.logo {
+        background-color: #000;
+        border: 1px solid black!important;
+    }
+    td.logo img { max-width: 75px;}
 </style>
 <table width="100%" class="navbar">
     <tr>
         <td rowspan=3 class="logo">
-            Skytour<br><small>V 2.0</small>
+            <img src="/media/logos/skytour_logo_2-crop.jpeg" alt="Skytour V2.0"/>
         </td>
         <td class="click">
             <span onClick="myFunctionHome()" class="dropbtn">Home 🔽</span>
