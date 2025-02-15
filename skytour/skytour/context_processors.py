@@ -17,12 +17,12 @@ def get_global_items(request):
         local_time = dt.datetime.now() # This will come back as UTC because the server is set to that.
         local_time_str = None
     local_time_str = local_time.strftime("%b %d, %Y  %I:%M %p %Z")
-    
+
     return dict(
         user_preferences=user_preferences,
         location=location,
         utdt_str = utdt_str,
         local_time_str = local_time_str,
         cookie_utdt = ut,
-        cookie_local = local_time
+        cookie_local = local_time,
     )

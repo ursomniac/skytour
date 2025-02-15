@@ -56,29 +56,10 @@ class CalendarMonthView(MonthArchiveView):
         this_date = context['month'] # defined in super()
         this_month = this_date.month
         this_year = this_date.year
-
         start_date = datetime.datetime(this_year, this_month, 1, 0, 0).replace(tzinfo=pytz.utc)
         days_out = 29 if this_month == 2 and is_leap_year(this_year) else out[this_month]
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
         my_time_zone = pytz.timezone(TimeZone.objects.get(pk=time_zone_id).name)
         grid = create_calendar_grid(start_date, days_out=days_out - 1, time_zone=my_time_zone)
-        context['grid'] = grid
-
-        # Get around Next Month being None - sigh
-        """
-        if context['next_month'] is None:
-            ty = int(context['month'].year)
-            tm = int(context['month'].month)
-            td = int(context['month'].day) # always 1
-            tm += 1
-            if tm > 12:
-                tm = tm % 12
-                ty += 1
-            context['next_month'] = datetime.date(ty, tm, td)
-        else:
-            print("NEXT TYPE: ", type(context['next_month']))
-        print ("THIS: ", context['month'])            
-        print ("NEXT: ", context['next_month'])
-        """
-        
+        context['grid'] = grid        
         return context
