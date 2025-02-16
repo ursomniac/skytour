@@ -125,12 +125,10 @@
             <span onClick="myFunctionCalendar()" class="dropbtn">Calendar  🔽</span>
             <div id="myDropdownCalendar" class="dropdown-content">
                 <a href="{% url 'calendar-current' %}">This Month: {% now "M Y" %}</a>
-                <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
+                <a href="{% url 'calendar-month' next_month|date:'Y' next_month|date:'b' %}">
                     Next: {{ next_month|date:"M Y"}}</a>
-                <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
+                <a href="{% url 'calendar-month' previous_month|date:'Y' previous_month|date:'b' %}">
                     Last: {{ previous_month|date:"M Y"}}</a>
-
-            </h2>
             </div>
         </td>
         <td class="click op-sky" colspan="2">
