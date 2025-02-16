@@ -3,22 +3,30 @@ from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 
 def parse_utdt(s):
+    """
+    Return datetime from formatted string of time.
+    """
     utdt = None
     if s is None or len(s.strip()) == 0:
-        #print(f"GOT NOTHING: [{s}]")
         return None
     has_sec = len(s.split(':')) == 3
     fmt = '%Y-%m-%d %H:%M' 
     fmt += ':%S' if has_sec else ''
     try:
         utdt = dt.datetime.strptime(s, fmt).replace(tzinfo=pytz.utc)
-        #print("GOT: ", utdt)
         return utdt
     except:
         print("PARSE ERROR: ", s)
         return None
     
 def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, house_extra=False):
+    """
+    TODO V2: This needs a complete rethink --- needs to be customizable for ANY ObservingLocation!
+    Basically what you need to define is a series of azimuth ranges with minimum altitudes.
+    (Ideally it should be a series of series under the weird situation where things aren't continuous.)
+
+    THEN this method takes that series and makes a mask.
+    """
     min_alts = dict(
         neighbor = 40., # above neighbor roof
         street = 30. # in SE hole
@@ -116,29 +124,6 @@ def find_objects_at_home(
                 house=house, min_alt=min_alt, max_alt=max_alt, house_extra=house)
         if use:
             candidate_pks.append(d.pk)
-
-        """
-        if alt > 70.: # keep!
-            #candidates.append(d)
-            candidate_pks.append(d.pk)
-            continue
-        elif az < 120.:
-            continue
-        elif az > 230.: 
-            continue
-        elif az > 160. and az <= 210.: # Kim's house
-            #skim = 30. + 15. * (az - 160.) / 70.
-            skim = 45.
-            if alt < skim:
-                continue
-        elif az > 210 and az <= 230: # window in the SE
-            if alt < 15. or (alt >= 30. and alt <= 60.):
-                continue
-        elif alt < min_alt: 
-            continue
-        # in the window!
-        candidate_pks.append(d.pk)
-        """
     # Return as a queryset 
     # Ideally this should ALSO contain alt/az!
     dsos = DSO.objects.filter(pk__in=candidate_pks)

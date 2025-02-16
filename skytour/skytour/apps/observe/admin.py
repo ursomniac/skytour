@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ObservingLocation, LocationImage
+from .models import ObservingLocation, LocationImage, ObservingLocationMask
 
 class LocationImageInline(admin.StackedInline):
     model = LocationImage
@@ -77,4 +77,4 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     get_state.short_description = 'State'
 
 admin.site.register(ObservingLocation, ObservingLocationAdmin)
-
+admin.site.register(ObservingLocationMask)

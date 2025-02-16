@@ -1,9 +1,9 @@
-import datetime as dt
-import pytz
 from .utils import parse_utdt
     
 class CustomMixin(object):
-
+    """
+    Mixin for the @Now and @Cookie view
+    """
     def get_context_data(self, **kwargs):
         context = super(CustomMixin, self).get_context_data(**kwargs)
 

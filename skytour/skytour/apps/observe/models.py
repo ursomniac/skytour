@@ -291,4 +291,32 @@ class LocationImage(models.Model):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
 
 
-        
+class ObservingLocationMask(models.Model):
+    """
+    Example:
+     (a1, h1)
+     (a2, h1) -> this creates a straight altitude line from a1->a2
+     (a3, h3) -> this creates an interpolated altitude line from a2->a3
+     (a4, h3) -> this creates another straight altitude line from a3->a4
+     (a4, h1) -> this starts a straight line at a4
+     (a5, h1) -> this creates a straight altitude line from a4->a5
+
+     When making lines, starting azimuth is considered inclusive; ending azimuth is exclusive;
+     i.e., 50° to 65° at 15° then 65° to 90° at 20°  it's 15° for az >= 50 and < 65;
+     but 20° for az >= 65 and < 90, and so on.
+
+     When defining - start at 0° and end at 360°.
+    """
+    location = models.ForeignKey(ObservingLocation, on_delete=models.CASCADE)
+    azimuth = models.FloatField(
+        _('Azimuth'),
+        help_text='Inclusive - start at 0°'
+    )
+    altitude = models.FloatField(_('Altitude'))
+
+    class Meta:
+        ordering = ['azimuth']
+
+    def __str__(self):
+         x = self.location.name
+         return f"{x}: {self.azimuth:5.1f}, {self.azimuth:4.1f}"

@@ -1,6 +1,8 @@
 from django.db import models
 from .vocabs import *
 
+### THIS IS STILL IN DEVELOPMENT!
+
 class ChallengeList(models.Model):
     title = models.CharField(
         max_length = 100,
