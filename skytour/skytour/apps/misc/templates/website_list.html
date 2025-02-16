@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}External Websites: Skytour{% endblock %}
+{% block content %}
+<style>
+    .admin { float: right; }
+</style>
+<h1>Links to External Websites</h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>
+            URL
+            <span class="admin"><a href="/admin/misc/website/add/"><button>Add New</button></a></span>
+        </th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.name }}</td>
+        <td>
+            <a href="{{ obj.url }}" target="_new">{{ obj.url }}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

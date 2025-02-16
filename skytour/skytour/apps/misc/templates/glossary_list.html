@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Glossary: Skytour{% endblock %}
+{% block content %}
+<style>
+    .admin { float: right; }
+</style>
+<h1>Glossary</h1>
+
+<table>
+    <tr>
+        <th>Term</th>
+        <th>
+            Description
+            <span class="admin"><a href="/admin/misc/glossary/add/"><button>Add New</button></a></span>
+        </th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td width="20%"">
+            {{ obj.name }}
+            {% if obj.link %}
+            <br><br>
+            <small>
+            <a href="{{ obj.link }}" target="_new"><button>More Info</button></a>
+            </small>
+            {% endif %}
+        </td>
+        <td width="80%"">
+            {{ obj.description|safe }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
