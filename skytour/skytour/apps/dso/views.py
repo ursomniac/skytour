@@ -12,16 +12,14 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from reportlab.pdfgen import canvas
 from ..abstract.utils import get_real_time_conditions
-from ..astro.culmination import get_opposition_date_at_time
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
-from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
-from .finder import create_dso_finder_chart, plot_dso_list
+from .finder import plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
-from .models import DSO, DSOList, AtlasPlate, DSOAlias, DSOInField, DSOImagingChecklist
+from .models import DSO, DSOList, AtlasPlate, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import select_atlas_plate, select_other_atlas_plates

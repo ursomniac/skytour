@@ -33,6 +33,3 @@ def get_observing_situation(ra, dec, utdt_start, location):
         d[k]['is_up'] = is_up
         d[k]['airmass'] = airmass
     return d
-
-def get_rise_set(ra, dec, utdt, location):
-    pass

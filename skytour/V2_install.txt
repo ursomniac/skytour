@@ -1,0 +1,64 @@
+
+Things you have to do to install:
+
+0. Initial Compilation
+	a. Create virtualenv
+	b. Install packages
+
+1. Set up database
+	a. Create superuser/admin user
+
+2. Get/Generate necessary data files:
+	2.1. Get NASA SSO files
+	2.2. Generate Planetary System files
+	2.3. Get MPC data
+		2.3.1. Get Asteroid datafile
+			a. Generate default bright_asteroids.txt file
+		2.3.2. Pull Comet data files from MPC
+	TODO: Make a script for this that will seed/update those tables if changes made
+
+3. Seed database
+	3.1. Admin stuff
+		a. Choose port (default: 8000) and set in Site table!
+	3.2. Stars and Constellations
+		a. Seed Constellation table
+		b. Seed BrightStar table
+		c. Seed ObjectType and Catalog
+	3.3. DSOs
+		a. Seed DSO and DSOInField from .csv file (need to generate this)
+		b. Seed DSO TargetObservingModes
+		c. Seed DSOAlias and DSOInFieldAlias
+		d. Seed MilkyWay
+		e. Seed AtlasPlate
+		f. Seed AtlasPlateConstellationAnnotation
+	3.4. Seed default ObservingLocation entry
+	3.5. SiteParameters and other defaults
+		a. SiteParameter* tables           TODO: Create List for defaults
+		b. SiteParameter images
+			- Moon map
+			- Moon SQM Table
+		c. Default Telescope
+			- Eyepieces 
+			- Filters
+	3.6. Seed SSO Tables
+		a. Planet (from CSV)
+			- Include surface images for Mars and Jupiter
+		b. Asteroid (from script and generated bright_asteroids.txt file)
+		c. Comet (from script and downloaded CometEls.txt file)
+		d. MeteorShower (from CSV)
+	3.7. Ancillary/Misc
+		a. TimeZone, StateRegion, Websites
+		b. EventType
+		c. Calendar
+
+4. Generate DSO Images
+	a. Generate DSO field images from Stellarium
+		- need to establish/set the camera or eyepiece and its setting in Stellarium
+	b. Generate wide/narrow charts
+	c. Generate printable charts
+	d. Generate AtlasPlate images
+
+TBD:
+	Science app --- remove from V2?
+
+

@@ -14,6 +14,9 @@ def get_altitude(last, lat, ra, dec):
     return s1 + s2 # sine of the altitude
 
 def get_delta_hour_for_altitude(dec, alt=20, dlat=None, send='days', debug=False):
+    """
+    Calculate range of hour angle for an object's max altitude for a given latitude and declination.
+    """
     # H = theta - RA : theta is local sidereal time
     # sin h = sin phi sin dec + cos phi cos dec cos H
     # H is zero on the meridian
@@ -49,9 +52,6 @@ def get_delta_hour_for_altitude(dec, alt=20, dlat=None, send='days', debug=False
     days = ha * 365 / 360.
     return days, cos_hh
     
-
-
-
 def solar_system_apparent_magnitude(
         earth_dist,
         sun_dist,
@@ -60,6 +60,7 @@ def solar_system_apparent_magnitude(
         g = 0.15
     ):
     """
+    Return planetary apparent magnitude based on distances, G and H.
     Stellarium uses:
 
     d = 5.* math.log(dr)
@@ -82,6 +83,9 @@ def solar_system_apparent_magnitude(
     return mag
 
 def galilean_magnitude(name, h, phi, d_e, d_s):
+    """
+    Return apparent magnitude of Galilean Satellites based on distances and phase angle.
+    """
     terms = {
         'Io':        [0.046,  0.0010],
         'Europa':    [0.0312, 0.00125],

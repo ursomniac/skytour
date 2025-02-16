@@ -8,6 +8,9 @@ from ..site_parameter.helpers import find_site_parameter
 from .models import Calendar
 
 class CalendarYearView(YearArchiveView):
+    """
+    Generate a table (not a grid) for an entire year's Calendar entries
+    """
     model = Calendar
     date_field = 'date'
     make_object_list = True
@@ -20,6 +23,9 @@ class CalendarYearView(YearArchiveView):
         return context
     
 class CalendarMonthView(MonthArchiveView):
+    """
+    Generate a grid for a month's Calendar entries
+    """
     model = Calendar
     date_field = 'date'
     make_object_list = True

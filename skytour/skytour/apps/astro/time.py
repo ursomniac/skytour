@@ -169,9 +169,15 @@ def get_last(utdt, longitude):
     return last
 
 def utc_now():
+    """
+    Return the time-zone aware UTC.
+    """
     return datetime.datetime.now(datetime.timezone.utc)
 
 def utc_round_up_minutes(dt=None, window=15):
+    """
+    Round up now() to next 15m.
+    """
     dt = dt if dt is not None else datetime.datetime.now(datetime.timezone.utc)
     new_hour = dt.hour
     minute = dt.minute

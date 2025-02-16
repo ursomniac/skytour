@@ -1,5 +1,6 @@
 import math
-from .atlas_utils import plate_list, get_sep
+from ..astro.utils import get_sep
+from .atlas_utils import plate_list
 from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion, AtlasPlateSpecial, AtlasPlateSpecialVersion
 from .plot import create_atlas_plot
 from .vocabs import SIMPLE_DSO_LIST

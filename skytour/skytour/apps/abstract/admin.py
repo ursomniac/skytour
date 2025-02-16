@@ -1,6 +1,13 @@
 from django.contrib import admin
 
 class AbstractObservation(admin.StackedInline):
+    """
+    Used for:
+        - DSO observations
+        - Planet observations
+        - Asteroid observations
+        - Comet observations
+    """
     extra = 0
     fieldsets = (
         (None, {
@@ -17,7 +24,13 @@ class AbstractObservation(admin.StackedInline):
         abstract = True
 
 class ObservableObjectAdmin(admin.ModelAdmin):
-    
+    """
+    Used for:
+        - DSO Observations
+        - Planet Observations
+        - Comet Observations
+        - Asteroid Observations
+    """
     @admin.display(description='# Obs.')
     def n_obs(self, obj):
         return obj.number_of_observations
@@ -32,6 +45,10 @@ class ObservableObjectAdmin(admin.ModelAdmin):
         abstract = True
 
 class TagModelAdmin(admin.ModelAdmin):
+    """
+    Used for tagging.
+    TODO V2: work out how to make this more useful
+    """
     @admin.display(description='Tags')
     def tag_list(self, obj):
         return u", ".join(o.name for o in obj.tags.all())

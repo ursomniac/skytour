@@ -23,21 +23,10 @@ def get_astronomical_twilight(times, events, value):
         at_time = None
     return at_time
 
-def dark_time(d, debug=False):
-    """
-    Given a dict of metadata, get the begin/end of twilight
-    """
-    f = dark_twilight_day(d['eph'], d['wgs'])
-    today = get_0h(d['utdt_start'])
-    end_at, begin_at = get_almanac_times(today, d['ts'], f)
-    if debug:
-        print ("F: ", f)
-        print ("Today: ", today)
-        print ("End at: ", end_at)
-        print ("Begin at: ", begin_at)
-    return end_at, begin_at
-
 def get_dark_time(utdt, location, debug=False):
+    """
+    Return the end/beginning of astronomical twilight
+    """
     ts = load.timescale()
     wgs = wgs84.latlon(location.latitude, location.longitude)
     eph = load(get_ephemeris())
@@ -75,6 +64,13 @@ def get_almanac_times(today, ts, f):
     return end_at, begin_at
 
 def get_events(t, y, events=None, transit=False, serialize=False, time_zone=None):
+    """
+    Create dict of timings for:
+        Rise
+        Transit
+        Set
+        Anti-Transit
+    """
     if events is None:
         events = []
     for zt, zy in zip(t, y):
@@ -122,6 +118,9 @@ def get_object_rise_set(utdt, eph, target, location, serialize=False, time_zone=
     return events
     
 def get_sun_rise_set(utdt, loc, ts, eph, time_zone=None):
+    """
+    Get next sunrise/sunset times for a given location and UTDT.
+    """
     sunrise = None
     sunset = None
     t0 = utdt + datetime.timedelta(hours=2)
@@ -144,6 +143,9 @@ def get_sun_rise_set(utdt, loc, ts, eph, time_zone=None):
     return sunrise, sunset
 
 def get_moon_rise_set(utdt0, loc, eph, time_zone=None):
+    """
+    Get Moon rise/set times for a given location and UTDT
+    """
     utdt = datetime.datetime(utdt0.year, utdt0.month, utdt0.day, 2, 0).replace(tzinfo=pytz.utc)
     moon = get_object_rise_set(utdt, eph, eph['moon'], loc, time_zone=time_zone)
     moonrise = None
@@ -160,6 +162,9 @@ def get_moon_rise_set(utdt0, loc, eph, time_zone=None):
     return moonrise, moonset
             
 def get_twilight_begin_end(utdt, loc, time_zone=None):
+    """
+    Get one of the twilight timings for a given location and UTDT.
+    """
     twi_list = ['night', 'astro', 'nautical', 'civil', 'day']
     twilight = {}
     

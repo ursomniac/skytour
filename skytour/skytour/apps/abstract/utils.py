@@ -11,6 +11,9 @@ from ..site_parameter.helpers import find_site_parameter
 from ..observe.models import ObservingLocation
 
 def rectify_ha(xha):
+    """
+    TODO: Used where?
+    """
     if xha <= -12.:
         return xha + 24.
     if xha >= 12:
@@ -101,6 +104,10 @@ def get_metadata(observation):
     return d
 
 def get_real_time_conditions(target, request, context, debug=False):
+    """
+    Used to create the "Real Time" and "Cookie" popup on an object's detail page.
+    Works with the pop-up's form for things like time offset.
+    """
     errors = False
     utdt = None
     dt_base = request.GET.get('utdt_base', 'now')
@@ -140,7 +147,6 @@ def get_real_time_conditions(target, request, context, debug=False):
             location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
             location = ObservingLocation.objects.filter(pk=location_id[0]).first()
 
-    #if dt_base == 'cookie':
     try:    
         moon = context['cookies']['moon']
         moon_ra = moon['apparent']['equ']['ra']
@@ -152,7 +158,7 @@ def get_real_time_conditions(target, request, context, debug=False):
     except:
         print(f"Cannot find moon - dt_base: {dt_base}")
         
-    last = get_last(utdt, location.longitude)
+    last = get_last(utdt, location.longitude) # Local Apparent Sidereal Time
     object_type = target._meta.model_name
     if object_type == 'dso':
         ra = target.ra_float
@@ -160,7 +166,7 @@ def get_real_time_conditions(target, request, context, debug=False):
         distance = target.distance
         distance_units = target.distance_units
         constellation = target.constellation.abbreviation
-        angular_diameter = target.major_axis_size  # arcsec
+        angular_diameter = target.major_axis_size  # arcmin
         angular_diameter_units = '\''
         apparent_magnitude = target.magnitude
         surface_brightness = target.surface_brightness

@@ -112,7 +112,6 @@ class DSOAdmin(ObservableObjectAdmin):
         'shown_name', 
         'nickname',
         'object_type',
-        #'has_dso_imaging_chart',
         'ra_text', 
         'dec_text', 
         'magnitude',
@@ -151,9 +150,6 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('object_type', 'morphological_type', 'priority'),
                 ('library_image_checklist_param', 'reimage'),
                 ('tags', 'map_label'),
-                #
-                #('dso_imaging_chart', 'dso_imaging_chart_tag'),
-                #
             ]
         }),
         ('Coordinates', {

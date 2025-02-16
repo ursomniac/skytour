@@ -31,7 +31,9 @@ class FieldView(models.Model):
 ##### Abstract Models
 class Coordinates(models.Model):
     """
-
+    Abstract RA/Dec coordinates
+        - stores HMS and DMS separately
+        - has floating values calculated in an model instance save()
     """
     ra_h = models.PositiveIntegerField ( 
         _('RA: hr'),
@@ -139,6 +141,9 @@ class Coordinates(models.Model):
     
     @property
     def get_xyz(self):
+        """
+        Convert RA/Dec to XYZ
+        """
         return get_cartesian(self.ra_float, self.dec_float, ra_dec = True)
 
     class Meta:
@@ -146,6 +151,12 @@ class Coordinates(models.Model):
 
 
 class ObjectImage(models.Model):
+    """
+    Abstract model for images (uploaded) attached to objects.
+
+    TODO V2: change the vocab entires to ancillary models so that they're not
+    tied to specific telescopes
+    """
     image = models.ImageField (
         _('Image'),
         upload_to = 'object_image/'
@@ -154,10 +165,16 @@ class ObjectImage(models.Model):
         _('Notes'),
         blank = True, null = True
     )
+    # TODO V2: this is REALLY clunky...  One problem is that things
+    #   sort lowest first so as you add images you have to alter all
+    #   the values to 'put them on top'.
+    # Might be better to REVERSE the ordering so that newer images can just
+    # take the next-highest value...
     order_in_list = models.PositiveIntegerField (
         _('Order'),
         default = 1
     )
+    # TODO V2: this should really be called 
     image_type = models.CharField(
         _('Image Type'),
         max_length = 30,
@@ -165,6 +182,7 @@ class ObjectImage(models.Model):
         choices = IMAGE_TYPE_CHOICES,
         default = None
     )
+    # TODO V2: REMOVE THIS - it's not used anywhere!
     image_alterations = models.CharField (
         _('Image Alterations'),
         max_length = 30,
@@ -174,10 +192,12 @@ class ObjectImage(models.Model):
     )
     exposure = models.FloatField (
         _('Image Exposure'),
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'in floating minutes'
     )
 
     # This might go away
+    # TODO V2: clean this up
     processing_status = models.CharField (
         _('Image Processing Status'),
         max_length = 30,
@@ -206,6 +226,7 @@ class LibraryAbstractImage(ObjectImage):
         default = YES,
         help_text = 'Set to YES/1 show on the image carousel'
     )
+    # TODO: make this clearer - the Style determines which panel the image appears in
     image_style = models.CharField (
         _('Image Class'),
         max_length = 30,
@@ -224,6 +245,9 @@ class LibraryAbstractImage(ObjectImage):
 
 
 class ObservingLog(models.Model):
+    """
+    Generic observation.
+    """
     session = models.ForeignKey(ObservingSession, null=True, on_delete=models.CASCADE)
     ut_datetime = models.DateTimeField (
         _('UTDT of Obs.'),
@@ -275,7 +299,12 @@ class ObservingLog(models.Model):
         abstract = True
 
 class ObservableObject(models.Model):
-    
+    """
+    Properties for observable objects:
+        1. Last Observed
+        2. Reimage flag - this is an artifact # TODO: remove in V2
+        3. Need to Image flag  # TODO keep in V2?
+    """
     @property
     def last_observed(self):
         obs = self.observations.order_by('-ut_datetime').first()

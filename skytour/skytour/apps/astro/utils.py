@@ -14,25 +14,9 @@ def get_limiting_magnitude(bortle):
     ]
     return vrange[bortle]
 
-def get_apparent_magnitude(h, r_sun_target, r_earth_target, beta, g=0.15):
-    """
-    H: absolute magnitude (solar system)
-    r: distance from body to Sun
-    delta: distance from body to Earth
-    beta: phase angle (degrees)
-    g: slope parameter: defaults to 0.15 
-    """
-    rpa = math.radians(beta) # Assuming this is the same phase angle
-    phi_1 = math.exp(-3.33 * math.tan(rpa/2.)**0.63)
-    phi_2 = math.exp(-1.87 * math.tan(rpa/2.)**1.22)
-    m1 = h + 5 * math.log10(r_sun_target * r_earth_target) 
-    m2 = 2.5 * math.log10((1 - g) * phi_1 + g * phi_2)
-    mag = m1 - m2
-    return mag
-
 def get_sep(ra1, dec1, ra2, dec2):
     """
-    Return angular separation (degrees) between two coordinates.
+    Return angular separation (degrees) between two coordinates given in RADIANS.
     This will NOT WORK for small angular separations (cos d ---> 1 - tiny number).
     """
     dra = ra1 - ra2
@@ -43,6 +27,9 @@ def get_sep(ra1, dec1, ra2, dec2):
     return sep
 
 def get_atlas_sep(ra1, dec1, ra2, dec2):
+    """
+    Same as above but given RA in hours and Dec in degrees
+    """
     dra = math.radians((ra1 - ra2) * 15.)
     d1 = math.radians(dec1)
     d2 = math.radians(dec2)
@@ -68,7 +55,10 @@ def get_small_sep(ra1, dec1, ra2, dec2, hemi=False):
     return z
 
 def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', hemi=False, debug=False):
-
+    """
+    Alternate calculation of small separation.
+    Used to calculate lunar separation for a DSO --- this works better than the other formula.
+    """
     r1 = math.radians(ra1*15)
     r2 = math.radians(ra2*15)
     d1 = math.radians(dec1)
@@ -110,6 +100,9 @@ def alt_get_small_sep(ra1, dec1, ra2, dec2, unit='deg', hemi=False, debug=False)
         return dd
 
 def get_simple_position_angle(ra1, dec1, ra2, dec2):
+    """
+    Calculate position angle between two objects.
+    """
     # Positive east
     xra1 = math.radians(ra1 * 15.)
     xra2 = math.radians(ra2 * 15.)
@@ -126,7 +119,7 @@ def get_simple_position_angle(ra1, dec1, ra2, dec2):
 
 def get_size_from_logd25(x, ratio=0., raw=False, both=False):
     """
-    LEDA, etc. stores angular size as log d25 in 0.1 arcmins.
+    HyperLeda, etc. stores angular size as log d25 in units of 0.1 arcmins.
     """
     ratio = 0. if ratio is None else ratio
     major = 10. ** (x - 1.)
@@ -141,6 +134,9 @@ def get_size_from_logd25(x, ratio=0., raw=False, both=False):
         return str
 
 def get_distance_from_modulus(mu, units='mly'):
+    """
+    Convert Hyperleda 'modbest' (or other modulus) to distance.
+    """
     mult = {'pc': 1, 'kpc': 1.e-3, 'mpc': 1.e-6, 'ly': 3.26, 'kly': 3.26e-3, 'mly': 3.26e-6}
     x = 1. + mu / 5.
     d = 10. ** x # parsecs
@@ -149,32 +145,22 @@ def get_distance_from_modulus(mu, units='mly'):
     return d
 
 def sqs_to_sqm(sqs):
+    """
+    Convert sky brightness from SQS to SQM
+    """
     return sqs - 8.89
 
 def sqm_to_sqs(sqm):
+    """
+    Convert sky brightness from SQM to SQS
+    """
     return sqm + 8.89
 
-def radec_from_degrees(ra, dec):
-    # ra
-    ra /= 15.
-    rah = int(ra)
-    ra -= rah
-    ra *= 60.
-    ram = int(ra)
-    ras = (ra - ram) * 60.
-    raout = f"{rah}h {ram}m {ras:.3f}s"
-    # dec
-    dsign = '+' if dec >= 0. else '-'
-    d = abs(dec)
-    dd = int(d)
-    d -= dd
-    d *= 60
-    dm = int(d)
-    ds = (d - dm) * 60.
-    decout = f"{dsign}{dd}° {dm}\' {ds:.2f}\""
-    return f"{raout} {decout}"
-
 def get_declination_range(location, min_altitude=None):
+    """
+    Get range of declinations for a given latitude.
+    This works for all latitudes.
+    """
     min_altitude = min_altitude if min_altitude is not None else find_site_parameter('minimim-object-altitude', default=10., param_type='float')
     try:
         latitude = location.latitude

@@ -8,6 +8,9 @@ from ..solar_system.moon import simple_lunar_phase
 from ..misc.models import Calendar
 
 def is_leap_year(year):
+    """
+    Simple boolean for leap years.
+    """
     if year % 4 != 0:   # not divisible by 4 ---> False
         return False
     if year % 100 != 0: # divisible by 4 but not divisible by 100 ---> True

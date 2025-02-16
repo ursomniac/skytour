@@ -3,7 +3,10 @@ from ..observe.utils import get_effective_bortle
 from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm, sqm_to_sqs
 
 def haz(thing, zero=False):
-    if thing is None or thing == 'None' or len(thing.strip()) == 0:
+    """
+    Boolean against None | empty strings | strings == 'None'
+    """
+    if thing is None or thing.strip() == 'None' or len(thing.strip()) == 0:
         return False
     return True
 
@@ -14,21 +17,22 @@ class AstroCalcView(TemplateView):
         context = super(AstroCalcView, self).get_context_data(**kwargs)
 
         ctype = self.request.GET.get('calc')
-        print(f"CTYPE: {ctype}")
+        #print(f"CTYPE: {ctype}")
         context['ctype'] = ctype
 
+        # Convert distance modulus to distance
         if ctype == 'distance':
             modulus = self.request.GET.get('modulus')
             if haz(modulus):
                 context['mly'] = get_distance_from_modulus(float(modulus))
                 context['modulus'] = float(modulus)
-
+        # Convert SQS to SQM (sky brightness)
         elif ctype == 'sqs':
             sqs = self.request.GET.get('sqs')
             if haz(sqs):
                 context['sqm'] = sqs_to_sqm(float(sqs))
                 context['sqs'] = float(sqs)
-
+        # Convert log(d25) and log(r25) to angular size
         elif ctype == 'angsize':
             d25 = self.request.GET.get('d25')
             r25 = self.request.GET.get('r25')
@@ -39,13 +43,13 @@ class AstroCalcView(TemplateView):
                     context['r25'] = r25
                 else:
                     context['angsize'] = get_size_from_logd25(float(d25))
-
+        # Convert SQM to Bortle
         elif ctype == 'bortle':
             bsqm = self.request.GET.get('bsqm')
             if haz(bsqm):
                 context['ebortle'] = get_effective_bortle(float(bsqm))
                 context['bsqm'] = float(bsqm)
-
+        # Convert eQuinox exposure time (4s) to # frames
         elif ctype == 'frames_equ':
             tm = self.request.GET.get('time_equ_m')
             ts = self.request.GET.get('time_equ_s')
@@ -57,7 +61,7 @@ class AstroCalcView(TemplateView):
                     context['time_equ_s'] = ts
                     zs = int(ts)
                 context['eframes_equ'] = (zm * 60 + zs)/4.
-            
+        # Convert Seestar exposure time (10s) to # frames
         elif ctype == 'frames_see':
             tm = self.request.GET.get('time_see_m')
             ts = self.request.GET.get('time_see_s')
@@ -69,6 +73,7 @@ class AstroCalcView(TemplateView):
                     context['time_see_s'] = ts
                     zs = int(ts)
                 context['eframes_see'] = (zm * 60 + zs)/10.
+        # Convert # frames to Seestar exposure time
         elif ctype == 'time_see':
             frames = self.request.GET.get('frames_see')
             if haz(frames):
@@ -78,6 +83,7 @@ class AstroCalcView(TemplateView):
                 time_min = int(total_time/60.)
                 time_sec = int(total_time % 60)
                 context['frame_time_see'] = f"{time_min}m {time_sec:02d}s"
+        # Convert # frames to eQuinox exposure time
         elif ctype == 'time_equ':
             frames = self.request.GET.get('frames_equ')
             if haz(frames):

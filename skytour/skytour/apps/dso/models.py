@@ -24,6 +24,9 @@ from .utils import get_hyperleda_value, get_simbad_value
 from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO, YES, NO
 
 class DSOAbstract(Coordinates):
+    """
+    Abstract model covering DSO and DSOInField
+    """
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
     id_in_catalog = models.CharField (
         _('ID'),
@@ -32,12 +35,14 @@ class DSOAbstract(Coordinates):
     shown_name = models.CharField (
         _('Shown Name'),
         max_length = 100,
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'Override if you want to use a specific designation'
     )
     nickname = models.CharField(
         _('Nickname'),
         max_length = 200,
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'A nickname, e.g. "Crab Nebula"'
     )
     constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
     object_type = models.ForeignKey(ObjectType, on_delete=models.PROTECT)
@@ -54,17 +59,19 @@ class DSOAbstract(Coordinates):
     magnitude_system = models.CharField (
         _('Mag. System'),
         max_length = 3, # default = 'V',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'e.g., V, B, Phot.'
     )
     angular_size = models.CharField (
         _('Angular Size'),
         max_length = 50,
         null = True, blank = True,
-        help_text = 'single or double dimension, e.g., 8\' by 12\''
+        help_text = 'single or double dimension, e.g., 36\" or  8\'x5\''
     )
     surface_brightness = models.FloatField (
         _('Surface Brightness'),
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'Mag/arcmin^2 (SQM)'
     )
     contrast_index = models.FloatField (
         _('Contrast Index'),
@@ -83,7 +90,7 @@ class DSOAbstract(Coordinates):
     other_parameters = models.TextField (
         _('Other Params'),
         null = True, blank = True,
-        help_text = "Age, etc., in x: y; format"
+        help_text = "Age, etc., in x: y; format - see README"
     )
     notes = models.TextField (
         _('Notes'),
@@ -105,21 +112,31 @@ class DSOAbstract(Coordinates):
         null = True, blank = True,
         help_text = 'arcmin'
     )
-    metadata = JSONField(null=True, blank=True)
-    simbad = JSONField(null=True, blank=True)
-    archive_metadata = JSONField(null=True, blank=True)
+    metadata = JSONField(
+        null=True, blank=True,
+        help_text='JSON object constructed from HyperLeda lookup'
+    )
+    simbad = JSONField(
+        null=True, 
+        blank=True,
+        help_text='JSON object constructed from SIMBAD lookup'
+    )
+    override_metadata = JSONField(
+        null=True, blank=True,
+        help_text='Custom JSON Objects - overrides SIMBAD/HyperLeda values'
+    )
 
     hyperleda_name = models.CharField (
         _('HyperLeda Name Override'),
         max_length = 30,
         null = True, blank = True,
-        help_text = 'Use this name when querying HyperLeda'
+        help_text = 'Use this designation when querying HyperLeda'
     )
     simbad_name = models.CharField (
         _('SIMBAD Name Override'),
         max_length = 30,
         null = True, blank = True,
-        help_text = 'Use this name when querying SIMBAD'
+        help_text = 'Use this designation when querying SIMBAD'
     )
 
     @property
@@ -131,9 +148,13 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_magnitude(self):
+        """
+        Get Magnitude from Hyperleda/Simbad/Override.
+        """
         mag = self.magnitude
         hv = get_hyperleda_value(self, 'magnitude')
         sv = get_simbad_value(self, 'magnitude')
+        # TODO: Add Override
         if hv is not None:
             return (hv['value'], hv['system'], 'H')
         if sv is not None:
@@ -142,6 +163,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_surface_brightness(self):
+        """
+        Get Surface Brightness from Hyperleda/Simbad/Override.
+        """
         sb = self.surface_brightness
         hv = get_hyperleda_value(self, 'surface_brightness')
         if hv is not None: # Simbad data doesn't have this
@@ -150,6 +174,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_angular_size(self):
+        """
+        Get Angular Size from Hyperleda/Simbad/Override.
+        """
         size = self.angular_size
         hv = get_hyperleda_value(self, 'angsize')
         sv = get_simbad_value(self, 'angsize')
@@ -162,6 +189,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_major_axis_size(self):
+        """
+        Get Major Axis Size from Hyperleda/Simbad/Override.
+        """
         size = self.major_axis_size
         hv = get_hyperleda_value(self, 'amajor')
         sv = get_simbad_value(self, 'amajor')
@@ -173,6 +203,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_orientation(self):
+        """
+        Get Orientation (rotation) from Hyperleda/Simbad/Override
+        """
         o = self.orientation_angle
         hv = get_hyperleda_value(self, 'orientation')
         sv = get_simbad_value(self, 'orientation')
@@ -184,6 +217,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def find_distance(self):
+        """
+        Get Distance from Hyperleda/Simbad/Override
+        """
         d = self.distance
         u = self.distance_units
         hv = get_hyperleda_value(self, 'distance')
@@ -197,6 +233,9 @@ class DSOAbstract(Coordinates):
     
     @property
     def other_metadata_text(self):
+        """
+        Get/Format Additional Metadata text
+        """
         orig = self.other_parameters
         if orig is not None and orig.strip() != '':
             interim = []
@@ -233,48 +272,57 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     finder_chart = models.ImageField (
         _('Finder Chart'),
         upload_to = 'finder_chart/',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'Deprecated: finder charts found on the WWW'
     )
     dso_finder_chart = models.ImageField (
         _('DSO Finder Chart'),
         upload_to = 'dso_finder_chart',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'This is a printable color finder chart'
     )
     dso_finder_chart_wide = models.ImageField (
         _('Constructed Finder Chart - Wide'),
         upload_to = 'dso_finder_wide',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='Generated wide-field chart'
     )
     dso_finder_chart_narrow = models.ImageField (
         _('Constructed Finder Chart - Narrow'),
         upload_to = 'dso_finder_narrow',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='Generate narrow-field chart'
     )
     dso_imaging_chart = models.ImageField (
         _('Imaging Chart for eQuinox 2'),
         upload_to = 'dso_imaging_charts',
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='Generated field from Stellarium'
     )
     priority = models.CharField (
         _('Priority'),
         max_length = 20,
         choices = PRIORITY_CHOICES,
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='DEPRECATED'
     )
     show_on_skymap = models.PositiveIntegerField (
         _('Show on Skymap'),
         default = 0,
-        choices = INT_YES_NO
+        choices = INT_YES_NO,
+        help_text='Filter for DSOs on skymap'
     )
     pdf_page = models.FileField (
         _('PDF Page'),
         null = True, blank = True,
-        upload_to = 'dso_pdf'
+        upload_to = 'dso_pdf',
+        help_text='PDF file --- deprecated?'
     )
     map_label = models.CharField (
         _('Map Label'),
         max_length = 40,
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='Override label used on maps/atlas plates'
     )
     tags = TaggableManager(blank=True)
     object_class = 'dso'
@@ -291,6 +339,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
     @property
     def alias_list(self):
+        """
+        Generate a comma-separated list of aliases.
+        TODO V2: deprecate in favor of SIMBAD/HyperLeda (with filtering?)
+        """
         aliases = []
         for alias in self.aliases.all():
             if alias.alias_in_field:
@@ -303,6 +355,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def ngc_alias(self):
         """
         Stupid Celestron and Unistellar don't support the Caldwell catalog.
+        TODO V2: DEPRECATE!
         """
         if self.catalog.abbreviation == 'C':
             aa = self.aliases.filter(catalog__abbreviation='NGC').first()
@@ -312,6 +365,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def h400_alias(self):
+        """
+        TODO V2: DEPRECATE!
+        """
         aa = self.aliases.filter(catalog__abbreviation='H400').first()
         if aa is not None:
             return aa.shown_name
@@ -319,6 +375,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def old_alias_list(self):
+        """
+        TODO V2: DEPRECATE!
+        """
         aa = []
         ngc = self.ngc_alias
         h400 = self.h400_alias
@@ -332,16 +391,25 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
     @property
     def opposition_date(self):
+        """
+        Return Opposition Date based on RA
+        """
         return get_opposition_date(self.ra, next=True)
     
     @property
     def hour_angle_min_alt(self):
+        """
+        Calculate the Hour Angle when the object reaches a minimum altitude
+        NOTE: the minimum is set to be 20° generally, can be 5° or 10° - this
+            is only because there are handful of DSOs that are REALLY south
+            but still very high priority
+        TODO V2: Refactor this to pull from SiteParameter for minimum altitude
+            and just go with that
+        TODO: Test to make sure this works in S. Hemisphere locations?
+        """
         ipri = self.imaging_checklist_priority
         alt = 20.
         delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
-        # if delta_days is None
-        #   if cos_hh < -1 this is circumpolar for alt=20.
-        #   if cos_hh >  1 this object never rises or reaches alt=20.
         if delta_days is None:
             alt = 5. if (ipri is not None and ipri > 0) else 10.
             delta_days, cos_hh = get_delta_hour_for_altitude(self.dec, alt=alt)
@@ -349,7 +417,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def observing_date_range(self):
-        # These are the dates where the object is above 20° altitude at midnight
+        """
+        The date range where the object is >20° at Midnight
+        TODO V2: Refactor this to pull from SiteParameter for minimum altitude
+        """
         delta_days, cos_hh, alt = self.hour_angle_min_alt
         if delta_days:
             date_min = self.opposition_date - dt.timedelta(days=round(delta_days))
@@ -360,10 +431,16 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
     @property
     def nearby_dsos(self):
+        """
+        Return DSOs within ???° of object...
+        """
         return get_neighbors(self)
     
     @property
     def priority_value(self):
+        """
+        TODO: DEPRECATE?
+        """
         dv = {'Highest': 4, 'High': 3, 'Medium': 2, 'Low': 1, 'None': 0}
         if self.priority is None:
             return 0
@@ -377,6 +454,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
     @property
     def atlas_plate_list(self):
+        """
+        Return the list of Atlas Plates this DSO is on.
+        NOTE: this is not 100% accurate - sometimes an object might be just off the plate
+        """
         pp = []
         for p in self.atlasplate_set.all():
             pp.append(str(p.plate_id))
@@ -384,15 +465,25 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def num_library_images(self):
+        """
+        Return the number of Library Images
+        """
         return self.image_library.count()
     
     @property
     def num_slideshow_images(self):
+        """
+        Return the number of Slideshow Images
+        """
         return self.image_library.filter(use_in_carousel=True).count()
     
     # TODO: Add support for multiple telescopes
     @property
     def imaging_checklist_priority(self):
+        """
+        Return Imaging Checklist Priority
+        TODO: DEPRECATE in favor of TargetDSOMode.priority
+        """
         c = self.dsoimagingchecklist_set.first()
         if c and c.priority is not None:
             return c.priority
@@ -401,13 +492,16 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     # TODO: Add support for multiple telescopes
     @property 
     def color_imaging_checklist_priority(self):
+        """
+        TODO: DEPRECATE in favor of TargetDSOMode.priority
+        """
         colors = ['#888', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
         p = self.imaging_checklist_priority
         if p is not None:
             return colors[p]
         return None
     
-    # TODO: Add support for multiple telescopes
+    # TODO (someday): Add support for multiple telescopes
     @property
     def library_image_camera(self):
         return '📷' if self.num_library_images > 0 else None
@@ -441,19 +535,33 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def library_image(self):
+        """
+        Return the first (based on order_in_list) image in the Library Image stack.
+        """
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
     @property
     def on_checklist(self):
+        """
+        TODO: Investigate where this is used
+        """
         c = self.dsoimagingchecklist_set.first() 
         return '☑️' if c is not None else '⏹'
     
     @property
     def is_on_imaging_checklist(self):
+        """
+        TODO: Investigate where this is used
+        """
         return self.dsoimagingchecklist_set.count() > 0
     
     @property
     def label_on_chart(self):
+        """
+        Generate the label for a finding chart or AtlasPlate image.
+        Note that DSOs with >0 DSOInField objects get a '+' appended,
+        e.g., M33 is shown as M33+ because of the other NGC objects in the FOV.
+        """
         in_fov = self.dsoinfield_set.all()
         n_in_fov = in_fov.count()
         label = self.shown_name if self.map_label is None else self.map_label
@@ -463,11 +571,16 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def dsos_in_field_count(self):
+        """
+        Return the number of DSOInField objects associated.
+        """
         return self.dsoinfield_set.count()
     
     @property
     def dsoinfield_table(self):
-        #print("COUNT: ", self.dsoinfield_set.count())
+        """
+        Generate a table of all the DSOInField objects.
+        """
         if self.dsoinfield_set.count() == 0:
             return "None"
     
@@ -508,6 +621,13 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def map_image_list(self):
+        """
+        Generate the list of images for the panel (right-hand side).
+        This includes the Stellarium-generated FOV image, plus (usually)
+        all of the "landscape" library images.
+
+        TODO: Assign names to each of the panels.
+        """
         map_images = self.image_library.filter(use_as_map=True).order_by('order_in_list')
         maps_list = []
         i = 1
@@ -531,6 +651,16 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def finder_image_list(self):
+        """
+        Generate the list of images for the "finder" panel on the DSO page.
+        This includes:
+            1. The Wide-field map
+            2. The Narrow-field map
+            3. All the AtlasPlates with the DSO (generally ordered by the proximity to the center)
+            4. The printable wide-field chart
+            5. Any uploaded 3rd party finder charts (deprecated)
+            6. The FOV image from telescope.info (deprecated)
+        """
         myra = self.ra
         mydec = self.dec
         finder_images = []
@@ -580,6 +710,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
 
     def max_altitude(self, location=None): # no location = default
+        """
+        Return the maximum altitude a DSO reaches at a given observing location.
+        """
         return get_max_altitude(self, location=location)
     
     def finder_chart_tag(self):
@@ -607,6 +740,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return get_alt_az(utdt, location.latitude, location.longitude, self.ra, self.dec)
     
     def shift_observing_dates(self, delta=0.):
+        """
+        Used?
+        """
         # delta is in hours:  -2 = 10PM
         start_date, end_date, alt = self.observing_date_range
         if start_date is None:
@@ -617,6 +753,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return new_start_date, new_end_date, alt
     
     def shift_opposition_date(self, delta=0.):
+        """
+        Used?
+        """
         day_shift = round(-1 * 365 * delta / 24.)
         new_opp_date = self.opposition_date + dt.timedelta(days=day_shift)
         return new_opp_date
@@ -625,6 +764,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         This is still used when creating an observing plan.
         Tests if a DSO is observable within a UTDT window.
+        TODO V2: DEPRECATE!
         """
         az, alt, airmass = self.alt_az(location, utdt)
         if alt > min_alt:
@@ -632,6 +772,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return False
 
     def get_absolute_url(self):
+        """
+        Django
+        """
         return '/dso/{}'.format(self.pk)
 
     def save(self, *args, **kwargs):
@@ -664,14 +807,26 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return self.shown_name
     
 class DSOInField(DSOAbstract, models.Model):
+    """
+    This model exists because there are too many cases where DSOs are near other DSOs,
+    OR that adjacent DSOs have some relationship to each other.  To avoid crowding,
+    we define a DSO object to be a field of 1+ DSOs; with a primary and additional
+    "DSOs in Field".
+    """
     parent_dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
 
     @property
     def label_on_chart(self):
+        """
+        These show up in the generated narrow-field view.
+        """
         return self.shown_name
     
     @property
     def name_plus_alias(self):
+        """
+        Return the shown_name plus all aliases
+        """
         main = self.shown_name
         full = []
         if self.aliases.count() > 0:
@@ -684,6 +839,9 @@ class DSOInField(DSOAbstract, models.Model):
     
     @property
     def primary_distance(self):
+        """
+        Return the angular distance to the primary DSO
+        """
         # angular separation in arcseconds
         sep = alt_get_small_sep(self.ra, self.dec, 
                 self.parent_dso.ra, self.parent_dso.dec,
@@ -693,11 +851,18 @@ class DSOInField(DSOAbstract, models.Model):
     
     @property
     def primary_angle(self):
+        """
+        Return the position angle from the primary DSO to the DSOInField
+        """
         pa = get_simple_position_angle(self.parent_dso.ra, self.parent_dso.dec, self.ra, self.dec)
         return pa
     
     @property
     def alias_list(self):
+        """
+        Return a comma-separated alias list.
+        TODO: Integrate aliases from SIMBAD/HyperLeda?
+        """
         aliases = []
         if self.aliases.count() > 0:
             for alias in self.aliases.all():
@@ -720,15 +885,14 @@ class DSOInField(DSOAbstract, models.Model):
     class Meta:
         verbose_name = 'Deep Sky Object in Field'
         verbose_name_plural = 'Deep Sky Objects in Field'
-        #ordering = ['ra', 'dec']
-        ordering = ['-pk']
+        ordering = ['-pk'] # ['ra', 'dec']  # TODO: What's the best ordering?
 
     def __str__(self):
         return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
 
 class DSOAbstractAlias(models.Model):
     """
-    This has all of the aliases for a DSO.
+    This has all of the aliases for a DSO or a DSOInField
     There's a slight precedence in catalogs:
         - Messier
         - Caldwell
@@ -738,6 +902,9 @@ class DSOAbstractAlias(models.Model):
     so that M 52 = NGC 7654 = Cr 455 = Mel 243.
     Several search functions check aliases, so you SHOULD always reach the
     desired object.
+
+    TODO V2: Use the precedence field for Catalog for ordering!
+        This logic might be elsewhere...
     """
 
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
@@ -794,7 +961,16 @@ class DSOInFieldAlias(DSOAbstractAlias):
 
 class DSOImage(LibraryAbstractImage):
     """
-    M:1 between uploaded images and a DSO
+    M:1 between uploaded images and a DSO.
+    THESE ARE NOT GENERATED - they're uploaded from anywhere (e.g., an HST image of M 1).
+
+    NOTE: The purpose of this table is to provide "cool" images of things to give the user
+    an idea of what they really look like.
+
+    HOWEVER, it's really not practical to seed them from anywhere.
+
+    TODO V2: TRY to sort this out using the DSS/DSS2 or some series of image archives
+        (PanSTARRS?)
     """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,
@@ -809,6 +985,10 @@ class DSOImage(LibraryAbstractImage):
         verbose_name_plural = 'Images'
 
 class DSOLibraryImage(LibraryAbstractImage):
+    """
+    These are USER-CREATED images of objects, i.e., from a Seestar/eQuinox or
+    any camera system.
+    """
     object = models.ForeignKey(
         DSO,
         on_delete = models.CASCADE,
@@ -838,8 +1018,6 @@ class DSOLibraryImage(LibraryAbstractImage):
 class DSOObservation(ObservingLog):
     """
     M:1 between observation records and DSOs.
-    So a separate one of these for model?   That gets away from
-    dealing with GFKs...
     """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,
@@ -880,10 +1058,13 @@ class DSOObservation(ObservingLog):
 
 class DSOList(models.Model):
     """
-    Parameters/Features:
-        - RA range
-        - Type/Subclass
-        - pre-seed?
+    A user-create list of DSOs sharing some theme for observing.
+
+    Typically, this will be used for "what I want to observe next time out".
+
+    DSOs on an "Active" list will show up with the telescope icon on lists of DSOs;
+    the idea is that you might want to keep older lists around for a while but don't 
+    want to get confused about which objects you really intend to observe "next".
     """
     name = models.CharField (
         _('Name'),
@@ -894,8 +1075,8 @@ class DSOList(models.Model):
         null = True, blank = True
     )
     dso = models.ManyToManyField (DSO)
-    tags = TaggableManager(blank=True)
-    show_on_plan = models.PositiveIntegerField (
+    tags = TaggableManager(blank=True)  # Used  TODO V2: come up with some use for this...
+    show_on_plan = models.PositiveIntegerField ( # TODO V2: DEPRECATE?
         _('On Plan PDF'),
         choices = INT_YES_NO,
         default = 1,
@@ -904,16 +1085,18 @@ class DSOList(models.Model):
     pdf_page = models.FileField (
         _('PDF Page'),
         null = True, blank = True,
-        upload_to = 'dso_pdf'
+        upload_to = 'dso_pdf' # TODO: Change this or remove it...
     )
     map_scaling_factor = models.FloatField (
         _('Map Scaling Factor'),
-        default = 2.4
+        default = 2.4,
+        help_text = 'Map scaling: you prob. do not need to change this.'
     )
     active_observing_list = models.PositiveIntegerField (
         _('Active List'),
         choices = INT_YES_NO,
-        default = NO
+        default = NO,
+        help_text = 'This is used for a back-reference on lists of DSOs'
     )
 
     def get_absolute_url(self):
@@ -972,12 +1155,14 @@ class DSOList(models.Model):
         ordering = ['-pk']
 
 class AtlasPlateAbstract(models.Model):
-
     """
     TODO: Bright Star Lists
     TODO: Double Stars?
     TODO: "Special" plates for things like the LMC/SMC/Virgo, etc. - These will need a different FOV, or 
         might be split up into sections...   Need to research.
+
+    This is an abstract model so as to support "special" plates (e.g., close-ups of the
+    Virgo cluster, or the LMC, etc.)
     """
     plate_id = models.PositiveIntegerField(_('Plate ID'), unique=True)
     slug = models.SlugField(unique=True)
@@ -1010,7 +1195,18 @@ class AtlasPlateAbstract(models.Model):
         abstract = True
 
 class AtlasPlate(AtlasPlateAbstract):
-
+    """
+    Divide the sky into 258 plates, roughly 30° in diameter with overlap.
+    Declinations: ±90°, 75°, 60°, 45°, 30°, 15°, 0°
+    Right Ascensions: vary depending on the declination
+        ±90°: n/a          ( 1 N/S each) =   2 total
+        ±75°: every 2h     (12 N/S each) =  26 total
+        ±60°: every 1h30m  (16 N/S each) =  58 total
+        ±45°: every 1h12m  (20 N/S each) =  98 total
+        ±30°: every 1h     (24 N/S each) = 146 total
+        ±15°: every 0h45m  (32 N/S each) = 210 total
+          0°: every 0h30m  (48 N/S each) = 258 total
+    """
     @property
     def plate_title(self):
         return f"Plate {self.plate_id}: ({self.center_ra:.2f}h {self.center_dec}°) in {self.center_constellation}"
@@ -1020,9 +1216,9 @@ class AtlasPlate(AtlasPlateAbstract):
         """
         Create a dict of all available atlas plate image renditions.
         There should be 4:
-            default = black-on-white, symbols
-            shapes = black-on-white, shapes
-            reversed = white-on-black, symbols
+            default        = black-on-white, symbols
+            shapes         = black-on-white, shapes
+            reversed       = white-on-black, symbols
             shapesreversed = white-on-black, shapes
         """
         vv = self.atlasplateversion_set.all()
@@ -1051,6 +1247,12 @@ class AtlasPlate(AtlasPlateAbstract):
         ordering = ['plate_id']
 
 class AtlasPlateSpecial(AtlasPlateAbstract):
+    """
+    Still in development: create custom plates centering on some large-scale set of DSOs
+        * LMC and SMC
+        * Virgo Cluster (or portions thereof)
+        * Sagittarius/Milky Way Center
+    """
     title = models.CharField(
         _('Title'),
         max_length = 100
@@ -1071,6 +1273,9 @@ class AtlasPlateSpecial(AtlasPlateAbstract):
         return f"Special Plate {self.plate_id}: {self.title}"
 
 class AtlasPlateVersionAbstract(models.Model):
+    """
+    Rendition of an Atlas Plate - Abstract
+    """
     shapes = models.BooleanField(_('Shapes'), default=False)
     reversed = models.BooleanField('Reversed', default=False)
 
@@ -1084,6 +1289,9 @@ class AtlasPlateVersionAbstract(models.Model):
         abstract = True
 
 class AtlasPlateVersion(AtlasPlateVersionAbstract):
+    """
+    Rendition of an Atlas Plate
+    """
     plate = models.ForeignKey(AtlasPlate, on_delete=models.CASCADE)
     image = models.ImageField(
         _('Plate'),
@@ -1136,6 +1344,10 @@ IMAGING_ISSUES_CHOICES = (
     ('questionable', 'Might not be possible')
 )
 class DSOImagingChecklist(models.Model):
+    """
+    Separate table for Imaging Priorities.
+    TODO V2: DEPRECATE and rectify differences between TargetDSO* and these values.
+    """
     priority = models.IntegerField(
         choices = IMAGING_PRIORITY_OPTIONS,
         null = True, blank = True

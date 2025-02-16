@@ -16,6 +16,9 @@ YEAR_OFFSET = 365 * OFFSET
 
 # RA = LST at meridian
 def get_opposition_date(ra, debug=False, next=True):
+    """
+    Get Opposition Date for a given RA.
+    """
     utdt = get_utdt() # current UTDT
     gmst0 = get_gmst0(utdt) # GMST at 0h
     ha = ra - gmst0 % 24.
@@ -32,6 +35,9 @@ def get_opposition_date(ra, debug=False, next=True):
     return opposition # next opposition
 
 def get_hms(x):
+    """
+    Convert floating HMS to H, M, S, µs
+    """
     sign = 1. if x >= 0. else -1.
     x = abs(x)
     h = int(x)
@@ -42,28 +48,6 @@ def get_hms(x):
     x = (x - s) * 1e6
     micro = int(x)
     return h, m, s, micro
-
-
-def get_opposition_date_at_time(ra, hours, next=True):
-    # hours is LOCAL standard time
-    (zh, zm, zs, zz) = get_hms(hours)
-    date0 = get_opposition_date(ra)
-    delta = 365 * hours / 24.
-    if next and delta < 0:
-        delta -= YEAR_OFFSET
-    date1 = date0 - dt.timedelta(days = int(delta))
-    new_date = date1.replace(hour=zh, minute=zm, second=zs, microsecond=zz)
-    return new_date
-
-
-def get_max_altitude(dec, latitude, raw=False):
-    z = 90 - latitude + dec
-    # if z > 90 then it's circumpolar
-    # if z < 0 then it never rises
-    if not raw:
-        if z > 90.:
-            z -= 90. # max altitude against opposite horizon
-    return z
 
 STD_ALT = math.sin(math.radians(-0.5667))
 def get_ha_range(latitude, dec):
@@ -82,19 +66,3 @@ def get_ha_range(latitude, dec):
         h0 = math.degrees(math.acos(cos_h0)) / 15.
         sit = 'Observable'
     return h0, sit
-
-def get_observable_date_range(ra, dec, latitude, debug=False):
-    ha, situation = get_ha_range(dec, latitude)
-    date0 = get_opposition_date(ra)
-    if ha is not None:
-        date_start = get_opposition_date(ra-ha % 24.)
-        date_end = get_opposition_date(ra+ha % 24.)
-        if date_end < date0:
-            date_end = date_end + dt.timedelta(days=YEAR_OFFSET)
-        if debug:
-            print("HA: {:.3f} Start: {} Upper Cul: {}  End: {}".format(ha, date_start, date0, date_end))
-    else:
-        date_start = None
-        date_end = None
-        print("{}: {}".format(date0, situation))
-    return date_start, date0,  date_end, situation

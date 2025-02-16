@@ -1,7 +1,4 @@
 import math
-from re import X
-from xml.dom import xmlbuilder
-
 
 def generate_equator(step=0.5, type='equ'):
     """
@@ -43,7 +40,7 @@ SPECIAL_POINTS = [
     dict(ra= 6.0000, dec=-66.5608, name='S. Ecl. Pole', abbr='SEP'),     
     dict(ra=12.8567, dec= 27.1167, name='N. Gal. Pole', abbr='NGP'),         # b = 90
     dict(ra= 0.8567, dec=-27.1167, name='S. Gal. Pole', abbr='SGP'),         # b = -90
-    dict(ra=17.7600, dec=-28.9333, name='Galactic Center', abbr='GalCen'),       # l, b = 0, 0
+    dict(ra=17.7600, dec=-28.9333, name='Galactic Center', abbr='GalCen'),   # l, b = 0, 0
     dict(ra= 5.7600, dec= 28.9333, name='Galactic Anti-Center', abbr='GAC'), # l, b = 180, 0
 ]
 

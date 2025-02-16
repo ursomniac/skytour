@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'ajax_select',
     'colorfield',
-    #'django_bootstrap5',
     'djangoyearlessdate',
     'taggit',
     
@@ -64,7 +63,7 @@ INSTALLED_APPS = [
     'skytour.apps.tech',
     'skytour.apps.utils',
     'skytour.templatetags.skytour_filters',
-    'skytour.test', # temporary
+    'skytour.test', 
 ]
 
 MIDDLEWARE = [

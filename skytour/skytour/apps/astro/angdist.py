@@ -43,24 +43,6 @@ def get_neighbors(
     else:
         return neighbor_objects
 
-def _hav(x):
-    return (1. - math.cos(x)) / 2.
-
-def _ahav(x):
-    angle = 2. * math.asin(math.sqrt(x))
-    return angle # radians
-
-def get_small_ang_sep2(ra1, dec1, ra2, dec2, degrees=True):
-    # ra in hours, dec in degrees
-    delta_ra = math.radians(ra1 * 15) - math.radians(ra2 * 15.)
-    xd1 = math.radians(dec1)
-    xd2 = math.radians(dec2)
-    hav_d = _hav(xd1-xd2) + math.cos(xd1) * math.cos(xd2) * _hav(delta_ra)
-    d = _ahav(hav_d)
-    if degrees:
-        return math.degrees(d)
-    return d
-
 def get_small_ang_sep(ra1, dec1, ra2, dec2, degrees=True):
     xx = math.cos(math.radians((dec1 + dec2) / 2.))
     t1 = (15. * (ra1 - ra2) * xx) **2

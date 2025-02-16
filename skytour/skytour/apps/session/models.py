@@ -165,7 +165,7 @@ class ObservingCircumstances(models.Model):
     )
     ut_datetime = models.DateTimeField (
         _('UTDT'),
-        default=utc_now  # Deprecated - fix = ???
+        default=utc_now
     )
     session_stage = models.CharField(
         _('Session Stage'),
