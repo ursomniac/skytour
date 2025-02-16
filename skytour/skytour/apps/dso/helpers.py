@@ -154,5 +154,10 @@ def get_star_mag_limit(radius):
     return 5
 
 def get_simple_dso_list():
+    """
+    SIMPLE_DSO_LIST are the brightest/most popular DSOs (more or less)
+    used in the "simple" version of StarMap.  It's not likely to change (much)
+    though it COULD be customized if needed.
+    """
     dso_list = DSO.objects.filter(pk__in=SIMPLE_DSO_LIST)
     return dso_list

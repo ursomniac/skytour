@@ -21,7 +21,7 @@ class TargetDSOAdmin(admin.ModelAdmin):
     model = TargetDSO
     inlines = [TargetObservingModeInline]
     readonly_fields = [
-        'dso', 'mode_set', 'seed_entry',
+        'dso', 'mode_set',
         'get_coordinates', 'dso_page_button', 'dso_object_type',
         'dso_priorities', 'dso_magnitudes', 'dso_angular_size',
         'dso_names'
@@ -32,14 +32,13 @@ class TargetDSOAdmin(admin.ModelAdmin):
         'get_dso_name', 
         'dso_object_type',
         'ready_to_go', 
-        'seed_entry',
         'mode_set',
         'dso_priorities'
     ]
     fieldsets = (
         (None, {
             'fields': [
-                ('dso', 'seed_entry', 'status'),
+                ('dso', 'status'),
                 ('get_coordinates', 'dso_page_button', 'dso_object_type'),
                 ('dso_priorities', 'dso_magnitudes', 'dso_angular_size'),
                 ('ready_to_go', 'dso_names'),

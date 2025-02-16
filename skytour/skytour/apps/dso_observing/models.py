@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 from django.utils.html import mark_safe
 
 from ..dso.models import DSO
-from .seed import SEED_DICT
 from .vocabs import OBSERVING_MODE_TYPES, \
     STATUS_CHOICES, MODE_VIABILITY_CHOICES, MODE_PRIORITY_CHOICES, \
     VIABILITY_BACKGROUND_COLORS as VBC, VIABILITY_FOREGROUND_COLORS as VFC
@@ -88,15 +87,6 @@ class TargetDSO(models.Model):
         for k in 'NBSMI':
             out += k if k in self.mode_list else ' '
         return out
-    
-    @property
-    def seed_entry(self):
-        seeds = SEED_DICT[self.dso.constellation.abbreviation]
-        for seed in seeds:
-            (name, default) = seed
-            if name == self.dso.shown_name:
-                return default
-        return None
     
     def viability_chart(self):
         out = '<pre>'
