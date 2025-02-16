@@ -2,10 +2,11 @@ import datetime, pytz
 from django.http import Http404
 from django.utils.timezone import now
 from django.views.generic.dates import YearArchiveView, MonthArchiveView
+from django.views.generic import ListView
 from ..astro.calendar import create_calendar_grid, is_leap_year
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
-from .models import Calendar
+from .models import Calendar, Website, Glossary
 
 class CalendarYearView(YearArchiveView):
     """
@@ -68,4 +69,20 @@ class CalendarMonthView(MonthArchiveView):
         my_time_zone = pytz.timezone(TimeZone.objects.get(pk=time_zone_id).name)
         grid = create_calendar_grid(start_date, days_out=days_out - 1, time_zone=my_time_zone)
         context['grid'] = grid        
+        return context
+    
+class WebsiteListView(ListView):
+    model = Website
+    template_name = 'website_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(WebsiteListView, self).get_context_data(**kwargs)
+        return context
+    
+class GlossaryListView(ListView):
+    model = Glossary
+    template_name = 'glossary_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GlossaryListView, self).get_context_data(**kwargs)
         return context

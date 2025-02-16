@@ -1,10 +1,9 @@
 from django.urls import path
 from .views import (
-    CalendarYearView, CalendarMonthView
+    WebsiteListView, GlossaryListView
 )
 
 urlpatterns = (
-    path('', CalendarMonthView.as_view(), name='calendar-current'),
-    path('<int:year>/', CalendarYearView.as_view(), name='calendar-year'),
-    path('<int:year>/<str:month>', CalendarMonthView.as_view(), name='calendar-month')
+    path('website', WebsiteListView.as_view(), name='external-website-list'),
+    path('glossary', GlossaryListView.as_view(), name='glossary-list'),
 )
