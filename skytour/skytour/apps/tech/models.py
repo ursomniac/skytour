@@ -1,11 +1,10 @@
 import math
 from django.db import models
-from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from ..abstract.vocabs import YES_NO, YES
 from .utils import get_field_of_view, get_pixel_resolution, get_megapixels
 
 class Telescope(models.Model):
-
     name = models.CharField (
         _('Name'),
         max_length = 100
@@ -15,12 +14,18 @@ class Telescope(models.Model):
         help_text = 'mm'
     )
     focal_length = models.PositiveIntegerField (
-        ('Focal Length'),
+        _('Focal Length'),
         help_text = 'mm'
     )
     order_in_list = models.PositiveIntegerField (
-        ('Order in List'),
+        _('Order in List'),
         default = 0
+    )
+    active = models.PositiveIntegerField (
+        _('Active'),
+        choices = YES_NO,
+        default = YES,
+        help_text='If active will show up on drop-downs for telescopes'
     )
 
     @property
