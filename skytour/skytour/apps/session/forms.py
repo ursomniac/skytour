@@ -5,14 +5,12 @@ from ..astro.time import utc_now
 from ..dso.models import DSOList
 from ..dso_observing.vocabs import OBSERVING_MODE_TYPES
 from ..observe.models import ObservingLocation
-from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.models import Planet, Asteroid, Comet
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
 from .utils import get_observing_locations
-from .vocabs import PLANET_CHOICES
 
 YES_NO = [
     ('Yes', 'Yes'),
@@ -133,10 +131,10 @@ class SessionAddForm(forms.Form):
         queryset = Filter.objects.all(),
         required = False
     )
-    num_images = forms.IntegerField (
+    num_images = forms.IntegerField ( # TODO V2: DEPRECATE - make a boolean
         initial = 0
     )
-    imaging_status = forms.ChoiceField (
+    imaging_status = forms.ChoiceField ( # TODO V2: DEPRECATE!
         choices = IMAGING_STATUS_CHOICES,
         initial = 0
     )

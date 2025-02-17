@@ -3,6 +3,7 @@ from ...utils.models import Constellation
 from ..models import VariableStar, StarCatalog
 from ..vocabs import GCVS_ID as LOOKUP_GCVS
 
+# TODO V2: Move this to a ../../seed script library
 def tr(line, col, length, type):
     """
         eg:  tr(line, 15, 3, 'str') gets an A3 from line[14:16]

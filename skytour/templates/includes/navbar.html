@@ -1,12 +1,12 @@
 {% load skytour_filters %}
 <style>
     td.op-dso  { background-color:  #336; }  /* DSO          */
-    td.op-sso  { background-color:  #650; }  /* SSO          */
+    td.op-sso  { background-color:  #850; }  /* SSO          */
     td.op-ses  { background-color:  #363; }  /* Session      */
     td.op-sky  { background-color:  #636; }  /* Sky          */
-    td.op-info { background-color:  #066; }  /* Info         */
+    td.op-info { background-color:  #069; }  /* Info         */
     td.op-app  { background-color:  #600; }  /* Application  */
-    td.op-site { background-color:  #666; }  /* Site         */
+    td.op-site { background-color:  #066; }  /* Site         */
     td.op-set  { background-color:  #222; }  /* Cookie Data  */
     td.logo { background-color: #999; color: #000; font-size: 16px; font-weight: bold; }
     /* topnav */
@@ -28,20 +28,15 @@
     }
     .dropbtn {
         color: white;
-        xfont-size: 14px;
         font-weight: bold;
         cursor: pointer;
     }
-    .dropbtn:hover, .dropbtn:focus { 
-        xbackground-color: #ccc; 
-        xcolor: #000;
-        border: 1px solid white;
-    }
+
     .dropdown { position: relative; display: inline-block; }
     .dropdown-content {
         display: none;
         position: absolute;
-        background-color: #333;
+        background-color: #000;
         min-width: 160px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         z-index: 1;
@@ -140,7 +135,7 @@
                     <a href="{% url 'skymap-detail' %}?utdt_now=on">Now</a>
                     <a href="{% url 'skymap-detail' %}?house=on">With Location Mask</a>
                     <a href="{% url 'skymap-detail' %}?simple=on">Simple (for Printing)</a>
-                    <a href="{% url 'skymap-detail' %}?simple=on&utdt_now=on">Simple (for Printing)</a>
+                    <a href="{% url 'skymap-detail' %}?simple=on&utdt_now=on">Simple (for Printing) - Now</a>
                 </div>
         </td>
         <td class="click op-sky"><a href="{% url 'constellation-list' %}">Constellations</a></td>

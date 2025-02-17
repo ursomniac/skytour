@@ -5,6 +5,7 @@ from ..astro.altaz import get_obliquity
 from ..astro.time import get_julian_date, estimate_delta_t
 from ..site_parameter.helpers import get_ephemeris
 
+# Trig functions for degrees
 def _cosd(d):
     return math.cos(math.radians(d))
 def _sind(d):
@@ -133,6 +134,10 @@ def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
 MARS_DAY = 24.624
 MARS_HALF_DAY = MARS_DAY / 2.
 def get_mars_features(utdt, mars):
+    """
+    Assemble the list of Martian surface features and estimate their visiblity.
+    """
+    # TODO V2: Make this a table?  Or at LEAST something in .vocabs!
     features = [
         dict(name='Olympus Mons', longitude=226, latitude=19),
         dict(name='Valles Marineris', longitude=291, latitude=-12),

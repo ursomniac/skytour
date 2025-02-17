@@ -1,5 +1,8 @@
+<style>
+  table.dso-form { font-size: 12px; }
+</style>
 <form action="" method="GET">
-    <table>
+    <table class="dso-form">
         <tr>
             <td colspan=2><b>Name:</b>&nbsp;
               <input size=20 name="search_name"
@@ -35,14 +38,14 @@
             <b>RA Range: </b>
             <input name="ra_low" 
                 {% if ra_low %} value="{{ra_low}}" {% endif %}
-                size=5>e to 
+                size=5>E to 
             <input name="ra_high" 
                 {% if ra_high %} value="{{ra_high}}" {% endif %}
-                size=5>w (hours)
+                size=5>W (hours)
             </td>
         </tr>
         <td colspan=3>
-            <b>DSO Type:</b>
+            <b>DSO Type: </b>
             <input name="dso_type" type="radio" value="all" 
               {% if dso_type == 'all' %}checked="checked"{% endif %}>All 
               &nbsp;&nbsp;
@@ -53,16 +56,7 @@
             {% if dso_type == 'nebula' %}checked="checked"{% endif %}>Nebula 
               &nbsp;&nbsp;
             <input name="dso_type" type="radio" value="galaxy"
-            {% if dso_type == 'galaxy' %}checked="checked"{% endif %}>Galaxy
-
-            {% comment %}
-            <br>
-            SEEN: {{ seen }}
-            TYPE: {{ dso_type }}
-            PRI: {{ priority }}
-            CON: {{ constellation }}
-            {% endcomment %}
-            
+            {% if dso_type == 'galaxy' %}checked="checked"{% endif %}>Galaxy            
           </td>
           <td colspan=1>
             <b>Redo: </b>
@@ -92,9 +86,7 @@
                 &nbsp;&nbsp;
             <input name="imaged" value="both" type="radio" 
                 {% if imaged == 'all' %}checked="checked"{% endif %}>Either
-            <!--input name="seen" type="checkbox" {% if seen %}checked{% endif %}>Seen<-->  
             </td>            
-
           <td>
             <b>Dec Range: </b>
             <input name="dec_high" 

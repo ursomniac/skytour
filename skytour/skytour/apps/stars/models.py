@@ -10,7 +10,7 @@ from .utils import create_star_name, parse_designation
 from .vocabs import ENTITY, GCVS_ID, VARDES
 
 
-
+# TODO V2: Come up with a plan to use this
 class DoubleStar(Coordinates):
     catalog = models.ForeignKey('utils.StarCatalog', on_delete = models.CASCADE)
     id_in_catalog = models.CharField (
@@ -169,7 +169,8 @@ class BrightStar(Coordinates):
         if self.proper_name:
             name += " = {}".format(self.proper_name)
         return mark_safe("HR {} = {}".format(self.hr_id, name))
-    
+
+# TODO V2: Come up with a plan to use this
 class VariableStar(Coordinates):
     catalog = models.ForeignKey(StarCatalog, on_delete=models.CASCADE)
     id_in_catalog = models.CharField(

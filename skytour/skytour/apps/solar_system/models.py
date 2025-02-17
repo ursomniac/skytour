@@ -41,13 +41,12 @@ class Planet(ObservableObject):
         help_text = 'List of moons that might be observable; separate with commas'
     )
 
-    planet_map = models.ImageField(
+    planet_map = models.ImageField( # This is only used for Mars and Jupiter
         _('Planet Map'),
         null=True, blank=True,
         upload_to='planet_maps'
     )
     object_class = 'planet'
-
     detail_view = 'planet-detail'
 
     @property
@@ -137,9 +136,7 @@ Moons:
 
 class PlanetObservation(ObservingLog):
     """
-    M:1 between observation records and DSOs.
-    So a separate one of these for model?   That gets away from
-    dealing with GFKs...
+    M:1 between observations and Planet.
     """
     object = models.ForeignKey(Planet,
         on_delete = models.CASCADE,

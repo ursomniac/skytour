@@ -1,5 +1,6 @@
 from ..models import BrightStar
 
+# TODO V2: Move this to a ./seed script library
 """
 This just exists to load the BrightStar table from a text dump of the BSC file.
 Once it's in the database, this is no longer necessary.

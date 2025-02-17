@@ -8,7 +8,7 @@ ENTITY = {
     'Chi': '&chi;', 'Phi': '&phi;', 'Psi': '&psi;', 'Ome': '&omega;'
 }
 
-UNICODE = {
+UNICODE = { # greek letters
     'Alp': u'\03B1', 'Bet': u'\03B2', 'Gam': u'\03B3', 'Del': u'\03B4',
     'Eps': u'\03B5', 'Zet': u'\03B6', 'Eta': u'\03B7', 'The': u'\03B8',
     'Iot': u'\03B9', 'Kap': u'\03BA', 'Lam': u'\03BB', 'Mu':  u'\03BC',
@@ -17,7 +17,7 @@ UNICODE = {
     'Phi': u'\03C6', 'Chi': u'\03C7', 'Psi': u'\03C8', 'Ome': u'\03C9'
 }
 
-GCVS_ID = {
+GCVS_ID = { # greek letters
     '9001': u'\u03B1', '9002': u'\u03B2', '9003': u'\u03B3', '9004': u'\u03B4',
     '9005': u'\u03B5', '9006': u'\u03B6', '9007': u'\u03B7', '9008': u'\u03B8',
     '9009': u'\u03B9', '9010': u'\u03BA', '9011': u'\u03BB', '9012': u'\u03BC',
@@ -38,7 +38,7 @@ GCVS_ID = {
     '9221': 'U', '9222': 'V', '9223': 'W', '9224': 'X', '9225': 'Y', '9226': 'Z'
 }
 
-CONSTELLATION_LABELS = {
+CONSTELLATION_LABELS = { # centroids  (ra, dec)
     'AND': ( 0.2, 43.0),  'ANT': (10.0,-32.0),  'APS': (16.5,-74.0),  'AQL': (19.9,  4.0),
     'AQR': (22.7, -5.0),  'ARA': (17.3,-51.0),  'ARI': ( 2.2, 26.0),  'AUR': ( 5.7, 43.0),
     'BOO': (14.8, 33.0),  'CAE': ( 4.7,-48.0),  'CAM': ( 5.4, 70.0),  'CAP': (21.0,-22.0),

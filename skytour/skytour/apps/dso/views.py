@@ -45,6 +45,7 @@ class DSOListView(ListView):
         dso_list = filter_dsos(params, DSO.objects.all())
         context['total_count'] = len(dso_list)
         context['default_dec_limit'] = dec_limit = find_site_parameter('declination-limit', -30, 'float')
+        
         # Pagination
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)

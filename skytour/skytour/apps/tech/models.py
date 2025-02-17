@@ -2,6 +2,7 @@ import math
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from .utils import get_field_of_view, get_pixel_resolution, get_megapixels
 
 class Telescope(models.Model):
 
@@ -51,6 +52,7 @@ class Telescope(models.Model):
     def __str__(self):
         return self.name
 
+# TODO V2: Need to make this standalone but ALSO accessible to a Telescope for options
 class Eyepiece(models.Model):
     type = models.CharField(
         _('Eyepiece Type'),
@@ -111,6 +113,7 @@ FILTER_TYPE_CHOICES = (
     ('narrow', 'Narrow')
 )
 
+# TODO V2: Need to make this standalone but ALSO accessible to a Telescope for options
 class Filter(models.Model):
     name = models.CharField (
         _('Name'),
@@ -177,3 +180,60 @@ class Filter(models.Model):
     class Meta:
         ordering = ['central_wavelength']
 
+
+class Sensor(models.Model):
+    """
+    This is for camera, etc. that go with a telescope.
+    """
+    telescope = models.ForeignKey(
+        Telescope,
+        on_delete = models.SET_NULL,
+        null = True, blank = True
+    )
+    name = models.CharField (
+        _('Sensor Name'),
+        max_length = 30,
+        default = 'Onboard camera'
+    )
+    pixels_x = models.PositiveIntegerField (
+        _('Pixels X')
+    )
+    pixels_y = models.PositiveIntegerField (
+        _('Pixels Y')
+    )
+    pixel_size = models.FloatField (
+        _('Pixel Size'),
+        help_text = 'in microns: µm'
+    )
+    camera_name = models.CharField (
+        _('Camera Name'),
+        max_length = 30,
+        null = True, blank = True
+    )
+    order_in_list = models.PositiveIntegerField (
+        _('Order in List'),
+        default = 1
+    )
+
+    @property
+    def field_of_view(self):
+        return get_field_of_view(self.telescope.focal_length, self.pixels_x, self.pixels_y, self.pixel_size)
+    
+    @property
+    def pixel_resolution(self):
+        return get_pixel_resolution(self.telescope.focal_length, self.pixel_size)
+    
+    @property
+    def megapixels(self):
+        return get_megapixels(self.pixels_x, self.pixels_y)
+    
+    def __str__(self):
+        c = self.camera_name if self.camera_name is not None else 'FIX'
+        try:
+            back = f"{self.telescope.name}: {self.name} ({c}) = {self.megapixels:.1f}MP ({self.pixels_x}x{self.pixels_y})"
+            return back
+        except:
+            return "Something stupid happened"
+        
+    class Meta:
+        ordering = ['order_in_list']

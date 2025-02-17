@@ -16,7 +16,6 @@ def get_initial_from_cookie(request, initial):
     return initial
 
 def get_observing_locations(all, rejected=False):
-    
     qs = all.annotate(
         priority = Case(
             When(status='Active', then=1),

@@ -1,4 +1,3 @@
-import datetime
 import numpy as np
 from django.db import models
 from django.utils.translation import gettext as _
@@ -44,6 +43,10 @@ class ObservingSession(models.Model):
     # Get all of the Planet/OSD/etc. observations for this session
     @property
     def session_observations(self):
+        """
+        Get the list of observed objects and conditions ordered by UTDT.
+        This crosses all of the DSO/SSO models.
+        """
         ox = self.observingcircumstances_set.all()
         od = self.dsoobservation_set.all()
         op = self.planetobservation_set.all()
@@ -55,6 +58,9 @@ class ObservingSession(models.Model):
 
     @property
     def number_objects_observed(self):
+        """
+        Count up the number of DSO/SSO observations in the session.
+        """
         count = 0
         count += self.dsoobservation_set.count()
         count += self.planetobservation_set.count()
@@ -65,6 +71,9 @@ class ObservingSession(models.Model):
 
     @property
     def sqm_range(self):
+        """
+        Get the range of ALL SQM readings for the session: i.e., including when the Moon is up.
+        """
         conditions = self.observingcircumstances_set.all()
         try:
             sqm_min = conditions.aggregate(models.Min('sqm'))['sqm__min']
@@ -78,6 +87,9 @@ class ObservingSession(models.Model):
         
     @property
     def average_effective_bortle(self):
+        """
+        Get effective Bortle from observations (floating-point)
+        """
         conditions = self.observingcircumstances_set.all()
         sum = 0.
         n = 0
@@ -91,6 +103,9 @@ class ObservingSession(models.Model):
 
     @property
     def sqm_avg(self):
+        """
+        Get the average SQM for the session - EXCLUDING measures flagged for the Moon, etc.
+        """
         conditions = self.observingcircumstances_set.all()
         if conditions.count() < 1:
             return None
@@ -120,6 +135,9 @@ class ObservingSession(models.Model):
     
     @property
     def bortle_avg(self):
+        """
+        Get the average Effective Bortle EXCLUDING measures flagged for the Moon, etc.
+        """
         conditions = self.observingcircumstances_set.all()
         if conditions.count() < 1:
             return None
@@ -138,6 +156,9 @@ class ObservingSession(models.Model):
 
     @property
     def seeing_range(self):
+        """
+        Return the range of estimated seeing.
+        """
         try:
             conditions = self.observingcircumstances_set.all()
             see_min = conditions.aggregate(models.Min('seeing'))['seeing__min']
@@ -229,6 +250,12 @@ class ObservingCircumstances(models.Model):
 
     @property
     def bortle(self):
+        """
+        Estimate effective Bortle.
+        This interpolates between the defined translation between SQM and Bortle number.
+        BUT those definitons are NOT linear - at all.
+        This method just does it blindly - see the difference between B4 and B5, for example.
+        """
         sqm_ranges = [
             (22.00, 23.00), # 1
             (21.90, 21.99), # 2
@@ -249,7 +276,6 @@ class ObservingCircumstances(models.Model):
     @property
     def effective_bortle(self):
         return get_effective_bortle(self.sqm)
-
 
     @property
     def limiting_magnitude(self):

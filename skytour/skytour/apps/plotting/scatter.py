@@ -35,7 +35,7 @@ def create_plot(
     fig = Figure()
     #plt.style.use(style)
 
-    if subplot:
+    if subplot: # NOTE: Isn't this a bug?
         panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])
     
     panel.set_title(title)

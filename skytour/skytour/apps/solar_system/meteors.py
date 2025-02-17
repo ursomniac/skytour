@@ -3,6 +3,9 @@ from ..astro.time import get_julian_date
 from .models import MeteorShower
 
 def get_meteor_showers(utdt=None):
+    """
+    Return a list of meteor showers for a given UTDT.
+    """
     if not utdt:
         utdt = datetime.datetime.now(datetime.timezone.utc)
     active = []

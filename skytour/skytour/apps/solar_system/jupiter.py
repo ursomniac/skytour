@@ -11,9 +11,6 @@ System II:  longitude = 9° (jan 2022), drifts 1.75°/month
     best placed within 50m of transit time
 """
 def get_jupiter_physical_ephem(utdt, planet, debug=False):
-    """
-    This is a quick approximation.
-    """
     dt = estimate_delta_t(utdt)
     jd = get_julian_date(utdt)
     jde = jd + dt/86400.
@@ -87,6 +84,10 @@ def get_jupiter_physical_ephem(utdt, planet, debug=False):
     return jupiter
 
 def get_jupiter_features(utdt, jupiter, debug=False):
+    """
+    Assemble list of Jovian features (the GRS is the only one at present)
+    and their current visiblity.
+    """
     grs = get_red_spot(utdt, jupiter)
     features = [
         dict(
@@ -156,6 +157,8 @@ def get_all_system_longitude(utdt):
     """
     From https://www.projectpluto.com/grs_form.htm
     This is just to test the mapping.
+
+    TODO V2: stash this somewhere for future reference.
     """
     jd = get_julian_date(utdt)
     jup_mean = (jd - 2_455_636.938) * 360. / 4332.89709

@@ -393,19 +393,6 @@ class ObservingConditionsFormView(CreateView):
         self.session_id = session_id
         return super().form_valid(form)
 
-class ObservingLogView(TemplateView):
-    """
-    TODO: V2 --- this is no longer useful!   All the content is on other pages.
-    """
-    template_name = 'observed_objects_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ObservingLogView, self).get_context_data(**kwargs)
-        for run in [(DSO, 'dso_list'), (Planet, 'planet_list'), (Asteroid, 'asteroid_list'), (Comet, 'comet_list')]:
-            context[run[1]] = run[0].objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
-        context['table_dso_observed'] = 'dsos_observed'
-        return context
-
 class ObservingCircumstancesView(ListView):
     model = ObservingCircumstances
     template_name = 'observing_conditions_list.html'

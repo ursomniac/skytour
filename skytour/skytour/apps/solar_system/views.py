@@ -404,7 +404,7 @@ class TrackerView(FormView):
 class TrackerResultView(TemplateView):
     template_name = 'tracker.html'
 
-class OrreryView(TemplateView):
+class OrreryView(TemplateView): # TODO V2 - keep as separate view?
     template_name = 'orrery_view.html'
 
     def get_context_data(self, **kwargs):
@@ -413,7 +413,7 @@ class OrreryView(TemplateView):
         utdt = context['utdt_start']
         # Get the heliocentric ecliptic positions
         pdict = get_ecliptic_positions(utdt)
-        context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict)
+        context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, reversed=False)
         return context
 
 class PlanetRealTimeView(CookieMixin, DetailView):

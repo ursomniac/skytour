@@ -1,1 +1,1 @@
-pre-2.0.p - Added views for Website and Glossary
+pre-2.0.q - Added Sensor model (FK to Telescope) mostly for smart scope specs
