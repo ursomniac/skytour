@@ -264,19 +264,15 @@ class ObservingLog(models.Model):
     eyepieces = models.ManyToManyField (Eyepiece, blank=True)
     # Filter(s)
     filters = models.ManyToManyField (Filter, blank=-True)
+    
+    # TODO V2: deal with sensors!
+
     # Ugh you need location!
     location = models.ForeignKey (
         ObservingLocation,
         default = find_site_parameter('default-location-id', default=48, param_type='positive'),
         on_delete = models.CASCADE,
         limit_choices_to = {'status__in': ['Active', 'Provisional']}
-    )
-    # Image metadata if imaged
-    num_images = models.PositiveIntegerField(default=0, blank=True, null=True)
-    imaging_status = models.IntegerField(
-        choices = IMAGING_STATUS_CHOICES,
-        default = 0,
-        null=True, blank=True
     )
 
     # Filter(s)

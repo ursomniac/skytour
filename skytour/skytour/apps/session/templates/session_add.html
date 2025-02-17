@@ -4,151 +4,122 @@
 {% block content %}
 
 <style>
-  h1, h4 { color: #ff6; }
+  h1, h4 { color: #ccc; }
+  table.subform { border: none; }
+  table.subform td { border: none; }
+  table.subform th {
+    background-color: #cc9;
+    color: #000;
+    border: none;
+  }
+  table.panel { border: 1px solid #ffc;}
+  table.subform td.panel2 { border: 2px solid #960; }
 </style>
+
 <h1>Add Observation</h1>
-<b>{{ message }}</b>
-<br>
+<b>{{ message }}</b><br>
+
 <h2><a href="/session/add_object">New Observation</a></h2>
+
 <div class="plan_form">
-    {% if form %}
-    {{ form.media }}
-    <form method="post">
-        {% csrf_token %}
-        
-        {% if form.non_field_errors %}
-        <ul>
-          {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        
-        {% for hidden_field in form.hidden_fields %}
-        {% if hidden_field.errors %}
-          <ul>
-            {% for error in hidden_field.errors %}
-              <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-        {{ hidden_field }}
+  {% if form %}
+  {{ form.media }}
+  <form method="post">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <ul>
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% for hidden_field in form.hidden_fields %}
+    {% if hidden_field.errors %}
+      <ul>
+        {% for error in hidden_field.errors %}
+          <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
         {% endfor %}
+      </ul>
+    {% endif %}
+    {{ hidden_field }}
+    {% endfor %}
         
+    <table class="subform">
+        <tr><th>Session Metadata</th><th>Object Metadata</th></tr>
+        <tr>
+            <td>
+            <table class="panel">
+                {% with form.ut_date as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
 
-        <table>
-          <tr><td colspan=6><h4>Session Metadata</h4></td></tr>
-          <tr>
-            <td colspan="4">
-              {% with form.session as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.telescope as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              {% with form.ut_date as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="4">
-              {% with form.location as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              {% with form.eyepiece as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="3">
-              {% with form.filter as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2"></td>
-            <td colspan="2">
-              {% with form.num_images as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.imaging_status as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
+                {% with form.ut_time as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.object_type as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.planet as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.asteroid as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.comet as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.catalog as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.id_in_catalog as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+            
+                {% comment %}
+                {% with form.other_object as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+                {% endcomment %}
+            </table>
+          </td>
+          <td>
+              <table class="panel">
+                {% with form.session as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.telescope as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.location as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.eyepiece as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.filter as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+              </table>
+          </td>
         </tr>
-          <tr><td colspan=6><h4>Object Metadata</h4></td></tr>
-          <tr>
-            <td colspan="3">
-              {% with form.ut_time as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="3">
-              {% with form.object_type as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              {% with form.planet as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.asteroid as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.comet as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              {% with form.catalog as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.id_in_catalog as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-            <td colspan="2">
-              {% with form.other_object as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan=6>
-              {% with form.notes as field %}
-              {% include "inc_form_field.html" %}
-              {% endwith %}
-            </td>
-          </tr>
-        </table>
 
-        {% comment %}
-        <table>{{ form.as_table }}</table>
-        {% endcomment %}
-
-        <br><input type="submit" value="Submit"/>
+        <tr>
+          <td colspan=2 class="panel2"><input type="submit" value="Submit"/></td>
+        </tr>
+        
+      </table>
     </form>
     {% else %}
     There is no form!

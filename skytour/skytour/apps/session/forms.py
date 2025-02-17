@@ -121,27 +121,23 @@ class SessionAddForm(forms.Form):
         queryset = ObservingLocation.objects.all() #filter(status__in=['active', 'provisional'])
     )
     telescope = forms.ModelChoiceField (
-        queryset = Telescope.objects.order_by('order_in_list')
+        queryset = Telescope.objects.filter(active=1).order_by('order_in_list')
     )
+    # TODO: SOMEHOW remove this and replace with Sensor
+    # TODO: Also handle scopes with >1 sensor
     eyepiece = forms.ModelMultipleChoiceField (
         queryset = Eyepiece.objects.all(),
         required = False
     )
+    # Some smart scopes have a filter or can use one
     filter = forms.ModelMultipleChoiceField (
         queryset = Filter.objects.all(),
         required = False
     )
-    num_images = forms.IntegerField ( # TODO V2: DEPRECATE - make a boolean
-        initial = 0
-    )
-    imaging_status = forms.ChoiceField ( # TODO V2: DEPRECATE!
-        choices = IMAGING_STATUS_CHOICES,
-        initial = 0
-    )
     
     # Required
     ut_time = forms.TimeField(
-        label='UTX Time',
+        label='UT Time',
         initial=utc_now
     )
     object_type = forms.ChoiceField(

@@ -3,15 +3,28 @@
 {% block title %}Add Observing Session: Skytour{% endblock %}
 {% block content %}
 
+<style>
+    table.new-session { border: none; }
+    table.new-session td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.new-session th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+</style>
 
-<h1>Add Session</h1>
+<h1>Create/Start New Observing Session</h1>
 
 <div class="plan_form">
     {% if form %}
     {{ form.media }}
     <form method="post">
         {% csrf_token %}
-        <table>
+        <table class="new-session">
             {{ form.as_table }}
         </table>
         <br><input type="submit" value="Submit"/>

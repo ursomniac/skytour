@@ -10,84 +10,86 @@
     <form method="post">
         {% csrf_token %}
 
-        <table>
+        <style>
+            table.subform { border: none; }
+            table.subform td { border: none; }
+            table.panel { border: 1px solid #ffc;}
+            table.subform td.panel2 { border: 2px solid #960; }
+        </style>
+
+        <table class="subform">
             <tr>
                 <td colspan=2>
+                    <table class="panel">
                     {% with form.session as field %}
-                    {% include "inc_form_field.html" %}
+                    {% include "inc_obs_form_field.html" %}
                     {% endwith %}
-                </td>
-                <td colspan=2>
-                    {% with form.seeing as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
 
-            </tr>
-            <tr>
-                <td colspan=2>
-                    {% with form.ut_datetime as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
-                <td colspan=2>
                     {% with form.session_stage as field %}
-                    {% include "inc_form_field.html" %}
+                    {% include "inc_obs_form_field.html" %}
                     {% endwith %}
-                </td>
-            </tr>
-            <tr>
-                <td colspan=1>
-                    {% with form.sqm as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
-                <td colspan=1>
-                    {% with form.use_sqm as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
-                <td colspan=1>
-                    {% with form.moon as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
 
-            </tr>
-            <tr>
-                <td colspan=1>
-                    {% with form.temperature as field %}
-                    {% include "inc_form_field.html" %}
+                    {% with form.seeing as field %}
+                    {% include "inc_obs_form_field.html" %}
                     {% endwith %}
-                </td>
-                <td colspan=1>
-                    {% with form.humidity as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
-                <td colspan=1>
-                    {% with form.cloud_cover as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
-                </td>
-                <td colspan=1>
-                    {% with form.wind as field %}
-                    {% include "inc_form_field.html" %}
-                    {% endwith %}
+                    </table>
                 </td>
             </tr>
             <tr>
-                <td colspan=4>
+                <td>
+                    <table class="panel">
+                        {% with form.ut_datetime as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.sqm as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.use_sqm as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.moon as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+                    </table>
+                </td>
+                <td>
+                    <table class="panel">
+                        {% with form.temperature as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.humidity as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.cloud_cover as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+
+                        {% with form.wind as field %}
+                        {% include "inc_obs_form_field.html" %}
+                        {% endwith %}
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <table class="panel">
                     {% with form.notes as field %}
-                    {% include "inc_form_field.html" %}
+                    {% include "inc_obs_form_field.html" %}
                     {% endwith %}
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="panel2">
+                    <input type="submit" value="Submit"/>
                 </td>
             </tr>
         </table>
-        {% comment %}
-        <table>{{ form.as_table }}</table>
-        {% endcomment %}
-        <br><input type="submit" value="Submit"/>
     </form>
     {% else %}
     There is no form!

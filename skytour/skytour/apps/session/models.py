@@ -24,6 +24,7 @@ class ObservingSession(models.Model):
     # you could go to one location and then go to another location.
     ut_date = models.DateField(
         _('UT Date'),
+        help_text = 'YYYY-MM-DD'
     )
     location = models.ForeignKey (
         ObservingLocation,
@@ -208,7 +209,8 @@ class ObservingCircumstances(models.Model):
     use_sqm = models.PositiveIntegerField (
         _('Use SQM in Stats'),
         choices = YES_NO,
-        default = YES
+        default = YES,
+        help_text = 'Set to No if it will skew the stats'
     )
     temperature = models.IntegerField (
         _('Temperature'),
@@ -237,7 +239,8 @@ class ObservingCircumstances(models.Model):
     )
     moon = models.BooleanField (
         _('Moon'),
-        default = False
+        default = False,
+        help_text = 'Set if Moon is above the horizon'
     )
 
     url_path = None

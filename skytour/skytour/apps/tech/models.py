@@ -2,7 +2,7 @@ import math
 from django.db import models
 from django.utils.translation import gettext as _
 from ..abstract.vocabs import YES_NO, YES
-from .utils import get_field_of_view, get_pixel_resolution, get_megapixels
+from .utils import *
 
 class Telescope(models.Model):
     name = models.CharField (
@@ -30,26 +30,19 @@ class Telescope(models.Model):
 
     @property
     def f_ratio(self):
-        return self.focal_length / self.aperture
+        return get_telescope_f_ratio(self.focal_length, self.aperture)
 
     @property
     def limiting_magnitude(self):
-        #method_1 = 3.7 + 2.5 * math.log10(self.aperture**2)
-        method_2 = 9.5 + 5.0 * math.log10(self.aperture/25.4)
-        return method_2
+        return get_telescope_limiting_magnitude(self.aperture)
 
     @property
     def raleigh_limit(self):
-        """
-        Basically, the limit at which two stars can be seed as two separate objects
-        """
-        theta = 138 / self.aperture # for 550 nm
-        return theta
+        return get_telescope_raleigh_limit(self.aperture)
 
     @property
     def dawes_limit(self):
-        theta = 116 / self.aperture
-        return theta
+        return get_telescope_dawes_limit(self.aperature)
 
     class Meta:
         ordering = ['order_in_list']
@@ -83,13 +76,11 @@ class Eyepiece(models.Model):
 
     @property
     def magnification(self):
-        x = self.telescope.focal_length / self.focal_length
-        m = int(10.*(x + 0.05))/10.
-        return  m
+        return get_eyepiece_magnification(self.telescope.focal_length, self.focal_length)
 
     @property
     def field_of_view(self):
-        return self.apparent_fov / self.magnification # degrees
+        return get_eyepiece_field_of_view(self.apparent_fov, self.magnification)
 
     @property
     def fov_display(self):
@@ -222,15 +213,15 @@ class Sensor(models.Model):
 
     @property
     def field_of_view(self):
-        return get_field_of_view(self.telescope.focal_length, self.pixels_x, self.pixels_y, self.pixel_size)
+        return get_sensor_field_of_view(self.telescope.focal_length, self.pixels_x, self.pixels_y, self.pixel_size)
     
     @property
     def pixel_resolution(self):
-        return get_pixel_resolution(self.telescope.focal_length, self.pixel_size)
+        return get_sensor_pixel_resolution(self.telescope.focal_length, self.pixel_size)
     
     @property
     def megapixels(self):
-        return get_megapixels(self.pixels_x, self.pixels_y)
+        return get_sensor_megapixels(self.pixels_x, self.pixels_y)
     
     def __str__(self):
         c = self.camera_name if self.camera_name is not None else 'FIX'

@@ -14,7 +14,6 @@ class AbstractObservation(admin.StackedInline):
             'fields': [
                 ('ut_datetime', 'location'),
                 ('telescope', 'eyepieces', 'filters'),
-                ('num_images', 'imaging_status'),
                 'notes',
             ]
         }),
