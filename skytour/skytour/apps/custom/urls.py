@@ -1,8 +1,6 @@
 from django.urls import path
-from .views import (
-    HomeObjectsView, CookieObjectsView
-)
+from .views import DSOObjectsView
+
 urlpatterns = (
-    path('', HomeObjectsView.as_view(), name='home-objects'),
-    path('cookie', CookieObjectsView.as_view(), name = 'cookie-objects')
+    path('', DSOObjectsView.as_view(), name='dso-objects'),
 )

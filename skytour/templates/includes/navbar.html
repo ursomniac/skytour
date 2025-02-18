@@ -88,9 +88,9 @@
         <td colspan=3 class="op-dso">DSOs:  &nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;|&nbsp;
-            <a href="{% url 'home-objects' %}">@Now</a>
+            <a href="{% url 'dso-objects' %}">@Now</a>
             &nbsp;|&nbsp;
-            <a href="{% url 'cookie-objects' %}">@Cookie</a>
+            <a href="{% url 'dso-objects' %}?cookie=on">@Cookie</a>
             &nbsp;|&nbsp;
             <a href="{% url 'dsolist-list' %}">Obs. Lists</a>
         </td>
@@ -133,7 +133,7 @@
                 <div id="myDropdownSkyMap" class="dropdown-content">
                     <a href="{% url 'skymap-detail' %}">At Cookie Date/Time</a>
                     <a href="{% url 'skymap-detail' %}?utdt_now=on">Now</a>
-                    <a href="{% url 'skymap-detail' %}?house=on">With Location Mask</a>
+                    <a href="{% url 'skymap-detail' %}?mask=on">With Location Mask</a>
                     <a href="{% url 'skymap-detail' %}?simple=on">Simple (for Printing)</a>
                     <a href="{% url 'skymap-detail' %}?simple=on&utdt_now=on">Simple (for Printing) - Now</a>
                 </div>

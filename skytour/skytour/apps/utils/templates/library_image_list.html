@@ -5,9 +5,16 @@
 {% block title %}{{ object.name }} Library Images: Skytour {% endblock %}
 {% block content %}
 <style>
+    table.by-object { border: none; }
+    table.by-object th { background-color: #996; text-align: right; color: #000; padding: 5px 10px; }
+    table.by-object td { padding: 5px 10px; border: 1px solid #852;}
+    table.by-object th.empty { background-color: #333; border: none; }
+    table.by-object td.empty { border: 1px solid #640; }
+    table.by-object td.onleft { padding: 5px; 0px; }
     table.library_image_list td { font-size: 14px; }
     table.library_image_list td h3 { margin-top: 0; }
     img.library_image { display: block; width: 100%; }
+    span.con-label { background-color: #996; color: #000; padding: 5px 10px; margin-right: 10px; }
     span.nickname { color: #ff9; font-style: italic; margin-bottom: 2px; }
     span.label { color: #999; }
     span.value { font-size: 90%; }
@@ -41,9 +48,9 @@
 <h1>Library Images</h1>
 
 <h2>Filter by Object Type</h2>
-<table>
+<table class="by-object">
     <tr>
-        <td><b>Galaxies:</b></td>
+        <th><b>Galaxies:</b></th>
         <td class="click"><a href="{% url 'library-by-type' 'galaxy' %}">All</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'galaxy--spiral' %}">Spirals</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'galaxy--barred-spiral' %}">Barred</a></td>
@@ -56,7 +63,7 @@
         <td class="click"><a href="{% url 'library-by-type' 'galaxy--compact-group' %}">Compact Group</a></td>
     </tr>
     <tr>
-        <td><b>Nebulae:</b></td>
+        <th><b>Nebulae:</b></th>
         <td class="click"><a href="{% url 'library-by-type' 'nebula' %}">All</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'nebula--emission' %}">Emission</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'reflection-nebula' %}">Reflection</a></td>
@@ -65,36 +72,36 @@
         <td class="click"><a href="{% url 'library-by-type' 'planetary-nebula' %}">Planetary</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'interstellar-matter' %}">Interstellar</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'supernova-remnant' %}">SN Remnant</a></td>
-        <td colspan=2></td>
+        <td colspan=2 class="empty"></td>
     </tr>
     <tr>
-        <td><b>Clusters:</b></td>
+        <th><b>Clusters:</b></th>
         <td class="click"><a href="{% url 'library-by-type' 'cluster' %}">All</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'open-cluster' %}">Open</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'globular-cluster' %}">Globular</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'stellar-association' %}">Association</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'asterism' %}">Asterism</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'cluster-nebulosity' %}">w/ Nebulosity</a></td>
-        <td colspan=4></td>
+        <td colspan=4 class="empty"></td>
     </tr>
     <tr>
-        <td><b>Solar System:</b></td>
+        <th><b>Solar System:</b></th>
         <td class="click"><a href="{% url 'library-by-type' 'solar-system' %}">All</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'planet' %}">Planet</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'asteroid' %}">Asteroid</a></td>
         <td class="click"><a href="{% url 'library-by-type' 'comet' %}">Comet</a></td>
-        <td colspan=6></td>
+        <td colspan=6 class="empty"></td>
     </tr>
     <tr>
-        <td></td>
+        <th class="empty"></th>
         <td colspan="5"><a href="{% url 'library-image-list'%}">All Object Types</a></td>
-        <td colspan="5">
+        <td colspan="5" class="onleft">
             <form type="GET" action="/library/constellation">
-            <b>By Constellation:</b>
-            <select name="abbr">
-            {% for c in constellation_list %}<option {% if c == abbreviation %} selected{% endif %}>{{ c }}</option>{% endfor %}
-            </select>
-            <input type="submit"/>
+                <span class="con-label"><b>By Constellation:</b></span>
+                <select name="abbr">
+                {% for c in constellation_list %}<option {% if c == abbreviation %} selected{% endif %}>{{ c }}</option>{% endfor %}
+                </select>
+                <input type="submit"/>
             </form>
         </td>
     </tr>

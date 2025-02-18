@@ -308,15 +308,22 @@ class ObservingLocationMask(models.Model):
      When defining - start at 0° and end at 360°.
     """
     location = models.ForeignKey(ObservingLocation, on_delete=models.CASCADE)
-    azimuth = models.FloatField(
-        _('Azimuth'),
+    azimuth_start = models.FloatField(
+        _('Azimuth Start'),
         help_text='Inclusive - start at 0°'
     )
-    altitude = models.FloatField(_('Altitude'))
+    azimuth_end = models.FloatField (
+        _('Azimuth End'),
+        help_text = 'Exclusive'
+    )
+    altitude_start = models.FloatField(_('Altitude Start'))
+    altitude_end = models.FloatField(_('Altitude End'))
 
     class Meta:
-        ordering = ['azimuth']
+        ordering = ['azimuth_start']
 
     def __str__(self):
-         x = self.location.name
-         return f"{x}: {self.azimuth:5.1f}, {self.azimuth:4.1f}"
+        x = self.location.name
+        start = f"({self.azimuth_start:5.1f}, {self.altitude_start:4.1f})"
+        end = f"({self.azimuth_end:5.1f}, {self.altitude_end:4.1f})"
+        return f"{x}: {start} - {end}"

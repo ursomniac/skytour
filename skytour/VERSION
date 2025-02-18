@@ -1,1 +1,1 @@
-pre-2.0.r - Added Sensor/Telescope/Eyepiece utils; refactored Session/Add Observation/Add Conditions forms
+pre-2.0.r2- Apply mask to SkyView! Refactored @Home and @Cookie to use a single generating method

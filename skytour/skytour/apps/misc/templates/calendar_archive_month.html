@@ -3,7 +3,6 @@
 {% block content %}
 
 <h1>Events</h1>
-{{ next_month }}
 <h2>
     <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
         {{ previous_month|date:"M Y"}}</a>
@@ -28,7 +27,6 @@
     <input type="submit">
 </form>
 
-{# include 'inc_calendar_table.html' #}
 {% include 'inc_calendar_grid.html' %}
 
 <h2>

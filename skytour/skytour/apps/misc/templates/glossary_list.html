@@ -3,6 +3,14 @@
 {% block content %}
 <style>
     .admin { float: right; }
+    th { background-color: #996; border: None; color: #000; }
+    td.term { vertical-align: top; padding: 10px 5px; border: 1px solid #663; }
+    td.content { 
+        vertical-align: top; padding 10px 5px; border: 1px solid #663; 
+        font-size: 80%;
+        line-height: 1.4;
+        color: #aaa;
+    }
 </style>
 <h1>Glossary</h1>
 
@@ -16,7 +24,7 @@
     </tr>
     {% for obj in object_list %}
     <tr>
-        <td width="20%"">
+        <td width="20%" class="term">
             {{ obj.name }}
             {% if obj.link %}
             <br><br>
@@ -25,7 +33,7 @@
             </small>
             {% endif %}
         </td>
-        <td width="80%"">
+        <td width="80%" class="content">
             {{ obj.description|safe }}
         </td>
     </tr>

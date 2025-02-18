@@ -32,7 +32,7 @@ def get_skymap(
         local_time = None,
         title = None,
         hours = 0.,
-        house=False,
+        mask=False,
         min_alt = 20.,
     ):
     """
@@ -151,9 +151,9 @@ def get_skymap(
         )
     times.append((time.perf_counter(), 'Comets'))
 
-    # 8a. House Mask
-    if house:
-        ax = map_house(ax, earth, t, projection, center=(center_ra, center_dec))
+    # 8a. Mask
+    if mask:
+        ax = map_mask(ax, location)
         
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)

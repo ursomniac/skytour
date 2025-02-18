@@ -837,38 +837,72 @@ def map_constellation_labels(ax, earth, t, projection):
             bbox = dict(facecolor='#FFF', edgecolor='#fff', pad=1.0)
         )
     return ax
+        
+def map_mask(ax, location, color='#3ff', simple=False, debug=False):
+    n = 0
 
-HOME_COORDS = [
-    #[(20., 120.), (70., 120.)],
-    #[(20., 160.), (70., 230.)],
-    [(30., 120.), (30., 130.)],
-    [(30., 130.), (30., 140.)],
-    [(30., 140.), (30., 150.)],
-    [(30., 150.), (30., 160.)],
-    [(30., 120.), (70., 120.)],
-    [(30., 160.), (45., 160.)],
-    [(45., 160.), (45., 210.)],
-    ((30., 210.), (15., 210.)),
-    [(15., 210.), (15., 230.)],
-    [(15., 230.), (30., 230.)],
-    [(30., 230.), (30., 210.)],
-    [(45., 210.), (50., 210.)],
-    [(50., 210.), (50., 230.)],
-    [(50., 230.), (70., 230.)]
-]
-
-def map_house(ax, earth, t, projection, center):
-    def get_xy(alt, az):
+    def get_xy(az, alt):
         rad = (90 - alt)/90.
         x = rad * math.cos(math.radians(az+90.))
         y = rad * math.sin(math.radians(az+90.))
         return x, y
     
-    for group in HOME_COORDS:
-        start, end = group
-        x0, y0 = get_xy(start[0], start[1])
-        x1, y1 = get_xy(end[0], end[1])
-        ax.plot([x0, x1], [y0, y1], color='#3ff', linewidth=2)
+    def add_mask_points(mask, x, y, steps = 10):
+        points = []
+            
+        for i in range(steps+1):
+            z = (i + 0.)/steps
+            dx = mask.azimuth_start + z * (mask.azimuth_end - mask.azimuth_start)
+            dh = mask.altitude_end - mask.altitude_start
+            dy = mask.altitude_start + z * dh
+            if i != 0:
+                x0, y0 = get_xy(x, y)
+                x1, y1 = get_xy(dx, dy)
+                ax.plot([x0, x1], [y0, y1], color=color, linewidth=2)
+                if debug:
+                    point = ((x, y), (dx, dy))
+                    print(f"\t{i}: Sub arc: {point}")
+            x = dx
+            y = dy
+        return
+            
+    prev_mask = None
+    for mask in location.observinglocationmask_set.order_by('azimuth_start'):
+        if prev_mask: # connect two segments
+            x0, y0 = get_xy(prev_mask.azimuth_end, prev_mask.altitude_end)
+            x1, y1 = get_xy(mask.azimuth_start, mask.altitude_start)
+            ax.plot([x0, x1], [y0, y1], color=color, linewidth=2)
+            x = x1
+            y = y1
+            if debug:
+                point = (
+                    (prev_mask.azimuth_end, mask.altitude_end), 
+                    (prev_mask.azimuth_start, mask.altitude_start)
+                )
+                print(n, "Adding Mask from Prev: ", point)
+        else:
+            first_mask = mask
+
+        if simple: # add new segment
+            x0, y0 = get_xy(mask.azimuth_start, mask.altitude_start)
+            x1, y1 = get_xy(mask.azimuth_end, mask.altitude_end)
+            ax.plot([x0, x1], [y0, y1], color=color, linewidth=2)
+            if debug:
+                point = ((mask.azimuth_start, mask.altitude_start), (mask.azimuth_end, mask.altitude_end))
+                print(n, "Adding Mask from Mask: ", mask)
+        else:
+            add_mask_points(mask, mask.azimuth_start, mask.azimuth_end)
+
+        prev_mask = mask
+        n += 1
+
+    # final point
+    ax.plot([mask.azimuth_end, first_mask.azimuth_start], [mask.altitude_end, first_mask.altitude_start], color=color, linewidth=2)
+    if debug:
+        point = (
+            (mask.azimuth_end, mask.altitude_end),
+            (mask.azimuth_start, first_mask.altitude_start)
+        )
+        print(n, "Adding Last Point: ", mask)
+    
     return ax
-        
-        

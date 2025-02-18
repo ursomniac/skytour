@@ -1,6 +1,8 @@
 import datetime as dt, pytz
+from ..astro.utils import get_declination_range
 from ..dso.models import DSO
 from ..observe.models import ObservingLocation
+from ..site_parameter.helpers import find_site_parameter
 
 def parse_utdt(s):
     """
@@ -19,154 +21,38 @@ def parse_utdt(s):
         print("PARSE ERROR: ", s)
         return None
     
-def is_in_window(location_id, az, alt, min_alt=10., max_alt=90, house=False, house_extra=False):
-    """
-    TODO V2: This needs a complete rethink --- needs to be customizable for ANY ObservingLocation!
-    Basically what you need to define is a series of azimuth ranges with minimum altitudes.
-    (Ideally it should be a series of series under the weird situation where things aren't continuous.)
-
-    THEN this method takes that series and makes a mask.
-    """
-    min_alts = dict(
-        neighbor = 40., # above neighbor roof
-        street = 30. # in SE hole
-    )
-    
-    if location_id is None:
-        return True
-    if location_id != 1:
-        return alt >= min_alt and alt <= max_alt
-
-    if alt > max_alt:
-        return False
-    if alt < min_alt:
-        return False
-    
-    if house: # observing from backyard
-        if alt > 70 and alt < max_alt: # overhead-ish
-            return True
-        if az < 120.: # house in the way
-            return False
-        if az >= 120. and az <= 160. and alt < min_alts['street']: # too low
-            return False
-        if az >= 160. and az <= 210. and alt < min_alts['neighbor']: # behind neighbor
-            return False
-        if house_extra: # can we use the SW hole?
-            if az >= 210. and az < 230.:
-                if alt >= 15. and alt <= 30.: # in hole
-                    return True
-                elif alt >= 30. and alt <= 50.: # tree
-                    return False
-            elif az > 230.: # in trees
-                return False
-        else:
-            if az >= 210.: # in trees
-                return False
-    #else:
-    #    if az >= 210.:
-    #        return False
-    return True
-    
-def find_objects_at_home(
-        utdt = None, # set to now if none 
-        offset_hours = 0., 
-        imaged = False,
-        min_priority = 0,
-        #
-        location_id = 1,
-        min_dec = -20.,
-        min_alt = 30.,
-        max_alt = 90.,
-        house = False,
-        scheduled = False
-    ):
-    """
-    This really only works for my back yard, but the logic would pertain for anyone who 
-    would want to design a similar function.
-
-    What you need:
-        1. distribution of azimuth vs. altitude of obstructions
-        2. sidereal time at any point.
-    """
-    # 1. sort out time
-    if utdt is None:
-        utdt = dt.datetime.now(dt.timezone.utc)
-    else:
-        utdt = parse_utdt(utdt)
-    utdt += dt.timedelta(hours=offset_hours)
-    # 2. get latitude/longitude
-    loc =  ObservingLocation.objects.get(pk=location_id)
-    # 3. get DSOs
-    dsos = DSO.objects.filter(dec__gte=min_dec)
-
-    #candidates = []
-    candidate_pks = []
-    for d in dsos:
-        # Filter based on existing images
-        if d.imaging_checklist_priority is None:
-            continue
-        if d.imaging_checklist_priority < min_priority:
-            continue
-        # always include imaged = 'All'
-        if imaged == 'Yes' and d.library_image is None:
-            continue
-        elif imaged == 'Redo':
-            if d.library_image is not None and not d.reimage:
-                continue
-        elif imaged == 'No' and d.library_image is not None and d.reimage == False:
-            continue
-        # on active observing list
-        if scheduled and d.active_observing_list_count == 0:
-            continue
-
-        (az, alt, _) = d.alt_az(loc, utdt)
-        use = is_in_window(location_id, az, alt, 
-                house=house, min_alt=min_alt, max_alt=max_alt, house_extra=house)
-        if use:
-            candidate_pks.append(d.pk)
-    # Return as a queryset 
-    # Ideally this should ALSO contain alt/az!
-    dsos = DSO.objects.filter(pk__in=candidate_pks)
-    for d in dsos:
-        (az, alt, secz) = d.alt_az(loc, utdt)
-        d.azimuth = az
-        d.altitude = alt
-        d.airmass = secz
-    return dict(utdt=utdt, dsos=dsos, location=loc)
-
-def find_objects_at_cookie(        
+def find_dsos_at_location_and_time (
         utdt = None, # set to now if none 
         offset_hours = 0., 
         imaged = 'No',
         min_priority = 0,
         #
         location = None,
-        min_dec = -30.,
         min_alt = 30.,
         max_alt = 90.,
-        house = False,
+        mask = True,
         gear = None,
         scheduled = False
     ):
 
-    # 1. sort out time
+    # 1. sort out time if not sent
     if utdt is None:
         utdt = dt.datetime.now(dt.timezone.utc)
     else:
         if type(utdt) == str:
             utdt = parse_utdt(utdt)
     utdt += dt.timedelta(hours=offset_hours)
-    # 2. get latitude/longitude
-    if location is None:
-        loc = ObservingLocation.objects.get(pk=1)
-    else:
-        loc = location
-    # 3. get DSOs
-    dsos = DSO.objects.filter(dec__gte=min_dec)
 
+    # 2. get location if not sent
+    if location is None:
+        location_id = find_site_parameter('default-location-id', default=1, param_type='positive')
+        location = ObservingLocation.objects.get(pk=location_id)
+    min_dec, max_dec = get_declination_range(location)
+
+    # 3. Get DSOs in declination range
+    dsos = DSO.objects.filter(dec__gte=min_dec, dec__lte=max_dec)
     candidate_pks = []
-    for d in dsos:
-        
+    for d in dsos: # loop on DSOs
         # Filter based on existing images
         if d.imaging_checklist_priority is None:
             continue
@@ -188,22 +74,20 @@ def find_objects_at_cookie(
                 continue
         if scheduled and d.active_observing_list_count == 0:
             continue
-        (az, alt, _) = d.alt_az(loc, utdt)
-        in_window = is_in_window(
-                loc.id, az, alt, house=house, 
-                min_alt=min_alt, max_alt=max_alt, house_extra=house
-            )
+        (az, alt, _) = d.alt_az(location, utdt)
+        in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask)
         if in_window:
             candidate_pks.append(d.pk)
-
+    
+    # Given the subset of DSOs - assemble the list
     dsos = DSO.objects.filter(pk__in=candidate_pks)
     for d in dsos:
-        (az, alt, secz) = d.alt_az(loc, utdt)
+        (az, alt, secz) = d.alt_az(location, utdt)
         d.azimuth = az
         d.altitude = alt
         d.airmass = secz
 
-    return dict(utdt=utdt, dsos=dsos, location=loc)
+    return dict(utdt=utdt, dsos=dsos, location=location)
 
 def assemble_gear_list(request):
     out = ""
@@ -211,3 +95,62 @@ def assemble_gear_list(request):
         name = f"gear{g}"
         out += request.GET.get(name, '')
     return out if len(out) > 0 else None
+
+def is_available_at_location (
+        location,               # ObservingLocation object 
+        az, alt,                # Object's azimuth and altitude
+        min_alt=10.,            # Absolute minimum altitude (can be overridden)
+        max_alt=90,             # Absolute maximum altitude (can be overridden)
+        use_mask=True
+    ):
+    """
+    See if an object's azimuth and altitude are above the mask set for a location.
+    """
+
+    def interpolate_for_altitude(m, az):
+        """
+        Given two mask endpoints, get the altitude for a given mask and azimuth
+        This is an internal method
+        """
+        if m.altitude_end == m.altitude_start: # Flat so constant
+            return m.altitude_start
+        # Deal with azimuth
+        daz = m.azimuth_end - m.azimuth_start # size of az window
+        faz = az - m.azimuth_start  # degrees into window 
+        paz = faz/daz # percentage
+        # Deal with altitude
+        dalt = m.altitude_end - m.altitude_start # change in altitude
+        alt = m.altitude_start + paz * dalt
+        return alt
+
+    # Deal with no location or no masks
+    if location is None: # Shouldn't get here - but assume True
+        return True 
+        
+    masks = location.observinglocationmask_set.all()
+    if masks.count() == 0: # Oops - no masks defined for this location!  Assume True
+        return True
+        
+    # Stupid - but ... deal with bogus values
+    if abs(alt) > 90. or az < 0:
+        return False
+    az %= 360.
+
+    # Global restrictions - too low or too high
+    if max_alt is not None and alt > max_alt:
+        return False
+    if min_alt is not None and alt < min_alt:
+        return False
+    
+    # OK - play with the masks
+    if not use_mask:
+        return True
+    
+    for mask in masks:
+        if az < mask.azimuth_start or az >= mask.azimuth_end: # not in window
+            continue
+        # We're in the zone
+        mask_alt = interpolate_for_altitude(mask, az)
+        return alt >= mask_alt
+    
+    return True # default if no mask is set for this azimuth...

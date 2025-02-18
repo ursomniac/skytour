@@ -15,9 +15,14 @@ class LocationImageInline(admin.StackedInline):
         }),
     )
 
+class ObservingLocationMaskInline(admin.TabularInline):
+    model = ObservingLocationMask
+    fields = ['azimuth_start', 'altitude_start', 'azimuth_end', 'altitude_end']
+    extra = 1
+
 class ObservingLocationAdmin(admin.ModelAdmin):
     model = ObservingLocation
-    inlines = [LocationImageInline]
+    inlines = [LocationImageInline, ObservingLocationMaskInline]
     
     list_display = [
         'pk',  'status', 'travel_distance', 'city', 'get_state', 'street_address', 

@@ -5,25 +5,38 @@
         width: 14%;
         vertical-align: top;
     }
+    table.calendar-grid th {
+        background-color: #aa7;
+        color: #000;
+        border: none;
+        text-align: center;
+    }
+    table.calendar-cell th {
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border: 1px solid black;
+    }
     table.calendar-cell td {
         border: none!important;
         padding: 2px 2px;
         font-size: 14px;
     }
     .day-cell {
-        color = #eee!important;
+        color = #fff!important;
     }
+    
 </style>
 
 <h2>Calendar</h2>
 <table width="100%" class="calendar-grid">
 <tr>
-    <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
 </tr>
 {% for week in grid %}
     <tr>
     {% for day in week %}
-        <td style="background-color: {{day.moon.bgcolor}}" class="day-cell">
+        <td style="background-color: {% if day.moon.bgcolor %}{{day.moon.bgcolor}}{% else %}#000;{% endif %}" class="day-cell">
         {% if day.date %}
             <table width="100%" class='calendar-cell'>
                 <tr>
@@ -40,8 +53,8 @@
                 </tr>
             </table>
             <br/>
-            <br/>
             {% for e in day.events %}
+            <span class="event">
                 <small>
                 {% if e.time %}
                     {{e.time|time:"H:i"}}
@@ -52,6 +65,7 @@
                 {{ e.title }}
                 </small>
                 <br/>
+            </span>
             {% endfor %}
             <br/>
         {% endif %}

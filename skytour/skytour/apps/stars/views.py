@@ -25,7 +25,7 @@ class SkyView(CookieMixin, TemplateView):
         context = super(SkyView, self).get_context_data(**kwargs)
         hours = float(self.request.GET.get('hours', 0))
         simple = bool(self.request.GET.get('simple', False))
-        house = bool(self.request.GET.get('house', False))
+        mask = bool(self.request.GET.get('mask', False))
         utdt_now = bool(self.request.GET.get('utdt_now', False))
         min_dso_alt_form = self.request.GET.get('min_dso_alt', None)
 
@@ -55,7 +55,7 @@ class SkyView(CookieMixin, TemplateView):
         context['shown_datetime'] = utdt + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
-        context['house'] = house
+        context['mask'] = mask
         context['simple'] = simple
         context['hours'] = hours
         context['utdt_now'] = utdt_now
@@ -87,7 +87,7 @@ class SkyView(CookieMixin, TemplateView):
             hours=hours,
             title=title,
             simple=simple,
-            house=house,
+            mask=mask,
             min_alt = min_dso_alt
         )
 
