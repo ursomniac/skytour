@@ -9,7 +9,7 @@ from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
-from .vocabs import IMAGING_STATUS_CHOICES, IMAGING_PROCESSING_CHOICES, \
+from .vocabs import IMAGING_PROCESSING_CHOICES, \
     IMAGE_TYPE_CHOICES, IMAGE_POST_OPTIONS, IMAGE_STYLE_CHOICES, YES_NO, YES, NO
 
 class FieldView(models.Model):

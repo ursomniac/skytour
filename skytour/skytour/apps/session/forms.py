@@ -1,6 +1,5 @@
 import datetime
 from django import forms
-from ..abstract.vocabs import IMAGING_STATUS_CHOICES
 from ..astro.time import utc_now
 from ..dso.models import DSOList
 from ..dso_observing.vocabs import OBSERVING_MODE_TYPES

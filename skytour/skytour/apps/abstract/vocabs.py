@@ -6,13 +6,6 @@ SEEING_CHOICES = (
     (1, '1 = Fail: boiling image; no sign of diffraction pattern')
 )
 
-# TODO V2: Change this to a boolean or YES/NO
-IMAGING_STATUS_CHOICES = (
-    (0, 'No Images'),
-    (1, 'Image Taken'),
-    (2, 'Multiple Images Taken')
-)
-
 # TODO V2: Clean this up
 #   - None / Default / ??? --- is there a notes field?
 IMAGING_PROCESSING_CHOICES = (

@@ -971,6 +971,8 @@ class DSOImage(LibraryAbstractImage):
 
     TODO V2: TRY to sort this out using the DSS/DSS2 or some series of image archives
         (PanSTARRS?)
+
+    There are fields in LibraryAbstractImage that are unused in this model (exposure, processing_status)
     """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,

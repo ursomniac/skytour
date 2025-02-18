@@ -20,7 +20,7 @@ class DSOImageAdmin(admin.StackedInline):
     fieldsets =  (
         (None, {
             'fields': [
-                ('order_in_list','exposure'),
+                'order_in_list',
                 ('image', 'object_image_tag'),
                 'notes'
             ]
