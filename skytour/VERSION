@@ -1,1 +1,1 @@
-pre-2.0.s - started 17 Feb 2025
+pre-2.0.s.2 - removed ancient ngc_alias, h400_alias, and old_alias_list code from DSO model

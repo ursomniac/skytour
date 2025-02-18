@@ -1,7 +1,7 @@
 import datetime as dt
 from collections import OrderedDict
 from django.db import models
-from django.db.models import Count, Max, Min, Avg
+from django.db.models import Avg
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from jsonfield import JSONField
@@ -342,6 +342,8 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         Generate a comma-separated list of aliases.
         TODO V2: deprecate in favor of SIMBAD/HyperLeda (with filtering?)
+        TODO: Or write a script to populate from SIMBAD/Hyperleda - this might
+            be problematic for faint/obscure objects.
         """
         aliases = []
         for alias in self.aliases.all():
@@ -350,44 +352,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             else:
                 aliases.append(alias.shown_name)
         return ', '.join(aliases)
-    
-    @property
-    def ngc_alias(self):
-        """
-        Stupid Celestron and Unistellar don't support the Caldwell catalog.
-        TODO V2: DEPRECATE!
-        """
-        if self.catalog.abbreviation == 'C':
-            aa = self.aliases.filter(catalog__abbreviation='NGC').first()
-            if aa is not None:
-                return aa.shown_name
-        return None
-    
-    @property
-    def h400_alias(self):
-        """
-        TODO V2: DEPRECATE!
-        """
-        aa = self.aliases.filter(catalog__abbreviation='H400').first()
-        if aa is not None:
-            return aa.shown_name
-        return None
-    
-    @property
-    def old_alias_list(self):
-        """
-        TODO V2: DEPRECATE!
-        """
-        aa = []
-        ngc = self.ngc_alias
-        h400 = self.h400_alias
-        if ngc is not None:
-            aa.append(ngc)
-        if h400 is not None:
-            aa.append(h400)
-        if len(aa) > 0:
-            return ', '.join(aa)
-        return None
 
     @property
     def opposition_date(self):
