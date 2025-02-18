@@ -20,9 +20,12 @@ class CustomMixin(object):
         priority = self.request.GET.get('min_priority', '2')
         min_priority = 0 if priority is None or (len(priority.strip()) == 0) else int(priority)
         dec = self.request.GET.get('min_dec', None)
+        # TODO V2: get this from latitude!
         min_dec = -30. if not haz(dec) else float(dec)
+        # TODO V2: get this from site-parameters or cookie
         alt0 = self.request.GET.get('min_alt', None)
         min_alt = 30. if not haz(alt0) else float(alt0)
+        # TODO V2: get this from site-parameters or cookie
         alt1 = self.request.GET.get('max_alt', None)
         max_alt = 90. if not haz(alt1) else float(alt1)
         imaged = self.request.GET.get('imaged', 'Redo')

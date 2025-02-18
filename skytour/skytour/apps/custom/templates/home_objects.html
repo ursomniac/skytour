@@ -60,8 +60,15 @@ summary::-webkit-details-marker {
     span.infield { float: right; font-size: 80%; }
     span.nickname { font-style: italic; color: #ff9; }
     table.dso_table tbody th, 
-    table.dso_table tbody td { padding: 4px 10px 2px 10px; }
+        table.dso_table tbody td { padding: 4px 10px 2px 10px; }
+    table.dso_table th {
+        background-color: #996;
+        color: #000;
+    }
     table.filter_form label { color: #ff6; font-weight: bold; }
+    table.filter_form { border: 1px solid #996; }
+    h5 { color: #ff6; margin: 2px 2px 4px 2px; font-size: 14px; }
+    span.gear { color: #999; font-weight: normal; }
 </style>
 
 
@@ -76,6 +83,7 @@ summary::-webkit-details-marker {
 <h4>&nbsp;&nbsp;&nbsp;{{ location }}</h4>
         </td>
         <td>
+            <h5>Filter DSOs</h5>
             <form target="" method="GET">
                 <table class="filter_form">
                     <tr>
@@ -117,6 +125,7 @@ summary::-webkit-details-marker {
                         <td>
                             <label for="min_alt">Min Alt.:&nbsp;</label> 
                             <input name="min_alt" size=5 {% if min_alt %}value="{{ min_alt }}"{% endif %}>
+                            &nbsp;&nbsp;&nbsp;
                             <label for="max_alt"> Max. Alt:&nbsp;</label>
                             <input name="max_alt" size=5 {% if max_alt %}value="{{ max_alt }}"{% endif %}>
                         </td>
@@ -126,18 +135,23 @@ summary::-webkit-details-marker {
                             <label for="no_mask">No Mask:&nbsp;</label>
                             <input name="no_mask" type="checkbox" {% if no_mask %}checked{% endif %}>
                             &nbsp;&nbsp;
-                            <label for="scheduled">On List:&nbsp;</label>
+                            <label for="scheduled">On Active DSO List:&nbsp;</label>
                             <input name="scheduled" type="checkbox" {% if scheduled %}checked{% endif %}>
                         </td>
                         <td>
                             <label for="gear_N">Gear:&nbsp;</label>
                             <span style="color: #fff;">
-                            <input type="checkbox" name="gearN" value="N" {% if gearN %}checked{% endif %}>Naked Eye
-                            <input type="checkbox" name="gearB" value="B" {% if gearB %}checked{% endif %}>Binoculars
+                            <input type="checkbox" name="gearN" value="N" {% if gearN %}checked{% endif %}>
+                                <span class="gear">Naked Eye</span>
+                            <input type="checkbox" name="gearB" value="B" {% if gearB %}checked{% endif %}>
+                                <span class="gear">Binoculars</span>
                             | <span style="font-weight: bold;">Telescopes</span>: 
-                            <input type="checkbox" name="gearS" value="S" {% if gearS %}checked{% endif %}>Small
-                            <input type="checkbox" name="gearM" value="M" {% if gearM %}checked{% endif %}>Medium/Large
-                            <input type="checkbox" name="gearI" value="I" {% if gearI %}checked{% endif %}>Imaging
+                            <input type="checkbox" name="gearS" value="S" {% if gearS %}checked{% endif %}>
+                                <span class="gear">Small</span>
+                            <input type="checkbox" name="gearM" value="M" {% if gearM %}checked{% endif %}>
+                                <span class="gear">Medium/Large</span>
+                            <input type="checkbox" name="gearI" value="I" {% if gearI %}checked{% endif %}>
+                                <span class="gear">Imaging</span>
                             </span>
                         </td>
                     </tr>
