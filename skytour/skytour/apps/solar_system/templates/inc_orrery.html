@@ -1,3 +1,9 @@
+<style>
+    table.orrery-table th { background-color: #996; color: #000; }
+    table.orrery-table td { color: #999; }
+    table.orrery-table td.planet { background-color: #999; color: #000; }
+    span.planet-ball { float: right; }
+</style>
 <h2>Position of the Planets {{ utdt_start|date:"Y-m-d h:i" }} UT</h2>
 <table>
     <tr>
@@ -7,11 +13,14 @@
         </td>
         <td style="vertical-align: top">
             <h3>Heliocentric Ecliptic Positions</h3>
-            <table>
+            <table class="orrery-table">
                 <tr><th>Planet</th><th>Long.</th><th>Dist.</th></tr>
                 {% for p in ecl_pos %}
                 <tr>
-                    <td>{{ p.name }}</td>
+                    <td class="planet">
+                        {{ p.name }}
+                        <span class='planet-ball' style="color: {{ p.color }}">⬤</span>
+                    </td>
                     <td>{{ p.longitude|floatformat:2 }}</td>
                     <td>{{ p.distance|floatformat:2 }}</td>
                 </tr>

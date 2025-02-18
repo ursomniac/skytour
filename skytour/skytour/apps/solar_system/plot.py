@@ -16,7 +16,7 @@ from ..site_parameter.helpers import get_ephemeris
 from .asteroids import get_asteroid_target, fast_asteroid
 from .comets import get_comet_target, get_comet_magnitude
 from .utils import get_constellation
-from .vocabs import ZODIAC
+from .vocabs import ZODIAC, PLANET_COLORS
 
 
 matplotlib.use('Agg') # this gets around the threading issues.
@@ -317,6 +317,7 @@ def plot_ecliptic_positions(planets, reversed):
         r.append(d['distance'])
         theta.append(math.radians(d['longitude']))
         label.append(d['name'])
+        d['color'] = PLANET_COLORS[d['name']]
 
     #ax.set_xticks = (np.arange(0, 2.*math.pi, math.pi/12.))
     ax.set_xticks(np.arange(0, 2.*np.pi, np.pi/6.0))

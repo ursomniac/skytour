@@ -4,9 +4,14 @@
 {% endblock styles %}
 {% block title %}Planets: Skytour{% endblock %}
 {% block content %}
+<style>
+    table.planet-list th {
+        background-color: #996; color: #000; 
+    }
+</style>
 <h1>Planets</h1>
 
-<table>
+<table class="planet-list">
     <thead>
         <tr>
             <th>Planet</th>
@@ -24,7 +29,9 @@
     <tbody>
         {% for p in planet_list %}
         <tr class="{% cycle 'odd' 'even' %}">
-            <td><a href="{% url 'planet-detail' p.slug %}">{{ p.name }}</a></td>
+            <td>
+                <a href="{% url 'planet-detail' p.slug %}">{{ p.name }}</a>
+            </td>
             <td>{{ p.apparent.equ.ra_str }}</td>
             <td>{{ p.apparent.equ.dec_str }}</td>
             <td>{{ p.observe.apparent_magnitude|floatformat:2 }}</td>

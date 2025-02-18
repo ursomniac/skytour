@@ -2,10 +2,14 @@
 {% load skytour_filters humanize %}
 {% block title %}Atlas Plate List: Skytour{% endblock %}
 {% block content %}
+<style>
+    table.atlasplate-list th { background-color: #996; color: #000; border: none; }
+</style>
+
 <h1>List of Atlas Plates</h1>
 {% include 'atlas_grid.html' %}
 <br><br>
-<table>
+<table class='atlasplate-list'>
     <tr>
         <th>Plate #</th>
         <th>Center RA</th>

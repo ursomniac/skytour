@@ -75,6 +75,7 @@
 		padding: 0; /* Remove padding */
 		margin: 0; /* Remove margins */
 	}
+	div.panel-type {float: right!important; font-size: 10px; color: #999; }
 </style>
 {% endblock styles %}
 
@@ -155,18 +156,22 @@
 			{% endif %}
 		</h2>
 			<div class="slideshow-container">
+				<div class="panel-type">Library Panel</div>
+
 				{% for item in library_slideshow %}
 				<div class="mySlides libslide">
 					{# just remove the controls if there's only one image #}
-					{% if library_slideshow|length > 1 %}
 					<div class="slide-header">
+					{% if library_slideshow|length > 1 %}
+						<div class="slideshow-nav">
 						<a onclick="plusSlides(-1, 1)"><button>Previous</button></a>
 						&nbsp; | &nbsp; 
 						<a onclick="plusSlides(1, 1)"><button>Next</button></a>
 						&nbsp; | &nbsp; 
 						Image {{ forloop.counter }} of {{ library_slideshow | length }}
-					</div>
+						</div>
 					{% endif %}
+					</div>
 					<a href="{{ item.image.url }}" target="_blank>">
 						<img src="{{ item.image.url }}" alt="add data here" style="width:100%"/>
 					</a>
@@ -345,6 +350,7 @@
 	<td id="field_chart_view" width="50%">
 		<h3>Finder Chart(s):</h3>
 		<div class="finder-chart-container">
+			<div class="panel-type">Finder Chart Panel</div>
 			{% for item in finder_slideshow %}
 			<div class="mySlides finderslide">
 				{% if finder_slideshow|length > 1 %}
@@ -380,6 +386,7 @@
 		{% else %}
 			<h3>Imaging Chart and Full View</h3>
 			<div class="slideshow-container">
+				<div class="panel-type">Full-Sized View Panel</div>
 				{% for item in map_slideshow %}
 				<div class="mySlides mapslide">
 					{% if map_slideshow|length > 1 %}

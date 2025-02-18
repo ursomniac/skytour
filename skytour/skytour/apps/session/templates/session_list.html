@@ -2,12 +2,15 @@
 {% load skytour_filters humanize %}
 {% block title %}Observing Sessions: Skytour{% endblock %}
 {% block content %}
+<style>
+    table.session-list th { background-color: #996; color: #000; border: none; }
+</style>
 <h1>Observing Sessions</h1>
 
 <br>
 <a href="{% url 'session-create' %}"><button>Start New Session</button></a>
 <br><br>
-<table id="{{ table_id }}">
+<table id="{{ table_id }}" class="session-list">
  <thead>
     <tr>
         <th>UT Date</th>

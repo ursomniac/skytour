@@ -38,3 +38,14 @@ ZODIAC = [
     ('Aquarius',    315, '\u2652'),
     ('Pisces',      345, '\u2653')
 ]
+
+PLANET_COLORS = {
+    'Mercury': 'grey',
+    'Venus': 'orange', 
+    'Earth': 'blue', 
+    'Mars': 'red', 
+    'Jupiter': 'pink', 
+    'Saturn': 'brown', 
+    'Uranus': 'lime', 
+    'Neptune': 'cyan'
+}
