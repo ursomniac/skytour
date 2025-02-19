@@ -71,8 +71,6 @@ summary::-webkit-details-marker {
     span.gear { color: #999; font-weight: normal; }
 </style>
 
-
-
 <h1>Deep Sky Objects</h1>
 <table>
     <tr>
@@ -120,7 +118,10 @@ summary::-webkit-details-marker {
                     <tr>
                         <td>
                             <label for="min_dec">Min Dec.:&nbsp;</label> 
-                            <input name="min_dec" size=5 {% if min_dec %}value="{{ min_dec }}"{% endif %}>
+                            <input name="min_dec" size=5 {% if min_dec %}value="{{ min_dec_string }}"{% endif %}>
+                            &nbsp;&nbsp;&nbsp;
+                            <label for="max_dec">Max Dec.:&nbsp;</label>
+                            <input name="max_dec" size=5 {% if max_dec %}value="{{ max_dec_string }}"{% endif %}>
                         </td>
                         <td>
                             <label for="min_alt">Min Alt.:&nbsp;</label> 

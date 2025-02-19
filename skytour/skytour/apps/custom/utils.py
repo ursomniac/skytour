@@ -30,6 +30,8 @@ def find_dsos_at_location_and_time (
         location = None,
         min_alt = 30.,
         max_alt = 90.,
+        min_dec = None,
+        max_dec = None,
         mask = True,
         gear = None,
         scheduled = False
@@ -47,10 +49,14 @@ def find_dsos_at_location_and_time (
     if location is None:
         location_id = find_site_parameter('default-location-id', default=1, param_type='positive')
         location = ObservingLocation.objects.get(pk=location_id)
-    min_dec, max_dec = get_declination_range(location)
 
     # 3. Get DSOs in declination range
-    dsos = DSO.objects.filter(dec__gte=min_dec, dec__lte=max_dec)
+    dsos = DSO.objects.all() # start here
+    if min_dec is not None:
+        dsos = dsos.filter(dec__gte=min_dec)
+    if max_dec is not None:
+        dsos = dsos.filter(dec__lte=max_dec)
+        
     candidate_pks = []
     for d in dsos: # loop on DSOs
         # Filter based on existing images

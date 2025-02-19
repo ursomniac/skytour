@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from ..misc.models import TimeZone, StateRegion
-from ..astro.utils import get_limiting_magnitude
+from ..astro.utils import get_limiting_magnitude, get_declination_range
 from .pdf import create_pdf_form
 from .utils import get_mean_obs_sqm, get_effective_bortle
 
@@ -245,10 +245,24 @@ class ObservingLocation(models.Model):
     @property
     def effective_bortle(self):
         return get_effective_bortle(self.sqm)
+    
+    @property
+    def declination_range(self):
+        return get_declination_range(self)
+    
+    @property
+    def minimum_declination(self):
+        return self.declination_range[0]
+    
+    @property
+    def maximum_declination(self):
+        return self.declination_range[1]
 
     def get_absolute_url(self):
         return reverse('observing-location-detail', kwargs={'pk': self.pk})
         #return '/observing_location/{}'.format(self.pk)
+
+    
 
     def __str__(self):
         if self.name:

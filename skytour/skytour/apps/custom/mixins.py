@@ -8,6 +8,9 @@ class CustomMixin(object):
         context = super(CustomMixin, self).get_context_data(**kwargs)
 
         def haz(thing):
+            """
+            Simple internal method to test for something being empty or None
+            """
             if thing is None or thing == "None" or len(thing.strip()) == 0:
                 return False
             return True
@@ -17,27 +20,31 @@ class CustomMixin(object):
         utdt = parse_utdt(utdt_str)
         offset = self.request.GET.get('ut_offset', None)
         ut_offset = 0. if offset is None or (len(offset.strip()) == 0) else float(offset)
-        priority = self.request.GET.get('min_priority', '2')
-        min_priority = 0 if priority is None or (len(priority.strip()) == 0) else int(priority)
-        dec = self.request.GET.get('min_dec', None)
-        # TODO V2: get this from latitude!
-        min_dec = -30. if not haz(dec) else float(dec)
-        # TODO V2: get this from site-parameters or cookie
-        alt0 = self.request.GET.get('min_alt', None)
-        min_alt = 30. if not haz(alt0) else float(alt0)
-        # TODO V2: get this from site-parameters or cookie
-        alt1 = self.request.GET.get('max_alt', None)
-        max_alt = 90. if not haz(alt1) else float(alt1)
+        # Set priority high so that the initial list isn't TOO big!
+        priority = self.request.GET.get('min_priority', '3')
+        min_priority = 3 if priority is None or (len(priority.strip()) == 0) else int(priority)
         imaged = self.request.GET.get('imaged', 'Redo')
+        # These default to None if not set - the view will take care of putting in defaults
+        min_dec = self.request.GET.get('min_dec', None)
+        min_dec = None if not haz(min_dec) else float(min_dec)
+        max_dec = self.request.GET.get('max_dec', None)
+        max_dec = None if not haz(max_dec) else float(max_dec)
+        alt0 = self.request.GET.get('min_alt', None)
+        min_alt = None if not haz(alt0) else float(alt0)
+        alt1 = self.request.GET.get('max_alt', None)
+        max_alt = None if not haz(alt1) else float(alt1)
 
         if utdt:
             context['utdt'] = utdt.strftime('%Y-%m-%d %H:%M:%S')
         else:
             context['utdt'] = None
+
+        # Set the context to pass off to the DSOObjectsView
         context['ut_offset'] = ut_offset
         context['pri'] = priority
         context['imaged'] = imaged
         context['min_dec'] = min_dec
+        context['max_dec'] = max_dec
         context['min_alt'] = min_alt
         context['max_alt'] = max_alt
         context['min_priority'] = min_priority
