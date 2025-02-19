@@ -3,11 +3,6 @@ from .models import DSOList
 from ..utils.models import Catalog, ObjectType
 from .vocabs import PRIORITY_CHOICES
 
-YES_NO = [
-    ('Yes', 'Yes'),
-    ('No', 'No')
-]
-
 class DSOFilterForm(forms.Form):
     ra_min = forms.FloatField(required=False)
     ra_max = forms.FloatField(required=False)

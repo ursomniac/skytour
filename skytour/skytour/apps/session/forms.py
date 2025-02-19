@@ -11,10 +11,6 @@ from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
 from .utils import get_observing_locations
 
-YES_NO = [
-    ('Yes', 'Yes'),
-    ('No', 'No')
-]
 GRAPH_COLOR_SCHEME = [
     ('dark', 'DARK: White on Black'),
     ('light', 'LIGHT: Black on White')

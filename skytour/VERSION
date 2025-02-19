@@ -1,1 +1,1 @@
-pre-2.0.s.3 - Fixed initial values for @Now/@Cookie views - now get min/max Dec from location object.
+pre-2.0.s.4 - Moved all uses of YES_NO to abstract.vocabs

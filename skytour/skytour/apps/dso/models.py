@@ -11,6 +11,7 @@ from .utils import create_shown_name
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, LibraryAbstractImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
+from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO
 from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
@@ -21,7 +22,7 @@ from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
-from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS, INT_YES_NO, YES, NO
+from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS
 
 class DSOAbstract(Coordinates):
     """

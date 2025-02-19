@@ -2,15 +2,12 @@ import numpy as np
 from django.db import models
 from django.utils.translation import gettext as _
 from itertools import chain
-from ..observe.models import ObservingLocation
+from ..abstract.vocabs import YES_NO, YES
 from ..astro.time import get_last, get_julian_date, utc_now
 from ..astro.utils import get_limiting_magnitude
+from ..observe.models import ObservingLocation
 from ..observe.utils import get_effective_bortle
 from .vocabs import SESSION_STAGE_CHOICES, SEEING_CHOICES
-
-YES_NO = [(1, 'Yes'), (0, 'No')]
-YES = 1
-NO = 0
 
 class ObservingSession(models.Model):
     """

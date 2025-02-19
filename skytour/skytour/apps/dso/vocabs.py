@@ -23,12 +23,6 @@ PRIORITY_COLORS = {
     'Low': '#096',
     'None': '#ccc'
 }
-INT_YES_NO = (
-    (0, 'No'),
-    (1, 'Yes')
-)
-YES = 1
-NO = 0
 
 MILKY_WAY_CONTOUR_COLORS = [
     ['#0ff', '#FF0'], # this level is not used
