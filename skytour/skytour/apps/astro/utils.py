@@ -161,7 +161,7 @@ def get_declination_range(location, min_altitude=None):
     Get range of declinations for a given latitude.
     This works for all latitudes.
     """
-    min_altitude = min_altitude if min_altitude is not None else find_site_parameter('minimim-object-altitude', default=10., param_type='float')
+    min_altitude = min_altitude if min_altitude is not None else find_site_parameter('minimum-object-altitude', default=10., param_type='float')
     try:
         latitude = location.latitude
         if latitude > 0.: # Northern hemisphere

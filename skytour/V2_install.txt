@@ -24,6 +24,7 @@ Things you have to do to install:
 		a. Seed Constellation table
 		b. Seed BrightStar table
 		c. Seed ObjectType and Catalog
+		d. Seed /media with constellation maps (S&T/historical)
 	3.3. DSOs
 		a. Seed DSO and DSOInField from .csv file (need to generate this)
 		b. Seed DSO TargetObservingModes

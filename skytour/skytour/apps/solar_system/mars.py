@@ -4,6 +4,7 @@ from skyfield.api import load
 from ..astro.altaz import get_obliquity
 from ..astro.time import get_julian_date, estimate_delta_t
 from ..site_parameter.helpers import get_ephemeris
+from .vocabs import MARS_FEATURES
 
 # Trig functions for degrees
 def _cosd(d):
@@ -133,20 +134,14 @@ def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
 
 MARS_DAY = 24.624
 MARS_HALF_DAY = MARS_DAY / 2.
+
 def get_mars_features(utdt, mars):
     """
     Assemble the list of Martian surface features and estimate their visiblity.
     """
-    # TODO V2: Make this a table?  Or at LEAST something in .vocabs!
-    features = [
-        dict(name='Olympus Mons', longitude=226, latitude=19),
-        dict(name='Valles Marineris', longitude=291, latitude=-12),
-        dict(name='Syrtis Major Planum', longitude=70, latitude=8),
-        dict(name='Solis Lacus', longitude=275, latitude=-26)
-    ]
     meridian = mars['omega'] # degrees
     fdicts = []
-    for feature in features:
+    for feature in MARS_FEATURES:
         fdict = feature
         map_longitude = 360 - fdict['longitude']
         ha_degrees = map_longitude - meridian

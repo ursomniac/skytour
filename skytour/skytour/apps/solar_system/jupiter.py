@@ -155,8 +155,9 @@ def get_red_spot(utdt, jupiter):
 
 def get_all_system_longitude(utdt):
     """
-    From https://www.projectpluto.com/grs_form.htm
-    This is just to test the mapping.
+    TEST: 
+        From https://www.projectpluto.com/grs_form.htm
+        This is just to test the mapping.
 
     TODO V2: stash this somewhere for future reference.
     """

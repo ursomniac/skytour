@@ -62,9 +62,9 @@ class ObservingParametersForm(forms.Form):
         label = "Observing Mode",
     )
     # Misc Overrides
-    # TODO V2: keep
+    # black on white or white on black?
     color_scheme = forms.ChoiceField(choices=GRAPH_COLOR_SCHEME, initial='dark')
-    # TODO V2: used?
+    # Use symbols or DSO shapes
     atlas_dso_marker = forms.ChoiceField(
         choices=ATLAS_DSO_MARKERS,
         initial='shapes',
@@ -118,8 +118,6 @@ class SessionAddForm(forms.Form):
     telescope = forms.ModelChoiceField (
         queryset = Telescope.objects.filter(active=1).order_by('order_in_list')
     )
-    # TODO: SOMEHOW remove this and replace with Sensor
-    # TODO: Also handle scopes with >1 sensor
     eyepiece = forms.ModelMultipleChoiceField (
         queryset = Eyepiece.objects.all(),
         required = False
@@ -129,6 +127,7 @@ class SessionAddForm(forms.Form):
         queryset = Filter.objects.all(),
         required = False
     )
+    # TODO V2: add Sensor for non Imaging telescopes...
     
     # Required
     ut_time = forms.TimeField(
@@ -172,7 +171,6 @@ class SessionAddForm(forms.Form):
     )
 
 class ObservingConditionsForm(forms.ModelForm):
-    # TODO V2: set default session based on most recent session value
     class Meta:
         model = ObservingCircumstances
         fields = [

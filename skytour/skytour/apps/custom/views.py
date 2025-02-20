@@ -32,7 +32,7 @@ class DSOObjectsView(CookieMixin, CustomMixin, TemplateView):
         if context['max_dec'] is None:
             context['max_dec'] = max_dec
         if context['min_alt'] is None:
-            context['min_alt'] = find_site_parameter('minimim-object-altitude', default=10., param_type='float')
+            context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
         if context['max_alt'] is None:
             context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
         context['min_dec_string'] = f"{context['min_dec']:.1f}"

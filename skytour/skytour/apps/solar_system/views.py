@@ -406,7 +406,7 @@ class TrackerView(FormView):
 class TrackerResultView(TemplateView):
     template_name = 'tracker.html'
 
-class OrreryView(TemplateView): # TODO V2 - keep as separate view?
+class OrreryView(TemplateView):
     template_name = 'orrery_view.html'
 
     def get_context_data(self, **kwargs):

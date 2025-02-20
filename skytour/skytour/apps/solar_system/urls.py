@@ -6,7 +6,6 @@ from .views import (
     PlanetRealTimeView
 )
 
-# TODO V2: Add MoonDetailView, OrreryView? to navbar.
 urlpatterns = (
     path('', PlanetListView.as_view(), name='planet-list'),
     path('moon', MoonDetailView.as_view(), name='moon-detail'),

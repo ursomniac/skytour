@@ -33,11 +33,6 @@ MILKY_WAY_CONTOUR_COLORS = [
     ['#688', '#C40']  # level 5 - not used presently
 ]
 
-
-
-"""
-TODO: move all of the code reference to plot color choices to point to this dict.
-"""
 ATLAS_COLORS = {
     'milky-way-contours': [    
         ('#0ff', '#FF0'), # not used

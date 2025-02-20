@@ -154,7 +154,7 @@ class SetSessionCookieView(FormView):
             location = location_pk,
             time_zone = my_location.time_zone.name,
             julian_date = get_julian_date(utdt_start),
-            dec_limit = dec_limit, # TODO V2: replace with dec_range 
+            dec_limit = dec_limit, 
             dec_range = (min_dec, max_dec),
             slew_limit = d['slew_limit'],
             flip_planets = flip_planets,

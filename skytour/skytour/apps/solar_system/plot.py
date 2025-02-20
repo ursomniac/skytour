@@ -302,7 +302,7 @@ def create_planet_system_view (
     return pngImageB64String, times
 
 def plot_ecliptic_positions(planets, reversed):
-    dmax = 48
+    dmax = 48 # Max. Radius of plot (in AUs)
     r = [0., ]
     theta = [0., ]
     label = ['Sun', ]
@@ -323,7 +323,7 @@ def plot_ecliptic_positions(planets, reversed):
     ax.set_xticks(np.arange(0, 2.*np.pi, np.pi/6.0))
     ax.set_ylim(0, dmax)
     ax.set_rscale('symlog')
-    c = ax.scatter(theta, r, s=40, c=colors)
+    _ = ax.scatter(theta, r, s=40, c=colors)
 
     for (_, longitude, symbol) in ZODIAC:
         plt.annotate(
@@ -492,10 +492,6 @@ def plot_track(
         ax, _ = map_dsos(ax, earth, t, projection, product='finder')
         if times is not None:
             times.append((time.perf_counter(), 'Plotting DSOs'))
-    # TODO: Add (other) planets
-    # Would need multiple tracks...
-    #if planets:
-    #    ax, _ = map_planets(ax, None, planets_cookie, earth, t, projection)
 
     if fov:
         angle = np.pi - fov / 360.0 * np.pi

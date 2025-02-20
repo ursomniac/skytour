@@ -1,12 +1,3 @@
-# TODO: 
-# DONE 1. Get the midnight culmination date for an object (ra, dec) (location invariant)
-# DONE 2. Get the culmination date for an object (ra, dec) at a given UT (ditto?)
-# 3. Get the range of dates for an object to be above the horizon at a given location
-#   3.1. this might be none or circumpolar
-# 4. Get the range of dates for an object to be above a given altitude at a given location
-#   4.1. This might be null or circumpolar
-# 5. Get date range for an object above a given altitude at a location at a time of day.
-
 import datetime as dt
 import math
 from .time import get_utdt, get_gmst0
@@ -24,7 +15,7 @@ def get_opposition_date(ra, debug=False, next=True):
     ha = ra - gmst0 % 24.
     delta_days = 365 * ha / 24.
     if next and delta_days < 0:
-        delta_days += YEAR_OFFSET # TODO: IS THIS RIGHT?
+        delta_days += YEAR_OFFSET
     opposition = utdt + dt.timedelta(days = int(delta_days))
 
     if debug:

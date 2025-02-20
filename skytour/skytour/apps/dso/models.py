@@ -17,6 +17,7 @@ from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
 from ..astro.utils import alt_get_small_sep, get_simple_position_angle, get_atlas_sep
+from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
@@ -342,8 +343,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def alias_list(self):
         """
         Generate a comma-separated list of aliases.
-        TODO V2: deprecate in favor of SIMBAD/HyperLeda (with filtering?)
-        TODO: Or write a script to populate from SIMBAD/Hyperleda - this might
+        TODO V2: Or write a script to populate from SIMBAD/Hyperleda - this might
             be problematic for faint/obscure objects.
         """
         aliases = []
@@ -368,23 +368,22 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         NOTE: the minimum is set to be 20° generally, can be 5° or 10° - this
             is only because there are handful of DSOs that are REALLY south
             but still very high priority
-        TODO V2: Refactor this to pull from SiteParameter for minimum altitude
-            and just go with that
-        TODO: Test to make sure this works in S. Hemisphere locations?
+        BUG: This doesn't know about the latitude of the cookie!
+            Therefore it always will use the default location!
         """
+        default_min_altitude = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
         ipri = self.imaging_checklist_priority
         alt = 20.
         delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
         if delta_days is None:
-            alt = 5. if (ipri is not None and ipri > 0) else 10.
+            alt = 5. if (ipri is not None and ipri > 0) else default_min_altitude
             delta_days, cos_hh = get_delta_hour_for_altitude(self.dec, alt=alt)
         return delta_days, cos_hh, alt
     
     @property
     def observing_date_range(self):
         """
-        The date range where the object is >20° at Midnight
-        TODO V2: Refactor this to pull from SiteParameter for minimum altitude
+        The date range where the object is >20° (usually - with exceptions) at Midnight
         """
         delta_days, cos_hh, alt = self.hour_angle_min_alt
         if delta_days:
@@ -404,7 +403,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     @property
     def priority_value(self):
         """
-        TODO: DEPRECATE?
+        TODO V2: DEPRECATE?
         """
         dv = {'Highest': 4, 'High': 3, 'Medium': 2, 'Low': 1, 'None': 0}
         if self.priority is None:
@@ -506,17 +505,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
     @property
-    def on_checklist(self):
-        """
-        TODO: Investigate where this is used
-        """
-        c = self.dsoimagingchecklist_set.first() 
-        return '☑️' if c is not None else '⏹'
-    
-    @property
     def is_on_imaging_checklist(self):
         """
-        TODO: Investigate where this is used
+        Used in HTML pages.
         """
         return self.dsoimagingchecklist_set.count() > 0
     

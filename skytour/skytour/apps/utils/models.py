@@ -21,7 +21,9 @@ class AbstractCatalog(models.Model):
         _('Use Abbr in List'),
         default = True
     )
-    expected_complete = models.PositiveIntegerField (
+    expected_complete = models.PositiveIntegerField ( 
+        # Are all the entries in the Catalog expected to be in the DSO/DSOInField models?
+        # e.g., Messier and Caldwell = Yes;  NGC and IC = No
         _('Expected Completed'),
         choices = YES_NO,
         default = NO
@@ -40,6 +42,16 @@ class AbstractCatalog(models.Model):
         null = True, blank = True
     )
     precedence = models.PositiveIntegerField (
+        # Precedence = 1 - 9
+        #  1. Primary (Caldwell, Messier)
+        #  2. Important (NGC, IC)
+        #  3. Secondary (B, Cr, Mel, Sh2)
+        #  4. Collection (Ab, Arp, HCG, Stock, Tr, vdB)
+        #  5. Ancillary (H400)
+        #  6. Survey (LBN, LDN, PGC, PK, UGC)
+        #  7. Other (other)
+        #  8. Incidental (Bayer, Flamsteed)
+        #  9. Custom (Ast24, Ast)
         _('Precedence in Catalog Lists'),
         null = True, blank = True,
         choices = CATALOG_PRECEDENCE
@@ -53,21 +65,6 @@ class Catalog(AbstractCatalog):
     One Catalog is Proper Name - it has an empty abbreviation.
     """
 
-    def filter_dso_list(self, filters=None):
-        dso_list = self.dso_list
-        flist = []
-        for dso in dso_list:
-            if 'seen' in filters and dso.observations.count() == 0:
-                continue
-            if 'important' in filters and dso.priority not in ['High', 'Highest']:
-                continue
-            if 'unseen' in filters and dso.observations.count() != 0:
-                continue
-            if 'available' in filters and dso.priority == 'None':
-                continue
-            flist.append(dso)
-        return flist
-
     @property
     def dso_count(self):
         """
@@ -76,7 +73,7 @@ class Catalog(AbstractCatalog):
         return self.dso_set.count() + self.dsoalias_set.count()
 
     @property
-    def dso_list(self):
+    def dso_list(self):  # Used below
         dso1 = self.dso_set.order_by('id_in_catalog')
         dso2 = self.dsoalias_set.annotate(
             iic=models.functions.Cast('id_in_catalog', models.IntegerField())
@@ -90,6 +87,9 @@ class Catalog(AbstractCatalog):
     
     @property
     def observing_stats(self):
+        """
+        Count up # observed/images and % observed/imaged
+        """
         n_total = 0
         n_obs = 0
         n_imaged = 0
@@ -99,12 +99,11 @@ class Catalog(AbstractCatalog):
             if dso.number_of_observations > 0:
                 n_obs += 1
             if dso.priority != 'None':
-                # TODO: make this a method/property on DSO!
                 n_available += 1
             n_imaged += 1 if dso.num_library_images > 0 else 0
-        
         f_obs = (n_obs + 0.)/n_total
         f_avail = (n_obs + 0.)/n_available
+
         return dict(
             n_obs=n_obs,
             n_imaged=n_imaged,
@@ -116,7 +115,6 @@ class Catalog(AbstractCatalog):
             n_available=n_available,
             f_available=f_avail,
             p_available=f_avail*100.
-
         )
 
     class Meta:
@@ -217,13 +215,11 @@ class Constellation(models.Model):
         upload_to = 'constellation_maps',
         null=True, blank=True
     )
-
     description = models.TextField (
         _('Description'),
         null = True, blank = True,
         help_text = 'Can contain raw HTML'
     )    
-
     historical_image = models.ImageField (
         _('Historical Map'),
         upload_to = 'historical_constellation_maps',
@@ -239,6 +235,7 @@ class Constellation(models.Model):
 
     @property
     def abbr_case(self):
+        # Return case-sensitive constellation abbreviation
         exceptions = {
             'CMA': 'CMa', 'CMI': 'CMi', 'CRA': 'CrA', 'CRB': 'CrB',
             'CVN': 'CVn', 'LMI': 'LMi', 'PSA': 'PsA', 'TRA': 'TrA',
@@ -250,6 +247,7 @@ class Constellation(models.Model):
 
     @property
     def atlas_plate_list(self):
+        # Return list of atlas plates that contain part of the constellation
         pp = []
         for p in self.atlasplate_set.order_by('plate_id'):
             pp.append(str(p.plate_id))
@@ -284,12 +282,18 @@ class Constellation(models.Model):
 class ConstellationVertex(models.Model):
     """
     pk is the vertex ID.
+
+    List of constellation boundary coordinates.
+    NOTE: All values are Epoch 1875 for (ra, dec) - must be precessed for plotting!
     """
     ra_1875 = models.FloatField(_('R.A. 1875'))
     dec_1875 = models.FloatField(_('Dec. 1875'))
     constellation = models.ManyToManyField (Constellation)
 
 class ConstellationBoundaries(models.Model):
+    """
+    List of vertices to make up a constellation boundary.
+    """
     start_vertex = models.PositiveIntegerField('Start Vertex')
     end_vertex = models.PositiveIntegerField('End Vertex')
     ra = models.FloatField(_('Start R.A.'))
