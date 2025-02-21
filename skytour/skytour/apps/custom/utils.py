@@ -4,6 +4,8 @@ from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 
+# NOTE: This is in its own app mostly to get around a circular import problem.
+
 def parse_utdt(s):
     """
     Return datetime from formatted string of time.
@@ -86,7 +88,7 @@ def find_dsos_at_location_and_time (
             candidate_pks.append(d.pk)
     
     # Given the subset of DSOs - assemble the list
-    dsos = DSO.objects.filter(pk__in=candidate_pks)
+    dsos = dsos.filter(pk__in=candidate_pks)
     for d in dsos:
         (az, alt, secz) = d.alt_az(location, utdt)
         d.azimuth = az
