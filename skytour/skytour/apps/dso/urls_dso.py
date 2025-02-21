@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    AvailableDSOObjectsView,    
     DSODetailView, 
     DSOListView, 
     DSOFilterView, 
@@ -13,6 +14,7 @@ from .views import (
 )
 urlpatterns = (
     path('', DSOListView.as_view(), name='dso-list'),
+    path('available', AvailableDSOObjectsView.as_view(), name='dso-available-objects'),
     path('create_dso_list', DSOCreateList.as_view(), name='dso-create-list'),
     path('filter', DSOFilterView.as_view(), name='dso-filter'),
     path('list/<int:pk>', DSOListDetailView.as_view(), name='dsolist-detail'),

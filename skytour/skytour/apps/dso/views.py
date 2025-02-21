@@ -1,4 +1,4 @@
-import datetime as dt
+import datetime as dt, pytz
 from collections import Counter
 from dateutil.parser import isoparse
 from django.db.models import Q, Count
@@ -12,6 +12,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from reportlab.pdfgen import canvas
 from ..abstract.utils import get_real_time_conditions
+from ..observe.models import ObservingLocation # just for testing
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from .atlas_utils import find_neighbors, assemble_neighbors
@@ -19,10 +20,12 @@ from .finder import plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
+from .mixins import AvailableDSOMixin
 from .models import DSO, DSOList, AtlasPlate, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import select_atlas_plate, select_other_atlas_plates
+from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
 from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
     filter_dsos, get_filter_params, update_dso_filter_context
 from .vocabs import PRIORITY_CHOICES
@@ -360,6 +363,9 @@ class DSOChecklistView(ListView):
         return context
     
 class DSORealTimeView(CookieMixin, DetailView):
+    """
+    Get Observing Metadata in RealTime
+    """
     model = DSO
     template_name = 'real_time_popup.html'
 
@@ -372,7 +378,9 @@ class DSORealTimeView(CookieMixin, DetailView):
         return context
     
 class DSOSearchView(View):
-
+    """
+    Look up a DSO from name, alias, or DSOInField
+    """
     def get(self, request):
         query = request.GET.get('query', None).lower()
         words, name = find_cat_id_in_string(query)
@@ -380,3 +388,83 @@ class DSOSearchView(View):
         if target is not None:
             return redirect(target)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
+    """
+    This handles the @Now and @Cookie functions - the only difference is
+        using the cookie has a GET value.  Both presume the ObservingLocation
+        object in the cookie is the "right" value.
+    """
+    template_name = 'home_objects.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AvailableDSOObjectsView, self).get_context_data(**kwargs)
+        debug = self.request.GET.get('debug', False)
+        no_mask = self.request.GET.get('no_mask', 'off') == 'on'
+        context['no_mask'] = no_mask
+        is_scheduled  = self.request.GET.get('scheduled', 'off') == 'on'
+        context['scheduled'] = is_scheduled
+        use_cookie = self.request.GET.get('cookie', False)
+        gear = assemble_gear_list(self.request)        
+        location = context['cookies']['user_pref']['location']
+
+        min_dec, max_dec = location.declination_range
+        if context['min_dec'] is None:
+            context['min_dec'] = min_dec
+        if context['max_dec'] is None:
+            context['max_dec'] = max_dec
+        if context['min_alt'] is None:
+            context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
+        if context['max_alt'] is None:
+            context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
+        context['min_dec_string'] = f"{context['min_dec']:.1f}"
+        context['max_dec_string'] = f"{context['max_dec']:.1f}"
+
+        if use_cookie:
+            if context['utdt'] is None or context['utdt'] == 'None':
+                context['utdt'] = context['cookies']['user_pref']['utdt_start']
+        else: 
+            context['utdt'] = dt.datetime.now(dt.timezone.utc)
+
+        orig_utdt = context['utdt']
+        if type(orig_utdt) == str:
+            format_utdt = orig_utdt
+        else:
+            format_utdt = orig_utdt.strftime("%Y-%m-%d %H:%M:%S")
+
+        dso_list = DSO.objects.all()
+        if min_dec is not None:
+            dso_list = dso_list.filter(dec__gte=min_dec)
+        if max_dec is not None:
+            dso_list = dso_list.filter(dec__lte=max_dec)
+
+        up_dict = find_dsos_at_location_and_time (
+            dsos = dso_list,                         # DSO List to start with - filtered by declination
+            utdt = context['utdt'],                  # UTDT of now or the cookie
+            offset_hours = context['ut_offset'],     # Offset the time as instructed
+            imaged = context['imaged'],              # Only (don't) show objects with library images
+            min_priority = context['min_priority'],  # Filter by priority - TODO V2: change this!
+            location = location,                     # ObservingLocation object from the cookie
+            min_alt = context['min_alt'],            # Minimum altitude
+            max_alt = context['max_alt'],            # Maximum altitude
+            min_dec = context['min_dec'],            # Absolute range of declination
+            max_dec = context['max_dec'],            # Absolute range of declination
+            mask = not no_mask,                      # Use location mask (for trees, buildings, etc.)
+            gear = gear,                             # Filter by gear choices
+            scheduled = is_scheduled                 # Only show objects on active DSOList objects
+        )
+        dsos = up_dict['dsos']
+        context['calc_utdt'] = up_dict['utdt']
+        context['format_utdt'] = format_utdt
+        context['local_time'] = up_dict['utdt'].astimezone(pytz.timezone(location.time_zone.name)).strftime("%A %b %-d, %Y %-I:%M %p %z")
+        context['dso_list'] = dsos
+        context['dso_count'] = dsos.count()
+        context['table_id'] = 'available_table'
+        context['location'] = up_dict['location']
+        
+        # Set gear in form
+        for g in 'NBSMI':
+            context[f'gear{g}'] = g if gear and g in gear else None
+
+        return context
+

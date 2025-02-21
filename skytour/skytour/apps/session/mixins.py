@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from .cookie import deal_with_cookie, get_all_cookies, test_all_cookies
 

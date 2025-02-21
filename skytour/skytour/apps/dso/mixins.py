@@ -1,11 +1,11 @@
-from .utils import parse_utdt
+from .utils_avail import parse_utdt
     
-class CustomMixin(object):
+class AvailableDSOMixin(object):
     """
     Mixin for the @Now and @Cookie view
     """
     def get_context_data(self, **kwargs):
-        context = super(CustomMixin, self).get_context_data(**kwargs)
+        context = super(AvailableDSOMixin, self).get_context_data(**kwargs)
 
         def haz(thing):
             """
@@ -48,4 +48,6 @@ class CustomMixin(object):
         context['min_alt'] = min_alt
         context['max_alt'] = max_alt
         context['min_priority'] = min_priority
+
+        print("SENDING CONTEXT BACK FROM DSO MIXIN: ", context.keys())
         return context

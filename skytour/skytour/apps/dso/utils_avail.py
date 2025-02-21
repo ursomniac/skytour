@@ -1,6 +1,4 @@
 import datetime as dt, pytz
-from ..astro.utils import get_declination_range
-from ..dso.models import DSO
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 
@@ -24,6 +22,7 @@ def parse_utdt(s):
         return None
     
 def find_dsos_at_location_and_time (
+        dsos = None,
         utdt = None, # set to now if none 
         offset_hours = 0., 
         imaged = 'No',
@@ -51,13 +50,6 @@ def find_dsos_at_location_and_time (
     if location is None:
         location_id = find_site_parameter('default-location-id', default=1, param_type='positive')
         location = ObservingLocation.objects.get(pk=location_id)
-
-    # 3. Get DSOs in declination range
-    dsos = DSO.objects.all() # start here
-    if min_dec is not None:
-        dsos = dsos.filter(dec__gte=min_dec)
-    if max_dec is not None:
-        dsos = dsos.filter(dec__lte=max_dec)
         
     candidate_pks = []
     for d in dsos: # loop on DSOs
