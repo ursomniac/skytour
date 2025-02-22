@@ -33,7 +33,7 @@ class Command(BaseCommand):
             print(f"Viabilites: {vstr} = {viabilities}")
         else:
             if dso:
-                run_dso(dso, viabilities)
+                run_dso(dso, viabilities, test=options['test'])
             else:
                 print("DSO {dso_pk} not found - aborting")
 
@@ -59,7 +59,7 @@ def check_viabilities(raw):
     print("VIALIST: ", vialist)
     return vialist
 
-def run_dso(dso, viabilities):
+def run_dso(dso, viabilities, test=False):
     modes = dso.dsoobservingmode_set.all()
     d = {}
     op = None
@@ -76,7 +76,8 @@ def run_dso(dso, viabilities):
         vobj.mode = mode
         vobj.priority = priority
         vobj.viable = viability
-        vobj.save()
+        if not test:
+            vobj.save()
         print(f"\t{op} Mode {mode} ({priority}, {viability})")
     return dso
 

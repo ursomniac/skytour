@@ -1,7 +1,10 @@
-Name#Aperture#FocalLength#Sensor#X#Y#Size
-Celestron SE8#203.2#2032####
-Seestar S50#50.#250.#Onboard Camera#1080#1920#2.9
-Seestar S30#30.#150.#Onboard Camera#1080#1920#2.9
-eQuinox 2#114.#450.#Onboard Camera#2048#1536#2.9
-Vaonis Vespera#50.#250.#Onboard Camera#3840#2160#2.9
-Vaonis Pro#50#250#Onboard Camera#3536#3536#2.0
+Name#Aperture#FocalLength#Sensor#X#Y#Size#CameraName
+Celestron SE8#203.2#2032#ZWO MC224#1304#976#3.75#ZWO IMX224
+Seestar S50#50.#250.#Onboard Camera#1080#1920#2.9#Sony IMX462
+Seestar S30#30.#150.#Onboard Camera#1080#1920#2.9#Sony IMX662
+eQuinox 2#114.#450.#Onboard Camera#2048#1536#2.9#Sony IMX347
+Vaonis Vespera#50.#250.#Onboard Camera#3840#2160#2.9#Sony IMX585
+Vaonis Pro#50#250#Onboard Camera#3536#3536#2.0#Sony IMX676
+Dwarf 2#24.#100#Onboard Camera#3840#2160#1.45#Sony IMX415
+Dwarf 3#35.#150#Onboard Camera#3856#2180#2.0#Sony IMX678
+Celestron Origin#152#335#Onboard Camera#3096#2080#2.4#Sony IMX178LQJ
