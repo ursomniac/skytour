@@ -1,8 +1,5 @@
-from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from skytour.apps.dso.models import DSO
-from skytour.apps.dso_observing.models import TargetDSO, TargetObservingMode
-from skytour.apps.dso.finder import create_dso_finder_chart
+from skytour.apps.dso.models import DSO, DSOObservingMode
 
 class Command(BaseCommand):
     help = 'Create new TargetDSO for DSO --via [NBSMI][0-4][0-9] for mode/pri/viability'
@@ -63,26 +60,24 @@ def check_viabilities(raw):
     return vialist
 
 def run_dso(dso, viabilities):
-    target = TargetDSO.objects.filter(pk=dso.pk).first()
-    if target:
-        print(f"This DSO ({ dso }) already has a target.  Doing nothing.")
-        return target
-    else:
-        print("Creating new TargetDSO for DSO ", dso)
-        target = TargetDSO()
-        target.pk = dso.pk
-        target.dso_id = dso.pk
-        target.save() # deal with viability later?
-
-        for (mode, priority, viability) in viabilities:
-            vobj = TargetObservingMode()
-            vobj.target_id = target.pk
-            vobj.mode = mode
-            vobj.priority = priority
-            vobj.viable = viability
-            vobj.save()
-            print(f"\tAdding Mode {mode} ({priority}, {viability})")
-
-    return target
+    modes = dso.dsoobservingmode_set.all()
+    d = {}
+    op = None
+    for mode in modes:
+        d[mode] = mode
+    for (mode, priority, viability) in viabilities:
+        if mode not in d.keys():        # Create new mode
+            vobj = DSOObservingMode()
+            vobj.dso = dso
+            op = 'Creating'
+        else:                           # Existing mode - update
+            vobj = d[mode]
+            op = 'Editing'
+        vobj.mode = mode
+        vobj.priority = priority
+        vobj.viable = viability
+        vobj.save()
+        print(f"\t{op} Mode {mode} ({priority}, {viability})")
+    return dso
 
 

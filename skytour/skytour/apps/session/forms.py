@@ -2,7 +2,7 @@ import datetime
 from django import forms
 from ..astro.time import utc_now
 from ..dso.models import DSOList
-from ..dso_observing.vocabs import OBSERVING_MODE_TYPES
+from ..dso.vocabs import OBSERVING_MODE_TYPES
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.models import Planet, Asteroid, Comet

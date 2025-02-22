@@ -1,6 +1,7 @@
 from skytour.apps.dso.models import DSO
 from skytour.apps.dso.search import find_cat_id_in_string, search_dso_name
-from skytour.apps.dso_observing.models import TargetDSO, TargetObservingMode
+
+# This isn't expected to be used anymore.
 
 TARGET_OBJECTS = {
     # Block 1
