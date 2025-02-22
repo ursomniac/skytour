@@ -35,7 +35,6 @@ def get_global_items(request):
     now = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     next_month = adjust_date(now, offset=1)
     previous_month = adjust_date(now, offset=-1)
-    
 
     return dict(
         user_preferences=user_preferences,

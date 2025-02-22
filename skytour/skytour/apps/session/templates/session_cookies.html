@@ -2,23 +2,89 @@
 {% load skytour_filters humanize %}
 {% block title %}Observing Sessions: Skytour{% endblock %}
 {% block content %}
+<style>
+    .accordion {
+        background-color: #993;
+        color: #000;
+        cursor: pointer;
+        padding: 4px;
+        width: 100%;
+        text-align: left;
+        border: solid 1px #999;
+        outline: none;
+        transition: 0.4s;
+        font-weight: bold;
+        font-size: 12px;
+        margin-top: 12px;
+        }
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active, .accordion:hover {
+        background-color: #cc9;
+        }
+    /* Style the accordion panel. Note: hidden by default */
+    .panel {
+    padding: 0 18px;
+    background-color: #333;
+    display: none;
+    overflow: hidden;
+    }
+    .panel-open {
+        padding: 0 18px;
+        background-color: #333;
+        overflow: hidden;
+    }
+</style>
+
 <h1>Session Cookies</h1>
 
-<h2>User Preferences</h2>
+<button class="accordion">User Preferences</button>
+<div class="panel-open">
 {% if user_preferences %}<pre>{{ user_preferences|pprint }}</pre>{% else %}(Main cookie not set){% endif %}
+</div>
 
-<h2>Sun and Moon</h2>
+<button class="accordion">Sun and Moon</button>
+<div class="panel">
 <h3>Sun</h3>
 {% if sun %}<pre>{{ sun|pprint }}</pre>{% else %}(Sun not set.){% endif %}
 <h3>Moon</h3>
 {% if moon %}<pre>{{ moon|pprint }}</pre>{% else %}(Moon not set.){% endif %}
+</div>
 
-<h2>Planets</h2>
+<button class="accordion">Planets</button>
+<div class="panel">
 {% if planets %}<pre>{{ planets|pprint }}</pre>{% else %}(Planet dictionary not set.){% endif %}
+</div>
 
-<h2>Asteroids</h2>
+<button class="accordion">Asteroids</button>
+<div class="panel">
 {% if asteroids %}<pre>{{ asteroids|pprint }}</pre>{% else %}(Asteroid list not set){% endif %}
+</div>
 
-<h3>Comets</h3>
+<button class="accordion">Comets</button>
+<div class="panel">
 {% if comets %}<pre>{{ comets|pprint }}</pre>{% else %}(Comet list not set){% endif %}
+</div>
+{% endblock %}
+
+{% block extra-js %}
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+    this.classList.toggle("active");
+
+    /* Toggle between hiding and showing the active panel */
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
 {% endblock %}

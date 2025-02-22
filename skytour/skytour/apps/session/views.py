@@ -97,7 +97,6 @@ class SetSessionCookieView(FormView):
         local_time_start = utdt_start.astimezone(time_zone) if time_zone is not None else None
         times.append((time.perf_counter(), f'Processed Form'))
 
-        # ADD TWILIGHT!
         # Sun
         sun = get_object_metadata(utdt_start, 'Sun', 'sun', location=my_location)
         context['sun'] = sun 
@@ -160,7 +159,8 @@ class SetSessionCookieView(FormView):
             flip_planets = flip_planets,
             color_scheme = d['color_scheme'],
             atlas_dso_marker = d['atlas_dso_marker'],
-            twilight = twilight
+            twilight = twilight,
+            observing_mode = observing_mode
         )
 
         context['val'] = dict(
