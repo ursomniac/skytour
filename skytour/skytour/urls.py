@@ -33,6 +33,7 @@ urlpatterns = [
     path('comet/', include('skytour.apps.solar_system.urls_comet')),
     path('constellation/', include('skytour.apps.utils.urls_constellation')),
     path('dso/', include('skytour.apps.dso.urls_dso')),
+    path('help/', include('skytour.apps.help.urls')),
     path('library/', include('skytour.apps.utils.urls_library')),
     path('misc/', include('skytour.apps.misc.urls')),
     path('object_type/', include('skytour.apps.utils.urls_object_type')),

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'skytour.apps.astro',
     'skytour.apps.dso',
     'skytour.apps.dso_observing',
+    'skytour.apps.help',
     'skytour.apps.misc',
     'skytour.apps.plotting',
     'skytour.apps.observe',

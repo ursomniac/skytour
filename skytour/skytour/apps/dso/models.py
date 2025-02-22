@@ -23,7 +23,15 @@ from ..utils.models import Constellation, ObjectType
 #from .pdf import create_pdf_page
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
-from .vocabs import PRIORITY_CHOICES, PRIORITY_COLORS
+from .vocabs import (
+    MODE_PRIORITY_CHOICES,
+    MODE_VIABILITY_CHOICES,
+    OBSERVING_MODE_TYPES,
+    PRIORITY_CHOICES, 
+    PRIORITY_COLORS,
+    VIABILITY_BACKGROUND_COLORS as VBC,
+    VIABILITY_FOREGROUND_COLORS as VFC
+)
 
 class DSOAbstract(Coordinates):
     """
@@ -663,8 +671,49 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     @property
     def is_on_active_observing_list(self):
         return self.active_observing_list_count > 0
-
-
+    
+    @property
+    def mode_list(self):
+        found = ''
+        for my_mode in self.dsoobservingmode_set.all():
+            found += my_mode.mode
+        return found
+    
+    @property
+    def mode_set(self):
+        out = ''
+        for k in 'NBSMI':
+            out += k if k in self.mode_list else ' '
+        return out
+    
+    def mode_viability_chart(self):
+        if self.mode_list == '' or self.mode_list is None:
+            return f"No chart."
+        out = '<div class="mode-chart">'
+        out += '<pre>'
+        out += '<span class="mode-header">Mode  Pri  Grid</span><br>'
+        for k in 'NBSMI':
+            if k not in self.mode_list:
+                continue
+            mode = self.dsoobservingmode_set.filter(mode=k).first()
+            v = mode.viable
+            out += f'<b> {k}</b>:  &nbsp;' 
+            out += ' 0  &nbsp;' if mode.priority is None else f' {mode.priority}  &nbsp;'
+            for i in range(11):
+                val = 'X' if i == v else '&nbsp;'
+                val = f'&nbsp;{val}&nbsp;'
+                span = f"<span style='background-color: {VBC[i]}; color: {VFC[i]}'>"
+                span += val + '</span>'
+                out += span
+            out += f"&nbsp;<span>{mode.get_viable_display():<20s}</span>"
+            if mode.interesting:
+                out += '<span style="color: #FF0; font-weight: bold;">⚡</span>'
+            if mode.challenging:
+                out += '<span style="font-size: 75%">🏁</span>'
+            out += '<br>'
+        out += '</pre></div>'
+        return mark_safe(out)
+    
     def max_altitude(self, location=None): # no location = default
         """
         Return the maximum altitude a DSO reaches at a given observing location.
@@ -1265,7 +1314,6 @@ class AtlasPlateSpecialVersion(AtlasPlateVersionAbstract):
         null = True, blank = True
     )
 
-
 class MilkyWay(models.Model):
     """
     Each row is a data point along a segment/contour of a particular level.
@@ -1329,3 +1377,37 @@ class DSOImagingChecklist(models.Model):
         verbose_name = 'Imaging Checklist DSO'
         verbose_name_plural = 'Imaging Checklist DSOs'
         ordering = ['-dso__dec']
+
+class DSOObservingMode(models.Model):
+    dso = models.ForeignKey('dso', on_delete=models.CASCADE)
+    # The mode for this DSO?
+    mode = models.CharField(
+        _('Observing Mode'),
+        max_length = 10,
+        choices = OBSERVING_MODE_TYPES
+    )
+    # For this mode, how difficult will this DSO be?
+    viable = models.PositiveSmallIntegerField(
+        _('Viability'),
+        choices = MODE_VIABILITY_CHOICES
+    )
+    # Priority: 0 = none to 4 highest
+    priority = models.PositiveSmallIntegerField(
+        choices=MODE_PRIORITY_CHOICES,
+        null = True, blank = True # For now - this should be required post-seeding
+    )
+    # Is this DSO visually interesting for this mode?
+    interesting = models.BooleanField(default=False)
+    # Is this DSO a 'challenge' for this mode?
+    challenging = models.BooleanField(default=False)
+    # Notes on observing this DSO with this mode
+    notes = models.TextField(null=True, blank=True)
+
+    def notes_flag(self):
+        if self.notes is None or len(self.notes.strip()) == 0:
+            return ''
+        return '*'
+    
+    def __str__(self):
+        x = f"{self.dso}: {self.mode} ({self.priority}, {self.viable})"
+        return x

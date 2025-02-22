@@ -7,11 +7,24 @@ from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
     DSOLibraryImage, DSOImagingChecklist, \
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
-    DSOInField, DSOInFieldAlias
+    DSOInField, DSOInFieldAlias, DSOObservingMode
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
     field_name = 'constellation'
+
+class DSOObservingModeInline(admin.StackedInline):
+    model = DSOObservingMode
+    extra = 0
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('mode','viable', 'priority'),
+                ('interesting', 'challenging'),
+                'notes'
+            ]
+        }),
+    )
 
 class DSOImageAdmin(admin.StackedInline):
     model = DSOImage
@@ -42,11 +55,6 @@ class DSOLibraryImageAdmin(admin.StackedInline):
             ]
         }),
     )
-
-class DSOTargetModeInline(admin.StackedInline):
-    model = TargetDSO
-    extra = 0
-    
 
 class DSOImagingChecklistInline(admin.TabularInline):
     model = DSOImagingChecklist
@@ -196,11 +204,11 @@ class DSOAdmin(ObservableObjectAdmin):
     inlines = [
         DSOAliasInline, 
         DSOInFieldInline,
-        DSOTargetModeInline,
         DSOImagingChecklistInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  
-        DSOObservationAdmin
+        DSOObservationAdmin,
+        DSOObservingModeInline,
     ]
     actions = ['turn_on_redo', 'turn_off_redo']
 

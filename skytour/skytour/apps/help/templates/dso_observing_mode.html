@@ -1,0 +1,54 @@
+{% extends 'help_base.html' %}
+{% load skytour_filters humanize %}<div class="mode-help">
+{% block content %}
+<style>
+    .help-text { font-size: 12px; }
+    .interesting { font-size: 14px; color: #FF0; font-weight: bold; }
+</style>
+<div class="help-text">
+    <h3>Observing Modes</h3>
+    <ul class='list-of-defs'>
+        <li><b>N</b> = Naked Eye</li>
+        <li><b>B</b> = Binoculars</li>
+        <li><b>S</b> = Small Telescope (&le; 6")</li>
+        <li><b>M</b> = Medium Telescope (&gt; 6")</li>
+        <li><b>I</b> = Imaging Telescope</li>
+    </ul>
+    <p>Each observing mode has a priority and a viability.</p>
+    <h4> Priority</h4>
+    <p>This is a value from 0 to 4 and roughly suggests which object are "must see"/
+        <ul class='list-of-defs'>
+            <li>0 = Extremely Low</li>
+            <li>1 = Low</li>
+            <li>2 = Medium</li>
+            <li>3 = High</li>
+            <li>4 = Highest</li>
+        </ul>
+    </p>
+    <h4>Viability</h4>
+    <p>This value is from 0 to 10, and indicates the difficulty to observe the object
+        under normal conditions using each mode of observing.
+        <ul class='list-of-defs'>
+            <li>0 = Not Viable</li>
+            <li>1 = Unlikely Viable</li>
+            <li>2 = Extreme Difficulty</li>
+            <li>3 = Difficult</li>
+            <li>4 = Challenging</li>
+            <li>5 = Requires Patience</li>
+            <li>6 = Generally Visible</li>
+            <li>7 = Usually Viable</li>
+            <li>8 = Easy</li>
+            <li>9 = Very Easy</li>
+            <li>10 = Extremely Easy</li>
+        </ul>
+    </p>
+    <p>Finally:
+        <ul class='list-of-defs'>
+            <li>
+                "interesting" Objects for a particular mode are marked with 
+                <span class='lightning'>⚡</span>
+            </li>
+            </li>"challenging" objects for a particular mode are marked with 🏁</li>
+        </ul>
+</div>
+{% endblock content %}

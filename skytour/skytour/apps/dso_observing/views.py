@@ -1,8 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from .models import TargetDSO, TargetObservingMode
+from .models import TargetDSO
 
 class TargetListView(ListView):
     model = TargetDSO
