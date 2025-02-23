@@ -415,7 +415,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         dv = {'Highest': 4, 'High': 3, 'Medium': 2, 'Low': 1, 'None': 0}
         if self.priority is None:
-            return 0
+            return None
         return dv[self.priority]
 
     @property
