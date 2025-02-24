@@ -1,4 +1,5 @@
 from ..site_parameter.helpers import find_site_parameter
+from .vocabs import PRIORITY_VALUES
 
 def create_shown_name(obj, use_con=True):
     """
@@ -80,3 +81,64 @@ def get_simbad_value(obj, key):
     if key in vals.keys():
         return vals[key]
     return None
+
+### MODE PRIORITY STUFF
+def priority_color(pri):
+    colors = ['#888', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
+    if pri is None:
+        return None
+    else:
+        try:
+            return colors[pri]
+        except: # bad priority!
+            return None
+        
+def priority_symbol(pri, type='light-circle'):
+    if pri is None:
+        return None
+    if pri < 0 or pri > 5:
+        return None
+    
+    emoji_numbers = [ 
+        u"\u0030\uFE0F\u20E3", # 0
+        u"\u0031\uFE0F\u20E3", # 1
+        u"\u0032\uFE0F\u20E3", # 2
+        u"\u0033\uFE0F\u20E3", # 3
+        u"\u0034\uFE0F\u20E3", # 4
+        u"\u0035\uFE0F\u20E3"  # 5 
+    ]
+    light_circle_numbers = [
+        u"\u24EA", u"\u2460", u"\u2461", u"\u2462", u"\u2463", u"\u2464"
+    ]
+    dark_circle_numbers = [
+        u"\U0001F10C", u"\u278A", u"\u278B", u"\u278C", u"\u278D", u"\u278E"
+    ]
+
+    if type == 'emoji':
+        return emoji_numbers[pri]
+    elif type == 'dark-circle':
+        return dark_circle_numbers[pri]
+    return light_circle_numbers[pri]
+
+def priority_span(priority):
+    color = priority_color(priority)
+    symbol = priority_symbol(priority)
+    out = f'<span style="color: {color}">{symbol}</span>'
+    return out
+
+def get_priority_value_of_observing_mode(dso, mode):
+    this_mode = dso.dsoobservingmode_set.filter(mode=mode).first()
+    if this_mode is None:
+        return None
+    priority = this_mode.priority
+    return priority
+
+def get_priority_label_of_observing_mode(dso, mode):
+    priority = get_priority_value_of_observing_mode(dso, mode)
+    if priority is None or priority < 0 or priority > 4:
+        return 'Unknown'
+    return PRIORITY_VALUES[priority]
+
+def get_priority_span_of_observing_mode(dso, mode):
+    priority = get_priority_value_of_observing_mode(dso, mode)
+    return priority_span(priority)

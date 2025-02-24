@@ -5,13 +5,14 @@
 <style>
 	table.lite { border-style: none; }
 	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
-	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; }
+	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; margin-top: 10px; }
 	h2.nickname { font-size: 125%; margin-top: 5px; color: #ffd; }
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
 	td.description a { color: #ff0; }
+	td.operations { text-align: right; padding: 3px 10px!important; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; }
 	td.coordinates { width: 40%; font-size: 150%; padding: 3px 5px 15px 5px!important; margin-bottom: 5px; }
@@ -78,6 +79,9 @@
 	}
 	div.panel-type {float: right!important; font-size: 10px; color: #999; }
 	.popup-help-button { float: right; }
+	.object-metadata { font-weight: bold; color: #ff9; }
+	div.conditions { padding: 5px; border: 1px solid #ccc; }
+	button.op { width: 7em; }
 </style>
 {% endblock styles %}
 
@@ -108,23 +112,16 @@
 						</a>
 					</b>
 				</td>
-				<td width=20% class="description" rowspan=2>
-					<b>Priority:&nbsp;
-						<a href="{% url 'priority-detail' object.priority %}">{{ object.priority }}</a>
-						{% if object.is_on_active_observing_list %} 
-						&nbsp; 🔭 
-					   {% endif %}
-						<br>
-					<b>On Skymap:&nbsp;</b>{{ object.get_show_on_skymap_display }}
+				<td width=20% class="description operations" rowspan=2>
+					<a href="/admin/dso/dso/{{ object.pk }}"><button class="op">Admin</button></a>
 					<br>
-					<a href="/admin/dso/dso/{{ object.pk }}"><button>Admin</button></a>
-					<a href="/media/{{ object.pdf_page }}" target="_new"><button>PDF</button></a>
+					<a href="/media/{{ object.pdf_page }}" target="_new"><button class="op">PDF</button></a>
 					<br>
-
-					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')">
+					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
 					Real Time
 					</button>
-					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}?utdt_base=cookie')">
+					<br>
+					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}?utdt_base=cookie')" class="op">
 					Cookie
 					</button>
 
@@ -147,15 +144,6 @@
 		{% if library_slideshow|length > 0 %}
 		<h2 class="short">
 			Library Image(s)
-			<span style="color: {{ object.color_imaging_checklist_priority}}">
-				{{ object.library_image_priority }}
-			</span>
-			{% if object.reimage %}
-			<span style="color:#0cc"> - REDO </span>
-			{% endif %}
-			{% if object.is_on_active_observing_list %}
-			🔭
-			{% endif %}
 		</h2>
 			<div class="slideshow-container">
 				<div class="panel-type">Library Panel</div>
@@ -184,12 +172,10 @@
 		{% else %}
 			<div class="no-library-image">
 			No image in library.
-			{% if object.library_image_priority %}
+			{% if object.mode_imaging_priority %}
 				<br>
 				Imaging Priority: 
-				<span style="color: {{ object.color_imaging_checklist_priority}}">
-					{{ object.library_image_priority }}
-				</span>
+				{{ object.mode_imaging_priority_span }}
 			{% else %}
 				<br>
 				Not available for imaging.
@@ -200,8 +186,27 @@
 </tr>
 <tr>
 	<td id="metadata" colspan=2>
-		<h3>Information:</h3>
 		<table width=100% class="lite">
+			<tr>
+				<td colspan=2><h2>Information:</h2></td>
+				<td rowspan=2>
+					<br>
+					<div class="conditions">
+						<span class="object-metadata">Priority:</span>&nbsp;
+							{{ mode_priority_label }} &nbsp; &nbsp;					
+							{{ mode_priority_span }}
+							{% if object.reimage %}
+							<span style="color:#0cc"> - REDO </span>
+							{% endif %}
+							<br><br>
+						<span class="object-metadata">On Skymap:</span>&nbsp;
+							{{ object.get_show_on_skymap_display }}
+						{% if object.is_on_active_observing_list %}
+						<br><br>
+						🔭 - on active observing list
+						{% endif %}
+					</span>
+				</td>
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}
 					<br><span class="annotation">{{ object.ra_float|floatformat:3}}h {{ object.ra_deg_float|floatformat:3 }}°</span>
@@ -209,7 +214,6 @@
 				<td class="coordinates">&delta; (2000): {{ object.dec_text }}
 					<br><span class="annotation">{{ object.dec_float|floatformat:3}}°</span>
 				</td>
-				<td></td>
 			</tr>
 			<tr>
 				<td>
@@ -261,7 +265,7 @@
 				<td>
 					Orientation Angle: 
 					{% if object.find_orientation.0 %}
-						{{ object.find_orientation.0|floatformat:0 }}°
+						{{ object.find_orientation.0 }}°
 						{% if object.find_orientation.1 != 'O' %}
 						<span class="source">{{ object.find_orientation.1|show_property_source }}</span>
 						{% endif %}

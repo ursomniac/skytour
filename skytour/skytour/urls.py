@@ -39,7 +39,6 @@ urlpatterns = [
     path('object_type/', include('skytour.apps.utils.urls_object_type')),
     path('observing_location/', include('skytour.apps.observe.urls')),
     path('planet/', include('skytour.apps.solar_system.urls')),
-    path('priority/', include('skytour.apps.dso.urls_priority')),
     path('session/', include('skytour.apps.session.urls')),
     path('site/', include('skytour.apps.site_parameter.urls')),
     path('solar_system/', include('skytour.apps.solar_system.urls_features')),

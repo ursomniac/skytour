@@ -50,7 +50,7 @@ from .mixins import CookieMixin
 from .models import ObservingSession, ObservingCircumstances
 from .pdf import run_pdf
 from .plan import get_plan
-from .utils import get_initial_from_cookie
+from .utils import get_initial_from_cookie, get_observing_mode_string
 
 #@method_decorator(cache_page(0), name='dispatch')
 class SetSessionCookieView(FormView):
@@ -160,7 +160,8 @@ class SetSessionCookieView(FormView):
             color_scheme = d['color_scheme'],
             atlas_dso_marker = d['atlas_dso_marker'],
             twilight = twilight,
-            observing_mode = observing_mode
+            observing_mode = observing_mode,
+            observing_mode_string = get_observing_mode_string(observing_mode)
         )
 
         context['val'] = dict(

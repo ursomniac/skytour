@@ -70,22 +70,17 @@
             {% endif %}
         </td>
         <td>
-            {% if dso.is_on_imaging_checklist %}
-            <span hidden>{{ dso.imaging_checklist_priority }}</span>
-            <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
-                {{ dso.library_image_priority }}
+            {% if dso.mode_imaging_priority %} 
+                <span hidden>{{ dso.mode_imaging_priority }} </span>
+                {{ dso.mode_imaging_priority_span }}
             {% endif %}
-            </span>
-            {# dso.num_library_images #}
+
             {% if dso.library_image_camera %}
                 <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
-
         </td>
         <td>
-            <a href="{% url 'priority-detail' dso.priority %}" target="_new">
-                {{ dso.get_priority_display }}</a>
-
+            {{ dso.get_priority_display }}
         </td>
         <td>
             {{ dso.mode_set }}

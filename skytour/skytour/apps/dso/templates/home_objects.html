@@ -225,25 +225,17 @@ summary::-webkit-details-marker {
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         <td>
-            {% if dso.is_on_imaging_checklist %} 
-                <span hidden>{{ dso.imaging_checklist_priority }} </span>
-                <span style="float: left; color: {{ dso.color_imaging_checklist_priority }}">
-                    {{ dso.library_image_priority }}
-                </span>
-                {# dso.num_library_images #}
-                {% if dso.library_image_camera %}
-                    <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
-                {% endif %}
+            {% if dso.mode_imaging_priority %} 
+                <span hidden>{{ dso.mode_imaging_priority }} </span>
+                {{ dso.mode_imaging_priority_span }}
+            {% endif %}
+            {% if dso.library_image_camera %}
+                <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
         <td>
-            {{ dso.targetdso.mode_set }}
+            {{ dso.mode_set }}
         </td>
-        <!-- td>
-            <a href="{% url 'priority-detail' dso.priority %}" target="_new">
-                {{ dso.get_priority_display }}</a>
-
-        </td-->
         <td>
             {{ dso.number_of_observations }}
             {% if dso.last_observed %}

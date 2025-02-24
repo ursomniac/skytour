@@ -61,17 +61,14 @@ def check_viabilities(raw):
 
 def run_dso(dso, viabilities, test=False):
     modes = dso.dsoobservingmode_set.all()
-    d = {}
-    op = None
-    for mode in modes:
-        d[mode] = mode
     for (mode, priority, viability) in viabilities:
-        if mode not in d.keys():        # Create new mode
+        op = None
+        vobj = modes.filter(mode=mode).first()
+        if vobj is None:        # Create new mode
             vobj = DSOObservingMode()
             vobj.dso = dso
             op = 'Creating'
         else:                           # Existing mode - update
-            vobj = d[mode]
             op = 'Editing'
         vobj.mode = mode
         vobj.priority = priority

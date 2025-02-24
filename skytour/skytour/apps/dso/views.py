@@ -1,20 +1,21 @@
 import datetime as dt, pytz
-from collections import Counter
 from dateutil.parser import isoparse
+
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from reportlab.pdfgen import canvas
+
 from ..abstract.utils import get_real_time_conditions
-from ..observe.models import ObservingLocation # just for testing
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
+
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
 from .forms import DSOFilterForm, DSOAddForm
@@ -24,11 +25,21 @@ from .mixins import AvailableDSOMixin
 from .models import DSO, DSOList, AtlasPlate, DSOImagingChecklist
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
-from .utils import select_atlas_plate, select_other_atlas_plates
+from .utils import (
+    select_atlas_plate, 
+    select_other_atlas_plates, 
+    get_priority_label_of_observing_mode,
+    get_priority_span_of_observing_mode
+)
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
-from .utils_checklist import checklist_form, checklist_params, create_new_observing_list, \
-    filter_dsos, get_filter_params, update_dso_filter_context
-from .vocabs import PRIORITY_CHOICES
+from .utils_checklist import (
+    checklist_form, 
+    checklist_params, 
+    create_new_observing_list,
+    filter_dsos, 
+    get_filter_params, 
+    update_dso_filter_context
+)
 
 class DSOListView(ListView):
     model = DSO
@@ -69,7 +80,11 @@ class DSODetailView(CookieMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
         object = self.get_object()
-        now = self.request.GET.get('now', False)
+
+        observing_mode = context['observing_mode']
+        priority_label = get_priority_label_of_observing_mode(object, observing_mode)
+        priority_span = mark_safe(get_priority_span_of_observing_mode(object, observing_mode))
+
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
@@ -83,28 +98,8 @@ class DSODetailView(CookieMixin, DetailView):
         context['other_metadata'] = self.object.other_metadata_text
         context['other_parameters'] = self.object.other_parameters
         context['active_dsolists'] = self.object.dsolist_set.filter(active_observing_list=True)
-        return context
-
-class PriorityListView(TemplateView):
-    template_name = 'priority_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PriorityListView, self).get_context_data(**kwargs)
-        context['priorities'] = [x[0] for x in PRIORITY_CHOICES]
-        dso_priorities = list(DSO.objects.values_list('priority', flat=True))
-        context['priority_count'] = dict(Counter(dso_priorities))
-        context['table_id'] = 'priority_list'
-        return context
-
-class PriorityDetailView(TemplateView):
-    template_name = 'priority_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PriorityDetailView, self).get_context_data(**kwargs)
-        context['priority'] = priority = self.kwargs['priority']
-        context['dso_list'] = DSO.objects.filter(priority=priority)
-        context['hide_priority'] = True
-        context['table_id'] = 'dso_list_by_priority'
+        context['mode_priority_label'] = priority_label
+        context['mode_priority_span'] = priority_span
         return context
     
 class DSOListActiveView (TemplateView):

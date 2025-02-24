@@ -26,13 +26,14 @@ def find_dsos_at_location_and_time (
         utdt = None, # set to now if none 
         offset_hours = 0., 
         imaged = 'No',
-        min_priority = 0,
+        min_priority = 0.,
+        mode = 'I',
         #
         location = None,
         min_alt = 30.,
         max_alt = 90.,
-        min_dec = None,
-        max_dec = None,
+        min_dec = None,     # REMOVE
+        max_dec = None,     # REMOVE
         mask = True,
         gear = None,
         scheduled = False
@@ -54,9 +55,10 @@ def find_dsos_at_location_and_time (
     candidate_pks = []
     for d in dsos: # loop on DSOs
         # Filter based on existing images
-        if d.imaging_checklist_priority is None:
+        priority = d.observing_mode_priorities[mode]
+        if priority is None:
             continue
-        if d.imaging_checklist_priority < min_priority:
+        if priority < min_priority:
             continue
         # always include imaged = 'All'
         if imaged == 'Yes' and d.library_image is None:
@@ -66,9 +68,9 @@ def find_dsos_at_location_and_time (
                 continue
         elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
-        if gear is not None and len(d.targetdso.mode_list) > 0:
+        if gear is not None and len(d.mode_list) > 0:
             gear_set = set(gear)
-            dso_set = set(d.targetdso.mode_list)
+            dso_set = set(d.mode_list)
             n_overlap = len(gear_set.intersection(dso_set))
             if n_overlap < 1:
                 continue

@@ -88,6 +88,7 @@ class DSOInFieldInline(admin.StackedInline):
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
                 ('other_parameters', 'notes'),
+                'override_metadata',
             ]
         }),
     )
@@ -172,6 +173,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
                 ('other_parameters', 'notes'),
+                'override_metadata',
             ]
         }),
         ('DSOs in Field', {
@@ -490,6 +492,7 @@ class DSOInFieldAdmin(admin.ModelAdmin):
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
                 ('other_parameters','notes'),
+                'override_metadata',
             ]
         }),
         ('Metadata', {

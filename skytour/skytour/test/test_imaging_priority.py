@@ -8,7 +8,7 @@ def run_all(how='diff'):
         mode = dso.dsoobservingmode_set.filter(mode='I').first()
         if mode is None:
             continue
-        old = dso.imaging_checklist_priority
+        old = dso.mode_imaging_priority
         if old is None and how == 'diff':
             continue
         if old is not None and how != 'diff':

@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from jsonfield import JSONField
 from skyfield.api import Star
 from taggit.managers import TaggableManager
-from .utils import create_shown_name
+from .utils import create_shown_name, priority_color, priority_symbol, priority_span
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import Coordinates, LibraryAbstractImage, FieldView, ObservingLog, ObservableObject
 from ..abstract.utils import get_metadata
@@ -126,14 +126,15 @@ class DSOAbstract(Coordinates):
         null=True, blank=True,
         help_text='JSON object constructed from HyperLeda lookup'
     )
+    override_metadata = models.BooleanField (
+        _('Override Metadata'),
+        default = False,
+        help_text = 'Show model values for mag, angular size, etc. instead of Simbad/HyperLeda'
+    )
     simbad = JSONField(
         null=True, 
         blank=True,
         help_text='JSON object constructed from SIMBAD lookup'
-    )
-    override_metadata = JSONField(
-        null=True, blank=True,
-        help_text='Custom JSON Objects - overrides SIMBAD/HyperLeda values'
     )
 
     hyperleda_name = models.CharField (
@@ -162,9 +163,10 @@ class DSOAbstract(Coordinates):
         Get Magnitude from Hyperleda/Simbad/Override.
         """
         mag = self.magnitude
+        if self.overrride_metadata:
+            return (mag, None, 'O')
         hv = get_hyperleda_value(self, 'magnitude')
         sv = get_simbad_value(self, 'magnitude')
-        # TODO: Add Override
         if hv is not None:
             return (hv['value'], hv['system'], 'H')
         if sv is not None:
@@ -176,6 +178,8 @@ class DSOAbstract(Coordinates):
         """
         Get Surface Brightness from Hyperleda/Simbad/Override.
         """
+        if self.override_metadata:
+            return (sb, 'O')
         sb = self.surface_brightness
         hv = get_hyperleda_value(self, 'surface_brightness')
         if hv is not None: # Simbad data doesn't have this
@@ -188,6 +192,8 @@ class DSOAbstract(Coordinates):
         Get Angular Size from Hyperleda/Simbad/Override.
         """
         size = self.angular_size
+        if self.override_metadata:
+            return (size, 'O')
         hv = get_hyperleda_value(self, 'angsize')
         sv = get_simbad_value(self, 'angsize')
         # hv or sv or size might work
@@ -203,6 +209,8 @@ class DSOAbstract(Coordinates):
         Get Major Axis Size from Hyperleda/Simbad/Override.
         """
         size = self.major_axis_size
+        if self.override_metadata:
+            return (size, 'O')
         hv = get_hyperleda_value(self, 'amajor')
         sv = get_simbad_value(self, 'amajor')
         if hv is not None:
@@ -217,6 +225,8 @@ class DSOAbstract(Coordinates):
         Get Orientation (rotation) from Hyperleda/Simbad/Override
         """
         o = self.orientation_angle
+        if self.override_metadata:
+            return (o, 'O')
         hv = get_hyperleda_value(self, 'orientation')
         sv = get_simbad_value(self, 'orientation')
         if hv is not None:
@@ -232,6 +242,8 @@ class DSOAbstract(Coordinates):
         """
         d = self.distance
         u = self.distance_units
+        if self.override_metadata:
+            return (d, u, 'O')
         hv = get_hyperleda_value(self, 'distance')
         sv = get_simbad_value(self, 'distance')
 
@@ -380,7 +392,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             Therefore it always will use the default location!
         """
         default_min_altitude = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
-        ipri = self.imaging_checklist_priority
+        ipri = self.mode_imaging_priority
         alt = 20.
         delta_days, cos_hh = get_delta_hour_for_altitude(self.dec)
         if delta_days is None:
@@ -408,6 +420,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         return get_neighbors(self)
     
+    ### DEPRECATE
     @property
     def priority_value(self):
         """
@@ -418,6 +431,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             return None
         return dv[self.priority]
 
+    ### DEPRECATE
     @property
     def priority_color(self):
         if self.priority:
@@ -449,29 +463,65 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         return self.image_library.filter(use_in_carousel=True).count()
     
-    # TODO: Add support for multiple telescopes
+    @property
+    def observing_mode_priorities(self):
+        d = {}
+        modes = self.dsoobservingmode_set.all()
+        for m in 'NBSMI':
+            mode = modes.filter(mode=m).first()
+            priority = None if mode is None else mode.priority
+            d[m] = priority
+        return d
+    
+    @property
+    def mode_priority_string(self):
+        S = ['Lowest', 'Low', 'Medium', 'High', 'Highest']
+        out = {}
+        for k in 'NBSMI':
+            out[k] = 'None'
+            if k in self.observing_mode_priorities.keys():
+                p = self.observing_mode_priorities[k]
+                if p is not None:
+                    out[k] = S[p]
+        print("OUT: ", out)
+        return out
+    
+    @property
+    def mode_imaging_priority(self):
+        return self.observing_mode_priorities['I']
+
+    @property
+    def mode_imaging_priority_color(self):
+        return priority_color(self.mode_imaging_priority)
+    
+    @property
+    def mode_imaging_priority_symbol(self):
+        return priority_symbol(self.observing_mode_priorities['I'])
+    
+    @property
+    def mode_imaging_priority_span(self):
+        priority = self.observing_mode_priorities['I']
+        return mark_safe(priority_span(priority))
+    
+    ### NEW REPLACEMENTS FOR PRIORITY and LIBRARY_IMAGING_PRIORITY
+    # DEPRECATE
     @property
     def imaging_checklist_priority(self):
         """
-        Return Imaging Checklist Priority
-        TODO: DEPRECATE in favor of TargetDSOMode.priority
+        Return Imaging Priority
         """
         c = self.dsoimagingchecklist_set.first()
         if c and c.priority is not None:
             return c.priority
         return None
-    
-    # TODO: Add support for multiple telescopes
+
+    ### DEPRECATE
     @property 
     def color_imaging_checklist_priority(self):
         """
-        TODO: DEPRECATE in favor of TargetDSOMode.priority
+        TODO: DEPRECATE in favor of DSOObservingMode.priority
         """
-        colors = ['#888', '#c6f', '#6cf', '#0f0', '#ff6', '#f66']
-        p = self.imaging_checklist_priority
-        if p is not None:
-            return colors[p]
-        return None
+        return priority_color(self.imaging_checklist_priority)
     
     # TODO (someday): Add support for multiple telescopes
     @property
@@ -479,30 +529,12 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return '📷' if self.num_library_images > 0 else None
     
     @property
+    ### DEPRECATE
     def library_image_priority(self):
-        emoji_numbers = [ 
-            u"\u0030\uFE0F\u20E3", # 0
-            u"\u0031\uFE0F\u20E3", # 1
-            u"\u0032\uFE0F\u20E3", # 2
-            u"\u0033\uFE0F\u20E3", # 3
-            u"\u0034\uFE0F\u20E3", # 4
-            u"\u0035\uFE0F\u20E3"  # 5 
-        ]
-        light_circle_numbers = [
-            u"\u24EA", u"\u2460", u"\u2461", u"\u2462", u"\u2463", u"\u2464"
-        ]
-        dark_circle_numbers = [
-            u"\U0001F10C", u"\u278A", u"\u278B", u"\u278C", u"\u278D", u"\u278E"
-        ]
-        use = light_circle_numbers
-
         # TODO: Add support for multiple telescopes
         c = self.dsoimagingchecklist_set.first()
         if c:
-            my_priority = c.priority
-            if c.priority is not None and c.priority >= 0:
-                return use[my_priority]
-        # No priority or < 0
+            return priority_symbol(c.priority)
         return None
     
     @property
@@ -513,6 +545,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
     @property
+    ### DEPRECATE
     def is_on_imaging_checklist(self):
         """
         Used in HTML pages.
@@ -697,6 +730,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
                 continue
             mode = self.dsoobservingmode_set.filter(mode=k).first()
             v = mode.viable
+            out += f'<div class="mode-line">'
             out += f'<b> {k}</b>:  &nbsp;' 
             out += ' 0  &nbsp;' if mode.priority is None else f' {mode.priority}  &nbsp;'
             for i in range(11):
@@ -709,11 +743,12 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             if mode.interesting:
                 out += '<span style="color: #FF0; font-weight: bold;">⚡</span>'
             if mode.challenging:
-                out += '<span style="font-size: 75%">🏁</span>'
-            out += '<br>'
+                out += '<span style="color: #ff0; font-size: 110%;">☆</span>'
+            out += '</div>'
         out += '</pre></div>'
         return mark_safe(out)
     
+    ### NON-PROPERTY METHODS
     def max_altitude(self, location=None): # no location = default
         """
         Return the maximum altitude a DSO reaches at a given observing location.
@@ -1351,8 +1386,9 @@ IMAGING_ISSUES_CHOICES = (
 )
 class DSOImagingChecklist(models.Model):
     """
+    DEPRECATE!
     Separate table for Imaging Priorities.
-    TODO V2: DEPRECATE and rectify differences between TargetDSO* and these values.
+    TODO V2: DEPRECATE
     """
     priority = models.IntegerField(
         choices = IMAGING_PRIORITY_OPTIONS,

@@ -78,7 +78,7 @@ def construct_headers(options):
 
 def construct_modes(dso):
     x = []
-    modes = dso.targetdso.targetobservingmode_set.all()
+    modes = dso.dsoobservingmode_set.all()
     for mode in 'IMSBN':
         o = modes.filter(mode=mode).first()
         if o is not None:

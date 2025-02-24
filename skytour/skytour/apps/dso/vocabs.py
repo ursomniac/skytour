@@ -13,8 +13,10 @@ PRIORITY_CHOICES = [
     ('High', '3 - High'),
     ('Medium', '2 -Medium'),
     ('Low', '1 - Low'),
-    ('None', '0 - None')
+    ('Lowest', '0 - None')
 ]
+
+PRIORITY_VALUES = ['Lowest', 'Low', 'Medium', 'High', 'Highest']
 
 PRIORITY_COLORS = {
     'Highest': '#f00',
