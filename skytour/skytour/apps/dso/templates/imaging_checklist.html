@@ -94,8 +94,7 @@ summary::-webkit-details-marker {
     </tr>
 </thead>
 <tbody>
-{% for obj in dso_list %}
-    {% with obj.dso as dso %}
+{% for dso in dso_list %}
     <tr>
         <td>
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.shown_name}}</a>
@@ -113,12 +112,9 @@ summary::-webkit-details-marker {
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
         <td>
-          {{ obj.get_priority_display }}
-          {% if dso.is_on_imaging_checklist %} 
-            &nbsp; 
-            <span style="float: right; color: {{ dso.color_imaging_checklist_priority }}">
-            {{ dso.library_image_priority }}
-            </span>
+          {{ dso.mode_priority_dict|mode_priority_span:use_mode }}
+          {% if dso.mode_imaging_priority %} 
+          <span style="float: right;">{{ dso.mode_imaging_priority_span }}</span>
           {% endif %}
         </td>
         <td>
@@ -127,12 +123,8 @@ summary::-webkit-details-marker {
             <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        {% comment %}
-        <td>{% if dso.last_observed %}{{ dso.last_observed|date:'Y-m-d h:i' }} UT{% endif %}</td>
-        {% endcomment %}
         <td>{% if obj.issues %}{{ obj.issues }}{% endif %}</td>
     </tr>
-    {% endwith %}
 {% endfor %}
 </tbody>
 </table>

@@ -9,7 +9,7 @@ def create_shown_name(obj, use_con=True):
     things = []
     if obj.catalog.name in ['Bayer', 'Flamsteed']:
             try:
-                return "{} {}".format(obj.id_in_catalog, obj.object.constellation.abbreviation)
+                return "{} {}".format(obj.id_in_catalog, obj.constellation.abbreviation)
             except:
                 pass
     elif obj.catalog.name == 'Sharpless':
@@ -121,6 +121,8 @@ def priority_symbol(pri, type='light-circle'):
     return light_circle_numbers[pri]
 
 def priority_span(priority):
+    if priority is None or priority == 'None':
+        return None
     color = priority_color(priority)
     symbol = priority_symbol(priority)
     out = f'<span style="color: {color}">{symbol}</span>'
@@ -130,8 +132,7 @@ def get_priority_value_of_observing_mode(dso, mode):
     this_mode = dso.dsoobservingmode_set.filter(mode=mode).first()
     if this_mode is None:
         return None
-    priority = this_mode.priority
-    return priority
+    return this_mode.priority
 
 def get_priority_label_of_observing_mode(dso, mode):
     priority = get_priority_value_of_observing_mode(dso, mode)
@@ -140,5 +141,7 @@ def get_priority_label_of_observing_mode(dso, mode):
     return PRIORITY_VALUES[priority]
 
 def get_priority_span_of_observing_mode(dso, mode):
+    if mode is None:
+        return None
     priority = get_priority_value_of_observing_mode(dso, mode)
     return priority_span(priority)

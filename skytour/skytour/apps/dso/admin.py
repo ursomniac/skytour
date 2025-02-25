@@ -4,7 +4,7 @@ from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
-    DSOLibraryImage, DSOImagingChecklist, \
+    DSOLibraryImage, \
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
     DSOInField, DSOInFieldAlias, DSOObservingMode
 
@@ -55,10 +55,6 @@ class DSOLibraryImageAdmin(admin.StackedInline):
         }),
     )
 
-class DSOImagingChecklistInline(admin.TabularInline):
-    model = DSOImagingChecklist
-    extra = 0
-    
 class DSOAliasInline(admin.TabularInline):
     model = DSOAlias
     extra = 1
@@ -140,7 +136,6 @@ class DSOAdmin(ObservableObjectAdmin):
         'dso_finder_chart_narrow_tag',
         'dso_imaging_chart_tag',
         'atlas_plate_list',
-        'library_image_checklist_param',
         'has_dso_imaging_chart',
         'dsoinfield_table',
         'img_pri',
@@ -156,8 +151,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('constellation', 'show_on_skymap'),
                 ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type', 'priority'),
-                ('library_image_checklist_param', 'reimage'),
-                ('tags', 'map_label'),
+                ('reimage', 'tags', 'map_label'),
             ]
         }),
         ('Coordinates', {
@@ -205,7 +199,6 @@ class DSOAdmin(ObservableObjectAdmin):
     inlines = [
         DSOAliasInline, 
         DSOInFieldInline,
-        DSOImagingChecklistInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  
         DSOObservationAdmin,
@@ -234,7 +227,7 @@ class DSOAdmin(ObservableObjectAdmin):
     maj_axis.short_description = 'Size'
 
     def img_pri(self, obj):
-        return obj.library_image_priority
+        return obj.mode_imaging_priority
     img_pri.short_description = 'IP'
 
     def atlas_plate_list(self, obj):
@@ -244,14 +237,6 @@ class DSOAdmin(ObservableObjectAdmin):
             pp.append(p.plate_id)
         return pp
     atlas_plate_list.short_description = 'Plates'
-
-    def library_image_checklist_param(self, obj):
-        c = obj.dsoimagingchecklist_set.first()
-        if c is not None:
-            s = f"Priority: {c.priority}"
-            if c.issues:
-                s += f" Issues: {c.issues}"
-            return s
 
     def has_dso_imaging_chart(self, obj):
         return bool(obj.dso_imaging_chart) # Yeah, this is weird...
@@ -510,15 +495,8 @@ class DSOInFieldAdmin(admin.ModelAdmin):
     def distance_to_primary(self, obj):
         return f"{obj.primary_distance:5.1f}\' at {obj.primary_angle:5.1f}°"
 
-class DSOImagingChecklistAdmin(admin.ModelAdmin):
-    model = DSOImagingChecklist
-    search_fields = ['dso__nickname', 'dso__shown_name', 'dso__aliases__shown_name']
-
-
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
-# admin.site.register(DSOAlias)
 admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
-admin.site.register(DSOImagingChecklist, DSOImagingChecklistAdmin)

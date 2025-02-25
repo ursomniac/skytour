@@ -16,6 +16,7 @@ def checklist_params(request):
         #seen = request.GET.get('seen', False) == 'on',
         subset = request.GET.get('subset', 'all'),
         priority = int(request.GET.get('priority', 0)),
+        use_mode = request.GET.get('use_mode', None),
         dso_type = request.GET.get('dso_type', 'all'),
         exclude_issues = request.GET.getlist('exclude_issues', None),
         create_list = request.GET.get('create_list', False) == 'on',
@@ -28,18 +29,20 @@ def checklist_form(params, dsos):
     # constellation
     if params['constellation']:
         in_clist = [x.upper().strip() for x in params['constellation'].split(',')]
-        dsos = dsos.filter(dso__constellation__abbreviation__in=in_clist)
-    if params['priority'] > 0:
-        dsos = dsos.filter(priority__gte=(params['priority'] -1))
+        dsos = dsos.filter(constellation__abbreviation__in=in_clist)
+    #if params['priority'] > 0:
+    #    dsos = dsos.filter(priority__gte=(params['priority'] -1))
+    if params['use_mode'] is not None:
+        dsos = dsos.filter(dsoobservingmode__mode=params['use_mode'], dsoobservingmode__priority__gte=(params['priority'] - 1))
     if params['dso_type'] != 'all':
         in_list = DSO_TYPE_DICT[params['dso_type']]
-        dsos = dsos.filter(dso__object_type__slug__in=in_list)
+        dsos = dsos.filter(object_type__slug__in=in_list)
 
     if params['subset'] == 'seen':
-        good_ids = [x.pk if x.dso.num_library_images > 0 else None for x in dsos]
+        good_ids = [x.pk if x.num_library_images > 0 else None for x in dsos]
         dsos = dsos.filter(pk__in=good_ids)
     elif params['subset'] == 'unseen':
-        good_ids = [x.pk if x.dso.num_library_images == 0 else None for x in dsos]
+        good_ids = [x.pk if x.num_library_images == 0 else None for x in dsos]
         dsos = dsos.filter(pk__in=good_ids)
 
     for issue in params['exclude_issues']:
@@ -47,7 +50,6 @@ def checklist_form(params, dsos):
         if issue == 'all':
             continue
         dsos = dsos.exclude(issues=issue)
-        
     return dsos
 
 def create_new_observing_list(imaging_list, params):
@@ -58,13 +60,14 @@ def create_new_observing_list(imaging_list, params):
         Imaging: {params['subset']}
         Object Types: {params['dso_type']}
         Priority: {params['priority']}
+        Mode: {params['use_mode']}
     """
     new_list = DSOList()
     new_list.name = name
     new_list.description = description
     new_list.save() # need to do this before adding DSOs
     for item in imaging_list:
-        new_list.dso.add(item.dso)
+        new_list.add(item)
     new_list.save()
     return new_list
 
@@ -74,12 +77,12 @@ def get_filter_params(request):
         subset = request.GET.get('subset', 'all'),
         imaged = request.GET.get('imaged', 'all'),
         priority = int(request.GET.get('priority', 0)),
+        use_mode = request.GET.get('use_mode', None),
         dso_type = request.GET.get('dso_type', 'all'),
         ra_low = request.GET.get('ra_low', None),
         dec_low = request.GET.get('dec_low', None),
         ra_high = request.GET.get('ra_high', None),
         dec_high = request.GET.get('dec_high', None),
-        imaging_priority = int(request.GET.get('imaging_priority', 0)),
         redo_flag = request.GET.get('redo_flag', 'any')
     )
     return params
@@ -89,20 +92,11 @@ def filter_dsos(params, dsos):
         in_clist = [x.upper().strip() for x in params['constellation'].split(',')]
         dsos = dsos.filter(constellation__abbreviation__in=in_clist)
 
-    if params['priority'] > 0:
-        use = params['priority']
-        good_ids = [x.pk for x in dsos if x.priority_value >= use]
-        dsos = dsos.filter(pk__in=good_ids)
-
-    if params['imaging_priority'] > 0:
-        use = params['imaging_priority']
-        good_ids = []
-        for x in dsos:
-            if x.dsoimagingchecklist_set.count() > 0:
-                ip = x.dsoimagingchecklist_set.first().priority
-                if ip >= use:
-                    good_ids.append(x.pk)
-        dsos = dsos.filter(pk__in=good_ids)
+    # Have to do these two together
+    if params['use_mode'] is not None and params['priority'] > 0:
+        use_mode = params['use_mode']
+        use_pri = params['priority']
+        dsos = dsos.filter(dsoobservingmode__mode=use_mode, dsoobservingmode__priority__gte=use_pri)
 
     if params['redo_flag'] != 'any':
         use = params['redo_flag'] == 'yes'
@@ -144,9 +138,9 @@ def update_dso_filter_context(context, params):
     context['ra_low'] = params['ra_low']
     context['ra_high'] = params['ra_high']
     context['priority'] = params['priority']
+    context['use_mode'] = params['use_mode'] if params['use_mode'] is not None else context['observing_mode']
     context['dec_low'] = params['dec_low']
     context['dec_high'] = params['dec_high']
     context['dso_type'] = params['dso_type']
     context['redo_flag'] = params['redo_flag']
-    context['imaging_priority'] = params['imaging_priority']
     return context

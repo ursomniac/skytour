@@ -125,8 +125,7 @@
         <th>Size</th>
         <th>S.Br.</th>
         <th>Pri.</th>
-        <th># Obs./Img.</th>
-        <th>Last Obs.</th>
+        <th>Obs./Img.</th>
     </tr>
     
     {% for cat_object in object_list %}
@@ -168,33 +167,13 @@
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.surface_brightness|floatformat:1}}</td>
         <td>
-            {{ thing.priority }}
-            {% if thing.is_on_imaging_checklist %} 
-            &nbsp; 
-            <span style="float: right; color: {{ thing.color_imaging_checklist_priority }}">
-            {{ thing.library_image_priority }}
-            </span>
-        {% endif %}
+            {{ thing.mode_priority_dict|mode_priority_span:observing_mode }}
+            {% if thing.mode_imaging_priority %}
+            &nbsp; {{ thing.mode_imaging_priority_span }}
+            {% endif %}
         </td>
         <td style="vertical-align: middle;">
-            {{ thing.number_of_observations }} 
-            / {{ thing.num_library_images }} 
-
-            {% if thing.library_image_camera or thing.is_on_active_observing_list %}
-            <span style="float: right;">
-                <table class="flags"><tr>
-                <td>
-                {% if thing.library_image_camera %}{{ thing.library_image_camera }}{% else %}&nbsp;{% endif %}
-                </td>
-                <td>
-                {% if thing.is_on_active_observing_list %}🔭{% else %}&nbsp;{% endif %} 
-                </td>
-                </tr></table>
-            </span>
-            {% endif %}
-
-        </td>
-        <td>
+            {{ thing.number_of_observations }} / {{ thing.num_library_images }}
             {% if thing.last_observed %}
                 &nbsp;
                 <small>
@@ -208,6 +187,18 @@
                 {{ thing.last_observed|date:'Y-m-d H:i' }} UT
                 </span>
                 </small>
+            {% endif %}
+            {% if thing.library_image_camera or thing.is_on_active_observing_list %}
+            <span style="float: right;">
+                <table class="flags"><tr>
+                <td>
+                {% if thing.library_image_camera %}{{ thing.library_image_camera }}{% else %}&nbsp;{% endif %}
+                </td>
+                <td>
+                {% if thing.is_on_active_observing_list %}🔭{% else %}&nbsp;{% endif %} 
+                </td>
+                </tr></table>
+            </span>
             {% endif %}
         </td>
     </tr>

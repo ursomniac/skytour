@@ -91,9 +91,9 @@
                                     <a href="{% url 'dso-detail' object.pk %}" target="_blank">{{ object.shown_name }}</a>
                                 {% endif %}
                                 &nbsp;<span class="value">in {{ object.constellation.abbreviation }}</span>
-                                <span style="color: {{ object.color_imaging_checklist_priority }}">
-                                    &nbsp;{{ object.library_image_priority }}
-                                </span>
+                                {% if object.mode_imaging_priority %}
+                                    {{ object.mode_imaging_priority_span }}
+                                {% endif %}
                                 {% if object.num_slideshow_images > 1 %}
                                 <span class="special_tagline">SLIDES</span>
                                 {% else %}

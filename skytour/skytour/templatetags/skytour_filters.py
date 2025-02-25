@@ -1,6 +1,7 @@
 import datetime
 from django import template
-#from skytour.apps.utils.format import float2ang
+from django.utils.html import mark_safe
+from skytour.apps.dso.vocabs import PRIORITY_COLORS
 register = template.Library()
 
 @register.filter(name='dict_value')
@@ -162,3 +163,24 @@ def show_property_source(code):
         'L': 'HyperLeda'
     }
     return d[code] if code in d.keys() else ''
+
+#@register.filter(name='mode_priority')
+#def mode_priority(d, mode='S'):
+#    pri = '?'
+#    if mode in d.keys():
+#        pri = '' if d[mode] == 'None' else d[mode]
+#        if pri == 'None':
+#            return ''
+#    return pri
+
+@register.filter(name='mode_priority_span')
+def mode_priority_span(d, mode='S'):
+    VALS = {'None': 0, 'Lowest': 0, 'Low': 1, 'Medium': 2, 'High': 3, 'Highest': 4}
+    pri = 'None'
+    if mode in d.keys():
+        pri = d[mode]
+
+    color = PRIORITY_COLORS[pri]
+    val = VALS[pri]
+    out = f'<span style="color: {color}">{val} - {pri}</span>'
+    return mark_safe(out)

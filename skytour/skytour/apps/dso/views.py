@@ -22,7 +22,7 @@ from .forms import DSOFilterForm, DSOAddForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
-from .models import DSO, DSOList, AtlasPlate, DSOImagingChecklist
+from .models import DSO, DSOList, AtlasPlate
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import (
@@ -41,16 +41,13 @@ from .utils_checklist import (
     update_dso_filter_context
 )
 
-class DSOListView(ListView):
+# TODO V2: Fix filtering for priority!
+# TODO V2: Add mode considerations!
+class DSOListView(CookieMixin, ListView):
     model = DSO
     template_name = 'dso_list.html'
     context_object_name = 'dso_list'
     paginate_by = 100
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        params = get_filter_params(self.request)
-        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(DSOListView, self).get_context_data(**kwargs)
@@ -83,7 +80,8 @@ class DSODetailView(CookieMixin, DetailView):
 
         observing_mode = context['observing_mode']
         priority_label = get_priority_label_of_observing_mode(object, observing_mode)
-        priority_span = mark_safe(get_priority_span_of_observing_mode(object, observing_mode))
+        tmp_span = get_priority_span_of_observing_mode(object, observing_mode)
+        priority_span = None if tmp_span is None else mark_safe(tmp_span)
 
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
@@ -295,8 +293,12 @@ class DSOObservationLogView(CookieMixin, ListView):
         context['is_paginated'] = True
         return context
     
-class DSOChecklistView(ListView):
-    model = DSOImagingChecklist
+class DSOChecklistView(CookieMixin, ListView):
+    # TODO V2: Deal with priority filter!
+    # FIX: 
+    #   1. Add mode to form (default = current mode)
+    #   2. add that to filtering
+    model = DSO
     template_name = 'imaging_checklist.html'
     paginate_by = 100
 
@@ -305,7 +307,7 @@ class DSOChecklistView(ListView):
         # Deal with form
         form_params = checklist_params(self.request)
         # print ("FORM PARAMS: ", form_params)
-        all_dsos = DSOImagingChecklist.objects.all()
+        all_dsos = DSO.objects.all()
         
         #context['seen'] = 'checked' if form_params['seen'] else ''
         context['priority'] = form_params['priority']
@@ -316,6 +318,8 @@ class DSOChecklistView(ListView):
         context['dso_list'] = checklist_form(form_params, all_dsos)
         context['list_count'] = context['dso_list'].count()
         context['show_map'] = form_params['show_map']
+        use_mode = form_params['use_mode']
+        context['use_mode'] = use_mode if use_mode is not None else context['observing_mode']
         new_obs_list = None
         if form_params['create_list']:
             new_obs_list = create_new_observing_list(context['dso_list'], form_params)

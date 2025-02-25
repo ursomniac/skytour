@@ -70,7 +70,7 @@
             {% endif %}
         </td>
         <td>
-            {% if dso.mode_imaging_priority %} 
+            {% if dso.mode_imaging_priority is not None %} 
                 <span hidden>{{ dso.mode_imaging_priority }} </span>
                 {{ dso.mode_imaging_priority_span }}
             {% endif %}
@@ -79,9 +79,7 @@
                 <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        <td>
-            {{ dso.get_priority_display }}
-        </td>
+        <td>{{ dso.mode_priority_dict|mode_priority_span:observing_mode }}</td>
         <td>
             {{ dso.mode_set }}
         </td>

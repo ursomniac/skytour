@@ -155,10 +155,8 @@
                         <br><br>
 
                         {% if object.object_class == 'dso' %}
-                            <span style="color: {{ object.color_imaging_checklist_priority}}">
-                                {{ object.library_image_priority }} &nbsp;
-                            </span>
-
+                            {{ object.mode_imaging_priority_span }}
+                            &nbsp;
                             {{ object.object_type.short_name }}
                             {% if object.morphological_type %}: 
                                 <span type="value">{% if object.object_type.slug == 'globular-cluster' %}Class&nbsp;{% endif %}

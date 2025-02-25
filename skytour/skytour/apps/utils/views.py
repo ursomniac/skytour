@@ -10,7 +10,7 @@ from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-from .utils import original_objects_sort, new_objects_sort, get_filter_list
+from .utils import new_objects_sort
 from ..dso.models import DSO, DSOLibraryImage, DSOInField
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
@@ -113,15 +113,12 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         cat_list = Catalog.objects.order_by('slug')
         primary_dsos = DSO.objects.filter(catalog=object)
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
-        field_dsos = DSOInField.objects.filter(catalog=object)
-
+        field_dsos = DSOInField.objects.filter(catalog=object) if object.slug != 'hickson' else []
+        
         if object.slug in ['messier', 'caldwell', 'abell', 'hickson']: # Override pagination
             self.paginate_by = None
 
-        filters = get_filter_list(self.request)
-
-        #all_objects_sort = original_objects_sort(object, primary_dsos, alias_dsos, filters)
-        all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos, filters)
+        all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos)
         
         context = super(CatalogDetailView, self).get_context_data(
             object_list=all_objects_sort, 

@@ -163,7 +163,7 @@ class DSOAbstract(Coordinates):
         Get Magnitude from Hyperleda/Simbad/Override.
         """
         mag = self.magnitude
-        if self.overrride_metadata:
+        if self.override_metadata:
             return (mag, None, 'O')
         hv = get_hyperleda_value(self, 'magnitude')
         sv = get_simbad_value(self, 'magnitude')
@@ -419,24 +419,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         Return DSOs within ???° of object...
         """
         return get_neighbors(self)
-    
-    ### DEPRECATE
-    @property
-    def priority_value(self):
-        """
-        TODO V2: DEPRECATE?
-        """
-        dv = {'Highest': 4, 'High': 3, 'Medium': 2, 'Low': 1, 'None': 0}
-        if self.priority is None:
-            return None
-        return dv[self.priority]
-
-    ### DEPRECATE
-    @property
-    def priority_color(self):
-        if self.priority:
-            return PRIORITY_COLORS[self.priority]
-        return '#666'
 
     @property
     def atlas_plate_list(self):
@@ -463,32 +445,59 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         return self.image_library.filter(use_in_carousel=True).count()
     
+    ### MODE PROPERTIES
     @property
-    def observing_mode_priorities(self):
+    def mode_dict(self):
         d = {}
         modes = self.dsoobservingmode_set.all()
-        for m in 'NBSMI':
-            mode = modes.filter(mode=m).first()
-            priority = None if mode is None else mode.priority
-            d[m] = priority
+        for k in 'NBSMI':
+            mode = modes.filter(mode=k).first()
+            d[k] = None if mode is None else mode
         return d
     
     @property
-    def mode_priority_string(self):
+    def mode_priority_value_dict(self):
+        """
+        Make a dict of the integer priorities for each mode.
+        This is used in a template tag to display the priority
+        based on the current value of cookie['observing-mode']
+        """
+        out = {}
+        for k in 'NBSMI':
+            out[k] = None
+            mode_dict = self.mode_dict
+            if k in mode_dict.keys():
+                v = mode_dict[k]
+                if v is not None:
+                    p = v.priority
+                    if p is not None:
+                        out[k] = p
+        return out
+    @property
+    def mode_priority_dict(self): # This is stupid
+        return self.mode_priority_label_dict
+
+    @property
+    def mode_priority_label_dict(self):
+        """
+        Make a dict of the text priorities for each mode.
+        """
         S = ['Lowest', 'Low', 'Medium', 'High', 'Highest']
         out = {}
         for k in 'NBSMI':
             out[k] = 'None'
-            if k in self.observing_mode_priorities.keys():
-                p = self.observing_mode_priorities[k]
-                if p is not None:
-                    out[k] = S[p]
-        print("OUT: ", out)
+            v = self.mode_priority_value_dict[k]
+            if v is not None:
+                out[k] = S[v]
         return out
     
     @property
     def mode_imaging_priority(self):
-        return self.observing_mode_priorities['I']
+        """
+        Quick lookup to get the Imaging mode priority.
+        Used in the DSODetail view
+        """
+        return self.mode_priority_value_dict['I']
 
     @property
     def mode_imaging_priority_color(self):
@@ -496,46 +505,19 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def mode_imaging_priority_symbol(self):
-        return priority_symbol(self.observing_mode_priorities['I'])
+        return priority_symbol(self.mode_imaging_priority)
     
     @property
     def mode_imaging_priority_span(self):
-        priority = self.observing_mode_priorities['I']
+        priority = self.mode_imaging_priority
+        if priority is None: 
+            return None
         return mark_safe(priority_span(priority))
+    ### end of mode properties
     
-    ### NEW REPLACEMENTS FOR PRIORITY and LIBRARY_IMAGING_PRIORITY
-    # DEPRECATE
-    @property
-    def imaging_checklist_priority(self):
-        """
-        Return Imaging Priority
-        """
-        c = self.dsoimagingchecklist_set.first()
-        if c and c.priority is not None:
-            return c.priority
-        return None
-
-    ### DEPRECATE
-    @property 
-    def color_imaging_checklist_priority(self):
-        """
-        TODO: DEPRECATE in favor of DSOObservingMode.priority
-        """
-        return priority_color(self.imaging_checklist_priority)
-    
-    # TODO (someday): Add support for multiple telescopes
     @property
     def library_image_camera(self):
         return '📷' if self.num_library_images > 0 else None
-    
-    @property
-    ### DEPRECATE
-    def library_image_priority(self):
-        # TODO: Add support for multiple telescopes
-        c = self.dsoimagingchecklist_set.first()
-        if c:
-            return priority_symbol(c.priority)
-        return None
     
     @property
     def library_image(self):
@@ -544,14 +526,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         """
         return self.image_library.order_by('order_in_list').first() # returns None if none
 
-    @property
-    ### DEPRECATE
-    def is_on_imaging_checklist(self):
-        """
-        Used in HTML pages.
-        """
-        return self.dsoimagingchecklist_set.count() > 0
-    
     @property
     def label_on_chart(self):
         """
@@ -1368,51 +1342,6 @@ class AtlasPlateConstellationAnnotation(models.Model):
     constellation = models.ForeignKey(Constellation, on_delete=models.CASCADE)
     ra = models.FloatField(_('R.A.'))
     dec = models.FloatField(_('Dec.'))
-
-IMAGING_PRIORITY_OPTIONS = (
-    (-1, 'None'),
-    (0, 'Lowest'),
-    (1, 'Low'),
-    (2, 'Medium'),
-    (3, 'High'),
-    (4, 'Highest')
-)
-IMAGING_ISSUES_CHOICES = (
-    ('lowdec', 'Low Declination'),
-    ('angsize', 'Small Ang. Size'),
-    ('dim', 'Low Surf. Brightness'),
-    ('faint', 'Low V Magnitude'),
-    ('questionable', 'Might not be possible')
-)
-class DSOImagingChecklist(models.Model):
-    """
-    DEPRECATE!
-    Separate table for Imaging Priorities.
-    TODO V2: DEPRECATE
-    """
-    priority = models.IntegerField(
-        choices = IMAGING_PRIORITY_OPTIONS,
-        null = True, blank = True
-    )
-    issues = models.CharField(
-        _('Potential Issues'),
-        choices = IMAGING_ISSUES_CHOICES,
-        max_length = 20,
-        null = True, blank = True
-    )
-    dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
-    # TODO: Add Telescope so we can have different imaging priorities for different scopes
-
-    def get_absolute_url(self):
-        return '/dso/{}'.format(self.dso.pk)
-    
-    def __str__(self):
-        return self.dso.__str__()
-    
-    class Meta:
-        verbose_name = 'Imaging Checklist DSO'
-        verbose_name_plural = 'Imaging Checklist DSOs'
-        ordering = ['-dso__dec']
 
 class DSOObservingMode(models.Model):
     dso = models.ForeignKey('dso', on_delete=models.CASCADE)

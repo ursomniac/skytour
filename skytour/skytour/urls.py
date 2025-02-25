@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 
 admin.autodiscover()
+
 urlpatterns = [
     path('', include('skytour.apps.site.urls')),
     path('ajax_select/', include(ajax_select_urls)),

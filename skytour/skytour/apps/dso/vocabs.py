@@ -23,7 +23,8 @@ PRIORITY_COLORS = {
     'High': '#c90',
     'Medium': '#090',
     'Low': '#096',
-    'None': '#ccc'
+    'Lowest': '#999',
+    'None': '#999'
 }
 
 MILKY_WAY_CONTOUR_COLORS = [

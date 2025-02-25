@@ -1,6 +1,7 @@
 from dateutil.parser import isoparse
 import datetime as dt
 from .apps.observe.models import ObservingLocation
+from .apps.session.utils import get_observing_mode_string
 
 def adjust_date(mydate, offset=0):
     this_month = mydate.month
@@ -29,6 +30,8 @@ def get_global_items(request):
         local_time = dt.datetime.now() # This will come back as UTC because the server is set to that.
         local_time_str = None
     local_time_str = local_time.strftime("%b %d, %Y  %I:%M %p %Z")
+    observing_mode = user_preferences.get('observing_mode', 'I')
+    observing_mode_string = get_observing_mode_string(observing_mode)
 
     # Set next_month and previous_month
     now = dt.datetime.now(dt.timezone.utc)
@@ -44,5 +47,7 @@ def get_global_items(request):
         cookie_utdt = ut,
         cookie_local = local_time,
         next_month = next_month,
-        previous_month = previous_month
+        previous_month = previous_month,
+        observing_mode = observing_mode,
+        observing_mode_string = observing_mode_string
     )

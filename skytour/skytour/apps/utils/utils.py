@@ -1,13 +1,5 @@
 from itertools import takewhile
 
-def get_filter_list(request):
-    filters = []
-    filter_names = ['seen', 'important', 'unseen', 'available', 'imaged', 'unimaged']
-    for f in filter_names:
-        if request.GET.get(f, False):
-            filters.append(f)
-    return filters
-
 def filter_dso_test(dso, filters):
     if filters is None:
         return dso
@@ -34,31 +26,7 @@ def try_int(x):
             return int(foo)
         return 0
 
-def original_objects_sort(catalog, primary_dsos, alias_dsos, filters):
-    all_objects = []
-    for o in primary_dsos:
-        if filters is not None and filter_dso_test(o, filters) is None:
-            continue
-        entry = {}
-        entry['in_catalog'] = o.id_in_catalog
-        entry['primary_catalog'] = None
-        entry['dso'] = o
-        all_objects.append(entry)
-    for o in alias_dsos:
-        if filters is not None and filter_dso_test(o, filters) is None:
-            continue
-        entry = {}
-        entry['primary_catalog'] = o.shown_name
-        entry['in_catalog'] = o.aliases.filter(catalog = catalog).first().id_in_catalog
-        entry['dso'] = o
-        all_objects.append(entry)
-    try:
-        all_objects_sort = sorted(all_objects, key=lambda d: try_int(d['in_catalog']))
-    except:
-        all_objects_sort = sorted(all_objects, key=lambda d: str(d['in_catalog']))
-    return all_objects_sort
-
-def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos, filters):
+def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
     digits = 3 if catalog.number_objects is None else len(f"{catalog.number_objects}")
     odict = {}
     all_objects_sort = []

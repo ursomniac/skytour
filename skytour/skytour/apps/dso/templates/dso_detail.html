@@ -193,8 +193,11 @@
 					<br>
 					<div class="conditions">
 						<span class="object-metadata">Priority:</span>&nbsp;
-							{{ mode_priority_label }} &nbsp; &nbsp;					
+							{{ mode_priority_label }} 
+							{% if mode_priority_span %}
+							&nbsp;&nbsp;					
 							{{ mode_priority_span }}
+							{% endif %}
 							{% if object.reimage %}
 							<span style="color:#0cc"> - REDO </span>
 							{% endif %}
@@ -450,7 +453,7 @@
 		</tr>
 		{% endfor %}
 		</table>
-		{% endif %}
+		{% endif %} 
 		<a name="nearby_dsos"></a>
 		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h3>
 			<small>
@@ -460,15 +463,15 @@
 				<td width="20%">
 					{% if x is not None %}
 						<a href="{% url 'dso-detail' x.pk %}">{{ x.label_on_chart }}</a>
-						({{ x.object_type.short_name }}, 
-						<span style="color: {{ x.priority_color }}">{{ x.priority }}</span>
-						{% if x.library_image_priority %}
-							&nbsp;
-							<span style="color: {{ x.color_imaging_checklist_priority }}">{{ x.library_image_priority }}</span>
-						{% endif %}
-						{% if x.library_image_camera %}{{ x.library_image_camera }}{% endif %}
-						{% if x.is_on_active_observing_list %}🔭{% endif %}
-						{% if x.reimage %}↪️{% endif %}
+						(
+							{{ x.object_type.short_name }}, 
+							{{ x.mode_priority_dict|mode_priority_span:observing_mode }}
+							{% if x.mode_imaging_priority is not None %}
+								&nbsp;{{ x.mode_imaging_priority_span }}
+							{% endif %}
+							{% if x.library_image_camera %}{{ x.library_image_camera }}{% endif %}
+							{% if x.is_on_active_observing_list %}🔭{% endif %}
+							{% if x.reimage %}↪️{% endif %}
 						)
 						{% if not forloop.last %}, {% endif %}
 					{% endif %}

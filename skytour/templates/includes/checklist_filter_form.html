@@ -28,7 +28,16 @@
             <option value=2 {% if priority == 2 %}selected{% endif %}>Low</option>
             <option value=1 {% if priority == 1 %}selected{% endif %}>Lowest</option>
           </select>
-          &nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <b>Mode: </b>
+          <select name="use_mode">
+            <option value="I" {% if use_mode == "I" %}selected{% endif %}>Imaging Telescope</option>
+            <option value="M" {% if use_mode == "M" %}selected{% endif %}>Medium Telescope</option>
+            <option value="S" {% if use_mode == "S" %}selected{% endif %}>Small Telescope</option>
+            <option value="B" {% if use_mode == "B" %}selected{% endif %}>Binoculars</option>
+            <option value="N" {% if use_mode == "N" %}selected{% endif %}>Naked Eye</option>
+          </select>
+          &nbsp;&nbsp;
           <b>Show Map: </b>
           <input name="show_map" type="checkbox" 
             {% if show_map %}checked{% endif %}>

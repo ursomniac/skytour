@@ -55,7 +55,7 @@ def find_dsos_at_location_and_time (
     candidate_pks = []
     for d in dsos: # loop on DSOs
         # Filter based on existing images
-        priority = d.observing_mode_priorities[mode]
+        priority = d.mode_priority_value_dict[mode]
         if priority is None:
             continue
         if priority < min_priority:

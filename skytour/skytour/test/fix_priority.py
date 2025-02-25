@@ -1,5 +1,6 @@
 from skytour.apps.dso.models import DSO
 
+# TODO: REMOVE WHEN V2 is done!
 def haz(x):
     if x is None:
         return ''

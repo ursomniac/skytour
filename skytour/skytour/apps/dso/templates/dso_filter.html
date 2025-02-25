@@ -61,10 +61,14 @@
             <td>{{ dso.short_ra_dec }}</td>
             <td>{{ dso.object_type }}</td>
             <td>
-                {{ dso.priority }}
-                <span style="color: {{ dso.color_imaging_checklist_priority }}">
-                    {{ dso.library_image_priority }}
-                </span>
+                {{ dso.mode_priority_dict|mode_priority_span:observing_mode }}
+                {% if dso.mode_imaging_priority is not None %} 
+                <span hidden>{{ dso.mode_imaging_priority }} </span>
+                {{ dso.mode_imaging_priority_span }}
+            {% endif %}
+            {% if dso.library_image_camera %}
+                <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
+            {% endif %}
             </td>
             <td>{{ dso.magnitude }}</td>
             <td>{{ dso.angular_size }}</td>
