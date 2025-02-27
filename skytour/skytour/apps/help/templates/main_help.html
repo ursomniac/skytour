@@ -1,0 +1,55 @@
+{% extends 'help_base.html' %}
+{% block help_page %}
+<h2>Skytour</h2>
+
+<h3>Overview</h3>
+
+<p>This software is to help you:</p>
+<ul>
+    <li>Plan Observing Sessions</li>
+    <li>Record/Log Observations</li>
+    <li>Add Images Your Taken</li>
+</ul>
+
+<p>It is designed for observing in several modes:</p>
+<ul>
+    <li>Naked-Eye</li>
+    <li>Binoculars</li>
+    <li>Small Telescopes (&leq; 6")</li>
+    <li>Medium Telescopes (&gt; 6")</li>
+    <li>Imaging ("Smart") Telescopes</li>
+</ul>
+
+<p>It comes with an extensive library of 
+    several thousand Deep-Sky Objects (DSOs)
+    and Solar-System Objects (SSOs).   You can
+    add comets and asteroids.
+</p>
+
+If you travel with your scopes, you can add as many observing locations as you want.
+
+<h3>How it basically works</h3>
+
+<h4>Setting the Cookie</h4>
+<p>Everything operates against a "cookie" where you set:
+    <ul>
+        <li>Your Location</li>
+        <li>The UT Date/Time</li>
+        <li>What Mode You'll be Using (mainly)</li>
+    </ul>
+The cookie sorts out "what's up when", including the location of the Planets,
+and any Asteroids/Comets you've included.</p>
+
+<p>From there, you can create observing "to do" lists (if you want), or get a list of
+    all available targets either "right now" or "at the time of the cookie" (or some time
+    offset from either)
+
+<h4>Starting an Observing Session</h4>
+<p>When you start a new Observing Session you can log every object you observe,
+    as well as observing conditions (weather, sky brightness - if you have a light
+    meter). Skytour keeps track of all that logging for you.  It you're using an optical telescope,
+    you can also record the eyepieces and filters used.
+</p>
+<p>If you're using an imaging "smart" scope you can upload images of the objects you've
+    observed.</p>
+{% endblock %}
