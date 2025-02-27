@@ -184,6 +184,9 @@ summary::-webkit-details-marker {
         <th>Mag.</th>
         <th>Surf.</th>
         <th>Size</th>
+        {% if observing_mode != 'I' %}
+        <th>Priority<br>(Mode {{ observing_mode }})</th>
+        {% endif %}
         <th>Img</th>
         <th>Gear</th>
         <!--th>Obs</th-->
@@ -224,6 +227,11 @@ summary::-webkit-details-marker {
         <td>{{ dso.magnitude|floatformat:2 }}</td>
         <td>{{ dso.surface_brightness|floatformat:1}}</td>
         <td>{{ dso.major_axis_size|floatformat:1 }}</td>
+        {% if observing_mode != 'I' %}
+        <td>
+            {{ dso.mode_priority_dict|mode_priority_span:observing_mode }}
+        </td>
+        {% endif %}
         <td>
             {% if dso.mode_imaging_priority %} 
                 <span hidden>{{ dso.mode_imaging_priority }} </span>
@@ -263,5 +271,6 @@ summary::-webkit-details-marker {
 </small>
 {% include 'includes/sortable_table.html' %}
 <br/>
+{% include 'includes/performance_time.html' %}
 
 {% endblock %}

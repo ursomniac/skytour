@@ -1,56 +1,52 @@
-{% load static %}
-<!doctype html>
-<html lang="end">
-<head>
-	<meta charset="utf-8">
-	<title>{% block title %}SkyTour{% endblock title %}</title>
-	<link rel="stylesheet" href="/media/css/jquery-ui.min.css" type="text/css">
-	<script type="text/javascript" src="/media/js/jquery-3.6.0.min.js"></script>
-	<script src="/media/js/jquery-ui/external/jquery/jquery.js"></script>
-	<script src="/media/js/jquery-ui/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="/media/js/datatables.min.js"></script>
-	{% block extra_head %}{% endblock extra_head %}
-
-	<link rel="stylesheet" type="text/css" href="/media/css/datatables.css" type="text/css">
-	<link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
-	{% block styles %}{% endblock styles %}
-</head>
-<body>
-{% block header  %}
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block content %}
 <style>
-	.help-start { 
-		width: 100%;
-		background-color: #933;
-		padding: 10px;
-	}
-	h3 { color: #f63; font-size: 120%; }
-	h4 { color: #f96; font-size: 110%; }
-	ul.list-of-defs { list-style-type: none }
+    td.nav { 
+        font-size 12px;
+        background-color: #033;
+        vertical-align:top!important;
+        width: 15%;
+    }
+    td.nav ul {
+        list-style-type: none;
+        padding-inline-start: 15px;
+    }
+    td.nav ul.main li {
+        margin-top: 5px!important;
+        font-size: 14px;
+    }
+    td.nav ul.inner > li {
+        line-height: 1.25;
+    }
+    h2 { 
+        margin-top: 0px;
+        color: #ff9;
+    }
+    h3 {
+        color: #f99;
+    }
+    h4 {
+        color: #fff;
+    }
+    .body {
+        padding: 5px 20px;
+        vertical-align: top!important;
+    }
+    table.help-page { 
+        border: 1px solid #666;
+    }
 </style>
-<div class='help-start' style="width: 100%; background-color: #933; padding: 10px; ">
-	<button onClick="return closeHelpPopup();">Close Window</button>
-</div>
-{% endblock header  %}
 
-{% block content %}{% endblock content %}
-{% block footer  %}
-<footer>
-<div class="footer">
-	<br clear="all"/>
-	<p>
-	© {% now 'Y' %} - Skepsis Interplanetary
-	{% comment %}<br> UP: {{ user_preferences }}{% endcomment %}
-	</p>
-</div>
-</footer>
-{% endblock footer  %}
-<script>
-function closeHelpPopup() {
-	var me = window.self;
-	me.opener = me.self;
-	me.close();
-}
-</script>
-{% block extra-js %}{% endblock extra-js %}
-</body>
-</html>
+<h1>Skytour Help</h1>
+
+<table class="help-page">
+    <tr>
+        <td class="nav">{% include 'help_left_nav.html' %}</td>
+        <td class="body">
+            {% block help_page %}
+            {% endblock %}
+        </td>
+    </tr>
+</table>
+{% endblock content %}

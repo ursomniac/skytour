@@ -15,6 +15,7 @@ from django.views.generic.list import ListView
 from ..abstract.utils import get_real_time_conditions
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
+from ..utils.timer import compile_times
 
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
@@ -437,12 +438,12 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         if max_dec is not None:
             dso_list = dso_list.filter(dec__lte=max_dec)
 
-        up_dict = find_dsos_at_location_and_time (
+        up_dict, times = find_dsos_at_location_and_time (
             dsos = dso_list,                         # DSO List to start with - filtered by declination
             utdt = context['utdt'],                  # UTDT of now or the cookie
             offset_hours = context['ut_offset'],     # Offset the time as instructed
             imaged = context['imaged'],              # Only (don't) show objects with library images
-            min_priority = context['min_priority'],  # Filter by priority - TODO V2: change this!
+            min_priority = context['min_priority'],  # Filter by priority
             location = location,                     # ObservingLocation object from the cookie
             min_alt = context['min_alt'],            # Minimum altitude
             max_alt = context['max_alt'],            # Maximum altitude
@@ -460,7 +461,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['dso_count'] = dsos.count()
         context['table_id'] = 'available_table'
         context['location'] = up_dict['location']
-        
+        context['times'] = compile_times(times)
+
         # Set gear in form
         for g in 'NBSMI':
             context[f'gear{g}'] = g if gear and g in gear else None

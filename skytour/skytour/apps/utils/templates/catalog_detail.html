@@ -25,7 +25,10 @@
     table.cats td {
         font-size: 80%;
     }
-
+    th { 
+        background-color: #993;
+        color: #000;
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -124,8 +127,11 @@
         <th>Mag</th>
         <th>Size</th>
         <th>S.Br.</th>
-        <th>Pri.</th>
-        <th>Obs./Img.</th>
+        {% if observing_mode != 'I' %}
+        <th>Priority<br>(Mode {{ observing_mode }})</th>
+        {% endif %}
+        <th>Img.</th>
+        <th>Last Observed</th>
     </tr>
     
     {% for cat_object in object_list %}
@@ -166,8 +172,12 @@
         <td>{{ thing.magnitude }}</td>
         <td>{{ thing.angular_size }}</td>
         <td>{{ thing.surface_brightness|floatformat:1}}</td>
+        {% if observing_mode != 'I' %}
         <td>
             {{ thing.mode_priority_dict|mode_priority_span:observing_mode }}
+        </td>
+        {% endif %}
+        <td>
             {% if thing.mode_imaging_priority %}
             &nbsp; {{ thing.mode_imaging_priority_span }}
             {% endif %}

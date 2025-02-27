@@ -20,9 +20,11 @@
         <th>Mag.</th>
         <th>Surf.</th>
         <th>Size</th>
+        {% if observing_mode != 'I' %}
+        <th>Priority<br>(Mode {{ observing_mode }})</th>
+        {% endif %}
         <th>Img</th>
         <th>Obs</th>
-        <th>Mode</th>
         <th>Last Obs.</th>
     </tr>
 </thead>
@@ -68,7 +70,10 @@
             {% if dso.find_major_axis_size.0 %}
             {{ dso.find_major_axis_size.0|floatformat:1 }}
             {% endif %}
-        </td>
+        </td>        
+        {% if observing_mode != 'I' %}
+        <td>{{ dso.mode_priority_dict|mode_priority_span:observing_mode }}</td>
+        {% endif %}
         <td>
             {% if dso.mode_imaging_priority is not None %} 
                 <span hidden>{{ dso.mode_imaging_priority }} </span>
@@ -79,7 +84,6 @@
                 <span style="float: right;">{{ dso.library_image_camera }}&nbsp;&nbsp;</span>
             {% endif %}
         </td>
-        <td>{{ dso.mode_priority_dict|mode_priority_span:observing_mode }}</td>
         <td>
             {{ dso.mode_set }}
         </td>

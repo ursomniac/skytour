@@ -463,16 +463,14 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         based on the current value of cookie['observing-mode']
         """
         out = {}
+        modes = self.dsoobservingmode_set.all()
+        for mode in modes:
+            out[mode.mode] = mode.priority
         for k in 'NBSMI':
-            out[k] = None
-            mode_dict = self.mode_dict
-            if k in mode_dict.keys():
-                v = mode_dict[k]
-                if v is not None:
-                    p = v.priority
-                    if p is not None:
-                        out[k] = p
+            if k not in out.keys():
+                out[k] = None
         return out
+    
     @property
     def mode_priority_dict(self): # This is stupid
         return self.mode_priority_label_dict

@@ -1,6 +1,7 @@
 import datetime as dt, pytz
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
+import time
 
 # NOTE: This is in its own app mostly to get around a circular import problem.
 
@@ -36,8 +37,11 @@ def find_dsos_at_location_and_time (
         max_dec = None,     # REMOVE
         mask = True,
         gear = None,
-        scheduled = False
+        scheduled = False,
+        times = None
     ):
+
+    times = [(time.perf_counter(), 'Start')] if times is None else times
 
     # 1. sort out time if not sent
     if utdt is None:
@@ -51,7 +55,9 @@ def find_dsos_at_location_and_time (
     if location is None:
         location_id = find_site_parameter('default-location-id', default=1, param_type='positive')
         location = ObservingLocation.objects.get(pk=location_id)
-        
+    
+    times.append((time.perf_counter(), 'Filtering DSOs'))
+
     candidate_pks = []
     for d in dsos: # loop on DSOs
         # Filter based on existing images
@@ -80,7 +86,10 @@ def find_dsos_at_location_and_time (
         in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask)
         if in_window:
             candidate_pks.append(d.pk)
+        first = False
     
+    times.append((time.perf_counter(), 'Assemble DSO List'))
+
     # Given the subset of DSOs - assemble the list
     dsos = dsos.filter(pk__in=candidate_pks)
     for d in dsos:
@@ -89,7 +98,7 @@ def find_dsos_at_location_and_time (
         d.altitude = alt
         d.airmass = secz
 
-    return dict(utdt=utdt, dsos=dsos, location=location)
+    return dict(utdt=utdt, dsos=dsos, location=location), times
 
 def assemble_gear_list(request):
     out = ""
