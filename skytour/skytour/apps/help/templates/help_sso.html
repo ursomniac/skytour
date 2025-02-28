@@ -1,0 +1,61 @@
+{% extends 'help_base.html' %}
+{% block help_page %}
+<h2>Solar System Objects - SSOs</h2>
+<p>
+When setting the cookie all of the positions of the planets,
+and targeted asteroids and comets will be calculated and stored.
+</p><p>
+    From there, you can look up any of these, and find them on the Skymap.
+</p>
+<h3>Planets</h3>
+<p>
+    Planetary positions and other metadata are calculated when a new cookie is generated.
+</p>
+<p>
+    For the inferior planets, Mercury and Venus, their phases are also determined.
+</p>
+<h4>Planetary Moons</h4>
+<p>All of the primary moons (and several of the brighter secondary moons) are
+    stored and positions are calculated when the cookie is generated.
+</p>
+<h4>Other Planetary Features</h4>
+<p>
+    For Mars and Jupiter, the positions for Martian surface features 
+    and Jupiter's Great Red Spot are calculated to see if they're 
+    visible at the date/time of the cookie.
+</p>
+<h3>The Moon</h3>
+<p>
+The moon is also added to the cookie.  It's position is used with the "Real Time"
+view for any DSO/SSO to show how far away an object is from the Moon in the sky,
+if the Moon is above the horizon.
+</p>
+<h3>Asteroids</h3>
+<p>
+These are a subset of the full MPC Asteroid list - stored in the
+`bright_asteroids.txt` file.   You can add to this for other asteroids,
+and then use the Admin to put them in the "active" list.
+</p>
+<h4>Dwarf Planets</h4>
+<p>
+Pluto and the other dwarf planets are stored alongside the asteroids
+if for no other reason than that their orbital elements used to calculate
+their positions and magnitudes are in the MPC Asteroid database.
+</p>
+<h3>Comets</h3>
+Likewise "active" comets have their positions calculated and brightest estimated
+when a new cookie is generated.   The orbital elements are also 
+pulled  <a href="https://www.minorplanetcenter.net/iau/MPCORB/CometEls.txt">
+    from the MPC</a>.
+</p>
+<h4>Slight Bug</h4>
+    <i>This might no longer be true!</i>
+    <p>
+If you download a new version of the file, you have to edit it to remove 
+commas from the file:  the Skyfield package doesn't parse this correctly.
+</p>
+<p>It's a good idea to download updated version of this file every few months, 
+    especially if a newly-discovered comet might become visible.</p>
+<h3>Meteor Showers</h3>
+<h3>Tracking SSOs</h3>
+{% endblock %}

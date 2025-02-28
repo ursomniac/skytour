@@ -11,7 +11,7 @@
 {% block content %}
 <table>
     <tr>
-        <td width="20%">
+        <td width="20%"> 
             <h1> {{ object.name }}</h1> 
             {% if in_cookie %}
             <h3> Currently in 
@@ -70,18 +70,13 @@
 <table>
     <thead>
     <tr>
-        <th>Session</th>
         <th>Location</th>
         <th>Observe</th>
-        <th>Almanac</th>
+        <th>Maps</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td width="25%"  style="vertical-align:top;">
-            {% include 'inc_date_time.html' %}
-            {% include 'inc_location.html' %}
-        </td>
         <td width="25%" style="vertical-align:top;">
             {% with asteroid as obj %}
             {% include 'inc_coordinates.html' %}
@@ -94,13 +89,18 @@
         </td>
 
         <td width="25%" style="vertical-align:top;">
-        {% with asteroid as obj %}
-        {% include 'inc_rise_set.html' %}
-        {% endwith %}
+            <button onclick="return realtimePopup('/solar_system/sso_map/asteroid/{{ object.pk }}/wide')">
+                Wide Area Map (10°)
+            </button>
+            <br>
+            <button onclick="return realtimePopup('/solar_system/sso_map/asteroid/{{ object.pk }}/narrow')">
+                Narrow Area Map (4°)
+            </button>
         </td>
     </tr>
 </table>
 <br><br>
+{% comment %}
 <table class="lite">
     <tr>
         <td style="text-align: center;">
@@ -112,6 +112,7 @@
     </tr>
     </tbody>
 </table>
+{% endcomment %}
 
 {% with instance=object admin_dir='solar_system/asteroid' %}
 {% include 'includes/observation_section.html' %}

@@ -9,3 +9,14 @@
         return false;
     }
 </script>
+
+<script>
+    function mapPopup(url) {
+        newWindow = window.open(
+            url,
+            'Map Popup',
+            'height=800,  width=800'
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }

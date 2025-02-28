@@ -1,0 +1,128 @@
+{% extends 'help_base.html' %}
+{% block help_page %}
+<h2>Deep Sky Objects - DSOs</h2>
+<h3>The DSO Catalog</h3>
+<p>
+Skytour comes seeded with a table of over 3,000 deep-sky objects.
+</p>
+<p>
+This list is somewhat complete, in that it tries to incorporate objects 
+in both with hemispheres down to approximately 13th magnitude, which 
+should suffice for most small/medium telescopes as well as the imaging/"smart"
+telescopes currently on the market.
+</p>
+<h3>DSO Fields</h3>
+<p>
+To avoid crowding and taking into consideration that in many cases 
+more than one DSO can appear in a telescope's (wide) field of view,
+there's a related "DSOInField" table of - i.e., over 2,000 additional DSOs that
+are adjacent to (usually brighter) DSOs.  (So the total is just over 6,000.)
+</p>
+<p>
+Thus going to a "DSO page", for example, M 106 the record contains not only the
+bright galaxy, but also 3 other nearby galaxies.  In general, all the galaxies brighter
+than magnitude 13.0 within ~45 arcminutes of the "primary" DSO will be included.
+</p>
+<p>
+    <i>Occasionally</i> two adjacent objects might be held as separate records:
+    for example, Caldwell 60 and 61 (the "Antenna Galaxies") have separate entries,
+    even though their fields overlap.
+</p>
+<p>Using the Search box in the top navigation WILL scan both lists: in other words,
+    searching for "NGC 4232" will return the page for "M 106" because the former is
+    in the field of the latter.
+</p>
+<h3>DSO Metadata</h3>
+Where possible each DSO has the following metadata:
+<ul>
+    <li>Coordinates (J2000)</li>
+    <li>Magnitude (typically V band)</li>
+    <li>Angular Size</li>
+    <li>Surface Brightness (in mag/arcmin<sup>2</sup>)</li>
+    <li>Distance (units vary based on scale)</li>
+    <li>Object Type (galaxy, nebula, cluster, etc.)</li>
+    <li>Morphological Type - varies by object type:
+        <ul>
+            <li>Galaxies - Shapley classfication, e.g., SAc</li>
+            <li>Globular Clusters - Harlow/Hogg (from I to XII)</li>
+            <li>Open Clusteres - Trumpler, e.g., II 2 r</li>
+            <li>Dark Nebulae - Barnard opacity</li>
+            <li>Bright Nebulae - Sharpless, e.g, 2 1 2</li>
+            <li>Planetary Nebulae - Vorontsov-Velyaminov, e.g., 4+3a</li>
+            <li>Orientation Angle - degrees E from N</li>
+            <li>Contrast Index - obtained through Stellarium - not sure how to use it</li>
+        </ul>
+    </li>
+</ul>
+
+<h4>Metadata Sources</h4>
+<p>While the DSO and DSOInField models have fields for all of the above,
+    seeding of the database tables pulls from SIMBAD and HyperLeda (mostly for galaxies).
+    On display, the code tries them in the order HyperLeda, SIMBAD, and what in the Admin;
+    you can override this to use just the Admin in the DSO records (on a case-by-case basis).
+</p>
+<h4>Object Types</h4>
+
+<h3>DSO Observing Modes</h3>
+<p>Each DSO (and it's associated "field") is assign one or more observing "modes"
+    related to how appropriate it might be to different observing situations:
+
+    <ul>
+        <li><b>N</b>: Naked-Eye - objects that don't require optical aid to detect,
+            presuming mostly dark (no Moon) conditions at a relatively dark location.
+            Typically these objects will be 6th magnitude or brighter.</li>
+        <li><b>B</b>: Binoculars - objects that are somewhat large (several arcminutes)
+            and bright (< magnitude ~7.5)</li>
+        <li><b>S</b>: Small Telescope - with aperture &le; 6" - objects down to about
+            magnitude 11, or - in a few cases - fainter but with high surface brightness.</li>
+        <li><b>M</b>: Medium Telescope - with aperture &gt; 6" - objects down to magnitude 12
+            (sometimes fainter)</li>
+        <li><b>I</b>: Imaging Telescope - mostly objects with magnitude < 15, but also
+            excluding those with very small angular size - usually 2' in diameter, 
+            however exceptions have been made for some even smaller objects - down to ~30'
+            because post-processing of image stacks have been somewhat successful in 
+            showing structure.</li> 
+    </ul>
+
+<h4>DSO Observing Priorities</h4>
+<p>For each mode assigned a "priority" has been set:
+    <ul>
+        <li><b>0</b> - Lowest - almost not worth attempting</li>
+        <li><b>1</b> - Low - doable, but not likely to be especially interesting</li>
+        <li><b>2</b> - Medium - less well-known, generally smaller or fainter or 
+            unlikely to show much detail</li>
+        <li><b>3</b> - High - definitely worth attempting</li>
+        <li><b>4</b> - Highest - the "must see" objects on anyone's list</li>
+    </ul>
+
+    <p>These are all arbitrary.</p>
+
+    <p>On many pages, the Imaging Mode Priority is shown (encircled number with color)
+        to make it easy to scan lists if you're using an imaging/"smart" telescope.
+        For the other modes, the format is the priority value and label, 
+        e.g., "3 - High".
+    </p>
+
+ <h4>DSO Observing Viability</h4>
+ <p>In addition, there is also a "viability" assigned to each mode for a DSO.  These
+    range from 0 to 10, and crudely (and arbitrarily) say how difficult it would be
+    to observe (or even detect) an object:
+
+    <ul>
+        <li><b>0</b> - Not Viable</li>
+        <li><b>1</b> - Unlikely Viable</li>
+        <li><b>2</b> - Extreme Difficulty</li>
+        <li><b>3</b> - (Very)) Difficult</li>
+        <li><b>4</b> - Challenging</li>
+        <li><b>5</b> - Requires Patience</li>
+        <li><b>6</b> - Generally Visible</li>
+        <li><b>7</b> - Usually Easy</li>
+        <li><b>8</b> - Easy</li>
+        <li><b>9</b> - Very Easy</li>
+        <li><b>10</b> - Extremely Easy</li>
+    </ul>
+ </p>
+ <p>Of course, what's Easy for a larger telescope might be impossible in Binoculars,
+    so it's important to keep the observing mode in consideration.</p>
+    
+{% endblock %}

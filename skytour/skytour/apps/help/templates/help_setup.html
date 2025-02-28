@@ -1,0 +1,148 @@
+{% extends 'help_base.html' %}
+{% block help_page %}
+<h2>Getting Started</h2>
+
+<p>Once you've done the initial setup (generated the database and images) these
+    steps will get things started.
+</p>
+
+<h3>Adding an Observing Location</h3>
+
+<p>You'll need to define at least one observing location.
+    For most users - who only observe from one location - this
+    just sets important things like the latitude/longitude, but
+    also can include information about sky brightness, Bortle rating, etc.
+</p>
+<p>To add a new Observing Location, you use the Django Admin.
+    You'll need to be logged in, and your account has to be a superuser.
+    You should have set this up when doing the initial setup; if
+    not, use your Terminal app to go to the root Skytour directory
+    (where `manage.py` is located) and run:
+    <pre>
+        python manage.py createsuperuser
+    </pre>
+    then log into the Admin (it will prompt you)
+</p>
+<p>
+    You can add a new Observing Location 
+    <a href="/admin/observe/observinglocation/add" target="_new">here</a>.
+</p>
+<h4>Observing Location Parameters</h4>
+<h5>Primary Parameters</h5>
+<ul>
+    <li><b>Status:</b> this is "Active" although if you're scouting out several
+        remove locations, you can alter the Status value accordingly:
+        <ul>
+            <li>Active: currently being used for observations</li>
+            <li>Provisional: not Active, but under consideration</li>
+            <li>Possible: "on record" but not being considered</li>
+            <li>Issues: "checkout out" but with outstanding issues (nearby sources of lights, blockage by trees, etc.)</li>
+            <li>TBD: other situations</li>
+            <li>Rejected: tried out - not viable</li>
+        </ul>
+    <li><b>Name, Address, Time Zone:</b>: these are all self-evident</li>
+    <li><b>Distance and Travel Time:</b>: helpful for remote locations; of course if 
+        you're just observing from home, then "0" and "0"</li>
+    <li><b>Latitude</b> in ° North - this is used for (among other things) calculating
+        what Declination range is reachable from any location.</li>
+    <li><b>Longitude:</b> in ° EAST (so North American users will have a negative longitude)</li>
+    <li><b>Elevation:</b> not really used but might be helpful comparing across several locations</li>
+    </ul>
+    
+<h5>Sky Brightness Metadata</h5>
+    <p>
+    You can get values for all of the parameters below for any location on the planet at the 
+    <a href="https://www.lightpollutionmap.info/" target="_new">Light Pollution Map</a> site.
+    </p>
+
+    <ul>
+        <li><b>Bortle:</b> from 1 to 9 - this is frequently mentioned on 
+            social "astronomy" sites (or FB groups).  Handy to know - also
+            helpful as a guide when considering remote locations.</li>
+        <li><b>SQM:</b> the average dark-sky (no Moon) sky brightness
+            overhead in magnitudes/arcmin<sup>2</sup>.</li>
+        <li><b>Brightness:</b> ditto - measured in mcd/m<sup>2</sup></li>
+        <li><b>Artificial Brightness:</b> ditto - measured in µcd/m<sup>2</sup> - the 
+            estimation of artifical brightness to the sky brightness</li>
+        <li><b>Ratio:</b> the artificial to natural brightness</li>
+    </ul>
+<h5>Maps</h5>
+    <p>Three maps are stored (they're optional):
+        <ul>
+            <li>Google Maps (roadway version)</li>
+            <li>Google Earth (satellite image with trees, etc.)</li>
+            <li>Bortle Map (from the Light Pollution Map site, above)</li>
+        </ul>
+    </p>
+<h5>Site Issues</h5>
+    <p>Here you can add information about the site itself (all optional):
+    </p>
+    <ul>
+        <li><b>Description:</b> self-explanatory</li>
+        <li><b>Light Sources:</b> any on-site light sources to contend with</li>
+        <li><b>Horizon Blockage:</b> trees, buildings, etc. and directions that 
+            might limit what part of the sky you can observed.
+            (See Location Masks, below for additional features about this.)</li>
+    </ul>
+<h5>Images</h5>
+<p> Just a place to store images of the observing site, for your reference (optional)</p>
+
+<h5>Observing Location Mask</h5>
+<p>
+    This (also optional) feature allows you to define the minimum altitude available for a range of azimuth.
+    So, if you're observing from your yard, and the neighbor's house blocks some of the sky,
+    of if there are significant trees in some direction, etc. you can define a "mask".
+</p>
+<p>How it's used in Skytour is in two places:
+    <ol>
+        <li><b>Skymap:</b> you can optionally overlay your mask on the star map.</li>
+        <li><b>@Now and @Cookie:</b> this will filter out DSOs that are inconveniently
+            placed based on the mask at the given date/time/location.</li>
+    </ol>
+<p>
+    To enter this, you need to create a list of alt/az points (beginning and end).
+    You'll want to use a compass to measure the azimuth and probably the "extended fist"
+    method to estimate the altitude (for most people one "fist" = 10°).body
+
+    Each line in the mask has the starting and ending azimith and altitude.
+    If the two altitudes are equal, that's a straight line at that altitude; 
+    if they're not it'll be a diagonal (so you can make things a little more complicated).body
+</p>
+<p>Typically, you want to start an azimuth at the ending of the previous one (so, e.g., 
+    start = (90°, 30°) to end = (150°, 30°) to deal with the neighbor's house, followed
+    by (150°, 0°) to (240°, 0°) for the next entry because you have a clear view to the horizon.
+</p>
+<p>
+    You'll want to end using an azimuth of 360° so that you've completed the circle of azimuth.
+</p>
+<p>Click "Save" to Save.   If this will be your primary observing location,
+    note the ID (in the URL of the page for the Location, e.g., "http://127.0.0.1:8000/observing_location/1" the
+    ID = 1).    Then, if you haven't set the Site Parameter for this: do so
+    under Site Parameter Positive Integer with the slug "default-location-id"
+    and the ID under "Value".
+
+<h3>Setting Site Parameters</h3>
+<p>There are several tables in the database where you can customize Parameters
+    and limits: some of them will pre-select options in forms, e.g., which telescope
+    should be the default, what the default location ID is, altitude slew limits
+    (for Alt/Az scopes), etc.
+
+<h3>Observing Modes</h3>
+<p>There are five observing modes:
+    <ul>
+        <li><b>N</b>: Naked-Eye = no equipment</li>
+        <li><b>B</b>: Binoculars</li>
+        <li><b>S</b>: Small Telescope (&le; 6" aperture)</li>
+        <li><b>M</b>: Medium Telescope (&gt; 6" aperture)</li>
+        <li><b>I</b>: Imaging Telescope (Seestar, Unistellar, Vaonis, etc.)</li>
+    </ul>
+</p>
+<p>For any particular observing session you can choose any one of these.
+    You can observe in any way you want, regardless of what's set,
+    its function is to help in identifying potential objects for the
+    selected mode: assigning suggested priorities, etc.
+
+    Each DSO in the database is linked to the most-appropriate modes 
+    for observing them, along with a "viability" (i.e., how difficult
+    it would be to observe an object).
+{% endblock %}

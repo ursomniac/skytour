@@ -3,7 +3,7 @@ from .views import (
     MoonDetailView,
     PlanetListView, 
     PlanetDetailView, 
-    PlanetRealTimeView
+    PlanetRealTimeView,
 )
 
 urlpatterns = (

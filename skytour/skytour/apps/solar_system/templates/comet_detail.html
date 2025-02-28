@@ -10,7 +10,7 @@
 {% block title %}{{ object.name }}: Skytour{% endblock %}
 {% block content %}
 <table>
-    <tr>
+    <tr> 
         <td width="20%">
             <h1> {{ object.name }}</h1> 
             <h2> Currently in {{ comet.observe.constellation.name }}</h2>
@@ -59,7 +59,6 @@
 <table>
     <thead>
     <tr>
-        <th>Session</th>
         <th>Location</th>
         <th>Observe</th>
         <th>Almanac</th>
@@ -67,10 +66,6 @@
     </thead>
     <tbody>
     <tr>
-        <td width="25%"  style="vertical-align:top;">
-            {% include 'inc_date_time.html' %}
-            {% include 'inc_location.html' %}
-        </td>
         <td width="25%" style="vertical-align:top;">
             {% with comet as obj %}
             {% include 'inc_coordinates.html' %}
@@ -83,9 +78,13 @@
         </td>
 
         <td width="25%" style="vertical-align:top;">
-        {% with comet as obj %}
-        {% include 'inc_rise_set.html' %}
-        {% endwith %}
+            <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/wide')">
+                Wide Area Map (10°)
+            </button>
+            <br>
+            <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/narrow')">
+                Narrow Area Map (4°)
+            </button>
         </td>
     </tr>
 </table>

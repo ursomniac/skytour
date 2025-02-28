@@ -149,3 +149,32 @@ def get_position_from_cookie(cookie):
         return x['ra'], x['dec']
     except:
         return None, None
+    
+def get_object_from_cookie(object_type, cookie, object):
+    if object_type == 'planet':
+        return get_planet_from_cookie(cookie, object)
+    elif object_type == 'asteroid':
+        return get_asteroid_from_cookie(cookie, object)
+    elif object_type == 'comet':
+        return get_comet_from_cookie(cookie, object)
+    return None
+
+def get_fov(object_type, object, style):
+    if object_type == 'planet':
+        if style == 'narrow':
+            fov = 4. if object.name not in ['Uranus', 'Neptune'] else 2.
+        else:
+            fov = 10.
+    else:
+        fov = 2. if style == 'narrow' else 10.
+    return fov
+
+def get_mag_limit(object_type, object, style):
+    if object_type == 'planet':
+        if style == 'narrow':
+            mag_limit = 10. if object.name in ['Uranus', 'Neptune'] else 8.
+        else:
+            mag_limit = 6.
+    else:
+        mag_limit = 11. if style == 'narrow' else 9.
+    return mag_limit

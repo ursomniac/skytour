@@ -25,7 +25,10 @@ from .utils import (
     get_asteroid_from_cookie, 
     get_comet_from_cookie,
     get_planet_from_cookie,
-    get_position_from_cookie
+    get_position_from_cookie,
+    get_object_from_cookie,
+    get_fov,
+    get_mag_limit
 )
 from .vocabs import PLANET_COLORS
 
@@ -188,9 +191,9 @@ class AsteroidDetailView(CookieMixin, DetailView):
         reversed = context['color_scheme'] == 'dark'
         utdt_start = context['utdt_start']
         pdict = get_asteroid_from_cookie(context['cookies'], object)
-
         context['asteroid'] = pdict
 
+        foo = """
         if asteroid_cookie: # This is so you COULD go to an page for something not in the cookie
             for c, sc, mm in [
                 ('finder_chart', 2., 11.), 
@@ -211,6 +214,7 @@ class AsteroidDetailView(CookieMixin, DetailView):
                     show_dsos = False,
                     times=times
                 )
+        """
         context['in_cookie'] = True if pdict else False
         context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['times'] = compile_times(times)
@@ -259,9 +263,7 @@ class CometDetailView(CookieMixin, DetailView):
         planets = context['cookies']['planets']
         asteroids = context['cookies']['asteroids']
         comets = context['cookies']['comets']
-
         pdict = None
-        mag_limit = 10.
         for c in comets:
             if c['name'] == object.name:
                 pdict = c
@@ -271,12 +273,9 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['mag_offset'] = object.mag_offset
                 pdict['est_mag'] = mag + object.mag_offset
                 break
-        #if mag: 
-        #    mag_limit = mag + 0.5 if mag < mag_limit else mag_limit
-        #mag_limit = 8.0 if mag_limit < 8.0 else mag_limit
-
         context['comet'] = pdict
 
+        foo = """
         if pdict:
             context['finder_chart'], times = create_finder_chart (
                 context['utdt_start'],
@@ -310,7 +309,7 @@ class CometDetailView(CookieMixin, DetailView):
                 times=times
             )
             times.append((time.perf_counter(), 'Finished Wide Finder Chart'))
-
+        """
         context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['times'] = compile_times(times)
         return context
@@ -462,4 +461,48 @@ class CometRealTimeView(CookieMixin, DetailView):
         if comet_cookie:
             object.ra_float, object.dec_float = get_position_from_cookie(comet_cookie)
         context = get_real_time_conditions(object, self.request, context)
+        return context
+    
+class SSOMapView(CookieMixin, TemplateView):
+    template_name = 'sso_map_popup.html'
+
+    def get_cookie_entry(object_type, object, cookie):
+        if object_type == 'planet':
+            return get_planet_from_cookie
+
+    def get_context_data(self, **kwargs):
+        context = super(SSOMapView, self).get_context_data(**kwargs)
+        model = {'planet': Planet, 'asteroid': Asteroid, 'comet': Comet}
+        object_type = self.kwargs['object_type']
+        pk = self.kwargs['pk']
+        style = self.kwargs['style'] # wide | narrow
+        reversed = context['color_scheme'] == 'dark'
+
+        object = model[object_type].objects.filter(pk=pk).first()
+        pdict = get_object_from_cookie(object_type, context['cookies'], object)
+        planets = context['cookies']['planets']
+        asteroids = context['cookies']['asteroids']
+        times = [(time.perf_counter(), 'Start Creating Map')]
+        fov = get_fov(object_type, object, style)
+        mag_limit = get_mag_limit(object_type, object, style)
+
+        context['map'], times = create_finder_chart (
+            context['utdt_start'],
+            object,
+            planets,
+            asteroids,
+            object_type = object_type,
+            obj_cookie = pdict,
+            fov = fov,
+            reversed = reversed,
+            mag_limit = mag_limit,
+            sun = context['cookies']['sun'],
+            moon = context['cookies']['moon'],
+            show_dsos=False,
+            times=times
+        )
+        context['title'] = f"{style.title()} for {object.name}"
+        context['fov'] = fov
+        context['mag_limit'] = mag_limit
+        context['times'] = compile_times(times)
         return context

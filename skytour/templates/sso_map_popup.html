@@ -1,0 +1,55 @@
+{% load static skytour_filters %}
+<!doctype html>
+<html lang="end">
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %}RealTime: Skytour{% endblock title %}</title>
+
+	<link rel="stylesheet" href="/media/css/jquery-ui.min.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="/media/css/datatables.css" type="text/css">
+	<link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+
+	<script type="text/javascript" src="/media/js/jquery-3.6.0.min.js"></script>
+	<script src="/media/js/jquery-ui/external/jquery/jquery.js"></script>
+	<script src="/media/js/jquery-ui/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/media/js/datatables.min.js"></script>
+
+{% block styles %}
+<style>
+    h2 { color: #f96; font-size: 30px; margin-left: 10px; }
+    label { color: #ff9;  font-weight: 400; }
+    span.form_label { color: #39f; font-weight: 600; } 
+    td { padding: 5px; line-height: 1.4; font-size: 20px; }
+    form { padding: 18px 4px 8px 20px; }
+    table.loc td { line-height: 1.2; font-size: 14px; }
+    table.loc td label { color: #6f6; font-weight: 400; }
+</style>
+{% endblock styles %}
+</head>
+<body>
+{% block header  %}{% endblock header  %}
+{% block content %}
+<h2>{{ map_title }}</h2>
+
+<table class="lite">
+    <tbody>
+    <tr>
+        <td style="text-align: center;">
+            <img src="{{ map }}">
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endblock content %}
+
+{% block footer  %}
+<footer>
+<div class="footer2">
+	<br clear="all"/>
+	<p>© {% now 'Y' %} - Skepsis Interplanetary</p>
+</div>
+</footer>
+{% endblock footer  %}
+{% block extra-js %}{% endblock extra-js %}
+</body>
+</html>
