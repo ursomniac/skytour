@@ -157,6 +157,7 @@ class DSOAbstract(Coordinates):
         """
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
     
+    ### Properties to lookup SIMBAD/HyperLeda values.  Default to the model if not found.
     @property
     def find_magnitude(self):
         """
@@ -252,6 +253,7 @@ class DSOAbstract(Coordinates):
         if sv is not None:
             return sv['value'], sv['units'], 'S'
         return (d, u, 'O')
+    ### End of metadata lookup methods/properties
     
     @property
     def other_metadata_text(self):
@@ -283,13 +285,7 @@ class DSOAbstract(Coordinates):
 
 class DSO(DSOAbstract, FieldView, ObservableObject):
     """
-    Basically everything we want:
-        Name and Aliases
-            - botn are in the Object Alias abstract class:
-                the primary name is in this model, the other
-                is in a FK to this model from DSOAlias.
-        Images
-        Field View (https://astronomy.tools/calculators/field_of_view/)
+    Metadata, images, etc. for each DSO
     """
     finder_chart = models.ImageField (
         _('Finder Chart'),
@@ -363,8 +359,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     def alias_list(self):
         """
         Generate a comma-separated list of aliases.
-        TODO V2: Or write a script to populate from SIMBAD/Hyperleda - this might
-            be problematic for faint/obscure objects.
         """
         aliases = []
         for alias in self.aliases.all():
@@ -448,6 +442,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     ### MODE PROPERTIES
     @property
     def mode_dict(self):
+        """
+        Return a dict of the dsoobservingmode_set values, or None if no assignment.
+        """
         d = {}
         modes = self.dsoobservingmode_set.all()
         for k in 'NBSMI':
@@ -472,7 +469,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return out
     
     @property
-    def mode_priority_dict(self): # This is stupid
+    def mode_priority_dict(self): # This is stupid - dupe of mode_priority_value_dict
+        """
+        Return the value of the priority for each mode, or None
+        """
         return self.mode_priority_label_dict
 
     @property
@@ -499,14 +499,23 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
 
     @property
     def mode_imaging_priority_color(self):
+        """
+        Returns the assigned color for the imaging priority
+        """
         return priority_color(self.mode_imaging_priority)
     
     @property
     def mode_imaging_priority_symbol(self):
+        """
+        Return the encircled imaging priority (no color)
+        """
         return priority_symbol(self.mode_imaging_priority)
     
     @property
     def mode_imaging_priority_span(self):
+        """
+        Create the <span> with the color encircled imaging priority
+        """
         priority = self.mode_imaging_priority
         if priority is None: 
             return None
@@ -515,6 +524,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def library_image_camera(self):
+        """
+        Return the camera emoji if there are any library images.
+        Used in DSO lists to show which objects have been imaged.
+        """
         return '📷' if self.num_library_images > 0 else None
     
     @property
@@ -591,11 +604,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     @property
     def map_image_list(self):
         """
-        Generate the list of images for the panel (right-hand side).
+        Generate the list of images for the panel/slideshow (right-hand side).
         This includes the Stellarium-generated FOV image, plus (usually)
         all of the "landscape" library images.
-
-        TODO: Assign names to each of the panels.
         """
         map_images = self.image_library.filter(use_as_map=True).order_by('order_in_list')
         maps_list = []
@@ -621,7 +632,7 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     @property
     def finder_image_list(self):
         """
-        Generate the list of images for the "finder" panel on the DSO page.
+        Generate the list of images for the "finder" panel/slideshow on the DSO page.
         This includes:
             1. The Wide-field map
             2. The Narrow-field map
@@ -679,6 +690,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def mode_list(self):
+        """
+        Create a list of assigned modes - ignore those without assignments
+        e.g., ['S','M','I']
+        """
         found = ''
         for my_mode in self.dsoobservingmode_set.all():
             found += my_mode.mode
@@ -686,12 +701,18 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
     
     @property
     def mode_set(self):
+        """
+        Create a string with the assigned modes, e.g., '  SMI'
+        """
         out = ''
         for k in 'NBSMI':
             out += k if k in self.mode_list else ' '
         return out
     
     def mode_viability_chart(self):
+        """
+        This creates the mode/viability chart on the DSODetailPage.
+        """
         if self.mode_list == '' or self.mode_list is None:
             return f"No chart."
         out = '<div class="mode-chart">'

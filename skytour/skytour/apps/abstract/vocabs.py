@@ -21,9 +21,9 @@ IMAGING_PROCESSING_CHOICES = (
 # TODO V2: clean this up --- this is used to point to which panel the image is placed.
 #   - probably better to DEFINE the panels and make the choices reflect that.
 IMAGE_STYLE_CHOICES = (
-    ('square', 'Square Image'), # Use in galleries/carousel
-    ('map', 'Annotated Image'), # Use in field panel
-    ('full', 'Full Frame Image'), # Use in field panel
+    ('square', 'Square/Library Image Carousel'), # Use in galleries/carousel
+    ('map', 'Annotated Image/Full Frame Carousel'), # Use in field panel
+    ('full', 'Full Frame Image/Full Frame Carousel'), # Use in field panel
     ('other', 'Other'), # Use in carousel?
     # ('finder', 'Finder'), # Use in field panel
 )
