@@ -1,14 +1,24 @@
 {% load skytour_filters humanize %}
-
-<h4>Apparent</h4>
-
-Mag: {{ obj.observe.apparent_magnitude|floatformat:2 }}
-{% if obj.mag_offset != 0.0 %}
-&nbsp; (est. {{ obj.est_mag|floatformat:2 }})
-{% endif %}
-<br>
-
+<style>
+    table.apparent-table { border: none; margin-top: 5px; }
+    table.apparent-table td, th { border: none; }
+    table.apparent-table th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+</style>
+<table class="apparent-table">
+    <tr><th>Apparent</th></tr>
+    <tr>
+        <td>
+            Mag: {{ obj.observe.apparent_magnitude|floatformat:2 }}
+            {% if obj.mag_offset != 0.0 %}
+            &nbsp; (est. {{ obj.est_mag|floatformat:2 }})
+            {% endif %}
+        </td>
+    </tr>
 {% if obj.observe.angular_diameter %}
-    Ang Size: {{ obj.observe.angular_diameter_str }}
-    <br/>
-{% endif %}         
+    <tr><td>Ang Size: {{ obj.observe.angular_diameter_str }}</td></tr>
+{% endif %}
+</table>

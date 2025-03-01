@@ -325,6 +325,11 @@ class Asteroid(ObservableObject):
             x = float(axis.strip())
             sum += x
         return sum / len(axes)
+    
+    @property
+    def is_dwarf_planet(self):
+        DWARF_PLANETS = [134340, 136199, 136108, 136472] # ignore Ceres for now
+        return self.number in DWARF_PLANETS
 
     @property
     def orbital_period(self):

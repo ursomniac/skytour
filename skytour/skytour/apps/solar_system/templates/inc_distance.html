@@ -1,0 +1,18 @@
+{% load skytour_filters humanize %}
+<style>
+    table.distances-table { border: none; margin-top: 5px; }
+    table.distances-table td, th { border: none; }
+    table.distances-table th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+</style>
+<table class="distances-table">
+    <tr><th>Distances</th></tr>
+    <tr><td>AU: {{ obj.apparent.distance.au|stringformat:'0.3f' }}</td></tr>
+    <tr><td>km: {{ obj.apparent.distance.km|stringformat:'0.1f'|intcomma }}</td></tr>
+    <tr><td>mi: {{ obj.apparent.distance.mi|stringformat:'0.1f'|intcomma }}</td></tr>
+    <tr><td>Light Time: {{ obj.apparent.distance.light_time_str }}</td></tr>
+    <tr><td>Dist to Sun: {{ obj.apparent.sun_distance|floatformat:3 }} AU</td></tr>
+</table>
