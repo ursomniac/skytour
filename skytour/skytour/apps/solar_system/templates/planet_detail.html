@@ -222,10 +222,20 @@
 
 <table class="planet_map">
     <tr>
-        {% if planet_map %}<th>Map</th>{% endif %}
         <th>Telescope View</th>
+        {% if planet_map %}<th>Map</th>{% endif %}
     </tr>
     <tr>
+
+        <td>            
+            <div id="planet-view-image">
+            <img src="{{ view_image }}" width="500px">
+            <br>
+            <small><i>
+                ID above/below + = moon behind/in front of planet in orbit; 
+            </i></small>
+            </div>
+        </td>
         {% if planet_map %}
         <td>
             <img src="{{ planet_map }}" style="max-width:100%; height: auto;">
@@ -247,22 +257,13 @@
                         <td>{{ feature.ha_deg|floatformat:1 }}°</td>
                         <td>{{ feature.view }}</td>
                         <td>{{ feature.time_from_meridian|floatformat:2 }} h</td>
-                        <td>{{ feature.next_transit }} UT</td>
+                        <td>{{ feature.next_transit_string }} UT</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </td>
         {% endif %}
-        <td>            
-            <div id="planet-view-image">
-            <img src="{{ view_image }}" width="500px">
-            <br>
-            <small><i>
-                ID above/below + = moon behind/in front of planet in orbit; 
-            </i></small>
-        </div>
-        </td>
     </tr>
     </tbody>
 </table>

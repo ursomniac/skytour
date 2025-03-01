@@ -14,8 +14,7 @@ def _sind(d):
 def _tand(d):
     return math.tan(math.radians(d))
 
-
-def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
+def get_mars_physical_ephem(utdt, planet, fudge=0, features=True, debug=False):
     """
     Meeus, 2nd Ed., chapter 41
     All we need here is D_E and omega
@@ -111,7 +110,8 @@ def get_mars_physical_ephem(utdt, planet, fudge=0, debug=False):
         zeta=zeta,
         d_e=d_e
     )
-    mars['features'] = get_mars_features(utdt, mars)
+    if features:
+        mars['features'] = get_mars_features(utdt, mars)
 
     if debug:
         print ("JDE: ", jde, "T: ", tt)
@@ -164,11 +164,12 @@ def get_mars_features(utdt, mars):
         if abs(xtd) < 1.23:
             view = 'Best'
 
-        #print(f"{feature['name']}: {feature['longitude']} - {meridian} = {ha_degrees}")
         fdict['meridian'] = meridian
         fdict['ha_deg'] = ha_degrees
         fdict['view'] = view
         fdict['next_transit'] = t_trans.isoformat()
+        fdict['next_transit_string'] = t_trans.strftime("%Y-%m-%d %H:%M")
         fdict['time_from_meridian'] = dtt
         fdicts.append(fdict)
+
     return fdicts
