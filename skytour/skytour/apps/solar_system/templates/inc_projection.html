@@ -1,17 +1,17 @@
 {% load skytour_filters humanize %}
 
-<h4>Projection</h4>
+<table class="data-table">
+    <tr><th>Projection</th></tr>
 
 {% if obj.observe.lunar_phase %}
-    Phase: {{ obj.observe.lunar_phase.phase }}<br/>
-    Phase Angle: {{ obj.observe.lunar_phase.angle|to_dms }}<br/>
-    Day: {{ obj.observe.lunar_phase.days_since_new_moon|to_dhms }}<br/>
+    <tr><td>Phase: {{ obj.observe.lunar_phase.phase }}</td></tr>
+    <tr><td>Phase Angle: {{ obj.observe.lunar_phase.angle|to_dms }}</td></tr>
+    <tr><td>Day: {{ obj.observe.lunar_phase.days_since_new_moon|to_dhms }}</td></tr>
 {% else %}
-    Phase Angle: {{ obj.observe.phase_angle|to_dms }}<br/>
+    <tr><td>Phase Angle: {{ obj.observe.phase_angle|to_dms }}</td></tr>
 {% endif %}
-
 {% if obj.observe.fraction_illuminated %}
-    % Illuminated: {{ obj.observe.fraction_illuminated|floatformat:1 }} %<br/>
+    <tr><td>% Illuminated: {{ obj.observe.fraction_illuminated|floatformat:1 }} %</td></tr>
 {% endif %}
-
-Elongation: {{ obj.observe.elongation|to_dms }}<br/>
+    <tr><td>Elongation: {{ obj.observe.elongation|to_dms }}</td></tr>
+</table>

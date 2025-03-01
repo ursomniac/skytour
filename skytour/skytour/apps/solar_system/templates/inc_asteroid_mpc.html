@@ -10,14 +10,14 @@
 </style>
 <table class="orbit-table">
     <tr><th>Orbital/Metadata</th></tr>
-    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity }}</td></tr>
-    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees }}°</td></tr>
-    <tr><td>Semi-Major Axis: {{ obj.mpc_object_dict.semi_major_axis_au }} AU</td></tr>
-    <tr><td>Mean Daily Motion: {{ obj.mpc_object_dict.mean_daily_motion_degrees }}°</td></tr>
+    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity|floatformat:3 }}</td></tr>
+    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees|floatformat:1 }}°</td></tr>
+    <tr><td>Semi-Major Axis: {{ obj.mpc_object_dict.semimajor_axis_au|floatformat:2 }} AU</td></tr>
+    <tr><td>Mean Daily Motion: {{ obj.mpc_object_dict.mean_daily_motion_degrees|floatformat:3 }}°</td></tr>
     <tr><td>
         Mag H: {{ obj.mpc_object_dict.magnitude_H }}
         &nbsp;
         Mag G: {{ obj.mpc_object_dict.magnitude_G }}
     </td></tr>
-
+    <tr><td>Period: {{ obj.orbital_period|floatformat:2 }} yr</td></tr>
 </table>

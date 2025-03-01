@@ -1,13 +1,15 @@
 {% load skytour_filters humanize %}
-<h4>Physical</h4>
+<table class="data-table">
+    <tr><th>Physical</th></tr>
 {% if planet.name == 'Jupiter' %}
-&omega;<sub>1</sub>: {{ planet.physical.omega_1|to_dms }}<br>
-&omega;<sub>2</sub>: {{ planet.physical.omega_2|to_dms }}<br/>
-&lambda;: {{ planet.physical.longitude|to_dms }}<br/>
-D<sub>S</sub>: {{ planet.physical.d_s|floatformat:3 }}°<br>
-D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}°<br>
+    <tr><td>&omega;<sub>1</sub>: {{ planet.physical.omega_1|to_dms }}</td></tr>
+    <tr><td>&omega;<sub>2</sub>: {{ planet.physical.omega_2|to_dms }}</td></tr>
+    <tr><td>&lambda;: {{ planet.physical.longitude|to_dms }}</td></tr>
+    <tr><td>D<sub>S</sub>: {{ planet.physical.d_s|floatformat:3 }}°</td></tr>
+    <tr><td>D<sub>E</sub>: {{ planet.physical.d_e|floatformat:3 }}°</td></tr>
 {% elif planet.name == 'Mars' %}
-&omega;: {{ planet.physical.omega|to_dms }}<br/>
-&zeta;: {{ planet.physical.zeta|to_dms }}<br/>
-D<sub>E</sub>: {{ planet.physical.d_e|to_dms }}
+    <tr><td>&omega;: {{ planet.physical.omega|to_dms }}</td></tr>
+    <tr><td>&zeta;: {{ planet.physical.zeta|to_dms }}</td></tr>
+    <tr><td>D<sub>E</sub>: {{ planet.physical.d_e|to_dms }}</td></tr>
 {% endif %}
+</table>

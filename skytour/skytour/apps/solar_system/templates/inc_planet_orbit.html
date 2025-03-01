@@ -1,0 +1,18 @@
+{% load skytour_filters humanize %}
+<style>
+    table.orbit-table { border: none; margin-top: 5px; }
+    table.orbit-table td, th { border: none; }
+    table.orbit-table th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+</style>
+<table class="orbit-table">
+    <tr><th>Orbital/Metadata</th></tr>
+    <tr><td>Eccentricity: {{ obj.orbital_elements.eccentricity|floatformat:3 }}</td></tr>
+    <tr><td>Inclination: {{ obj.orbital_elements.inclination|floatformat:1 }}°</td></tr>
+    <tr><td>Semi-Major Axis: {{ obj.orbital_elements.semimajor_axis|floatformat:2 }} AU</td></tr>
+    <tr><td>Period: {{ obj.orbital_period|floatformat:2 }} yr</td></tr>
+    <tr><td>Period (days): {{ obj.orbital_period_days|floatformat:1 }}</tr></td>
+</table>

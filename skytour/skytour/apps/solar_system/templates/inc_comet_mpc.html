@@ -10,17 +10,14 @@
 </style>
 <table class="orbit-table">
     <tr><th>Orbital/Metadata</th></tr>
-    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity }}</td></tr>
-    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees }}°</td></tr>
+    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity|floatformat:3 }}</td></tr>
+    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees|floatformat:1 }}°</td></tr>
     <tr><td>
         Mag G: {{ obj.mpc_object_dict.magnitude_g }}
         &nbsp;
         Mag K: {{ obj.mpc_object_dict.magnitude_k }}
     </td></tr>
-    <tr><td>Perihelion: (
-        {{ obj.mpc_object_dict.perihelion_year }}, 
-        {{ obj.mpc_object_dict.perihelion_month}},
-        {{ obj.mpc_object_dict.perihelion_day }}
-    )</td></tr>
+    <tr><td>Perihelion: {{ obj.get_perihelion_date }}</td></tr>
     <tr><td>Perihelion Dist: {{ obj.mpc_object_dict.perihelion_distance_au }} AU</td></tr>
+    <tr><td>Period: {{ obj.comet_period|floatformat:1 }} yrs
 </table>

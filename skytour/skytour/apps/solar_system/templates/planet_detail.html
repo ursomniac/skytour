@@ -5,159 +5,232 @@
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
-    button { width: 10em; }
+    button { width: 8em; }
+    button.map { width: 20em; }
     dt  { font-weight: bold; color: #ff6; }
     img.constrained { width: 100%; max-width: 500px; }
     td.hvcenter { vertical-align: middle!important; text-align: center!important; }
+
+    h1 { margin: 2px 10px; }
+    h2 { margin-top: 6px; margin-bottom: 4px; color: #fc9; }
+	td.object_name { vertical-align: middle!important; padding-left: 20px; }
+	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description a { color: #ff0; }
+    td.classification { padding-right: 75px; }
+    td.ident { color: #ff0; }
+    td.operations { text-align: right; padding: 3px 10px!important; }
+    .hvcenter { vertical-align: middle!important; text-align: center!important; }
+    table.main { background-color: #555; width: 100%!important; }
+    table.main td { padding-left: 15px;  }
+
+    span.coordinates { 
+        font-size: 150%; 
+        padding: 3px 5px 15px 5px!important; 
+    }
+    td.vt { width: 33%; }
+    td.vt h4 { 
+        margin-top: 4px; margin-bottom: 6px; 
+        color: #f96;
+    }
+    table.data-table { border: none; margin-top: 5px; }
+    table.data-table td, th { border: none; }
+    table.data-table th, table.planet_map th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+    table.planet-nav { 
+        border: 1px solid #ccc; 
+        margin: 6px 0px; 
+    }
+    table.planet-nav th { background-color: #999; color: #000; }
+    table.planet-nav td { 
+        background-color: #666; 
+        width: 10%; 
+        vertical-align: middle!important;
+        text-align: center;
+    }
+    table.planet-nav a {
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    table.planet-nav td button { margin-top: 4px; }
+    table.planet_map td {
+        xwidth: 50%!important;
+    }
+    table.physical-features-table { border: none; }
+    table.physical-features-table td {
+        max-width: 25%;
+        border: 1px solid black;
+    }
+    table.physical-features-table th { 
+        background-color: #999;
+        color: #000;
+    }
 </style>
 {% endblock styles %}
 {% block title %}{{ planet.name }}: Skytour{% endblock %}
 {% block content %}
+<table class="planet-nav">
+    <tr>
+    <th>Planets</th>
+    <td class="click"><a href="{% url 'planet-detail' 'mercury' %}">Mercury</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'venus' %}">  Venus</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'mars' %}">   Mars</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'jupiter' %}">Jupiter</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'saturn' %}"> Saturn</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'uranus' %}"> Uranus</a></td>
+    <td class="click"><a href="{% url 'planet-detail' 'neptune' %}">Neptune</a></td>
+    <td class="click"><a href="{% url 'moon-detail' %}">            Moon</a></td>
+    </tr>
+</table>
 <table>
     <tr>
-        <td width="20%">
-            <h1> {{ planet.name }}</h1> 
-            in 
-            <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
-            <br><br>
-            {% if planet.name != 'Moon' %}
-            <a href="/admin/solar_system/planet/{{instance.pk}}/change" target="_new"><button>Admin</button></a>
-            <a href="{% url 'sso-pdf' 'planet' planet.slug %}" target="_new"><button>PDF View</button></a>
-            <br>
-            <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')")>
-                Real Time
-            </button>
-            <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}?utdt_base=cookie')")>
-                Cookie
-            </button>
-            {% endif %}
+        <td class="lite">
+            <table class="main">
+                <tr>
+                    <td width=65% class="object_name">
+                        <h1>{{ object.name }}</h1>
+                    </td>
+                    <td width=22% class="description classification" rowspan=2>
+                        Currently in<br>
+                        <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
+                    </td>
+                    <td  class="description operations" rowspan=2>
+                        <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button>   Admin   </button></a>
+                        <br>
+                        <a href="{% url 'sso-pdf' 'planet' object.slug %}" target="_new"><button>PDF View</button></a>
+                        <br>
+                        <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')">
+                            Real Time
+                        </button>
+                        <br>
+                        <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}?utdt_base=cookie')">
+                            Cookie
+                        </button>
+                    </td>
+                </tr>
+            </table>
+    
+            <table width=100% class="lite info">
+                <tr>
+                    <td colspan=3>
+                        <h2>Information:</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <span class="coordinates">
+                            &alpha; (2000): {{ planet.apparent.equ.ra_str }}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &delta; (2000): {{ planet.apparent.equ.dec_str }}
+                            <br><br>
+                        </span>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class='vt'>
+                        {% with planet as obj %}
+                        {% include 'inc_distance.html' %}
+                        {% endwith %}
+                    </td>
+                    <td class='vt'>
+                        {% with planet as obj %}
+                        {% include 'inc_apparent.html' %}
+                        {% endwith %}
+                        {% with planet as obj %}
+                        {% include 'inc_projection.html' %}
+                        {% endwith %}
+                    </td>
+                    <td class='vt' rowspan=2>
+                        {% if close_by|length > 0 %}
+                        <table class="data-table">
+                            <tr><th>Nearby Planets</th></tr>
+                            {% for encounter in close_by %}
+                            <tr><td>{{ encounter.0 }} is {{ encounter.1|floatformat:1 }}° away</td></tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                        <table class="data-table">
+                            <tr><th>Rise/Set</th></td>
+                            <tr><td>
+                                {% with planet as obj %}
+                                {% include 'inc_rise_set.html' %}
+                                {% endwith %}
+                            </td></tr>
+                        </table>
+                        {% if planet.physical %}
+                        {% include 'inc_physical.html' %}
+                        {% endif %}
+                    </td>         
+                </tr>
+                <tr>
+                    <td class='vt'>
+                        {% with object as obj %}
+                        {% include 'inc_planet_orbit.html' %}
+                        {% endwith %}
+                    </td>
+                    <td>
+                        {% if planet.moons %}
+                        {% include 'inc_moon_table.html' %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        {% if object.description %}
+                        <table class="description-table">
+                            <tr><th>Description</th></tr>
+                            <tr><td>{{ object.description|safe }}</td></tr>
+                        </table>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <button class="map" onclick="return realtimePopup('/solar_system/sso_map/planet/{{ object.pk }}/wide')">
+                        Wide Area Map (10°)
+                    </button>
+                    </td>
+                    <td>
+                        <button class="map" onclick="return realtimePopup('/solar_system/sso_map/planet/{{ object.pk }}/narrow')">
+                        Narrow Area Map (4°)
+                        </button>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
         </td>
-        <td width="25%">
-            <h2>Observations</h2>
-            # Observations:  {{ instance.number_of_observations }}
-            <br>
-            Last Observed:
-            {% if instance.last_observed %}
-                {{ instance.last_observed|date:"Y-m-d H:i" }} UT
-            {% else %}
-                (not yet)
-            {% endif %}
-        </td>
-        {% if library_slideshow|length > 1 %}
         <td width="500px" height="600px" style="position:relative;">
-        {% include "includes/library_slideshow.html" %}
-        </td>
-        {% elif object.library_image %}
-        <td width="35%">
-            <a href="{{ object.library_image.image.url }}" target="_blank"><img 
+            {% if library_slideshow|length > 1 %}
+            <div id="library-carousel">
+            {% include "includes/library_slideshow.html" %}
+            </div>
+            {% elif object.library_image %}
+            <a href="{{ object.library_image.image.url }}"><img 
                 src="{{ object.library_image.image.url }}" class="constrained"></a>
-        </td>
-        {% else %}
-        <td width="35%" class="hvcenter">
-            <p>No Image</p>
-        </td>
-        {% endif %}
-        <td>
-            <h2>Solar System</h2>
-            <a href="{% url 'planet-detail' 'mercury' %}">  <button>Mercury</button></a>
-            <a href="{% url 'planet-detail' 'saturn' %}">   <button>Saturn</button></a><br>
-            <a href="{% url 'planet-detail' 'venus' %}">    <button>Venus</button></a>
-            <a href="{% url 'planet-detail' 'uranus' %}">   <button>Uranus</button></a><br>
-            <a href="{% url 'planet-detail' 'mars' %}">     <button>Mars</button></a>
-            <a href="{% url 'planet-detail' 'neptune' %}">  <button>Neptune</button></a><br>
-            <a href="{% url 'planet-detail' 'jupiter' %}">  <button>Jupiter</button></a>
-            <a href="{% url 'moon-detail' %}">              <button>Moon</button></a>
-            <br><br>
+            {% else %}
+            <p class='hvcenter'>No Library Image(s)</p>
+            {% endif %}
+            <br clear="all"><br>
         </td>
     </tr>
 </table>
 
-<table>
-    <thead>
+<table class="planet_map">
     <tr>
-        <th>Session</th>
-        <th>Location</th>
-        <th>Observe</th>
-        <th>Almanac</th>
+        {% if planet_map %}<th>Map</th>{% endif %}
+        <th>Telescope View</th>
     </tr>
-    </thead>
-    <tbody>
     <tr>
-        <td width="25%"  style="vertical-align:top;">
-            {% include 'inc_date_time.html' %}
-            {% include 'inc_location.html' %}
-            <br><br>
-        </td>
-
-        <td width="25%" style="vertical-align:top;">
-            {% with planet as obj %}
-            {% include 'inc_coordinates.html' %}
-            {% endwith %}
-            <br><br>
-
-            {% if planet.moons %}
-            {% include 'inc_moon_table.html' %}
-            {% endif %}
-        </td>
-
-        <td width="25%" style="vertical-align:top;">
-            {% with planet as obj %}
-            {% include 'inc_apparent.html' %}
-            {% endwith %}
-
-            {% if close_by|length > 0 %}
-            <h4>Nearby Planets</h4>
-            {% for encounter in close_by %}
-                {{ encounter.0 }} is {{ encounter.1|floatformat:1 }}° away<br/>
-            {% endfor %}
-            {% endif %}
-
-            {% with planet as obj %}
-            {% include 'inc_projection.html' %}
-            {% endwith %}
-
-            {% if planet.physical %}
-            {% include 'inc_physical.html' %}
-            {% endif %}
-        </td>
-
-        <td width="25%" style="vertical-align:top;">
-        {% with planet as obj %}
-        {% include 'inc_rise_set.html' %}
-        {% endwith %}
-        <br><br>
-        </td>
-    </tr>
-    
-    <tr style='margin-top: 40px;'>
-        <td width="50%" colspan=2>
-            <img src="{{ finder_chart }}">
-        </td>
-        <td width="50%" colspan=2>
-            <div style="padding-left: 20px; margin-top:0">
-                <img src="{{ view_image }}">
-                <br>
-                <small><i>
-                    ID above + = moon behind planet in orbit; 
-                    ID below + = moon in front of planet in orbit
-                </i></small>
-            </div>
-        </td>
-    </tr>
-    {% if planet_map %}
-    <tr>
-        <td width="100%" colspan=4>
-            <h4>Map</h4>
-            <img src="{{ planet_map }}" style="margin:auto;">
-        </td>
-    </tr>
-    {% endif %}
-    
-    {% if planet.physical.features %}
-    <tr>
-        <td width="100%" colspan=4>
-            <h4>Features</h4>
-            <table class="inner">
+        {% if planet_map %}
+        <td>
+            <img src="{{ planet_map }}" style="max-width:100%; height: auto;">
+            <br>
+            <table class="physical-features-table">
                 <thead>
                     <tr>
                         <th>Feature</th>
@@ -171,17 +244,26 @@
                     {% for feature in planet.physical.features %}
                     <tr>
                         <td>{{ feature.name }}</td>
-                        <td>{{ feature.ha_deg|to_dms }}</td>
+                        <td>{{ feature.ha_deg|floatformat:1 }}°</td>
                         <td>{{ feature.view }}</td>
-                        <td>{{ feature.time_from_meridian|dt_hms }}</td>
-                        <td>{{ feature.next_transit|date:"Y-m-d H:i" }} UT</td>
+                        <td>{{ feature.time_from_meridian|floatformat:2 }} h</td>
+                        <td>{{ feature.next_transit }} UT</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </td>
+        {% endif %}
+        <td>            
+            <div id="planet-view-image">
+            <img src="{{ view_image }}" width="500px">
+            <br>
+            <small><i>
+                ID above/below + = moon behind/in front of planet in orbit; 
+            </i></small>
+        </div>
+        </td>
     </tr>
-    {% endif %}
     </tbody>
 </table>
 
@@ -191,8 +273,6 @@
 
 {% include 'includes/performance_time.html' %}
 {% endblock content %}
-
-
 
 {% block extra-js %}
 {% include 'includes/realtime_script.html' %}

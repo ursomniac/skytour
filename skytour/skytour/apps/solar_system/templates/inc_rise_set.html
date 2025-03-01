@@ -1,5 +1,4 @@
 {% load skytour_filters humanize %}
-<h4>Rise/Set Events</h4>
 {% for event in obj.almanac %}
     {{ event.type }}:<br/> 
     &nbsp;&nbsp;{{ event.local_time|get_local_time}}<br>

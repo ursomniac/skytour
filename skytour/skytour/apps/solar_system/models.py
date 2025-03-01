@@ -10,6 +10,7 @@ from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
 from .asteroids import get_asteroid_object
 from .comets import get_comet_object, get_comet_period
+from .planets import get_mean_orbital_elements
 from .vocabs import STATUS_CHOICES
 
 class Planet(ObservableObject):
@@ -66,6 +67,20 @@ class Planet(ObservableObject):
         for m in self.moon_names.split(','):
             mlist.append(m.strip())
         return mlist
+    
+    @property
+    def orbital_elements(self):
+        return get_mean_orbital_elements(self.name)
+    
+    @property
+    def orbital_period(self):
+        a = self.orbital_elements['semimajor_axis']
+        p = math.sqrt(a**3)
+        return p
+    
+    @property
+    def orbital_period_days(self):
+        return self.orbital_period * 365.25
     
     @property
     def num_library_images(self):
@@ -334,7 +349,10 @@ class Asteroid(ObservableObject):
 
     @property
     def orbital_period(self):
-        return math.sqrt(self.semi_major_axis**3)
+        if self.mpc_object['semimajor_axis_au']:
+            a = self.mpc_object['semimajor_axis_au']
+            return math.sqrt(a**3)
+        return None
 
     @property
     def full_name(self):
