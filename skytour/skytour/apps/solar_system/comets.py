@@ -52,4 +52,9 @@ def get_comet_period(obj):
     return period
 
 
-
+def lookup_comet_from_designation(designation):
+    comet = get_comet_object(designation)
+    # Need ts and sun
+    # target = get_comet_target(comet, ts, sun)
+    # mag = get_comet_magnitude(g, k, r_earth_target, r_sun_target)
+    # create some sort of object we can use

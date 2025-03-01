@@ -273,6 +273,8 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['mag_offset'] = object.mag_offset
                 pdict['est_mag'] = mag + object.mag_offset
                 break
+        # TODO V2: if pdict is None then it's not in the cookie.
+        # Figure out how to add things from that
         context['comet'] = pdict
 
         foo = """
