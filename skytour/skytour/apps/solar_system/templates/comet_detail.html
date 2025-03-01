@@ -5,100 +5,137 @@
     body { line-height: 1.2; }
     img.constrained { width: 100%; max-width: 500px; }
     td.hvcenter { vertical-align: middle!important; text-align: center!important; }
+
+    h1 { margin-top: 8px; margin-bottom: 2px; }
+
+    table.main { background-color: #555; width: 100%!important; }
+    table.main td { padding-left: 15px;  }
+	td.object_name { vertical-align: middle; padding-left: 20px; }
+	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description a { color: #ff0; }
+    td.classification { padding-right: 75px; }
+    td.operations { text-align: right; padding: 3px 10px!important; }
+    h2 { margin-top: 6px; margin-bottom: 4px; color: #fc9; }
+    span.coordinates { 
+        font-size: 150%; 
+        padding: 3px 5px 15px 5px!important; 
+        margin-bottom: 5px;
+    }
+    td.light-curve {
+        vertical-align: top;
+    }
+    td.vt { width: 33.3%; }
+    td.vt h4 { 
+        margin-top: 4px; margin-bottom: 6px; 
+        color: #f96;
+    }
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
 {% block content %}
+
+<br>
 <table>
-    <tr> 
-        <td width="20%">
-            <h1> {{ object.name }}</h1> 
-            <h2> Currently in {{ comet.observe.constellation.name }}</h2>
-            <a href="/admin/solar_system/comet/{{ object.pk }}/change" target="_new"><button>Admin</button></a>
-            <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a><br>
-            <a href="{{ object.light_curve_url }}" target="_new"><button>External Page</button></a>
-            <br>
-            <br>
-            <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}')")>
-                Real Time
-            </button>
-            <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}?utdt_base=cookie')")>
-                Cookie
-            </button>
-            <br><br>
+    <!-- main -->
+    <tr>
+        <td class="lite">
+            <table class="main">
+                <tr>
+                    <td width=69% class="object_name">
+                        <h1>{{ object.name }}</h1>
+                    </td>
+                    <td width=20% class="description classification" rowspan=2>
+                        Comet
+                        <br>currently in<br>
+                        <a href="{% url 'constellation-detail' comet.observe.constellation.abbr|upper %}">
+                            {{ comet.observe.constellation.name }}
+                        </a>
+                    </td>
+                    <td class="description operations" rowspan=2>
+                        <a href="/admin/solar_system/comet/{{object.pk}}/change" target="_new"><button>Admin</button></a>
+                        <br>
+                        <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
+                        <br>
+                        <button onclick="return realtimePopup('/comet/real-time/{{ object.slug }}')">
+                            Real Time
+                        </button>
+                        <br>
+                        <button onclick="return realtimePopup('/comet/real-time/{{ object.slug }}?utdt_base=cookie')">
+                            Cookie
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="ident">
+                        <b>Discovered:</b> {{ object.year_of_discovery }}
+                    </td>
+                </tr>
+            </table>
+    
+            <table width=100% class="lite info">
+                <tr>
+                    <td colspan=3>
+                        <h2>Information:</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <span class="coordinates">
+                            &alpha; (2000): {{ comet.apparent.equ.ra_str }}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &delta; (2000): {{ comet.apparent.equ.dec_str }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='vt'>
+                        {% with comet as obj %}
+                        {% include 'inc_distance.html' %}
+                        {% endwith %}
+                    </td>
+                    <td class='vt'>
+                        {% with comet as obj %}
+                        {% include 'inc_apparent.html' %}
+                        {% endwith %}
+                    </td>
+                    <td class='vt'>
+                        {% with object as obj %}
+                        {% include 'inc_comet_mpc.html' %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/wide')">
+                        Wide Area Map (10°)
+                    </button>
+                    </td>
+                    <td>
+                        <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/narrow')">
+                        Narrow Area Map (4°)
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <a href="{{ object.light_curve_graph_url }}" target="_new">
+                            <img src="{{ object.light_curve_graph_url }}" class="constrained">
+                            </a>
+                    </td>
+                </tr>
+            </table>
         </td>
-        <td width="25%" class="hvcenter">
-            <a href="{{ object.light_curve_graph_url }}" target="_new">
-            <img src="{{ object.light_curve_graph_url }}" class="constrained">
-            </a>
-        </td>
-        <td width="20%" class="hvcenter">
-            {% if object.description %}
-            <p>{{ object.description }}</p>
+        <td width="500px" height="600px" style="position:relative;">
+            {% if library_slideshow|length > 1 %}
+            {% include "includes/library_slideshow.html" %}
+            {% elif object.library_image %}
+            <a href="{{ object.library_image.image.url }}"><img 
+                src="{{ object.library_image.image.url }}" class="constrained"></a>
             {% else %}
-            <p>No description.</p>
+            <p class='hvcenter'>No Image</p>
             {% endif %}
         </td>
-        {% if library_slideshow|length > 1 %}
-        <td width="500px" height="600px" style="position:relative;">
-            {% include "includes/library_slideshow.html" %}
-        </td>
-            {% elif object.library_image %}
-        <td width="500px">
-            <a href="{{ object.library_image.image.url }}" target="_blank"><img 
-                src="{{ object.library_image.image.url }}" class="constrained"></a>
-        </td>
-        {% else %}
-        <td width="35%" class="hvcenter">
-            <p>No Image</p>
-        </td>
-        {% endif %}
     </tr>
-</table>
-
-<table>
-    <thead>
-    <tr>
-        <th>Location</th>
-        <th>Observe</th>
-        <th>Almanac</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td width="25%" style="vertical-align:top;">
-            {% with comet as obj %}
-            {% include 'inc_coordinates.html' %}
-            {% endwith %}
-        </td>
-        <td width="25%" style="vertical-align:top;">
-            {% with comet as obj %}
-            {% include 'inc_apparent.html' %}
-            {% endwith %}
-        </td>
-
-        <td width="25%" style="vertical-align:top;">
-            <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/wide')">
-                Wide Area Map (10°)
-            </button>
-            <br>
-            <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/narrow')">
-                Narrow Area Map (4°)
-            </button>
-        </td>
-    </tr>
-</table>
-<br><br>
-<table class="lite">
-    <tr>
-        <td style="text-align: center;">
-            <img src="{{ large_scale_map }}">
-        </td>
-        <td style="text-align: center;">
-            <img src="{{ finder_chart }}">
-        </td>
-    </tr>
-    </tbody>
 </table>
 
 {% with instance=object admin_dir='solar_system/comet' %}

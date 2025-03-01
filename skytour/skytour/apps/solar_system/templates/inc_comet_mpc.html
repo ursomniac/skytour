@@ -1,0 +1,26 @@
+{% load skytour_filters humanize %}
+<style>
+    table.orbit-table { border: none; margin-top: 5px; }
+    table.orbit-table td, th { border: none; }
+    table.orbit-table th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+</style>
+<table class="orbit-table">
+    <tr><th>Orbital/Metadata</th></tr>
+    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity }}</td></tr>
+    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees }}°</td></tr>
+    <tr><td>
+        Mag G: {{ obj.mpc_object_dict.magnitude_g }}
+        &nbsp;
+        Mag K: {{ obj.mpc_object_dict.magnitude_k }}
+    </td></tr>
+    <tr><td>Perihelion: (
+        {{ obj.mpc_object_dict.perihelion_year }}, 
+        {{ obj.mpc_object_dict.perihelion_month}},
+        {{ obj.mpc_object_dict.perihelion_day }}
+    )</td></tr>
+    <tr><td>Perihelion Dist: {{ obj.mpc_object_dict.perihelion_distance_au }} AU</td></tr>
+</table>

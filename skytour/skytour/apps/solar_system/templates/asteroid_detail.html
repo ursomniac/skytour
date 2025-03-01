@@ -28,6 +28,7 @@
         padding: 3px 5px 15px 5px!important; 
         margin-bottom: 5px;
     }
+    td.vt { width: 33%; }
     td.vt h4 { 
         margin-top: 4px; margin-bottom: 6px; 
         color: #f96;
@@ -83,19 +84,16 @@
                 <td colspan=3>
                     <h2>Information:</h2>
                 </td>
-                <td rowspan=4 width="30%" class="description-text">
-                    <br>
-                    {{ object.description|safe }}
-                </td>
             </tr>
             <tr>
-                <td colspan=2>
+                <td colspan=3>
                     <span class="coordinates">
                         &alpha; (2000): {{ asteroid.apparent.equ.ra_str }}
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &delta; (2000): {{ asteroid.apparent.equ.dec_str }}
                     </span>
                 </td>
+                <td></td>
             </tr>
             <tr>
                 <td class='vt'>
@@ -107,6 +105,17 @@
                     {% with asteroid as obj %}
                     {% include 'inc_apparent.html' %}
                     {% endwith %}
+                </td>
+                <td class='vt'>
+                    {% with object as obj %}
+                    {% include 'inc_asteroid_mpc.html' %}
+                    {% endwith %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2  class="description-text">
+                    {{ object.description|safe }}
+                    <br><br>
                 </td>
             </tr>
             <tr>

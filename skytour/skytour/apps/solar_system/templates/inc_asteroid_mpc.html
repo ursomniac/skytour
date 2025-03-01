@@ -1,0 +1,23 @@
+{% load skytour_filters humanize %}
+<style>
+    table.orbit-table { border: none; margin-top: 5px; }
+    table.orbit-table td, th { border: none; }
+    table.orbit-table th { 
+        background-color: #fc6; color: #000; 
+        text-align: left;
+        padding: 5px 8px;
+    }
+</style>
+<table class="orbit-table">
+    <tr><th>Orbital/Metadata</th></tr>
+    <tr><td>Eccentricity: {{ obj.mpc_object_dict.eccentricity }}</td></tr>
+    <tr><td>Inclination: {{ obj.mpc_object_dict.inclination_degrees }}°</td></tr>
+    <tr><td>Semi-Major Axis: {{ obj.mpc_object_dict.semi_major_axis_au }} AU</td></tr>
+    <tr><td>Mean Daily Motion: {{ obj.mpc_object_dict.mean_daily_motion_degrees }}°</td></tr>
+    <tr><td>
+        Mag H: {{ obj.mpc_object_dict.magnitude_H }}
+        &nbsp;
+        Mag G: {{ obj.mpc_object_dict.magnitude_G }}
+    </td></tr>
+
+</table>

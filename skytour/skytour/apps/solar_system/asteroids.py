@@ -17,6 +17,19 @@ def get_asteroid_target(asteroid, ts, sun):
       return None
    return target
 
+def get_asteroid_object(asteroid):
+   """
+   Lookup an asteroid in bright_asteroids.txt and return it as a target.
+   """
+   with load.open('generated_data/bright_asteroids.txt') as f:
+      mps = mpc.load_mpcorb_dataframe(f)
+   mps = mps.set_index('designation', drop=False)
+   try:
+      row = mps.loc[asteroid.mpc_lookup_designation]
+   except:
+      return None
+   return row
+
 def fast_asteroid(asteroid, eph, t, earth, sun, r_earth_sun):
    """
    Trying to get a fast estimate of magnitude for filtering.

@@ -8,6 +8,7 @@ from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
+from .asteroids import get_asteroid_object
 from .comets import get_comet_object, get_comet_period
 from .vocabs import STATUS_CHOICES
 
@@ -351,6 +352,14 @@ class Asteroid(ObservableObject):
     def num_slideshow_images(self):
         return self.image_library.filter(use_in_carousel=True).count()
     
+    @property
+    def mpc_object(self):
+        return get_asteroid_object(self)
+    
+    @property
+    def mpc_object_dict(self):
+        return self.mpc_object.to_dict()
+    
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
 
@@ -464,6 +473,10 @@ class Comet(ObservableObject):
     @property
     def mpc_object(self):
         return get_comet_object(self)
+    
+    @property
+    def mpc_object_dict(self):
+        return self.mpc_object.to_dict()
     
     @property
     def get_perihelion_date(self):
