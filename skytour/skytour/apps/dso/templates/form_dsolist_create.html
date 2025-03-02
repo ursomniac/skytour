@@ -1,0 +1,39 @@
+<style>
+    table.new-dsolist { border: none;  width: 400px; }
+    table.new-dsolist td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.new-dsolist th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+</style>
+<div class="dso_list_form" id="dsolist-create-form" style="display: none;">
+    <h2>Create New DSO Observing List</h2>
+    {% if create_form %}
+    {{ create_form.media }}
+    <form method="post" id='dsolist-create-form'>
+        {% csrf_token %}
+        <table class="new-dsolist">
+            {{ create_form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+
+<script>
+    function toggleDSOListCreateForm() {
+        var formDiv = document.getElementById("dsolist-create-form");
+        if (formDiv.style.display == "none") {
+            formDiv.style.display = "block";
+        } else {
+            formDiv.style.display = "none";
+        }
+    }
+</script>

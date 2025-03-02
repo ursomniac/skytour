@@ -116,6 +116,24 @@ class DSOListListView(CookieMixin, ListView):
     model = DSOList
     template_name = 'dsolist_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(DSOListListView, self).get_context_data(**kwargs)
+        context['create_form'] = DSOListCreateForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        print ("GOT HERE!")
+        form = DSOListCreateForm(request.POST)
+        if form.is_valid():
+            print("DIR: ", dir(form))
+            d = form.cleaned_data
+            obj = DSOList()
+            obj.name = d['name']
+            obj.description = d['description']
+            obj.active_observing_list = d['active_observing_list']
+            obj.save()
+        return self.get(request, *args, **kwargs)
+
 class DSOListDetailView(CookieMixin, DetailView):
     model = DSOList
     template_name = 'dsolist_detail.html'

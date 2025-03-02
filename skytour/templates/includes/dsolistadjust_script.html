@@ -1,0 +1,38 @@
+<script>
+    const screenWidth = window.screen.width;
+    const windowWidth = 600;
+    const windowHeight = 360;
+    const rightOffset = 100;
+    const rightPosition = screenWidth - windowWidth - rightOffset;
+    const topOffset = 200;
+
+    function DSOAddPopup(pk) {
+        const url = '/dso/list/adjustlist/add/'+pk;
+        newWindow = window.open(
+            url,
+            'Add to DSOList Popup',
+            `height=${windowHeight},  width=${windowWidth}, `
+            + ` left=${rightPosition}, top=${topOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function DSODeletePopup(pk) {
+        const url = '/dso/list/adjustlist/delete/'+pk;
+        newWindow = window.open(
+            url,
+            'Delete from DSOList Popup',
+            `height=${windowHeight},  width=${windowWidth}, `
+            + `left=${rightPosition}, top=${topOffset} `,
+            + 'menubar=no,toolbar=no,location=no,status=no',
+
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function refreshAndClose() {
+        window.opener.location.reload(true);
+        window.close()
+    }
+</script>

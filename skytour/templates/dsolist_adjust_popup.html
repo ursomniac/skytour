@@ -1,0 +1,57 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+        * { 
+            background-color: #333; 
+            color: #ccc; 
+            padding: 10px; 
+        }
+        h3 { color: #ff9; }
+        .popup-close { 
+            width: 80%;
+            background-color: #933;
+            padding: 10px;
+            color: #000;
+        }
+        .popup-close button {
+            color: #000;
+        }
+    </style>
+    </head>
+    <body onbeforeunload="refreshAndClose();">
+        {% if op == 'add' %}
+        <h3>Add a DSO to a DSOList</h3>
+        {% elif op == 'delete' %}
+        <h3>Delete a DSO from a DSOList</h3>
+        {% endif %}
+        {% if op is not None and dso.pk is not None %}
+        <form action="{% url 'dsolist-adjust' op dso.pk %}" class="dsoadd-form" type=GET>
+            <input type="hidden" name="op" value="add">
+            <b>DSO: </b>{{ dso }}
+            <br><br>
+            <b>DSO List:</b>
+            <select name='dso_list'>
+                <option value="">--------------------</option>
+                {% for item in dso_lists %}
+                <option value="{{ item.pk }}">{{ item }}</option>
+                {% endfor %}
+            </select> &nbsp; <input type="submit">
+        </form>
+        {% endif %}
+        {% if result %}
+        <h5>{{ result }}</h5>
+        {% endif %}
+        <div class='popup-close' style="width: 100%; background-color: #933; padding: 10px; ">
+            <button onClick="return closeDSOListAdjustPopup();">Close Window</button>
+        </div>
+</body>
+<script>
+    function closeDSOListAdjustPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</html>
+

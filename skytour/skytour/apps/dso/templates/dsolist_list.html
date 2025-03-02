@@ -11,8 +11,10 @@
 <br/>
 <h2>Filters</h2>
 <a href="{% url 'dsolist-active' %}"><button>Show DSOs on Active Lists</button></a>
-<a href="/admin/dso/dsolist/add"><button>Admin - Create new list</button></a>
+<button onClick='toggleDSOListCreateForm();'>Create New DSOList</button>
+{% include 'form_dsolist_create.html' %}
 <br/><br/>
+
 <table class="dsolist">
     <tr>
         <th>ID</th>
@@ -22,7 +24,7 @@
         <th>RA Range</th>
         <th>Dec Range</th>
         <th>Active</th>
-        <th>Admin</th>
+        <th>Ops</th>
     </tr>
 {% for object in object_list %}
     <tr>

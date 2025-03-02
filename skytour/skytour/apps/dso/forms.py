@@ -50,14 +50,10 @@ class DSOAddForm(forms.ModelForm):
         else:
             self.fields['add_dso'] = None
 
-class DSOListCreateForm(forms.ModelForm):
+class DSOListCreateForm(forms.Form):
     name = forms.CharField (required=True)
     description = forms.CharField (required=False, widget=forms.TextInput())
     # dso has to be not required!
     active_observing_list = forms.ChoiceField (
         choices = YES_NO, initial=YES
     )
-
-    class Meta:
-        model = DSOList
-        fields = ['name', 'description', 'active_observing_list']
