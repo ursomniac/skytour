@@ -12,7 +12,7 @@
     }
 </style>
 <div class="dso_list_form" id="website-add-form" style="display: none;">
-    <h2>Add/Edit External Website</h2>
+    <h2>Add External Website</h2>
     {% if create_form %}
     {{ create_form.media }}
     <form method="post" id='website-add-form'>
@@ -42,30 +42,6 @@
         } else {
             formDiv.style.display = "none";
         }
-    }
-    function popupEditWebsiteForm(pk) {
-        const url = '/misc/website/edit/'+pk;
-        newWindow = window.open(
-            url,
-            'Edit Website on List',
-            `height=${windowHeight},  width=${windowWidth}, `
-            + ` left=${rightPosition}, top=${topOffset}, `
-            + 'menubar=no,toolbar=no,location=no,status=no',
-        );
-        if (window.focus) { newWindow.focus() }
-        return false;
-    }
-    function popupDeleteWebsiteForm(pk) {
-        const url = '/misc/website/delete/'+pk;
-        newWindow = window.open(
-            url,
-            'Delete from Website List',
-            `height=${windowHeight},  width=${windowWidth}, `
-            + ` left=${rightPosition}, top=${topOffset}, `
-            + 'menubar=no,toolbar=no,location=no,status=no',
-        );
-        if (window.focus) { newWindow.focus() }
-        return false;
     }
 </script>
 

@@ -1,0 +1,67 @@
+<style>
+
+</style>
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    * { 
+        background-color: #333; 
+        color: #ccc; 
+        padding: 10px; 
+    }
+    h3 { color: #ff9; }
+    .popup-close { 
+        width: 80%;
+        background-color: #933;
+        padding: 10px;
+        color: #000;
+    }
+    .popup-close button {
+        color: #000;
+    }
+
+    table.edit-website { border: none;  width: 400px; }
+    table.edit-website td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.edit-website th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    </style>
+</head>
+<body>
+<div class="website_edit_form">
+    <h2>Edit External Website</h2>
+    {{ form.media }}
+    <form method="post" onsubmit="refreshParent();">
+        {% csrf_token %}
+        <table class="edit-website">
+            {{ form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    <div class='popup-close' style="width: 100%; background-color: #933; padding: 10px; ">
+        <button onClick="return closeWebsitePopup();">Close Window</button>
+    </div>
+</div>
+<script>
+    function refreshParent() {
+        window.opener.location.reload();
+        window.close();
+    }
+    function closeWebsitePopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</body>
+</html>
+
+
+

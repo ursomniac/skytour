@@ -43,7 +43,7 @@ class CalendarAdmin(admin.ModelAdmin):
 
 class WebsiteAdmin(admin.ModelAdmin):
     model = Website
-    list_display = ['name', 'get_url_link']
+    list_display = ['pk', 'name', 'get_url_link']
     readonly_fields = ['get_url_link']
 
     def get_url_link(self, obj):

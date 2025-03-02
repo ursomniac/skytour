@@ -1,8 +1,10 @@
 import datetime, pytz
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
 from django.views.generic.dates import YearArchiveView, MonthArchiveView
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import UpdateView, DeleteView
 from ..astro.calendar import create_calendar_grid, is_leap_year
 from ..misc.models import TimeZone
@@ -93,22 +95,29 @@ class WebsiteListView(ListView):
         return self.get(request, *args, **kwargs)
     
 class WebsiteEditView(UpdateView):
-    template_name = 'form_website_create.html'
+    template_name = 'form_website_edit.html'
     model = Website
     form_class = WebsiteEditForm
-    success_url = '/misc/website'
 
-    def get_context_data(self, **kwargs):
-        context = super(WebsiteEditView, self).get_context_data(**kwargs)
-        context['create_form'] = WebsiteEditForm()
-        return context
+    def get_success_url(self):
+        return reverse('website-edit-popup', kwargs={'pk': self.object.pk})
 
 class WebsiteDeleteView(DeleteView):
     template_name = 'form_website_delete.html'
     model = Website
     form_class = WebsiteDeleteForm
-    success_url = '/misc/website'
+    success_url = reverse_lazy('website-delete-result')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.pk = self.object.pk
+        self.object.delete()
+        return HttpResponseRedirect('misc/website/removed/result')
     
+class WebsiteDeleteResultView(TemplateView):
+    template_name = 'popup_website_delete_result.html'
+
 class GlossaryListView(ListView):
     model = Glossary
     template_name = 'glossary_list.html'

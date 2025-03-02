@@ -17,11 +17,9 @@ class WebsiteEditForm(forms.ModelForm):
         model = Website
         fields = ['name', 'url']
 
-class WebsiteDeleteForm(forms.ModelForm):
-    name = forms.CharField()
-    url = forms.URLField()
-    delete_checkbox = forms.BooleanField(required=False)
+class WebsiteDeleteForm(forms.Form):
+    delete_confirm = forms.BooleanField(required=False)
     
     class Meta:
         model = Website
-        fields = ['name', 'url', 'delete_checkbox']
+        fields = ['name', 'url', 'delete_confirm']

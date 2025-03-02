@@ -7,7 +7,7 @@
 </style>
 <h1>Links to External Websites</h1>
 
-<button onClick='toggleWebSiteAddForm();'>Create New DSOList</button>
+<button onClick='toggleWebSiteAddForm();'>Add Website</button>
 {% include 'form_website_create.html' %}
 
 <br/><br/>
@@ -19,7 +19,7 @@
     </tr>
     {% for obj in object_list %}
     <tr>
-        <td>{{ obj.name }}</td>
+        <td>{{ obj.pk}}: {{ obj.name }}</td>
         <td>
             <a href="{{ obj.url }}" target="_new">{{ obj.url }}</a>
         </td>
@@ -30,4 +30,5 @@
     </tr>
     {% endfor %}
 </table>
+{% include 'website_edit_script.html' %}
 {% endblock %}

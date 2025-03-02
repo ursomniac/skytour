@@ -1,0 +1,38 @@
+<style>
+
+</style>
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    * { 
+        background-color: #333; 
+        color: #ccc; 
+        padding: 10px; 
+    }
+    
+    .popup-close button {
+        color: #000;
+    }
+    button { color: #000; }
+    </style>
+</head>
+<body>
+    <h2>Website Successfully Deleted</h2>
+    <button onClick="refreshParent(); closeWebsitePopup();">Close and Refresh</button>
+<script>
+    function refreshParent() {
+        window.opener.location.reload();
+        window.close();
+    }
+    function closeWebsitePopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</body>
+</html>
+
+
+
