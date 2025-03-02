@@ -70,6 +70,11 @@ summary::-webkit-details-marker {
     table.filter_form { border: 1px solid #996; }
     h5 { color: #ff6; margin: 2px 2px 4px 2px; font-size: 14px; }
     span.gear { color: #999; font-weight: normal; }
+    .add-del button { 
+        background-color: #999; 
+        padding: 2px 4px;  border: none;
+        text-decoration: none;
+    }
 </style>
 
 <h1>Deep Sky Objects</h1>
@@ -189,8 +194,8 @@ summary::-webkit-details-marker {
         {% endif %}
         <th>Img</th>
         <th>Gear</th>
-        <!--th>Obs</th-->
         <th>Last Obs.</th>
+        <th>DSO List<br>Add/Del</th>
     </tr>
 </thead>
 <tbody>
@@ -264,12 +269,23 @@ summary::-webkit-details-marker {
             {% endif %}
             </small>
         </td>
+        <td class="add-del">
+            <span onClick="DSOAddPopup({{ dso.pk }})">
+                <button> ✅ </button>
+            </span>
+            {% if dso.is_on_active_observing_list %}
+            <span onClick="DSODeletePopup({{ dso.pk }})">
+                <button> ⛔  </button>
+            </span>
+            {% endif %}
+        </td>
     </tr>
 {% endfor %}
 </tbody>
 </table>
 </small>
 {% include 'includes/sortable_table.html' %}
+{% include 'includes/dsolistadjust_script.html' %}
 <br/>
 {% include 'includes/performance_time.html' %}
 

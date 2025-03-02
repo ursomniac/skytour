@@ -19,9 +19,10 @@
         >Admin</a>
     </button>
 <br/>
-{% with mylist.dso.all as dso_list %}
+{% with dso_list=mylist.dso.all load_adjust_script=False %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}
 <hr>
 {% endfor %}
-{% endblock %}
+{% include 'includes/dsolistadjust_script.html' %}
+{% endblock content %}

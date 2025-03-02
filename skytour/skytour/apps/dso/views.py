@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 from django.views.generic.list import ListView
 
 from ..abstract.utils import get_real_time_conditions
@@ -19,7 +19,7 @@ from ..utils.timer import compile_times
 
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
-from .forms import DSOFilterForm, DSOAddForm
+from .forms import DSOFilterForm, DSOAddForm, DSOListCreateForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
@@ -30,7 +30,9 @@ from .utils import (
     select_atlas_plate, 
     select_other_atlas_plates, 
     get_priority_label_of_observing_mode,
-    get_priority_span_of_observing_mode
+    get_priority_span_of_observing_mode,
+    add_dso_to_dsolist,
+    delete_dso_from_dsolist
 )
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
 from .utils_checklist import (
@@ -107,6 +109,7 @@ class DSOListActiveView (TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DSOListActiveView, self).get_context_data(**kwargs)
         context['dso_lists'] = DSOList.objects.filter(active_observing_list=True)
+        context['is_dsolist_page'] = True
         return context
 
 class DSOListListView(CookieMixin, ListView):
@@ -145,6 +148,7 @@ class DSOListDetailView(CookieMixin, DetailView):
             )
             context['map'] = map
         context['table_id'] = 'dsos-on-list'
+        context['is_dsolist_page'] = True
         return context
     
 class DSOFilterView(FormView):
@@ -375,6 +379,35 @@ class DSORealTimeView(CookieMixin, DetailView):
         context['object_type'] = 'DSO'
         context['object'] = object
         context = get_real_time_conditions(object, self.request, context)
+        return context
+        
+class DSOAdjustDSOListView(TemplateView):
+    template_name = 'dsolist_adjust_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOAdjustDSOListView, self).get_context_data(**kwargs)
+        dso_pk = self.kwargs['pk']
+        context['op'] = op = self.kwargs['op']
+        context['result'] = None 
+
+        # Get relevant objects
+        context['dso'] = dso = DSO.objects.filter(pk=dso_pk).first()
+        dso_lists = DSOList.objects.filter(active_observing_list=1).order_by('-pk')
+        if op == 'delete':
+            dso_lists = dso_lists.filter(dso=dso)
+        context['dso_lists'] = dso_lists
+
+        # Handle form
+        dsolist_pk = self.request.GET.get('dso_list', None)
+        dsolist = DSOList.objects.filter(pk=dsolist_pk).first()
+
+        if dsolist_pk is None:
+            context['result'] = None
+        elif op == 'add':
+            context['result'] = add_dso_to_dsolist(dso, dsolist)
+        elif op == 'delete':
+            context['result'] = delete_dso_from_dsolist(dso, dsolist)
+
         return context
     
 class DSOSearchView(View):

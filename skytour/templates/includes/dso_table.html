@@ -26,6 +26,7 @@
         <th>Img</th>
         <th>Obs</th>
         <th>Last Obs.</th>
+        <th>List</th>
     </tr>
 </thead>
 <tbody>
@@ -108,10 +109,29 @@
             {% endif %}
             {% if dso.reimage %}&nbsp; ↪️{% endif %}
         </td>
+
+        <td style="width: 10em;">
+            {% if is_dsolist_page != True %}
+            <span onClick="DSOAddPopup({{ dso.pk }})">
+                <button> 
+                    ✅ Add to List 
+                </button>
+            </span>
+            {% else %}
+            <span onClick="DSODeletePopup({{ dso.pk }})">
+                <button>
+                    ⛔ Delete from List
+                </button>
+            </span>
+            {% endif %}
+        </td>
     </tr>
 {% endfor %}
 </tbody>
 </table>
 </small>
 {% include 'includes/sortable_table.html' %}
+{% if load_adjust_script != False %}
+{% include 'includes/dsolistadjust_script.html' %}
+{% endif %}
 <br/>

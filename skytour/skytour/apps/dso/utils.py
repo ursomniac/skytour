@@ -145,3 +145,31 @@ def get_priority_span_of_observing_mode(dso, mode):
         return None
     priority = get_priority_value_of_observing_mode(dso, mode)
     return priority_span(priority)
+
+
+def add_dso_to_dsolist(add_dso, dsolist):
+    if add_dso is None:
+        return "Failed: no DSO"
+    if dsolist is None:
+        return "Failed: no DSOList"
+    if add_dso in dsolist.dso.all():
+        return "Failed: DSO already on this list"
+    try:
+        dsolist.dso.add(add_dso)
+        return "Success!"
+    except:
+        return "Failed: unknown error"
+    
+def delete_dso_from_dsolist(remove_dso, dsolist):
+    if remove_dso is None:
+        return "Failed: no DSO"
+    if dsolist is None:
+        return "Failed: no DSO"
+    if remove_dso not in dsolist.dso.all():
+        return "Failed: DSO is not in this list"
+    try:
+        dsolist.dso.remove(remove_dso)
+        return "Success!"
+    except:
+        return "Failed: unknown error"
+    

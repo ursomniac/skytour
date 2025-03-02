@@ -87,14 +87,19 @@
             &nbsp; | &nbsp;
             <a href="/admin" target="_new"><button>Admin</button></a>
         </td>
-        <td colspan=3 class="op-dso">DSOs:  &nbsp;
+        <td colspan=2 class="op-dso">DSOs:  &nbsp;
             <a href="{% url 'dso-list' %}">All</a>
             &nbsp;|&nbsp;
             <a href="{% url 'dso-available-objects' %}">@Now</a>
             &nbsp;|&nbsp;
             <a href="{% url 'dso-available-objects' %}?cookie=on">@Cookie</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'dsolist-list' %}">Obs. Lists</a>
+        </td>
+        <td class="op-dso">
+            <span onClick="myFunctionDSOList()" class="dropbtn">DSO Lists 🔽</span>
+            <div id="myDropdownDSOList" class="dropdown-content">
+                <a href="{% url 'dsolist-list' %}">All DSO Lists</a>
+                <a href="{% url 'dsolist-active' %}">Active DSO Lists</a>
+            </div>
         </td>
         <td class="op-dso">
             <span onClick="myFunctionDSO()" class="dropbtn">DSO Filters 🔽</span>
@@ -200,6 +205,9 @@
     }
     function myFunctionDSO() {
         document.getElementById("myDropdownDSO").classList.toggle("show");
+    }
+    function myFunctionDSOList() {
+        document.getElementById("myDropdownDSOList").classList.toggle("show");
     }
     function myFunctionSkyMap() {
         document.getElementById("myDropdownSkyMap").classList.toggle("show");

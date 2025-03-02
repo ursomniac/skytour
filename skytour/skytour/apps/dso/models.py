@@ -20,7 +20,6 @@ from ..astro.utils import alt_get_small_sep, get_simple_position_angle, get_atla
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.utils import get_constellation
 from ..utils.models import Constellation, ObjectType
-#from .pdf import create_pdf_page
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
 from .vocabs import (
@@ -28,7 +27,6 @@ from .vocabs import (
     MODE_VIABILITY_CHOICES,
     OBSERVING_MODE_TYPES,
     PRIORITY_CHOICES, 
-    PRIORITY_COLORS,
     VIABILITY_BACKGROUND_COLORS as VBC,
     VIABILITY_FOREGROUND_COLORS as VFC
 )
@@ -1109,7 +1107,7 @@ class DSOList(models.Model):
         _('Description'),
         null = True, blank = True
     )
-    dso = models.ManyToManyField (DSO)
+    dso = models.ManyToManyField (DSO, blank=True)
     tags = TaggableManager(blank=True)  # Used  TODO V2: come up with some use for this...
     show_on_plan = models.PositiveIntegerField ( # TODO V2: DEPRECATE?
         _('On Plan PDF'),
