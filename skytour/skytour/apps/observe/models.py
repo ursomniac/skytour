@@ -7,25 +7,7 @@ from ..misc.models import TimeZone, StateRegion
 from ..astro.utils import get_limiting_magnitude, get_declination_range
 from .pdf import create_pdf_form
 from .utils import get_mean_obs_sqm, get_effective_bortle
-
-CARDINAL_DIRECTIONS = [
-    ('N', 'North'),
-    ('NE', 'Northeast'),
-    ('E', 'East'),
-    ('SE', 'Southeast'),
-    ('S', 'South'),
-    ('SW', 'Southwest'),
-    ('W', 'West'),
-    ('NW', 'Northwest')
-]
-STATUS_CHOICES = [
-    ('TBD', 'TBD'),
-    ('Possible', 'Possible'),
-    ('Issues', 'Issues'),
-    ('Provisional', 'Provisional'),
-    ('Active', 'Active'),
-    ('Rejected', 'Rejected'),
-]
+from .vocabs import CARDINAL_DIRECTIONS, STATUS_CHOICES
 
 class ObservingLocation(models.Model):
     #
@@ -262,8 +244,6 @@ class ObservingLocation(models.Model):
         return reverse('observing-location-detail', kwargs={'pk': self.pk})
         #return '/observing_location/{}'.format(self.pk)
 
-    
-
     def __str__(self):
         if self.name:
             tag = "{}: {}".format(self.name, self.street_address)
@@ -275,8 +255,11 @@ class ObservingLocation(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        filename = create_pdf_form(self)
-        self.pdf_form.name = filename
+        try:
+            filename = create_pdf_form(self)
+            self.pdf_form.name = filename
+        except:
+            pass
         super(ObservingLocation, self).save(*args, **kwargs)
         return
 

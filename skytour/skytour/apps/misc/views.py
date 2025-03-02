@@ -3,10 +3,12 @@ from django.http import Http404
 from django.utils.timezone import now
 from django.views.generic.dates import YearArchiveView, MonthArchiveView
 from django.views.generic import ListView
+from django.views.generic.edit import UpdateView, DeleteView
 from ..astro.calendar import create_calendar_grid, is_leap_year
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
 from .models import Calendar, Website, Glossary
+from .forms import WebsiteAddForm, WebsiteEditForm, WebsiteDeleteForm
 
 class CalendarYearView(YearArchiveView):
     """
@@ -77,7 +79,35 @@ class WebsiteListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(WebsiteListView, self).get_context_data(**kwargs)
+        context['create_form'] = WebsiteAddForm()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = WebsiteAddForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            obj = Website()
+            obj.name = d['name']
+            obj.url = d['url']
+            obj.save()
+        return self.get(request, *args, **kwargs)
+    
+class WebsiteEditView(UpdateView):
+    template_name = 'form_website_create.html'
+    model = Website
+    form_class = WebsiteEditForm
+    success_url = '/misc/website'
+
+    def get_context_data(self, **kwargs):
+        context = super(WebsiteEditView, self).get_context_data(**kwargs)
+        context['create_form'] = WebsiteEditForm()
+        return context
+
+class WebsiteDeleteView(DeleteView):
+    template_name = 'form_website_delete.html'
+    model = Website
+    form_class = WebsiteDeleteForm
+    success_url = '/misc/website'
     
 class GlossaryListView(ListView):
     model = Glossary

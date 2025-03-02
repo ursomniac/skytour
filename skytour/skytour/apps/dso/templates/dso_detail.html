@@ -191,11 +191,13 @@
 				<td rowspan=2>
 					<br>
 					<div class="conditions">
-						<span class="object-metadata">Priority:</span>&nbsp;
+						<span class="object-metadata">
+							Priority ({{ observing_mode_string_short }}):
+						</span>&nbsp;
 							{{ mode_priority_label }} 
-							{% if mode_priority_span %}
-							&nbsp;&nbsp;					
-							{{ mode_priority_span }}
+							{% if xmode_priority_span %}
+								&nbsp;&nbsp;					
+								{{ mode_priority_span }}
 							{% endif %}
 							{% if object.reimage %}
 							<span style="color:#0cc"> - REDO </span>
@@ -337,7 +339,7 @@
 					<h3>
 						Active Observing Lists
 						<span class='popup-button' onClick="DSOAddPopup({{ object.pk }})">
-							<button> ✅ to DSO List</button>
+							<button> ✅ Add to DSO List</button>
 						</span>
 					</h3>
 					{% if active_dsolists.count > 0 %}
@@ -345,9 +347,6 @@
 							{% for ol in active_dsolists %}
 							<li>
 								<a href="{% url 'dsolist-detail' ol.pk %}" target="_new">{{ ol.name }}</a>
-								&nbsp;
-								<a href="/admin/dso/dsolist/{{ ol.pk }}/change/" target="_new">
-									<button>Edit List</button></a>
 							</li>
 							{% endfor %}
 						</ul>

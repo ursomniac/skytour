@@ -1,7 +1,11 @@
+from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView, CreateView
+
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
+from .forms import NewObservingLocationForm
 from .models import ObservingLocation
 from .plot import make_location_plot, plot_sqm_history, plot_expect_vs_observed_sqm
 
@@ -43,4 +47,24 @@ class ObservingLocationDetailView(CookieMixin, DetailView):
         location = self.get_object()
         reversed = context['color_scheme'] == 'dark'
         context['sqm_plot'] = plot_sqm_history(location, reversed=reversed)
+        return context
+    
+class ObservingLocationAddView(CreateView):
+    model = ObservingLocation
+    template_name = 'form_add_new_location.html'
+    form_class = NewObservingLocationForm
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingLocationAddView, self).get_context_data(**kwargs)
+        context['op'] = 'Add'
+        return context
+
+class ObservingLocationUpdateView(UpdateView):
+    model = ObservingLocation
+    template_name = 'form_add_new_location.html'
+    form_class = NewObservingLocationForm
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservingLocationUpdateView, self).get_context_data(**kwargs)
+        context['op'] = 'Edit'
         return context

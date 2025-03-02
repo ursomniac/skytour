@@ -32,6 +32,7 @@ def get_global_items(request):
     local_time_str = local_time.strftime("%b %d, %Y  %I:%M %p %Z")
     observing_mode = user_preferences.get('observing_mode', 'I')
     observing_mode_string = get_observing_mode_string(observing_mode)
+    observing_mode_string_short = get_observing_mode_string(observing_mode, short=True)
 
     # Set next_month and previous_month
     now = dt.datetime.now(dt.timezone.utc)
@@ -49,5 +50,6 @@ def get_global_items(request):
         next_month = next_month,
         previous_month = previous_month,
         observing_mode = observing_mode,
-        observing_mode_string = observing_mode_string
+        observing_mode_string = observing_mode_string,
+        observing_mode_string_short = observing_mode_string_short
     )

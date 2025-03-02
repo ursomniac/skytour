@@ -1,23 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Observing Locations: Skytour{% endblock %}
 {% block content %}
+<style>
+    table.images { border: 1px solid #999; }
+    table.images td { max-width: 30%; border:none; }
+    table.nav td { background-color: #666; text-align: center; }
+    table.nav td a { font-weight: bold; font-size: 110%; color: #fff;  }
+    img { object-fit: cover!important; max-width: 450px; }
+    button { width: 15em; }
+    h2 { margin: 4px; 0px 0px 0px; padding: 0px; }
+</style>
 <h1>Observing Locations</h1>
+<a name="top"></a>
+<a href="{% url 'observing-location-add' %}">
+    <button>Add New Observing Location</button></a>
+<br>
 <table class="images">
     <tr>
-        <td><img src="{{ sqm_plot }}"/></td>
-        <td><img src="{{ brightness_plot }}"/></td>
-    </tr>
-    <tr>
-        <td><img src="{{ bortle_plot }}"/></td>
+        <td><a href="{{ sqm_plot }}" target="_new"><img src="{{ sqm_plot }}"/></a></td>
+        <td><a href="{{ brightness_plot }}" target="_new"><img src="{{ brightness_plot }}"/></a></td>
+        <td><a href="{{ bortle_plot }}" target="_new"><img src="{{ bortle_plot }}"/></a></td>
     </tr>
 </table>
 <br>
-
+<table class="nav">
+    <tr>
+    {% for key, value in locations.items %}
+        <td><a href="#table-{{ key }}">{{ key }}</a></td>
+    {% endfor %}
+    </tr>
+</table>
+<br>
 {% for key, value in locations.items %}
+    <a name="table-{{key}}"></a>
     <h2>{{ key }} Locations</h2>
     {% with object_list=value table_id=key %}
         {% include 'inc_obs_location.html' %}
     {% endwith %}
+    <a href="#top"><button>Top</button></a>
+    <br><br>
 {% endfor %}
 
 {% endblock content %}

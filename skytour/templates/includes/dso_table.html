@@ -104,13 +104,9 @@
                 </span>
             </small>
             {% endif %}
-            {% if table_id != 'dsos-on-list' and dso.is_on_active_observing_list %}
-                &nbsp; 🔭
-            {% endif %}
-            {% if dso.reimage %}&nbsp; ↪️{% endif %}
         </td>
 
-        <td style="width: 10em;">
+        <td style="width: 15em;">
             {% if is_dsolist_page != True %}
             <span onClick="DSOAddPopup({{ dso.pk }})">
                 <button> 
@@ -124,6 +120,10 @@
                 </button>
             </span>
             {% endif %}
+            {% if table_id != 'dsos-on-list' and dso.is_on_active_observing_list %}
+                &nbsp; 🔭
+            {% endif %}
+            {% if dso.reimage %}&nbsp; ↪️{% endif %}
         </td>
     </tr>
 {% endfor %}

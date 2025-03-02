@@ -6,11 +6,10 @@
     table.dsolist th {
         background-color: #996; color: #000; border: none;
     }
+    table.dsolist td.center  {text-align: center; }
 </style>
 <h1>Lists of Deep Sky Objects</h1>
 <br/>
-<h2>Filters</h2>
-<a href="{% url 'dsolist-active' %}"><button>Show DSOs on Active Lists</button></a>
 <button onClick='toggleDSOListCreateForm();'>Create New DSOList</button>
 {% include 'form_dsolist_create.html' %}
 <br/><br/>
@@ -24,7 +23,6 @@
         <th>RA Range</th>
         <th>Dec Range</th>
         <th>Active</th>
-        <th>Ops</th>
     </tr>
 {% for object in object_list %}
     <tr>
@@ -34,14 +32,13 @@
         <td>{{ object.dso_count }}</td>
         <td>{{ object.ra_range.0|to_hm:0 }} to {{ object.ra_range.1|to_hm:0 }}</td>
         <td>{{ object.dec_range.0|to_dm:0 }} to {{ object.dec_range.1|to_dm:0 }}</td>
-        <td>
+        <td class='center'>
             {% if object.active_observing_list %}
             ✅
             {% else %}
             ❌
             {% endif %}
         </td>
-        <td><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></td>
     </tr>
 {% endfor %}
 </table>

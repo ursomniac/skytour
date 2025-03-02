@@ -30,7 +30,7 @@ def get_observing_locations(all, rejected=False):
         return qs.exclude(status='Rejected')
     return qs
 
-def get_observing_mode_string(mode):
+def get_observing_mode_string(mode, short=False):
     MODE_STRINGS = {
         'N': 'Naked Eye',
         'B': 'Binoculars',
@@ -38,8 +38,9 @@ def get_observing_mode_string(mode):
         'M': 'Medium Telescope',
         'I': 'Imaging Telescope'
     }
+    SHORT_MODE_STRINGS = {'N': 'Nak. Eye', 'B': 'Binoc.', 'S': 'Sm. Tel.', 'M': 'Med. Tel.', 'I': 'Img. Tel.'}
     if mode is None:
         return None
     if mode in 'NBSMI':
-        return MODE_STRINGS[mode]
+        return SHORT_MODE_STRINGS[mode] if short else MODE_STRINGS[mode]
     return 'Unknown'

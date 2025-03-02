@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Add Observation: Skytour{% endblock %}
+{% block content %}
+
+<style>
+  h1, h4 { color: #ccc; }
+  table.subform { border: none; }
+  table.subform td { border: none; }
+  table.subform th {
+    background-color: #cc9;
+    color: #000;
+    border: none;
+  }
+  table.panel { border: 1px solid #ffc;  margin-bottom: 20px; }
+  table.subform td { vertical-align: top; }
+  table.subform td.panel2 { border: 2px solid #960; background-color: #850; }
+  table.subform td.panel2 input { width: 20em;}
+</style>
+
+<h1>{{ op }} Observing Location</h1>
+{% if message %}
+<b>{{ message }}</b><br>
+{% endif %}
+
+<div class="add_location_form">
+  {% if form %}
+  {{ form.media }}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <ul>
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% for hidden_field in form.hidden_fields %}
+    {% if hidden_field.errors %}
+      <ul>
+        {% for error in hidden_field.errors %}
+          <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {{ hidden_field }}
+    {% endfor %}
+        
+    {% with form.status as field %}
+    {% include "inc_obs_form_field.html" %}
+    {% endwith %}
+    <table class="subform">
+        <tr>
+            <td>
+            <table class="panel">
+              <tr><th colspan=2>Location Metadata</tr>
+                {% with form.name as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.street_address as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.city as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.state as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+              </table>
+            <table class="panel">
+              <tr><th colspan=2>Geographic Metadata</th></tr>
+                {% with form.latitude as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.longitude as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.elevation as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+ 
+                {% with form.time_zone as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+                {% with form.travel_distance as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.travel_time as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+              </table>
+              <table class="panel">
+                <tr><th colspan=2>Sky Brightness</th></tr>
+                {% with form.sqm as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.brightness as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.artificial_brightness as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.ratio as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
+                {% with form.bortle as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+              </table>
+            </td>
+            <td>
+            <table class="panel">
+              <tr><th colspan=2>Site Metadata</th></tr>
+              {% with form.parking as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.is_flat as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.description as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.light_sources as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.horizon_blockage as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+            </table>
+            <table class='panel'>
+              <tr><th colspan=2>Maps</th></tr>
+              {% with form.map_image as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.earth_image as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.bortle_image as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan=2 class="panel2"><input type="submit" value="Submit"/></td>
+        </tr>
+        
+      </table>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+{% endblock %}

@@ -5,12 +5,10 @@ import numpy as np
 import pandas as pd
 import time
 from django.core.exceptions import ValidationError
-from django.db.models import Count
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView

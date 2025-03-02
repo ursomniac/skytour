@@ -5,7 +5,11 @@
 <h1>DSO List: {{ object.name }}</h1>
 <h2>Description</h2>
 <p> {{ object.description }} </p>
-<p><a href="/admin/dso/dsolist/{{ object.pk }}/change"><button>Admin</button></a></p>
+<p>
+    <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
+    {% include 'form_dsolist_edit.html' %}
+</p>
+
 <h2>{{ object.dso.count}} DSOs</h2>
 {% with object.dso.all as dso_list %}
 {% include 'includes/dso_table.html' %}

@@ -1,0 +1,71 @@
+<style>
+    table.new-website { border: none;  width: 400px; }
+    table.new-website td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.new-website th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+</style>
+<div class="dso_list_form" id="website-add-form" style="display: none;">
+    <h2>Add/Edit External Website</h2>
+    {% if create_form %}
+    {{ create_form.media }}
+    <form method="post" id='website-add-form'>
+        {% csrf_token %}
+        <table class="new-website">
+            {{ create_form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+</div>
+
+<script>
+    const screenWidth = window.screen.width;
+    const windowWidth = 600;
+    const windowHeight = 360;
+    const rightOffset = 100;
+    const rightPosition = screenWidth - windowWidth - rightOffset;
+    const topOffset = 200;
+
+    function toggleWebSiteAddForm() {
+        var formDiv = document.getElementById("website-add-form");
+        if (formDiv.style.display == "none") {
+            formDiv.style.display = "block";
+        } else {
+            formDiv.style.display = "none";
+        }
+    }
+    function popupEditWebsiteForm(pk) {
+        const url = '/misc/website/edit/'+pk;
+        newWindow = window.open(
+            url,
+            'Edit Website on List',
+            `height=${windowHeight},  width=${windowWidth}, `
+            + ` left=${rightPosition}, top=${topOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function popupDeleteWebsiteForm(pk) {
+        const url = '/misc/website/delete/'+pk;
+        newWindow = window.open(
+            url,
+            'Delete from Website List',
+            `height=${windowHeight},  width=${windowWidth}, `
+            + ` left=${rightPosition}, top=${topOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>
+

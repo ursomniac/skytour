@@ -6,19 +6,26 @@
     th { background-color: #996; color: #000; border: none; }
 </style>
 <h1>Links to External Websites</h1>
+
+<button onClick='toggleWebSiteAddForm();'>Create New DSOList</button>
+{% include 'form_website_create.html' %}
+
+<br/><br/>
 <table>
     <tr>
         <th>Name</th>
-        <th>
-            URL
-            <span class="admin"><a href="/admin/misc/website/add/"><button>Add New</button></a></span>
-        </th>
+        <th>URL</th>
+        <th>Edit/Delete</th>
     </tr>
     {% for obj in object_list %}
     <tr>
         <td>{{ obj.name }}</td>
         <td>
             <a href="{{ obj.url }}" target="_new">{{ obj.url }}</a>
+        </td>
+        <td style="text-align: center;">
+            <button onClick='popupEditWebsiteForm({{ obj.pk }});'>✏️ Edit</button>
+            <button onClick='popupDeleteWebsiteForm({{ obj.pk }});'>⛔️ Delete</button>
         </td>
     </tr>
     {% endfor %}

@@ -1,7 +1,7 @@
 from django import forms
 from .models import DSOList
 from ..abstract.vocabs import YES_NO, YES, NO
-from ..utils.models import Catalog, ObjectType
+from ..utils.models import ObjectType
 from .vocabs import PRIORITY_CHOICES
 
 class DSOFilterForm(forms.Form):
@@ -56,4 +56,15 @@ class DSOListCreateForm(forms.Form):
     # dso has to be not required!
     active_observing_list = forms.ChoiceField (
         choices = YES_NO, initial=YES
+    )
+
+class DSOListEditForm(forms.Form):
+    name = forms.CharField (required=True)
+    description = forms.CharField (required=False, widget=forms.TextInput())
+    # dso has to be not required!
+    active_observing_list = forms.ChoiceField (
+        choices = YES_NO, initial=YES
+    )
+    delete_checkbox = forms.BooleanField(
+        required=False,
     )

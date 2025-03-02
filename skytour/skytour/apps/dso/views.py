@@ -19,7 +19,7 @@ from ..utils.timer import compile_times
 
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
-from .forms import DSOFilterForm, DSOAddForm, DSOListCreateForm
+from .forms import DSOFilterForm, DSOAddForm, DSOListCreateForm, DSOListEditForm
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
@@ -122,10 +122,8 @@ class DSOListListView(CookieMixin, ListView):
         return context
     
     def post(self, request, *args, **kwargs):
-        print ("GOT HERE!")
         form = DSOListCreateForm(request.POST)
         if form.is_valid():
-            print("DIR: ", dir(form))
             d = form.cleaned_data
             obj = DSOList()
             obj.name = d['name']
@@ -137,6 +135,23 @@ class DSOListListView(CookieMixin, ListView):
 class DSOListDetailView(CookieMixin, DetailView):
     model = DSOList
     template_name = 'dsolist_detail.html'
+
+    def post(self, request, *args, **kwargs):
+        form = DSOListEditForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            obj = self.get_object()
+            print("OBJ: ", obj)
+
+            if d['delete_checkbox']:
+                obj.delete()
+                return redirect('dsolist-list')
+            else:
+                obj.name = d['name']
+                obj.description = d['description']
+                obj.active_observing_list = d['active_observing_list']
+                obj.save()
+            return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
@@ -167,6 +182,10 @@ class DSOListDetailView(CookieMixin, DetailView):
             context['map'] = map
         context['table_id'] = 'dsos-on-list'
         context['is_dsolist_page'] = True
+        # Deal with Edit form
+        initial = {'name': object.name, 'description': object.description, 'active_observing_list': object.active_observing_list}
+        context['edit_form'] = DSOListEditForm(initial=initial)
+        context['object'] = object
         return context
     
 class DSOFilterView(FormView):
