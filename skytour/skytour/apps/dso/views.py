@@ -146,7 +146,7 @@ class DSOListDetailView(CookieMixin, DetailView):
             context['map'] = map
         context['table_id'] = 'dsos-on-list'
         return context
-
+    
 class DSOFilterView(FormView):
     form_class = DSOFilterForm
     template_name = 'dso_filter.html'

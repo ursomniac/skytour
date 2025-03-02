@@ -19,7 +19,11 @@
     <tr>
       <td width="30%" class="header"><h3>{{ object.name }}</h3></td>
       <td width="30%" style="text-align: center; vertical-align: middle !important;">
+        {% if object_type != 'moon' %}
         in <a href="{% url 'constellation-detail' object.observe.constellation.abbr|upper %}">{{ object.observe.constellation.name }}</a>
+        {% else %}
+        X{{ object }}
+        {% endif %}
       </td>
       <td width="30%" style="text-align: left; vertical-align: middle !important;">
         {% if object_type != 'moon' %}

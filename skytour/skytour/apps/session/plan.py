@@ -22,15 +22,18 @@ def get_plan(context, debug=False):
     location = context['location']
 
     # Moon
-    moon_session = cookies['moon']['session']
-    go = show_all or start_v2_issue(moon_session)
-    if go:
-        show_moon = moon_session
-    else:
-        show_moon = None
-    context['moon'] = cookies['moon']
-    context['show_moon'] = show_moon
-    times.append((time.perf_counter(), 'Moon'))
+    try:
+        moon_session = cookies['moon']['session']
+        go = show_all or start_v2_issue(moon_session)
+        if go:
+            show_moon = moon_session
+        else:
+            show_moon = None
+        context['moon'] = cookies['moon']
+        context['show_moon'] = show_moon
+        times.append((time.perf_counter(), 'Moon'))
+    except:
+        pass
 
     # Planets
     show_planets = []
