@@ -98,9 +98,7 @@ class WebsiteEditView(UpdateView):
     template_name = 'form_website_edit.html'
     model = Website
     form_class = WebsiteEditForm
-
-    def get_success_url(self):
-        return reverse('website-edit-popup', kwargs={'pk': self.object.pk})
+    success_url = reverse_lazy('website-edit-result')
 
 class WebsiteDeleteView(DeleteView):
     template_name = 'form_website_delete.html'
@@ -110,13 +108,15 @@ class WebsiteDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        success_url = self.get_success_url()
         self.pk = self.object.pk
         self.object.delete()
         return HttpResponseRedirect('misc/website/removed/result')
-    
+
+class WebsiteEditResultView(TemplateView):
+    template_name = 'edit_website_result.html'
+
 class WebsiteDeleteResultView(TemplateView):
-    template_name = 'popup_website_delete_result.html'
+    template_name = 'delete_website_result.html'
 
 class GlossaryListView(ListView):
     model = Glossary

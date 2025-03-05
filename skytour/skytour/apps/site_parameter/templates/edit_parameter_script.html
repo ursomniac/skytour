@@ -6,23 +6,11 @@
     const wrightPosition = wscreenWidth - wwindowWidth - wrightOffset;
     const wtopOffset = 200;
 
-    function popupEditWebsiteForm(pk) {
-        const url = '/misc/website/edit/'+pk;
+    function popupEditParameter(pk, ptype) {
+        const url = `/site/param/edit/${ptype}/${pk}`;
         newWindow = window.open(
             url,
-            'Edit Website on List',
-            `height=${wwindowHeight},  width=${wwindowWidth}, `
-            + ` left=${wrightPosition}, top=${wtopOffset}, `
-            + 'menubar=no,toolbar=no,location=no,status=no',
-        );
-        if (window.focus) { newWindow.focus() }
-        return false;
-    }
-    function popupDeleteWebsiteForm(pk) {
-        const url = '/misc/website/delete/'+pk;
-        newWindow = window.open(
-            url,
-            'Delete from Website List',
+            'Edit SiteParameter Value',
             `height=${wwindowHeight},  width=${wwindowWidth}, `
             + ` left=${wrightPosition}, top=${wtopOffset}, `
             + 'menubar=no,toolbar=no,location=no,status=no',

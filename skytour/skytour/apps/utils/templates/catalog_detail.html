@@ -5,7 +5,7 @@
 {% block title %}{{ object.name }} Catalog: Skytour {% endblock %}
 {% block content %}
 <style>
-    table.catalog_list td { font-size: 14px; }
+    table.catalog_list td { font-size: 12px; }
     table.stats { width: 70%; }
     table.stats td {
         padding: 3px;
@@ -21,7 +21,6 @@
         background-color: #666;
         border: 0;
     }
-
     table.cats td {
         font-size: 80%;
     }
@@ -29,6 +28,7 @@
         background-color: #993;
         color: #000;
     }
+    td.center { text-align: center; }
 </style>
 <!-- main -->
 {# header section #}
@@ -115,6 +115,7 @@
 
 {% include 'includes/paginate.html' %}
 <h3>{{ object_count }} Objects in List</h3>
+
 <table class="catalog_list" id='{{ table_id }}'>
     <tr>
         <th>Object</th>
@@ -132,6 +133,7 @@
         {% endif %}
         <th>Img.</th>
         <th>Last Observed</th>
+        <th>
     </tr>
     
     {% for cat_object in object_list %}
@@ -180,6 +182,12 @@
         <td>
             {% if thing.mode_imaging_priority %}
             &nbsp; {{ thing.mode_imaging_priority_span }}
+            {% if thing.library_image_camera %}
+            &nbsp;
+            {{ thing.library_image_camera }}
+            {% else %}
+            &nbsp;&nbsp;
+            {% endif %}
             {% endif %}
         </td>
         <td style="vertical-align: middle;">
@@ -198,23 +206,24 @@
                 </span>
                 </small>
             {% endif %}
-            {% if thing.library_image_camera or thing.is_on_active_observing_list %}
-            <span style="float: right;">
-                <table class="flags"><tr>
-                <td>
-                {% if thing.library_image_camera %}{{ thing.library_image_camera }}{% else %}&nbsp;{% endif %}
-                </td>
-                <td>
-                {% if thing.is_on_active_observing_list %}🔭{% else %}&nbsp;{% endif %} 
-                </td>
-                </tr></table>
+        </td>
+        <td class="center">
+            <span onClick="DSOAddPopup({{ thing.pk }})">
+                <button> 
+                    ✅ Add to List 
+                </button>
             </span>
-            {% endif %}
+            {% if thing.is_on_active_observing_list %}
+            &nbsp;🔭
+            {% else %}
+            &nbsp;&nbsp;
+            {% endif %} 
         </td>
     </tr>
     {% endwith %}
     {% endfor %}
 </table>
+{% include 'includes/dsolistadjust_script.html' %}
 {% include 'includes/sortable_table.html' %}
 {% include 'includes/paginate.html' %}
 {% endblock content %}

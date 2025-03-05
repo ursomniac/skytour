@@ -1,0 +1,60 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    * { 
+        background-color: #333; 
+        color: #ccc; 
+        padding: 10px; 
+    }
+    table.edit-param { border: none;  width: 400px; }
+    table.edit-param td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.edit-param th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    table.edit-param td.popup-close {
+        background-color: #933; padding: 10px;
+    }
+    td.popup-close button {
+        color: #000;
+    }
+    </style>
+</head>
+<body>
+    <h2>Edit {{ item }} Parameter Value</h2>
+    {{ form.media }}
+    {% if form.errors %}
+    <h6>{{ form.errors }}</h6>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <table class="edit-param">
+            <tr>
+                <td>{{ form.as_p }}</td>
+                <td><input type="submit" value="Submit"/></td>
+            </tr>
+            <tr>
+                <td colspan=2 class="popup-close">
+                    <button onClick="return closePopup();">Close Window</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+<script>
+function closeWebsitePopup() {
+    var me = window.self;
+    me.opener = me.self;
+    me.close();
+}
+</script>
+</html>
+
+
+

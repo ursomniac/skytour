@@ -11,7 +11,11 @@ def get_altitude(last, lat, ra, dec):
     xha = math.radians(ha)
     s1 = math.sin(math.radians(lat)) * math.sin(math.radians(dec))
     s2 = math.cos(math.radians(lat)) * math.cos(math.radians(dec)) * math.cos(xha)
-    return s1 + s2 # sine of the altitude
+    s = s1 + s2
+    # Rarely there's a rounding error and sin(alt) is out of range...
+    s = 1.0 if s > 1.0 else s
+    s = -1.0 if s < -1.0 else s
+    return s # sine of the altitude
 
 def get_delta_hour_for_altitude(dec, alt=20, dlat=None, send='days', debug=False):
     """

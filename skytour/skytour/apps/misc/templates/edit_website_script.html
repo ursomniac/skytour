@@ -1,0 +1,35 @@
+<script>
+    const wscreenWidth = window.screen.width;
+    const wwindowWidth = 500;
+    const wwindowHeight = 500;
+    const wrightOffset = 800;
+    const leftOffset = 800;
+    const wrightPosition = wscreenWidth - wwindowWidth - wrightOffset;
+    const wtopOffset = 200;
+
+    function popupEditWebsiteForm(pk) {
+        const url = '/misc/website/edit/'+pk;
+        newWindow = window.open(
+            url,
+            'Edit Website on List',
+            'height=500, width=500, top=300, left=500'
+            //`height=${wwindowHeight},  width=${wwindowWidth}, `
+            //+ ` left=${leftOffset}, top=${wtopOffset}, `
+            //+ 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function popupDeleteWebsiteForm(pk) {
+        const url = '/misc/website/delete/'+pk;
+        newWindow = window.open(
+            url,
+            'Delete from Website List',
+            `height=${wwindowHeight},  width=${wwindowWidth}, `
+            + ` left=${leftOffset}, top=${wtopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>

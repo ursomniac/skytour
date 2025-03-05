@@ -426,6 +426,8 @@ def map_dsos(ax, earth, t, projection,
                 if not ignore_setting:
                     interesting.append(other)
                 else:
+                    sin_dist = 1.0 if sin_dist > 1.0 else sin_dist
+                    sin_dist = -1.0 if sin_dist < -1.0 else sin_dist
                     my_alt = math.degrees(math.asin(sin_dist))
                     if my_alt > min_alt:
                         interesting.append(other)

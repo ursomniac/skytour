@@ -8,18 +8,15 @@
         width: 80%;
         margin-left: 30px;
     }
+    td.center  { text-align: center; }
 </style>
+
 <table class="parameter_table">
     <tr>
         <th style="width: 20%">Name</th>
         <th style="width: 20%">Slug</th>
         <th style="width: 45%">Value</th>
-        <th style="width: 10%">Admin
-            &nbsp;
-            <a href="/admin/site_parameter/siteparameter{{ submodel }}/add/" target="_new">
-                <button>New</button>
-            </a>
-        </th>
+        <th style="width: 10%">Change</th>
     </tr>
     {% for item in itemlist %}
     <tr>
@@ -34,7 +31,9 @@
             {{ item.value }}
             {% endif %}
         </td>
-        <td><a href="/admin/site_parameter/siteparameter{{ submodel }}/{{ item.pk }}/change/" target="_new"><button>Admin</button></a></td>
+        <td class="center">
+            <button onClick="popupEditParameter({{ item.pk }}, '{{ submodel }}');">✏️ Edit</button>
+        </td>
     </tr>
     {% endfor %}
 </table>

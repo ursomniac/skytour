@@ -19,7 +19,7 @@
     </tr>
     {% for obj in object_list %}
     <tr>
-        <td>{{ obj.pk}}: {{ obj.name }}</td>
+        <td>{{ obj.name }}</td>
         <td>
             <a href="{{ obj.url }}" target="_new">{{ obj.url }}</a>
         </td>
@@ -30,5 +30,5 @@
     </tr>
     {% endfor %}
 </table>
-{% include 'website_edit_script.html' %}
+{% include 'edit_website_script.html' %}
 {% endblock %}

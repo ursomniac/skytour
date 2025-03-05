@@ -3,25 +3,45 @@
 {% block content %}
 <h1>Site Parameters</h1>
 
-<h2>Links</h2>
-{% with itemlist=parameters.link submodel='link' %}{% include 'inc_parameter_list.html' %}{% endwith %}
-
-<h2>PDF Files</h2>
-{% with itemlist=parameters.pdf submodel='pdffile' %}{% include 'inc_parameter_list.html' %}{% endwith %}
 
 <h2>Positive Integers</h2>
-{% with itemlist=parameters.positive submodel='positiveinteger' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+{% with itemlist=parameters.positive submodel='positive' item='Positive Integer' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
 
 <h2>Strings</h2>
-{% with itemlist=parameters.string submodel='string' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+{% with itemlist=parameters.string submodel='string' item='String' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
 
 <h2>Floats</h2>
-{% with itemlist=parameters.float submodel='float' %}{% include 'inc_parameter_list.html' %}{% endwith %}
-
-<h2>Images</h2>
-{% with itemlist=parameters.image submodel='image' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+{% with itemlist=parameters.float submodel='float' item='Floating Number' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
 
 <h2>Numbers</h2>
-{% with itemlist=parameters.number submodel='number' %}{% include 'inc_parameter_list.html' %}{% endwith %}
+{% with itemlist=parameters.number submodel='number' item='Number' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
 
+<hr>
+<h2>PDF Files</h2>
+{% with itemlist=parameters.pdf submodel='pdffile' item='PDF File' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
+
+<h2>Images</h2>
+{% with itemlist=parameters.image submodel='image' item='Image' %}
+{% include 'inc_parameter_list.html' %}
+{% endwith %}
+
+<script>
+    const screenWidth = window.screen.width;
+    const windowWidth = 600;
+    const windowHeight = 360;
+    const rightOffset = 100;
+    const rightPosition = screenWidth - windowWidth - rightOffset;
+    const topOffset = 200;
+</script>
+{% include 'edit_parameter_script.html' %}
 {% endblock %}
