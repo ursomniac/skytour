@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}PDF Manuals: Skytour{% endblock %}
+{% block content %}
+<style>
+    .admin { float: right; }
+    th { background-color: #996; color: #000; border: none; }
+</style>
+<h1>Links to PDF Manuals</h1>
+
+<p>This is just a handy place to stash your PDF Manuals.</p>
+
+<button onClick='toggleManualAddForm();'>Add PDF Manual</button>
+{% include 'form_manual_create.html' %}
+
+<br/><br/>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>File</th>
+        <th>Edit/Delete</th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.title }}</td>
+        <td>
+            <a href="{{ obj.pdf_file }}" target="_new">{{ obj.pdf_file }}</a>
+        </td>
+        <td style="text-align: center;">
+            <button onClick='popupEditManualForm({{ obj.pk }});'>✏️ Edit</button>
+            <button onClick='popupDeleteManualForm({{ obj.pk }});'>⛔️ Delete</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% include 'edit_manual_script.html' %}
+{% endblock %}

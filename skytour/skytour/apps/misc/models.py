@@ -179,3 +179,17 @@ class Glossary(models.Model):
         ordering = ['slug']
         verbose_name = 'Glossary Entry'
         verbose_name_plural = 'Glossary Entries'
+
+class PDFManual(models.Model):
+    title = models.CharField(
+        _('Title'),
+        max_length = 100
+    )
+    slug = models.SlugField()
+    pdf_file = models.FileField (
+        _('PDF File'),
+        upload_to = 'pdf_files'
+    )
+
+    class Meta:
+        ordering = ['slug']

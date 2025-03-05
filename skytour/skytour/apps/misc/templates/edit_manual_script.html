@@ -1,0 +1,22 @@
+<script>
+    function popupEditManualForm(pk) {
+        const url = '/misc/manual/edit/'+pk;
+        newWindow = window.open(
+            url,
+            'Edit PDF Manual on List',
+            'height=500, width=500, top=300, left=500'
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function popupDeleteManualForm(pk) {
+        const url = '/misc/manual/delete/'+pk;
+        newWindow = window.open(
+            url,
+            'Delete from PDF Manual List',
+            'height=500, width=500, top=300, left=500'
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>

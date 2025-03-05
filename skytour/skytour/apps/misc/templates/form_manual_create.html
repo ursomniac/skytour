@@ -1,0 +1,53 @@
+<style>
+    table.new-manual { border: none;  width: 600px; }
+    table.new-manual td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.new-manual th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    input.submit { width: 20em; }
+</style>
+<div id="manual-add-form" style="display: none;">
+    <h2>Add PDF Manual</h2>
+    {% if create_form %}
+    {{ create_form.media }}
+    <form method="post" id='manual-add-form' enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="new-manual">
+            {{ create_form.as_table }}
+            <tr>
+                <td colspan=2><input class="submit" type="submit" value="Submit"/></td>
+            </tr>
+        </table>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+</div>
+
+<script>
+    const screenWidth = window.screen.width;
+    const windowWidth = 600;
+    const windowHeight = 360;
+    const rightOffset = 100;
+    const rightPosition = screenWidth - windowWidth - rightOffset;
+    const topOffset = 200;
+
+    function toggleManualAddForm() {
+        var formDiv = document.getElementById("manual-add-form");
+        if (formDiv.style.display == "none") {
+            formDiv.style.display = "block";
+        } else {
+            formDiv.style.display = "none";
+        }
+    }
+</script>
+

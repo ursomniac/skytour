@@ -1,0 +1,54 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    * { background-color: #333; color: #ccc; padding: 10px; }
+    .popup-close button { color: #000; }
+    table.edit-manual { border: none;  width: 600px; }
+    table.edit-manual td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.edit-manual th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    table.edit-manual td.popup-close { background-color: #933; padding: 10px; }
+    </style>
+</head>
+<body>
+<div class="manual_edit_form">
+    <h2>Edit PDF Manual</h2>
+    {{ form.media }}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="edit-manual">
+            {{ form.as_table }}
+            <tr>
+                <td colspan=2>
+                    <input type="submit" value="Submit"/>
+                </td>
+            </tr>
+            <tr>
+                <td class='popup-close' colspan=2>
+                    <button onClick="return closeManualPopup();">Close Window</button>
+                </div>
+            </tr>
+        </table>
+    </form>
+
+</div>
+<script>
+    function closeManualPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</body>
+</html>
+
+
+

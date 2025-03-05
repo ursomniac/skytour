@@ -1,0 +1,27 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    * { background-color: #333; color: #ccc; padding: 10px; }
+    button.popup-close { color: #000; }
+    </style>
+</head>
+<body>
+    <h2>PDF Manual Successfully Edited</h2>
+    <button class='popup-close' onClick="refreshParent(); closeManualPopup();">Close and Refresh</button>
+<script>
+    function refreshParent() {
+        window.opener.location.reload();
+        window.close();
+    }
+    function closeWebsitePopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</body>
+</html>
+
+
+

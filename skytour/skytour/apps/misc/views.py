@@ -1,7 +1,8 @@
 import datetime, pytz
+from django.core.files.storage import default_storage
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.utils.timezone import now
 from django.views.generic.dates import YearArchiveView, MonthArchiveView
 from django.views.generic import ListView, TemplateView
@@ -9,8 +10,11 @@ from django.views.generic.edit import UpdateView, DeleteView
 from ..astro.calendar import create_calendar_grid, is_leap_year
 from ..misc.models import TimeZone
 from ..site_parameter.helpers import find_site_parameter
-from .models import Calendar, Website, Glossary
-from .forms import WebsiteAddForm, WebsiteEditForm, WebsiteDeleteForm
+from .models import Calendar, Website, Glossary, PDFManual
+from .forms import (
+    WebsiteAddForm, WebsiteEditForm, WebsiteDeleteForm,
+    PDFManualAddForm, PDFManualEditForm, PDFManualDeleteForm
+)
 
 class CalendarYearView(YearArchiveView):
     """
@@ -125,3 +129,60 @@ class GlossaryListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(GlossaryListView, self).get_context_data(**kwargs)
         return context
+
+class PDFManualListView(ListView):
+    model = PDFManual
+    template_name = 'pdfmanual_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PDFManualListView, self).get_context_data(**kwargs)
+        context['create_form'] = PDFManualAddForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = PDFManualAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            d = form.cleaned_data
+            obj = PDFManual()
+            obj.title = d['title']
+            obj.slug = slugify(obj.title)
+            print ("request.FILES: ", request.FILES)
+            obj.pdf_file = d['pdf_file']
+            obj.save()
+        else:
+            print("ERROR WITH FORM: ", form)
+            print("FORM ERRORS: ", form.errors)
+        return self.get(request, *args, **kwargs)
+    
+class PDFManualEditView(UpdateView):
+    template_name = 'form_manual_edit.html'
+    model = PDFManual
+    form_class = PDFManualEditForm
+    success_url = reverse_lazy('manual-edit-result')
+
+    def post(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if 'pdf_file' in form.changed_data:
+            self.object.file = self.request.FILES['pdf_file']
+        return super().form_valid(form)
+
+class PDFManualEditResultView(TemplateView):
+    template_name = 'edit_manual_result.html'
+
+class PDFManualDeleteView(DeleteView):
+    template_name = 'form_manual_delete.html'
+    model = PDFManual
+    form_class = PDFManualDeleteForm
+    success_url = reverse_lazy('manual-delete-result')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.pk = self.object.pk
+        self.object.delete()
+        return HttpResponseRedirect('misc/manual/delete/result')
+
+class PDFManualDeleteResultView(TemplateView):
+    template_name = 'edit_manual_result.html'

@@ -5,7 +5,12 @@ from .views import (
     WebsiteEditView, 
     WebsiteDeleteView, 
     WebsiteDeleteResultView,
-    WebsiteEditResultView
+    WebsiteEditResultView,
+    PDFManualListView,
+    PDFManualEditView,
+    PDFManualEditResultView,
+    #PDFManualDeleteView,
+    #PDFManualDeleteResult,
 )
 
 urlpatterns = (
@@ -15,4 +20,9 @@ urlpatterns = (
     path('website/removed/result', WebsiteDeleteResultView.as_view(), name='website-delete-result'),
     path('website/delete/<int:pk>', WebsiteDeleteView.as_view(), name='website-delete-popup'),
     path('glossary', GlossaryListView.as_view(), name='glossary-list'),
+    path('manual', PDFManualListView.as_view(), name='manual-list'),
+    path('manual/edit/<int:pk>', PDFManualEditView.as_view(), name='manual-edit'),
+    path('manual/edit/result', PDFManualEditResultView.as_view(), name='manual-edit-result'),
+    #path('manual/delete/<int:pk>', PDFManualDeleteView.as_view(), name='manual-delete'),
+    #path('manual/delete/result', PDFManualDeleteResult.as_view(), name='manual-delete-result')
 )
