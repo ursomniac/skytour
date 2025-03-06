@@ -9,8 +9,8 @@ from .views import (
     PDFManualListView,
     PDFManualEditView,
     PDFManualEditResultView,
-    #PDFManualDeleteView,
-    #PDFManualDeleteResult,
+    PDFManualDeleteView,
+    PDFManualDeleteResultView,
 )
 
 urlpatterns = (
@@ -23,6 +23,6 @@ urlpatterns = (
     path('manual', PDFManualListView.as_view(), name='manual-list'),
     path('manual/edit/<int:pk>', PDFManualEditView.as_view(), name='manual-edit'),
     path('manual/edit/result', PDFManualEditResultView.as_view(), name='manual-edit-result'),
-    #path('manual/delete/<int:pk>', PDFManualDeleteView.as_view(), name='manual-delete'),
-    #path('manual/delete/result', PDFManualDeleteResult.as_view(), name='manual-delete-result')
+    path('manual/delete/<int:pk>', PDFManualDeleteView.as_view(), name='manual-delete'),
+    path('manual/delete/result', PDFManualDeleteResultView.as_view(), name='manual-delete-result')
 )

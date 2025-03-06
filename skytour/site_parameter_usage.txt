@@ -1,9 +1,12 @@
    2 'adjacent-planets-separation' 	--- seed value
-   1 'asteroid-cutoff' 			--- used once - seed value?
-   1 'asteroid-magnitude-limit'		--- how is this different?
-   1 'atlas-plate-version-key'		--- NOT SET in table -- I think this is which one is the default - NEED?
+   1 'skymap-magnitude-limit-stars'	--- seed
+   2 'slew-limit'			--- seed
+
+?  1 'asteroid-cutoff' 			--- used once - seed value?
+?  1 'asteroid-magnitude-limit'		--- how is this different?
    1 'comet-magnitude-limit'		--- used once - seed value?
-   1 'declination-limit'		--- FIND AND REMOVE - should be set from location's latitude!
+
+   1 'atlas-plate-version-key'		--- NOT SET in table -- I think this is which one is the default - NEED?
    7 'default-location-id'    		--- need to set at startup with first Location - store this as a default
    1 'default-observing-mode' 		--- used to set up form initial on setting cookie
    1 'default-telescope-pk'   		--- need to set at startup with first Location - store this as a default
@@ -13,11 +16,7 @@
    2 'eyepiece-fov'			--- keep - but used for generating DSO finders - seed?
    1 'max-location-distance'		--- ???
    4 'minimum-object-altitude'		--- keep/seed
-   1 'moon-vs-sqm'			--- MOVE to /static! then remove!
    1 'pdf-observing-form-pages' 	--- obscure - used for Plan - need to rethink!
-   1 'simple-moon-map'			--- MOVE to /static! then remove!
-   1 'skymap-magnitude-limit-stars'	--- seed
-   2 'slew-limit'			--- seed
 
 No links are used anywhere? - move them to websites!
 

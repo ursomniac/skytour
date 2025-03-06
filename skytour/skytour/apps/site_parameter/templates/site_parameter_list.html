@@ -3,7 +3,6 @@
 {% block content %}
 <h1>Site Parameters</h1>
 
-
 <h2>Positive Integers</h2>
 {% with itemlist=parameters.positive submodel='positive' item='Positive Integer' %}
 {% include 'inc_parameter_list.html' %}
@@ -21,17 +20,6 @@
 
 <h2>Numbers</h2>
 {% with itemlist=parameters.number submodel='number' item='Number' %}
-{% include 'inc_parameter_list.html' %}
-{% endwith %}
-
-<hr>
-<h2>PDF Files</h2>
-{% with itemlist=parameters.pdf submodel='pdffile' item='PDF File' %}
-{% include 'inc_parameter_list.html' %}
-{% endwith %}
-
-<h2>Images</h2>
-{% with itemlist=parameters.image submodel='image' item='Image' %}
 {% include 'inc_parameter_list.html' %}
 {% endwith %}
 

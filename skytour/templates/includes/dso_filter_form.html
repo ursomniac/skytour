@@ -99,19 +99,14 @@
             </td>            
           <td>
             <b>Dec Range: </b>
-            <input name="dec_high" 
-                {% if dec_high %}value="{{ dec_high }}" {% endif %}
-                size=5> 
-              down to 
             <input name="dec_low" 
-                {% if dec_low %} 
-                  value="{{ dec_low }}" 
-                {% else %}
-                  value="{{ default_dec_limit }}" 
-                {% endif %}
-                size=5> °
-
-            </td>
+            {% if dec_low %} 
+              value="{{ dec_low|floatformat:1 }}" 
+            {% endif %}
+            size=5>° to 
+            <input name="dec_high" 
+                {% if dec_high %}value="{{ dec_high|floatformat:1 }}" {% endif %}
+                size=5>°
         </tr>
         <tr>
             <td colspan=5>

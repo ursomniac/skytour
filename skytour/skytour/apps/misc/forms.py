@@ -34,13 +34,16 @@ class PDFManualAbstractForm(forms.ModelForm):
         fields = ['title', 'pdf_file']
 
 class PDFManualAddForm(PDFManualAbstractForm):
+    op = forms.CharField(widget = forms.HiddenInput(), initial='add')
     pass
 
 class PDFManualEditForm(PDFManualAbstractForm):
+    op = forms.CharField(widget = forms.HiddenInput(), initial='edit')
     pass
 
 class PDFManualDeleteForm(forms.Form):
     delete_confirm = forms.BooleanField(required=False)
+    op = forms.CharField(widget = forms.HiddenInput(), initial='delete')
 
     class Meta:
         fields = ['delete_confirm']

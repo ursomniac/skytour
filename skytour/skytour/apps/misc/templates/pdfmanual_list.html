@@ -21,7 +21,7 @@
     </tr>
     {% for obj in object_list %}
     <tr>
-        <td>{{ obj.title }}</td>
+        <td>{{ obj.pk }}: {{ obj.title }}</td>
         <td>
             <a href="{{ obj.pdf_file }}" target="_new">{{ obj.pdf_file }}</a>
         </td>

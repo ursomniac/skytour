@@ -16,6 +16,11 @@
         color: #000;
     }
     table.edit-manual td.popup-close { background-color: #933; padding: 10px; }
+    table.edit-manual td.popup-submit { 
+        background-color: #666; padding: 10px;
+        text-align: center;
+    }
+    input.submit-button { width: 20em; }
     </style>
 </head>
 <body>
@@ -27,8 +32,8 @@
         <table class="edit-manual">
             {{ form.as_table }}
             <tr>
-                <td colspan=2>
-                    <input type="submit" value="Submit"/>
+                <td class='popup-submit' colspan=2>
+                    <input class='submit-button' type="submit" value="Submit"/>
                 </td>
             </tr>
             <tr>

@@ -1,4 +1,5 @@
 from dateutil.parser import isoparse
+from django.contrib.staticfiles import finders
 from ...pdf.utils import label_and_text
 from ...site_parameter.helpers import find_site_parameter
 from ...solar_system.models import Asteroid, Comet, Planet
@@ -185,13 +186,14 @@ def do_moon(p, context):
     p.drawInlineImage(moon_tel, 30, y -200, 200, 200)
     y =  200
 
-    map = find_site_parameter('simple-moon-map', None, 'image')
+    map = finders.find('site_images/simple_moonmap.jpg')
     if map:
         p.drawImage(map.file.name, 250, 450, width=300, height=300, mask=None)
 
-    sqm = find_site_parameter('moon-vs-sqm', None, 'image')
     y -= 150
-    p.drawImage(sqm.file.name, 50, y, width=500,  height=.46*500, mask=None)
+    sqm = finders.find('site_parameters/Moon_vs_SQM.png')
+    if sqm:
+        p.drawImage(sqm.file.name, 50, y, width=500,  height=.46*500, mask=None)
     p.showPage()
 
     return p

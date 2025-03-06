@@ -4,6 +4,7 @@ from .models import (
     Calendar, CalendarEventReference,
     EventType,
     Glossary,
+    PDFManual,
     StateRegion,
     TimeZone,
     Website,
@@ -54,9 +55,14 @@ class TimeZoneAdmin(admin.ModelAdmin):
     model = TimeZone
     list_display = ['pk', 'name', 'utc_offset']
 
+class PDFManualAdmin(admin.ModelAdmin):
+    model = PDFManual
+    list_display = ['pk', 'title', 'pdf_file']
+
 admin.site.register(Calendar, CalendarAdmin)
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Glossary, GlossaryAdmin)
+admin.site.register(PDFManual, PDFManualAdmin)
 admin.site.register(StateRegion)
 admin.site.register(TimeZone, TimeZoneAdmin)
 admin.site.register(Website, WebsiteAdmin)

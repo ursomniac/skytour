@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import (
     SiteParameterFloat,
-    SiteParameterImage,
-    SiteParameterPDFFile,
+    #SiteParameterImage,
+    #SiteParameterPDFFile,
     SiteParameterPositiveInteger,
     SiteParameterLink,
     SiteParameterNumber,
@@ -67,8 +67,8 @@ class SPPDFFileAdmin(AbstractAdmin):
 
 admin.site.register(SiteParameterLink, SPLinkAdmin)
 admin.site.register(SiteParameterNumber, SPNumberAdmin)
-admin.site.register(SiteParameterPDFFile, SPPDFFileAdmin)
+#admin.site.register(SiteParameterPDFFile, SPPDFFileAdmin)
 admin.site.register(SiteParameterPositiveInteger, SPPositiveIntegerAdmin)
 admin.site.register(SiteParameterString, SPStringAdmin)
 admin.site.register(SiteParameterFloat, SPFloatAdmin)
-admin.site.register(SiteParameterImage, SPImageAdmin)
+#admin.site.register(SiteParameterImage, SPImageAdmin)

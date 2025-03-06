@@ -58,8 +58,14 @@ class DSOListView(CookieMixin, ListView):
         context = update_dso_filter_context(context, params)
         dso_list = filter_dsos(params, DSO.objects.all())
         context['total_count'] = len(dso_list)
-        context['default_dec_limit'] = dec_limit = find_site_parameter('declination-limit', -30, 'float')
-        
+        # Deal with Declination
+        if 'dec_range' in context.keys():
+            try:
+                dlo, dhi = context['dec_range']
+                context['dec_low'] = dlo
+                context['dec_high'] = dhi
+            except:
+                pass
         # Pagination
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)
@@ -71,6 +77,9 @@ class DSOListView(CookieMixin, ListView):
         context['is_paginated'] = True
         # context['dso_count'] = len(context['dso_list'])
         context['table_id'] = 'dso_list'
+        print('context: ', context.keys())
+        print('DEC: ', context['dec_low'], context['dec_high'])
+        print('RANGE: ', context['dec_range'])
         return context
 
 class DSODetailView(CookieMixin, DetailView):

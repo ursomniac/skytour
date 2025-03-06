@@ -143,12 +143,12 @@ class PDFManualListView(ListView):
         form = PDFManualAddForm(request.POST, request.FILES)
         if form.is_valid():
             d = form.cleaned_data
-            obj = PDFManual()
-            obj.title = d['title']
-            obj.slug = slugify(obj.title)
-            print ("request.FILES: ", request.FILES)
-            obj.pdf_file = d['pdf_file']
-            obj.save()
+            if d['op'] != 'delete':
+                obj = PDFManual()
+                obj.title = d['title']
+                obj.slug = slugify(obj.title)
+                obj.pdf_file = d['pdf_file']
+                obj.save()
         else:
             print("ERROR WITH FORM: ", form)
             print("FORM ERRORS: ", form.errors)
@@ -160,14 +160,9 @@ class PDFManualEditView(UpdateView):
     form_class = PDFManualEditForm
     success_url = reverse_lazy('manual-edit-result')
 
-    def post(self, request, *args, **kwargs):
-      self.object = self.get_object()
-      return super().post(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        if 'pdf_file' in form.changed_data:
-            self.object.file = self.request.FILES['pdf_file']
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super(PDFManualEditView, self).get_context_data(**kwargs)
+        return context
 
 class PDFManualEditResultView(TemplateView):
     template_name = 'edit_manual_result.html'

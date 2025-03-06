@@ -191,5 +191,7 @@ class PDFManual(models.Model):
         upload_to = 'pdf_files'
     )
 
+    def __str__(self):
+        return f"{self.title} ({self.pdf_file})"
     class Meta:
         ordering = ['slug']
