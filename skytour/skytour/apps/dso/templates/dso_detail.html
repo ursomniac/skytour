@@ -81,7 +81,7 @@
 	.popup-button, .popup-dso { float: right; }
 	.object-metadata { font-weight: bold; color: #ff9; }
 	div.conditions { padding: 5px; border: 1px solid #ccc; }
-	button.op { width: 7em; }
+	button.op { width: 12em; }
 </style>
 {% endblock styles %}
 
@@ -113,7 +113,7 @@
 					</b>
 				</td>
 				<td width=20% class="description operations" rowspan=2>
-					<a href="/admin/dso/dso/{{ object.pk }}"><button class="op">Admin</button></a>
+					<a href="{% url 'dso-edit-metadata' object.pk %}"><button class="op">Edit Metadata</button></a>
 					<br>
 					<a href="/media/{{ object.pdf_page }}" target="_new"><button class="op">PDF</button></a>
 					<br>

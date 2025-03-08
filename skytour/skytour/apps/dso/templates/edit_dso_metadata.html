@@ -1,0 +1,145 @@
+{% extends 'edit_base.html' %}
+{% block content %}
+<style>
+    table.dso-edit { width: 640px; }
+    span.helptext { font-size: 70%; }
+    th, td { height: 20px; }
+    th { width: 200px; background-color: #333; color: #ccc; border: 1px solid #cc6; }
+    td.submit input { width: 30em; }
+    td.submit { background-color: #993; }
+    td.escape { background-color: #900; }
+    td.info { font-size: 80%; color: #999; }
+    td.meta { vertical-align: top; }
+    h2 { color: #f90; }
+    h1 { color: #cc6; }
+    b.white { color: #fff; }
+</style>
+<form method="post" id='dso-edit-form'>
+{% csrf_token %}
+<h1>Editing DSO Metadata for {{ dso.shown_name }}</h1>
+<table class="meta">
+<tr>
+    <td id="meta_left_column" class="meta"> <!--- left column -->
+        <h2>Overall/Observing</h2>
+        <table class="dso-edit">
+            <th>
+                <label for="id_nickname">Nickname:</label>
+                <br><span class="helptext">A nickname, e.g. "Crab Nebula"</span>
+            </th>
+            <td>{{ form.nickname }}</td>
+            <th>
+                <label for="id_reimage">Reimage:</label>
+                <br><span class="helptext">Check to override image filtering.</span>
+            </th>
+            <td>{{ form.reimage }}</td>
+        </table>
+        <h2>Object Metadata</h2>
+
+        <table class="dso-edit">
+            <tr>
+                <td colspan=4 class="info">
+                    <b class="white">NOTE:</b><br>Changes here will NOT be seen on the DSO Detail Page,
+                    UNLESS the "Override Metadata" box is checked.   Otherwise what's
+                    shown default to the HyperLeda/SIMBAD values.
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_override_metadata">Override Metadata:</label>
+                </th>
+                <td>{{ form.override_metadata }}</td>
+                <td colspan=2>
+                    <span class="helptext">Use values below for mag, angular size, etc. instead of Simbad/HyperLeda</span>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="id_magnitude">Mag.</label></th>
+                <td>{{ form.magnitude }}</td>
+                <th>
+                    <label for="id_magnitude_system">Mag. System:</label>
+                    <br><span class="helptext">e.g., V, B, Phot.</span>
+                </th>
+                <td>{{ form.magnitude_system }}</td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_angular_size">Angular Size:</label>
+                </th>
+                <td>{{ form.angular_size }}</td>
+                <td colspan=2>
+                <span class="helptext">single or double dimension, e.g., 36" or  8'x5'</span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_major_axis_size">Major Axis:</label>
+                    <br><span class="helptext">arcmin</span>
+                </th>
+                <td>{{ form.major_axis_size }}</td>
+                <th>
+                    <label for="id_minor_axis_size">Minor Axis:</label>
+                    <br><span class="helptext">arcmin</span>
+                </th>
+                <td>{{ form.minor_axis_size }}</td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_surface_brightness">Surf. Brightness:</label>
+                    <span class="helptext">Mag/arcmin<sup>2</sup> (SQM)</span>
+                </th>
+                <td>{{ form.surface_brightness }}</td>
+                <th>
+                    <label for="id_orientation_angle">Orientation Ang.:</label>
+                    <br><span class="helptext">Degrees</span>
+                </th>
+                <td>{{ form.orientation_angle }}</td>
+            </tr>
+            <tr>
+                <th><label for="id_distance">Distance:</label></th>
+                <td colspan=3>
+                    {{ form.distance }}
+                    {{ form.distance_units }}
+                </td>
+            </tr>
+        </table>
+    </td> <!--- end of left column -->
+
+    <td id="meta_right_column" class="meta"> <!--- right column -->
+        <h2>Object Notes and Additional Data</h2>
+        <table class="dso-edit">
+            <tr>
+                <th><label for="id_notes">Notes:</label></th>
+                <td>
+                    {{ form.notes }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_other_parameters">Other Params:</label></th>
+                <td>
+                    {{ form.other_parameters }}
+                    <br>
+                    <span class="helptext">
+                        Format is <i>parameter: value</i> (name, colon, value)
+                        <br>
+                        Separate successive items with ';' (semi-colons)
+                    </span>
+                </td>
+            </tr>
+
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="2" class="submit">
+        <input type="submit">
+    </td>
+</tr>
+<tr>
+    <td colspan="2" class="escape">
+        <button >Close Window</button>
+    </td>
+</tr>
+</table>
+</form>
+{% endblock content %}

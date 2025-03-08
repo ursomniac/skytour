@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
 
 from ..abstract.utils import get_real_time_conditions
@@ -19,7 +19,13 @@ from ..utils.timer import compile_times
 
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
-from .forms import DSOFilterForm, DSOAddForm, DSOListCreateForm, DSOListEditForm
+from .forms import (
+    DSOFilterForm, 
+    DSOAddForm, 
+    DSOListCreateForm, 
+    DSOListEditForm,
+    DSOMetadataForm
+)
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
@@ -548,3 +554,13 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
 
         return context
 
+class DSOEditMetadataView(UpdateView):
+    model = DSO
+    form_class = DSOMetadataForm
+    template_name = 'edit_dso_metadata.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOEditMetadataView, self).get_context_data(**kwargs)
+        context['dso'] = self.get_object()
+        print("GOT HERE! DSO: ", context['dso'])
+        return context

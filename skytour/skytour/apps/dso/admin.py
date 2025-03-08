@@ -150,7 +150,7 @@ class DSOAdmin(ObservableObjectAdmin):
                 ('catalog', 'id_in_catalog'),
                 ('constellation', 'show_on_skymap'),
                 ('nickname', 'atlas_plate_list'),
-                ('object_type', 'morphological_type', 'priority'),
+                ('object_type', 'morphological_type'),
                 ('reimage', 'tags', 'map_label'),
             ]
         }),

@@ -1,0 +1,49 @@
+{% load static skytour_filters %}
+<!doctype html>
+<html lang="end">
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %}Calculators: Skytour{% endblock title %}</title>
+	<link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+{% block styles %}
+<style>
+	th { 
+        background-color: #880;
+        color: #000;
+        width: 150px;
+        height: 60px;
+    }
+    td.input { width: 150px!important; height: 60px; }
+    td.submit { background-color: #666; text-align: center; height: 50px; }
+    td.submit input.submit { width: 30em; height: 30px; }
+    td.close-popup { background-color: #900; text-align: right; }
+    td.close-popup button { width: 12em;  }
+	div.footer2 { 
+		background-color: #000; 
+		padding-left: 10px; 
+		color: #666;
+	}
+	td.result { border: 1px solid #ff9; }
+	h4 { color: #ff9; text-align: center;  }
+</style>
+{% endblock styles %}
+</head>
+<body>
+{% block header %}{% endblock header %}
+
+{% block content %}
+{% endblock content %}
+
+{% block footer %}
+<footer>
+	<div class="footer2" >
+		<br clear="all"/>
+		<p>© {% now 'Y' %} - Skepsis Interplanetary</p>
+		<br>
+	</div>
+</footer>
+{% endblock footer %}
+
+{% block extra-js %}{% endblock extra-js %}
+</body>
+</html>

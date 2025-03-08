@@ -134,7 +134,6 @@ class DSOAbstract(Coordinates):
         blank=True,
         help_text='JSON object constructed from SIMBAD lookup'
     )
-
     hyperleda_name = models.CharField (
         _('HyperLeda Name Override'),
         max_length = 30,
