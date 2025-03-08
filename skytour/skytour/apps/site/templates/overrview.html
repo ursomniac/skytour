@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Skytour: {{ utdt|date:"Y-M-d" }}{% endblock %}
+{% block content %}
+<style>
+    .indented { margin: 10px 50px; }
+</style>
+<h1>Skytour</h1>
+
+<p>Welcome!</p>
+<p>Here are links to most of the features on the site, grouped by how you'll use them.</p>
+<p>More detailed explanations/documentation are on the         
+    <a href="{% url 'main-help-page' %}"><button>Help</button></a> pages.</p>
+<p>All of these things are also in the top navbar on every page.</p>
+
+<h2>Set the Cookie</h2>
+<p>To do almost anything you'll need to set the Cookie.
+    This handles all the calculations surrounding object positions, and
+    their relative availabilities.  Most functions will let you offset
+    the date/time of the cookie as needed.</p>
+
+    <div class="indented">
+    <a href="{% url 'session-set' %}"><button>Set Date/Time/Location</button></a>
+    </div>
+
+<h2>Events/Calendar</h2>
+    <p>
+    These pages have information about:
+    <ul>
+        <li>Events happening over the next few days</li>
+        <li>Meteor Showers</li>
+        <li>"Close" Proximity of Planets to Each Other</li>
+        <li>Calendar over the following few weeks</li>
+    </ul>
+    <div class="indented">
+        <a href="{% url 'today' %}"><button>Events - Now</button></a>
+        <br>
+        <a href="{% url 'today' %}?cookie"><button>Events - Cookie</button></a>
+    </div>
+    </p>
+
+    <p>There's also a calendar by month.  Each day has:
+        <ul>
+            <li>a background color that
+                reflects the current Moon phase (brighter close to Full Moon;
+                darker close to New Moon)</li>
+            <li>The times of 
+                <ul>
+                    <li>sunset/sunride</li>
+                    <li>moonrise/moonset</li>
+                    <li>end/beginning of Astronomical Twilight</li>
+                </ul>
+            </li>
+            <li>List of events on that date</li>
+        </ul>
+        <div class="indented">
+            <a href="{% url 'calendar-current' %}">
+                <button>This Month {% now "M Y" %}</button></a>
+            <br>
+            <a href="{% url 'calendar-month' next_month|date:'Y' next_month|date:'b' %}">
+                <button>Next: {{ next_month|date:"M Y"}}</button></a>
+            <br>
+            <a href="{% url 'calendar-month' previous_month|date:'Y' previous_month|date:'b' %}">
+                <button>Last: {{ previous_month|date:"M Y"}}</button></a>
+        </div>
+    </p>
+
+<h2>Finding Objects to Observe</h2>
+<p>Depending on how you're planning to observe and how much planning you want to make,
+    there are several options.</p>
+
+<h3>Skymap</h3>
+
+<p>This will show you the sky either at the date/time and observing location set in the Cookie, or right now.
+    You can offset the date/time from the Skymap page.  If you've defined a "mask" for your 
+    observing location (for trees, buildings, or other obstructions) you can make that appear
+    as well.   There's also a "simple" mode with fewer things on it that is good for printing.
+</p>
+
+<p>Several DSOs are shown on the Skymap.  These aren't ALL of the brightest or largest
+    objects - sometimes they've been added to "fill in" a part of the sky, and 
+    sometimes popular objects aren't there to avoid clutter.</p>
+
+    <div class="indented">
+        <a href="{% url 'skymap-detail' %}"><button>At Cookie Date/Time</button></a>
+        <br>
+        <a href="{% url 'skymap-detail' %}?utdt_now=on"><button>Now</button></a>
+        <br>
+        <a href="{% url 'skymap-detail' %}?mask=on"><button>With Location Mask</button></a>
+        <br>
+        <a href="{% url 'skymap-detail' %}?simple=on"><button>Simple (for Printing) - Cookie</button></a>
+        <br>
+        <a href="{% url 'skymap-detail' %}?simple=on&utdt_now=on"><button>Simple (for Printing) - Now</button></a>
+    </div>
+
+<h3>@Now and @Cookie Views</h3>
+<p>For finding which DSOs are "up" there are two pages: @Home and @Cookie which 
+    filter the DSO catalog for those that are above the horizon at the specific
+    date/time/location.   From those pages you can further filter to narrow your search.
+</p>
+<p> If you have your laptop in the field, these pages are very helpful <i>while</i>
+    observing!</p>
+<p>The lists can optionally take location masking into consideration (if you've set it
+    up), so that you don't waste time trying to find something behind your neighbor's house!
+</p>
+
+    <div class="indented">
+        <a href="{% url 'dso-available-objects' %}"><button>@Now</button></a>
+        <br>
+        <a href="{% url 'dso-available-objects' %}?cookie=on"><button>@Cookie</button></a>
+    </div>
+
+<h3>Deep Sky Objects (DSOs)</h3>
+<p>There are several ways to find DSOs.  The search box in the navbar will go to a DSO detail
+    page.  The DSO Search knows about most aliases, <b>and</b> also about any fainter DSOs in the field of other
+    brighter DSOs!  So, both "M 46" or "NGC 2437" will get you to the right page, <i>as well as</i> "NGC 2438" (the planetary nebula
+    in the same field as M 46).</p>
+
+<p>Several pages have lists of DSOs (@Home, @Cookie, Constellation Detail pages, Atlas pages).</p>
+
+<h4>Create a DSOList</h4>
+<p>If you're planning your observations in advance, you can 
+<h4>Using the Atlas</h4>
+
+<h3>Solar System Objects (SSOs)</h3>
+<h4>Planets</h4>
+<h4>Asteroids/Comets</h4>
+<h4>Tracking Moving SSOs</h4>
+
+<h3>Constellations</h3>
+<h3>DSO Catalogs</h3>
+
+<h2>Observing Sessions</h2>
+<h3>Start an Observing Session</h3>
+<h4>Observing Locations</h4>
+
+<h3>Add an Observation</h3>
+<h3>Add Observing Conditions</h3>
+
+<h2>Image Library</h2>
+<h3>Add an Library Image to a DSO/SSO page</h3>
+
+<h2>
+
+{% endblock %}

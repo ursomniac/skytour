@@ -1,6 +1,7 @@
+from django.utils.safestring import mark_safe
 from django.views.generic.base import TemplateView
 from ..observe.utils import get_effective_bortle
-from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm, sqm_to_sqs
+from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm
 
 def haz(thing, zero=False):
     """
@@ -10,89 +11,137 @@ def haz(thing, zero=False):
         return False
     return True
 
-class AstroCalcView(TemplateView):
-    template_name='astro_calc.html'
+class CalcModulusView(TemplateView):
+    template_name = 'calc_value.html'
 
     def get_context_data(self, **kwargs):
-        context = super(AstroCalcView, self).get_context_data(**kwargs)
+        context = super(CalcModulusView, self).get_context_data()
+        value = self.request.GET.get('value', None)
+        context['title'] = 'Calculate Distance from Modulus'
+        context['value_label'] = 'Dist. Modulus'
+        context['submit_value'] = 'Convert to Mly'
+        context['init_value'] = float(value) if value is not None else None
 
-        ctype = self.request.GET.get('calc')
-        #print(f"CTYPE: {ctype}")
-        context['ctype'] = ctype
-
-        # Convert distance modulus to distance
-        if ctype == 'distance':
-            modulus = self.request.GET.get('modulus')
-            if haz(modulus):
-                context['mly'] = get_distance_from_modulus(float(modulus))
-                context['modulus'] = float(modulus)
-        # Convert SQS to SQM (sky brightness)
-        elif ctype == 'sqs':
-            sqs = self.request.GET.get('sqs')
-            if haz(sqs):
-                context['sqm'] = sqs_to_sqm(float(sqs))
-                context['sqs'] = float(sqs)
-        # Convert log(d25) and log(r25) to angular size
-        elif ctype == 'angsize':
-            d25 = self.request.GET.get('d25')
-            r25 = self.request.GET.get('r25')
-            if haz(d25):
-                context['d25'] = float(d25)
-                if haz(r25):
-                    context['angsize'] = get_size_from_logd25(float(d25), float(r25))
-                    context['r25'] = r25
-                else:
-                    context['angsize'] = get_size_from_logd25(float(d25))
-        # Convert SQM to Bortle
-        elif ctype == 'bortle':
-            bsqm = self.request.GET.get('bsqm')
-            if haz(bsqm):
-                context['ebortle'] = get_effective_bortle(float(bsqm))
-                context['bsqm'] = float(bsqm)
-        # Convert eQuinox exposure time (4s) to # frames
-        elif ctype == 'frames_equ':
-            tm = self.request.GET.get('time_equ_m')
-            ts = self.request.GET.get('time_equ_s')
-            if haz(tm):
-                context['time_equ_m'] = tm
-                zm = int(tm)
-                zs = 0
-                if haz(ts):
-                    context['time_equ_s'] = ts
-                    zs = int(ts)
-                context['eframes_equ'] = (zm * 60 + zs)/4.
-        # Convert Seestar exposure time (10s) to # frames
-        elif ctype == 'frames_see':
-            tm = self.request.GET.get('time_see_m')
-            ts = self.request.GET.get('time_see_s')
-            if haz(tm):
-                context['time_see_m'] = tm
-                zm = int(tm)
-                zs = 0
-                if haz(ts):
-                    context['time_see_s'] = ts
-                    zs = int(ts)
-                context['eframes_see'] = (zm * 60 + zs)/10.
-        # Convert # frames to Seestar exposure time
-        elif ctype == 'time_see':
-            frames = self.request.GET.get('frames_see')
-            if haz(frames):
-                frames = int(frames)
-                context['frames_see'] = frames
-                total_time = frames * 10
-                time_min = int(total_time/60.)
-                time_sec = int(total_time % 60)
-                context['frame_time_see'] = f"{time_min}m {time_sec:02d}s"
-        # Convert # frames to eQuinox exposure time
-        elif ctype == 'time_equ':
-            frames = self.request.GET.get('frames_equ')
-            if haz(frames):
-                frames = int(frames)
-                context['frames_equ'] = int(frames)
-                total_time = frames * 4
-                time_min = int(total_time/60.)
-                time_sec = int(total_time % 60)
-                context['frame_time_equ'] = f"{time_min}m {time_sec:02d}s"
-            
+        if value is not None:
+            if haz(value):
+                result = get_distance_from_modulus(float(value))
+                context['result_string'] = f"{result:.2f} Mly"
         return context
+    
+class CalcSQSToSQMView(TemplateView):
+    template_name = 'calc_value.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(CalcSQSToSQMView, self).get_context_data()
+        value = self.request.GET.get('value', None)
+        context['title'] = 'Calculate SQM from SQS'
+        context['value_label'] = 'SQS'
+        context['submit_value'] = 'Convert to SQM'
+        context['init_value'] = float(value) if value is not None else None
+        if value is not None:
+            if haz(value):
+                result = sqs_to_sqm(float(value))
+                context['result_string'] = mark_safe(f"{result:.2f}<br>mag/arcmin<sup>2</sup>")
+        return context
+    
+class CalcSQMToBortleView(TemplateView):
+    template_name = 'calc_value.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcSQMToBortleView, self).get_context_data()
+        value = self.request.GET.get('value', None)
+        context['title'] = 'Calculate Bortle from SQM'
+        context['value_label'] = 'SQM'
+        context['submit_value'] = 'Convert to Bortle'
+        context['value_type'] = 'number'
+        context['init_value'] = float(value) if value is not None else None
+        if value is not None:
+            if haz(value):
+                result = get_effective_bortle(float(value))
+                context['result_string'] = mark_safe(f"Bortle {result:.2f}")
+        return context
+    
+class CalcExposureFromFramesView(TemplateView):
+    template_name = 'calc_frames.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcExposureFromFramesView, self).get_context_data()
+        context['submit_value'] = 'Get Exposure Time'
+        context['shutter_speed'] = [ 4, 10, 15, 20, 30 ]
+
+        vframes = self.request.GET.get('frames', None)
+        vexptime = self.request.GET.get('exptime', None)
+        vcustom = self.request.GET.get('customexp', None)
+        frames  = None if not haz(vframes)  else int(vframes)
+        exptime = None if not haz(vexptime) else int(vexptime)
+        custom  = None if not haz(vcustom)  else int(vcustom)
+
+        # pick either exptime or custom depending
+        not_exp = vexptime == "0" or vexptime is None
+        factor = custom if not_exp else exptime
+        if frames and factor:
+            total_time = frames * factor
+            time_min = int(total_time/60.)
+            time_sec = int(total_time % 60)
+            context['result_string'] = f"{time_min}m {time_sec:02d}s"
+        context['frames'] = vframes
+        context['exptime'] = vexptime
+        context['customexp'] = vcustom
+        return context
+    
+class CalcFramesFromExposureView(TemplateView):
+    template_name = 'calc_times.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcFramesFromExposureView, self).get_context_data()
+        context['submit_value'] = 'Get # Frames'
+        context['shutter_speed'] = [ 4, 10, 15, 20, 30 ]
+
+        vmin = self.request.GET.get('exp_min', 0)
+        vsec = self.request.GET.get('exp_sec', 0)
+        vexptime = self.request.GET.get('exptime', None)
+        vcustom = self.request.GET.get('customexp', None)
+        exptime = None if not haz(vexptime) else int(vexptime)
+        custom  = None if not haz(vcustom)  else int(vcustom)
+
+        total_time = int(vmin) * 60. + int(vsec)
+        # pick either exptime or custom depending
+        not_exp = vexptime == "0" or vexptime is None
+
+        # pick either exptime or custom depending
+        not_exp = vexptime == "0" or vexptime is None
+        factor = custom if not_exp else exptime
+        frames = None
+        if total_time and factor:
+            frames = int(0.5 + total_time / factor)
+            context['result_string'] = f"{ frames }"
+        context['frames'] = frames
+        context['exp_min'] = vmin
+        context['exp_sec'] = vsec
+        context['exptime'] = vexptime
+        context['customexp'] = vcustom
+        return context
+    
+class CalcAngularSizeView(TemplateView):
+    template_name = 'calc_angular.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcAngularSizeView, self).get_context_data()
+        context['submit_value'] = 'Get Angular Size'
+        vd25 = self.request.GET.get('d25', None)
+        vr25 = self.request.GET.get('r25', None)
+
+        d25 = None if not haz(vd25) else float(vd25)
+        r25 = None if not haz(vr25) else float(vr25)
+        context['d25'] = vd25
+        context['r25'] = vr25
+
+        if d25 and r25:
+            angsize = get_size_from_logd25(d25, r25)
+        elif d25 is not None and r25 is None:
+            angsize = get_size_from_logd25(float(d25))
+        else:
+            angsize = None
+        if angsize is not None:
+            context['result_string'] = angsize
+        return context

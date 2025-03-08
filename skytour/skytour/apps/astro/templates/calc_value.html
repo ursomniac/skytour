@@ -1,0 +1,42 @@
+{% extends 'popup_base.html' %}
+{% load skytour_filters humanize %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+    <form type="GET">
+        <table>
+            <tr>
+                <th><label for="id_value">{{ value_label }}:</label></th>
+                <td class="input">
+                    <input 
+                        type="{{ value_type }}" name="value" 
+                        step="any" required id="id_value" 
+                        {% if init_value %} value="{{ init_value }}"{% endif %}
+                    >
+                </td>
+                {% if result_string %}
+                <td class="result">
+                    {% if result_string %}
+                    <h4>{{ result_string }}</h4>
+                    {% endif %}
+                </td>
+                {% else %}
+                <td class="noresult"></td>
+                {% endif %}
+            </tr>
+        <tr><td colspan=3 class="submit">
+            <input class="submit" type="submit" value="{{ submit_value }}">
+        </td></tr>
+        <tr><td colspan=3  class="close-popup">
+            <button onClick="closeFormPopup();">Close Popup</button>
+        </td></tr>
+        </table>
+    </form>
+<script>
+    function closeFormPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+{% endblock content %}

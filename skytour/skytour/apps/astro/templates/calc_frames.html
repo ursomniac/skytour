@@ -1,0 +1,68 @@
+{% extends 'popup_base.html' %}
+{% load skytour_filters humanize %}
+
+{% block content %}
+<style>
+    table.form th, td.input { height: 40px; }
+    #id-custom { float: right; }
+</style>
+<h2>{{ title }}</h2>
+    <form type="GET">
+        <table class="form">
+            <tr>
+                <th><label for="id_value"># Frames:</label></th>
+                <td class="input">
+                    <input name="frames" {% if frames %}value="{{ frames }}"{% endif %}>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="exptime">Exp. Time:</label></th>
+                <td class="input">
+                    <select name="exptime" id="id-exp">
+                        <option value="0">--Custom--</option>
+                        <option value="4" {% if exptime ==  '4' %}selected{% endif %}>4s (Unistellar)</option>
+                        <option value="10"{% if exptime == '10' %}selected{% endif %}>10s</option>
+                        <option value="15"{% if exptime == '15' %}selected{% endif %}>15s (Origin w/ filter)</option>
+                        <option value="20"{% if exptime == '20' %}selected{% endif %}>20s</option>
+                        <option value="30"{% if exptime == '30' %}selected{% endif %}>30s</option>
+                    </select>
+                    <div id="id-custom">
+                        = <input size="4" name="customexp" {% if customexp %}value="{{ customexp }}"{% endif %}>
+                    </div>
+                </td>
+            </tr>
+            {% if result_string %}
+            <tr>
+                <td></td>
+                <td class="result">
+                    <h4>{{ result_string }}</h4>
+                </td>
+            </tr>
+            {% endif %}
+        <tr><td colspan=2 class="submit">
+            <input class="submit" type="submit" value="{{ submit_value }}">
+        </td></tr>
+        <tr><td colspan=2  class="close-popup">
+            <button onClick="closeFormPopup();">Close Popup</button>
+        </td></tr>
+        </table>
+    </form>
+<script>
+    function closeFormPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+
+    const selectElement = document.getElementById('id-exp');
+    const divElement = document.getElementById('id-custom');
+
+    selectElement.addEventListener('change', function() {
+        if (this.value === '0') {
+            divElement.style.display = 'block';
+        } else {
+            divElement.style.display = 'none';
+        }
+    });
+</script>
+{% endblock content %}

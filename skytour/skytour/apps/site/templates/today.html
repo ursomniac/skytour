@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Skytour: {{ utdt|date:"Y-M-d" }}{% endblock %}
+{% block content %}
+<h1>Skytour</h1>
+
+<h2>Today: {{ utdt|date:"Y-M-d" }}</h2>
+
+{% if upcoming_events %}
+    {% with object_list=upcoming_events %}
+    {% include 'inc_calendar_table.html' %}
+    {% endwith %}
+{% else %}
+No upcoming events.
+{% endif %}
+
+<h3>Meteor Showers</h3>
+
+{% if meteor_showers %}
+<table width="100%">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Start</th>
+        <th>Peak</th>
+        <th>End</th>
+        <th>ZHR</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for shower in meteor_showers %}
+    <tr class="M{% cycle 'odd' 'even' %}">
+        <td>{{ shower.name }}</td>
+        <td>{{ shower.start_date }}</td>
+        <td>{{ shower.peak_date }}</td>
+        <td>{{ shower.end_date }}</td>
+        <td>{{ shower.zhr }}</td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+{% else %}
+None active.
+{% endif %}
+
+<h3>Planets Close Together (within {{ min_sep }}°)</h3>
+
+{% if adjacent_planets %}
+<table width="100%">
+    <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th></tr></thead>
+    <tbody>
+        {% for pair in adjacent_planets %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            <td>{{ pair.0 }}</td>
+            <td>{{ pair.1 }}</td>
+            <td>{{ pair.2|floatformat:1 }}°</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+None near each other ({{ min_sep }}°).
+{% endif %}
+
+{% include 'inc_calendar_grid.html' %}
+{% endblock %}

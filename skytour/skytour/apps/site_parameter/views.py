@@ -53,7 +53,7 @@ class SiteParameterListView(TemplateView):
 class SiteParameterEditView(UpdateView):
     template_name = 'form_parameter_edit.html'
     fields = ['value',]
-    success_url = '/site/param/edit/result'
+    success_url = '/param/edit/result'
     
     def get_queryset(self):
         model = MODEL_CLASSES[self.kwargs['ptype']]

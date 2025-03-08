@@ -59,15 +59,17 @@
 <table width="100%" class="navbar">
     <tr>
         <td rowspan=3 class="logo">
+            <a href="{% url 'home' %}">
             <img src="{% static 'logos/skytour-v2.jpeg' %}" alt="Skytour V2.0"/>
+            </a>
             <br>
             <a href="{% url 'main-help-page' %}">Help</a>
         </td>
         <td class="click">
-            <span onClick="myFunctionHome()" class="dropbtn">Home 🔽</span>
+            <span onClick="myFunctionHome()" class="dropbtn">Events 🔽</span>
             <div id="myDropdownHome" class="dropdown-content">
-                <a href="{% url 'home' %}">Home -- Now</a>
-                <a href="{% url 'home' %}?cookie">Home - Cookie</a>
+                <a href="{% url 'today' %}">Events - Now</a>
+                <a href="{% url 'today' %}?cookie">Events - Cookie</a>
             </div>
         </td>
         <td class="click">
@@ -185,7 +187,15 @@
             <span style="color: #ff0;">{{ observing_mode_string }}</span>
         </td>
         <td class="click op-app">
-            <a href="{% url 'astro-calc' %}">Calculators</a>
+            <span onClick="myFunctionCalculator()" class="dropbtn">Calculators  🔽</span>
+            <div id="myDropdownCalculator" class="dropdown-content">
+                <a onClick="openPopup('/astro/calc/modulus')">Modulus to Distance</a>
+                <a onClick="openPopup('/astro/calc/angsize')">Calc. Angular Size</a>
+                <a onClick="openPopup('/astro/calc/sqs2sqm')">SQS to SQM</a>
+                <a onClick="openPopup('/astro/calc/sqm2bortle')">SQM to Bortle</a>
+                <a onClick="openPopup('/astro/calc/framesexposure')">Calc. Exp. Time</a>
+                <a onClick="openPopup('/astro/calc/exposureframes')">Est. Frames</a>
+            </div>
         </td>
         <td class="op-ses">
             Settings:
@@ -216,6 +226,9 @@
     function myFunctionCalendar() {
         document.getElementById("myDropdownCalendar").classList.toggle("show");
     }
+    function myFunctionCalculator() {
+        document.getElementById("myDropdownCalculator").classList.toggle("show");
+    }
     window.onclick = function(event) {
         if(!event.target.matches('.dropbtn')) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -227,5 +240,8 @@
                 }
             }
         }
+    }
+    function openPopup(path) {
+        window.open(path, 'calc-window', 'height=360, width=540, top=200, left=500');
     }
 </script>

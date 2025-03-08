@@ -1,65 +1,108 @@
 {% extends "base.html" %}
 {% block title %}Skytour: {{ utdt|date:"Y-M-d" }}{% endblock %}
+
+{% block header %}
+<style>
+    .indented { margin: 10px 50px; }
+    .random_image { max-width: 500px; }
+    .obs_table { width: 500px; }
+    .obs_table table { border: 0px; }
+    table.location_table { width: 600px; border: 0px; }
+    .obs_table table th, table.location_table th {
+        background-color: #980;
+        color: #000;
+    }
+    table.header { border: 0px; background-color: #000; }
+    table.header th {
+        border: 0px;
+        background-color: #000;
+    }
+    h1 {
+        text-align: left;
+        padding-left: 30px;
+    }
+    h2 {
+        text-align: right;
+        padding-right: 30px;
+        font-size: 80%;
+        color: #999;
+    }
+    h4.dso_title { 
+        max-width: 480px;
+        background-color: #336;
+        font-weight: bold;
+        padding: 10px;
+        display: block;
+        margin-bottom: 0px;
+    }
+    h3 { 
+        color: #c90;
+    }
+    .image-text {
+        max-width: 500px;
+        display: flex;
+        font-size: 12px;
+        justify-content: center;
+        align-items: center;
+        color: rgb(255, 255, 255);
+        background: rgba(0, 0, 0, 0.3);
+        height: 35px;
+        margin-top: -4px;
+    }
+    td.num {
+        text-align: right;
+        padding-right: 15px;
+    }
+    td.col { vertical-align: top; }
+</style>
+{% endblock header %}
+
 {% block content %}
-<h1>Skytour</h1>
-
-<h2>Today: {{ utdt|date:"Y-M-d" }}</h2>
-
-{% if upcoming_events %}
-    {% with object_list=upcoming_events %}
-    {% include 'inc_calendar_table.html' %}
-    {% endwith %}
-{% else %}
-No upcoming events.
-{% endif %}
-
-<h3>Meteor Showers</h3>
-
-{% if meteor_showers %}
-<table width="100%">
-    <thead>
+<table class="header">
     <tr>
-        <th>Name</th>
-        <th>Start</th>
-        <th>Peak</th>
-        <th>End</th>
-        <th>ZHR</th>
+        <th><h1>Skytour</h1></th>
+        <th><h2>Version {{ version }}</h2></th>
     </tr>
-    </thead>
-    <tbody>
-{% for shower in meteor_showers %}
-    <tr class="M{% cycle 'odd' 'even' %}">
-        <td>{{ shower.name }}</td>
-        <td>{{ shower.start_date }}</td>
-        <td>{{ shower.peak_date }}</td>
-        <td>{{ shower.end_date }}</td>
-        <td>{{ shower.zhr }}</td>
-    </tr>
-{% endfor %}
-    </tbody>
 </table>
-{% else %}
-None active.
-{% endif %}
+<table class="main">
+    <tr>
+        <td class="col">
+            <h3>Observations: </h3>
+            <div class="obs_table">
+                {{ observation_table }}
+            </div>
 
-<h3>Planets Close Together (within {{ min_sep }}°)</h3>
+            <h3>Last Session: </h3>
+            {{ most_recent_session }}
+            <h4>Days Since Last Session: {{ days_since_last_session }}</h4>
 
-{% if adjacent_planets %}
-<table width="100%">
-    <thead><tr><th>Planet 1</th><th>Planet 2</th><th>Separation</th></tr></thead>
-    <tbody>
-        {% for pair in adjacent_planets %}
-        <tr class="{% cycle 'odd' 'even' %}">
-            <td>{{ pair.0 }}</td>
-            <td>{{ pair.1 }}</td>
-            <td>{{ pair.2|floatformat:1 }}°</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-None near each other ({{ min_sep }}°).
-{% endif %}
+            <h3>Top Location(s)</h3>
+            <table class="location_table">
+                <tr><th>Place</th><th>Count</th></tr>
+            {% for item in  top_5_locations %}
+                <tr>
+                    <td>{{ item.0.1.placename }}</td>
+                    <td class="num">{{ item.1 }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+        <td class="col">
+            <h3>Featured DSO Image:</h3>
+            {% if random_dso_image %}
+            {% with random_dso_image as img %}
+            <h4 class="dso_title">
+                {{ img }}:
+                ({{ img.object.object_type.name }})
+                in
+                {{ img.object.constellation.name }}
+            </h4>
+            <img class="random_image" src="{{ img.image.url }}"/>
+            <div class="image-text">{{ img.caption }}</div>
+            {% endwith %}
+            {% endif %}
+        </td>
+{% endblock content %}
 
-{% include 'inc_calendar_grid.html' %}
-{% endblock %}
+{% block footer %}
+{% endblock footer %}
