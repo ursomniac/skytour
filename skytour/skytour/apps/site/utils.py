@@ -97,3 +97,7 @@ def get_skytour_version():
     if not lines:
         return '???'
     return lines[0].strip()
+
+def get_active_dso_lists():
+    lists = DSOList.objects.filter(active_observing_list=1)
+    return lists

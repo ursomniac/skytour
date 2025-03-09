@@ -44,7 +44,14 @@
 <table class="subsubtable">
 <tr>
     <th>Order in List</th>
-    <td><input size=3 name="form-{{ nimg }}-order" value="{{ item.order_in_list }}"></td>
+    <td>
+        <input 
+            size=3 name="form-{{ nimg }}-order" 
+            value="{{ item.order_in_list }}"
+            {% if nimg != 'extra' %}required{% endif %}
+        />
+        <span class="required">(required)</span>
+    </td>
 <tr>
 </tr>
 <tr>
@@ -53,8 +60,10 @@
             size=10
             name="form-{{ nimg }}-utdate" 
             value="{{ item.ut_datetime|date:'Y-m-d'}}"
-        />
-    </td>
+            {% if nimg != 'extra' %}required{% endif %}
+        />         
+        <span class="required">(required)</span>
+    </td> 
 </tr>
 <tr>
     <th>UT Time</th>
@@ -63,7 +72,9 @@
             size=8
             name="form-{{ nimg }}-uttime" 
             value="{{ item.ut_datetime|date:'H:i:s'}}"
+            {% if nimg != 'extra' %}required{% endif %}
         />
+        <span class="required">(required)</span>
     </td>
 </tr>
 <tr>

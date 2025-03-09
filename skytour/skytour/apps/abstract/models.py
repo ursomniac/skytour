@@ -271,7 +271,10 @@ class LibraryAbstractImage(ObjectImage):
     @property
     def imaging_telescope(self):
         t = {'e-': 'eQuinox 2', 's-': 'Seestar S50', 'c-': 'Celestron Origin'}
-        slug = self.image_type[:2]
+        try:
+            slug = self.image_type[:2]
+        except:
+            slug = '  '
         if slug in t.keys():
             return t[slug]
         return None

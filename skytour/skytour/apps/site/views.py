@@ -11,7 +11,8 @@ from .utils import (
     get_most_popular_observing_locations,
     number_of_days_since_last_observing_session,
     get_random_dso_library_image,
-    get_skytour_version
+    get_skytour_version,
+    get_active_dso_lists
 )
 
 class HomePageView(TemplateView):
@@ -25,6 +26,7 @@ class HomePageView(TemplateView):
         context['days_since_last_session'] = number_of_days_since_last_observing_session()
         context['top_5_locations'] = get_most_popular_observing_locations(n=5)
         context['random_dso_image'] = get_random_dso_library_image()
+        context['active_dso_lists'] = get_active_dso_lists()
         return context
 
 class TodayPageView(CookieMixin, TemplateView):

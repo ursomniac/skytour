@@ -572,11 +572,13 @@ class DSOEditMetadataView(UpdateView):
         context['dso'] = self.get_object()
         return context
 
+
 class DSOManageExternalImageView(TemplateView):
     template_name = "manage_dso_image.html"
     model = DSO
     
     def post(self, request, *args, **kwargs):
+        
         dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
         if request.method == 'POST':
             # How many images are there to process (and then maybe add)?
@@ -646,12 +648,19 @@ class DSOManageLibraryImagePanelView(TemplateView):
     template_name = 'manage_dso_library_image_panel.html'
 
     def post(self, request, *args, **kwargs):
+        def haz(x): # All the ways something isn't something
+            return x not in [None, 'None', '']
+        def nodash(x):
+            return x.replace('-','').strip() == 0
+
         dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
+        panel = self.kwargs['panel']
 
         if request.method == "POST":
 
             # how many existing images are there to process?
             num_items = request.POST.get('num_images', "0")
+
             # These are the simpler fields on the form for each image
             keys = ['pk', 'order', 'utdate', 'uttime','exptime', 'telescope', 'proc', 'orientation', 'crop']
             # create an index for every object in the form - including "extra"
@@ -659,6 +668,7 @@ class DSOManageLibraryImagePanelView(TemplateView):
 
             # loop through every object on the form
             for n in indexes:
+                op = None
                 vals = {} # Store all the .get() values in here
                 for k in keys: # do the easy ones first
                     name = f"form-{n}-{k}"
@@ -669,32 +679,52 @@ class DSOManageLibraryImagePanelView(TemplateView):
 
                 # Toss things if not complete
                 if n != 'extra' and vals['pk'] is None: # I needed a PK!
-                    continue
-                # If an image isn't added, skip it
-                # This is the case if you DIDN'T add a new image, and only edited the other ones
-                if vals['image'] is None: 
+                    print("No PK found for updating image.")
                     continue
 
                 # Get the DSOLibrary object or create one
                 if n != 'extra': # This is an UPDATE - get the instance
                     img_object = DSOLibraryImage.objects.filter(pk=int(vals['pk'])).first()
                     if img_object is None: # didn't find it
+                        print("Could not find image to update")
                         continue
                     # If this is a DELETE operation - do it now
                     if vals['delete']:
+                        print("DELETEING image")
                         img_object.delete()
                         continue
+                    op = 'UPDATE'
+
                 else: # This is an INSERT operation - create a new instance!
                     img_object = DSOLibraryImage()
                     img_object.object_id = dso.pk  # set the parent DSO
+                    op = 'CREATE'
                 
                 # OK - fill in the fields!
+
+                # which panel?
+                if panel == 'slideshow':
+                    img_object.use_as_map = 0
+                    img_object.use_in_carousel = 1
+                else:
+                    img_object.use_as_map = 1
+                    img_object.use_in_carousel = 0
+
                 # image order
-                order_val = 0 if vals['order'] is None else int(vals['order'])
+                if haz(vals['order']):
+                    order_val = int(vals['order'])
+                else:
+                    order_val = 0
                 img_object.order_in_list = order_val
 
                 # the image itself
-                img_object.image = vals['image']
+                # If an image isn't added, skip it
+                # This is the case if you DIDN'T add a new image, and only edited the other ones
+                if vals['image'] is not None: 
+                    img_object.image = vals['image']
+                else:
+                    if op == 'CREATE': # No image to upload
+                        continue
 
                 # deal with date/time (two fields on the form map to a datetime object)
                 new_dt = get_datetime_from_strings(vals['utdate'], vals['uttime'])
@@ -702,28 +732,26 @@ class DSOManageLibraryImagePanelView(TemplateView):
                     img_object.ut_datetime = new_dt
 
                 # deal with exposure time (float)
-                if vals['exptime'] is not None:
+                if haz(vals['exptime']):
                     exptime = float(vals['exptime'])
                     img_object.exposure = exptime
 
                 # deal with Telescope FK
-                if vals['telescope'] not in ['', None,] and vals['telescope'][:3] != '---':
+                if haz(vals['telescope']) and nodash(vals['telescope']):
                     tel_id = int(vals['telescope'])
                     img_object.telescope_id = tel_id
 
                 # the others are all strings... so they're straightforward
-                if vals['proc'] not in ['', None] and vals['proc'][:3] != '---':
+                if haz(vals['proc']) and nodash(vals['proc']):
                     img_object.image_processing_status = vals['proc']
-                if vals['orientation'] not in ['', None] and vals['orientation'][:3] != '---':
+                if haz(vals['orientation']) and nodash(vals['orientation']):
                     img_object.image_orientation = vals['orientation']
-                if vals['crop'] not in ['', None] and vals['crop'][:3] != '---':
+                if haz(vals['crop']) and nodash(vals['crop']):
                     img_object.image_cropping = vals['crop']
 
-                try: # OK - should be good to go
-                    img_object.save()
-                except:
-                    print("Manage DSO Library - something went wrong!")
-                    continue # ???
+                print("READY TO SAFE: ", vals)
+                img_object.save()
+
         
         # Go back to the parent DSO Detail page with the updated panel!
         return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))

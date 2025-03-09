@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Skytour: {{ utdt|date:"Y-M-d" }}{% endblock %}
-
-{% block header %}
+{% block content %}
 <style>
     .indented { margin: 10px 50px; }
     .random_image { max-width: 500px; }
     .obs_table { width: 500px; }
     .obs_table table { border: 0px; }
-    table.location_table { width: 600px; border: 0px; }
-    .obs_table table th, table.location_table th {
+    table.location_table { width: 550px; border: 0px; }
+    th {
         background-color: #980;
         color: #000;
     }
+    table.dsolist_table { border: none; }
     table.header { border: 0px; background-color: #000; }
     table.header th {
         border: 0px;
@@ -55,9 +55,7 @@
     }
     td.col { vertical-align: top; }
 </style>
-{% endblock header %}
-
-{% block content %}
+<body>
 <table class="header">
     <tr>
         <th><h1>Skytour</h1></th>
@@ -88,6 +86,18 @@
             </table>
         </td>
         <td class="col">
+            <h3>Active DSO Observing Lists</h3>
+            <table class="dsolist_table">
+                <tr><th>Name</th><th># DSOs</th></tr>
+            {% for list in active_dso_lists %}
+                <tr>
+                    <td>{{ list.name }}</td>
+                    <td class="num">{{ list.dso_count }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+        <td class="col">
             <h3>Featured DSO Image:</h3>
             {% if random_dso_image %}
             {% with random_dso_image as img %}
@@ -102,7 +112,7 @@
             {% endwith %}
             {% endif %}
         </td>
+    </tr>
+</table>
+</body>
 {% endblock content %}
-
-{% block footer %}
-{% endblock footer %}
