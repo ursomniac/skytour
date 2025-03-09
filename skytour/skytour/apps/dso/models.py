@@ -9,7 +9,14 @@ from skyfield.api import Star
 from taggit.managers import TaggableManager
 from .utils import create_shown_name, priority_color, priority_symbol, priority_span
 from .vocabs import DISTANCE_UNIT_CHOICES
-from ..abstract.models import Coordinates, LibraryAbstractImage, FieldView, ObservingLog, ObservableObject
+from ..abstract.models import (
+    Coordinates, 
+    LibraryAbstractImage, 
+    FieldView, 
+    ObservingLog, 
+    ObservableObject,
+    ObjectImage
+)
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO
 from ..astro.angdist import get_neighbors
@@ -989,7 +996,7 @@ class DSOInFieldAlias(DSOAbstractAlias):
     def __str__(self):
         return f"{self.catalog.abbreviation} {self.id_in_catalog}"
 
-class DSOImage(LibraryAbstractImage):
+class DSOImage(ObjectImage):
     """
     M:1 between uploaded images and a DSO.
     THESE ARE NOT GENERATED - they're uploaded from anywhere (e.g., an HST image of M 1).
@@ -1013,8 +1020,8 @@ class DSOImage(LibraryAbstractImage):
         return out
     
     class Meta:
-        verbose_name = 'Image'
-        verbose_name_plural = 'Images'
+        verbose_name = 'External Image'
+        verbose_name_plural = 'External Images'
         ordering = ['order_in_list']
 
 class DSOLibraryImage(LibraryAbstractImage):
@@ -1032,13 +1039,13 @@ class DSOLibraryImage(LibraryAbstractImage):
     @property
     def caption(self):
         x = ''
-        if self.imaging_telescope is not None:
-            x += f"{self.imaging_telescope}: "
+        if self.telescope is not None:
+            x += f"{self.telescope.name}: "
         x += self.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
         if self.exposure is not None:
             x += f', {self.exposure}min'
-        if self.processing_status not in [None, 'None']:
-            x += f', {self.get_processing_status_display()}'
+        if self.image_processing_status not in [None, 'None']:
+            x += f', {self.get_image_processing_status_display()}'
         return x
     
     def __str__(self):

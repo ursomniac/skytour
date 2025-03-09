@@ -44,7 +44,28 @@ IMAGE_POST_OPTIONS = (
     ('processed', 'Processed')
 )
 
-# TODO V2: Move this to a top-level "general" vocab (I think it is in several places)
+# V2 Field options
+# REPLACES IMAGE_PROCESSING_OPTIONS
+IMAGE_PROCESSING_STATUS_OPTIONS = ( 
+    ('default', 'Default'), # as provided from the app
+    ('post-processed', 'Post Processed'),
+    ('rejected', 'Rejected'),
+    ('unknown', 'Unknown')
+)
+# REPLACES IMAGE_STYLE_CHOICES
+IMAGE_ORIENTATION_CHOICES = (
+    ('square', 'Square'),
+    ('landscape', 'Landscape'),
+    ('portrait', 'Portait'),
+    ('other', 'Other')
+)
+# REPLACES IMAGE_POST_OPTIONS
+IMAGE_CROPPING_OPTIONS = (
+    ('full', 'Full-Size'),
+    ('cropped', 'Cropped')
+)
+
+
 YES_NO = [(1, 'Yes'), (0, 'No')]
 YES = 1
 NO = 0

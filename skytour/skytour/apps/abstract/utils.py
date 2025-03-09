@@ -238,3 +238,4 @@ def get_real_time_conditions(target, request, context, debug=False):
         context['use_date'] = dt_base
         context['use_offset'] = offset
     return context
+

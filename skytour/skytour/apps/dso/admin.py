@@ -46,13 +46,20 @@ class DSOLibraryImageAdmin(admin.StackedInline):
     fieldsets =  (
         (None, {
             'fields': [
-                ('order_in_list', 'exposure', 'ut_datetime'),
-                ('image_type', 'processing_status'), 
-                ('image_style', 'use_in_carousel', 'use_as_map'),
+                ('order_in_list', 'ut_datetime'),
+                ('telescope', 'exposure', 'image_processing_status'),
+                ('image_orientation', 'image_cropping'), 
+                ('use_in_carousel', 'use_as_map'),
                 ('image', 'object_image_tag',),
                 'notes'
             ]
         }),
+        #('V1 deprecated', {
+        #    'fields': [
+        #        ('image_type', 'processing_status'), 
+        #        'image_style',
+        #    ]
+        #})
     )
 
 class DSOAliasInline(admin.TabularInline):

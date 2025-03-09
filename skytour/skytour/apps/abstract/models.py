@@ -9,9 +9,19 @@ from ..session.models import ObservingSession
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
-from .vocabs import IMAGING_PROCESSING_CHOICES, \
-    IMAGE_TYPE_CHOICES, IMAGE_POST_OPTIONS, IMAGE_STYLE_CHOICES, YES_NO, YES, NO
-
+from .vocabs import (
+    # V1
+    IMAGING_PROCESSING_CHOICES,
+    IMAGE_TYPE_CHOICES, 
+    IMAGE_POST_OPTIONS, 
+    IMAGE_STYLE_CHOICES, 
+    # V2
+    IMAGE_PROCESSING_STATUS_OPTIONS,
+    IMAGE_ORIENTATION_CHOICES,
+    IMAGE_CROPPING_OPTIONS,
+    #
+    YES_NO, YES, NO
+)
 class FieldView(models.Model):
     """
     This is a model for the FOV map.
@@ -152,10 +162,7 @@ class Coordinates(models.Model):
 
 class ObjectImage(models.Model):
     """
-    Abstract model for images (uploaded) attached to objects.
-
-    TODO V2: change the vocab entires to ancillary models so that they're not
-    tied to specific telescopes
+    Abstract model for images (external) attached to objects.
     """
     image = models.ImageField (
         _('Image'),
@@ -165,30 +172,34 @@ class ObjectImage(models.Model):
         _('Notes'),
         blank = True, null = True
     )
-    # TODO V2: this is REALLY clunky...  One problem is that things
-    #   sort lowest first so as you add images you have to alter all
-    #   the values to 'put them on top'.
-    # Might be better to REVERSE the ordering so that newer images can just
-    # take the next-highest value...
     order_in_list = models.PositiveIntegerField (
         _('Order'),
         default = 1
     )
-    # TODO V2: this should really be called 
-    image_type = models.CharField(
-        _('Image Type'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_TYPE_CHOICES,
-        default = None
+
+    def object_image_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.image.url)
+
+    class Meta:
+        abstract = True
+
+class LibraryAbstractImage(ObjectImage):
+    """
+    Abstract class for user-created DSO, Planet, Asteroid, Comet images
+    """
+    # If True - is shown on the "Library Panel" (for square images)
+    use_in_carousel = models.PositiveIntegerField (
+        _('Use in Slideshow'),
+        choices = YES_NO,
+        default = YES,
+        help_text = 'Set to YES/1 show on the image carousel'
     )
-    # TODO V2: REMOVE THIS - it's not used anywhere!
-    image_alterations = models.CharField (
-        _('Image Alterations'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_POST_OPTIONS,
-        default = 'None'
+    # If True - is sown on the "Full-Sized View Panel" (for landscape images)
+    use_as_map = models.PositiveIntegerField (
+        _('Use in Map Panel'),
+        choices = YES_NO,
+        default = NO,
+        help_text = 'Set to YES/1 show on the map panel'
     )
     exposure = models.FloatField (
         _('Image Exposure'),
@@ -196,8 +207,30 @@ class ObjectImage(models.Model):
         help_text = 'in floating minutes'
     )
 
-    # This might go away
-    # TODO V2: clean this up
+    # TODO V2: replace with image_orientation
+    image_style = models.CharField (
+        _('Image Class'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_STYLE_CHOICES
+    )
+    # TODO V2: replace with image_cropping and telescope 
+    image_type = models.CharField(
+        _('Image Type'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_TYPE_CHOICES,
+        default = None
+    )
+    # TODO V2: remove
+    image_alterations = models.CharField (
+        _('Image Alterations'),
+        max_length = 30,
+        null = True, blank = True,
+        choices = IMAGE_POST_OPTIONS,
+        default = 'None'
+    )
+    # TODO V2: replace with image_processing_status
     processing_status = models.CharField (
         _('Image Processing Status'),
         max_length = 30,
@@ -205,9 +238,36 @@ class ObjectImage(models.Model):
         choices = IMAGING_PROCESSING_CHOICES
     )
 
-    def object_image_tag(self):
-        return mark_safe(u'<img src="%s" width=500>' % self.image.url)
-    
+    ### V2 fields
+    # REPLACES image_style
+    image_orientation = models.CharField (
+        _('Image Orientation'),
+        max_length = 20,
+        blank = True, null = True,
+        choices = IMAGE_ORIENTATION_CHOICES
+    )
+    # REPLACES processing_status
+    image_processing_status = models.CharField (
+        _('Image Processing Status'),
+        max_length = 20,
+        blank = True, null = True,
+        choices = IMAGE_PROCESSING_STATUS_OPTIONS
+    )
+    # REPLACES image_type
+    image_cropping = models.CharField (
+        _('Image Cropping'),
+        max_length = 20,
+        blank = True, null = True,
+        choices = IMAGE_CROPPING_OPTIONS
+    )
+    # REPLACES and disambiguates image_type
+    telescope = models.ForeignKey (
+        Telescope,
+        null = True, blank = True,
+        on_delete = models.PROTECT
+    )
+
+    ## TODO V2: NEED TO SOLVE THIS
     @property
     def imaging_telescope(self):
         t = {'e-': 'eQuinox 2', 's-': 'Seestar S50', 'c-': 'Celestron Origin'}
@@ -215,31 +275,7 @@ class ObjectImage(models.Model):
         if slug in t.keys():
             return t[slug]
         return None
-
-    class Meta:
-        abstract = True
-
-class LibraryAbstractImage(ObjectImage):
-    use_in_carousel = models.PositiveIntegerField (
-        _('Use in Slideshow'),
-        choices = YES_NO,
-        default = YES,
-        help_text = 'Set to YES/1 show on the image carousel'
-    )
-    # TODO: make this clearer - the Style determines which panel the image appears in
-    image_style = models.CharField (
-        _('Image Class'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_STYLE_CHOICES
-    )
-    use_as_map = models.PositiveIntegerField (
-        _('Use in Map Panel'),
-        choices = YES_NO,
-        default = NO,
-        help_text = 'Set to YES/1 show on the map panel'
-    )
-
+    
     class Meta:
         abstract = True
 

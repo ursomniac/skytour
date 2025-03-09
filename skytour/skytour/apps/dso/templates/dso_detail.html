@@ -77,7 +77,8 @@
 		padding: 0; /* Remove padding */
 		margin: 0; /* Remove margins */
 	}
-	div.panel-type {float: right!important; font-size: 10px; color: #999; }
+	div.panel-type {float: right!important;  }
+	span.little-header { font-size: 10px; color: #999; margin-right: 2em; }
 	.popup-button, .popup-dso { float: right; }
 	.object-metadata { font-weight: bold; color: #ff9; }
 	div.conditions { padding: 5px; border: 1px solid #ccc; }
@@ -89,6 +90,7 @@
 	}
 	td.edit_images button { width: 20em; height: 20px; }
 	td.indented { background-color: #666; padding-left: 20px; }
+	.rightside { float: right!important; }
 </style>
 {% endblock styles %}
 
@@ -152,7 +154,14 @@
 			Library Image(s)
 		</h2>
 			<div class="slideshow-container">
-				<div class="panel-type">Library Panel</div>
+				<div class="panel-type">
+					<span class="little-header">Library Panel</span>					
+					<div class="rightside">
+						<a href="{% url 'dso-manage-panel' 'slideshow' object.pk %}">
+						<button>Manage Images</button>
+						</a>
+					</div>
+				</div>
 
 				{% for item in library_slideshow %}
 				<div class="mySlides libslide">
@@ -186,6 +195,12 @@
 				<br>
 				Not available for imaging.
 			{% endif %}
+
+			<div class="manage">
+				<a href="{% url 'dso-manage-panel' 'slideshow' object.pk %}">
+				<button>Manage Images</button>
+				</a>
+			</div>
 			</div>
 		{% endif %}
 	</td>
@@ -408,18 +423,26 @@
 		{% else %}
 			<h3>Imaging Chart and Full View</h3>
 			<div class="slideshow-container">
-				<div class="panel-type">Full-Sized View Panel</div>
+				<div class="panel-type">
+					<span class="little-header">Full-Sized View Panel</span>
+					<div class="rightside">
+						<a href="{% url 'dso-manage-panel' 'landscape' object.pk %}">
+						<button>Manage Images</button>
+						</a>
+					</div>
+				</div>
 				{% for item in map_slideshow %}
 				<div class="mySlides mapslide">
-					{% if map_slideshow|length > 1 %}
 					<div class="slide-header">
+						{% if map_slideshow|length > 1 %}
 						<a onclick="plusSlides(-1, 2)"><button>Previous</button></a>
 						&nbsp; | &nbsp;
 						<a onclick="plusSlides(1, 2)"><button>Next</button></a>
 						&nbsp; | &nbsp;
 						Image {{ forloop.counter }} of {{ map_slideshow|length }}
+						{% endif %}
+
 				 	</div>
-					{% endif %}
 					<a href="{{ item.url }}" target="_blank>">
 						<img
 							src="{{ item.url }}"  

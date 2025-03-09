@@ -13,9 +13,16 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
 
-from ..abstract.utils import get_real_time_conditions
+from ..abstract.utils import get_real_time_conditions 
+from ..abstract.vocabs import (
+    IMAGE_CROPPING_OPTIONS, 
+    IMAGE_ORIENTATION_CHOICES, 
+    IMAGE_PROCESSING_STATUS_OPTIONS
+)
+from ..astro.time import get_datetime_from_strings
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
+from ..tech.models import Telescope
 from ..utils.timer import compile_times
 
 from .atlas_utils import find_neighbors, assemble_neighbors
@@ -30,7 +37,7 @@ from .forms import (
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
-from .models import DSO, DSOList, AtlasPlate, DSOImage
+from .models import DSO, DSOList, AtlasPlate, DSOImage, DSOLibraryImage
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import (
@@ -565,56 +572,178 @@ class DSOEditMetadataView(UpdateView):
         context['dso'] = self.get_object()
         return context
 
-class DSOManageImageView(TemplateView):
+class DSOManageExternalImageView(TemplateView):
     template_name = "manage_dso_image.html"
     model = DSO
     
     def post(self, request, *args, **kwargs):
         dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
         if request.method == 'POST':
+            # How many images are there to process (and then maybe add)?
             num_items = request.POST.get('num_images', "0")
-            for n in range(int(num_items)):
+
+            # Create an index for each image and the "new" image
+            indexes = [str(x) for x in range(int(num_items))] + ['new']
+
+            # Loop over the images
+            for n in indexes:
                 # Image - can be None if the file isn't changing!
-                image_name = f"form-{n}-image"
-                image_value = request.FILES.get(image_name, None)
+                image_value = request.FILES.get(f"form-{n}-image", None)
                 # Order in list
-                order_name = f"form-{n}-order"
-                image_pk = f"form-{n}-pk"
-                pk_value = request.POST.get(image_pk, None)
-                order_value = int(request.POST.get(order_name, 0))
-                delete_name = f"form-{n}-delete"
-                delete_value = request.POST.get(delete_name, 'off') == 'on'
-                # update fields
-                if pk_value is None:
+                order_value = int(request.POST.get(f"form-{n}-order", 0))
+                # The PK if this is an UPDATE
+                pk_value = request.POST.get(f"form-{n}-pk", None)
+                # Delete
+                delete_value = request.POST.get(f"form-{n}-delete", 'off') == 'on'
+
+                img_object = None # default
+
+                # Look up or Create a DSOImage instance
+                if n != 'new': # This is an UPDATE (or DELETE) operation
+                    if pk_value in [None ,'']:  # oops - we should have a PK
+                        continue
+                    # Look up the DSOImage instance
+                    img_object = DSOImage.objects.filter(pk=int(pk_value)).first()
+                    if not img_object: # oops - didn't find it - skip
+                        continue
+                    if delete_value: # Ah - this is a DELETE operation
+                        img_object.delete()
+                        continue
+                else:  # This is a CREATE operation
+                    img_object = DSOImage()
+                    img_object.object_id = dso.pk # set the parent DSO
+
+                # just in case that didn't go well and we didn't catch it
+                if img_object is None: 
                     continue
-                exist = DSOImage.objects.filter(pk=int(pk_value)).first()
-                if not exist:
-                    continue
-                if not delete_value:
-                    exist.order_in_list = order_value
-                    if image_value is not None:
-                        exist.image = image_value
-                    exist.save()
-                else: # delete
-                    exist.delete()
-            extra_name = "form-new-image"
-            extra_name_value = request.FILES.get(extra_name)
-            extra_order = "form-new-order"
-            extra_order_value = request.POST.get(extra_order, 0)
-            if extra_name_value is not None:
-                new = DSOImage()
-                new.object_id = dso.pk
-                new.order_in_list = int(extra_order_value)
-                new.image = extra_name_value
-                new.save()
+
+                # Fill in the instance fields
+                img_object.order_in_list = order_value
+                if image_value is not None:
+                    img_object.image = image_value
+                
+                # And now save it
+                try:
+                    img_object.save()
+                except:
+                    print("DSOImage Management - somwthing went wrong!")
+
+        # Go back to the parent DSO Detail page
         return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))
 
     def get_context_data(self, **kwargs):
-        context = super(DSOManageImageView, self).get_context_data(**kwargs)
+        context = super(DSOManageExternalImageView, self).get_context_data(**kwargs)
         pk = self.kwargs['pk']
         dso = get_object_or_404(DSO, pk=pk)
         context['dso'] = dso
         context['images'] = dso.images.all()
         context['num_images'] = dso.images.count()
         context['extra'] = True
+        return context
+    
+class DSOManageLibraryImagePanelView(TemplateView):
+    model = DSO
+    template_name = 'manage_dso_library_image_panel.html'
+
+    def post(self, request, *args, **kwargs):
+        dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
+
+        if request.method == "POST":
+
+            # how many existing images are there to process?
+            num_items = request.POST.get('num_images', "0")
+            # These are the simpler fields on the form for each image
+            keys = ['pk', 'order', 'utdate', 'uttime','exptime', 'telescope', 'proc', 'orientation', 'crop']
+            # create an index for every object in the form - including "extra"
+            indexes = [str(x) for x in range(int(num_items))] + ['extra']
+
+            # loop through every object on the form
+            for n in indexes:
+                vals = {} # Store all the .get() values in here
+                for k in keys: # do the easy ones first
+                    name = f"form-{n}-{k}"
+                    vals[k] = request.POST.get(name, None)
+                # deal with the other fields
+                vals['image'] = request.FILES.get(f"form-{n}-image", None)
+                vals['delete'] = request.POST.get(f"form-{n}-delete", 'off') == 'on'
+
+                # Toss things if not complete
+                if n != 'extra' and vals['pk'] is None: # I needed a PK!
+                    continue
+                # If an image isn't added, skip it
+                # This is the case if you DIDN'T add a new image, and only edited the other ones
+                if vals['image'] is None: 
+                    continue
+
+                # Get the DSOLibrary object or create one
+                if n != 'extra': # This is an UPDATE - get the instance
+                    img_object = DSOLibraryImage.objects.filter(pk=int(vals['pk'])).first()
+                    if img_object is None: # didn't find it
+                        continue
+                    # If this is a DELETE operation - do it now
+                    if vals['delete']:
+                        img_object.delete()
+                        continue
+                else: # This is an INSERT operation - create a new instance!
+                    img_object = DSOLibraryImage()
+                    img_object.object_id = dso.pk  # set the parent DSO
+                
+                # OK - fill in the fields!
+                # image order
+                order_val = 0 if vals['order'] is None else int(vals['order'])
+                img_object.order_in_list = order_val
+
+                # the image itself
+                img_object.image = vals['image']
+
+                # deal with date/time (two fields on the form map to a datetime object)
+                new_dt = get_datetime_from_strings(vals['utdate'], vals['uttime'])
+                if new_dt is not None:
+                    img_object.ut_datetime = new_dt
+
+                # deal with exposure time (float)
+                if vals['exptime'] is not None:
+                    exptime = float(vals['exptime'])
+                    img_object.exposure = exptime
+
+                # deal with Telescope FK
+                if vals['telescope'] not in ['', None,] and vals['telescope'][:3] != '---':
+                    tel_id = int(vals['telescope'])
+                    img_object.telescope_id = tel_id
+
+                # the others are all strings... so they're straightforward
+                if vals['proc'] not in ['', None] and vals['proc'][:3] != '---':
+                    img_object.image_processing_status = vals['proc']
+                if vals['orientation'] not in ['', None] and vals['orientation'][:3] != '---':
+                    img_object.image_orientation = vals['orientation']
+                if vals['crop'] not in ['', None] and vals['crop'][:3] != '---':
+                    img_object.image_cropping = vals['crop']
+
+                try: # OK - should be good to go
+                    img_object.save()
+                except:
+                    print("Manage DSO Library - something went wrong!")
+                    continue # ???
+        
+        # Go back to the parent DSO Detail page with the updated panel!
+        return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOManageLibraryImagePanelView, self).get_context_data(**kwargs)
+        panel = self.kwargs['panel']
+        pk = self.kwargs['pk']
+        dso = get_object_or_404(DSO, pk=pk)
+
+        image_list = dso.image_library.all()
+        if panel == 'slideshow':
+            image_list = image_list.filter(use_in_carousel=1).order_by('order_in_list')
+        elif panel == 'landscape':
+            image_list = image_list.filter(use_as_map=1).order_by('order_in_list')
+        context['images'] = image_list
+        context['num_images'] = image_list.count()
+        context['extra'] = True
+        context['telescopes'] = Telescope.objects.all()
+        context['orientations'] = IMAGE_ORIENTATION_CHOICES
+        context['croppings'] = IMAGE_CROPPING_OPTIONS
+        context['procstats'] = IMAGE_PROCESSING_STATUS_OPTIONS
         return context

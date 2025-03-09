@@ -194,3 +194,21 @@ def utc_round_up_minutes(dt=None, window=15):
     if increase_date:
         dt = dt + datetime.timedelta(days=1)
     return dt
+
+def get_datetime_from_strings(date_str, time_str):
+    temp = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        ut_date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+        colons = len(time_str.split(':')) -1
+        if colons == 2:
+            ut_time = datetime.datetime.strptime(time_str, '%H:%M:%S')
+        else:
+            ut_time = datetime.datetime.strptime(time_str, '%H:%M')
+        temp = temp.replace(
+            year=ut_date.year, month=ut_date.month, day=ut_date.day,
+            hour=ut_time.hour, minute=ut_time.minute, second=ut_time.second,
+            microsecond=0
+        )
+        return temp
+    except:
+        return None
