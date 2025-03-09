@@ -1,0 +1,140 @@
+
+<tr>
+    <input type="hidden" name="form-{{ nimg }}-pk" value="{{ item.pk }}">
+    <th>
+        <label for="id-{{ nimg }}">
+            {% if nimg == 'extra' %}
+            Add New Image
+            {% else %}
+            Image {{ forloop.counter }}:
+            {% endif %}
+        </label>
+    </th>
+</tr>
+<tr>
+    <td>
+        <table class="subtable">
+            <tr>
+                <td colspan=2>
+                <b>Currently:</b> 
+                <span class="fn">{{ item.image }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <b>Change:</b>
+                <input 
+                    type="file" 
+                    name="form-{{ nimg }}-image" 
+                    accept="image/*" id="id-{{ nimg }}-image"
+                />
+                </td>
+                <td class="order delimg">
+                    <b>Delete:</b>
+                    <input type="checkbox" name="form-{{ nimg }}-delete"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                <img src="{{ item.image.url }}" class="image_in_list" />
+                </td>
+
+                <td class="order">
+<table class="subsubtable">
+<tr>
+    <th>Order in List</th>
+    <td><input size=3 name="form-{{ nimg }}-order" value="{{ item.order_in_list }}"></td>
+<tr>
+</tr>
+<tr>
+    <th>UT Date</th>
+    <td><input 
+            size=10
+            name="form-{{ nimg }}-utdate" 
+            value="{{ item.ut_datetime|date:'Y-m-d'}}"
+        />
+    </td>
+</tr>
+<tr>
+    <th>UT Time</th>
+    <td>
+        <input 
+            size=8
+            name="form-{{ nimg }}-uttime" 
+            value="{{ item.ut_datetime|date:'H:i:s'}}"
+        />
+    </td>
+</tr>
+<tr>
+    <th>Exp. Time</th>
+    <td>
+        <input 
+            size=8
+            name="form-{{ nimg }}-exptime" 
+            value="{{ item.exposure }}"
+        />
+    </td>
+</tr>
+<tr>
+    <th>Telescope</th>
+    <td>
+        <select name="form-{{ nimg }}-telescope">
+            <option value="">---------------</option>
+            {% for tel in telescopes %}
+            <option value="{{ tel.pk }}"
+                {% if item.telescope.pk == tel.pk %}selected{% endif %}>
+                {{ tel.name }}
+            </option>
+            {% endfor %}
+        </select>
+</tr>
+<tr>
+    <th>Processing</th>
+    <td>
+        <select name="form-{{ nimg }}-proc">
+            <option value="">---------------</option>
+            {% for opt in procstats %}
+                <option value="{{ opt.0 }}"
+                    {% if item.image_processing_status == opt.0 %}selected{% endif %}>
+                    {{ opt.1 }}
+                </option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>
+<tr>
+    <th>Orientation</th>
+    <td>
+        <select name="form-{{ nimg }}-orientation">
+            <option value="">---------------</option>
+            {% for opt in orientations %}
+            <option value="{{ opt.0 }}" 
+                {% if item.image_orientation == opt.0 %}selected{% endif %}>
+                {{ opt.1 }}
+            </option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>
+<tr>
+    <th>Cropping</th>
+    <td>
+        <select name="form-{{ nimg }}-crop">
+            <option value="">---------------</option>
+            {% for opt in croppings %}
+            <option value="{{ opt.0 }}"
+                {% if item.image_cropping == opt.0 %}selected{% endif %}>
+                {{ opt.1 }}
+            </option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>
+</table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
