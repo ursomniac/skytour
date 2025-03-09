@@ -3,9 +3,8 @@ from dateutil.parser import isoparse
 
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from django.forms import formset_factory, modelformset_factory
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, get_object_or_404, render
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View

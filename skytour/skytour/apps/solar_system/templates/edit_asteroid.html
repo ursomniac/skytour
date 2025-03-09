@@ -1,0 +1,80 @@
+{% extends 'edit_base.html' %}
+{% block title %}Skytour - Edit Asteroid Metadata{% endblock title %}
+{% block content %}
+<style>
+    table.edit_form { width: 600px; }
+    th { height: 20px; background-color: #cc6; width: 50%; }
+    td.close { background-color: #900; }
+    .helptext { font-size: 80%; color: #999; }
+    span.fn { font-size: 10px; }
+    span.sublabel {
+        color: #ff9;
+        font-size: 80%;
+        font-weight: bold;
+    }
+</style>
+
+<h1>Edit Asteroid {{ object.name }} Metadata</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="edit_form">
+        <tr>
+            <th><label for="id_diameter">Diameter:</label></th>
+            <td>{{ form.diameter }}
+                <br>
+                <span class="helptext"># or # x # or # x # x #</span>              
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id_year_of_discovery">Year of Discovery:</label></th>
+            <td>{{ form.year_of_discovery }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_classification">Classification:</label></th>
+            <td>{{ form.classification }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_description">Description:</label></th>
+            <td>{{ form.description }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_always_include">Always Include:</label></th>
+            <td>{{ form.always_include }}
+                <br>
+                <span class="helptext">Override magnitude limit, e.g., for Pluto</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id_est_brightest">Estimated Brightest:</label></th>
+            <td>{{ form.est_brightest }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_image">Image:</label></th>
+            <td>
+                <span class="sublabel">Currently:</span> 
+                <a href="{{ object.image.url }}"><span class="fn">{{ object.image }}</span></a>
+                <br>
+                <span class="sublabel">Clear:</span> 
+                <input type="checkbox" name="image-clear" id="image-clear_id">
+                <br>
+                <span class="sublabel">Change:</span> 
+                <input type="file" name="image" accept="image/*" id="id_image">
+            </td>
+          </tr>
+        <tr>
+            <td colspan=2 class="submit">
+                <button type="submit" class="submit">Save Changes</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2 class="close">
+                <a href="{% url 'comet-detail' object.pk %}">
+                    {{ object.pk }}
+                <button class="close">Close and Go Back</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock content %}

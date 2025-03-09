@@ -1,0 +1,154 @@
+<td 
+width="500px" height="600px" rowspan=2 
+{% if library_slideshow|length < 2 %}
+class="hvcenter"
+{% else %}
+class="hcenter"
+{% endif %} {# overflow; auto #}
+style="position:relative; max-height: 600px;"
+>
+{% if library_slideshow|length > 0 %}
+<h2 class="short">
+Library Image(s)
+</h2>
+<div class="slideshow-container">
+    <div class="panel-type">
+        <span class="little-header">Library Panel</span>					
+        <div class="rightside">
+            <a href="{% url 'sso-manage-library' object_type object.pk %}">
+            <button>Manage Images</button>
+            </a>
+        </div>
+    </div>
+
+    {% for item in library_slideshow %}
+    <div class="mySlides libslide">
+        {# just remove the controls if there's only one image #}
+        <div class="slide-header">
+        {% if library_slideshow|length > 1 %}
+            <div class="slideshow-nav">
+            <a onclick="plusSlides(-1, 0)"><button>Previous</button></a>
+            &nbsp; | &nbsp; 
+            <a onclick="plusSlides(1, 0)"><button>Next</button></a>
+            &nbsp; | &nbsp; 
+            Image {{ forloop.counter }} of {{ library_slideshow | length }}
+            </div>
+        {% endif %}
+        </div>
+        <a href="{{ item.image.url }}" target="_blank>">
+            <img src="{{ item.image.url }}" alt="add data here" style="width:100%"/>
+        </a>
+        <div class="image-text">{{ item.caption }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-library-image">
+No image in library.<br>
+{% if object.mode_imaging_priority %}
+    <br>
+    Imaging Priority: 
+    {{ object.mode_imaging_priority_span }}
+{% else %}
+    <br>
+    Not available for imaging.<br>
+{% endif %}
+
+<div class="manage">
+    <br>
+    <a href="{% url 'sso-manage-library' object_type object.pk %}">
+    <button>Manage Images</button>
+    </a>
+</div>
+</div>
+{% endif %}
+</td>
+
+<script>
+    var slideIndex = [1,];
+    var slideId = ["libslide",]
+    showSlides(1, 0);
+    //showSlides(1, 1);
+    //showSlides(1, 2); 
+    
+    function plusSlides(n, no) {
+      showSlides(slideIndex[no] += n, no);
+    }
+    
+    function showSlides(n, no) {
+      var i;
+      var x = document.getElementsByClassName(slideId[no]);
+      if (n > x.length) {slideIndex[no] = 1}    
+      if (n < 1) {slideIndex[no] = x.length}
+      for (i = 0; i < x.length; i++) {
+         x[i].style.display = "none";  
+      }
+      x[slideIndex[no]-1].style.display = "block";  
+    }
+</script>
+<style>
+    * {box-sizing: border-box}
+    .mySlides{display: none}
+    img {vertical-align: middle;}
+    
+    /* Slideshow container */
+    .slideshow-container {
+      max-width: 800px;
+      position: relative;
+    }
+    h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; text-align: center; }
+	.slide-header {
+		width: 100%;
+		padding-left: 10px;
+		font-size: 12px;
+		display: flex;
+		align-items: center;
+		color: rgb(204, 204, 204);
+		background: rgba(0, 0, 0, 0.3);
+		height: 35px;
+	}
+    .image-text {
+        position: absolute;
+        bottom: -32px;
+        width: 100%;
+        display: flex;
+        font-size: 12px;
+        justify-content: center;
+        align-items: center;
+        color: rgb(255, 255, 255);
+        background: rgba(0, 0, 0, 0.3);
+        height: 35px;
+    }
+    /* Next & previous buttons */
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 4%;
+      width: auto;
+      padding: 16px;
+      margin-top: -22px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      transition: 0.6s ease;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+      height:100%;
+      width:49.5%;
+    }
+    
+    /* Position the "next button" to the right */
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+    
+    /* On hover, add a grey background color */
+    .prev:hover, .next:hover {
+      color: black;
+    }
+
+    div.panel-type {float: right!important;  }
+	span.little-header { font-size: 10px; color: #999; margin-right: 2em; }
+    .rightside { float: right!important; }
+</style>

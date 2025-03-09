@@ -61,10 +61,14 @@
                     {% if object.is_dwarf_planet %}
                     Dwarf Planet
                     {% endif %}
+                    {% if asteroid.observe %}
                     <br>currently in<br>
                     <a href="{% url 'constellation-detail' asteroid.observe.constellation.abbr|upper %}">{{ asteroid.observe.constellation.name }}</a>
+                    {% endif %}
                 </td>
                 <td  class="description operations" rowspan=2>
+                    <a href="{% url 'asteroid-edit' object.pk %}"><button>Edit Metadata</button></a>
+                    <br>
                     <a href="/admin/solar_system/asteroid/{{object.pk}}/change" target="_new"><button>   Admin   </button></a>
                     <br>
                     <a href="{% url 'sso-pdf' 'asteroid' object.slug %}" target="_new"><button>PDF View</button></a>
@@ -145,16 +149,9 @@
             </tr>
         </table>
     </td>
-    <td width="500px" height="600px" style="position:relative;">
-        {% if library_slideshow|length > 1 %}
-        {% include "includes/library_slideshow.html" %}
-        {% elif object.library_image %}
-        <a href="{{ object.library_image.image.url }}"><img 
-            src="{{ object.library_image.image.url }}" class="constrained"></a>
-        {% else %}
-        <p class='hvcenter'>No Image</p>
-        {% endif %}
-    </td>
+    {% with 'asteroid' as object_type %}
+    {% include 'inc_slideshow_panel.html' %}
+    {% endwith %}
 </tr>
 </table>
 <br><br>

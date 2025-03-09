@@ -5,7 +5,7 @@
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
-    button { width: 8em; }
+    button.op { width: 8em; }
     button.map { width: 20em; }
     dt  { font-weight: bold; color: #ff6; }
     img.constrained { width: 100%; max-width: 500px; }
@@ -68,6 +68,8 @@
         background-color: #999;
         color: #000;
     }
+
+
 </style>
 {% endblock styles %}
 {% block title %}{{ planet.name }}: Skytour{% endblock %}
@@ -98,15 +100,15 @@
                         <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
                     </td>
                     <td  class="description operations" rowspan=2>
-                        <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button>   Admin   </button></a>
+                        <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button class="op">   Admin   </button></a>
                         <br>
-                        <a href="{% url 'sso-pdf' 'planet' object.slug %}" target="_new"><button>PDF View</button></a>
+                        <a href="{% url 'sso-pdf' 'planet' object.slug %}" target="_new"><button class="op">PDF View</button></a>
                         <br>
-                        <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')">
+                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')">
                             Real Time
                         </button>
                         <br>
-                        <button onclick="return realtimePopup('/planet/real-time/{{ object.slug }}?utdt_base=cookie')">
+                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ object.slug }}?utdt_base=cookie')">
                             Cookie
                         </button>
                     </td>
@@ -204,19 +206,9 @@
                 </tr>
             </table>
         </td>
-        <td width="500px" height="600px" style="position:relative;">
-            {% if library_slideshow|length > 1 %}
-            <div id="library-carousel">
-            {% include "includes/library_slideshow.html" %}
-            </div>
-            {% elif object.library_image %}
-            <a href="{{ object.library_image.image.url }}"><img 
-                src="{{ object.library_image.image.url }}" class="constrained"></a>
-            {% else %}
-            <p class='hvcenter'>No Library Image(s)</p>
-            {% endif %}
-            <br clear="all"><br>
-        </td>
+        {% with 'planet' as object_type %}
+        {% include 'inc_slideshow_panel.html' %}
+        {% endwith %}
     </tr>
 </table>
 
@@ -273,6 +265,7 @@
 {% endwith %}
 
 {% include 'includes/performance_time.html' %}
+
 {% endblock content %}
 
 {% block extra-js %}

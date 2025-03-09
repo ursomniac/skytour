@@ -1,11 +1,15 @@
 import datetime
 from django import forms
 from ..astro.time import utc_now
-from ..dso.models import DSOList
+from ..dso.models import DSOList, DSOObservation
 from ..dso.vocabs import OBSERVING_MODE_TYPES
 from ..observe.models import ObservingLocation
+from ..observe.models import Session
 from ..site_parameter.helpers import find_site_parameter
-from ..solar_system.models import Planet, Asteroid, Comet
+from ..solar_system.models import (
+    Planet, Asteroid, Comet,
+    PlanetObservation, AsteroidObservation, CometObservation
+)
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
@@ -187,3 +191,13 @@ class ObservingConditionsForm(forms.ModelForm):
             'notes',
             'moon'
         ]
+
+class ObservationForm(forms.Form):
+    ut_date = forms.CharField()
+    ut_time = forms.CharField()
+    session = forms.ModelChoiceField(Session)
+    telescope = forms.ModelChoiceField(Telescope)
+    eyepiece = forms.ModelChoiceField(Eyepiece, required=False)
+    filter = forms.ModelMutipleChoiceField(Filter, required=False)
+    class Meta:
+        fields = ['session', 'telescope', 'eyepiece', 'filter', 'ut_date', 'ut_time']

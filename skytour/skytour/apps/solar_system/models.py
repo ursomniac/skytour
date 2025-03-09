@@ -322,7 +322,6 @@ class Asteroid(ObservableObject):
         null = True, blank = True
     )
     object_class = 'asteroid'
-
     detail_view = 'asteroid-detail'
 
     @property

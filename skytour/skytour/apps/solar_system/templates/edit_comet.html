@@ -1,0 +1,100 @@
+{% extends 'edit_base.html' %}
+{% block title %}Skytour - Edit Comet Metadata{% endblock title %}
+{% block content %}
+<style>
+    table.edit_form { width: 900px; }
+    th { height: 20px; background-color: #cc6; width: 33%; }
+    td.close { background-color: #900; }
+    td.light_curve { text-align: center; }
+    td.light_curve img { max-width: 300px; }
+    .helptext { font-size: 80%; color: #999; }
+</style>
+
+<h1>Edit Comet {{ object.name }} Metadata</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="edit_form">
+        <tr>
+            <th><label for="id_status">Status:</label></th>
+            <td>{{ form.status }}
+              <br><span class="helptext">Turn off once the comet isn't generally visible.</span>
+            </td>
+            <td rowspan=6 class="light_curve">
+              {% if form.light_curve_graph_url.value %}
+              <h4>Comet Light Curve</h4>
+              <img src="{{ form.light_curve_graph_url.value }}">
+              {% else %}
+              (No light curve referenced)
+              {% endif %}
+            </td>
+        </tr>
+        
+        <tr>
+            <th><label for="id_mag_offset">Mag Offset:</label></th>
+            <td>{{ form.mag_offset }}
+              <br><span class="helptext">Use to offset the est. mag if the comet is esp. bright/dim</span>
+            </td>
+        </tr>
+        
+        <tr>
+            <th><label for="id_light_curve_url">Light Curve URL:</label></th>
+            <td>
+              <input 
+                type="url"
+                size="50"
+                name="light_curve_url" 
+                value="{{ form.light_curve_url.value}}"
+                maxlength="200"
+                id="id_light_curve_url"
+              >
+              <br><span class="helptext">
+                This information can be 
+                found at <a href="http://www.aerith.net/comet/future-n.html" target="_new">aerith.net</a>
+              </span>
+            </td>
+          </tr>
+        
+          <tr>
+            <th><label for="id_light_curve_graph_url">Light Curve Graph URL:</label></th>
+            <td>
+              <input 
+                type="url" 
+                size="50" 
+                name="light_curve_graph_url" 
+                value="{{ form.light_curve_graph_url.value }}" 
+                maxlength="200" 
+                id="id_light_curve_graph_url"
+              >
+              <br>
+              <span class="helptext">Likewise you can find the most-recent light curves
+                for most comets at <a href="http://www.aerith.net/comet/future-n.html" target="_new">aerith.net</a>
+              </span>
+              </td>
+          </tr>
+          <tr>
+            <th><label for="id_override_limits">Override limits:</label></th>
+            <td>{{ form.override_limits }}
+              <br>
+              <span class="helptext">Turn this on to prevent filtering based on magnitude.</span>
+            </td>
+          </tr>
+          <tr>
+            <th><label for="id_perihelion_date">Peri.</label></th>
+            <td>{{ form.perihelion_date }}</td>
+          </tr>
+        <tr>
+        <td colspan=3 class="submit">
+            <button type="submit" class="submit">Save Changes</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=3 class="close">
+            <a href="{% url 'comet-detail' object.pk %}">
+            <button class="close">Close and Go Back</button>
+            </a>
+        </td>
+    </tr>
+    </table>
+</form>
+{% endblock content %}

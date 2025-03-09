@@ -1,5 +1,4 @@
 import datetime, pytz
-from django.core.files.storage import default_storage
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify

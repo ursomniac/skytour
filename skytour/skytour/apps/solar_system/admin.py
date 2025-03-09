@@ -26,12 +26,6 @@ class AsteroidLibraryImageAdmin(admin.StackedInline):
                 'notes'
             ]
         }),
-        #('V1 deprecated', {
-        #    'fields': [
-        #        ('image_type', 'processing_status'), 
-        #        'image_style',
-        #    ]
-        #})
     )
 
 class CometObservationAdmin(AbstractObservation):
@@ -52,12 +46,6 @@ class CometLibraryImageAdmin(admin.StackedInline):
                 'notes'
             ]
         }),
-        #('V1 deprecated', {
-        #    'fields': [
-        #        ('image_type', 'processing_status'), 
-        #        'image_style',
-        #    ]
-        #})
     )
 
 class PlanetObservationAdmin(AbstractObservation):
@@ -78,12 +66,6 @@ class PlanetLibraryImageAdmin(admin.StackedInline):
                 'notes'
             ]
         }),
-        #('V1 deprecated', {
-        #    'fields': [
-        #        ('image_type', 'processing_status'), 
-        #        'image_style',
-        #    ]
-        #})
     )
 #class MoonObservationAdmin(AbstractObservation):
 #    model = MoonObservation
@@ -120,7 +102,6 @@ class AsteroidAdmin(ObservableObjectAdmin):
     list_display_links = ['number', 'name']
     inlines = [AsteroidLibraryImageAdmin, AsteroidObservationAdmin]
     save_on_top = True
-
 
 class CometAdmin(ObservableObjectAdmin):
     model = Comet

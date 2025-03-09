@@ -1,0 +1,47 @@
+{% extends 'edit_base.html' %}
+{% block title %}Skytour - Manage SSO Library Image Panel{% endblock title %}
+{% block content %}
+<style>
+    table.image_form { width: 750px; }
+    img.image_in_list { max-width: 300px; }
+    table.image_form th { height: 20px; }
+    table.image_form td.submit { 
+        height: 30px; 
+        text-align: center;
+    }
+    span.fn { font-size: 12px; }
+    button.submit { width: 20em; }
+    table.subtable td { width: 300px; }
+    table.subsubtable td { border: none; text-align: left; padding-left: 10px; }
+    table.subsubtable { border: none; }
+    table.subsubtable th { background-color: #444; border: 1px solid #cc6; color: #fff; }
+    td.order { text-align: center;}
+    td.delimg { background-color: #600; }
+    span.required { color: #fff; font-size: 80%;}
+</style>
+<h1>Manage {{ sso.name }} Library Images</h1>
+<h2># Images: {{ num_images }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="num_images" value="{{ num_images }}">
+
+    <table class="image_form">
+    {% for item in images %}
+        {% with forloop.counter0 as nimg %}
+        {% include 'include_manage_library_image.html' %}
+        {% endwith %}
+    {% endfor %}
+
+    {% if extra %}
+        {% with 'extra' as nimg %}
+        {% include 'include_manage_library_image.html' %}
+        {% endwith %}
+    {% endif %}
+    <tr>
+        <td class="submit">
+            <button type="submit" class="submit">Save Changes</button>
+        </td>
+    </table>
+
+</form>
+{% endblock content %}

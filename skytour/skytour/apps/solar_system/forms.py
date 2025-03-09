@@ -49,3 +49,29 @@ class TrackerForm(forms.Form):
         c += [('comet--'+ str(x.pk), x.name) for x in comets]
         self.fields['object'].choices = c
 
+class AsteroidEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Asteroid
+        fields = [
+            'diameter',
+            'year_of_discovery',
+            'image',
+            'classification',
+            'description',
+            'always_include',
+            'est_brightest'
+        ]
+
+class CometEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Comet
+        fields = [
+            'status',
+            'mag_offset',
+            'light_curve_url',
+            'light_curve_graph_url',
+            'override_limits',
+            'perihelion_date'
+        ]

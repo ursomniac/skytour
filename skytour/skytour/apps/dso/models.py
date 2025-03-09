@@ -1035,18 +1035,6 @@ class DSOLibraryImage(LibraryAbstractImage):
         related_name = 'image_library'
     )
     ut_datetime = models.DateTimeField()
-
-    @property
-    def caption(self):
-        x = ''
-        if self.telescope is not None:
-            x += f"{self.telescope.name}: "
-        x += self.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
-        if self.exposure is not None:
-            x += f', {self.exposure}min'
-        if self.image_processing_status not in [None, 'None']:
-            x += f', {self.get_image_processing_status_display()}'
-        return x
     
     def __str__(self):
         return self.object.shown_name

@@ -1,16 +1,25 @@
 import datetime, pytz, time
-from dateutil.parser import isoparse
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
+from django.shortcuts import get_object_or_404
 from ..abstract.utils import get_real_time_conditions
+from ..abstract.vocabs import (
+    IMAGE_CROPPING_OPTIONS, 
+    IMAGE_ORIENTATION_CHOICES, 
+    IMAGE_PROCESSING_STATUS_OPTIONS
+)
+from ..astro.time import get_datetime_from_strings
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
+from ..tech.models import Telescope
 from ..utils.timer import compile_times
-from .forms import TrackerForm
+from .forms import TrackerForm, AsteroidEditForm, CometEditForm
 from .helpers import compile_nearby_planet_list
-from .models import Comet, Planet, Asteroid
+from .models import Comet, Planet, Asteroid, CometLibraryImage, AsteroidLibraryImage, PlanetLibraryImage
 from .pdf import get_rise_set
 from .planets import get_ecliptic_positions
 from .plot import (
@@ -30,7 +39,6 @@ from .utils import (
     get_fov,
     get_mag_limit
 )
-from .vocabs import PLANET_COLORS
 
 class PlanetListView(CookieMixin, ListView):
     model = Planet 
@@ -110,7 +118,11 @@ class PlanetDetailView(CookieMixin, DetailView):
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
-        context['library_slideshow'] = obj.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        #slideshow = obj.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        slideshow = obj.image_library.order_by('order_in_list')
+        print("SLIDESHOW: ", slideshow)
+        context['library_slideshow'] = slideshow
+        
         context['instance'] = obj
         context['times'] = compile_times(times)
         return context
@@ -186,37 +198,13 @@ class AsteroidDetailView(CookieMixin, DetailView):
         # Track performance
         times = [(time.perf_counter(), 'Start')]
         object = self.get_object()
-        planets_cookie = context['cookies']['planets']
-        asteroid_cookie = context['cookies']['asteroids']
-        reversed = context['color_scheme'] == 'dark'
-        utdt_start = context['utdt_start']
         pdict = get_asteroid_from_cookie(context['cookies'], object)
         context['asteroid'] = pdict
-
-        foo = """
-        if asteroid_cookie: # This is so you COULD go to an page for something not in the cookie
-            for c, sc, mm in [
-                ('finder_chart', 2., 11.), 
-                ('large_scale_map', 10., 9.)
-            ]:
-                context[c], times = create_finder_chart (
-                    utdt_start, 
-                    object,
-                    planets_cookie=planets_cookie,
-                    asteroids=asteroid_cookie,
-                    object_type = 'asteroid',
-                    obj_cookie = pdict,
-                    fov=sc, 
-                    reversed = reversed,
-                    mag_limit=mm, 
-                    sun = context['cookies']['sun'],
-                    moon = context['cookies']['moon'],
-                    show_dsos = False,
-                    times=times
-                )
-        """
         context['in_cookie'] = True if pdict else False
-        context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        slideshow = object.image_library.order_by('order_in_list')
+        context['library_slideshow'] = slideshow
+        #slideslow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['times'] = compile_times(times)
         return context
 
@@ -258,10 +246,7 @@ class CometDetailView(CookieMixin, DetailView):
         context = super(CometDetailView, self).get_context_data(**kwargs)
         # Track performance
         times = [(time.perf_counter(), 'Start')]
-        reversed = context['color_scheme'] == 'dark'
         object = self.get_object()
-        planets = context['cookies']['planets']
-        asteroids = context['cookies']['asteroids']
         comets = context['cookies']['comets']
         pdict = None
         for c in comets:
@@ -276,43 +261,9 @@ class CometDetailView(CookieMixin, DetailView):
         # TODO V2: if pdict is None then it's not in the cookie.
         # Figure out how to add things from that
         context['comet'] = pdict
-
-        foo = """
-        if pdict:
-            context['finder_chart'], times = create_finder_chart (
-                context['utdt_start'],
-                object,
-                planets,
-                asteroids,
-                object_type = 'comet',
-                obj_cookie = pdict,
-                fov = 4.,
-                reversed = reversed,
-                mag_limit = 11.,
-                sun = context['cookies']['sun'],
-                moon = context['cookies']['moon'],
-                show_dsos=False,
-                times=times
-            )
-            times.append((time.perf_counter(), 'Finished Narrow Finder Chart'))
-            context['large_scale_map'], times = create_finder_chart (
-                context['utdt_start'],
-                object,
-                planets,
-                asteroids,
-                object_type = 'comet',
-                obj_cookie = pdict,
-                fov = 10.,
-                reversed = reversed,
-                mag_limit = 9.,
-                sun = context['cookies']['sun'],
-                moon = context['cookies']['moon'],
-                show_dsos=False,
-                times=times
-            )
-            times.append((time.perf_counter(), 'Finished Wide Finder Chart'))
-        """
-        context['library_slideshow'] = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        slideshow = object.image_library.order_by('order_in_list')
+        context['library_slideshow'] = slideshow
         context['times'] = compile_times(times)
         return context
 
@@ -508,3 +459,149 @@ class SSOMapView(CookieMixin, TemplateView):
         context['mag_limit'] = mag_limit
         context['times'] = compile_times(times)
         return context
+    
+class SSOManageLibraryImagePanelView(TemplateView):
+    template_name = 'manage_sso_library_image_panel.html'
+    MODELS = {'planet': Planet, 'comet': Comet, 'asteroid': Asteroid}
+    LIBRARY = {'planet': PlanetLibraryImage, 'comet': CometLibraryImage, 'asteroid': AsteroidLibraryImage}
+
+    def post(self, request, *args, **kwargs):
+        def haz(x): # All the ways something isn't something
+            return x not in [None, 'None', '']
+        def nodash(x):
+            return x.replace('-','').strip() == 0
+
+        object_type = self.kwargs['object_type']
+        mymodel = self.MODELS[object_type]
+        library = self.LIBRARY[object_type]
+        sso = get_object_or_404(mymodel, pk=self.kwargs['pk'])
+
+        if request.method == "POST":
+
+            # how many existing images are there to process?
+            num_items = request.POST.get('num_images', "0")
+
+            # These are the simpler fields on the form for each image
+            keys = ['pk', 'order', 'utdate', 'uttime','exptime', 'telescope', 'proc', 'orientation', 'crop']
+            # create an index for every object in the form - including "extra"
+            indexes = [str(x) for x in range(int(num_items))] + ['extra']
+
+            # loop through every object on the form
+            for n in indexes:
+                op = None
+                vals = {} # Store all the .get() values in here
+                for k in keys: # do the easy ones first
+                    name = f"form-{n}-{k}"
+                    vals[k] = request.POST.get(name, None)
+                # deal with the other fields
+                vals['image'] = request.FILES.get(f"form-{n}-image", None)
+                vals['delete'] = request.POST.get(f"form-{n}-delete", 'off') == 'on'
+
+                # Toss things if not complete
+                if n != 'extra' and vals['pk'] is None: # I needed a PK!
+                    print("No PK found for updating image.")
+                    continue
+
+                # Get the DSOLibrary object or create one
+                if n != 'extra': # This is an UPDATE - get the instance
+                    img_object = library.objects.filter(pk=int(vals['pk'])).first()
+                    if img_object is None: # didn't find it
+                        print("Could not find image to update")
+                        continue
+                    # If this is a DELETE operation - do it now
+                    if vals['delete']:
+                        print("DELETEING image")
+                        img_object.delete()
+                        continue
+                    op = 'UPDATE'
+
+                else: # This is an INSERT operation - create a new instance!
+                    img_object = library()
+                    img_object.object_id = sso.pk  # set the parent DSO
+                    op = 'CREATE'
+                
+                # OK - fill in the fields!
+                img_object.use_as_map = 1
+                img_object.use_in_carousel = 0
+
+                # image order
+                if haz(vals['order']):
+                    order_val = int(vals['order'])
+                else:
+                    order_val = 0
+                img_object.order_in_list = order_val
+
+                # the image itself
+                # If an image isn't added, skip it
+                # This is the case if you DIDN'T add a new image, and only edited the other ones
+                if vals['image'] is not None: 
+                    img_object.image = vals['image']
+                else:
+                    if op == 'CREATE': # No image to upload
+                        continue
+
+                # deal with date/time (two fields on the form map to a datetime object)
+                new_dt = get_datetime_from_strings(vals['utdate'], vals['uttime'])
+                if new_dt is not None:
+                    img_object.ut_datetime = new_dt
+
+                # deal with exposure time (float)
+                if haz(vals['exptime']):
+                    exptime = float(vals['exptime'])
+                    img_object.exposure = exptime
+
+                # deal with Telescope FK
+                if haz(vals['telescope']) and nodash(vals['telescope']):
+                    tel_id = int(vals['telescope'])
+                    img_object.telescope_id = tel_id
+
+                # the others are all strings... so they're straightforward
+                if haz(vals['proc']) and nodash(vals['proc']):
+                    img_object.image_processing_status = vals['proc']
+                if haz(vals['orientation']) and nodash(vals['orientation']):
+                    img_object.image_orientation = vals['orientation']
+                if haz(vals['crop']) and nodash(vals['crop']):
+                    img_object.image_cropping = vals['crop']
+
+                print("READY TO SAFE: ", vals)
+                img_object.save()
+
+        # Go back to the parent DSO Detail page with the updated panel!
+        path = f"{object_type}-detail"
+        if object_type == 'comet':
+            return HttpResponseRedirect(reverse(path, kwargs={'pk': sso.pk}))
+        return HttpResponseRedirect(reverse(path, kwargs={'slug': sso.slug}))
+
+
+    def get_context_data(self, **kwargs):
+        context = super(SSOManageLibraryImagePanelView, self).get_context_data(**kwargs)
+        pk = self.kwargs['pk']
+        object_type = self.kwargs['object_type']
+        mymodel = self.MODELS[object_type]
+        sso = get_object_or_404(mymodel, pk=pk)
+        image_list = sso.image_library.order_by('order_in_list')
+        context['sso'] = sso
+        context['images'] = image_list
+        context['num_images'] = image_list.count()
+        context['extra'] = True
+        context['telescopes'] = Telescope.objects.all()
+        context['orientations'] = IMAGE_ORIENTATION_CHOICES
+        context['croppings'] = IMAGE_CROPPING_OPTIONS
+        context['procstats'] = IMAGE_PROCESSING_STATUS_OPTIONS
+        return context
+    
+class AsteroidEditView(UpdateView):
+    form_class = AsteroidEditForm
+    model = Asteroid
+    template_name = 'edit_asteroid.html'
+
+    def get_success_url(self):
+        return reverse_lazy('asteroid-detail', kwargs={'pk', self.object.slug})
+
+class CometEditView(UpdateView):
+    form_class = CometEditForm
+    model = Comet
+    template_name = 'edit_comet.html'
+
+    def get_success_url(self):
+        return reverse_lazy('comet-detail', kwargs={'pk': self.object.pk})
