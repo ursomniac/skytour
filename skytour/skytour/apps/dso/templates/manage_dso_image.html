@@ -1,0 +1,95 @@
+{% extends 'edit_base.html' %}
+{% block content %}
+<style>
+    table.image_form { width: 600px; }
+    img.image_in_list { max-width: 300px; }
+    table.image_form th { height: 20px; }
+    table.image_form td.submit { 
+        height: 30px; 
+        text-align: center;
+    }
+
+    span.fn { font-size: 10px; }
+    button.submit { width: 20em; }
+    table.subtable td { width: 300px; }
+    td.order { text-align: center;}
+</style>
+<h1>Manage Images for {{ dso.shown_name }}</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="num_images" value="{{ num_images }}">
+
+    <table class="image_form">
+    {% for item in images %}
+        {% with forloop.counter0 as nimg %}
+        <tr>
+            <input type="hidden" name="form-{{ nimg }}-pk" value="{{ item.pk }}">
+            <th><label for="id-{{ nimg }}"> Image {{ forloop.counter }}:</label></th>
+        </tr>
+        <tr>
+            <td>
+                <table class="subtable">
+                    <tr>
+                        <td colspan=2>
+                        <b>Currently:</b> 
+                        <span class="fn">{{ item.image }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                        <b>Change:</b>
+                        <input 
+                            type="file" 
+                            name="form-{{ nimg }}-image" 
+                            accept="image/*" id="id-{{ nimg }}-image"
+                        />
+                        </td>
+                    </tr>
+                        <td rowspan=2>
+                        <img src="{{ item.image.url }}" class="image_in_list" />
+                        </td>
+                        <td class="order">
+                        <b>Order in List:</b>&nbsp;&nbsp;
+                        <input size=3 name="form-{{ nimg }}-order" value="{{ item.order_in_list }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="order">
+                        <b>Delete:</b>
+                        <input type="checkbox" name="form-{{ nimg }}-delete"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {% endwith %}
+    {% endfor %}
+    {% if extra %}
+    <tr>
+        <th><label for="id-{{ nimg }}">Add New Image:</label></th>
+    </tr>
+    <tr>
+        <td>
+            <br>
+            &nbsp;&nbsp;&nbsp;
+            Image: 
+            <input 
+                type="file" 
+                name="form-new-image" 
+                accept="image/*" id="id-new-image"
+            >
+            <br><br>&nbsp;&nbsp;&nbsp;
+            <b>Order in List:</b>
+            <input name='form-new-order' size=3>
+            <br><br>
+        </td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td class="submit">
+            <button type="submit" class="submit">Save Changes</button>
+        </td>
+    </table>
+
+</form>
+{% endblock content %}

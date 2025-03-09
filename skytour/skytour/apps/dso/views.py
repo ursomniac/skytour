@@ -3,8 +3,9 @@ from dateutil.parser import isoparse
 
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
+from django.forms import formset_factory, modelformset_factory
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
@@ -24,12 +25,12 @@ from .forms import (
     DSOAddForm, 
     DSOListCreateForm, 
     DSOListEditForm,
-    DSOMetadataForm
+    DSOMetadataForm,
 )
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
-from .models import DSO, DSOList, AtlasPlate
+from .models import DSO, DSOList, AtlasPlate, DSOImage
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import (
@@ -562,5 +563,58 @@ class DSOEditMetadataView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(DSOEditMetadataView, self).get_context_data(**kwargs)
         context['dso'] = self.get_object()
-        print("GOT HERE! DSO: ", context['dso'])
+        return context
+
+class DSOManageImageView(TemplateView):
+    template_name = "manage_dso_image.html"
+    model = DSO
+    
+    def post(self, request, *args, **kwargs):
+        dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
+        if request.method == 'POST':
+            num_items = request.POST.get('num_images', "0")
+            for n in range(int(num_items)):
+                # Image - can be None if the file isn't changing!
+                image_name = f"form-{n}-image"
+                image_value = request.FILES.get(image_name, None)
+                # Order in list
+                order_name = f"form-{n}-order"
+                image_pk = f"form-{n}-pk"
+                pk_value = request.POST.get(image_pk, None)
+                order_value = int(request.POST.get(order_name, 0))
+                delete_name = f"form-{n}-delete"
+                delete_value = request.POST.get(delete_name, 'off') == 'on'
+                # update fields
+                if pk_value is None:
+                    continue
+                exist = DSOImage.objects.filter(pk=int(pk_value)).first()
+                if not exist:
+                    continue
+                if not delete_value:
+                    exist.order_in_list = order_value
+                    if image_value is not None:
+                        exist.image = image_value
+                    exist.save()
+                else: # delete
+                    exist.delete()
+            extra_name = "form-new-image"
+            extra_name_value = request.FILES.get(extra_name)
+            extra_order = "form-new-order"
+            extra_order_value = request.POST.get(extra_order, 0)
+            if extra_name_value is not None:
+                new = DSOImage()
+                new.object_id = dso.pk
+                new.order_in_list = int(extra_order_value)
+                new.image = extra_name_value
+                new.save()
+        return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOManageImageView, self).get_context_data(**kwargs)
+        pk = self.kwargs['pk']
+        dso = get_object_or_404(DSO, pk=pk)
+        context['dso'] = dso
+        context['images'] = dso.images.all()
+        context['num_images'] = dso.images.count()
+        context['extra'] = True
         return context

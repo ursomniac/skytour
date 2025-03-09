@@ -82,6 +82,13 @@
 	.object-metadata { font-weight: bold; color: #ff9; }
 	div.conditions { padding: 5px; border: 1px solid #ccc; }
 	button.op { width: 12em; }
+	td.edit_images {
+		vertical-align: middle;
+		background-color: #900;
+		text-align: center;
+	}
+	td.edit_images button { width: 20em; height: 20px; }
+	td.indented { background-color: #666; padding-left: 20px; }
 </style>
 {% endblock styles %}
 
@@ -505,35 +512,47 @@
 </tr>
 </table>
 
-{% if image_list.0 %}
 <table>
-<tr><td colspan="6"><h2>Images</h2></td></tr>
-<tr class="bottom">
-
-	<td class="dso_image" colspan=2 style="width:33%;">
-		{% if object.images.all.0 %}
-		<a href="{{ image_list.0.image.url}}" target="_blank">
-		<img src="{{ image_list.0.image.url }}" width=100%>
-		</a>
-		{% endif %}
+<tr>
+	<td colspan="5" class="indented">
+		<h2>Uploaded Images</h2>
 	</td>
-	<td class="dso_image" colspan=2 style="width:33%;">
-		{% if image_list.1 %}
-		<a href="{{ image_list.1.image.url}}" target="_blank">
-		<img src="{{ image_list.1.image.url }}" width=100%>
+	<td class="edit_images">
+		<a href="{% url 'dso-manage-image' object.pk %}">
+			<button>Manage Images</button>
 		</a>
-		{% endif %}
-	</td>
-	<td class="dso_image" colspan=2 style="width=33%;">
-		{% if image_list.2 %}
-		<a href="{{ image_list.2.image.url}}" target="_blank">
-		<img src="{{ image_list.2.image.url }}" width=100%>
-		</a>
-		{% endif %}
 	</td>
 </tr>
-</table>
+{% if image_list|length > 0 %}
+	{% for image in image_list %}
+		{% if forloop.counter0|divisibleby:3 %}
+		<tr class="bottom">
+		{% endif %}
+			<td class="dso_image" colspan=2 style="width:33%">
+				<a href="{{ image.image.url}}" target="_blank">
+					<img src="{{ image.image.url }}" width=100%>
+				</a>
+			</td>
+		{% if forloop.counter|divisibleby:3 %}
+		</tr>
+		{% endif %}
+	{% endfor %}
+	{% if image_list|length|modulo:3 == 1 %} {# clear out row #}
+			<td colspan=2 style="width:33%">&nbsp;</td>
+			<td colspan=2 style="width:33%">&nbsp;</td>
+		</tr>
+	{% elif image_list|length|modulo:3 == 2 %} {# clear out row#}
+			<td colspan=2 style="width:33%">&nbsp;</td>
+		</tr>
+	{% endif %}
+{% else %} {# oops = no images #}
+<tr>
+	<td colspan=6>
+		(No uploaded images.  Use "Manage Images" to add some.)
+	</td>
+</tr>
 {% endif %}
+</table>
 
 {# include 'includes/performance_time.html' #}
 {% include 'includes/multiple_slideshows.html' %}

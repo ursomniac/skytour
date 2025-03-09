@@ -184,3 +184,7 @@ def mode_priority_span(d, mode='S'):
     val = VALS[pri]
     out = f'<span style="color: {color}">{val} - {pri}</span>'
     return mark_safe(out)
+
+@register.filter(name='modulo')
+def modulo(num, val):
+    return num % val

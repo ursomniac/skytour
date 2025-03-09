@@ -1015,6 +1015,7 @@ class DSOImage(LibraryAbstractImage):
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
+        ordering = ['order_in_list']
 
 class DSOLibraryImage(LibraryAbstractImage):
     """
