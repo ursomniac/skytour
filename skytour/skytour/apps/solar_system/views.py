@@ -17,9 +17,16 @@ from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..tech.models import Telescope
 from ..utils.timer import compile_times
-from .forms import TrackerForm, AsteroidEditForm, CometEditForm
+from .forms import (
+    TrackerForm, AsteroidEditForm, CometEditForm,
+    PlanetObservationEditForm, AsteroidObservationEditForm, CometObservationEditForm
+)
 from .helpers import compile_nearby_planet_list
-from .models import Comet, Planet, Asteroid, CometLibraryImage, AsteroidLibraryImage, PlanetLibraryImage
+from .models import (
+    Comet, Planet, Asteroid, 
+    CometLibraryImage, AsteroidLibraryImage, PlanetLibraryImage,
+    CometObservation, AsteroidObservation, PlanetObservation, 
+)
 from .pdf import get_rise_set
 from .planets import get_ecliptic_positions
 from .plot import (
@@ -605,3 +612,48 @@ class CometEditView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('comet-detail', kwargs={'pk': self.object.pk})
+    
+class PlanetObservationEditView(UpdateView):
+    model = PlanetObservation
+    form_class = PlanetObservationEditForm
+    template_name = 'ssoobservation_edit.html'
+    
+    def get_success_url(self):
+        object = self.object
+        return reverse_lazy('session-detail', kwargs={'pk': object.session.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super(PlanetObservationEditView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['parent'] = object.object
+        return context
+    
+class AsteroidObservationEditView(UpdateView):
+    model = AsteroidObservation
+    form_class = AsteroidObservationEditForm
+    template_name = 'ssoobservation_edit.html'
+    
+    def get_success_url(self):
+        object = self.object
+        return reverse_lazy('session-detail', kwargs={'pk': object.session.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super(AsteroidObservationEditView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['parent'] = object.object
+        return context
+    
+class CometObservationEditView(UpdateView):
+    model = CometObservation
+    form_class = CometObservationEditForm
+    template_name = 'ssoobservation_edit.html'
+    
+    def get_success_url(self):
+        object = self.object
+        return reverse_lazy('session-detail', kwargs={'pk': object.session.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super(CometObservationEditView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['parent'] = object.object
+        return context

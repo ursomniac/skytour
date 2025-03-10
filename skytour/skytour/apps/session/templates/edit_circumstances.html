@@ -1,0 +1,32 @@
+{% extends 'edit_base.html' %}
+{% block title %}Skytour - Edit Obs. Circumstances{% endblock title %}
+{% block content %}
+<style>
+    table.edit_form { width: 800px; }
+    th { height: 20px; background-color: #cc6; width: 50%; }
+    td.close { background-color: #900; }
+    .helptext { font-size: 80%; color: #999; }
+    span.fn { font-size: 10px; }
+    span.sublabel {
+        color: #ff9;
+        font-size: 80%;
+        font-weight: bold;
+    }
+</style>
+
+<h1>Edit Curcumstances</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="edit_form">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_table }}
+        <tr>
+            <td colspan=2 class="submit">
+                <button type="submit" class="submit">Save Changes</button>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock content %}

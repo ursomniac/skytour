@@ -3,6 +3,7 @@ from .views import (
     ObservingPlanView,
     SetSessionCookieView,
     ObservingCircumstancesView,
+    ObservingCircumstancesEditView,
     ObservingConditionsFormView,
     ObservingSessionListView, 
     ObservingSessionCreateView,
@@ -20,5 +21,6 @@ urlpatterns = (
     path('create', ObservingSessionCreateView.as_view(), name='session-create'),
     path('add_object', SessionAddView.as_view(), name='session-add'),
     path('add_conditions', ObservingConditionsFormView.as_view(), name='session-conditions'),
-    path('circumstances', ObservingCircumstancesView.as_view(), name='observing-circumstnaces'),
+    path('circumstances', ObservingCircumstancesView.as_view(), name='observing-circumstances'),
+    path('circumstances/edit/<int:pk>', ObservingCircumstancesEditView.as_view(), name='condition-edit'),
 )

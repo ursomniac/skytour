@@ -1,9 +1,8 @@
 from django import forms
-from django.forms.models import inlineformset_factory
-from .models import DSOList, DSO, DSOImage
+from .models import DSOList, DSO, DSOObservation
 from ..abstract.vocabs import YES_NO, YES, NO
 from ..utils.models import ObjectType
-from .vocabs import PRIORITY_CHOICES, DISTANCE_UNIT_CHOICES
+from .vocabs import PRIORITY_CHOICES
 
 class DSOFilterForm(forms.Form):
     ra_min = forms.FloatField(required=False)
@@ -81,3 +80,8 @@ class DSOMetadataForm(forms.ModelForm):
             'other_parameters',
             'notes'
         ]
+
+class DSOObservationEditForm(forms.ModelForm):
+    class Meta:
+        model = DSOObservation
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']

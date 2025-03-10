@@ -19,6 +19,7 @@
     }
     h3 { color: #cc0; }
     h4 { color: #cc0; }
+    span.edit-button { float: right; }
 </style>
 {% endblock styles %}
 
@@ -58,6 +59,7 @@
 <h3>&nbsp;# Objects: {{ object.number_objects_observed }}</h3>
 <table class="boxed">
 {% for target in object.session_observations %}
+
 {% with e=target.observation_metadata %}
 <tr class="{% cycle 'odd' 'even' %}">
     <td width="20%">
@@ -167,6 +169,23 @@
         {% endif %}
     </td>
     <td>
+        <span class="edit-button">
+        {% with target.object_type|lower as class %}
+            {% if class == 'dso' %}
+            <a href="{% url 'dso-observe-edit' target.pk %}"><button>Edit Observation</button></a>
+            {% elif class == 'planet' %}
+            <a href="{% url 'planet-observe-edit' target.pk %}"><button>Edit Observation</button></a>
+            {% elif class == 'comet' %}
+            <a href="{% url 'comet-observe-edit' target.pk %}"><button>Edit Observation</button></a>
+            {% elif class == 'asteroid' %}
+            <a href="{% url 'asteroid-observe-edit' target.pk %}"><button>Edit Observation</button></a>
+            {% elif class == 'condition' %}
+            <a href="{% url 'condition-edit' target.pk %}"><button>Edit Conditions</button></a>
+            {% else %}
+            Got here with class {{ class }}.
+            {% endif %}
+        {% endwith %}
+        </span><br>
         <h4>Notes:</h4>
         {{ target.notes|linebreaks }}
     </td>

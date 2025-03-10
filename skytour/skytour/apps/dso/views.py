@@ -5,7 +5,7 @@ from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -32,11 +32,12 @@ from .forms import (
     DSOListCreateForm, 
     DSOListEditForm,
     DSOMetadataForm,
+    DSOObservationEditForm
 )
 from .geo import get_circle_center
 from .helpers import get_map_parameters, get_star_mag_limit
 from .mixins import AvailableDSOMixin
-from .models import DSO, DSOList, AtlasPlate, DSOImage, DSOLibraryImage
+from .models import DSO, DSOList, AtlasPlate, DSOImage, DSOLibraryImage, DSOObservation
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import (
@@ -773,4 +774,19 @@ class DSOManageLibraryImagePanelView(TemplateView):
         context['orientations'] = IMAGE_ORIENTATION_CHOICES
         context['croppings'] = IMAGE_CROPPING_OPTIONS
         context['procstats'] = IMAGE_PROCESSING_STATUS_OPTIONS
+        return context
+    
+class DSOObservationEditView(UpdateView):
+    model = DSOObservation
+    form_class = DSOObservationEditForm
+    template_name = 'dsoobservation_edit.html'
+    
+    def get_success_url(self):
+        object = self.object
+        return reverse_lazy('session-detail', kwargs={'pk': object.session.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super(DSOObservationEditView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['dso'] = object.object
         return context

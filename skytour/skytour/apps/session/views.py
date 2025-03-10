@@ -1,17 +1,16 @@
 import datetime, pytz
 import io
-import math
 import numpy as np
 import pandas as pd
 import time
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.views.generic.list import ListView
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -20,7 +19,7 @@ from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date, utc_round_up_minutes
 from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
-from ..dso.models import DSOObservation, DSO
+from ..dso.models import DSOObservation
 from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.helpers import ( 
@@ -31,7 +30,7 @@ from ..solar_system.helpers import (
 from ..solar_system.models import (
     Asteroid, AsteroidObservation,
     Comet, CometObservation,
-    Planet, PlanetObservation,
+    PlanetObservation,
     MoonObservation
 )
 from ..solar_system.position import get_object_metadata
@@ -409,3 +408,12 @@ class ObservingCircumstancesView(ListView):
         sqm_bins = np.linspace(20.0, 22.0, num=21)
         sqm_y, sqm_x = np.histogram(df['sqm'][~np.isnan(df['sqm'])], bins=sqm_bins)
         return context
+
+class ObservingCircumstancesEditView(UpdateView):
+    model = ObservingCircumstances
+    template_name = 'edit_circumstances.html'
+    form_class = ObservingConditionsForm
+
+    def get_success_url(self):
+        object = self.get_object()
+        return reverse_lazy('session-detail', kwargs={'pk': object.session.pk })

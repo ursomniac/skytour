@@ -1,7 +1,10 @@
 import datetime
 from django import forms
 from ..astro.time import utc_now
-from .models import Asteroid, Planet, Comet
+from .models import (
+    Asteroid, Planet, Comet,
+    AsteroidObservation, PlanetObservation, CometObservation
+)
 from .vocabs import STATUS_CHOICES, BACKGROUND_CHOICES
 
 
@@ -75,3 +78,18 @@ class CometEditForm(forms.ModelForm):
             'override_limits',
             'perihelion_date'
         ]
+
+class AsteroidObservationEditForm(forms.ModelForm):
+    class Meta:
+        model = AsteroidObservation
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+
+class CometObservationEditForm(forms.ModelForm):
+    class Meta:
+        model = CometObservation
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+
+class PlanetObservationEditForm(forms.ModelForm):
+    class Meta:
+        model = PlanetObservation
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']

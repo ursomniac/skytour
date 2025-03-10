@@ -132,22 +132,10 @@
         {% with 'comet' as object_type %}
         {% include 'inc_slideshow_panel.html' %}
         {% endwith %}
-        {% comment %}
-        <td width="500px" height="600px" style="position:relative;">
-            {% if library_slideshow|length > 1 %}
-            {% include "includes/library_slideshow.html" %}
-            {% elif object.library_image %}
-            <a href="{{ object.library_image.image.url }}"><img 
-                src="{{ object.library_image.image.url }}" class="constrained"></a>
-            {% else %}
-            <p class='hvcenter'>No Image</p>
-            {% endif %}
-        </td>
-        {% endcomment %}
     </tr>
 </table>
 
-{% with instance=object admin_dir='solar_system/comet' %}
+{% with instance=object admin_dir='/comet' %}
 {% include 'includes/observation_section.html' %}
 {% endwith %}
 

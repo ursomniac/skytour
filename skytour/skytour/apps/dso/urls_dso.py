@@ -14,7 +14,8 @@ from .views import (
     DSOSearchView,
     DSOEditMetadataView,
     DSOManageExternalImageView,
-    DSOManageLibraryImagePanelView
+    DSOManageLibraryImagePanelView,
+    DSOObservationEditView
 )
 urlpatterns = (
     path('', DSOListView.as_view(), name='dso-list'),
@@ -25,6 +26,7 @@ urlpatterns = (
     path('list/adjustlist/<str:op>/<int:pk>', DSOAdjustDSOListView.as_view(), name='dsolist-adjust'),
     path('list/dsoactive', DSOListActiveView.as_view(), name='dsolist-active'),
     path('list', DSOListListView.as_view(), name='dsolist-list'),
+    path('observation/edit/<int:pk>', DSOObservationEditView.as_view(), name='dso-observe-edit'),
     path('observe', DSOObservationLogView.as_view(), name='dso-observed'),
     path('real-time/<int:pk>', DSORealTimeView.as_view(), name='dso-real-time'),
     path('search', DSOSearchView.as_view(), name='dso-name-search'),
