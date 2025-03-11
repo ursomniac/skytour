@@ -3,6 +3,8 @@ import io
 import numpy as np
 import pandas as pd
 import time
+
+from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
@@ -41,6 +43,7 @@ from .forms import (
     ObservingConditionsForm,
     ObservingParametersForm, 
     PDFSelectForm, 
+    PlanSelectForm,
     SessionAddForm,
 )
 from .mixins import CookieMixin
@@ -49,7 +52,6 @@ from .pdf import run_pdf
 from .plan import get_plan
 from .utils import get_initial_from_cookie, get_observing_mode_string
 
-#@method_decorator(cache_page(0), name='dispatch')
 class SetSessionCookieView(FormView):
     form_class = ObservingParametersForm
     template_name = 'observing_parameters.html'
@@ -61,7 +63,6 @@ class SetSessionCookieView(FormView):
         return initial
 
     def get(self, request, *args, **kwargs):
-        WINDOW = 15 # 0, 15, 30, 45 = interval for "now" UT for form
         form = self.get_form(self.get_form_class())
         context = self.get_context_data(**kwargs)
         context['form'] = form
@@ -123,13 +124,14 @@ class SetSessionCookieView(FormView):
         times.append((time.perf_counter(), f'Got Asteroids'))
 
         # Comets
-        comet_list, times = get_comet_positions(
+        comet_list, ctimes = get_comet_positions(
             utdt_start, 
             #location=my_location,  # This slows it down by 10x
             times=times
         )
         context['comets'] = comet_list
         self.request.session['comets'] = comet_list
+        times += ctimes
         times.append((time.perf_counter(), 'Got Comets'))
 
         # Twilight
@@ -189,22 +191,48 @@ class SetSessionCookieView(FormView):
         return context
 
 @method_decorator(cache_page(0), name='dispatch')
-class ObservingPlanView(CookieMixin, FormView):
-    template_name = 'observing_plan.html'
-    form_class = PDFSelectForm
+class ObservingPlanV2View(CookieMixin, FormView):
+    template_name = 'observing_plan_v2.html'
+    form_class = PlanSelectForm
 
-    def get_context_data(self, **kwargs):
-        context = super(ObservingPlanView, self).get_context_data(**kwargs)
-        context = get_plan(context)
-        local_time = context['local_time_start']
-        ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
-        context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
-        context['now'] = datetime.datetime.now(datetime.timezone.utc)
-        context['form'] = PDFSelectForm()
-        return context
+    def get_asteroids(self):
+        alist = self.request.session.get('asteroids', None) # list of dicts
+        aslugs = [x['slug'] for x in alist]
+        asteroids = Asteroid.objects.filter(slug__in=aslugs)
+        return asteroids
 
+    def get_comets(self):
+        clist = self.request.session.get('comets', None) # list of dicts
+        cpks = [x['pk'] for x in clist]
+        comets = Comet.objects.filter(pk__in=cpks)
+        return comets
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['asteroids'] = self.get_asteroids()
+        initial['comets'] = self.get_comets()
+        return initial
+    
+    def post(self, request, *args, **kwargs):
+        form = PlanSelectForm(
+            request.POST, 
+            asteroids=self.get_asteroids(), 
+            comets=self.get_comets()
+        )
+        if form.is_valid(): 
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+    
+    def form_invalid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        print("FORM IS INVALID")
+        print("ERRORS: ", form.errors)
+        context['form'] = form
+        return self.render_to_response(context)
+        
     def form_valid(self, form, **kwargs):
-        all = ['skymap', 'zenith', 'planets', 'asteroids', 'comets', 'moon', 'dso_lists', 'dsos']
+        all = ['skymap', 'zenith', 'moon', 'dso_lists']
         context = self.get_context_data(**kwargs)
         d = form.cleaned_data
         opt = d['pages']
@@ -212,17 +240,48 @@ class ObservingPlanView(CookieMixin, FormView):
         skip = list(set(all).difference(opt))
         # Specific fields
         planet_list = d['planets']
+        asteroid_list = d['asteroids']
+        comet_list = d['comets']
         dso_lists = d['dso_lists']
         pages = d['obs_forms']
+
         # Create a PDF file
         buffer = io.BytesIO()
         p = canvas.Canvas(buffer, pagesize=letter)
-        p = run_pdf(p, context, planet_list=planet_list, dso_lists=dso_lists, skip=skip, pages=pages)
+        p = run_pdf(
+            p, 
+            context, 
+            planet_list=planet_list, 
+            asteroid_list=asteroid_list,
+            comet_list=comet_list,
+            dso_lists=dso_lists, 
+            skip=skip, 
+            pages=pages
+        )
         buffer.seek(0)
         if p:
             response = HttpResponse(buffer, content_type='application/pdf')
+            #response['Content-Disposition'] = 'attachment; filename="skytour_plan.pdf"'
             return response
         return self.render_to_response(context)
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super(ObservingPlanV2View, self).get_context_data(**kwargs)
+        local_time = context['local_time_start']
+        ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
+        context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
+        context['now'] = datetime.datetime.now(datetime.timezone.utc)
+        asteroids = self.get_asteroids()
+        comets = self.get_comets()
+
+        if self.request.method == 'GET':
+            context['form'] = PlanSelectForm(asteroids=asteroids, comets=comets)
+
+        elif self.request.method == 'POST':
+            form = PlanSelectForm(self.request.POST, asteroids=asteroids, comets=comets)
+            context['form'] = form
+        return context
 
 class ObservingSessionListView(ListView):
     model = ObservingSession
@@ -260,6 +319,9 @@ class ShowCookiesView(TemplateView):
         return context
 
 class SessionAddView(CookieMixin, FormView):
+    """
+    Add Observation to Observing Session
+    """
     template_name = 'session_add.html'
     success_url = '/session/add_object'
     form_class = SessionAddForm

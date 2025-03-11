@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Observing Plan: Skytour{% endblock %}
+{% block content %}
+<style>
+h2 { color: #cc0; }
+h3 { color: #c90; }
+th { background-color: #c90; color: #000; }
+table.main, table.dsolist, table.form-pick-fields { border: none; }
+table.main td { 
+    vertical-align: top; 
+    border: none; 
+    padding-left: 20px; 
+    padding-right: 20px; 
+}
+table.internal { border: none; }
+table.internal td { border: none; }
+table.internal th { 
+    background-color: #444; color: #fff; 
+    text-align: right;
+    padding-right: 10px; 
+}
+table.dsolist td { border: none; }
+table.form-pick-fields td { border: none; }
+td.submit { background-color: #666; text-align: center;  }
+td.submit input { width: 40em; height: 30px; margin-top: 10px; }
+span.helptext { font-size: 80%; color: #999; }
+span.white { color: #fff; }
+ol li { margin-bottom: 4px; }
+ol li b { color: #fc0; }
+</style>
+
+<table class="main">
+<tr>
+    <td width="40%" id="main-left">
+        <h2>Plan Observations</h2>
+        <h4>Current UT: {{ now|date:"D Y-m-d H:i" }}</h4>
+        <h4>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h4>
+        <h4>Plan Local Time: {{ local_time_str }}</h4>
+
+        <a href="{% url 'zenith-view' %}"><button>Zenith Finding Chart</button></a>
+        <small>(Will run for <b><span style="color: #fff">{{ zenith_time }}</span></b>)</small>
+        <br/><br>
+
+    <table class="internal">
+        <tr><th>Start:</th>
+            <td>{{ utdt_start|date:"D Y M d  H:i"}} UT</td>
+        </tr>
+        <tr><th>Julian Date:</th>
+            <td> {{ julian_date|floatformat:5 }}</td>
+        </tr>
+        <tr><th>Twilight Ends:</th>
+            <td> {{ twilight.end|get_datetime|date:"Y M d H:i" }} UT </td>
+        </tr>
+        <tr><th>Twilight Begins:</th>
+            <td>{{ twilight.begin|get_datetime|date:"Y M d H:i" }} UT</td>
+        </tr>
+    </table>
+
+    <h3>Instructions:</h3>
+
+    <p>Select pages to print (there will be a cover page):
+        <ol>
+            <li><b>Skymap</b> - will print the Skymap for the Cookie UTDT/Location</li>
+            <li><b>Zenith Map</b> - prints an overhead map of the sky at the Cookie
+                UTDT/Location with the magnitudes of the stars - helpful if you
+                want to measure the limiting magnitude.</li>
+            <li><b>Planets</b>, <b>Asteroids</b>, <b>Comets</b> - will print
+                finding charts and metadata for the planets/asteroids/comets selected
+            </li>
+            <li><b>Moon</b> - will print a map of the Moon</li>
+            <li><b>Observing Forms</b> - print blank observing forms where you can log 
+                observations and sketch eyepiece views.</li>
+            <li><b>DSO Lists</b> - select any of the active DSO Lists to print a map
+                with all the DSOs on the list</li>
+            </ol>
+    </td>
+
+    <td width="60%" id=main-right>
+        <h2>Custom Plan PDF</h2>
+        <p>Choose which pages to print.  A full PDF takes about a minute to run.</p>
+
+        <form method="post" target="_new">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+  
+        {% for hidden_field in form.hidden_fields %}
+            {% if hidden_field.errors %}
+            <ul>
+                {% for error in hidden_field.errors %}
+                <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ hidden_field }}
+        {% endfor %}
+  
+        <table class="dsolist">
+            <tr>
+                <td id='form-left' rowspan=3>
+                    <table class='form-pick-fields'>
+                        {% for field in form.visible_fields %}
+                            {% if field.name != 'dso_lists' %}
+                            <tr>
+                                <th>{{ field.label_tag }}</th>
+                                <td>
+                                {% if field.errors %}
+                                    <ul>
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                    {{ field }}
+
+                                {% if field.help_text %}
+                                    <br />
+                                    <span class="helptext">{{ field.help_text }}</span>
+                                {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+            <tr><th>DSO Lists</th></tr>
+            <tr>
+                <td id='form-right'>
+                    {% for field in form.visible_fields %}
+                        {% if field.name == 'dso_lists' %}
+                            {% if field.errors %}
+                            <ul>
+                                {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                            <br /><span class="helptext">{{ field.help_text }}</span>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="submit">
+                    <input type="submit" value="Create PDF">
+                    <br>
+                    <span class="helptext white">
+                    (Generating the full set of PDF pages might take up to a minute to complete.)
+                    </span>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </td>
+</tr>
+</table>
+
+{% endblock %}

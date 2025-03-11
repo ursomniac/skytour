@@ -30,7 +30,6 @@ urlpatterns = [
     path('atlas/', include('skytour.apps.dso.urls_atlas')),
     path('calendar/', include('skytour.apps.misc.urls_calendar')),
     path('catalog/', include('skytour.apps.utils.urls_catalog')),
-    path('checklist', include('skytour.apps.dso.urls_checklist')),
     path('comet/', include('skytour.apps.solar_system.urls_comet')),
     path('constellation/', include('skytour.apps.utils.urls_constellation')),
     path('dso/', include('skytour.apps.dso.urls_dso')),

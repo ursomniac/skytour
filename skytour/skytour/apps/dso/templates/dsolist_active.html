@@ -6,6 +6,11 @@
 
 <h1>Lists of Deep Sky Objects on Active Lists</h1>
 
+<br>
+<button onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
+{% include 'form_dsolist_create.html' %}
+<br>
+
 {% for mylist in dso_lists %}
     <h2>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_new">{{ mylist.name }}</a></h2>
     <h3>{{ mylist.dso.all|length }} DSOs</h3>

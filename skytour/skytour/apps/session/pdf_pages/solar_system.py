@@ -8,8 +8,11 @@ from ...utils.format import to_sex, to_hm, to_dm, to_time
 from .utils import do_line, show_object_table, show_table_header
 from .vocabs import PDICT, PLANET_LIST
 
-FCX = [390, 30, 210, 390, 30, 210, 390, 30, 210, 390]
-FCY = [-45, 130, 130, 130, 310, 310, 310, 490, 490, 490]
+FCX = [390,  30, 210, 390,  30, 210, 390,  30, 210, 390]
+#FCX = [30, 210, 390]
+#FCY = [  0, 180, 180, 180, 360, 360, 360, 540, 540, 540]
+FCY = [  0, 160, 160, 160, 320, 320, 320, 480, 480, 480]
+#FCY = [-45, 130, 130, 130, 310, 310, 310, 490, 490, 490]
 
 def do_planets(p, context):
     utdt = context['utdt_start']
@@ -56,10 +59,9 @@ def do_planets(p, context):
             p.drawString(65, dy, f"{alm['type']}: {isoparse(alm['ut']).strftime('%H:%M')} UT")
             dy -= 15
     p.showPage() # This is page 3
-
     return p
 
-def do_asteroids(p, context):
+def do_asteroids(p, context, asteroid_list=None, debug=False):
     utdt = context['utdt_start']
     cookie_dict = context['cookies']
 
@@ -69,14 +71,24 @@ def do_asteroids(p, context):
     p.setFont('Helvetica', 8)
     y -= 15
 
-    n_asteroids = len(cookie_dict['asteroids'])
+    adict = {}
+    for a in cookie_dict['asteroids']: # This is ANNOYING - but...
+        slug = a['slug']
+        adict[slug] = a
+
+    if asteroid_list is None:
+        aslugs = [x['slug'] for x in cookie_dict['asteroids']]
+        asteroid_list = Asteroid.objects.filter(slug__in=aslugs)
+
+    n_asteroids = asteroid_list.count()
     if n_asteroids > 0:
         na = 0
-        fcy_start = y - n_asteroids * 15
+        fcy_start = 600 # y - n_asteroids * 15
         p, y = show_table_header(p, y)
-        for a in cookie_dict['asteroids']:
-            instance = Asteroid.objects.get(slug=a['slug'])
-            p, y = show_object_table(a, p, y, instance)
+
+        for instance in asteroid_list:
+            a = adict[instance.slug]
+            p, y = show_object_table(a, p, y, instance) 
             # Finder Charts
             if na < 10:
                 aft, _ = create_finder_chart(
@@ -89,16 +101,15 @@ def do_asteroids(p, context):
                     fov=5,
                     reversed = False
                 )
+                #p.drawInlineImage(aft, FCX[na % 3], fcy_start - FCY[na // 3], 180, 180)
                 p.drawInlineImage(aft, FCX[na], fcy_start - FCY[na], 180, 180)
                 na += 1
     else:
         p.drawString(50, y, '(no Asteroids)')
     p.showPage() # This is page 4
-
     return p
 
-
-def do_comets(p, context):
+def do_comets(p, context, comet_list=None, debug=False): 
     cookie_dict = context['cookies']
     utdt = context['utdt_start']
 
@@ -107,19 +118,30 @@ def do_comets(p, context):
     p.drawString(50, y, 'Comets:')
     p.setFont('Helvetica', 8)
     y -= 30
-    
-    n_comets = len(cookie_dict['comets'])
+
+    if comet_list is None:
+        cpks = [x['pk'] for x in cookie_dict['comets']]
+        comet_list = Comet.objects.filter(pk__in=cpks)
+
+    cdict = {}
+    for c in cookie_dict['comets']:
+        pk = c['pk']
+        cdict[pk] = c
+
+    n_comets = comet_list.count()
     nc = 0
     na = 1 # fudge the position of the first finder chart
+
     if n_comets > 0:
-        fcy_start = y - n_comets * 15 - 20
+        fcy_start = 600
         p, y = show_table_header(p, y, xoff=40)
-        for comet in cookie_dict['comets']:
+        
+        for instance in comet_list:
+            comet = cdict[instance.pk]
             bright_enough = comet['observe']['apparent_magnitude'] <= 12.0
             if not bright_enough:
                 continue
             nc += 1
-            instance = Comet.objects.get(pk=comet['pk']) 
             p, y = show_object_table(comet, p, y, instance, xoff=40)
             
             if na < 6:
@@ -133,6 +155,7 @@ def do_comets(p, context):
                     fov=5,
                     reversed = False
                 )
+                #p.drawInlineImage(aft, FCX[na % 3], fcy_start - FCY[na // 3], 180, 180)
                 p.drawInlineImage(aft, FCX[na], fcy_start - FCY[na], 180, 180)
                 na += 1        
     if nc == 0:

@@ -1,4 +1,4 @@
-import time
+import datetime, time
 from django.db.models import Q
 from skyfield.api import load, Star
 from skyfield.constants import GM_SUN_Pitjeva_2005_km3_s2 as GM_SUN
@@ -82,13 +82,15 @@ def get_planet_positions(utdt, location=None):
       planet_dict[p.name] = d
    return planet_dict
 
-def get_visible_asteroid_positions(utdt, location=None, pluto=True):
+def get_visible_asteroid_positions(utdt=None, location=None, pluto=True):
    """
    Get dict of all selected asteroids.
    Asteroids are filtered by magnitude.
    Asteroids with "always_include" set to True are not filtered.  This is generally
    set for the dwarf planets.
    """
+   utdt = datetime.datetime.now(datetime.timezone.utc) if utdt is None else utdt
+   # TODO V2: fix this somehow
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.
@@ -133,10 +135,11 @@ def get_visible_asteroid_positions(utdt, location=None, pluto=True):
          times.append((time.perf_counter(), x['name']))
    return asteroid_list, times
 
-def get_comet_positions(utdt, location=None, times=None):
+def get_comet_positions(utdt=None, location=None, times=None):
    """
    Get positions of selected comets (i.e., those whose status == 1)
    """
+   utdt = datetime.datetime.now(datetime.timezone.utc) if utdt is None else utdt
    mag_limit = find_site_parameter('comet-magnitude-limit', 12.0, 'float')
    comets = Comet.objects.filter(status=1)
    comet_list = []

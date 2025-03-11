@@ -1,5 +1,6 @@
 import datetime
 from django import forms
+from django.db.models import Count
 from ..astro.time import utc_now
 from ..dso.models import DSOList
 from ..dso.vocabs import OBSERVING_MODE_TYPES
@@ -13,6 +14,7 @@ from ..tech.models import Telescope, Eyepiece, Filter
 from ..utils.models import Catalog
 from .models import ObservingSession, ObservingCircumstances
 from .utils import get_observing_locations
+from .vocabs import OBSERVE_TYPES 
 
 GRAPH_COLOR_SCHEME = [
     ('dark', 'DARK: White on Black'),
@@ -76,11 +78,7 @@ class ObservingParametersForm(forms.Form):
 PAGE_CHOICES = [
     ('skymap', 'SkyMap'),
     ('zenith', 'Zenith Map'),
-    ('planets', 'Planets'),
-    ('asteroids', 'Asteroids'),
-    ('comets', 'Comets'),
     ('moon', 'Moon'),
-    ('dsos', 'All DSOs')
 ]
 class PDFSelectForm(forms.Form):
     pages = forms.MultipleChoiceField(
@@ -91,23 +89,65 @@ class PDFSelectForm(forms.Form):
     )
     planets = forms.ModelMultipleChoiceField(
         queryset = Planet.objects.all(),
-        required=False
+        required=False,
     )
-    obs_forms = forms.IntegerField(initial=2)
+
+    obs_forms = forms.IntegerField(
+        label = 'Obs. Forms',
+        initial = 2
+    )
     dso_lists = forms.ModelMultipleChoiceField(
         widget = forms.CheckboxSelectMultiple, 
-        queryset = DSOList.objects.filter(show_on_plan=True),
+        queryset = DSOList.objects.filter(active_observing_list=True),
         required = False,
     )
 
-OBSERVE_TYPES = [
-    ('dso', 'DSO'),
-    ('planet', 'Planet'), 
-    ('asteroid', 'Asteroid'), 
-    ('comet', 'Comet'), 
-    ('moon', 'Moon'), 
-    ('other', 'Other')
-]
+class PlanSelectForm(forms.Form):
+    pages = forms.MultipleChoiceField(
+        widget = forms.CheckboxSelectMultiple, 
+        choices=PAGE_CHOICES,
+        initial = [c[0] for c in PAGE_CHOICES],
+        required=False
+    )
+    planets = forms.ModelMultipleChoiceField(
+        queryset = Planet.objects.all(),
+        required=False,
+        help_text = 'Option+click to select/deselect multiple'
+    )
+    asteroids = forms.ModelMultipleChoiceField(
+        queryset = Asteroid.objects.none(),
+        required=False,
+        help_text = 'Option+click to select/deselect multiple'
+    )
+    comets = forms.ModelMultipleChoiceField(
+        widget = forms.CheckboxSelectMultiple, 
+        queryset = Comet.objects.none(),
+        required=False,
+        help_text = 'Option+click to select/deselect multiple'
+    )
+    obs_forms = forms.IntegerField(
+        initial = 2,
+        label = 'Obs. Forms'
+    )
+    dso_lists = forms.ModelMultipleChoiceField(
+        widget = forms.CheckboxSelectMultiple, 
+        #queryset = DSOList.objects.none() #filter(active_observing_list=True),
+        queryset = DSOList.objects
+            .annotate(ndso=Count('dso'))
+            .filter(active_observing_list=True)
+            .exclude(ndso=0)
+            .order_by('-pk'),
+        required = False
+    )
+
+    def __init__(self, *args, **kwargs):
+        qs_asteroid = kwargs.pop('asteroids', None)
+        qs_comet = kwargs.pop('comets', None)
+        super().__init__(*args, **kwargs)
+        if qs_asteroid:
+            self.fields['asteroids'].queryset = qs_asteroid
+        if qs_comet:
+            self.fields['comets'].queryset = qs_comet
 
 class SessionAddForm(forms.Form):
     # Fill these in from the session cookie OR override

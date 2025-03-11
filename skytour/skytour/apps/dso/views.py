@@ -1,7 +1,7 @@
 import datetime as dt, pytz
 from dateutil.parser import isoparse
 
-from django.db.models import Q, Count
+from django.db.models import Count
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from ..abstract.utils import get_real_time_conditions 
@@ -27,8 +27,6 @@ from ..utils.timer import compile_times
 from .atlas_utils import find_neighbors, assemble_neighbors
 from .finder import plot_dso_list
 from .forms import (
-    DSOFilterForm, 
-    DSOAddForm, 
     DSOListCreateForm, 
     DSOListEditForm,
     DSOMetadataForm,
@@ -50,28 +48,36 @@ from .utils import (
 )
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
 from .utils_checklist import (
-    checklist_form, 
-    checklist_params, 
-    create_new_observing_list,
     filter_dsos, 
     get_filter_params, 
     update_dso_filter_context
 )
 
-# TODO V2: Fix filtering for priority!
-# TODO V2: Add mode considerations!
 class DSOListView(CookieMixin, ListView):
     model = DSO
     template_name = 'dso_list.html'
     context_object_name = 'dso_list'
     paginate_by = 100
 
+    def post(self, request, *args, **kwargs):
+        form = DSOListCreateForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            obj = DSOList()
+            obj.name = d['name']
+            obj.description = d['description']
+            obj.active_observing_list = d['active_observing_list']
+            obj.save()
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(DSOListView, self).get_context_data(**kwargs)
+        context['create_form'] = DSOListCreateForm()
         params = get_filter_params(self.request)
         context = update_dso_filter_context(context, params)
         dso_list = filter_dsos(params, DSO.objects.all())
         context['total_count'] = len(dso_list)
+
         # Deal with Declination
         if 'dec_range' in context.keys():
             try:
@@ -83,17 +89,14 @@ class DSOListView(CookieMixin, ListView):
         # Pagination
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)
+        context['use_mode'] = self.request.GET.get('use_mode', None)
         context['num_on_page'] = num_on_page
         p = Paginator(dso_list, num_on_page)
         this_page = p.page(page_no)
         context['page_obj'] = this_page
         context['dso_list'] = this_page.object_list # Just this page of objects.
         context['is_paginated'] = True
-        # context['dso_count'] = len(context['dso_list'])
         context['table_id'] = 'dso_list'
-        print('context: ', context.keys())
-        print('DEC: ', context['dec_low'], context['dec_high'])
-        print('RANGE: ', context['dec_range'])
         return context
 
 class DSODetailView(CookieMixin, DetailView):
@@ -129,8 +132,20 @@ class DSODetailView(CookieMixin, DetailView):
 class DSOListActiveView (TemplateView):
     template_name = 'dsolist_active.html'
 
+    def post(self, request, *args, **kwargs):
+        form = DSOListCreateForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            obj = DSOList()
+            obj.name = d['name']
+            obj.description = d['description']
+            obj.active_observing_list = d['active_observing_list']
+            obj.save()
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(DSOListActiveView, self).get_context_data(**kwargs)
+        context['create_form'] = DSOListCreateForm()
         context['dso_lists'] = DSOList.objects.filter(active_observing_list=True)
         context['is_dsolist_page'] = True
         return context
@@ -211,42 +226,6 @@ class DSOListDetailView(CookieMixin, DetailView):
         context['object'] = object
         return context
     
-class DSOFilterView(FormView):
-    form_class = DSOFilterForm
-    template_name = 'dso_filter.html'
-
-    def form_valid(self, form, **kwargs):
-        context = self.get_context_data(**kwargs)
-        d = form.cleaned_data
-        context['values'] = d
-        context['completed'] = True
-
-        dso_list = DSO.objects.exclude(priority='None')
-        # Filter on RA, DEC
-        if d['ra_min'] is not None and d['ra_max'] is not None:
-            if d['ra_min'] > d['ra_max']: # crosses 0h
-                dso_list = dso_list.filter(Q(ra__gte=d['ra_min']) | Q(ra__lte=d['ra_max']))
-            else:
-                dso_list = dso_list.filter(ra__gte=d['ra_min'], ra__lte=d['ra_max'])
-        if d['dec_min'] is not None and d['dec_max'] is not None:
-            dso_list = dso_list.filter(dec__gte=d['dec_min'], dec__lte=d['dec_max'])
-        if d['object_type'].count() > 0:
-            dso_list = dso_list.filter(object_type__in=d['object_type'])
-        if len(d['priority']) > 0:
-            dso_list = dso_list.filter(priority__in=d['priority'])
-        if d['mag_max'] is not None:
-            dso_list = dso_list.exclude(magnitude__gte=d['mag_max'])
-        if d['surface_max'] is not None:
-            dso_list = dso_list.exclude(surface_brightness__gte=d['surface_max'])
-        if d['filter_imaged']:
-            unimaged_ids = [d.pk for d in dso_list if d.num_library_images == 0]
-            dso_list = DSO.objects.filter(pk__in=unimaged_ids)
-        context['dso_count'] = dso_list.count()
-        context['dso_found'] = dso_list.order_by('ra')
-        context['add_form'] = DSOAddForm(dso_list)
-        context['table_id'] = 'dso_picker'
-        return self.render_to_response(context)
-
 class DSOCreateList(TemplateView):
 
     def post(self, request):
@@ -347,74 +326,6 @@ class DSOObservationLogView(CookieMixin, ListView):
         context['dso_table'] = 'dsos-observed'
         context['total_count'] = context['dso_list'].count()
         
-        # Pagination
-        page_no = self.request.GET.get('page', 1)
-        num_on_page = self.request.GET.get('page_size', self.paginate_by)
-        context['num_on_page'] = num_on_page
-        p = Paginator(context['dso_list'], num_on_page)
-        this_page = p.page(page_no)
-        context['page_obj'] = this_page
-        context['dso_list'] = this_page.object_list # Just this page of objects.
-        context['is_paginated'] = True
-        return context
-    
-class DSOChecklistView(CookieMixin, ListView):
-    # TODO V2: Deal with priority filter!
-    # FIX: 
-    #   1. Add mode to form (default = current mode)
-    #   2. add that to filtering
-    model = DSO
-    template_name = 'imaging_checklist.html'
-    paginate_by = 100
-
-    def get_context_data(self, **kwargs):
-        context = super(DSOChecklistView, self).get_context_data(**kwargs)
-        # Deal with form
-        form_params = checklist_params(self.request)
-        # print ("FORM PARAMS: ", form_params)
-        all_dsos = DSO.objects.all()
-        
-        #context['seen'] = 'checked' if form_params['seen'] else ''
-        context['priority'] = form_params['priority']
-        context['dso_type'] = form_params['dso_type'] if form_params['dso_type'] != 'all' else ''
-        context['constellation'] = form_params['constellation'] if form_params['constellation'] else ''
-        context['subset'] = form_params['subset'] if form_params['subset'] else 'all'
-        context['exclude_issues'] = form_params['exclude_issues']
-        context['dso_list'] = checklist_form(form_params, all_dsos)
-        context['list_count'] = context['dso_list'].count()
-        context['show_map'] = form_params['show_map']
-        use_mode = form_params['use_mode']
-        context['use_mode'] = use_mode if use_mode is not None else context['observing_mode']
-        new_obs_list = None
-        if form_params['create_list']:
-            new_obs_list = create_new_observing_list(context['dso_list'], form_params)
-        context['new_obs_list'] = new_obs_list if new_obs_list else None
-
-        # Make a map
-        if form_params['show_map']:
-            dso_list = [x.dso for x in context['dso_list']]
-            if len(dso_list) == 0:
-                context['map'] = None
-            else:
-                center_ra, center_dec, max_dist, fov = get_map_parameters(dso_list) #, mag=1.8)
-                star_mag_limit = get_star_mag_limit(max_dist)
-                map = plot_dso_list(
-                    center_ra, 
-                    center_dec,
-                    dso_list,
-                    fov=fov,
-                    star_mag_limit = star_mag_limit,
-                    reversed = False,
-                    label_size='small',
-                    symbol_size=60,
-                    title = f"Imaging Sample"
-                )
-                context['map'] = map
-        else:
-            dso_list = context['dso_list']
-            context['map'] = None
-        context['table_id'] = 'dsos-on-list'
-
         # Pagination
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)

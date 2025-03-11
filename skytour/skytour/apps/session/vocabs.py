@@ -16,3 +16,12 @@ SESSION_STAGE_CHOICES = [
     ('during', 'During'),
     ('end', 'End')
 ]
+
+OBSERVE_TYPES = [
+    ('dso', 'DSO'),
+    ('planet', 'Planet'), 
+    ('asteroid', 'Asteroid'), 
+    ('comet', 'Comet'), 
+    ('moon', 'Moon'), 
+    ('other', 'Other')
+]

@@ -140,6 +140,7 @@ def get_map_parameters(dso_list, mag=2.4, debug=False):
         elif dist > max_dist:
             max_dist = dist
 
+    max_dist = max_dist if max_dist > 2. else 2.
     fov = max_dist * mag
     if debug:
         print(f"MAX DIST: {max_dist} FOV: {fov}")

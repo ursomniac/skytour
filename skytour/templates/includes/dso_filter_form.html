@@ -1,5 +1,9 @@
 <style>
   table.dso-form { font-size: 12px; }
+  td.submit { background-color: #666; }
+  td.submit input { width: 40em; margin-left: 30px; height: 30px; border: 1px solid #900; }
+  td.addlist { background-color: #606; text-align: center; }
+  td.addlist button { width: 20em; }
 </style>
 <form action="" method="GET">
     <table class="dso-form">
@@ -13,15 +17,15 @@
                 {% if constellation %}value="{{ constellation }}"{% endif %}>
             </td>
             <td colspan=1>
-                <b>Priority: </b>
-                <select name="priority">
-                  <option value=0 {% if priority == 0 %}selected{% endif %}>All</option>
-                  <option value=4 {% if priority == 4 %}selected{% endif %}>Highest</option>
-                  <option value=3 {% if priority == 3 %}selected{% endif %}>High</option>
-                  <option value=2 {% if priority == 2 %}selected{% endif %}>Medium</option>
-                  <option value=1 {% if priority == 1 %}selected{% endif %}>Low</option>
-                </select>
-              </td>
+              <b>Obs. Mode: </b>
+              <select name="use_mode">
+                <option value="I" {% if use_mode == "I" %}selected{% endif %}>Imaging Telescope</option>
+                <option value="M" {% if use_mode == "M" %}selected{% endif %}>Medium Telescope</option>
+                <option value="S" {% if use_mode == "S" %}selected{% endif %}>Small Telescope</option>
+                <option value="B" {% if use_mode == "B" %}selected{% endif %}>Binoculars</option>
+                <option value="N" {% if use_mode == "N" %}selected{% endif %}>Naked Eye</option>
+              </select>
+            </td>
             <td colspan=1>
             <b>Subset: </b>
             <input name="subset" value="observed" type="radio" 
@@ -32,7 +36,6 @@
                 &nbsp;&nbsp;
             <input name="subset" value="all" type="radio" 
                 {% if subset == 'all' %}checked="checked"{% endif %}>Both
-            <!--input name="seen" type="checkbox" {% if seen %}checked{% endif %}>Seen<-->  
             </td>
             <td>
             <b>RA Range: </b>
@@ -67,23 +70,13 @@
             </select>
           </td>
           <td colspan=1>
-            {% comment %}
-            <b>Img. Priority: </b>
-            <select name="imaging_priority">
-              <option value=0 {% if imaging_priority == 0 %}selected{% endif %}>All</option>
-              <option value=4 {% if imaging_priority == 4 %}selected{% endif %}>Highest</option>
-              <option value=3 {% if imaging_priority == 3 %}selected{% endif %}>High</option>
-              <option value=2 {% if imaging_priority == 2 %}selected{% endif %}>Medium</option>
-              <option value=1 {% if imaging_priority == 1 %}selected{% endif %}>Low</option>
-            </select>
-            {% endcomment %}
-            <b>Obs. Mode: </b>
-            <select name="use_mode">
-              <option value="I" {% if use_mode == "I" %}selected{% endif %}>Imaging Telescope</option>
-              <option value="M" {% if use_mode == "M" %}selected{% endif %}>Medium Telescope</option>
-              <option value="S" {% if use_mode == "S" %}selected{% endif %}>Small Telescope</option>
-              <option value="B" {% if use_mode == "B" %}selected{% endif %}>Binoculars</option>
-              <option value="N" {% if use_mode == "N" %}selected{% endif %}>Naked Eye</option>
+            <b>Priority: </b>
+            <select name="priority">
+              <option value=0 {% if priority == 0 %}selected{% endif %}>All</option>
+              <option value=4 {% if priority == 4 %}selected{% endif %}>Highest</option>
+              <option value=3 {% if priority == 3 %}selected{% endif %}>High</option>
+              <option value=2 {% if priority == 2 %}selected{% endif %}>Medium</option>
+              <option value=1 {% if priority == 1 %}selected{% endif %}>Low</option>
             </select>
           </td>
           <td colspan=1>
@@ -107,11 +100,17 @@
             <input name="dec_high" 
                 {% if dec_high %}value="{{ dec_high|floatformat:1 }}" {% endif %}
                 size=5>°
+          </td>
         </tr>
         <tr>
-            <td colspan=5>
+            <td colspan=5 class="submit">
               <input type="submit" value="Filter">
+            </td>
+            <td colspan=2 class="addlist">
+              <button onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
             </td>
           </tr>
     </table>
 </form>
+
+{% include 'form_dsolist_create.html' %}
