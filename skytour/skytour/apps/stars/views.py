@@ -49,7 +49,7 @@ class SkyView(CookieMixin, TemplateView):
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
 
-        # TODO: figure out if moon is on the plot
+        # TODO V2.x: figure out if moon is on the plot
         context['show_moon'] =  moon is not None 
         
         context['shown_datetime'] = utdt + datetime.timedelta(hours=hours)

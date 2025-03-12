@@ -90,7 +90,7 @@ def get_visible_asteroid_positions(utdt=None, location=None, pluto=True):
    set for the dwarf planets.
    """
    utdt = datetime.datetime.now(datetime.timezone.utc) if utdt is None else utdt
-   # TODO V2: fix this somehow
+   # TODO V2.x: fix this somehow
    # Actual magnitude of asteroid - if fainter than this, don't add to the list.
    mag_limit = find_site_parameter('asteroid-magnitude-limit', default=10, param_type='float')
    # Cutoff is the magnitude that an asteroid COULD get based on orbital elements.

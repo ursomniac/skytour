@@ -80,27 +80,6 @@ PAGE_CHOICES = [
     ('zenith', 'Zenith Map'),
     ('moon', 'Moon'),
 ]
-class PDFSelectForm(forms.Form):
-    pages = forms.MultipleChoiceField(
-        widget = forms.CheckboxSelectMultiple, 
-        choices=PAGE_CHOICES,
-        initial = [c[0] for c in PAGE_CHOICES],
-        required=False
-    )
-    planets = forms.ModelMultipleChoiceField(
-        queryset = Planet.objects.all(),
-        required=False,
-    )
-
-    obs_forms = forms.IntegerField(
-        label = 'Obs. Forms',
-        initial = 2
-    )
-    dso_lists = forms.ModelMultipleChoiceField(
-        widget = forms.CheckboxSelectMultiple, 
-        queryset = DSOList.objects.filter(active_observing_list=True),
-        required = False,
-    )
 
 class PlanSelectForm(forms.Form):
     pages = forms.MultipleChoiceField(
@@ -131,7 +110,6 @@ class PlanSelectForm(forms.Form):
     )
     dso_lists = forms.ModelMultipleChoiceField(
         widget = forms.CheckboxSelectMultiple, 
-        #queryset = DSOList.objects.none() #filter(active_observing_list=True),
         queryset = DSOList.objects
             .annotate(ndso=Count('dso'))
             .filter(active_observing_list=True)
@@ -170,7 +148,7 @@ class SessionAddForm(forms.Form):
         queryset = Filter.objects.all(),
         required = False
     )
-    # TODO V2: add Sensor for non Imaging telescopes...
+    # TODO V2.x: add Sensor for non Imaging telescopes...
     
     # Required
     ut_time = forms.TimeField(

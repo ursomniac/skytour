@@ -111,7 +111,7 @@ def get_object_rise_set(utdt, eph, target, location, serialize=False, time_zone=
     t, y = find_discrete(t0, t1, f)
     events = get_events(t, y, serialize=serialize, time_zone=time_zone)
 
-    # TODO: Add transit times!
+    # TODO V2.x: Add transit times!
     f2 = meridian_transits(eph, target, loc)
     t2, y2 = find_discrete(t0, t1, f2)
     events = get_events(t2, y2, events=events, serialize=serialize, time_zone=time_zone, transit=True)

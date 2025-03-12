@@ -228,6 +228,4 @@ class SSOPDFView(View):
             buffer.seek(0)
             response = HttpResponse(buffer, content_type='application/pdf')
             return response
-        else:
-            # TODO: 404?
-            pass
+        return context            

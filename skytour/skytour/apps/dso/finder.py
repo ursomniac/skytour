@@ -285,7 +285,7 @@ def create_dso_finder_chart(
     )
     ##### other dsos
     if show_other_dsos:
-        # TODO: This is inefficient: should use the dso.nearby_dsos property to get a list
+        # BUG: V2.x: This is inefficient: should use the dso.nearby_dsos property to get a list
         # unless the FOV for "wide" is so wide that that won't work?
         other_dso_records = DSO.objects.exclude(pk = dso.pk).order_by('-major_axis_size')
         ax, times = plot_other_dsos(ax, other_dso_records, projection, earth, t, limit, times, in_field=False, reversed=reversed, fov_type=chart_type)

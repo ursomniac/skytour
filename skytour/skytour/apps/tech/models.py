@@ -50,7 +50,6 @@ class Telescope(models.Model):
     def __str__(self):
         return self.name
 
-# TODO V2: Need to make this standalone but ALSO accessible to a Telescope for options
 class Eyepiece(models.Model):
     type = models.CharField(
         _('Eyepiece Type'),

@@ -361,7 +361,7 @@ def map_saturn_rings(ax, pdict, t0, reversed=False):
     You'll immediately notice that I'm just putting down two ellipses and the 
     disk atop it.   Sue me.  :-)
 
-    TODO: make this more realistic
+    TODO V2.x: make this more realistic
         - use arcs to simulate the 3-dness of things
         - test against the vector of the pole of Saturn's rotation...
     """
@@ -396,11 +396,11 @@ def map_dsos(ax, earth, t, projection,
     """
     Like the star mapping methods above, put down symbols for DSOs.
 
-    TODO: I THINK We want to ALWAYS send a center value, even when this is
+    TODO V2.x: I THINK We want to ALWAYS send a center value, even when this is
         called from create_finder_chart or plot_track because then we ought
         to be able to make things run faster.
 
-    TODO: IF you are creating a plot that has a center + radius or FOV, 
+    TODO V2.x: IF you are creating a plot that has a center + radius or FOV, 
         then you can change the sin(altitude) to be > 0, i.e., the sin(90 - radius)
         or sin(90 - fov/2)...   I think.
     """
@@ -571,7 +571,7 @@ def map_single_object(ax, name, obj, earth, t, projection, color='silver'):
     """
     Put in the Sun and Moon Unicode symbols on the map.
 
-    TODO: replace the Moon's unicode with a scaled Moon phase.
+    TODO V2.x: replace the Moon's unicode with a scaled Moon phase.
     """
     ra = obj['apparent']['equ']['ra']
     dec = obj['apparent']['equ']['dec']
@@ -712,7 +712,7 @@ def map_milky_way(
         d = {'x': [], 'y': []}
         for coord in segment:
             xx, yy = projection(earth.at(t).observe(Star(ra_hours=coord[0], dec_degrees=coord[1])))
-            # TODO: test if xx, yy near the plot to speed this up
+            # TODO V2.x: test if xx, yy near the plot to speed this up
             d['x'].append(xx)
             d['y'].append(yy)
         w = ax.plot(d['x'], d['y'], c=color, ls=line_type, lw=line_width, alpha=alpha)

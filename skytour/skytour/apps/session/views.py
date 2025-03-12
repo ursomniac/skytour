@@ -42,14 +42,12 @@ from .cookie import get_all_cookies, deal_with_cookie
 from .forms import (
     ObservingConditionsForm,
     ObservingParametersForm, 
-    PDFSelectForm, 
     PlanSelectForm,
     SessionAddForm,
 )
 from .mixins import CookieMixin
 from .models import ObservingSession, ObservingCircumstances
 from .pdf import run_pdf
-from .plan import get_plan
 from .utils import get_initial_from_cookie, get_observing_mode_string
 
 class SetSessionCookieView(FormView):

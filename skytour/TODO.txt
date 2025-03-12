@@ -1,29 +1,9 @@
-   8 skytour/apps/abstract/models.py
-	- ObservableObject.reimage_flag (for the B/W imaging night)
-	- ObservableObject.need_to_image_flag (for the pre-post-proc objects)
-   1 skytour/apps/abstract/utils.py
-   4 skytour/apps/abstract/vocabs.py
-   1 skytour/apps/astro/almanac.py
-   1 skytour/apps/astro/altaz.py
-   1 skytour/apps/dso/finder.py
-  11 skytour/apps/dso/models.py
-   4 skytour/apps/dso/plot.py
    1 skytour/apps/dso/seed.py
-   1 skytour/apps/misc/models.py
-   5 skytour/apps/plotting/map.py
-   1 skytour/apps/session/forms.py
+   2 skytour/apps/misc/models.py
    1 skytour/apps/session/pdf_pages/solar_system.py
-   1 skytour/apps/solar_system/helpers.py
-   1 skytour/apps/solar_system/pdf.py
-   1 skytour/apps/solar_system/plot.py
    2 skytour/apps/solar_system/position.py
-   1 skytour/apps/solar_system/saturn.py
-   1 skytour/apps/solar_system/utils.py
    5 skytour/apps/solar_system/views.py
    2 skytour/apps/stars/models.py
    1 skytour/apps/stars/plot.py
-   1 skytour/apps/stars/seed/seed_bsc.py
-   1 skytour/apps/stars/seed/seed_gcvs.py
-   2 skytour/apps/stars/views.py
-   2 skytour/apps/tech/models.py
-   1 skytour/test/fix_priority.py
+   1 skytour/apps/stars/views.py
+   1 skytour/apps/tech/models.py

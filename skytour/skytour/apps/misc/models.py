@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from .vocabs import REFERENCE_MODEL_CHOICES
 
+### TODO V2: REMOVE THIS MODEL
 class StateRegion(models.Model):
     """
     This is just to get around the observing location hard-coded states.

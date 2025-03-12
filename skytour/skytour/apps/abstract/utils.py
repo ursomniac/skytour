@@ -12,7 +12,7 @@ from ..observe.models import ObservingLocation
 
 def rectify_ha(xha):
     """
-    TODO: Used where?
+    Normalize hour angle to be ±12 h
     """
     if xha <= -12.:
         return xha + 24.

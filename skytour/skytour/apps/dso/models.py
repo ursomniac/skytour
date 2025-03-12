@@ -790,23 +790,9 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         return new_start_date, new_end_date, alt
     
     def shift_opposition_date(self, delta=0.):
-        """
-        Used?
-        """
         day_shift = round(-1 * 365 * delta / 24.)
         new_opp_date = self.opposition_date + dt.timedelta(days=day_shift)
         return new_opp_date
-
-    def object_is_up(self, location, utdt, min_alt=0.):
-        """
-        This is still used when creating an observing plan.
-        Tests if a DSO is observable within a UTDT window.
-        TODO V2: DEPRECATE!
-        """
-        az, alt, airmass = self.alt_az(location, utdt)
-        if alt > min_alt:
-            return True
-        return False
 
     def get_absolute_url(self):
         """
@@ -898,7 +884,6 @@ class DSOInField(DSOAbstract, models.Model):
     def alias_list(self):
         """
         Return a comma-separated alias list.
-        TODO: Integrate aliases from SIMBAD/HyperLeda?
         """
         aliases = []
         if self.aliases.count() > 0:
@@ -922,7 +907,7 @@ class DSOInField(DSOAbstract, models.Model):
     class Meta:
         verbose_name = 'Deep Sky Object in Field'
         verbose_name_plural = 'Deep Sky Objects in Field'
-        ordering = ['-pk'] # ['ra', 'dec']  # TODO: What's the best ordering?
+        ordering = ['-pk'] # ['ra', 'dec']  
 
     def __str__(self):
         return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
@@ -939,9 +924,6 @@ class DSOAbstractAlias(models.Model):
     so that M 52 = NGC 7654 = Cr 455 = Mel 243.
     Several search functions check aliases, so you SHOULD always reach the
     desired object.
-
-    TODO V2: Use the precedence field for Catalog for ordering!
-        This logic might be elsewhere...
     """
 
     catalog = models.ForeignKey('utils.Catalog', on_delete = models.CASCADE)
@@ -969,6 +951,7 @@ class DSOAbstractAlias(models.Model):
         abstract = True
         verbose_name = 'Alias'
         verbose_name_plural = 'Aliases'
+        ordering = ['catalog__precedence']
 
     def __str__(self):
         return self.shown_name
@@ -1099,17 +1082,11 @@ class DSOList(models.Model):
         null = True, blank = True
     )
     dso = models.ManyToManyField (DSO, blank=True)
-    tags = TaggableManager(blank=True)  # Used  TODO V2: come up with some use for this...
-    show_on_plan = models.PositiveIntegerField ( # TODO V2: DEPRECATE?
-        _('On Plan PDF'),
-        choices = INT_YES_NO,
-        default = 1,
-        help_text = 'Set to YES/1 to add this to a PDF plan'
-    )
+    tags = TaggableManager(blank=True)  # Used  TODO V2.x: come up with some use for this...
     pdf_page = models.FileField (
         _('PDF Page'),
         null = True, blank = True,
-        upload_to = 'dso_pdf' # TODO: Change this or remove it...
+        upload_to = 'dso_pdf' # TODO V2.x: add this to save()?
     )
     map_scaling_factor = models.FloatField (
         _('Map Scaling Factor'),
@@ -1180,9 +1157,9 @@ class DSOList(models.Model):
 
 class AtlasPlateAbstract(models.Model):
     """
-    TODO: Bright Star Lists
-    TODO: Double Stars?
-    TODO: "Special" plates for things like the LMC/SMC/Virgo, etc. - These will need a different FOV, or 
+    TODO V2.x: Bright Star Lists
+    TODO V2.x: Double Stars?
+    TODO V2.x: "Special" plates for things like the LMC/SMC/Virgo, etc. - These will need a different FOV, or 
         might be split up into sections...   Need to research.
 
     This is an abstract model so as to support "special" plates (e.g., close-ups of the

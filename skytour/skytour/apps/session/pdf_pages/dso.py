@@ -1,23 +1,16 @@
-from ...astro.local import is_object_up
-from ...dso.models import DSOList
 from ...dso.finder import plot_dso_list
 from ...dso.helpers import get_map_parameters, get_star_mag_limit
-from ...pdf.utils import bold_text, label_and_text, place_text, add_image
+from ...pdf.utils import bold_text, label_and_text, add_image
 from ...pdf.utils import X0, Y0
 from ...utils.format import to_hm, to_dm
 
-def do_dso_lists(p, context, dso_lists=None):
-    #location = context['location']
-    #ut0 = context['utdt_start']    
+def do_dso_lists(p, context, dso_lists=None):  
     if dso_lists is None:
-        dso_lists = DSOList.objects.filter(show_on_plan=1)
+        return p
         
     for dl in dso_lists:
         if dl.dso.count() == 0: ### Oops! empty list!
             return p
-        # Are most of the things in the list going to be up during the session?
-        #ra = dl.mid_ra
-        #dec = dl.mid_dec
 
         # Make the page for the DSO List
         y = Y0

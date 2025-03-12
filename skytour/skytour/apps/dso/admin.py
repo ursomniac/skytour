@@ -264,14 +264,6 @@ class DSOAdmin(ObservableObjectAdmin):
     def turn_off_redo(modeladmin, request, queryset):
         queryset.update(reimage=False)
 
-@admin.action(description='Show on Plan PDF')
-def add_to_plan(modeladmin, request, queryset):
-    queryset.udpate(show_on_plan=1)
-
-@admin.action(description='Do not show on Plan PDF')
-def remove_from_plan(modeladmin, request, queryset):
-    queryset.update(show_on_plan=0)
-
 class DSOListAdmin(TagModelAdmin):
     model = DSOList
     list_display = ['pk', 'name', 'description', 'tag_list', 'active_observing_list', 'dso_count']

@@ -6,7 +6,7 @@ def clear_database_table():
     for row in all:
         row.delete()
 
-### TODO V2:  make this a standalone script used in DB seeding!
+### TODO V2.1:  make this a standalone script used in DB seeding!
 def seed_milky_way_from_json():
     """
     This is a PITA and another example of how "pure" coding/data

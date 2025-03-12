@@ -10,12 +10,6 @@ from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
 from .vocabs import (
-    # V1
-    IMAGING_PROCESSING_CHOICES,
-    IMAGE_TYPE_CHOICES, 
-    IMAGE_POST_OPTIONS, 
-    IMAGE_STYLE_CHOICES, 
-    # V2
     IMAGE_PROCESSING_STATUS_OPTIONS,
     IMAGE_ORIENTATION_CHOICES,
     IMAGE_CROPPING_OPTIONS,
@@ -205,14 +199,6 @@ class LibraryAbstractImage(ObjectImage):
         _('Image Exposure'),
         null = True, blank = True,
         help_text = 'in floating minutes'
-    )
-
-    # TODO V2: replace with image_orientation
-    image_style = models.CharField (
-        _('Image Class'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_STYLE_CHOICES
     )
 
     image_orientation = models.CharField (

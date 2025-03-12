@@ -232,7 +232,7 @@ def create_planet_system_view (
         max_sep = min_sep
 
     # If Saturn, add rings
-    # TODO: deal with having the ring in front of the planet and then behind it.
+    # TODO V2.x: deal with having the ring in front of the planet and then behind it.
     if name == 'Saturn':
         ax = map_saturn_rings(ax, pdict, t0, reversed=reversed)
 

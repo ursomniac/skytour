@@ -72,7 +72,7 @@ def map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False
     """
     Map the constellation boundaries.
     """
-    # TODO: MOVE this to .plotting.map - I think that will handle the circular import problem...
+    # BUG ?: MOVE this to .plotting.map - I think that will handle the circular import problem...
     line_color = '#9907' if reversed else '#999' # constellation-boundary
     line_width = 1.5
     line_type = '--'
@@ -99,7 +99,7 @@ def create_atlas_plot(
     ):
     """
     Create an AtlasPlate image.
-    TODO: Change annontation font weight to be BOLD for high/highest priority!
+    TODO V2.x: Change annontation font weight to be BOLD for high/highest priority!
     """
     fov = fov if fov else 20.
     object = model.objects.get(plate_id=plate_id)
@@ -244,8 +244,8 @@ def create_atlas_plot(
 
 def create_atlas_legend():
     """
-    TODO: write this.
+    TODO V2.x: write this.
     This creates an image showing all the lines/symbols on the atlas.
-    TODO: put all the colors together in a single dictionary!
+    TODO V2.x: put all the colors together in a single dictionary!
     """
     pass

@@ -1,6 +1,6 @@
 import math
 
-### TODO V2: replace these with Skyfield calls, since I think they exist now.
+### TODO V2.x: replace these with Skyfield calls, since I think they exist now.
 # But I spent so much time typing these in!   :-)
 
 COEFF_D = [ # 63 terms

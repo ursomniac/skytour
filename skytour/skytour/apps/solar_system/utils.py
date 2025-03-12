@@ -96,7 +96,7 @@ def get_elongation(l_target, l_sun):
 def get_constellation(ra, dec):
     """
     Return the constellation at a given ra, dec.
-    TODO: I'm not sure if the call to Skyfield handles the precession
+    NOTE: I'm not sure if the call to Skyfield handles the precession
     from the 1875 epoch (where the constellation boundaries were 
     established) to the present-era RA/DEC.
     """
