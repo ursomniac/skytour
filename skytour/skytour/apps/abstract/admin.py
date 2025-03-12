@@ -46,7 +46,6 @@ class ObservableObjectAdmin(admin.ModelAdmin):
 class TagModelAdmin(admin.ModelAdmin):
     """
     Used for tagging.
-    TODO V2: work out how to make this more useful
     """
     @admin.display(description='Tags')
     def tag_list(self, obj):

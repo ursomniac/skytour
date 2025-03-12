@@ -619,10 +619,10 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
             item = {}
             item['url'] = m.image.url
             item['caption'] = ''
-            if m.imaging_telescope is not None:
-                item['caption'] += f"{m.imaging_telescope}: "
+            if m.telescope is not None:
+                item['caption'] += f"{m.telescope}: "
             item['caption'] += f'{m.ut_datetime.strftime("%Y-%m-%d %H:%M")} UT, {m.exposure}min, '
-            item['caption'] += f'{m.get_image_style_display()}'
+            item['caption'] += f'{ m.get_image_processing_status_display() }'
             maps_list.append(item)
             i += 1
         if self.dso_imaging_chart:
@@ -1006,10 +1006,9 @@ class DSOImage(ObjectImage):
 
     HOWEVER, it's really not practical to seed them from anywhere.
 
-    TODO V2: TRY to sort this out using the DSS/DSS2 or some series of image archives
+    TODO V2.x: TRY to sort this out using the DSS/DSS2 or some series of image archives
         (PanSTARRS?)
 
-    There are fields in LibraryAbstractImage that are unused in this model (exposure, processing_status)
     """
     object = models.ForeignKey(DSO,
         on_delete = models.CASCADE,
@@ -1035,9 +1034,6 @@ class DSOLibraryImage(LibraryAbstractImage):
         related_name = 'image_library'
     )
     ut_datetime = models.DateTimeField()
-    
-    def __str__(self):
-        return self.object.shown_name
     
     class Meta:
         verbose_name = 'DSO Library Image'

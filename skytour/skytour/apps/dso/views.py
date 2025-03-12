@@ -1,9 +1,11 @@
 import datetime as dt, pytz
+import io
+
 from dateutil.parser import isoparse
 
 from django.db.models import Count
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import mark_safe
@@ -11,6 +13,8 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 from ..abstract.utils import get_real_time_conditions 
 from ..abstract.vocabs import (
@@ -19,6 +23,7 @@ from ..abstract.vocabs import (
     IMAGE_PROCESSING_STATUS_OPTIONS
 )
 from ..astro.time import get_datetime_from_strings
+from ..session.pdf_pages.dso import do_dso_lists
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from ..tech.models import Telescope
@@ -701,3 +706,25 @@ class DSOObservationEditView(UpdateView):
         object = self.get_object()
         context['dso'] = object.object
         return context
+    
+class DSOListPDFView(View):
+    
+    def get_context_data(self, **kwargs):
+        context = {}
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        pk = kwargs.get('pk', None)
+        if pk:
+            dso_lists = DSOList.objects.filter(pk=pk)
+            # Start file.
+            buffer = io.BytesIO()
+            p = canvas.Canvas('/tmp/foo.pdf', pagesize=letter)
+            p = canvas.Canvas(buffer, pagesize=letter)
+            p = do_dso_lists(p, context, dso_lists=dso_lists)     # DSO Lists       
+            print("P: ", p)
+            p.save()
+            buffer.seek(0)
+            response = HttpResponse(buffer, content_type='application/pdf')
+            return response

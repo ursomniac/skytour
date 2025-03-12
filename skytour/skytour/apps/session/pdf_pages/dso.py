@@ -7,8 +7,8 @@ from ...pdf.utils import X0, Y0
 from ...utils.format import to_hm, to_dm
 
 def do_dso_lists(p, context, dso_lists=None):
-    location = context['location']
-    ut0 = context['utdt_start']    
+    #location = context['location']
+    #ut0 = context['utdt_start']    
     if dso_lists is None:
         dso_lists = DSOList.objects.filter(show_on_plan=1)
         
@@ -16,12 +16,8 @@ def do_dso_lists(p, context, dso_lists=None):
         if dl.dso.count() == 0: ### Oops! empty list!
             return p
         # Are most of the things in the list going to be up during the session?
-        ra = dl.mid_ra
-        dec = dl.mid_dec
-        up0 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
-        up1 = is_object_up(ut0, location, ra, dec, min_alt=15.)[2]
-        #if not (up0 or up1):
-        #    continue
+        #ra = dl.mid_ra
+        #dec = dl.mid_dec
 
         # Make the page for the DSO List
         y = Y0
@@ -29,7 +25,7 @@ def do_dso_lists(p, context, dso_lists=None):
 
         # Set up map
         dso_set = dl.dso.all()
-        center_ra, center_dec, max_dist, fov = get_map_parameters(dl.dso.all())
+        center_ra, center_dec, max_dist, fov = get_map_parameters(dso_set)
         star_mag_limit = get_star_mag_limit(max_dist)
 
         y = 770

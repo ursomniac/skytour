@@ -69,9 +69,9 @@ def get_most_popular_observing_locations(n=None):
         return sorted_list
     return sorted_list[:n]
 
-def get_random_dso_library_image(style='square', processing=['Pix+RCA', '3-Step']):
+def get_random_dso_library_image(style='square', processing='post-processed'):
     image = DSOLibraryImage.objects.filter(
-        image_style=style, processing_status__in=processing
+        image_orientation=style, image_processing_status=processing
     ).order_by('?').first()
     return image
 

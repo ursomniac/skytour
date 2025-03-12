@@ -54,12 +54,6 @@ class DSOLibraryImageAdmin(admin.StackedInline):
                 'notes'
             ]
         }),
-        #('V1 deprecated', {
-        #    'fields': [
-        #        ('image_type', 'processing_status'), 
-        #        'image_style',
-        #    ]
-        #})
     )
 
 class DSOAliasInline(admin.TabularInline):

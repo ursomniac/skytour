@@ -214,70 +214,33 @@ class LibraryAbstractImage(ObjectImage):
         null = True, blank = True,
         choices = IMAGE_STYLE_CHOICES
     )
-    # TODO V2: replace with image_cropping and telescope 
-    image_type = models.CharField(
-        _('Image Type'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_TYPE_CHOICES,
-        default = None
-    )
-    # TODO V2: remove
-    image_alterations = models.CharField (
-        _('Image Alterations'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGE_POST_OPTIONS,
-        default = 'None'
-    )
-    # TODO V2: replace with image_processing_status
-    processing_status = models.CharField (
-        _('Image Processing Status'),
-        max_length = 30,
-        null = True, blank = True,
-        choices = IMAGING_PROCESSING_CHOICES
-    )
 
-    ### V2 fields
-    # REPLACES image_style
     image_orientation = models.CharField (
         _('Image Orientation'),
         max_length = 20,
         blank = True, null = True,
         choices = IMAGE_ORIENTATION_CHOICES
     )
-    # REPLACES processing_status
+
     image_processing_status = models.CharField (
         _('Image Processing Status'),
         max_length = 20,
         blank = True, null = True,
         choices = IMAGE_PROCESSING_STATUS_OPTIONS
     )
-    # REPLACES image_type
+
     image_cropping = models.CharField (
         _('Image Cropping'),
         max_length = 20,
         blank = True, null = True,
         choices = IMAGE_CROPPING_OPTIONS
     )
-    # REPLACES and disambiguates image_type
+
     telescope = models.ForeignKey (
         Telescope,
         null = True, blank = True,
         on_delete = models.PROTECT
     )
-
-    ## TODO V2: NEED TO SOLVE THIS
-    @property
-    def imaging_telescope(self):
-        t = {'e-': 'eQuinox 2', 's-': 'Seestar S50', 'c-': 'Celestron Origin'}
-        try:
-            slug = self.image_type[:2]
-        except:
-            slug = '  '
-        if slug in t.keys():
-            return t[slug]
-        return None
     
     @property
     def caption(self):
@@ -291,6 +254,20 @@ class LibraryAbstractImage(ObjectImage):
             x += f', {self.get_image_processing_status_display()}'
         return x
     
+    @property
+    def panel_list(self):
+        panel=[]
+        if self.use_in_carousel:
+            panel.append('panel')
+        if self.use_as_map:
+            panel.append('map')
+        return panel
+    
+    def __str__(self):
+        panel_str = '+'.join(self.panel_list)
+        if panel_str != '':
+            pf = f"[{panel_str} - {self.order_in_list:3d}]"
+        return  f"{self.object}: {pf} {self.ut_datetime} {self.telescope} {self.image_orientation} {self.image_processing_status}"
     class Meta:
         abstract = True
 
@@ -316,7 +293,7 @@ class ObservingLog(models.Model):
     # Filter(s)
     filters = models.ManyToManyField (Filter, blank=-True)
     
-    # TODO V2: deal with sensors!
+    # TODO V2.x: deal with sensors!
 
     # Ugh you need location!
     location = models.ForeignKey (
@@ -349,8 +326,8 @@ class ObservableObject(models.Model):
     """
     Properties for observable objects:
         1. Last Observed
-        2. Reimage flag - this is an artifact # TODO: remove in V2
-        3. Need to Image flag  # TODO keep in V2?
+        2. Reimage flag - this is an artifact # TODO V2.x: remove 
+        3. Need to Image flag - this is an artifact  # TODO V2.x: remove 
     """
     @property
     def last_observed(self):
