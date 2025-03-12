@@ -1,9 +1,0 @@
-   1 skytour/apps/dso/seed.py
-   2 skytour/apps/misc/models.py
-   1 skytour/apps/session/pdf_pages/solar_system.py
-   2 skytour/apps/solar_system/position.py
-   5 skytour/apps/solar_system/views.py
-   2 skytour/apps/stars/models.py
-   1 skytour/apps/stars/plot.py
-   1 skytour/apps/stars/views.py
-   1 skytour/apps/tech/models.py
