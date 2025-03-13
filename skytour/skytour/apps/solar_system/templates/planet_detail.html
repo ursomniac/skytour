@@ -19,6 +19,7 @@
     td.classification { padding-right: 75px; }
     td.ident { color: #ff0; }
     td.operations { text-align: right; padding: 3px 10px!important; }
+    td.operations button { width: 10em; }
     .hvcenter { vertical-align: middle!important; text-align: center!important; }
     table.main { background-color: #555; width: 100%!important; }
     table.main td { padding-left: 15px;  }
@@ -93,7 +94,7 @@
             <table class="main">
                 <tr>
                     <td width=65% class="object_name">
-                        <h1>{{ object.name }}</h1>
+                        <h1>{{ name }}</h1>
                     </td>
                     <td width=22% class="description classification" rowspan=2>
                         Currently in<br>
@@ -102,13 +103,15 @@
                     <td  class="description operations" rowspan=2>
                         <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button class="op">   Admin   </button></a>
                         <br>
-                        <a href="{% url 'sso-pdf' 'planet' object.slug %}" target="_new"><button class="op">PDF View</button></a>
+                        {% if object.slug %}
+                        <a href="{% url 'sso-pdf' 'planet' slug %}" target="_new"><button class="op">PDF View</button></a>
                         <br>
-                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ object.slug }}')">
+                        {% endif %}
+                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ slug }}')">
                             Real Time
                         </button>
                         <br>
-                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ object.slug }}?utdt_base=cookie')">
+                        <button class="op" onclick="return realtimePopup('/planet/real-time/{{ slug }}?utdt_base=cookie')">
                             Cookie
                         </button>
                     </td>
@@ -190,6 +193,7 @@
                         {% endif %}
                     </td>
                 </tr>
+                {% if slug != 'moon' %}
                 <tr>
                     <td>
                     <button class="map" onclick="return realtimePopup('/solar_system/sso_map/planet/{{ object.pk }}/wide')">
@@ -204,6 +208,7 @@
                     <td>
                     </td>
                 </tr>
+                {% endif %}
             </table>
         </td>
         {% with 'planet' as object_type %}
@@ -218,14 +223,15 @@
         {% if planet_map %}<th>Map</th>{% endif %}
     </tr>
     <tr>
-
         <td>            
             <div id="planet-view-image">
             <img src="{{ view_image }}" width="500px">
+            {% if slug != 'moon' %}
             <br>
             <small><i>
                 ID above/below + = moon behind/in front of planet in orbit; 
             </i></small>
+            {% endif %}
             </div>
         </td>
         {% if planet_map %}
@@ -254,6 +260,16 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </td>
+        {% elif moon_finder_chart %}
+        <td>            
+            <div id="moon-finder-image">
+            <img src="{{ moon_finder_chart }}" width="500px">
+            <br>
+            <small><i>
+                ID above/below + = moon behind/in front of planet in orbit; 
+            </i></small>
+            </div>
         </td>
         {% endif %}
     </tr>

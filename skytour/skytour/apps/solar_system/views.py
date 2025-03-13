@@ -89,6 +89,8 @@ class PlanetDetailView(CookieMixin, DetailView):
         utdt_start = context['utdt_start']
         pdict = context['planet'] = planets_cookie[obj.name]
         pdict['name'] = obj.name
+        context['name'] = obj.name
+        context['slug'] = obj.slug
         
         context['close_by'], times = compile_nearby_planet_list(obj.name, planets_cookie, utdt_start, times=times)
         times.append((time.perf_counter(), 'Got nearby planets'))
@@ -145,8 +147,10 @@ class MoonDetailView(CookieMixin, TemplateView):
         asteroids_cookie = context['cookies']['asteroids']
         reversed = context['color_scheme'] == 'dark'
         context['planet'] = pdict
+        context['name'] = 'Moon'
+        context['slug'] = 'moon'
 
-        context['finder_chart'], ftimes = create_finder_chart (
+        context['moon_finder_chart'], ftimes = create_finder_chart (
             context['utdt_start'],
             pdict, 
             planets_cookie,
@@ -383,13 +387,43 @@ class PlanetRealTimeView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PlanetRealTimeView, self).get_context_data(**kwargs)
+        cookie = None
+        slug = self.kwargs['slug']
         object = self.get_object()
         context['object_type'] = 'Planet'
         context['object'] = object
-        planet_cookie = get_planet_from_cookie(context['cookies'], object)
-        if planet_cookie:
-            object.ra_float, object.dec_float = get_position_from_cookie(planet_cookie)
+        cookie = get_planet_from_cookie(context['cookies'], object)
+        if cookie:
+            object.ra_float, object.dec_float = get_position_from_cookie(cookie)
         context = get_real_time_conditions(object, self.request, context)
+        return context
+    
+class MoonRealTimeView(CookieMixin, TemplateView):
+    model = Planet
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MoonRealTimeView, self).get_context_data(**kwargs)
+        cookie = None
+        slug = 'moon'
+        object = None
+        ra_float = None
+        dec_float = None
+        context['object_type'] = 'Moon'
+        context['object'] = object
+        cookie = context['cookies']['moon']
+        if cookie:
+            ra_float, dec_float = get_position_from_cookie(cookie)
+            if object:
+                object.ra_float = ra_float
+                object.dec_float = dec_float
+        context = get_real_time_conditions(
+            object, 
+            self.request, 
+            context,
+            ra_float = ra_float,
+            dec_float = dec_float
+        )
         return context
     
 class AsteroidRealTimeView(CookieMixin, DetailView):

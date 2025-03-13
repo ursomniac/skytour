@@ -1,12 +1,34 @@
 from django.db.models import Q
 
 DSO_TYPE_DICT = {
-    'cluster': ['asterism', 'cluster-nebulosity', 'globular-cluster', 
-        'open-cluster', 'stellar-association'],
-    'nebula': ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula', 'nebula--emission', 
-        'interstellar-matter', 'planetary-nebula', 'reflection-nebula', 'supernova-remnant'],
-    'galaxy': ['galaxy--barred-spiral', 'galaxy--cluster', 'galaxy--dwarf', 'galaxy--elliptical', 'galaxy--irregular',
-        'galaxy--intermediate', 'galaxy--lenticular', 'galaxy--spiral', 'galaxy--unclassified']
+    'cluster': [
+        'asterism', 'cluster-nebulosity', 'globular-cluster', 
+        'open-cluster', 'stellar-association'
+    ],
+    'cluster--open': [
+        'open-cluster', 'stellar-association', 'cluster-nebulosity', 'asterism'
+    ],
+    'cluster--globular': ['globular-cluster'],
+    'nebula': [
+        'cluster-nebulosity', 'dark-nebula', 'diffuse-nebula', 'nebula--emission', 
+        'interstellar-matter', 'planetary-nebula', 'reflection-nebula', 'supernova-remnant'
+    ],
+    'nebula--emission': [
+        'cluster-nebulosity', 'diffuse-nebula', 'nebula--emission', 'interstellar-matter'
+    ],
+    'nebula--reflection': ['reflection-nebula'],
+    'nebula--planetary': ['planetary-nebula', 'supernova-remnant'],
+    'galaxy': [
+        'galaxy--barred-spiral', 'galaxy--cluster', 'galaxy--dwarf', 'galaxy--elliptical', 
+        'galaxy--irregular', 'galaxy--intermediate', 'galaxy--lenticular', 'galaxy--spiral', 
+        'galaxy--unclassified', 'galaxy--compact-group'
+    ],
+    'galaxy--spiral': [ 
+        'galaxy--barred-spiral', 'galaxy--dwarf', 'galaxy--intermediate',  'galaxy--spiral'
+    ],
+    'galaxy--elliptical': ['galaxy--lenticular',  'galaxy--elliptical' ],
+    'galaxy--group': ['galaxy--cluster', 'galaxy--compact-group' ],
+    'other': [ 'quasar', 'black-hole-system']
 }
 
 def get_filter_params(request):

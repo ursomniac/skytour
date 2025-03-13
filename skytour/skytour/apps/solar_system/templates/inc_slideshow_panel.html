@@ -56,9 +56,11 @@ No image in library.<br>
 
 <div class="manage">
     <br>
+    {% if object.pk %}
     <a href="{% url 'sso-manage-library' object_type object.pk %}">
     <button>Manage Images</button>
     </a>
+    {% endif %}
 </div>
 </div>
 {% endif %}

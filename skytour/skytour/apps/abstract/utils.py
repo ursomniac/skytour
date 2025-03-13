@@ -103,11 +103,19 @@ def get_metadata(observation):
     )
     return d
 
-def get_real_time_conditions(target, request, context, debug=False):
+def get_real_time_conditions(
+        target, # for everything BUT the moon
+        request, 
+        context, 
+        ra_float = None, dec_float = None, # for the moon
+        debug=False
+    ):
     """
     Used to create the "Real Time" and "Cookie" popup on an object's detail page.
     Works with the pop-up's form for things like time offset.
     """
+    # this is a kludge
+    is_moon = target is None and ra_float is not None and dec_float is not None
     errors = False
     utdt = None
     dt_base = request.GET.get('utdt_base', 'now')
@@ -147,19 +155,29 @@ def get_real_time_conditions(target, request, context, debug=False):
             location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
             location = ObservingLocation.objects.filter(pk=location_id[0]).first()
 
-    try:    
-        moon = context['cookies']['moon']
-        moon_ra = moon['apparent']['equ']['ra']
-        moon_dec = moon['apparent']['equ']['dec']
-        (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
-        #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
-        if moon_alt is not None: # > -10.:
-            lunar_distance = alt_get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float, hemi=True)
+    lunar_distance = None
+    try:
+        if is_moon:
+            lunar_distance = 0.
+        else:
+            moon = context['cookies']['moon']
+            moon_ra = moon['apparent']['equ']['ra']
+            moon_dec = moon['apparent']['equ']['dec']
+            (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
+            #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
+            if moon_alt is not None: # > -10.:
+                lunar_distance = alt_get_small_sep(moon_ra, moon_dec, target.ra_float, target.dec_float, hemi=True)        
     except:
         print(f"Cannot find moon - dt_base: {dt_base}")
         
     last = get_last(utdt, location.longitude) # Local Apparent Sidereal Time
-    object_type = target._meta.model_name
+    object_type = None
+    if is_moon:
+        object_type = 'moon'
+    else:
+        if target is not None:
+            object_type = target._meta.model_name
+
     if object_type == 'dso':
         ra = target.ra_float
         dec = target.dec_float
@@ -174,7 +192,14 @@ def get_real_time_conditions(target, request, context, debug=False):
         best_airmass = 1./math.cos(math.radians(90. - max_alt)) if max_alt > 0. else None
 
     else:
-        eph_label =  target.target if object_type == 'planet' else None
+        if object_type == 'planet':
+            eph_label = target.target
+        elif object_type == 'moon':
+            eph_label = 'moon'
+        else:
+            eph_label = None
+            
+        #eph_label =  target.target if object_type == 'planet' else None
         ephem = get_object_metadata(
             utdt, 
             eph_label, 
@@ -203,7 +228,11 @@ def get_real_time_conditions(target, request, context, debug=False):
         except:
             errors = True
 
-    
+    if object_type != 'moon':
+        display_name = target.__str__()
+    else:
+        display_name = 'Moon'
+
     if utdt and location and not errors:
         azimuth, altitude, airmass = get_alt_az(utdt, location.latitude, location.longitude, ra, dec)
         hour_angle = rectify_ha(last - ra)
@@ -229,7 +258,7 @@ def get_real_time_conditions(target, request, context, debug=False):
             hour_angle = hour_angle,
             julian_date = julian_date,
             sidereal_time = last,
-            display_name = target.__str__(),
+            display_name = display_name,
             max_alt = max_alt,
             best_airmass = best_airmass,
             lunar_distance = lunar_distance

@@ -1,9 +1,16 @@
 <style>
   table.dso-form { font-size: 12px; }
-  td.submit { background-color: #666; }
-  td.submit input { width: 40em; margin-left: 30px; height: 30px; border: 1px solid #900; }
-  td.addlist { background-color: #606; text-align: center; }
+  table.dso-form td, th { height: 40px; }
+  table.dso-form td b { color: #fff;  margin-left: 6px; }
+  td.submit { background-color: #555; border: 1px solid #fff;  text-align: center; }
+  td.submit input { 
+    width: 40em; 
+    height: 30px; 
+    border: 1px solid #900; 
+  }
+  td.addlist { background-color: #606; text-align: center;  border: 1px solid #c0c; }
   td.addlist button { width: 20em; }
+  .helptext { color: #aa7; font-size: 85%; font-style: italic; margin-left: 2em; }
 </style>
 <form action="" method="GET">
     <table class="dso-form">
@@ -11,10 +18,12 @@
             <td colspan=2><b>Name:</b>&nbsp;
               <input size=20 name="search_name"
                 {% if search_name %}value="{{ search_name }}"{% endif %}>
+                <br><span class="helptext">&nbsp;</span>
             </td>
             <td colspan=2><b>Constellations:</b> &nbsp; 
             <input size="20" name="constellation" 
                 {% if constellation %}value="{{ constellation }}"{% endif %}>
+                <br><span class="helptext">(Separate abbreviations with commas)</span>
             </td>
             <td colspan=1>
               <b>Obs. Mode: </b>
@@ -25,6 +34,7 @@
                 <option value="B" {% if use_mode == "B" %}selected{% endif %}>Binoculars</option>
                 <option value="N" {% if use_mode == "N" %}selected{% endif %}>Naked Eye</option>
               </select>
+              <br><span class="helptext">&nbsp;</span>
             </td>
             <td colspan=1>
             <b>Subset: </b>
@@ -36,30 +46,38 @@
                 &nbsp;&nbsp;
             <input name="subset" value="all" type="radio" 
                 {% if subset == 'all' %}checked="checked"{% endif %}>Both
+            <br><span class="helptext">&nbsp;</span>
             </td>
             <td>
             <b>RA Range: </b>
             <input name="ra_low" 
                 {% if ra_low %} value="{{ra_low}}" {% endif %}
-                size=5>E to 
+                size=5>W to 
             <input name="ra_high" 
                 {% if ra_high %} value="{{ra_high}}" {% endif %}
-                size=5>W (hours)
+                size=5>E (hours)
+              <br><span class="helptext">(Can cross 0h if E < W)
             </td>
         </tr>
         <td colspan=3>
             <b>DSO Type: </b>
-            <input name="dso_type" type="radio" value="all" 
-              {% if dso_type == 'all' %}checked="checked"{% endif %}>All 
-              &nbsp;&nbsp;
-            <input name="dso_type" type="radio" value="cluster" 
-              {% if dso_type == 'cluster' %}checked="checked"{% endif %}>Cluster 
-              &nbsp;&nbsp;
-            <input name="dso_type" type="radio" value="nebula"
-            {% if dso_type == 'nebula' %}checked="checked"{% endif %}>Nebula 
-              &nbsp;&nbsp;
-            <input name="dso_type" type="radio" value="galaxy"
-            {% if dso_type == 'galaxy' %}checked="checked"{% endif %}>Galaxy            
+            <select name="dso_type">
+              <option value="all">----- ( All Types ) -----</option>
+              <option value="cluster">            All Clusters</option>
+              <option value="cluster--open">      &nbsp;&nbsp;Open Clusters</option>
+              <option value="cluster--globular">  &nbsp;&nbsp;Globular Clusters</option>
+              <option value="nebula">            All Nebulae</option>
+              <option value="nebula--emission">  &nbsp;&nbsp;Emission Nebulae</option>
+              <option value="nebula--reflection">&nbsp;&nbsp;Reflection Nebulae</option>
+              <option value="nebula--dark">      &nbsp;&nbsp;Dark Nebulae</option>
+              <option value="nebula--planetary"> &nbsp;&nbsp;Planetary Nebulae/Supernova Remnant</option>
+              <option value="galaxy">             All Galaxies</option>
+              <option value="galaxy--spiral">     &nbsp;&nbsp;Spiral Galaxies</option>
+              <option value="galaxy--elliptical"> &nbsp;&nbsp;Elliptical Galaxies</option>
+              <option value="galaxy--group">      &nbsp;&nbsp;Galaxy Clusters/Compact Groups</option>
+              <option value="other">              Other</option>
+            </select>
+            <br><span class="helptext">&nbsp;</span>
           </td>
           <td colspan=1>
             <b>Redo: </b>
@@ -68,6 +86,7 @@
               <option value="yes" {% if redo_flag == 'yes' %}selected{% endif %}>Yes</option>
               <option value="no" {% if redo_flag == 'no' %}selected{% endif %}>No</option>
             </select>
+            <br><span class="helptext">(DSOs tagged with "redo")</span>
           </td>
           <td colspan=1>
             <b>Priority: </b>
@@ -78,6 +97,8 @@
               <option value=2 {% if priority == 2 %}selected{% endif %}>Medium</option>
               <option value=1 {% if priority == 1 %}selected{% endif %}>Low</option>
             </select>
+            <br><span class="helptext">(If a mode is provided; otherwise the current mode)</span>
+
           </td>
           <td colspan=1>
             <b>Subset: </b>
@@ -89,6 +110,7 @@
                 &nbsp;&nbsp;
             <input name="imaged" value="both" type="radio" 
                 {% if imaged == 'all' %}checked="checked"{% endif %}>Either
+            <br><span class="helptext">(Images are in either Library Image panel)</span>
             </td>            
           <td>
             <b>Dec Range: </b>
@@ -100,6 +122,7 @@
             <input name="dec_high" 
                 {% if dec_high %}value="{{ dec_high|floatformat:1 }}" {% endif %}
                 size=5>°
+            <br><span class="helptext">(Defaults to your location's latitude)</span>
           </td>
         </tr>
         <tr>

@@ -15,6 +15,7 @@
 	td.description a { color: #ff0; }
     td.classification { padding-right: 75px; }
     td.operations { text-align: right; padding: 3px 10px!important; }
+    td.operations button { width: 10em; }
     h2 { margin-top: 6px; margin-bottom: 4px; color: #fc9; }
     span.coordinates { 
         font-size: 150%; 
@@ -60,11 +61,11 @@
                         <br>
                         <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
                         <br>
-                        <button onclick="return realtimePopup('/comet/real-time/{{ object.slug }}')">
+                        <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}')">
                             Real Time
                         </button>
                         <br>
-                        <button onclick="return realtimePopup('/comet/real-time/{{ object.slug }}?utdt_base=cookie')">
+                        <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}?utdt_base=cookie')">
                             Cookie
                         </button>
                     </td>
