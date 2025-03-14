@@ -9,7 +9,7 @@ from ..pdf.utils import (
 def create_pdf_form(loc):
     dir = 'location_pdf/'
     lname = '' if loc.name is None else f"{loc.name.lower().replace(' ','_')}__"
-    filename = f'{dir}{loc.pk}__{lname}{loc.city.lower()}_{loc.state.abbreviation.lower()}.pdf'
+    filename = f'{dir}{loc.pk}__{lname}{loc.city.lower()}_{loc.short_region_name.lower()}.pdf'
     #p = canvas.Canvas(buffer, pagesize=letter) # width = 612, height = 792
     p = canvas.Canvas('media/'+filename)
     x0 = X0
@@ -22,7 +22,7 @@ def create_pdf_form(loc):
     p, tw = bold_text(p, 400, 800, f'Status: {status}', size=16)
     
     # city, state
-    p, tw = bold_text(p,  x0, 780, f'{loc.city}, {loc.state.abbreviation}')
+    p, tw = bold_text(p,  x0, 780, f'{loc.city}, {loc.short_region_name}')
     # Distance
     p, tw = bold_text(p,  x0, 750, 'Distance: ')
     p.drawString( 50 + tw, 750, f'{loc.travel_distance} mi')

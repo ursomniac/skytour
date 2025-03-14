@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Website, PDFManual
+from .models import Website, PDFManual, Calendar
 
 class WebsiteAddForm(forms.ModelForm):
     name = forms.CharField()
@@ -47,3 +47,8 @@ class PDFManualDeleteForm(forms.Form):
 
     class Meta:
         fields = ['delete_confirm']
+
+class CalendarItemForm(forms.ModelForm):
+
+    class Meta:
+        model = Calendar

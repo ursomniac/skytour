@@ -1,11 +1,8 @@
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-
 from django.db import models
 from django.utils.translation import gettext as _
+from .utils_pytz import possible_timezones
 from .vocabs import REFERENCE_MODEL_CHOICES
 
-### TODO V2: REMOVE THIS MODEL
 class StateRegion(models.Model):
     """
     This is just to get around the observing location hard-coded states.
@@ -33,7 +30,23 @@ class StateRegion(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['slug']
+        ordering = ['pk']
+
+class Country(models.Model):
+    name = models.CharField (
+        _('Name '),
+        max_length = 100
+    )
+    code = models.CharField (
+        _('Code'),
+        max_length = 2
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+    
+    class Meta:
+        ordering = ['name']
 
 class TimeZone(models.Model):
     """
@@ -48,6 +61,22 @@ class TimeZone(models.Model):
         _('UTC Offset'),
         help_text = '<0 for West, >0 for East of Greenwich'
     )
+    abbreviation = models.CharField (
+        _('Abbreviation'),
+        max_length = 5
+    )
+
+    @property
+    def time_code(self):
+        o = self.utc_offset
+        s = '+' if o >= 0.0 else '-'
+        h = int(abs(o))
+        m = (60 * o) % 60
+        return f"{s}{h:02s}:{m:02d}"
+    
+    @property 
+    def pytz_name(self):
+        return possible_timezones(self.utc_offset)[0]
 
     def __str__(self):
         return "{} (UTC {:+d})".format(self.name, self.utc_offset)

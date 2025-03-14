@@ -71,6 +71,10 @@
                 {% with form.state as field %}
                 {% include "inc_obs_form_field.html" %}
                 {% endwith %}
+
+                {% with form.region as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
               </table>
             <table class="panel">
               <tr><th colspan=2>Geographic Metadata</th></tr>
@@ -89,6 +93,7 @@
                 {% with form.time_zone as field %}
                 {% include "inc_obs_form_field.html" %}
                 {% endwith %}
+                
                 {% with form.travel_distance as field %}
                 {% include "inc_obs_form_field.html" %}
                 {% endwith %}

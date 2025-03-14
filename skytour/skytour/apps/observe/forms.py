@@ -10,6 +10,7 @@ class NewObservingLocationForm(forms.ModelForm):
             'street_address',
             'city',
             'state',
+            'region',
             'latitude',
             'longitude',
             'elevation',

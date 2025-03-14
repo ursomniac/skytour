@@ -73,7 +73,7 @@ class CalendarMonthView(MonthArchiveView):
         start_date = datetime.datetime(this_year, this_month, 1, 0, 0).replace(tzinfo=pytz.utc)
         days_out = 29 if this_month == 2 and is_leap_year(this_year) else out[this_month]
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
-        my_time_zone = pytz.timezone(TimeZone.objects.get(pk=time_zone_id).name)
+        my_time_zone = pytz.timezone(TimeZone.objects.get(pk=time_zone_id).pytz_name)
         grid = create_calendar_grid(start_date, days_out=days_out - 1, time_zone=my_time_zone)
         context['grid'] = grid        
         return context

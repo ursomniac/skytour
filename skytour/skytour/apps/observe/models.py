@@ -3,7 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
-from ..misc.models import TimeZone, StateRegion
+from ..misc.models import TimeZone, StateRegion, Country
 from ..astro.utils import get_limiting_magnitude, get_declination_range
 from .pdf import create_pdf_form
 from .utils import get_mean_obs_sqm, get_effective_bortle
@@ -29,6 +29,18 @@ class ObservingLocation(models.Model):
     )
     state = models.ForeignKey (
         StateRegion,
+        null = True, blank = True,
+        on_delete = models.SET_NULL
+    )
+    region = models.CharField (
+        _('Region/Country'),
+        max_length = 100,
+        blank=True, null=True,
+        help_text = 'For outside US/Canada'
+    )
+    country = models.ForeignKey (
+        Country, 
+        null = True, blank = True,
         on_delete = models.CASCADE
     )
     status = models.CharField (
@@ -144,6 +156,24 @@ class ObservingLocation(models.Model):
         return mark_safe(u'<img src="%s" width=500>' % self.bortle_image.url)
 
     @property
+    def plotting_marker_type(self):
+        if self.state:
+            return self.state.marker
+        return 'x'
+    
+    @property
+    def region_name(self):
+        if self.state:
+            return self.state.name
+        return self.region
+    
+    @property
+    def short_region_name(self):
+        if self.state:
+            return self.state.abbreviation
+        return self.region
+    
+    @property
     def elevation_feet(self):
         if self.elevation:
             return self.elevation * 39.37 / 12.
@@ -151,7 +181,7 @@ class ObservingLocation(models.Model):
         
     @property
     def placename(self):
-        x = "{}, {}: {}".format(self.city, self.state, self.street_address)
+        x = "{}, {}: {}".format(self.city, self.region_name, self.street_address)
         if self.name:
             x += " ({})".format(self.name)
         return x
@@ -176,14 +206,14 @@ class ObservingLocation(models.Model):
 
     @property
     def name_for_header(self):
-        x = "{}, {} {}".format(self.street_address, self.city, self.state.abbreviation)
+        x = "{}, {} {}".format(self.street_address, self.city, self.region_name)
         if self.name:
             x = "{}: ".format(self.name) + x
         return x
 
     @property
     def short_name(self):
-        return f"{self.city}, {self.state.abbreviation}: {self.name}"
+        return f"{self.city}, {self.state.short_region_name}: {self.name}"
 
     @property
     def limiting_magnitude(self):
@@ -191,7 +221,8 @@ class ObservingLocation(models.Model):
 
     @property
     def my_time_zone(self):
-        return pytz.timezone(self.time_zone.name)
+        pz = self.time_zone.pytz_name
+        return pytz.timezone(pz)
 
     @property
     def number_of_sessions(self):
@@ -251,7 +282,7 @@ class ObservingLocation(models.Model):
             tag = self.street_address
 
         return "{}: {} | {} {}, {}".format(
-            self.pk, self.status, tag, self.city, self.state.abbreviation
+            self.pk, self.status, tag, self.city, self.region_name
         )
 
     def save(self, *args, **kwargs):

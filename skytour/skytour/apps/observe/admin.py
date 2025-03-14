@@ -39,7 +39,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
                 'status', 
                 ('name'),
                 ('street_address',), 
-                ('city', 'state', 'time_zone'),
+                ('city', 'state', 'region', 'time_zone'),
                 ('travel_distance', 'travel_time')
             ]
         }),
@@ -77,9 +77,11 @@ class ObservingLocationAdmin(admin.ModelAdmin):
     n_sessions.short_description = '# Sessions'
 
     def get_state(self, obj):
-        return obj.state.slug
+        if obj.state:
+            return obj.state.abbreviation
+        return obj.region
     get_state.admin_order_field = 'state'
-    get_state.short_description = 'State'
+    get_state.short_description = 'State/Reg'
 
 admin.site.register(ObservingLocation, ObservingLocationAdmin)
 admin.site.register(ObservingLocationMask)

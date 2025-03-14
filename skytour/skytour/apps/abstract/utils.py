@@ -133,8 +133,8 @@ def get_real_time_conditions(
         time_zone = 'UTC'
     else:
         time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
-        time_zone = TimeZone.objects.get(pk=time_zone_id).name
-        local_time = utdt.astimezone(pytz.timezone(time_zone))
+        time_zone = TimeZone.objects.get(pk=time_zone_id)
+        local_time = utdt.astimezone(pytz.timezone(time_zone.pytz_name))
 
     # STUPID BUG IN DJANGO - AFAICT the |date template tag ALWAYS goes back to the
     #   System time zone, so local_time will ALWAYS BE in UTC

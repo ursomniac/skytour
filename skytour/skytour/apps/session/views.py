@@ -82,7 +82,7 @@ class SetSessionCookieView(FormView):
         location_pk = d['location'].pk
         my_location = ObservingLocation.objects.get(pk=location_pk)
         try:
-            time_zone = pytz.timezone(my_location.time_zone.name)
+            time_zone = pytz.timezone(my_location.time_zone.pytz_name)
         except:
             time_zone = None
         min_dec, max_dec = get_declination_range(my_location, min_altitude=d['min_object_altitude'])
@@ -267,7 +267,7 @@ class ObservingPlanV2View(CookieMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanV2View, self).get_context_data(**kwargs)
         local_time = context['local_time_start']
-        ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
+        ztime = datetime.datetime.fromisoformat(local_time).astimezone(tzone)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
         context['now'] = datetime.datetime.now(datetime.timezone.utc)
         asteroids = self.get_asteroids()

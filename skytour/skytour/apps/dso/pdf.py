@@ -95,7 +95,7 @@ def create_pdf_page(dso, fn=None):
     for o in obs:
         dt = o.ut_datetime.strftime('%Y-%m-%d %H:%M UT')
         om = o.observation_metadata
-        loc = f"{o.location.city}, {o.location.state.abbreviation}"
+        loc = f"{o.location.city}, {o.location.region_name}"
         p, y = label_and_text(p, X0 +  0, y, "", (f"{dt}", 7), cr=0)
         p, y = label_and_text(p, X0 + 80, y, "", (loc, 7), cr=0)
         p, y = label_and_text(p, X0 + 160, y, "", (f"{float2ang(om['altitude'], 'dm')}", 7), cr=0)
