@@ -217,7 +217,7 @@ class ObservingLocation(models.Model):
 
     @property
     def name_for_header(self):
-        x = "{}, {} {}".format(self.street_address, self.city, self.region_name)
+        x = "{}, {} {}".format(self.street_address, self.city, self.short_region_name)
         if self.name:
             x = "{}: ".format(self.name) + x
         return x
