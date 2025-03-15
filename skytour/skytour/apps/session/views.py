@@ -85,6 +85,7 @@ class SetSessionCookieView(FormView):
             time_zone = pytz.timezone(my_location.time_zone.pytz_name)
         except:
             time_zone = None
+            print(f"Error setting time_zone to {my_location.time_zone.pytz_name}")
 
         min_dec, max_dec = get_declination_range(my_location, min_altitude=d['min_object_altitude'])
         dec_limit = min_dec if my_location.latitude >= 0. else max_dec

@@ -101,8 +101,10 @@
                         <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
                     </td>
                     <td  class="description operations" rowspan=2>
+                        {% if slug != 'moon' %}
                         <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button class="op">   Admin   </button></a>
                         <br>
+                        {% endif %}
                         {% if object.slug %}
                         <a href="{% url 'sso-pdf' 'planet' slug %}" target="_new"><button class="op">PDF View</button></a>
                         <br>

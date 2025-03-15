@@ -22,3 +22,6 @@ def possible_timezones(tz_offset, common_only=True):
             results.append(tz_name)
 
     return results
+
+def get_pytz_timezone(tz_offset):
+    pass

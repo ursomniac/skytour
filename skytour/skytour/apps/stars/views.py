@@ -55,21 +55,19 @@ class SkyView(CookieMixin, TemplateView):
         
         context['shown_datetime'] = utdt + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(pytz_tz))
-        context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
+        context['map_time_str'] = context['local_time'].strftime('%a %b %-d, %Y %-I:%M %p %z')
         context['mask'] = mask
         context['simple'] = simple
         context['hours'] = hours
         context['utdt_now'] = utdt_now
         context['min_dso_alt'] = min_dso_alt
-        title = f"Skymap: {context['local_time_str']} - {location.name_for_header}"
+        title = f"Skymap: {context['map_time_str']} - {location.name_for_header}"
 
         if simple:
             dso_list = get_simple_dso_list()
             asteroid_list = None
             comet_list = None
             reversed = False
-            # TODO: change default location!
-            #title = f"Skymap: {context['local_time_str']}"
             title = ''
         else:
             dso_list = None # Get from DSO table

@@ -65,6 +65,12 @@ class TimeZone(models.Model):
         _('Abbreviation'),
         max_length = 5
     )
+    pytz_label = models.CharField (
+        _('PYTZ Label'),
+        max_length = 50,
+        blank=True, null=True,
+        help_text = 'Needed for local time, help with DST'
+    )
 
     @property
     def time_code(self):
@@ -76,7 +82,8 @@ class TimeZone(models.Model):
     
     @property 
     def pytz_name(self):
-        return possible_timezones(self.utc_offset)[0]
+        #return possible_timezones(self.utc_offset)[0]
+        return self.pytz_label
 
     def __str__(self):
         return "{} (UTC {:+d})".format(self.name, self.utc_offset)

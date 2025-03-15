@@ -52,7 +52,7 @@
         
         </td>
         <td>
-            <label>Local Time:</label> {{ real_time.local_time_str }}<br/>
+            <label>Local Time:</label> {{ real_time.local_time_display_str }}<br/>
             <label>Magnitude:</label> 
             {{ real_time.apparent_magnitude|floatformat:1 }}
             {% if real_time.surface_brightness %}

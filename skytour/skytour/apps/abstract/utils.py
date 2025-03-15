@@ -127,16 +127,23 @@ def get_real_time_conditions(
     # Set up datetimes
     utdt = dt.datetime.now(dt.timezone.utc) if dt_base == 'now' else context['utdt_start']
     utdt += dt.timedelta(hours=offset)
+    
+    if 'location' in context.keys():
+        location = context['location']
+    else:
+        location = ObservingLocation.get_default_location()
+    time_zone = location.time_zone.pytz_label
 
     if dt_base == 'cookie':
-        local_time = context['local_time'] + dt.timedelta(hours=offset)
+        offset_cookie_time = context['local_time'] + dt.timedelta(hours=offset)
+        local_time = offset_cookie_time.astimezone(pytz.timezone(time_zone))
     else:
-        time_zone = ObservingLocation.get_default_location().time_zone
-        local_time = utdt.astimezone(pytz.timezone(time_zone.pytz_name))
+        #time_zone = ObservingLocation.get_default_location().time_zone
+        local_time = utdt.astimezone(pytz.timezone(time_zone))
 
     # STUPID BUG IN DJANGO - AFAICT the |date template tag ALWAYS goes back to the
     #   System time zone, so local_time will ALWAYS BE in UTC
-    local_time_str = local_time.strftime("%Y-%b-%d %H:%M:%S")
+    local_time_display_str = local_time.strftime("%Y-%b-%d %H:%M:%S")
 
     if debug:
         print(f"UT: {utdt}")
@@ -237,7 +244,7 @@ def get_real_time_conditions(
         d = dict(
             utdt = utdt,
             local_time = local_time,
-            local_time_str = local_time_str,
+            local_time_display_str = local_time_display_str,
             location = location,
             ra = ra,
             dec = dec,

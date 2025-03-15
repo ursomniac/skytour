@@ -61,6 +61,7 @@
     }
     .navdiv-l { margin-right: 8px; text-align:right; }
     .navdiv-l, .navdiv-r { display: inline-block;  }
+    button.admin { width: auto; }
 </style>
 <table width="100%" class="navbar">
     <tr>
@@ -93,7 +94,7 @@
         <td class="op-site">
             <a href="{% url 'site-parameter-list' %}">Settings</a>
             &nbsp; | &nbsp;
-            <a href="/admin" target="_new"><button>Admin</button></a>
+            <a href="/admin" target="_new"><button class="admin">Admin</button></a>
         </td>
         <td colspan=2 class="op-dso">
             <span onClick="myFunctionDSO()" class="dropbtn">DSOs&nbsp;&nbsp; 🔽</span>

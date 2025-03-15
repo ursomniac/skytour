@@ -31,10 +31,10 @@ def get_global_items(request):
     if 'local_time_start' in user_preferences.keys() and user_preferences['local_time_start'] is not None:
         local_time = isoparse(user_preferences['local_time_start'])
     else:
-        local_time = dt.datetime.now() # This will come back as UTC because the server is set to that.
+        local_time = dt.datetime.now() 
         local_time_str = None
 
-    local_time_str = local_time.strftime("%b %d, %Y  %I:%M %p %Z")
+    local_time_str = local_time.strftime("%a %b %d, %Y  %I:%M %p %z")
     observing_mode = user_preferences.get('observing_mode', 'I')
     observing_mode_string = get_observing_mode_string(observing_mode)
     observing_mode_string_short = get_observing_mode_string(observing_mode, short=True)

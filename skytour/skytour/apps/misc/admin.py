@@ -54,7 +54,7 @@ class WebsiteAdmin(admin.ModelAdmin):
 
 class TimeZoneAdmin(admin.ModelAdmin):
     model = TimeZone
-    list_display = ['pk', 'name', 'abbreviation', 'utc_offset']
+    list_display = ['pk',  'utc_offset', 'name', 'pytz_label', 'abbreviation',]
 
 class PDFManualAdmin(admin.ModelAdmin):
     model = PDFManual

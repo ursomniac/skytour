@@ -56,7 +56,6 @@ class TodayPageView(CookieMixin, TemplateView):
         else:
             location = ObservingLocation.get_default_location()
         time_zone = pytz.timezone(location.time_zone.pytz_name)
-        print("LOCATION: ", location, type(location))
         
         context['now'] = utdt
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)

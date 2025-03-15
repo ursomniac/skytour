@@ -254,6 +254,7 @@ class LibraryAbstractImage(ObjectImage):
         if panel_str != '':
             pf = f"[{panel_str} - {self.order_in_list:3d}]"
         return  f"{self.object}: {pf} {self.ut_datetime} {self.telescope} {self.image_orientation} {self.image_processing_status}"
+    
     class Meta:
         abstract = True
 

@@ -102,10 +102,12 @@
             {% if random_dso_image %}
             {% with random_dso_image as img %}
             <h4 class="dso_title">
-                {{ img }}:
-                ({{ img.object.object_type.name }})
+                {{ img.object }}: {{ img.object.object_type.name }}
                 in
                 {{ img.object.constellation.name }}
+                <br>
+                <small>&nbsp;&nbsp;&nbsp;{{ img.caption }}</small>
+
             </h4>
             <img class="random_image" src="{{ img.image.url }}"/>
             <div class="image-text">{{ img.caption }}</div>
