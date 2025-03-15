@@ -7,14 +7,14 @@
     </style>
 </head>
 <body>
-    <h2>Telescope Successfully Deleted</h2>
-    <button class='popup-close' onClick="refreshParent(); closePopup();">Close and Refresh</button>
+    <h2>Filter Successfully Deleted</h2>
+    <button class='popup-close' onClick="refreshParent(); closeManualPopup();">Close and Refresh</button>
 <script>
     function refreshParent() {
         window.opener.location.reload();
         window.close();
     }
-    function closePopup() {
+    function closeWebsitePopup() {
         var me = window.self;
         me.opener = me.self;
         me.close();

@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Observing Locations: Skytour{% endblock %}
+{% block title %}Eyepieces: Skytour{% endblock %}
 {% block content %}
 <style>
-    table.tel { width: 75%; }
     h1 { color: #c90; }
     th { background-color: #990; color: #000; }
     td { padding-left: 20px; }
-    td.name { width: 30%; }
     td.edit { text-align: center; }
     button { width: 12em; }
     button.add { width: 15em; height: 3em; }
@@ -20,18 +18,20 @@
         padding: 2px 4px;
         font-size: 80%;
     }
+    table.new-eyepiece { width: 30%;  border: 1px solid #cc0; }
+    table.new-eyepiece td, th { border: none; }
 </style>
-<h1>Telescopes</h1>
+<h1>Eyepieces</h1>
 <br/><br/>
 
-<button onClick='toggleTelescopeCreateForm();' class="add">Add Telescope</button>
-<div class="telescope_list_form" id="telescope-create-form" style="display: none;">
-    <h2>Add Telescope</h2>
+<button onClick='toggleEyepieceCreateForm();' class="add">Add Eyepiece</button>
+<div class="eyepiece_list_form" id="eyepiece-create-form" style="display: none;">
+    <h2>Add Eyepiece</h2>
     {% if create_form %}
     {{ create_form.media }}
     <form method="post">
         {% csrf_token %}
-        <table class="new-telescope">
+        <table class="new-eyepiece">
             {{ create_form.as_table }}
         </table>
         <br><input type="submit" value="Submit"/>
@@ -44,29 +44,29 @@
 <br><br>
 
 <div class="container">
-<table class='tel'>
+<table class='eye'>
     <tr>
-        <th>Telescope</th>
-        <th>Aperture</th>
+        <th>Type</th>
         <th>Focal Length</th>
-        <th>Uses Eyepiece</th>
+        <th>Eyepiece FOV</th>
+        <th>Magnification</th>
+        <th>Angular FOV</th>
+        <th>Short Name</th>
+        <th>Telescope</th>
         <th>Edit</th>
     </tr>
     {% for object in object_list %}
     <tr>
-        <td class="name">
-            {{ object.name }}
-            {% if object.is_default %}
-            <span class="default">Default</span>
-            {% endif %}
-
-        </td>
-        <td>{{ object.aperture }} mm</td>
+        <td>{{ object.type }}</td>
         <td>{{ object.focal_length }} mm</td>
-        <td>{{ object.uses_eyepiece }}</td>
+        <td>{{ object.apparent_fov }}°</td>
+        <td>{{ object.magnification }}</td>
+        <td>{{ object.fov_display }}</td>
+        <td>{{ object.short_name }}</td>
+        <td>{{ object.telescope }}</td>
         <td class="edit">
-            <button onClick="popupEditTelescope( {{ object.pk }} );">✏️ Edit</button>
-            <button onClick='popupDeleteTelescope({{ object.pk }});'>⛔️ Delete</button>
+            <button onClick="popupEditEyepiece( {{ object.pk }} );">✏️ Edit</button>
+            <button onClick='popupDeleteEyepiece({{ object.pk }});'>⛔️ Delete</button>
         </td>
     </tr>
     {% endfor %}
@@ -81,11 +81,11 @@
     const trightPosition = tscreenWidth - twindowWidth - trightOffset;
     const ttopOffset = 200;
 
-    function popupEditTelescope(pk) {
-        const url = `/tech/telescope/edit/${pk}`;
+    function popupEditEyepiece(pk) {
+        const url = `/tech/eyepiece/edit/${pk}`;
         newWindow = window.open(
             url,
-            'Edit Telescope',
+            'Edit Eyepiece',
             `height=${twindowHeight},  width=${twindowWidth}, `
             + ` left=${trightPosition}, top=${ttopOffset}, `
             + 'menubar=no,toolbar=no,location=no,status=no',
@@ -93,11 +93,11 @@
         if (window.focus) { newWindow.focus() }
         return false;
     }
-    function popupDeleteTelescope(pk) {
-        const url = `/tech/telescope/delete/${pk}`;
+    function popupDeleteEyepiece(pk) {
+        const url = `/tech/eyepiece/delete/${pk}`;
         newWindow = window.open(
             url,
-            'Delete Telescope',
+            'Delete Eyepiece',
             `height=400,  width=500, `
             + ` left=${trightPosition}, top=${ttopOffset}, `
             + 'menubar=no,toolbar=no,location=no,status=no',
@@ -105,8 +105,8 @@
         if (window.focus) { newWindow.focus() }
         return false;
     }
-    function toggleTelescopeCreateForm() {
-        var formDiv = document.getElementById("telescope-create-form");
+    function toggleEyepieceCreateForm() {
+        var formDiv = document.getElementById("eyepiece-create-form");
         if (formDiv.style.display == "none") {
             formDiv.style.display = "block";
         } else {

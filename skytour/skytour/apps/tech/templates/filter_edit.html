@@ -3,32 +3,36 @@
     <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
     <style>
     h2 { color: #c90; }
-    table.edit-telescope { border: none;  width: 500px;  margin-left: 50px; }
-    table.edit-telescope td { 
+    table.edit-filter { border: none;  width: 500px;  margin-left: 50px; }
+    table.edit-filter td { 
         border: none;
         padding: 10px;
         line-height: 1.4;
     }
-    table.edit-telescope th {
+    table.edit-filter th {
         border: none;
         background-color: #996;
         color: #000;
     }
     table.form td, th { border: none; }
-    table.edit-telescope td.submit {
+    table.edit-filter td.submit {
         background-color: #999;
     }
-    table.edit-telescope td.popup-close {
+    table.edit-filter td.popup-close {
         background-color: #933; padding: 10px;
     }
+    td.submit { background-color: #999; }
+    td.submit button { width: 20em; }
+    td.popup-close { background-color: #900; }
     td.popup-close button {
+        width: 20em; 
         color: #000;
     }
     .helptext { color: #999; font-size: 85%; font-style: italic;}
     </style>
 </head>
 <body>
-    <h2>Edit Telescope</h2>
+    <h2>Edit Filter</h2>
     {% if form.errors %}
     <h6>{{ form.errors }}</h6>
     {% endif %}

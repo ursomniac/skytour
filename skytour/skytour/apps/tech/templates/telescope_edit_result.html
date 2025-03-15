@@ -8,13 +8,13 @@
 </head>
 <body>
     <h2>Telescope Successfully Edited</h2>
-    <button class='popup-close' onClick="refreshParent(); closeManualPopup();">Close and Refresh</button>
+    <button class='popup-close' onClick="refreshParent(); closePopup();">Close and Refresh</button>
 <script>
     function refreshParent() {
         window.opener.location.reload();
         window.close();
     }
-    function closeWebsitePopup() {
+    function closePopup() {
         var me = window.self;
         me.opener = me.self;
         me.close();

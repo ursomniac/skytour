@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Filters: Skytour{% endblock %}
+{% block content %}
+<style>
+    h1 { color: #c90; }
+    th { background-color: #990; color: #000; }
+    td { padding-left: 20px; vertical-align: top; color: #bbb; }
+    td.edit { text-align: center; padding: 2px 4px; 8px; 2px; }
+    td.edit button { width: 8em; margin: 4px 0px 4px 0px; }
+    button.add { width: 15em; height: 3em; }
+    h2 { margin: 4px; 0px 0px 0px; padding: 0px; }
+    .default { 
+        margin-left: 5px; 
+        margin-right: 5px;
+        float: right;
+        background-color: #c90;
+        color: #000;
+        padding: 2px 4px;
+        font-size: 80%;
+    }
+    table.new-filter { width: 30%;  border: 1px solid #cc0; }
+    table.new-filter td, th { border: none; }
+    table.new-filter td.submit { background-color: #999; height: 4em; vertical-align: middle!important;  }
+    table.new-filter td.submit input { width: 20em; height: 3em; }
+    td.specs { width: 20%; line-height: 1.4; }
+    img.trans { max-width: 200px;  margin-top: 10px; }
+    table.main { border: none; }
+    table.main td { border: 1px solid #999; }
+    table.spec-table { border: none; }
+    table.spec-table td, th { border: none; }
+    table.spec-table th { background-color: #333; color: #fff; font-weight: bold; }
+    table.main td.notes { width: 25%; }
+    .helptext { color: #fff; font-size: 85%; font-style: italic; }
+</style>
+<h1>Filters</h1>
+<br/><br/>
+
+<button onClick='toggleFilterCreateForm();' class="add">Add Filter</button>
+<br>
+<div class="filter_list_form" id="filter-create-form" style="display: none;">
+    <br><br>
+    <h2>Add Filter</h2>
+    {% if create_form %}
+    {{ create_form.media }}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="new-filter">
+            {{ create_form.as_table }}
+            <tr>
+                <td colspan="2" class="submit">
+                    <input type="submit" value="Submit"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+    <br>
+</div>
+<br><br>
+
+<div class="container">
+<table class='main'>
+    <tr>
+        <th>Specs</th>
+        <th>Trans. Curve</th>
+        <th>Watten Curve</th>
+        <th>Notes</th>
+        <th>Tech Notes</th>
+        <th>Edit</th>
+    </tr>
+    {% for object in object_list %}
+    <tr>
+        <td class="specs">
+            <table class="spec-table">
+                <tr><th>Name:</th>
+                    <td>
+                        {{ object.name }}
+                        ({{ object.short_name }})
+                    </td>
+                </tr>
+                <tr><th>Type:</th><td>{{ object.filter_type }}</td></tr>
+                <tr><th>Center:</th><td>{{ object.central_wavelength }} nm</td></tr>
+                <tr><th>FWHM:</th><td>{{ object.fwhm }} nm</td></tr>
+                <tr><th>Dom. Wave.:</th><td>{{ object.dominant_wavelength }} nm</td></tr>
+                <tr><th>Trans:</th><td>{{ object.transmission }} %</td></tr>
+            </table>
+        </td>
+        <td>
+            {% if object.transmission_curve %}
+            <a href="{{ object.transmission_curve.url }}" target="_new">
+            <img src="{{ object.transmission_curve.url }}" class="trans"/>
+            </a>
+            {% endif %}
+        </td>
+        <td>
+            {% if object.watten_curve %}
+            <a href="{{ object.watten_curve.url }}" target="_new">
+            <img src="{{ object.watten_curve.url }}" class="trans"/>
+            </a>
+            {% endif %}
+        </td>
+        <td class="notes">{{ object.notes|linebreaks }}</td>
+        <td>{{ object.tech_notes |linebreaks}}</td>
+        <td class="edit">
+            <button   onClick="popupEditFilter( {{ object.pk }} );">✏️ Edit</button>
+            <br>
+            <button onClick='popupDeleteFilter( {{ object.pk }} );'>⛔️ Delete</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<script>
+    const tscreenWidth = window.screen.width;
+    const twindowWidth = 800;
+    const twindowHeight = 900;
+    const trightOffset = 100;
+    const trightPosition = tscreenWidth - twindowWidth - trightOffset;
+    const ttopOffset = 200;
+
+    function popupEditFilter(pk) {
+        const url = `/tech/filter/edit/${pk}`;
+        newWindow = window.open(
+            url,
+            'Edit Filter',
+            `height=${twindowHeight},  width=${twindowWidth}, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function popupDeleteFilter(pk) {
+        const url = `/tech/filter/delete/${pk}`;
+        newWindow = window.open(
+            url,
+            'Delete Filter',
+            `height=400,  width=500, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function toggleFilterCreateForm() {
+        var formDiv = document.getElementById("filter-create-form");
+        if (formDiv.style.display == "none") {
+            formDiv.style.display = "block";
+        } else {
+            formDiv.style.display = "none";
+        }
+    }
+</script>
+{% endblock content %}

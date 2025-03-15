@@ -30,7 +30,12 @@ class EyepieceAdmin(admin.ModelAdmin):
 
 class TelescopeAdmin(admin.ModelAdmin):
     model = Telescope
-    list_display = ['pk', 'name', 'aperture', 'focal_length', 'sensor_field_of_view', 'sensor_resolution', 'order_in_list']
+    list_display = [
+        'pk', 'name', 'aperture', 'focal_length', 
+        'is_default', 'uses_eyepiece',
+        'sensor_field_of_view', 'sensor_resolution', 
+        'order_in_list'
+    ]
     readonly_fields = ['sensor_field_of_view', 'sensor_resolution']
     inlines = [SensorInline]
 

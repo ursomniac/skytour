@@ -31,6 +31,11 @@ class Telescope(models.Model):
         _('Is Default'),
         default = False
     )
+    uses_eyepiece = models.BooleanField (
+        _('Uses Eyepieces'),
+        default = False,
+        help_text = 'False for Imaging/Smart Telescopes'
+    )
 
     @classmethod
     def get_default_telescope(self):

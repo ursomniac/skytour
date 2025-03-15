@@ -18,13 +18,13 @@
     </style>
 
 <style>
-    table.delete-telescope { border: none;  width: 400px; }
-    table.delete-telescope td { 
+    table.delete-eyepiece { border: none;  width: 400px; }
+    table.delete-eyepiece td { 
         border: 1px solid #cc9; 
         padding: 10px;
         line-height: 1.4;
     }
-    table.delete-telescope th {
+    table.delete-eyepiece th {
         border: none;
         background-color: #996;
         color: #000;
@@ -34,14 +34,14 @@
 </head>
 <body>
     <style>
-        table.delete-telescope td { width: 50%; height: 5em; }
+        table.delete-eyepiece td { width: 50%; height: 5em; }
     </style>
-<div class="telescope_delete_form">
-    <h2>Delete Telescope</h2>
+<div class="eyepiece_delete_form">
+    <h2>Delete Eyepiece</h2>
     {{ form.media }}
     <form method="POST">
         {% csrf_token %}
-        <table class="delete-telescope">
+        <table class="delete-eyepiece">
             <tr>
                 <td>{{ form.as_p }}</td>
                 <td>
@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <td colspan=2 class='popup-close'>
-                    <button onClick="return closePopup();">Close Window</button>
+                    <button onClick="return closemanualPopup();">Close Window</button>
                 </td>
             </tr>
         </table>
@@ -69,7 +69,7 @@
     }
     checkbox.addEventListener('change', toggleSubmitButton);
     toggleSubmitButton(); // Initial check on page load
-    function closePopup() {
+    function closemanualPopup() {
         var me = window.self;
         me.opener = me.self;
         me.close();
