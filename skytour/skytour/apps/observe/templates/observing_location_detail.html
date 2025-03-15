@@ -30,12 +30,13 @@
 			<h2>{{ object.city }}, {{ object.state }}</h2>
 		</td>
 		<td width=33% class="description">
-			<b>Distance:</b>
+			<b>Distance: </b>
 			{{ object.travel_distance }} mi
-			<br><b>Travel Time:</b>
+			<br><b>Travel Time: </b>
 			{{ object.travel_time }} min
-			<br><b>Status:</b>
+			<br><b>Status: </b>
 			{{ object.status }}
+			<br><b>Is Default Location: </b>{{ object.is_default }}
 			<br><br>
 			<a href="{% url 'observing-location-update' object.pk %}"><button>Edit/Update</button></a>
 			<a href="/media/{{ object.pdf_form }}" target="_blank"><button>PDF Form</button></a>

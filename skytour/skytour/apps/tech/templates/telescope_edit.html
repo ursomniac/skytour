@@ -1,0 +1,68 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+    h2 { color: #c90; }
+    table.edit-telescope { border: none;  width: 500px;  margin-left: 50px; }
+    table.edit-telescope td { 
+        border: none;
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.edit-telescope th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    table.form td, th { border: none; }
+    table.edit-telescope td.submit {
+        background-color: #999;
+    }
+    table.edit-telescope td.popup-close {
+        background-color: #933; padding: 10px;
+    }
+    td.popup-close button {
+        color: #000;
+    }
+    .helptext { color: #999; font-size: 85%; font-style: italic;}
+    </style>
+</head>
+<body>
+    <h2>Edit Telescope</h2>
+    {% if form.errors %}
+    <h6>{{ form.errors }}</h6>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <table class="edit-telescope">
+            <tr>
+                <td>
+                    <table class="form">
+                    {{ form.as_table }}
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="submit" colspan=2>
+                    <input type="submit" value="Submit"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="popup-close">
+                    <button onClick="return closePopup();">Close Window</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+<script>
+function closeWebsitePopup() {
+    var me = window.self;
+    me.opener = me.self;
+    me.close();
+}
+</script>
+</html>
+
+
+

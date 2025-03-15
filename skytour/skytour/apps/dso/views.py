@@ -465,7 +465,7 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         dsos = up_dict['dsos']
         context['calc_utdt'] = up_dict['utdt']
         context['format_utdt'] = format_utdt
-        context['local_time'] = up_dict['utdt'].astimezone(pytz.timezone(location.time_zone.name)).strftime("%A %b %-d, %Y %-I:%M %p %z")
+        context['local_time'] = up_dict['utdt'].astimezone(pytz.timezone(location.time_zone.pytz_name)).strftime("%A %b %-d, %Y %-I:%M %p %z")
         context['dso_list'] = dsos
         context['dso_count'] = dsos.count()
         context['table_id'] = 'available_table'
@@ -487,7 +487,6 @@ class DSOEditMetadataView(UpdateView):
         context = super(DSOEditMetadataView, self).get_context_data(**kwargs)
         context['dso'] = self.get_object()
         return context
-
 
 class DSOManageExternalImageView(TemplateView):
     template_name = "manage_dso_image.html"

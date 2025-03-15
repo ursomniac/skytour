@@ -51,6 +51,11 @@
     {% with form.status as field %}
     {% include "inc_obs_form_field.html" %}
     {% endwith %}
+    &nbsp;&nbsp;&nbsp;
+    {% with form.is_default as field %}
+    {% include "inc_obs_form_field.html" %}
+    {% endwith %}
+
     <table class="subform">
         <tr>
             <td>

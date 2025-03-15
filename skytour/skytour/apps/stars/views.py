@@ -42,6 +42,7 @@ class SkyView(CookieMixin, TemplateView):
         # Set date/time for view
         utdt = context['utdt_start'] if not utdt_now else datetime.datetime.now(datetime.timezone.utc)
         location = context['location']
+        pytz_tz = location.time_zone.pytz_name
         # get cookies
         planets = context['cookies']['planets']
         asteroid_list = context['cookies']['asteroids']
@@ -53,7 +54,7 @@ class SkyView(CookieMixin, TemplateView):
         context['show_moon'] =  moon is not None 
         
         context['shown_datetime'] = utdt + datetime.timedelta(hours=hours)
-        context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(context['time_zone']))
+        context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(pytz_tz))
         context['local_time_str'] = context['local_time'].strftime('%A %b %-d, %Y %-I:%M %p %z')
         context['mask'] = mask
         context['simple'] = simple

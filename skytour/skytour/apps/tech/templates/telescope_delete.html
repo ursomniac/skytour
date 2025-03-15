@@ -1,0 +1,82 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/media/css/skytour.css" type="text/css">
+    <style>
+        * { 
+            background-color: #333; 
+            color: #ccc; 
+            padding: 10px; 
+        }
+        td.popup-close { 
+            background-color: #933;
+            padding: 10px;
+            color: #000;
+        }
+        .popup-close button {
+            color: #000;
+        }
+    </style>
+
+<style>
+    table.delete-telescope { border: none;  width: 400px; }
+    table.delete-telescope td { 
+        border: 1px solid #cc9; 
+        padding: 10px;
+        line-height: 1.4;
+    }
+    table.delete-telescope th {
+        border: none;
+        background-color: #996;
+        color: #000;
+    }
+    p { margin: 0px; padding: 4px 0px!important; }
+</style>
+</head>
+<body>
+    <style>
+        table.delete-telescope td { width: 50%; height: 5em; }
+    </style>
+<div class="telescope_delete_form">
+    <h2>Delete Telescope</h2>
+    {{ form.media }}
+    <form method="POST">
+        {% csrf_token %}
+        <table class="delete-telescope">
+            <tr>
+                <td>{{ form.as_p }}</td>
+                <td>
+                    <p><input type="submit" value="Submit" id="submitBtn"/></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class='popup-close'>
+                    <button onClick="return closemanualPopup();">Close Window</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+<script>
+    const checkbox = document.getElementById('id_delete_confirm');
+    const submitBtn = document.getElementById('submitBtn');
+    function toggleSubmitButton() {
+        if (checkbox.checked) {
+            submitBtn.style.display = 'block';
+        } else {
+            submitBtn.style.display = 'none';
+        }
+    }
+    checkbox.addEventListener('change', toggleSubmitButton);
+    toggleSubmitButton(); // Initial check on page load
+    function closemanualPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+</body>
+</html>
+
+
+

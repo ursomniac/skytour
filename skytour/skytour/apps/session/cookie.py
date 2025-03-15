@@ -34,11 +34,10 @@ def get_cookie_defaults():
     ut0 = datetime.datetime.now(datetime.timezone.utc)
     julian_date = get_julian_date(ut0)
     t = get_t_epoch(julian_date)
-    default_location_pk = ObservingLocation.objects.first().pk
 
     cookie_dict = dict (
         utdt_start = ut0.isoformat(),
-        location = find_site_parameter('default-location-id', default=default_location_pk, param_type='positive'),
+        location = ObservingLocation.get_default_location().pk,
         color_scheme = 'dark',
         julian_date = julian_date,
         t = t

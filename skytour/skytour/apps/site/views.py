@@ -1,6 +1,7 @@
 import datetime, pytz
 from django.views.generic.base import TemplateView
 from ..astro.calendar import get_upcoming_calendar, create_calendar_grid
+from ..observe.models import ObservingLocation
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.meteors import get_meteor_showers
@@ -49,10 +50,13 @@ class TodayPageView(CookieMixin, TemplateView):
             context['adjacent_planets'], _ = get_adjacent_planets(planets, context['utdt_start'])
         else:
             context['adjacent_planets'] = None
-        if 'time_zone' in context.keys():
-            time_zone = pytz.timezone(context['time_zone'])
+
+        if 'location' in context.keys():
+            location = context['location']
         else:
-            time_zone = None
+            location = ObservingLocation.get_default_location()
+        time_zone = pytz.timezone(location.time_zone.pytz_name)
+        print("LOCATION: ", location, type(location))
         
         context['now'] = utdt
         context['meteor_showers'] = get_meteor_showers(utdt=utdt)

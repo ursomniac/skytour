@@ -44,5 +44,6 @@ urlpatterns = [
     path('solar_system/', include('skytour.apps.solar_system.urls_features')),
     path('sso_pdf/', include('skytour.apps.solar_system.urls_pdf')),
     path('stars/', include('skytour.apps.stars.urls')),
+    path('tech/', include('skytour.apps.tech.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

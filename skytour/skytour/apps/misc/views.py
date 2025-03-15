@@ -8,12 +8,20 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import UpdateView, DeleteView
 from ..astro.calendar import create_calendar_grid, is_leap_year
 from ..misc.models import TimeZone
+from ..observe.models import ObservingLocation
 from ..site_parameter.helpers import find_site_parameter
 from .models import Calendar, Website, Glossary, PDFManual
 from .forms import (
     WebsiteAddForm, WebsiteEditForm, WebsiteDeleteForm,
     PDFManualAddForm, PDFManualEditForm, PDFManualDeleteForm
 )
+
+MONTHS = [
+    (1, 'January', 'Jan'), (2, 'February', 'Feb'), (3, 'March', 'Mar'),
+    (4, 'April', 'Apr'), (5, 'May', 'May'), (6, 'June', 'Jun'),
+    (7, 'July', 'Jul'), (8, 'August', 'Aug'), (9, 'September', 'Sep'),
+    (10, 'October', 'Oct'), (11, 'November', 'Nov'), (12, 'December', 'Dec')
+]
 
 class CalendarYearView(YearArchiveView):
     """
@@ -27,7 +35,9 @@ class CalendarYearView(YearArchiveView):
 
     def get_context_data(self, **kwargs):
         context = super(CalendarYearView, self).get_context_data(**kwargs)
+        context['year'] = self.kwargs['year']
         context['event_list'] = Calendar.objects.order_by('date')
+        context['months'] = MONTHS
         return context
     
 class CalendarMonthView(MonthArchiveView):
@@ -64,18 +74,35 @@ class CalendarMonthView(MonthArchiveView):
 
     def get_context_data(self, **kwargs):
         out = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        month_list = [None, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ]
         context = super(CalendarMonthView, self).get_context_data(**kwargs)
         context['event_list'] = Calendar.objects.order_by('date')
-        
         this_date = context['month'] # defined in super()
         this_month = this_date.month
         this_year = this_date.year
+
+        # Generate list of years for form
+        all = Calendar.objects.order_by('-date', '-time')
+        oldest_year = all.last().date.year
+        latest_year = all.first().date.year
+        year_list = list(range(oldest_year, latest_year + 1))[::-1]
+
+        context['year_list'] = year_list
+        context['month_list'] = month_list[1:]
+        context['form_year'] = this_year
+        context['form_month'] = month_list[this_month]
+        
         start_date = datetime.datetime(this_year, this_month, 1, 0, 0).replace(tzinfo=pytz.utc)
         days_out = 29 if this_month == 2 and is_leap_year(this_year) else out[this_month]
-        time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
-        my_time_zone = pytz.timezone(TimeZone.objects.get(pk=time_zone_id).pytz_name)
+
+        # TODO: Figure out how to localize for DST
+        my_time_zone = pytz.timezone(ObservingLocation.get_default_location().time_zone.pytz_name)
+
         grid = create_calendar_grid(start_date, days_out=days_out - 1, time_zone=my_time_zone)
         context['grid'] = grid        
+        
         return context
     
 class WebsiteListView(ListView):

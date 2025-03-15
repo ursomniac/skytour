@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Observing Locations: Skytour{% endblock %}
+{% block content %}
+<style>
+    table.tel { width: 900px; }
+    h1 { color: #c90; }
+    th { background-color: #990; color: #000; }
+    td { padding-left: 20px; }
+    td.name { width: 30%; }
+    td.edit { text-align: center; }
+    button { width: 12em; }
+    button.add { width: 15em; height: 3em; }
+    h2 { margin: 4px; 0px 0px 0px; padding: 0px; }
+    .default { 
+        margin-left: 5px; 
+        margin-right: 5px;
+        float: right;
+        background-color: #c90;
+        color: #000;
+        padding: 2px 4px;
+        font-size: 80%;
+    }
+</style>
+<h1>Telescopes</h1>
+<br/><br/>
+
+<button onClick='toggleTelescopeCreateForm();' class="add">Add Telescope</button>
+<div class="telescope_list_form" id="telescope-create-form" style="display: none;">
+    <h2>Add Telescope</h2>
+    {% if create_form %}
+    {{ create_form.media }}
+    <form method="post">
+        {% csrf_token %}
+        <table class="new-telescope">
+            {{ create_form.as_table }}
+        </table>
+        <br><input type="submit" value="Submit"/>
+    </form>
+    {% else %}
+    There is no form!
+    {% endif %}
+    <br>
+</div>
+<br><br>
+
+<div class="container">
+<table class='tel'>
+    <tr><th>Telescope</th><th>Aperture</th><th>Focal Length</th><th>Edit</th></tr>
+    {% for object in object_list %}
+    <tr>
+        <td class="name">
+            {{ object.name }}
+            {% if object.is_default %}
+            <span class="default">Default</span>
+            {% endif %}
+
+        </td>
+        <td>{{ object.aperture }} mm</td>
+        <td>{{ object.focal_length }} mm</td>
+        <td class="edit">
+            <button onClick="popupEditTelescope( {{ object.pk }} );">✏️ Edit</button>
+            <button onClick='popupDeleteTelescope({{ object.pk }});'>⛔️ Delete</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<script>
+    const tscreenWidth = window.screen.width;
+    const twindowWidth = 600;
+    const twindowHeight = 600;
+    const trightOffset = 100;
+    const trightPosition = tscreenWidth - twindowWidth - trightOffset;
+    const ttopOffset = 200;
+
+    function popupEditTelescope(pk) {
+        const url = `/tech/telescope/edit/${pk}`;
+        newWindow = window.open(
+            url,
+            'Edit Telescope',
+            `height=${twindowHeight},  width=${twindowWidth}, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function popupDeleteTelescope(pk) {
+        const url = `/tech/telescope/delete/${pk}`;
+        newWindow = window.open(
+            url,
+            'Delete Telescope',
+            `height=400,  width=500, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+    function toggleTelescopeCreateForm() {
+        var formDiv = document.getElementById("telescope-create-form");
+        if (formDiv.style.display == "none") {
+            formDiv.style.display = "block";
+        } else {
+            formDiv.style.display = "none";
+        }
+    }
+</script>
+{% endblock content %}

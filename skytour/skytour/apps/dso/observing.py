@@ -23,9 +23,10 @@ def make_observing_date_grid(dso):
     )
     
 def get_max_altitude(dso, location=None):
+    
     if location is None: # Get the default location
-        location_id = find_site_parameter('default-location-id', param_type=int, default=1)
-        location = ObservingLocation.objects.get(pk=location_id)
+        location = ObservingLocation.get_default_location()
+
     lat = location.latitude
     delta = 90. - lat + dso.dec
     delta = 180 - delta if delta > 90 else delta

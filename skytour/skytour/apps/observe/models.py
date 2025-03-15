@@ -49,6 +49,10 @@ class ObservingLocation(models.Model):
         choices = STATUS_CHOICES,
         default = 'TBD'
     )
+    is_default = models.BooleanField (
+        _('Default Location'),
+        default = False
+    )
     #
     ### GEOSPATIAL FIELDS
     latitude = models.FloatField (
@@ -155,6 +159,13 @@ class ObservingLocation(models.Model):
     def bortle_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.bortle_image.url)
 
+    @classmethod
+    def get_default_location(cls):
+        obj = cls.objects.filter(is_default=True).first()
+        if obj is not None:
+            return obj
+        return cls.objects.first()
+    
     @property
     def plotting_marker_type(self):
         if self.state:
@@ -291,6 +302,9 @@ class ObservingLocation(models.Model):
             self.pdf_form.name = filename
         except:
             pass
+        # Handle default
+        if self.is_default:
+            ObservingLocation.objects.filter(is_default=True).update(is_default=False)
         super(ObservingLocation, self).save(*args, **kwargs)
         return
 

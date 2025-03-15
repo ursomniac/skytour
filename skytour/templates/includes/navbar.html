@@ -71,11 +71,10 @@
             <br>
             <a href="{% url 'main-help-page' %}"><div class="help">Help</div></a>
         </td>
-        <td class="click">
-            <span onClick="myFunctionHome()" class="dropbtn">Events&nbsp;&nbsp; 🔽</span>
-            <div id="myDropdownHome" class="dropdown-content">
-                <a href="{% url 'today' %}">Events - Now</a>
-                <a href="{% url 'today' %}?cookie">Events - Cookie</a>
+        <td>
+            <span onClick="myFunctionTech()" class="dropbtn">Technical&nbsp;&nbsp;  🔽</span>
+            <div id="myDropdownTech" class="dropdown-content">
+                <a href="{% url 'telescope-list' %}">Telescopes</a>
             </div>
         </td>
         <td class="click">
@@ -137,12 +136,20 @@
             <div id="myDropdownCalendar" class="dropdown-content">
                 <a href="{% url 'calendar-current' %}">This Month: {% now "M Y" %}</a>
                 <a href="{% url 'calendar-month' next_month|date:'Y' next_month|date:'b' %}">
-                    Next: {{ next_month|date:"M Y"}}</a>
+                    Next Month: {{ next_month|date:"M Y"}}</a>
                 <a href="{% url 'calendar-month' previous_month|date:'Y' previous_month|date:'b' %}">
-                    Last: {{ previous_month|date:"M Y"}}</a>
+                    Last Month: {{ previous_month|date:"M Y"}}</a>
+                <a href="{% url 'calendar-year' this_year %}">This Year: {{ this_year }}</a>
             </div>
         </td>
-        <td class="click op-sky" colspan="2">
+        <td class="op-info">
+            <span onClick="myFunctionHome()" class="dropbtn">Events&nbsp;&nbsp; 🔽</span>
+            <div id="myDropdownHome" class="dropdown-content">
+                <a href="{% url 'today' %}">Events - Now</a>
+                <a href="{% url 'today' %}?cookie">Events - Cookie</a>
+            </div>
+        </td>
+        <td class="click op-sky" colspan=1>
             <span onClick="myFunctionSkyMap()" class="dropbtn">SkyMap&nbsp;&nbsp; 🔽</span>
                 <div id="myDropdownSkyMap" class="dropdown-content">
                     <a href="{% url 'skymap-detail' %}">At Cookie Date/Time</a>
@@ -241,6 +248,9 @@
     }
     function myFunctionCalculator() {
         document.getElementById("myDropdownCalculator").classList.toggle("show");
+    }
+    function myFunctionTech() {
+        document.getElementById("myDropdownTech").classList.toggle("show");
     }
     window.onclick = function(event) {
         if(!event.target.matches('.dropbtn')) {

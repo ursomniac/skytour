@@ -130,10 +130,8 @@ def get_real_time_conditions(
 
     if dt_base == 'cookie':
         local_time = context['local_time'] + dt.timedelta(hours=offset)
-        time_zone = 'UTC'
     else:
-        time_zone_id = find_site_parameter('default-time-zone-id', 2, 'positive')
-        time_zone = TimeZone.objects.get(pk=time_zone_id)
+        time_zone = ObservingLocation.get_default_location().time_zone
         local_time = utdt.astimezone(pytz.timezone(time_zone.pytz_name))
 
     # STUPID BUG IN DJANGO - AFAICT the |date template tag ALWAYS goes back to the
@@ -141,7 +139,6 @@ def get_real_time_conditions(
     local_time_str = local_time.strftime("%Y-%b-%d %H:%M:%S")
 
     if debug:
-        print(f"TZ: {time_zone}")
         print(f"UT: {utdt}")
         print(f"LOCAL: {local_time}")
 
@@ -152,9 +149,8 @@ def get_real_time_conditions(
         try:
             location = context['location']
         except:
-            location_id = find_site_parameter('default-location-id', default=48, param_type='positive'),
-            location = ObservingLocation.objects.filter(pk=location_id[0]).first()
-
+            location = ObservingLocation.get_default_location()
+            
     lunar_distance = None
     try:
         if is_moon:

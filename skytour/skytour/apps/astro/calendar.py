@@ -65,8 +65,9 @@ def create_calendar_grid(start_date, location_pk = None, days_out=30, time_zone=
     ts = api.load.timescale()
     eph = api.load(get_ephemeris())
     if location_pk is None:
-        location_pk = find_site_parameter('default-location-id', 43, 'positive')
-    location = ObservingLocation.objects.get(pk=location_pk)
+        location = ObservingLocation.get_default_location()
+    else:
+        location = ObservingLocation.objects.get(pk=location_pk)
     loc = api.wgs84.latlon(location.latitude, location.longitude)
 
     # Create a list of data, one for each day shown

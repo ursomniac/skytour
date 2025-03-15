@@ -1,42 +1,86 @@
 {% extends 'base.html' %}
 {% block title %}{{ month|date:"M Y" }} Events: Skytour{% endblock %}
 {% block content %}
-
+<style>
+    h1 { color: #c90; }
+    h2 { color: #fc0; }
+    h3 { font-size: 120%; }
+    table.nav { border: none; }
+    table.nav td { width: 20%; border: none; }
+    table.nav td select { 
+        height: 30px; 
+        font-size: 110%; 
+        width: 5em; 
+        margin-right: 10px; 
+        background-color: #bbb;
+    }
+    table.nav td input { 
+        height: 30px; 
+        font-size: 110%; 
+        width: 10em;  
+        margin-left: 5px; 
+        background-color: #bbb;
+    }
+    table.nav td.admin { text-align: right; }
+    table.nav td.admin button { 
+        width: 15em; 
+        height: 30px;  
+        background-color: #999;
+    }
+    span.helptext { font-size: 85%; }
+    span.white { color: #fff; }
+</style>
 <h1>Events</h1>
-<h2>
-    <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
-        {{ previous_month|date:"M Y"}}</a>
-    &nbsp; | &nbsp; {{ month|date:"M Y"}} &nbsp; | &nbsp;
-    <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
-        {{ next_month|date:"M Y"}}</a>
-</h2>
-<form target="" method="GET">
-    <select name="month">
-        <option>Jan</option>  <option>Feb</option>  <option>Mar</option>
-        <option>Apr</option>  <option>May</option>  <option>Jun</option>
-        <option>Jul</option>  <option>Aug</option>  <option>Sep</option>
-        <option>Oct</option>  <option>Nov</option>  <option>Dec</option>
-    </select>
-    <select name="year">
-        <option>2026</option>
-        <option selected>2025</option>
-        <option>2024</option>
-        <option>2023</option>
-        <option>2022</option>
-    </select>
-    <input type="submit">
-</form>
+<table class="nav">
+    <tr>
+        <td>
+            <h3>
+            <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
+                {{ previous_month|date:"M Y"}}</a>
+                &nbsp; | &nbsp; 
+                <span class="white">{{ month|date:"M Y"}} </span>
+                &nbsp; | &nbsp;
+            <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
+                {{ next_month|date:"M Y"}}</a>
+            </h3>
+        </td>
+        <td>
+            <form target="" method="GET">
+                <select name="month">
+                    {% for month in month_list %}
+                    <option value="{{ month }}" {% if month == form_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
+                </select>
+                <select name="year">
+                    {% for year in year_list %}
+                    <option value="{{ year }}" {% if year == form_year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit">
+            </form>
+        </td>
+        <td colspan=6 class="admin">
+            <a href="/admin/misc/calendar"><button>Admin</button></a>
+            <br>
+            <span class="helptext">
+                <i>(to add/edit items - use with caution)</i>
+            </span>
+        </td>
+    </tr>
+</table>
 
 {% include 'inc_calendar_grid.html' %}
 
-<h2>
+<h3>
     <a href="{% url 'calendar-month' year=previous_month|date:'Y' month=previous_month|date:'b' %}">
         {{ previous_month|date:"M Y"}}
     </a>
-    &nbsp; | &nbsp; {{ month|date:"M Y"}} &nbsp; | &nbsp;
+    &nbsp; | &nbsp; 
+    <span class="white">{{ month|date:"M Y"}}</span>
+    &nbsp; | &nbsp;
     <a href="{% url 'calendar-month' year=next_month|date:'Y' month=next_month|date:'b' %}">
         {{ next_month|date:"M Y"}}
     </a>
-</h2>
+</h3>
 
 {% endblock %}

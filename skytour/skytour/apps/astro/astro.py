@@ -28,8 +28,7 @@ def get_delta_hour_for_altitude(dec, alt=20, dlat=None, send='days', debug=False
     ralt = math.radians(alt)
     # latitude
     if dlat is None:
-        pk = find_site_parameter('default-location-id', default=1, param_type=int)
-        loc = ObservingLocation.objects.get(pk=pk)
+        loc = ObservingLocation.get_default_location()
         dlat = loc.latitude
     if debug:
         print(f"PHI: {dlat} = {phi}")

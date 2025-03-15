@@ -6,6 +6,7 @@ class NewObservingLocationForm(forms.ModelForm):
         model = ObservingLocation
         fields = [
             'status',
+            'is_default',
             'name',
             'street_address',
             'city',

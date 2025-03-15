@@ -53,8 +53,7 @@ def find_dsos_at_location_and_time (
 
     # 2. get location if not sent
     if location is None:
-        location_id = find_site_parameter('default-location-id', default=1, param_type='positive')
-        location = ObservingLocation.objects.get(pk=location_id)
+        location = ObservingLocation.get_default_location()
     
     times.append((time.perf_counter(), 'Filtering DSOs'))
 

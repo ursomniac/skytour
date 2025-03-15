@@ -85,6 +85,7 @@ class SetSessionCookieView(FormView):
             time_zone = pytz.timezone(my_location.time_zone.pytz_name)
         except:
             time_zone = None
+
         min_dec, max_dec = get_declination_range(my_location, min_altitude=d['min_object_altitude'])
         dec_limit = min_dec if my_location.latitude >= 0. else max_dec
 
@@ -263,11 +264,10 @@ class ObservingPlanV2View(CookieMixin, FormView):
             return response
         return self.render_to_response(context)
     
-    
     def get_context_data(self, **kwargs):
         context = super(ObservingPlanV2View, self).get_context_data(**kwargs)
         local_time = context['local_time_start']
-        ztime = datetime.datetime.fromisoformat(local_time).astimezone(tzone)
+        ztime = datetime.datetime.fromisoformat(local_time) #.astimezone(tzone)
         context['zenith_time'] = ztime.strftime("%A %b %-d, %Y %-I:%M %p %z")
         context['now'] = datetime.datetime.now(datetime.timezone.utc)
         asteroids = self.get_asteroids()
@@ -349,9 +349,10 @@ class SessionAddView(CookieMixin, FormView):
         location = deal.get('location', None)
         if location is not None:
             initial['location'] = location
-        tel_pk = find_site_parameter('default-telescope-pk', None, 'positive')
-        if tel_pk is not None:
-            initial['telescope'] = Telescope.objects.filter(pk=tel_pk).first()
+
+        # Default Telescope
+        initial['telescope'] = Telescope.get_default_telescope()
+        
         return initial
 
     def get_context_data(self, **kwargs):

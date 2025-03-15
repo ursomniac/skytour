@@ -27,6 +27,17 @@ class Telescope(models.Model):
         default = YES,
         help_text='If active will show up on drop-downs for telescopes'
     )
+    is_default = models.BooleanField (
+        _('Is Default'),
+        default = False
+    )
+
+    @classmethod
+    def get_default_telescope(self):
+        tel = Telescope.objects.filter(is_default=True).first()
+        if tel is not None:
+            return tel
+        return Telescope.objects.first()
 
     @property
     def f_ratio(self):
@@ -46,6 +57,13 @@ class Telescope(models.Model):
 
     class Meta:
         ordering = ['order_in_list']
+
+    def save(self, *args, **kwargs):
+        # Handle default
+        if self.is_default:
+            Telescope.objects.filter(is_default=True).update(is_default=False)
+        super(Telescope, self).save(*args, **kwargs)
+        return
         
     def __str__(self):
         return self.name
