@@ -224,7 +224,7 @@ class ObservingLocation(models.Model):
 
     @property
     def short_name(self):
-        return f"{self.city}, {self.state.short_region_name}: {self.name}"
+        return f"{self.city}, {self.short_region_name}: {self.name}"
 
     @property
     def limiting_magnitude(self):
@@ -293,7 +293,7 @@ class ObservingLocation(models.Model):
             tag = self.street_address
 
         return "{}: {} | {} {}, {}".format(
-            self.pk, self.status, tag, self.city, self.region_name
+            self.pk, self.status, tag, self.city, self.short_region_name
         )
 
     def save(self, *args, **kwargs):

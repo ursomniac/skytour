@@ -23,7 +23,7 @@ from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
 from ..dso.models import DSOObservation
 from ..observe.models import ObservingLocation
-from ..site_parameter.helpers import find_site_parameter
+from ..plotting.scatter import create_histogram
 from ..solar_system.helpers import ( 
     get_planet_positions, 
     get_comet_positions,
@@ -261,7 +261,6 @@ class ObservingPlanV2View(CookieMixin, FormView):
         buffer.seek(0)
         if p:
             response = HttpResponse(buffer, content_type='application/pdf')
-            #response['Content-Disposition'] = 'attachment; filename="skytour_plan.pdf"'
             return response
         return self.render_to_response(context)
     
@@ -394,7 +393,6 @@ class SessionAddView(CookieMixin, FormView):
                 shown_name = shown_name.replace(' ', '-')
             if d['catalog'].abbreviation == 'OTHER':
                 shown_name = shown_name.replace('OTHER ','')
-            #print("SHOWN NAME: ", shown_name)
             object = lookup_dso(shown_name)
             if object is None:
                 raise ValidationError(f"Failed to look up DSO {d['catalog']} {dso_id}")
@@ -453,7 +451,7 @@ class ObservingConditionsFormView(CreateView):
         self.session_id = session_id
         return super().form_valid(form)
 
-class ObservingCircumstancesView(ListView):
+class ObservingCircumstancesView(CookieMixin, ListView):
     model = ObservingCircumstances
     template_name = 'observing_conditions_list.html'
 
@@ -469,6 +467,28 @@ class ObservingCircumstancesView(ListView):
         # Histogram of SQM - ignore NaN values
         sqm_bins = np.linspace(20.0, 22.0, num=21)
         sqm_y, sqm_x = np.histogram(df['sqm'][~np.isnan(df['sqm'])], bins=sqm_bins)
+        ytotal = int(np.sum(sqm_y))
+        sqm_py = sqm_y.copy()
+        sqm_py = sqm_py / (ytotal + 0.)
+
+        plot_reversed = True
+        if 'color_scheme' in context.keys():
+            plot_reversed = context['color_scheme'] == 'dark'
+
+        context['sqm_hist'] = create_histogram(
+            sqm_x, sqm_y,
+            title = 'SQM Histogram',
+            xtitle = 'SQM',
+            ytitle = f'# Measures ({ ytotal } total)',
+            reversed = plot_reversed
+        )
+        context['sqm_phist'] = create_histogram(
+            sqm_x, sqm_py,
+            title = 'SQM Histogram',
+            xtitle = 'SQM',
+            ytitle = '% of Dist.',
+            reversed = plot_reversed
+        )
         return context
 
 class ObservingCircumstancesEditView(UpdateView):

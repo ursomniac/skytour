@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load skytour_filters humanize %}
-
-{% block styles %}
-{% endblock styles %}
 {% block title %}Tracker: Skytour{% endblock %}
 {% block content %}
 <style>
+    h1 { color: #fc0; }
+    h2 { color: #fc0; }
+    h3 { color: #960; }
     table { border: none; }
     table.form-table { 
         border: none;
@@ -13,12 +13,13 @@
     table.form-table th {
         background-color: #cc9;
         color: #000;
+        border: none!important;
     }
     table.form-table td {
         vertical-align: top;
-        border: 1px solid #996;
+        border: none!important;
     }
-    table.tracker-form  td{ border: 1px solid #ccc; }
+    table.tracker-form td { xborder: none; vertical-align: top;}
     td { border: 1px solid #999; }
     table.track-positions th {
         background-color: #996;
@@ -26,6 +27,20 @@
     }
     table.track-positions td {
         border: none;
+    }
+    td.submit { 
+        height: 4em;  ; 
+        background-color: #999;
+        vertical-align: middle!important;
+    }
+    td.submit input { 
+        width: 20em; height: 3em; 
+        margin-left: 5em; 
+    }
+    .helptext { 
+        font-style: italic;
+        font-size: 85%;
+        color: #fff;
     }
 </style>
 <h1>Tracker</h1>
@@ -37,8 +52,12 @@
                 {% csrf_token %}
                 <table class="form-table">
                     {{ form.as_table }}
+                <tr>
+                    <td colspan=3 class="submit">
+                        <input type="submit" value="Submit"/>
+                    </td>
+                </tr>
                 </table>
-                <br><input type="submit" value="Submit"/>
             </form>
             {% else %}
             There is no form!

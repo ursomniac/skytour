@@ -34,6 +34,9 @@ class AvailableDSOMixin(object):
         alt1 = self.request.GET.get('max_alt', None)
         max_alt = None if not haz(alt1) else float(alt1)
 
+        raw_cookie = self.request.GET.get('cookie', None)
+        is_now = raw_cookie is None
+
         if utdt:
             context['utdt'] = utdt.strftime('%Y-%m-%d %H:%M:%S')
         else:
@@ -48,6 +51,7 @@ class AvailableDSOMixin(object):
         context['min_alt'] = min_alt
         context['max_alt'] = max_alt
         context['min_priority'] = min_priority
+        context['is_now'] = is_now
 
-        print("SENDING CONTEXT BACK FROM DSO MIXIN: ", context.keys())
+        #print("SENDING CONTEXT BACK FROM DSO MIXIN: ", context.keys())
         return context

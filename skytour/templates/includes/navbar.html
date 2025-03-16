@@ -120,7 +120,7 @@
             <a href="{% url 'library-by-catalog' %}">Imaged</a>
         </td>
         <td class="click op-dso"><a href="{% url 'atlas-list' %}">Atlas</a></td>
-        <td colspan=2 class="op-dso">
+        <td colspan=3 class="op-dso">
             <form action="/dso/search" method="GET">
                 <b>Search DSO/Alias/In Field:</b>
                 &nbsp;&nbsp;
@@ -165,12 +165,17 @@
         <td class="click op-sso"><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
         <td class="click op-sso"><a href="{% url 'comet-list' %}">Comets</a></td>
         <td class="click op-sso"><a href="{% url 'object-track' %}">Track SSO</a></td>
-        <td colspan=3 class="op-ses"><b>Sessions:</b> &nbsp;&nbsp;
-            <a href="{% url 'session-list' %}">List</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'session-create' %}">Create New</a>
-            &nbsp;|&nbsp;
-            <a href="{% url 'session-add' %}">Observe</a>
+        <td colspan=1 class="op-ses">
+            <span onClick="myFunctionSession()" class="dropbtn">Session&nbsp;&nbsp; 🔽</span>
+                <div id="myDropdownSession" class="dropdown-content">
+                    <a href="{% url 'session-list' %}">List Sessions</a>
+                    <a href="{% url 'session-create' %}">Start New Session</a>
+                    <a href="{% url 'observing-circumstances' %}">Conditions List</a>
+                </div>
+        </td>
+        <td class="op-ses">
+            <b>Add Observation: </b>
+            <a href="{% url 'session-add' %}">DSO/SSO</a>
             &nbsp;|&nbsp;
             <a href="{% url 'session-conditions' %}">Conditions</a>
         </td>
@@ -217,7 +222,7 @@
                 <a onClick="openPopup('/astro/calc/exposureframes')">Est. Frames</a>
             </div>
         </td>
-        <td class="op-ses">
+        <td colspan=2 class="op-ses">
             <b>Cookie:</b>&nbsp;&nbsp;
             <a href="{% url 'session-set' %}"><button>Set Date/Time/Location</button></a>
             &nbsp;&nbsp;|&nbsp;&nbsp; 
@@ -251,6 +256,9 @@
     }
     function myFunctionTech() {
         document.getElementById("myDropdownTech").classList.toggle("show");
+    }
+    function myFunctionSession() {
+        document.getElementById("myDropdownSession").classList.toggle("show");
     }
     window.onclick = function(event) {
         if(!event.target.matches('.dropbtn')) {

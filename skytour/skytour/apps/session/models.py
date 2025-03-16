@@ -256,6 +256,9 @@ class ObservingCircumstances(models.Model):
         BUT those definitons are NOT linear - at all.
         This method just does it blindly - see the difference between B4 and B5, for example.
         """
+        if self.sqm is None:
+            return None
+        
         sqm_ranges = [
             (22.00, 23.00), # 1
             (21.90, 21.99), # 2

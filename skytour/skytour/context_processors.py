@@ -47,6 +47,10 @@ def get_global_items(request):
     this_month = adjust_date(now, offset=0)
     this_year = now.year
 
+    plot_reversed = False
+    if 'color_scheme' in user_preferences.keys():
+        plot_reversed = user_preferences.get('color_scheme', 'default') == 'dark'
+
     return dict(
         user_preferences=user_preferences,
         location=location,
@@ -60,5 +64,6 @@ def get_global_items(request):
         previous_month = previous_month,
         observing_mode = observing_mode,
         observing_mode_string = observing_mode_string,
-        observing_mode_string_short = observing_mode_string_short
+        observing_mode_string_short = observing_mode_string_short,
+        plot_reversed=plot_reversed
     )

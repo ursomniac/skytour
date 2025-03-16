@@ -32,6 +32,7 @@ def make_location_plot(
     xpad = 0.02,
     ypad = 0.02,
     grid = True,
+    reversed = False
 ):
     """
     This is an attempt to make it easy to make scatter plots...
@@ -51,7 +52,10 @@ def make_location_plot(
         brightness.append(obj.brightness)
         distance.append(obj.travel_distance)
         colors.append(STATUS_COLOR[obj.status])
-        markers.append(obj.state.marker)
+        if obj.state is not None:
+            markers.append(obj.state.marker)
+        else:
+            markers.append('x')
         sizes.append(SIZES[obj.status] * .5)
 
     if type == 'sqm':
@@ -83,11 +87,12 @@ def make_location_plot(
         grid = grid, title=title,
         xtitle = xtitle, ytitle=ytitle,
         xpad = xpad, ypad = ypad,
-        lines = lines
+        lines = lines,
+        reversed = reversed
     )
     return image
 
-def plot_expect_vs_observed_sqm(locations):
+def plot_expect_vs_observed_sqm(locations, reversed=False):
     xx = []
     yy = []
     ee = []
@@ -107,7 +112,8 @@ def plot_expect_vs_observed_sqm(locations):
             xrange = [min(2.9, min(xx)), max(5, max(xx))],
             yrange = [min(4, min(yy)), max(6, max(yy))],
             other_lines = [([3, 6], [3, 6]),],
-            title='Obs. Bortle vs. Expected'
+            title='Obs. Bortle vs. Expected',
+            reversed=reversed
         )
     return image
 

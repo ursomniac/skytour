@@ -30,14 +30,13 @@ def create_plot(
     """
     Given data, make a scatter plot.
     """
-	# Create a new figure
-    #style = 'dark_background' if reversed else 'default'
     fig = Figure()
-    #plt.style.use(style)
 
     if subplot: # NOTE: Isn't this a bug?
         panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])
-    
+    if reversed:
+        plt.style.use('dark_background')
+
     panel.set_title(title)
     panel.set_xlabel(xtitle)
     panel.set_ylabel(ytitle)
@@ -86,5 +85,39 @@ def create_plot(
     
     return pngImageB64String
 
-def create_histogram(x, y):
-    pass
+def create_histogram(
+        x, 
+        y, 
+        title='Title', 
+        xtitle='X Axis', 
+        ytitle='Y Axis',
+        binedges = True,
+        reversed = False
+    ):
+
+    if binedges: 
+        bin_centers = (x[:-1] + x[1:]) / 2
+    else:
+        bin_centers = x
+
+    fig = Figure()
+    subplot = (1, 1, 1)
+    if subplot: # NOTE: Isn't this a bug?
+        panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])
+    
+    if reversed:
+        panel.style.use('dark_background')
+    panel.set_title(title)
+    panel.set_xlabel(xtitle)
+    panel.set_ylabel(ytitle)
+    panel.bar(bin_centers, y, align='center')
+    
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    plt.cla()
+    plt.close(fig)
+    return pngImageB64String

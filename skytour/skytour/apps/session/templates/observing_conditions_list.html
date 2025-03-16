@@ -3,14 +3,21 @@
 {% block title %}Observing Conditions: Skytour{% endblock %}
 {% block content %}
 
-<h1>Observing Conditions</h1>
-
+<style>
+    h1 { color: #fc0; }
+    th { background-color: #cc0; color: #000; }
+</style>
+<h1>Observing Circumstances</h1>
+<img src="{{ sqm_hist }}"/>
+<img src="{{ sqm_phist }}"/>
+<br>
 <table>
     <tr>
         <th>Session</th>
         <th>Location</th>
         <th>Time</th>
         <th>SQM</th>
+        <th>Bortle</th>
         <th>Temp.</th>
         <th>Hum.</th>
         <th>Wind</th>
@@ -21,7 +28,16 @@
         <td><a href="{% url 'observing-location-detail' obj.session.location.pk %}">{{ obj.session.location.short_name }}</a></td>
         <td>{{ obj.ut_datetime.time }}</td>
         <td>{{ obj.sqm|floatformat:2 }}</td>
-        <td>{{ obj.temperature|floatformat:0 }}°F</td>
+        <td>
+            {% if obj.effective_bortle %}
+            {{ obj.effective_bortle|floatformat:2 }}
+            {% endif %}
+        </td>
+        <td>
+            {% if obj.temperature %}
+            {{ obj.temperature|floatformat:0 }}°F
+            {% endif %}
+        </td>
         <td>{% if obj.humidity %}{{ obj.humidity }}%{% endif %}</td>
         <td>{% if obj.wind %}{{ obj.wind }}{% endif %}</td>
     </tr>

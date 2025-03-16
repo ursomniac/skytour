@@ -53,6 +53,7 @@ def deal_with_cookie(request, context):
 
     for k, v in cookie.items():
         context[k] = v
+        
     # Override these three values from the cookie where they're encoded
     context['utdt_start'] = isoparse(cookie['utdt_start'])
     context['location'] = ObservingLocation.objects.filter(pk=cookie['location']).first()

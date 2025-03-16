@@ -1,63 +1,12 @@
-
 {% extends 'base.html' %}
 {% load skytour_filters humanize %}
 {% block title %}Available DSOs: Skytour{% endblock %}
 {% block content %}
 <style>
-.plan td {
-    vertical-align: top;
-    padding: 1em;
-}
-.td-center td {
-  vertical-align: middle;
-}
-details {
-  user-select: none;
-}
+    h1 { color: #fc0; }
+    h2 { color: #f90; }
+    h5 { color: #f63; margin: 3px 2px 3px 2px; font-size: 16px; }
 
-details>summary span.icon {
-  width: 24px;
-  height: 24px;
-  transition: all 0.3s;
-  margin-left: auto;
-}
-
-table.subnav { 
-	width: 80%; 
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #603; 
-}
-table.subnav td {
-	text-align: center; 
-	vertical-align: middle !important; 
-	padding: 5px !important;
-	border: 1px solid white !important; 
-}
-table.subnav td a {
-	color: #fff; 
-	font-weight: 800; 
-	text-decoration: none;
-}
-
-details[open] summary span.icon {
-  transform: rotate(180deg);
-}
-summary {
-  display: flex;
-  cursor: pointer;
-  background-color: #666;
-  color: #fff;
-  padding: 4px 10px;
-  margin: 0px 10px 20px 10px;
-}
-
-summary::-webkit-details-marker {
-  display: none;
-}
-</style>
-<style>
-    span.light-yellow { color: #ffc; font-weight: bold; }
     span.infield { float: right; font-size: 80%; }
     span.nickname { font-style: italic; color: #ff9; }
     table.dso_table tbody th, 
@@ -68,17 +17,28 @@ summary::-webkit-details-marker {
     }
     table.filter_form label { color: #ff6; font-weight: bold; }
     table.filter_form { border: 1px solid #996; }
-    h5 { color: #ff6; margin: 2px 2px 4px 2px; font-size: 14px; }
+    table.filter_form td.submit { 
+        background-color: #666; 
+        height: 3em; 
+    }
+    table.filter_form td.submit input { 
+        width: 20em; 
+        height: 2em;
+        margin-left: 20px;
+    }
     span.gear { color: #999; font-weight: normal; }
     .add-del button { 
-        background-color: #999; 
+        background-color: rgba(144, 144, 144, 0); 
         padding: 2px 4px;  border: none;
         text-decoration: none;
+        font-size: 120%;
     }
+    table.top-main { border: none;  margin-bottom: 20px; }
+    table.top-main td { border: none;; }
 </style>
 
 <h1>Deep Sky Objects</h1>
-<table>
+<table class="top-main">
     <tr>
         <td>
 <h2>{{ dso_count }} DSOs available at:</h2>
@@ -89,6 +49,9 @@ summary::-webkit-details-marker {
         <td>
             <h5>Filter DSOs</h5>
             <form target="" method="GET">
+                {% if not is_now %}
+                <input type="hidden" name="cookie" value="on">
+                {% endif %}
                 <table class="filter_form">
                     <tr>
                         <td>
@@ -163,7 +126,7 @@ summary::-webkit-details-marker {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="2" class="submit">
                             <input type="submit">
                         </td>
                     </tr>
@@ -172,7 +135,6 @@ summary::-webkit-details-marker {
         </td>
     </tr>
 </table>
-
 <small>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>

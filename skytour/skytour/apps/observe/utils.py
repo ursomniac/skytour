@@ -33,7 +33,7 @@ def get_mean_obs_sqm(loc, include_moon=False, debug=True):
     
 def get_effective_bortle(sqm):
     if sqm is None:
-        return -1.
+        return None
     if sqm > 21.99:    # Bortle 1:  SQM > 21.99
         return 1.0
     elif sqm >= 21.89:  # Bortle 2:  SQM 21.89 to 21.99

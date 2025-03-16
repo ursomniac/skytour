@@ -49,16 +49,17 @@ class ObservingParametersForm(forms.Form):
     # Location
     location = forms.ModelChoiceField(
         queryset = get_observing_locations(ObservingLocation.objects.all())
-        #queryset = ObservingLocation.objects.exclude(status='Rejected').order_by('travel_distance')
     )
     # Override Altitude and Slew
     min_object_altitude = forms.FloatField(
         initial = find_site_parameter('minimum-object-altitude', default=10.0, param_type='float'),
         label = 'Min. Altitude Limit',
+        help_text = 'Lowest alititude for objects to be "available"'
     )
     slew_limit = forms.FloatField(
         initial = find_site_parameter('slew-limit', default=70.0, param_type='float'),
         label = 'Max. Altitude/Slew Limit',
+        help_text = 'For alt/az scopes, the maximum altitude.'
     )
     # Set Observing Mode
     observing_mode = forms.ChoiceField(

@@ -413,7 +413,6 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['no_mask'] = no_mask
         is_scheduled  = self.request.GET.get('scheduled', 'off') == 'on'
         context['scheduled'] = is_scheduled
-        use_cookie = self.request.GET.get('cookie', False)
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -429,11 +428,13 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['min_dec_string'] = f"{context['min_dec']:.1f}"
         context['max_dec_string'] = f"{context['max_dec']:.1f}"
 
-        if use_cookie:
+        if context['is_now']:
+            #print("Doing @Now")
+            context['utdt'] = dt.datetime.now(dt.timezone.utc)
+        else:
+            #print("Doing @Cookie")
             if context['utdt'] is None or context['utdt'] == 'None':
                 context['utdt'] = context['cookies']['user_pref']['utdt_start']
-        else: 
-            context['utdt'] = dt.datetime.now(dt.timezone.utc)
 
         orig_utdt = context['utdt']
         if type(orig_utdt) == str:

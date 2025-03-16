@@ -9,7 +9,7 @@ from .forms import NewObservingLocationForm
 from .models import ObservingLocation
 from .plot import make_location_plot, plot_sqm_history, plot_expect_vs_observed_sqm
 
-class ObservingLocationListView(ListView):
+class ObservingLocationListView(CookieMixin, ListView):
     model = ObservingLocation
     template_name = 'observing_location_list.html'
 
@@ -27,14 +27,14 @@ class ObservingLocationListView(ListView):
                     locations[s] = all_locations.filter(status=s).exclude(travel_distance__gt=max_distance)
             else:
                 locations[s] = all_locations.filter(status=s)
-            #print (f"LEN {s}: {locations[s].count()}")
         context['locations'] = locations
         context['sections'] = sections
+        reversed = context['color_scheme'] == 'dark'
 
         plot_locations = all_locations.exclude(travel_distance__gte=max_distance)
-        context['sqm_plot'] = make_location_plot(plot_locations, 'sqm')
-        context['brightness_plot'] = make_location_plot(plot_locations, 'bright')
-        context['bortle_plot'] = plot_expect_vs_observed_sqm(all_locations)
+        context['sqm_plot'] = make_location_plot(plot_locations, 'sqm', reversed=reversed)
+        context['brightness_plot'] = make_location_plot(plot_locations, 'bright', reversed=reversed)
+        context['bortle_plot'] = plot_expect_vs_observed_sqm(all_locations, reversed=reversed)
         context['table_id'] = 'location_table'
         return context
 

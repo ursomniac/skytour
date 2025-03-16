@@ -11,56 +11,29 @@
   border: solid 2px #FF0;
 }
 .now-button a {
-  color: #000;
+  text-decoration: none;
+  font-weight: bold;
 }
-
-.cookie_form  {
-  margin: 0px 20px 10px 40px;
-  width: 80%;
-}
-.cookie_form td.values { 
-  min-width: 30%;
-}
-
-th {
-  background-color: #999;
-  color: #000;
-}
-
-td {
-  padding: 5px 15px;
-}
-
-td.field_column {
-  text-align: right;
-}
-
-.submit_line td {
-  background-color: #666;
-}
+h1 { color: #fc0; }
+.h2-label { color: #c90; }
+.now-button a { color: #000; }
+.cookie_form  { margin: 0px 20px 10px 40px; }
+.cookie_form td.values { width: 40%; }
+th { background-color: #990; color: #000; }
+td { padding: 5px 15px; }
+td.field_column { text-align: right; width: 20%; }
+.submit_line td { background-color: #666; height: 4em; }
+.submit_line td.submit input { width: 20em; height: 3em; font-weight: bold; font-size: 120%; }
+.field-label { font-weight: bold; color: #fff; }
+.helptext { font-style: italic; font-size: 85%; color: #ccc; }
+.warning { font-style: italic; font-size: 110%; color: #ff9; }
 </style>
 
 <h1>Set Session Parameters</h1>
 <h2>
-  Current UT: {{ now|date:"D Y-M-d H:i" }}         
+  <span class="h2-label">Current UT: </span>{{ now|date:"D Y-M-d H:i" }}         
   <button class="now-button"><a href="#" onClick="autoFill(); return true;">Set Date/Time to Now</a></button>
 </h2>
-{% comment %}
-<div class="plan_form">
-    {% if form %}
-    <form method="post">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <br><input type="submit" value="Submit"/>
-        <small>&nbsp;&nbsp;<b>Note:</b> This may take ~30 seconds to run</small>
-    </form>
-    {% else %}
-    There is no form!
-    {% endif %}
-</div>
-{% endcomment %}
 
 <div class="cookie_form">
   {% if form %}
@@ -93,8 +66,8 @@ td.field_column {
       <tr>{% with field=form.atlas_dso_marker set_value=val.atlas_dso_marker %}{% include "inc_cookie_form_field.html" %}{% endwith %}</tr>
       <tr class="submit_line">
         <td></td>
-        <td><input type="submit" value="Submit"/></td>
-        <td><small>This may take ~10s to run</small></td>
+        <td class="submit"><input type="submit" value="Submit"/></td>
+        <td><span class="warning">This may take ~10s to run</span></td>
       </tr>
     </table>
   </form>
