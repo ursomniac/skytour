@@ -85,8 +85,6 @@
         <td class="click">
             <span onClick="myFunctionMisc()" class="dropbtn">Misc.&nbsp;&nbsp; 🔽</span>
             <div id="myDropdownMisc" class="dropdown-content">
-                <a href="{% url 'observing-plan-v2' %}">Plan</a>
-                <a href="{% url 'zenith-view' %}">Zenith Finding Chart</a>
                 <a href="{% url 'glossary-list' %}">Glossary</a>
                 <a href="{% url 'external-website-list' %}">Other Websites</a>
                 <a href="{% url 'manual-list' %}">Manuals/PDFs</a>
@@ -170,6 +168,8 @@
                 <div id="myDropdownSession" class="dropdown-content">
                     <a href="{% url 'session-list' %}">List Sessions</a>
                     <a href="{% url 'session-create' %}">Start New Session</a>
+                    <a href="{% url 'observing-plan-v2' %}">Plan</a>
+                    <a href="{% url 'zenith-view' %}">Zenith Finding Chart</a>
                     <a href="{% url 'observing-circumstances' %}">Conditions List</a>
                 </div>
         </td>

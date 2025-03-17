@@ -9,12 +9,13 @@
         height: 30px; 
         text-align: center;
     }
-
+    th.add-new { background-color: #960; }
     span.fn { font-size: 10px; }
     button.submit { width: 20em; }
     table.subtable td { width: 300px; }
     td.order { text-align: center;}
 </style>
+
 <h1>Manage Images for {{ dso.shown_name }}</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -67,7 +68,7 @@
     {% endfor %}
     {% if extra %}
     <tr>
-        <th><label for="id-{{ nimg }}">Add New Image:</label></th>
+        <th class='add-new'><label for="id-{{ nimg }}">Add New Image:</label></th>
     </tr>
     <tr>
         <td>

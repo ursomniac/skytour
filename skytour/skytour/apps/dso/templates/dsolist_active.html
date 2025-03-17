@@ -3,17 +3,51 @@
 {% block title %}DSO Lists Active Objects: Skytour{% endblock %}
 
 {% block content %}
-
-<h1>Lists of Deep Sky Objects on Active Lists</h1>
-
+<style>
+    h1 { color: #fc0; margin-left: 4px;  margin-top: 0px; }
+    table.list-nav { margin-top: 10px; border: none; }
+    table.list-nav td { vertical-align: top; border: none; }
+    table.inner { border: none; }
+    table.inner td { border: none; }
+    table.inner td button { width: 15em; font-weight: bold; }
+    button.add-button { height: 3em; width: 20em; font-weight: bold; }
+</style>
+<a name="top"></a>
+<table class="list-nav">
+    <tr>
+        <td>
+        <h1>Active DSO Lists</h1>
+        <br>
+        <button class="add-button" onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
+        </td>
+        <td class="lists">
+            <table class="inner">
+                {% for mylist in dso_lists reversed %}
+                {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
+                    <td>
+                        <a href="#list-{{ mylist.pk }}">
+                            <button>{{ mylist.name }}</button>
+                        </a>
+                    </td>
+                {% if forloop.revcounter|divisibleby:4 %}</tr>{% endif %}
+                {% endfor %}
+                {% if not forloop.revcounter|divisibleby:4 %}</tr>{% endif %}
+            </table>
+        </td>
+    </tr>
+</table>
 <br>
-<button onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
 {% include 'form_dsolist_create.html' %}
 <br>
 
 {% for mylist in dso_lists %}
+    <a name="list-{{ mylist.pk }}"></a>
     <h2>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_new">{{ mylist.name }}</a></h2>
-    <h3>{{ mylist.dso.all|length }} DSOs</h3>
+    <h3>
+        {{ mylist.dso.all|length }} DSOs
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="#top">Back to top</a>
+    </h3>
     {% with dso_list=mylist.dso.all load_adjust_script=False %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}
