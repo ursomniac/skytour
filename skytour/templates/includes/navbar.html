@@ -167,6 +167,7 @@
             <span onClick="myFunctionSession()" class="dropbtn">Session&nbsp;&nbsp; 🔽</span>
                 <div id="myDropdownSession" class="dropdown-content">
                     <a href="{% url 'session-list' %}">List Sessions</a>
+                    <a href="{% url 'session-latest' %}">Latest/Active Session</a>
                     <a href="{% url 'session-create' %}">Start New Session</a>
                     <a href="{% url 'observing-plan-v2' %}">Plan</a>
                     <a href="{% url 'zenith-view' %}">Zenith Finding Chart</a>

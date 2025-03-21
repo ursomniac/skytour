@@ -329,10 +329,16 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         help_text='DEPRECATED'
     )
     show_on_skymap = models.PositiveIntegerField (
-        _('Show on Skymap'),
+        _('Show on SkyMap'),
         default = 0,
         choices = INT_YES_NO,
-        help_text='Filter for DSOs on skymap'
+        help_text='Filter for DSOs on SkyMap'
+    )
+    show_on_simple_skymap = models.PositiveIntegerField ( 
+        _('Show on Simple SkyMap'),
+        default = 0,
+        choices = INT_YES_NO,
+        help_text = 'Show on the simple SkyMap'
     )
     pdf_page = models.FileField (
         _('PDF Page'),
@@ -554,6 +560,18 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         if n_in_fov > 0 and self.map_label is None:
             label += '+'
         return label
+    
+    @property
+    def observe_cat_entry(self):
+        """
+        This is for the situation where the label on chart isn't a simple
+        Catalog + ID in Catalog - and so it's not immediately apparent
+        what to enter in the AddObservation form.
+        """
+        entry = f"{self.catalog.abbreviation} {self.id_in_catalog}"
+        if entry != self.label_on_chart:
+            return entry
+        return None
     
     @property
     def dsos_in_field_count(self):

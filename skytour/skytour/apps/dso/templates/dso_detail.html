@@ -10,7 +10,11 @@
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
-	td.description { vertical-align: middle!important; text-align: center; line-height: 1.75; color: #FFF;}
+	td.description { 
+		vertical-align: middle!important; 
+		text-align: center; line-height: 1.75; 
+		color: #FFF;
+	}
 	td.description a { color: #ff0; }
 	td.operations { text-align: right; padding: 3px 10px!important; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
@@ -69,8 +73,8 @@
 	div.panel-type {float: right!important;  }
 	span.little-header { font-size: 10px; color: #999; margin-right: 2em; }
 	.popup-button, .popup-dso { float: right; }
-	.object-metadata { font-weight: bold; color: #ff9; }
-	div.conditions { padding: 5px; border: 1px solid #ccc; }
+	.object-metadata { font-weight: bold; color: #aa4; }
+	div.conditions { padding: 5px; border: 1px solid #ccc; line-height: 1.4; }
 	button.op { width: 12em; }
 	td.edit_images {
 		vertical-align: middle;
@@ -80,6 +84,16 @@
 	td.edit_images button { width: 20em; height: 20px; }
 	td.indented { background-color: #666; padding-left: 20px; }
 	.rightside { float: right!important; }
+	.white { color: #fff; }
+	span.cat_entry {
+		color: #ccc;
+		font-style: italic;
+	}
+	span.cat_entry_text {
+		color: #fff;
+		font-weight: bold;
+		font-style: normal;
+	}
 </style>
 {% endblock styles %}
 
@@ -122,10 +136,26 @@
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}?utdt_base=cookie')" class="op">
 					Cookie
 					</button>
+					<br/>
+					<a href="{% url 'session-add' %}?object_type=dso&pk={{ object.pk }}">
+					<button class="op">Observe</button>
+					</a>
 				</td>
 			</tr>
 			{% if object.alias_list %}
-			<tr><td class="aliases">{{ object.alias_list }}</td></tr>
+			<tr>
+				<td class="aliases">
+					{{ object.alias_list }}
+					{% if object.observe_cat_entry %}
+					<span class="cat_entry"> 
+						&nbsp; &mdash; &nbsp;
+						Use: 
+					<span class="cat_entry_text">{{ object.observe_cat_entry }}</span>
+						to add an Observation
+					</span>
+					{% endif %}
+				</td>
+			</tr>
 			{% endif %}
 		</table>
 	</td>
@@ -205,22 +235,25 @@
 						<span class="object-metadata">
 							Priority ({{ observing_mode_string_short }}):
 						</span>&nbsp;
-							{{ mode_priority_label }} 
-							{% if xmode_priority_span %}
-								&nbsp;&nbsp;					
-								{{ mode_priority_span }}
-							{% endif %}
-							{% if object.reimage %}
+						{% if observing_mode != 'I' %}
+						<span class="white">{{ mode_priority_label }}</span>
+						{% else %}				
+						{{ mode_priority_span }}
+						{% endif %}
+						{% if object.reimage %}
 							<span style="color:#0cc"> - REDO </span>
-							{% endif %}
-							<br><br>
-						<span class="object-metadata">On Skymap:</span>&nbsp;
+						{% endif %}
+						<br>
+						<span class="object-metadata">On SkyMap:</span>&nbsp;
 							{{ object.get_show_on_skymap_display }}
+						<br>
+						<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
+							{{ object.get_show_on_simple_skymap_display }}
 						{% if object.is_on_active_observing_list %}
-						<br><br>
+						<br>
 						🔭 - on active observing list
 						{% endif %}
-					</span>
+					</div>
 				</td>
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}
@@ -404,6 +437,14 @@
 	<td id="imaging_view" colspan=3 style="width:50%;">
 		{% if map_slideshow|length < 2 %}
 			<h3>Imaging Chart:</h3>
+			<div class="panel-type">
+				<span class="little-header">Full-Sized View Panel</span>
+				<div class="rightside">
+					<a href="{% url 'dso-manage-panel' 'landscape' object.pk %}">
+					<button>Manage Images</button>
+					</a>
+				</div>
+			</div>
 			{% if object.dso_imaging_chart %}
 			<img src="{{ object.dso_imaging_chart.url }}" width=100% style="display:block;">
 			{% else %}
@@ -566,6 +607,7 @@
 {% endif %}
 </table>
 
+{% include 'includes/performance_time.html' %}
 {% include 'includes/multiple_slideshows.html' %}
 {% endblock content %}
 
@@ -573,5 +615,4 @@
 {% include 'includes/realtime_script.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 <script src="/media/js/bootstrap.js">
-<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script-->
 {% endblock extra-js %}

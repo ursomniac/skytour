@@ -6,6 +6,7 @@
     td.subnav_ut {
         background: #303;
     }
+    td.subnav_ut input.submit { width: 15em; }
     td.side {
         width: 20%;
     }
@@ -105,13 +106,19 @@
                             <label for="simple">Simple: </label>
                             <input type="checkbox" name="simple" {% if simple %}checked{% endif %}>
                             &nbsp;&nbsp;&nbsp;
+                            <select type="custom">
+                                <option value="stanard" {% if custom == 'standard'%}selected{% endif %}>Standard</option>
+                                <option value="simple" {% if custom == 'simple' %}selected{% endif %}>Simple</option>
+                                <option value="dsolist" {% if custom == 'dsolist' %}selected>Active DSO Lists{% endif %}</option>
+                            </select>
+                            &nbsp;&nbsp;&nbsp;
                             <label for="utdt_now">Now: </label>
                             <input type="checkbox" name="utdt_now" {% if utdt_now %}checked{% endif %}>
                             &nbsp;&nbsp;&nbsp;
                             <label for="min_dso_alt">Min DSO Alt: </label>
                             <input name="min_dso_alt" size=3 {% if min_dso_alt %}value="{{ min_dso_alt }}"{% endif %}>
                             &nbsp;&nbsp;&nbsp;
-                            <input type="submit">
+                            <input class="submit" type="submit">
                         </form>
                     </td>
                 </tr>

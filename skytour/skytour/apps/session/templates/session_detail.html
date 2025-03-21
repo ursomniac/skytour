@@ -20,6 +20,7 @@
     h3 { color: #cc0; }
     h4 { color: #cc0; }
     span.edit-button { float: right; }
+    span.tel { font-weight: bold; color: #fff; }
 </style>
 {% endblock styles %}
 
@@ -141,7 +142,7 @@
         {% else %}
         <h4>Equipment:</h4>
         <table class="internal">
-            <tr><td>Telescope:</td><td>{{ target.telescope }}</td></tr>
+            <tr><td>Telescope:</td><td><span class="tel">{{ target.telescope }}</span></td></tr>
             <tr><td>Eyepiece(s):</td><td>{{ target.eyepiece_list }}</td></tr>
             <tr><td>Filter(s):</td><td>{{ target.filter_list }}</td></tr>
             {% endif %}

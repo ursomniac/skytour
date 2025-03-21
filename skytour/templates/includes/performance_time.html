@@ -2,7 +2,7 @@
 {% with times|last as final %}
 <h3 style="color: #999;">
     Page Generation Time: 
-    {{ final.2|floatformat:1 }} secs
+    {{ final.2|floatformat:2 }} secs
     <button onClick="togglePerformance();"
          style="margin-left: 20px;">Show Details</button>
 </h3>

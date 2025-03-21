@@ -28,6 +28,8 @@ class DSOMetadataForm(forms.ModelForm):
         fields = [
             'nickname',
             'reimage',
+            'show_on_skymap',
+            'show_on_simple_skymap',
             'override_metadata',
 
             'magnitude', 'magnitude_system',

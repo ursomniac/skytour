@@ -1,10 +1,10 @@
 import datetime as dt, pytz
 import io
+import time
 
 from dateutil.parser import isoparse
-
-from django.db.models import Count
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -110,18 +110,23 @@ class DSODetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSODetailView, self).get_context_data(**kwargs)
+        times = [(time.perf_counter(), 'Start')]
+
         object = self.get_object()
 
         observing_mode = context['observing_mode']
         priority_label = get_priority_label_of_observing_mode(object, observing_mode)
         tmp_span = get_priority_span_of_observing_mode(object, observing_mode)
         priority_span = None if tmp_span is None else mark_safe(tmp_span)
+        times.append((time.perf_counter(), 'Get priorities'))
 
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
         context['max_altitude'] = get_max_altitude(object, location=location)
         context['observing_date_grid'] = make_observing_date_grid(object)
+        times.append((time.perf_counter(), 'Get alt/grid'))
+
         context['image_list'] = self.object.images.order_by('order_in_list')
         context['other_library_images'] = self.object.image_library.all() # [1:]
         context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
@@ -129,9 +134,12 @@ class DSODetailView(CookieMixin, DetailView):
         context['finder_slideshow'] = self.object.finder_image_list
         context['other_metadata'] = self.object.other_metadata_text
         context['other_parameters'] = self.object.other_parameters
+        times.append((time.perf_counter(), 'Get other metadata'))
         context['active_dsolists'] = self.object.dsolist_set.filter(active_observing_list=True)
+        times.append((time.perf_counter(), 'Get DSO Lists'))
         context['mode_priority_label'] = priority_label
         context['mode_priority_span'] = priority_span
+        context['times'] = compile_times(times)
         return context
     
 class DSOListActiveView (TemplateView):
@@ -653,16 +661,18 @@ class DSOManageLibraryImagePanelView(TemplateView):
                     img_object.exposure = exptime
 
                 # deal with Telescope FK
-                if haz(vals['telescope']) and nodash(vals['telescope']):
+                if haz(vals['telescope']): # and nodash(vals['telescope']):
                     tel_id = int(vals['telescope'])
                     img_object.telescope_id = tel_id
 
                 # the others are all strings... so they're straightforward
-                if haz(vals['proc']) and nodash(vals['proc']):
+                if haz(vals['proc']): # and nodash(vals['proc']):
                     img_object.image_processing_status = vals['proc']
-                if haz(vals['orientation']) and nodash(vals['orientation']):
+
+                if haz(vals['orientation']): # and nodash(vals['orientation']):
                     img_object.image_orientation = vals['orientation']
-                if haz(vals['crop']) and nodash(vals['crop']):
+
+                if haz(vals['crop']): # and nodash(vals['crop']):
                     img_object.image_cropping = vals['crop']
 
                 print("READY TO SAFE: ", vals)

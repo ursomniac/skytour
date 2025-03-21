@@ -3,7 +3,6 @@ from ..astro.utils import get_sep
 from .atlas_utils import plate_list
 from .models import DSOList, AtlasPlate, DSO, AtlasPlateVersion, AtlasPlateSpecial, AtlasPlateSpecialVersion
 from .plot import create_atlas_plot
-from .vocabs import SIMPLE_DSO_LIST
 
 def create_dso_list_from_queryset(dsos, name='Default Name', description=None):
     """
@@ -156,9 +155,8 @@ def get_star_mag_limit(radius):
 
 def get_simple_dso_list():
     """
-    SIMPLE_DSO_LIST are the brightest/most popular DSOs (more or less)
-    used in the "simple" version of StarMap.  It's not likely to change (much)
-    though it COULD be customized if needed.
+    Only show the DSOs that have show_on_simple_skymap turned on.
+    This list can be user-customized.
     """
-    dso_list = DSO.objects.filter(pk__in=SIMPLE_DSO_LIST)
+    dso_list = DSO.objects.filter(show_on_simple_skymap=1)
     return dso_list

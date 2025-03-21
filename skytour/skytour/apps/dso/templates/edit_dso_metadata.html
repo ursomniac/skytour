@@ -22,6 +22,7 @@
     <td id="meta_left_column" class="meta"> <!--- left column -->
         <h2>Overall/Observing</h2>
         <table class="dso-edit">
+        <tr>
             <th>
                 <label for="id_nickname">Nickname:</label>
                 <br><span class="helptext">A nickname, e.g. "Crab Nebula"</span>
@@ -32,6 +33,21 @@
                 <br><span class="helptext">Check to override image filtering.</span>
             </th>
             <td>{{ form.reimage }}</td>
+        </tr>
+        <tr>
+            <th>
+                <label for="id_show_on_skymap">Show on SkyMap:</label>
+                <br><span class="helptext">Show on non-simple rendition of SkyMap</span>
+            </th>
+            <td>{{ form.show_on_skymap }}</td>
+            <th>
+            <label for="id_show_on_simple_skymap">Show on Simple SkyMap:</label>
+                <br><span class="helptext">Show on simple rendition of SkyMap</span>
+            </th>
+            <td>
+                {{ form.show_on_simple_skymap }}</td>
+            </td>
+        </tr>
         </table>
         <h2>Object Metadata</h2>
 
@@ -137,7 +153,9 @@
 </tr>
 <tr>
     <td colspan="2" class="escape">
+        <a href="{% url 'dso-detail' dso.pk }">
         <button >Close Window</button>
+        </a>
     </td>
 </tr>
 </table>

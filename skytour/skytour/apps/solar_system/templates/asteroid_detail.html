@@ -81,6 +81,10 @@
                     <button onclick="return realtimePopup('/asteroid/real-time/{{ object.slug }}?utdt_base=cookie')">
                         Cookie
                     </button>
+                    <br>
+                    <a href="{% url 'session-add' %}?object_type=asteroid&pk={{ object.pk }}">
+                        <button>Observe</button>
+                    </a>
                 </td>
             </tr>
             <tr>

@@ -592,16 +592,16 @@ class SSOManageLibraryImagePanelView(TemplateView):
                     img_object.exposure = exptime
 
                 # deal with Telescope FK
-                if haz(vals['telescope']) and nodash(vals['telescope']):
+                if haz(vals['telescope']): # and nodash(vals['telescope']):
                     tel_id = int(vals['telescope'])
                     img_object.telescope_id = tel_id
 
                 # the others are all strings... so they're straightforward
-                if haz(vals['proc']) and nodash(vals['proc']):
+                if haz(vals['proc']): # and nodash(vals['proc']):
                     img_object.image_processing_status = vals['proc']
-                if haz(vals['orientation']) and nodash(vals['orientation']):
+                if haz(vals['orientation']): # and nodash(vals['orientation']):
                     img_object.image_orientation = vals['orientation']
-                if haz(vals['crop']) and nodash(vals['crop']):
+                if haz(vals['crop']): # and nodash(vals['crop']):
                     img_object.image_cropping = vals['crop']
 
                 print("READY TO SAFE: ", vals)

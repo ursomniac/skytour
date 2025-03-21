@@ -1,6 +1,8 @@
 from dateutil.parser import isoparse
 from django.db.models import Case, When
+from ..dso.models import DSO
 from ..session.cookie import get_cookie_defaults
+from ..solar_system.models import Planet, Asteroid, Comet
 
 def get_initial_from_cookie(request, initial):
     cookie = request.session.get('user_preferences', None)
@@ -44,3 +46,27 @@ def get_observing_mode_string(mode, short=False):
     if mode in 'NBSMI':
         return SHORT_MODE_STRINGS[mode] if short else MODE_STRINGS[mode]
     return 'Unknown'
+
+def update_initial(initial, object_type, pk):
+    otype = object_type.lower()
+    initial['object_type'] = otype
+    if otype == 'dso':
+        obj = DSO.objects.filter(pk=pk).first()
+        if obj is not None:
+            initial['catalog'] = obj.catalog
+            initial['id_in_catalog'] = obj.id_in_catalog
+        else:
+            print("DID NOT FIND DSO: ", pk, type(pk))
+    elif otype == 'planet':
+        obj = Planet.objects.filter(pk=pk).first()
+        if obj is not None:
+            initial['planet'] = obj
+    elif otype == 'comet':
+        obj = Comet.objects.filter(pk=pk).first()
+        if obj is not None:
+            initial['comet'] = obj
+    elif otype == 'asteroid':
+        obj = Asteroid.objects.filter(pk=pk).first()
+        if obj is not None:
+            initial['asteroid'] = obj
+    return initial

@@ -47,8 +47,6 @@ def search_dso_name(words, name, debug=False):
             catalog__abbreviation__iexact=cat,
             id_in_catalog__iexact=id
         )
-        if debug:
-            print(f"{cat}, {id}: aliases found {field_aliases}")
         if field_aliases.count() > 0:
             return field_aliases.first().object.parent_dso
         
@@ -60,18 +58,29 @@ def search_dso_name(words, name, debug=False):
         if map_name_objects.count() > 0:
             return map_name_objects.first()
         
+        # maybe it's a nickname
+        nickname_objects = DSO.objects.filter(nickname__istartswith=idstr)
+        if nickname_objects.count() > 0:
+            return nickname_objects.first()
+        
         # Maybe it's in the other catalog
         other_objects = DSO.objects.filter(catalog__abbreviation='OTHER', id_in_catalog__iexact=idstr)
         if debug:
             print(f"{idstr}: other objects found {other_objects}")
         if other_objects.count() > 0:
             return other_objects.first()
+    # TODO V2.x: come up with better logic for this
+    # if you send one word as a name then it can get confused...
     else:
         names = DSO.objects.filter(nickname__icontains=name)
         if debug:
             print(f"name {name} found {names}")
-        if names.count() > 0:
+        if names.count() == 1:
             return names.first()
+        elif names.count() > 1:
+            names = DSO.objects.filter(nickname__istartswith=name)
+            if names.count() >= 1:
+                return names.first()
         
         field_names = DSOInField.objects.filter(nickname__icontains=name)
         if debug:

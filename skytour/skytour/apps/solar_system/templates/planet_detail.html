@@ -116,6 +116,12 @@
                         <button class="op" onclick="return realtimePopup('/planet/real-time/{{ slug }}?utdt_base=cookie')">
                             Cookie
                         </button>
+                        {% if slug != 'moon' %}
+                        <br>
+                        <a href="{% url 'session-add' %}?object_type=planet&pk={{ object.pk }}">
+                            <button>Observe</button>
+                        </a>
+                        {% endif %}
                     </td>
                 </tr>
             </table>

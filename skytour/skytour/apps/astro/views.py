@@ -99,6 +99,8 @@ class CalcFramesFromExposureView(TemplateView):
 
         vmin = self.request.GET.get('exp_min', 0)
         vsec = self.request.GET.get('exp_sec', 0)
+        if vsec == '':
+            vsec = 0
         vexptime = self.request.GET.get('exptime', None)
         vcustom = self.request.GET.get('customexp', None)
         exptime = None if not haz(vexptime) else int(vexptime)

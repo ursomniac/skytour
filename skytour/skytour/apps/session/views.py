@@ -21,7 +21,7 @@ from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date, utc_round_up_minutes
 from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
-from ..dso.models import DSOObservation
+from ..dso.models import DSOObservation, DSO
 from ..observe.models import ObservingLocation
 from ..plotting.scatter import create_histogram
 from ..solar_system.helpers import ( 
@@ -48,7 +48,11 @@ from .forms import (
 from .mixins import CookieMixin
 from .models import ObservingSession, ObservingCircumstances
 from .pdf import run_pdf
-from .utils import get_initial_from_cookie, get_observing_mode_string
+from .utils import (
+    get_initial_from_cookie, 
+    get_observing_mode_string,
+    update_initial
+)
 
 class SetSessionCookieView(FormView):
     form_class = ObservingParametersForm
@@ -299,6 +303,11 @@ class ObservingSessionDetailView(DetailView):
     model = ObservingSession
     template_name = 'session_detail.html'
 
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = ObservingSession.objects.all()
+        return queryset.first()
+
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)
         return context
@@ -349,10 +358,14 @@ class SessionAddView(CookieMixin, FormView):
         location = deal.get('location', None)
         if location is not None:
             initial['location'] = location
-
         # Default Telescope
         initial['telescope'] = Telescope.get_default_telescope()
-        
+
+        # If things are sent on the query string then use them to pre-populate fields
+        pk = self.request.GET.get('pk')
+        object_type = self.request.GET.get('object_type')
+        if object_type is not None and pk is not None:
+            initial = update_initial(initial, object_type, pk)
         return initial
 
     def get_context_data(self, **kwargs):

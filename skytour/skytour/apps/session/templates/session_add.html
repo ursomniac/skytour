@@ -6,14 +6,22 @@
 <style>
   h1, h4 { color: #ccc; }
   table.subform { border: none; }
-  table.subform td { border: none; }
+  table.subform td { border: none;  vertical-align: top; }
   table.subform th {
     background-color: #cc9;
     color: #000;
     border: none;
   }
   table.panel { border: 1px solid #ffc;}
-  table.subform td.panel2 { border: 2px solid #960; }
+  table.subform td.panel2 { border: 2px solid #960;  background-color: #630;}
+  table.subform td.goback   { 
+    border: 2px solid #960; 
+    background-color: #690; 
+    text-align: center; 
+    vertical-align: middle; 
+  }
+  table.subform td.goback button { width: 15em; }
+  table.subform td.panel2 input { width: 20em; height: 3em; }
 </style>
 
 <h1>Add Observation</h1>
@@ -47,7 +55,10 @@
     {% endfor %}
         
     <table class="subform">
-        <tr><th>Session Metadata</th><th>Object Metadata</th></tr>
+        <tr><th>Session Metadata</th>
+          <th>Object Metadata</th>
+          <th>Notes</th>
+        </tr>
         <tr>
             <td>
             <table class="panel">
@@ -113,10 +124,21 @@
                 {% endwith %}
               </table>
           </td>
+          <td>
+            <table class="panel">
+            {% with form.notes as field %}
+            {% include "inc_obs_form_field.html" %}
+            {% endwith %}
+            </table>
+
+          </td>
         </tr>
 
         <tr>
           <td colspan=2 class="panel2"><input type="submit" value="Submit"/></td>
+          <td class="goback">
+            <a href="{% url 'session-latest' %}"><button>Return to Latest Session</button></a>
+          </td>
         </tr>
         
       </table>

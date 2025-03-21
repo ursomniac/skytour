@@ -9,6 +9,7 @@ SEEING_CHOICES = (
 IMAGE_PROCESSING_STATUS_OPTIONS = ( 
     ('default', 'Default'), # as provided from the app
     ('post-processed', 'Post Processed'),
+    ('annotated', 'Annotated'),
     ('rejected', 'Rejected'),
     ('unknown', 'Unknown')
 )
