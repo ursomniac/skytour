@@ -11,7 +11,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, FormView
 from django.views.generic.list import ListView
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -35,12 +35,17 @@ from .forms import (
     DSOListCreateForm, 
     DSOListEditForm,
     DSOMetadataForm,
-    DSOObservationEditForm
+    DSOObservationEditForm,
 )
 from .geo import get_circle_center
-from .helpers import get_map_parameters, get_star_mag_limit
+from .helpers import get_star_mag_limit
 from .mixins import AvailableDSOMixin
-from .models import DSO, DSOList, AtlasPlate, DSOImage, DSOLibraryImage, DSOObservation
+from .models import (
+    DSO, DSOList, 
+    AtlasPlate, 
+    DSOImage, DSOLibraryImage, 
+    DSOObservation, DSOObservingMode
+)
 from .observing import make_observing_date_grid, get_max_altitude
 from .search import search_dso_name, find_cat_id_in_string
 from .utils import (
@@ -49,7 +54,9 @@ from .utils import (
     get_priority_label_of_observing_mode,
     get_priority_span_of_observing_mode,
     add_dso_to_dsolist,
-    delete_dso_from_dsolist
+    delete_dso_from_dsolist,
+    construct_mode_form, 
+    deconstruct_mode_form
 )
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
 from .utils_checklist import (
@@ -733,8 +740,47 @@ class DSOListPDFView(View):
             p = canvas.Canvas('/tmp/foo.pdf', pagesize=letter)
             p = canvas.Canvas(buffer, pagesize=letter)
             p = do_dso_lists(p, context, dso_lists=dso_lists)     # DSO Lists       
-            print("P: ", p)
             p.save()
             buffer.seek(0)
             response = HttpResponse(buffer, content_type='application/pdf')
             return response
+
+class DSOObservingModeEditView(TemplateView):
+    template_name = 'dsoobservingmode_edit.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(DSOObservingModeEditView, self).get_context_data(**kwargs)
+        pk = self.kwargs['pk']
+        dso = context['dso'] = get_object_or_404(DSO, pk=pk)
+        forms = {}
+        for mode in 'NBSMI':
+            mode_obj = dso.dsoobservingmode_set.filter(mode=mode).first()
+            forms[mode] = construct_mode_form(mode, mode_obj, dso)
+        context['mode_forms'] = forms
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        dso = get_object_or_404(DSO, pk=self.kwargs['pk'])
+        modes = dso.dsoobservingmode_set.all()
+        if request.method == 'POST':
+            data = request.POST
+            for mode in 'NBSMI':
+                item = modes.filter(mode=mode).first()
+                vals, delete_flag = deconstruct_mode_form(data, mode)
+                if delete_flag and item is not None:
+                    item.delete()
+                else:
+                    if vals is not None:
+                        if item is None:
+                            item = DSOObservingMode() # INSERT
+                            item.dso = dso
+                            item.mode = mode
+
+                        item.priority = vals['priority']
+                        item.viable = vals['viable']
+                        item.interesting = vals['interesting']
+                        item.challenging = vals['challenging']
+                        item.notes = vals['notes']
+                        item.save()
+
+        return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))

@@ -1,0 +1,173 @@
+{% extends 'edit_base.html' %}
+{% block content %}
+<style>
+    th { background-color: #444; color: #fff; height: auto; font-weight: bold; }
+    table.panel td { vertical-align: top; width: 33%; }
+    table.panel td.submit { 
+        vertical-align: middle; text-align: middle; 
+        background-color: #c93;
+    }
+    h3 { background-color: #c90; 
+        color: #000;
+        padding: 3px 5px;
+        margin: 0px 3px 8px 0px;  
+    }
+    button.add { width: 20em; }
+    input.submit { width: 20em; height: 8em; }
+    span.warning { font-size: 80%; font-style: italic; margin-left: 8px; color: #ff9; }
+</style>
+<form method="post">
+{% csrf_token %}
+<h1>Editing DSO Mode Metadata for {{ dso.shown_name }}</h1>
+
+<table class="panel">
+    <tr>
+        <td>{% with mode_forms.N as item %}{% include 'inc_mode_edit.html' %}{% endwith %}</td>
+        <td>{% with mode_forms.B as item %}{% include 'inc_mode_edit.html' %}{% endwith %}</td>
+        <td>{% with mode_forms.S as item %}{% include 'inc_mode_edit.html' %}{% endwith %}</td>
+    </tr>
+    <tr>
+        <td>{% with mode_forms.M as item %}{% include 'inc_mode_edit.html' %}{% endwith %}</td>
+        <td>{% with mode_forms.I as item %}{% include 'inc_mode_edit.html' %}{% endwith %}</td>
+        <td class="submit">
+            <input type="submit" class="submit" value="Submit Changes">
+        </td>
+    </tr>
+</table>
+
+</form>
+
+<script>
+    function showModePanel(mode) {
+        var panelDiv = document.getElementById(mode);
+        if (panelDiv.style.display == "none") {
+            panelDiv.style.display = "inline-block";
+        } else {
+            panelDiv.style.display = "none";
+        }
+        var noSubmit = document.getElementById(mode)
+            .addEventListener("click", function(event) {
+                event.preventDefault();
+            });
+        return false;
+    }
+</script>
+
+{% comment %}
+{% for form in mode_formset.forms %}
+{{ form.as_p }}
+{% endfor %}
+<button type="submit">Save</button>
+</form>
+<hr>
+
+<p>
+    <label for="id_dsoobservingmode_set-0-mode">Observing Mode:</label>
+    <select name="dsoobservingmode_set-0-mode" id="id_dsoobservingmode_set-0-mode">
+  <option value="">---------</option>
+
+  <option value="N">Naked Eye</option>
+
+  <option value="B" selected>Binoculars</option>
+
+  <option value="S">Small Scope</option>
+
+  <option value="M">Medium Scope</option>
+
+  <option value="I">Imaging Scope</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-viable">Viability:</label>
+    <select name="dsoobservingmode_set-0-viable" id="id_dsoobservingmode_set-0-viable">
+  <option value="">---------</option>
+
+  <option value="0">Not Viable</option>
+
+  <option value="1">Unlikely Viable</option>
+
+  <option value="2" selected>Extreme Difficulty</option>
+
+  <option value="3">(Very) Difficult</option>
+
+  <option value="4">Challenging</option>
+
+  <option value="5">Requires Patience</option>
+
+  <option value="6">Generally Visible</option>
+
+  <option value="7">Usually Easy</option>
+
+  <option value="8">Easy</option>
+
+  <option value="9">Very Easy</option>
+
+  <option value="10">Extremely easy</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-priority">Priority:</label>
+    <select name="dsoobservingmode_set-0-priority" id="id_dsoobservingmode_set-0-priority">
+  <option value="">---------</option>
+
+  <option value="0">Lowest</option>
+
+  <option value="1">Low</option>
+
+  <option value="2" selected>Medium</option>
+
+  <option value="3">High</option>
+
+  <option value="4">Highest</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-interesting">Interesting:</label>
+    <input type="checkbox" name="dsoobservingmode_set-0-interesting" id="id_dsoobservingmode_set-0-interesting">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-challenging">Challenging:</label>
+    <input type="checkbox" name="dsoobservingmode_set-0-challenging" id="id_dsoobservingmode_set-0-challenging" checked>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-notes">Notes:</label>
+    <textarea name="dsoobservingmode_set-0-notes" cols="40" rows="10" id="id_dsoobservingmode_set-0-notes">
+At best will appear as a dim patch.  Nonetheless it&#x27;s a good challenge under dark skies.</textarea>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_dsoobservingmode_set-0-DELETE">Delete:</label>
+    <input type="checkbox" name="dsoobservingmode_set-0-DELETE" id="id_dsoobservingmode_set-0-DELETE">
+    
+    
+      <input type="hidden" name="dsoobservingmode_set-0-id" value="1306" id="id_dsoobservingmode_set-0-id"><input type="hidden" name="dsoobservingmode_set-0-dso" value="1" id="id_dsoobservingmode_set-0-dso">
+    
+  </p>
+{% endcomment %}
+{% endblock content %}

@@ -1,5 +1,6 @@
 from django import forms
-from .models import DSO, DSOObservation
+from django.forms import inlineformset_factory
+from .models import DSO, DSOObservation, DSOObservingMode
 from ..abstract.vocabs import YES_NO, YES, NO
 
 class DSOListCreateForm(forms.Form):
@@ -44,3 +45,16 @@ class DSOObservationEditForm(forms.ModelForm):
     class Meta:
         model = DSOObservation
         fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+
+class DSOObservingModeForm(forms.ModelForm):
+    class Meta:
+        model = DSOObservingMode
+        fields = ['mode', 'viable', 'priority', 'interesting', 'challenging', 'notes']
+
+DSOModeFormSet = inlineformset_factory(
+    DSO,
+    DSOObservingMode,
+    DSOObservingModeForm,
+    extra = 0, # this has to be overridable somehow...
+    can_delete = True # ugh - don't really want this... but...
+)

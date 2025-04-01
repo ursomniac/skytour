@@ -5,33 +5,38 @@
 {% block content %}
 <style>
     h1 { color: #fc0; margin-left: 4px;  margin-top: 0px; }
-    table.list-nav { margin-top: 10px; border: none; }
+    h2 { color: #c90; margin-top: 0px; }
+    h3 { color: #cc6; }
+    table.list-nav { margin-top: 10px; border:none; }
     table.list-nav td { vertical-align: top; border: none; }
+    table.list-nav td.half { width: 30%; }
+    table.list-nav td.lists { border: 1px solid #999; }
     table.inner { border: none; }
-    table.inner td { border: none; }
-    table.inner td button { width: 15em; font-weight: bold; }
+    table.inner td { border: none; width: 20em; }
+    table.inner td button { width: 18em; font-weight: bold; }
     button.add-button { height: 3em; width: 20em; font-weight: bold; }
 </style>
 <a name="top"></a>
 <table class="list-nav">
     <tr>
-        <td>
+        <td class="half">
         <h1>Active DSO Lists</h1>
         <br>
         <button class="add-button" onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
         </td>
         <td class="lists">
+            <h2>Navigate Active DSO Lists</h2>
             <table class="inner">
-                {% for mylist in dso_lists reversed %}
+                {% for mylist in dso_lists %}
                 {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
                     <td>
                         <a href="#list-{{ mylist.pk }}">
                             <button>{{ mylist.name }}</button>
                         </a>
                     </td>
-                {% if forloop.revcounter|divisibleby:4 %}</tr>{% endif %}
+                {% if forloop.counter|divisibleby:4 %}</tr>{% endif %}
                 {% endfor %}
-                {% if not forloop.revcounter|divisibleby:4 %}</tr>{% endif %}
+                {% if not forloop.counter|divisibleby:4 %}</tr>{% endif %}
             </table>
         </td>
     </tr>
@@ -39,15 +44,15 @@
 <br>
 {% include 'form_dsolist_create.html' %}
 <br>
-
+<hr>
 {% for mylist in dso_lists %}
     <a name="list-{{ mylist.pk }}"></a>
-    <h2>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_new">{{ mylist.name }}</a></h2>
-    <h3>
+    <h3>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_new">{{ mylist.name }}</a></h3>
+    <h4>
         {{ mylist.dso.all|length }} DSOs
         &nbsp;&nbsp;|&nbsp;&nbsp;
         <a href="#top">Back to top</a>
-    </h3>
+    </h4>
     {% with dso_list=mylist.dso.all load_adjust_script=False %}
     {% include 'includes/dso_table.html' %}
     {% endwith %}

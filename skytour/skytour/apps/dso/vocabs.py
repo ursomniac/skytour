@@ -67,6 +67,13 @@ OBSERVING_MODE_TYPES = [
     ('M', 'Medium Scope'),
     ('I', 'Imaging Scope')
 ]
+OBSERVING_MODE_DICT = {
+    'N': 'Naked Eye',
+    'B': 'Binoculars',
+    'S': 'Small Scope',
+    'M': 'Medium Scope',
+    'I': 'Imaging Scope'
+}
 
 STATUS_CHOICES = [
     (-9, 'Removed'),

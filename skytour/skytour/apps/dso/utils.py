@@ -1,5 +1,8 @@
 from ..site_parameter.helpers import find_site_parameter
-from .vocabs import PRIORITY_VALUES
+from .vocabs import (
+    PRIORITY_VALUES, MODE_VIABILITY_CHOICES, MODE_PRIORITY_CHOICES,
+    OBSERVING_MODE_DICT
+)
 
 def create_shown_name(obj, use_con=True):
     """
@@ -173,3 +176,120 @@ def delete_dso_from_dsolist(remove_dso, dsolist):
     except:
         return "Failed: unknown error"
     
+def construct_mode_form(mode, obj, dso):
+    """
+    This is easier than trying to wrangle a formset.
+    I think...
+    """
+    if obj is None:
+        viability = None
+        priority = None
+        interesting = False
+        challenging = False
+        notes = ''
+        pk = ''
+    else:
+        viability = obj.viable
+        priority = obj.priority
+        interesting = obj.interesting
+        challenging = obj.challenging
+        notes = obj.notes
+        pk = obj.pk
+    fields = {}
+
+    fields['exists'] = True if obj is not None else False
+    fields['button'] = f'<button onclick="showModeForm(mode);">Add Observing Mode</button>'
+    fields['shown'] = 'table-row' if obj is not None else 'none'
+    fields['id'] = f'mode-{mode}-form'    
+    fields['name'] = OBSERVING_MODE_DICT[mode]
+    # 1. the mode in question
+    fields['mode'] = f'\t<input name="mode-{mode}-mode" id="id_mode-{mode}-mode" type="hidden" value="{mode}">'
+    
+    # 2. Viability
+    out = ''
+    #out = f'\n<label for="mode-{mode}-viable">Viability:</label>\n'
+    out += f'<select name="mode-{mode}-viable" id="id_mode-{mode}-viable">\n'
+    out += '\t<option value="">---------</option>\n'
+    for item in MODE_VIABILITY_CHOICES:
+        sel = " selected" if viability and viability == item[0] else ''
+        out += f'\t<option value="{item[0]}"{sel}>{item[1]}</option>\n' 
+    out += '</select>\n'
+    fields['viability'] = out
+    
+    # 3. Priority
+    out = ''
+    #out = f'\n<label for="mode-{mode}-priority">Priority:</label>\n'
+    out += f'<select name="mode-{mode}-priority" id="id_mode-{mode}-priority">\n'
+    out += '\t<option value="">---------</option>'
+    for item in MODE_PRIORITY_CHOICES:
+        sel = " selected" if priority and priority == item[0] else ''
+        out += f'\t<option value="{item[0]}"{sel}>{item[1]}</option>\n'
+    out += '</select>\n'
+    fields['priority'] = out
+
+    # 4. Interesting
+    out = ''
+    #out = f'\n<label for="mode-{mode}-interesting">Interesting:</label>\n'
+    val = 'Yes' if interesting else 'No'
+    out += f'<select name="mode-{mode}-interesting">\n'
+    for item in ['Yes', 'No']:
+        sel = ' selected' if val == item else ''
+        out += f'\t<option value="{item}"{sel}>{item}</option>\n'
+    out += '</select>'
+    fields['interesting'] = out
+
+    # 5. Challenging
+    out = ''
+    #out = f'\n<label for="mode-{mode}-challenging">Challenging:</label>\n'
+    val = 'Yes' if challenging else 'No'
+    out += f'<select name="mode-{mode}-challenging">\n'
+    for item in ['Yes', 'No']:
+        sel = ' selected' if val == item else ''
+        out += f'\t<option value="{item}"{sel}>{item}</option>\n'
+    out += '</select>\n'
+    fields['challenging'] = out
+
+    # 6. Notes
+    out = ''
+    #out = f'\n<label for="mode-{mode}-notes">Notes:</label>\n'
+    out += f'<textarea name="mode-{mode}-notes" cols="40" rows="10" id="id_mode-{mode}-notes">\n'
+    out += f'{notes}'            
+    out += '</textarea>'
+    fields['notes'] = out
+
+    # 7. Delete ???
+    out = ''
+    #out = f'<label for="mode-{mode}-DELETE">Delete:</label>\n'
+    out += f'<input type="checkbox" name="mode-{mode}-DELETE" id="id_mode-{mode}-DELETE">\n'
+    fields['delete'] = out
+
+    # 8. Etc.
+    out = f'<input type="hidden" name="mode-{mode}-id" value="{pk}" id="id_mode-{mode}-id">\n'
+    out += f'<input type="hidden" name="mode-{mode}-dso" value="{dso.pk}" id="id_mode-{mode}-dso">\n'
+    fields['metadata'] = out
+
+    return fields
+
+def deconstruct_mode_form(data, mode):
+    keys = ['viable', 'priority', 'interesting', 'challenging', 'notes', 'DELETE']
+    fields = {}
+    delete = False
+    for k in keys:
+        name = f'mode-{mode}-{k}'
+        val = data.get(name)
+        if k in ['interesting', 'challenging']:
+            fields[k] = val == 'Yes'
+        elif k in ['viable', 'priority']:
+            if val == '':
+                fields[k] = None
+            else:
+                fields[k] = int(val)
+        elif k == 'notes':
+            fields[k] = val.strip()
+        elif k == 'DELETE':
+            delete = val == 'on'
+
+    # Send back None if viability and priority are not set!
+    if fields['viable'] is None or fields['priority'] is None:
+        fields = None
+    return fields, delete

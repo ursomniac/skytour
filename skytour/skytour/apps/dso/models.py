@@ -1379,3 +1379,13 @@ class DSOObservingMode(models.Model):
     def __str__(self):
         x = f"{self.dso}: {self.mode} ({self.priority}, {self.viable})"
         return x
+    
+    class Meta:
+        ordering = models.Case(
+            models.When(mode='N', then=models.Value(0)),
+            models.When(mode='B', then=models.Value(1)),
+            models.When(mode='S', then=models.Value(2)),
+            models.When(mode='M', then=models.Value(3)),
+            default=models.Value(4),
+            output_field=models.IntegerField()
+        ), # yes, you need this comma...

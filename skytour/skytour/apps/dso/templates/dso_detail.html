@@ -6,8 +6,10 @@
 	table.lite { border-style: none; }
 	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
 	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; margin-top: 10px; }
+	h2 { color: #fc0; }
 	h2.nickname { font-size: 125%; margin-top: 5px; color: #ffd; }
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
+	h3 { color: #ff9; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { 
@@ -19,7 +21,13 @@
 	td.operations { text-align: right; padding: 3px 10px!important; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; }
-	td.coordinates { width: 40%; font-size: 150%; padding: 3px 5px 15px 5px!important; margin-bottom: 5px; }
+	td.coordinates { 
+		width: 40%; 
+		font-size: 150%; 
+		padding: 3px 5px 15px 5px!important; 
+		margin-bottom: 5px; 
+		color: #fff;
+	}
 	table.info_box { border: 2px solid black }
 	tr.bottom { height: 150px; }
     img.constrained { max-width: 500px; }
@@ -82,6 +90,9 @@
 		text-align: center;
 	}
 	td.edit_images button { width: 20em; height: 20px; }
+	td.editing { border: 1px solid #900!important; }
+	td.editing h3 { margin-top: 8px; }
+	td.editing button { width: 8em; margin-right: 8px;  }
 	td.indented { background-color: #666; padding-left: 20px; }
 	.rightside { float: right!important; }
 	.white { color: #fff; }
@@ -125,8 +136,6 @@
 					</b>
 				</td>
 				<td width=20% class="description operations" rowspan=2>
-					<a href="{% url 'dso-edit-metadata' object.pk %}"><button class="op">Edit Metadata</button></a>
-					<br>
 					<a href="/media/{{ object.pdf_page }}" target="_new"><button class="op">PDF</button></a>
 					<br>
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
@@ -379,7 +388,17 @@
 						</span>
 					</h3>
 					{{ object.mode_viability_chart }}
-					<br>
+
+				</td>
+			</tr>
+			<tr>
+				<td class="editing">
+					<h3>Editing</h3>
+					<a href="{% url 'dso-edit-metadata' object.pk %}"><button class="op">Edit Metadata</button></a>
+					<a href="/admin/dso/dso/{{ object.pk }}/change"><button>Admin</button></a>
+					<a href="{% url 'dso-edit-modes' object.pk %}"><button>Obs. Modes</button></a>
+				</td>
+				<td>
 					<h3>
 						Active Observing Lists
 						<span class='popup-button' onClick="DSOAddPopup({{ object.pk }})">
@@ -397,7 +416,6 @@
 					{% else %}
 					<p>Not on any active Observing Lists</p>
 					{% endif %}
-
 				</td>
 			</tr>
 		</table>

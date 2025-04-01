@@ -39,14 +39,15 @@ def get_dark_time(utdt, location, debug=False):
         end_at, _ = get_almanac_times(get_0h(utdt - datetime.timedelta(days=-1)), ts, f)
     if begin_at is None:
         _, begin_at = get_almanac_times(get_0h(utdt + datetime.timedelta(days=1)), ts, f)
-    if end_at is None:
-        print("ERROR Getting end_at dark time!")
-    else:
-        print("Found end_at dark time ", end_at)
-    if begin_at is None:
-        print("ERROR getting begin_at dark time!")
-    else:
-        print("Found begin_at dark time ", begin_at)
+    if debug:
+        if end_at is None:
+            print("ERROR Getting end_at dark time!")
+        else:
+            print("Found end_at dark time ", end_at)
+        if begin_at is None:
+            print("ERROR getting begin_at dark time!")
+        else:
+            print("Found begin_at dark time ", begin_at)
     return end_at, begin_at
 
 

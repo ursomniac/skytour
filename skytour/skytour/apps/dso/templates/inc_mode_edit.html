@@ -1,0 +1,20 @@
+    <h3>{{ item.name }}</h3>
+    {% if item.exists %}
+    <b>Delete:</b>
+    {{ item.delete|safe }}
+    <span class="warning">Use this with EXTREME caution!</span>
+    {% else %}
+    <button type="button" class="add" onclick='showModePanel("{{ item.id }}");'>Add Observing Mode</button>
+    {% endif %}
+
+    <div class="mode-edit_form" id="{{ item.id }}" style="display: {{ item.shown }};">
+        <table class="mode-form">
+            <tr><th>Viability</th><td>{{ item.viability|safe }}</td></tr>
+            <tr><th>Priority</th><td>{{ item.priority|safe }}</td></tr>
+            <tr><th>Interesting</th><td>{{ item.interesting|safe }}</td></tr>
+            <tr><th>Challenging</th><td>{{ item.challenging|safe }}</td></tr>
+            <tr><th>Notes</th><td>{{ item.notes|safe }}</td></tr>
+        </table>
+        {{ item.metadata|safe }}
+        {{ item.mode|safe }}
+    </div>
