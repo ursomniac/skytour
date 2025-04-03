@@ -1,6 +1,7 @@
 from django import forms 
-from django.forms import modelformset_factory
-from .models import Website, PDFManual
+from django.forms import inlineformset_factory
+from .models import Website, PDFManual, Calendar, CalendarEventReference
+from .vocabs import REFERENCE_MODEL_CHOICES
 
 class WebsiteAddForm(forms.ModelForm):
     name = forms.CharField()
@@ -48,3 +49,39 @@ class PDFManualDeleteForm(forms.Form):
 
     class Meta:
         fields = ['delete_confirm']
+
+FORM_REFERENCE_MODEL_CHOICES = [('', '---------------')] + REFERENCE_MODEL_CHOICES
+class CalendarEventReferenceForm(forms.ModelForm):
+    reference_type = forms.ChoiceField (
+        choices = FORM_REFERENCE_MODEL_CHOICES,
+    )
+    reference = forms.CharField(
+    )
+
+    class Meta:
+        model = CalendarEventReference
+        fields = ['reference_type', 'reference']
+
+CalendarAddEventReferenceFormset = inlineformset_factory(
+    Calendar, 
+    CalendarEventReference,
+    form = CalendarEventReferenceForm,
+    fields = ['reference_type', 'reference'],
+    extra = 3,
+    can_delete = True
+)
+
+CalendarEditEventReferenceFormset = inlineformset_factory(
+    Calendar, 
+    CalendarEventReference,
+    form = CalendarEventReferenceForm,
+    fields = ['reference_type', 'reference'],
+    extra = 0,
+    can_delete = True
+)
+
+class CalendarEntryForm(forms.Form):
+    class Meta:
+        model = Calendar
+        fields = ['date', 'time', 'title', 'description', 'event_type',]
+

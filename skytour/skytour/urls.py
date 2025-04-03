@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 admin.autodiscover()
 
@@ -45,5 +47,6 @@ urlpatterns = [
     path('sso_pdf/', include('skytour.apps.solar_system.urls_pdf')),
     path('stars/', include('skytour.apps.stars.urls')),
     path('tech/', include('skytour.apps.tech.urls')),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

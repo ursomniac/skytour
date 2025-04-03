@@ -6,6 +6,7 @@
     table.inner td {
         background-color: #069;
         text-align: center;
+        width: 16.7%;
     }
     table.inner td a { 
         font-weight: bold;
@@ -32,14 +33,20 @@
             <table class="inner">
             {% for month in months %}
             {% if forloop.counter0|divisibleby:6 %}<tr>{% endif %}
-                <td>
+                <td colspan=2>
                     <a href="{% url 'calendar-month' year month.2|lower %}">
                         {{ month.1 }}</a>
                 </td>
             {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
             {% endfor %}
             <tr>
-                <td colspan=6 class="admin">
+                <td colspan=6 class="admin"></td>
+                <td colspan=3 class="admin">
+                    <a href="{% url 'calendar-add' %}"><button>Add Event</button></a>
+                    <br>
+                    <span class="helptext">&nbsp;</span> 
+                </td>
+                <td colspan=3 class="admin">
                     <a href="/admin/misc/calendar"><button>Admin</button></a>
                     <br>
                     <span class="helptext">

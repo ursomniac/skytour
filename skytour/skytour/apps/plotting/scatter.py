@@ -92,21 +92,21 @@ def create_histogram(
         xtitle='X Axis', 
         ytitle='Y Axis',
         binedges = True,
-        reversed = False
+        reversed = True
     ):
 
     if binedges: 
         bin_centers = (x[:-1] + x[1:]) / 2
     else:
-        bin_centers = x
+        bin_centers = x[1:]
 
     fig = Figure()
+    if reversed:
+        plt.style.use('dark_background')
     subplot = (1, 1, 1)
     if subplot: # NOTE: Isn't this a bug?
         panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])
-    
-    if reversed:
-        panel.style.use('dark_background')
+
     panel.set_title(title)
     panel.set_xlabel(xtitle)
     panel.set_ylabel(ytitle)

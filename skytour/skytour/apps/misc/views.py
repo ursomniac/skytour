@@ -1,19 +1,21 @@
 import datetime, pytz
+from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.timezone import now
 from django.views.generic.dates import YearArchiveView, MonthArchiveView
 from django.views.generic import ListView, TemplateView
-from django.views.generic.edit import UpdateView, DeleteView
+from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from ..astro.calendar import create_calendar_grid, is_leap_year
-from ..misc.models import TimeZone
 from ..observe.models import ObservingLocation
-from ..site_parameter.helpers import find_site_parameter
 from .models import Calendar, Website, Glossary, PDFManual
 from .forms import (
     WebsiteAddForm, WebsiteEditForm, WebsiteDeleteForm,
-    PDFManualAddForm, PDFManualEditForm, PDFManualDeleteForm
+    PDFManualAddForm, PDFManualEditForm, PDFManualDeleteForm,
+    CalendarAddEventReferenceFormset,
+    CalendarEditEventReferenceFormset
 )
 
 MONTHS = [
@@ -207,3 +209,76 @@ class PDFManualDeleteView(DeleteView):
 
 class PDFManualDeleteResultView(TemplateView):
     template_name = 'edit_manual_result.html'
+
+class CalendarAddItemView(CreateView):
+    model = Calendar
+    template_name = 'add_calendar_item.html'
+    fields = ['date', 'time', 'title', 'description', 'event_type',]
+
+    def xpost(self, request, *args, **kwargs):
+        print(request.POST)
+        return self.get(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        children = context['ref_formset']
+        with transaction.atomic():
+            self.object = form.save()
+            if children.is_valid():
+                children.instance = self.object
+                children.save()
+        return self.get(self.request)
+    
+    def form_invalid(self, form):
+        return self.get(self.request)
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarAddItemView, self).get_context_data(**kwargs)
+        context['year'] = datetime.datetime.now().year
+        context['op'] = 'Add'
+        if self.request.POST: 
+            ref_formset = CalendarAddEventReferenceFormset(self.request.POST)
+        else:
+            ref_formset = CalendarAddEventReferenceFormset()
+        context['ref_formset'] = ref_formset
+        return context
+    
+class CalendarUpdateItemView(UpdateView):
+    model = Calendar
+    template_name = 'update_calendar_item.html'
+    fields = ['date', 'time', 'title', 'description', 'event_type',]
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        ref_formset = CalendarEditEventReferenceFormset(request.POST, instance=self.object)
+        if form.is_valid() and ref_formset.is_valid():
+            return self.form_valid(form, ref_formset)
+        else:
+            return self.form_invalid(form, ref_formset)
+        
+    def form_valid(self, form, ref_formset):
+        d = form.cleaned_data
+        year = d['date'].year
+        form.save()
+        ref_formset.save()
+        return redirect('calendar-year', year=year)
+    
+    def form_invalid(self, form, ref_formset): 
+        print("FORM IS INVALID")
+        print("FORM ERRORS: ", form.errors)
+        print("REF FORM ERRORS: ", ref_formset.errors)
+        return self.render_to_response(self.get_context_data(form=form, ref_formset=ref_formset))
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarUpdateItemView, self).get_context_data(**kwargs)
+        context['year'] = datetime.datetime.now().year
+        context['op'] = 'Update'
+        object = self.get_object()
+        context['parent_pk'] = object.pk
+        if self.request.POST: 
+            ref_formset = CalendarEditEventReferenceFormset(self.request.POST)
+        else:
+            ref_formset = CalendarEditEventReferenceFormset(instance=self.object)
+        context['ref_formset'] = ref_formset
+        return context

@@ -140,9 +140,9 @@ class Calendar(models.Model):
         null = True, blank=True,
         on_delete = models.CASCADE
     )
-    involves = models.ManyToManyField (
-        'CalendarEventReference',
-    )
+    #involves = models.ManyToManyField (
+    #    'CalendarEventReference',
+    #)
 
     @property
     def reference_list(self):

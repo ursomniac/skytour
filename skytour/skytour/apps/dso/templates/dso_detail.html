@@ -90,7 +90,7 @@
 		text-align: center;
 	}
 	td.edit_images button { width: 20em; height: 20px; }
-	td.editing { border: 1px solid #900!important; }
+	td.editing { border: 2px solid #900!important; }
 	td.editing h3 { margin-top: 8px; }
 	td.editing button { width: 8em; margin-right: 8px;  }
 	td.indented { background-color: #666; padding-left: 20px; }
@@ -155,6 +155,7 @@
 			<tr>
 				<td class="aliases">
 					{{ object.alias_list }}
+					{% comment %}
 					{% if object.observe_cat_entry %}
 					<span class="cat_entry"> 
 						&nbsp; &mdash; &nbsp;
@@ -163,6 +164,7 @@
 						to add an Observation
 					</span>
 					{% endif %}
+					{% endcomment %}
 				</td>
 			</tr>
 			{% endif %}

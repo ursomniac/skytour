@@ -485,8 +485,8 @@ class ObservingCircumstancesView(CookieMixin, ListView):
         sqm_py = sqm_py / (ytotal + 0.)
 
         plot_reversed = True
-        if 'color_scheme' in context.keys():
-            plot_reversed = context['color_scheme'] == 'dark'
+        #if 'color_scheme' in context.keys():
+        #    plot_reversed = context['color_scheme'] == 'dark'
 
         context['sqm_hist'] = create_histogram(
             sqm_x, sqm_y,

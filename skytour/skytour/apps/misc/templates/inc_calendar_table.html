@@ -13,6 +13,7 @@
             <th>Type</th>
             <th>Event</th>
             <th>Objects</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +24,9 @@
             <td>{{ obj.event_type }}</td>
             <td>{{ obj.title }}</td>
             <td>{{ obj.reference_list }}</td>
+            <td>
+                <a href="{% url 'calendar-edit' obj.pk %}"><button>Edit</button></a>
+            </td>
         </tr>
         {% endfor %}      
     </tbody>
