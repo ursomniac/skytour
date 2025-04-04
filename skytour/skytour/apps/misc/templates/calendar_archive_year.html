@@ -3,15 +3,28 @@
 {% block content %}
 <style>
     h1 { color: #fc0; }
+    table.inner { border: 0px; }
     table.inner td {
         background-color: #069;
         text-align: center;
-        width: 16.7%;
+        width: 8.33%;
+        border: 0;
+    }
+    table.inner td.yearnav {
+        text-align: left;
+        margin-left: 0px;
+        vertical-align: center;
+        font-size: 120%;
+        padding-right: 0!important;
     }
     table.inner td a { 
         font-weight: bold;
         color: #fff;
         text-decoration: none;
+    }
+    table.inner td.yearnav a {
+        color: #c90;
+        text-decoration: underline;
     }
     table.inner td.admin { 
         text-align: right;
@@ -40,7 +53,17 @@
             {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
             {% endfor %}
             <tr>
-                <td colspan=6 class="admin"></td>
+                <td colspan=4 class="admin yearnav">
+                    <b>Nagivation: </b>
+                    &nbsp;&nbsp;
+                    <a href="{% url 'calendar-year' last_year %}">{{ last_year }}</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <b>{{ year }}</b>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{% url 'calendar-year' next_year %}">{{ next_year }}</a>
+
+                </td>
+                <td colspan=2 class="admin"></td>
                 <td colspan=3 class="admin">
                     <a href="{% url 'calendar-add' %}"><button>Add Event</button></a>
                     <br>

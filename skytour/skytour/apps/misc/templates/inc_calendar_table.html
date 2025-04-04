@@ -4,6 +4,10 @@
         color: #000;
         text-align: center;
     }
+    td.edit-item {
+        text-align: center;
+    }
+    td.edit-item button { width: 5em; }
 </style>
 <table class="calendar-grid">
     <thead>
@@ -24,8 +28,8 @@
             <td>{{ obj.event_type }}</td>
             <td>{{ obj.title }}</td>
             <td>{{ obj.reference_list }}</td>
-            <td>
-                <a href="{% url 'calendar-edit' obj.pk %}"><button>Edit</button></a>
+            <td class="edit-item">
+                <a href="{% url 'calendar-edit' obj.pk %}"><button>✍️ Edit</button></a>
             </td>
         </tr>
         {% endfor %}      

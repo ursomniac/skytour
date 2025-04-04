@@ -35,11 +35,21 @@ class CalendarYearView(YearArchiveView):
     allow_future = True
     template_name = 'calendar_archive_year.html'
 
+    def get_allow_future(self):
+        return True
+    
+    def get_allow_empty(self):
+        return True
+
     def get_context_data(self, **kwargs):
         context = super(CalendarYearView, self).get_context_data(**kwargs)
-        context['year'] = self.kwargs['year']
+        this_year = context['year'] = self.kwargs['year']
         context['event_list'] = Calendar.objects.order_by('date')
         context['months'] = MONTHS
+
+        # Generate list of years for form
+        context['last_year'] = this_year - 1
+        context['next_year'] = this_year + 1
         return context
     
 class CalendarMonthView(MonthArchiveView):

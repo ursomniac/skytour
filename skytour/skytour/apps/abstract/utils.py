@@ -135,7 +135,7 @@ def get_real_time_conditions(
     time_zone = location.time_zone.pytz_label
 
     if dt_base == 'cookie':
-        offset_cookie_time = context['local_time'] + dt.timedelta(hours=offset)
+        offset_cookie_time = context['utdt_start'] + dt.timedelta(hours=offset)
         local_time = offset_cookie_time.astimezone(pytz.timezone(time_zone))
     else:
         #time_zone = ObservingLocation.get_default_location().time_zone
