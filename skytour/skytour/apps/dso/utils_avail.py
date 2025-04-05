@@ -1,6 +1,5 @@
 import datetime as dt, pytz
 from ..observe.models import ObservingLocation
-from ..site_parameter.helpers import find_site_parameter
 import time
 
 # NOTE: This is in its own app mostly to get around a circular import problem.
@@ -164,3 +163,4 @@ def is_available_at_location (
         return alt >= mask_alt
     
     return True # default if no mask is set for this azimuth...
+

@@ -28,7 +28,7 @@ class SkyView(CookieMixin, TemplateView):
         mask = bool(self.request.GET.get('mask', False))
         utdt_now = bool(self.request.GET.get('utdt_now', False))
         min_dso_alt_form = self.request.GET.get('min_dso_alt', None)
-        custom = self.request.GET.get('custom', 'standard')
+        #custom = self.request.GET.get('custom', 'standard')
 
         # Handle lowest altitude DSO limit
         if min_dso_alt_form:
@@ -59,7 +59,7 @@ class SkyView(CookieMixin, TemplateView):
         context['map_time_str'] = context['local_time'].strftime('%a %b %-d, %Y %-I:%M %p %z')
         context['mask'] = mask
         context['simple'] = simple
-        context['custom'] = custom
+        #context['custom'] = custom
         context['hours'] = hours
         context['utdt_now'] = utdt_now
         context['min_dso_alt'] = min_dso_alt

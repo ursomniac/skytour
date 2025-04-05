@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Active DSOList DSOs: Skytour{% endblock %}
+{% block content %}
+<style>
+    h1, h2 { color: #fc9; }
+    table.outer { width: auto; border: 1px solid #999; }
+    table.outer td { vertical-align: top; border: 0px; }
+    table.outer td.map { width: 800px; }
+    table.inner { border: 1px solid #960; }
+    table.inner td.submit {
+        background-color: #c93;
+        text-align: center;
+        height: 4em;
+        vertical-align: middle; 
+    }
+    table.inner td.submit button { width: 20em; margin: 0 10px; }
+    span.count { color: #fc9; font-weight: bold; font-size: 120%; }
+</style>
+
+<h1>DSOs on Active DSO Lists</h1>
+<form method="GET">
+<table class="outer">
+    <tr>
+        <td class="map">
+            {% if map %}
+            <img src="{{map}}">
+            {% else %}
+            <h4>No Map to show</h4>
+            {% endif %}
+        </td>
+        <td>
+            <table class="inner">
+                <tr>
+                    <td colspan=2>
+                        <span class="count"># DSOs: {{ num_dsos }}</span>
+                    </td>
+                <tr>
+                    <th>Mode:</th>
+                    <td>
+                        <select name="mode">
+                            <option value="I" 
+                                {% if mode == 'I' %} selected{% endif %}>
+                                Imaging</option>
+                            <option value="M" 
+                                {% if mode == 'M' %} selected{% endif %}>
+                                Med. Scope</option>
+                            <option value="S" 
+                                {% if mode == 'S' %} selected{% endif %}>
+                                Small Scope </option>
+                            <option value="B" 
+                                {% if mode == 'B' %} selected{% endif %}>
+                                Binoculars</option>
+                            <option value="N" 
+                                {% if mode == 'N' %} selected{% endif %}>
+                                Naked Eye</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Priority: </th>
+                    <td>
+                        <select name="priority">
+                            <option value="4"
+                            {% if priority == 4 %} selected{% endif %}>4 - Highest</option>
+                            <option value="3"
+                            {% if priority == 3 %} selected{% endif %}>3 - High</option>
+                            <option value="2"
+                            {% if priority == 2 %} selected{% endif %}>2 - Medium</option>
+                            <option value="1"
+                            {% if priority == 1 %} selected{% endif %}>1 - Low</option>
+                            <option value="0"
+                            {% if priority == 0 %} selected{% endif %}>0 - Lowest/All</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr><td></td><td></td></tr>
+                <tr>
+                    <td colspan=2 class="submit">
+                        <button type="submit">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</form>
+<hr>
+<h2>DSO List</h2>
+{% include 'includes/dso_table.html' %}
+{% endblock %}

@@ -64,6 +64,7 @@ from .utils_checklist import (
     get_filter_params, 
     update_dso_filter_context
 )
+from .utils_dsolist import get_active_dsolist_objects, get_dso_list_map
 
 class DSOListView(CookieMixin, ListView):
     model = DSO
@@ -149,7 +150,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['times'] = compile_times(times)
         return context
     
-class DSOListActiveView (TemplateView):
+class DSOListActiveView(TemplateView):
     template_name = 'dsolist_active.html'
 
     def post(self, request, *args, **kwargs):
@@ -167,6 +168,21 @@ class DSOListActiveView (TemplateView):
         context = super(DSOListActiveView, self).get_context_data(**kwargs)
         context['create_form'] = DSOListCreateForm()
         context['dso_lists'] = DSOList.objects.filter(active_observing_list=True)
+        context['is_dsolist_page'] = True
+        return context
+    
+class DSOListActiveDSOListView(CookieMixin, TemplateView):
+    template_name = 'active_dsos_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOListActiveDSOListView, self).get_context_data(**kwargs)
+        priority = int(self.request.GET.get('priority', 4))
+        mode = self.request.GET.get('mode', context['observing_mode'])
+        context['priority'] = priority
+        context['mode'] = mode
+        context['dso_list'] = dso_list = get_active_dsolist_objects(mode, priority)
+        context['num_dsos'] = len(context['dso_list'])
+        context['map'] = get_dso_list_map(dso_list, priority, mode)
         context['is_dsolist_page'] = True
         return context
 
