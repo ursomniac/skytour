@@ -68,9 +68,6 @@ def create_pdf_page(dso, fn=None):
     # Library Image OR Finder View
     if dso.library_image:
         p, y = add_image(p, ytop+2, dso.library_image.image.file, size=280, x=300)
-    elif dso.field_view:
-        fov = None if dso.field_view.name == '' else dso.field_view.file
-        p, y = add_image(p, ytop, fov, size=280, x=300)
 
     # Start 2nd row
     y = yrow2 = min(y, y2) - 15

@@ -12,7 +12,6 @@ from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import (
     Coordinates, 
     LibraryAbstractImage, 
-    FieldView, 
     ObservingLog, 
     ObservableObject,
     ObjectImage
@@ -287,7 +286,7 @@ class DSOAbstract(Coordinates):
     class Meta:
         abstract = True
 
-class DSO(DSOAbstract, FieldView, ObservableObject):
+class DSO(DSOAbstract, ObservableObject):
     """
     Metadata, images, etc. for each DSO
     """
@@ -695,7 +694,6 @@ class DSO(DSOAbstract, FieldView, ObservableObject):
         for chart in [
             self.dso_finder_chart,
             self.finder_chart,
-            self.field_view
         ]:
             if chart.name == '':
                 continue

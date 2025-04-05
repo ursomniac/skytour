@@ -130,7 +130,6 @@ class DSOAdmin(ObservableObjectAdmin):
     ]
     list_display_links = ['pk', 'shown_name',]
     readonly_fields = [
-        'field_view_tag', 
         'finder_chart_tag',
         'dso_finder_chart_tag',
         'dso_finder_chart_wide_tag',
@@ -180,7 +179,6 @@ class DSOAdmin(ObservableObjectAdmin):
             'classes': ['collapse'],
             'fields': [
                 ('dso_imaging_chart', 'dso_imaging_chart_tag'),
-                ('field_view', 'field_view_tag'),
                 ('dso_finder_chart', 'dso_finder_chart_tag'),
                 ('finder_chart', 'finder_chart_tag'),
                 ('dso_finder_chart_wide', 'dso_finder_chart_wide_tag'),

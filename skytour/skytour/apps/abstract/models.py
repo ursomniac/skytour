@@ -16,21 +16,6 @@ from .vocabs import (
     #
     YES_NO, YES, NO
 )
-class FieldView(models.Model):
-    """
-    This is a model for the FOV map.
-    """
-    field_view = models.ImageField (
-        _('Field View'),
-        upload_to = 'field_view/', 
-        null = True, blank = True
-    )
-
-    def field_view_tag(self):
-        return mark_safe(u'<img src="%s" width=500>' % self.field_view.url)
-
-    class Meta:
-        abstract = True
 
 ##### Abstract Models
 class Coordinates(models.Model):
