@@ -28,7 +28,7 @@
         <td colspan="{{ val.cspan }}">{{ item.ra }}<br>{{ item.number }}</td>
         {% endcomment %}
         <td colspan="{{ val.cspan }}">
-            <a href="{% url 'atlas-detail' item.slug %}" target="_new" title="{{ item.title }}">{{ item.number }}</a>
+            <a href="{% url 'atlas-detail' item.slug %}" target="_blank" title="{{ item.title }}">{{ item.number }}</a>
         </td>
         {% endfor %}
     <tr>

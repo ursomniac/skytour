@@ -15,7 +15,7 @@
             <b>Center RA/Dec:</b> {{ object.center_ra|floatformat:2 }}h  {{ object.center_dec }}°
             <br><br><b>Constellations</b> 
             {% for con in object.constellation.all %}
-            <a href="{% url 'constellation-detail' con.abbreviation %}" target="_new">{{ con.abbreviation }}</a>
+            <a href="{% url 'constellation-detail' con.abbreviation %}" target="_blank">{{ con.abbreviation }}</a>
             {% if not forloop.last %}, {% endif %}
             {% endfor %}
             <br><br/><b>Tags:  </b>{{ object.tags.all|join:", " }}

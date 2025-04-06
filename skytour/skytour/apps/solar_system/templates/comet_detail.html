@@ -57,9 +57,9 @@
                     <td class="description operations" rowspan=2>
                         <a href="{% url 'comet-edit' object.pk %}"><button>Edit Metadata</button></a>
                         <br>
-                        <a href="/admin/solar_system/comet/{{object.pk}}/change" target="_new"><button>Admin</button></a>
+                        <a href="/admin/solar_system/comet/{{object.pk}}/change" target="_blank"><button>Admin</button></a>
                         <br>
-                        <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_new"><button>PDF View</button></a>
+                        <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_blank"><button>PDF View</button></a>
                         <br>
                         <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}')">
                             Real Time
@@ -127,7 +127,7 @@
                 </tr>
                 <tr>
                     <td colspan=2>
-                        <a href="{{ object.light_curve_graph_url }}" target="_new">
+                        <a href="{{ object.light_curve_graph_url }}" target="_blank">
                             <img src="{{ object.light_curve_graph_url }}" class="constrained">
                             </a>
                     </td>

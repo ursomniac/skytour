@@ -142,7 +142,7 @@
 					</b>
 				</td>
 				<td width=20% class="description operations" rowspan=2>
-					<a href="/media/{{ object.pdf_page }}" target="_new"><button class="op">PDF</button></a>
+					<a href="/media/{{ object.pdf_page }}" target="_blank"><button class="op">PDF</button></a>
 					<br>
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
 					Real Time
@@ -392,7 +392,7 @@
 				<td colspan="2">
 					<h3>On Atlas Plates:</h3>
 					{% for plate in object.atlasplate_set.all %}
-					<a href="{% url 'atlas-detail' plate.slug %}" target="_new">{{ plate.plate_id }}</a>
+					<a href="{% url 'atlas-detail' plate.slug %}" target="_blank">{{ plate.plate_id }}</a>
 					{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 
@@ -424,7 +424,7 @@
 						<ul class="nobullet">
 							{% for ol in active_dsolists %}
 							<li>
-								<a href="{% url 'dsolist-detail' ol.pk %}" target="_new">{{ ol.name }}</a>
+								<a href="{% url 'dsolist-detail' ol.pk %}" target="_blank">{{ ol.name }}</a>
 							</li>
 							{% endfor %}
 						</ul>

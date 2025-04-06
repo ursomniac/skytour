@@ -68,19 +68,19 @@
         <h3>Condition: {{ target.session_stage }}</h3>
     {% elif target.object_type == 'DSO' %}
         <h3>{{ target.object_type}}: 
-            <a href="{% url target.url_path target.object.pk %}" target="_new">
+            <a href="{% url target.url_path target.object.pk %}" target="_blank">
             {{ target.object.shown_name }}
             </a>
         </h3>
     {% elif target.object_type == 'Comet' %}
         <h3>{{ target.object_type}}: 
-            <a href="{% url target.url_path target.object.pk %}" target="_new">
+            <a href="{% url target.url_path target.object.pk %}" target="_blank">
             {{ target.object.name }}
             </a>
         </h3>
     {% elif target.object_type == "Planet" or target.object_name == 'Asteroid' %}
         <h3>{{ target.object_type }}: 
-            <a href="{% url target.url_path target.object.slug %}" target="_new">
+            <a href="{% url target.url_path target.object.slug %}" target="_blank">
             {{ target.object.name }}
             </a>
         </h3>

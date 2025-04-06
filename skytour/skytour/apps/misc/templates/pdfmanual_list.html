@@ -23,7 +23,7 @@
     <tr>
         <td>{{ obj.pk }}: {{ obj.title }}</td>
         <td>
-            <a href="{{ obj.pdf_file }}" target="_new">{{ obj.pdf_file }}</a>
+            <a href="{{ obj.pdf_file }}" target="_blank">{{ obj.pdf_file }}</a>
         </td>
         <td style="text-align: center;">
             <button onClick='popupEditManualForm({{ obj.pk }});'>✏️ Edit</button>

@@ -12,7 +12,7 @@
     <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
     {% include 'form_dsolist_edit.html' %}
 </p>
-<p><a href="{% url 'dsolist-pdf' object.pk %}" target="_new"><button>PDF Page</button></a></p>
+<p><a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a></p>
 
 <h2>{{ object.dso.count}} DSOs</h2>
 {% with object.dso.all as dso_list %}

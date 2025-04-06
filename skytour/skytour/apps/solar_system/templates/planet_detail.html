@@ -102,11 +102,11 @@
                     </td>
                     <td  class="description operations" rowspan=2>
                         {% if slug != 'moon' %}
-                        <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_new"><button class="op">   Admin   </button></a>
+                        <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_blank"><button class="op">   Admin   </button></a>
                         <br>
                         {% endif %}
                         {% if object.slug %}
-                        <a href="{% url 'sso-pdf' 'planet' slug %}" target="_new"><button class="op">PDF View</button></a>
+                        <a href="{% url 'sso-pdf' 'planet' slug %}" target="_blank"><button class="op">PDF View</button></a>
                         <br>
                         {% endif %}
                         <button class="op" onclick="return realtimePopup('/planet/real-time/{{ slug }}')">

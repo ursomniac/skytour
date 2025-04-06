@@ -80,7 +80,7 @@ ol li b { color: #fc0; }
         <h2>Custom Plan PDF</h2>
         <p>Choose which pages to print.  A full PDF takes about a minute to run.</p>
 
-        <form method="post" target="_new">
+        <form method="post" target="_blank">
         {% csrf_token %}
 
         {% if form.non_field_errors %}

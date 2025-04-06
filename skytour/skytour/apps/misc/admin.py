@@ -49,7 +49,7 @@ class WebsiteAdmin(admin.ModelAdmin):
     readonly_fields = ['get_url_link']
 
     def get_url_link(self, obj):
-        return mark_safe(f'<a href="{obj.url}" target="_new">{obj.url}')
+        return mark_safe(f'<a href="{obj.url}" target="_blank">{obj.url}')
     get_url_link.short_description = 'Link'
 
 class TimeZoneAdmin(admin.ModelAdmin):

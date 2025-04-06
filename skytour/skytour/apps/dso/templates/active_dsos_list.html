@@ -93,7 +93,7 @@
                     <ul>
                         {% for item in active_lists %}
                         <li>
-                            <a href="{% url 'dsolist-detail' item.pk %}" target="_new">{{ item.name }}</a>
+                            <a href="{% url 'dsolist-detail' item.pk %}" target="_blank">{{ item.name }}</a>
                         </li>
                         {% endfor %}
                     </ul>

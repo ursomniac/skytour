@@ -47,7 +47,7 @@
 <hr>
 {% for mylist in dso_lists %}
     <a name="list-{{ mylist.pk }}"></a>
-    <h3>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_new">{{ mylist.name }}</a></h3>
+    <h3>List: <a href="{% url 'dsolist-detail' mylist.pk %}" target="_blank">{{ mylist.name }}</a></h3>
     <h4>
         {{ mylist.dso.all|length }} DSOs
         &nbsp;&nbsp;|&nbsp;&nbsp;
