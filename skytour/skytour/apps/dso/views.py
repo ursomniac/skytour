@@ -442,6 +442,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AvailableDSOObjectsView, self).get_context_data(**kwargs)
         debug = self.request.GET.get('debug', False)
+
+        # Deal with form values
         no_mask = self.request.GET.get('no_mask', 'off') == 'on'
         context['no_mask'] = no_mask
         is_scheduled  = self.request.GET.get('scheduled', 'off') == 'on'
@@ -451,46 +453,52 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
+        # Set gear in form
+        for g in 'NBSMI':
+            context[f'gear{g}'] = g if gear and g in gear else None
+
+        # Default min/max alt come from: 1. cookie; 2. site_parameter; override by form
+        default_min_alt = context['min_alt'] or find_site_parameter('minimum-object-altitude', default=10., param_type='float')
+        default_max_alt = context['slew_limit'] or find_site_parameter('slew-limit', default=90., param_type='float')
+        my_min_alt = float(self.request.GET.get('min_alt', default_min_alt))
+        my_max_alt = float(self.request.GET.get('max_alt', default_max_alt))
+        context['min_alt'] = my_min_alt
+        context['max_alt'] = my_max_alt
+
+        #if context['min_alt'] is None:
+        #    context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
+        #if context['max_alt'] is None:
+        #    context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
+
         min_dec, max_dec = location.declination_range
         if context['min_dec'] is None:
             context['min_dec'] = min_dec
         if context['max_dec'] is None:
             context['max_dec'] = max_dec
-        if context['min_alt'] is None:
-            context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
-        if context['max_alt'] is None:
-            context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
         context['min_dec_string'] = f"{context['min_dec']:.1f}"
         context['max_dec_string'] = f"{context['max_dec']:.1f}"
 
         if context['is_now']:
-            #print("Doing @Now")
             context['utdt'] = dt.datetime.now(dt.timezone.utc)
         else:
-            #print("Doing @Cookie")
             if context['utdt'] is None or context['utdt'] == 'None':
                 context['utdt'] = context['cookies']['user_pref']['utdt_start']
 
+        # Deal with time
         orig_utdt = context['utdt']
         if type(orig_utdt) == str:
             format_utdt = orig_utdt
         else:
             format_utdt = orig_utdt.strftime("%Y-%m-%d %H:%M:%S")
             
+        # START with all DSOs.
         dso_list = DSO.objects.all()
 
-        if debug:
-            print("MIN DEC: ", min_dec)
-            print("MAX_DEC: ", max_dec)
-            print("# DSOS: ", dso_list.count())
-
+        # Eliminate impossible ones (based on latitude)
         if min_dec is not None:
             dso_list = dso_list.filter(dec__gte=min_dec)
         if max_dec is not None:
             dso_list = dso_list.filter(dec__lte=max_dec)
-
-        if debug:
-            print("# DSOs 2: ", dso_list.count())
 
         up_dict, times = find_dsos_at_location_and_time (
             dsos = dso_list,                         # DSO List to start with - filtered by declination
@@ -507,6 +515,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             debug=debug
         )
         dsos = up_dict['dsos']
+
+        # Set context for page
         context['calc_utdt'] = up_dict['utdt']
         context['format_utdt'] = format_utdt
         context['local_time'] = up_dict['utdt'].astimezone(pytz.timezone(location.time_zone.pytz_name)).strftime("%A %b %-d, %Y %-I:%M %p %z")
@@ -516,9 +526,6 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['location'] = up_dict['location']
         context['times'] = compile_times(times)
 
-        # Set gear in form
-        for g in 'NBSMI':
-            context[f'gear{g}'] = g if gear and g in gear else None
 
         return context
 

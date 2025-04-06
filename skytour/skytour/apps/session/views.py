@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import time
 
-from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
@@ -21,7 +20,7 @@ from ..astro.almanac import get_dark_time
 from ..astro.time import get_julian_date, utc_round_up_minutes
 from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
-from ..dso.models import DSOObservation, DSO
+from ..dso.models import DSOObservation
 from ..observe.models import ObservingLocation
 from ..plotting.scatter import create_histogram
 from ..solar_system.helpers import ( 
@@ -91,7 +90,8 @@ class SetSessionCookieView(FormView):
             time_zone = None
             print(f"Error setting time_zone to {my_location.time_zone.pytz_name}")
 
-        min_dec, max_dec = get_declination_range(my_location, min_altitude=d['min_object_altitude'])
+        min_alt= d['min_object_altitude']
+        min_dec, max_dec = get_declination_range(my_location, min_altitude=min_alt)
         dec_limit = min_dec if my_location.latitude >= 0. else max_dec
 
         # Deal with time/date
@@ -158,6 +158,7 @@ class SetSessionCookieView(FormView):
             julian_date = get_julian_date(utdt_start),
             dec_limit = dec_limit, 
             dec_range = (min_dec, max_dec),
+            min_alt = min_alt,
             slew_limit = d['slew_limit'],
             flip_planets = flip_planets,
             color_scheme = d['color_scheme'],
