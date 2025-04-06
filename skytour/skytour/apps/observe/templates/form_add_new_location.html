@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load skytour_filters humanize %}
-{% block title %}Add Observation: Skytour{% endblock %}
+{% block title %}{{ op }} Location: Skytour{% endblock %}
 {% block content %}
 
 <style>
-  h1, h4 { color: #ccc; }
+  h1, h2, h4 { color: #fc6; }
+  h2 { margin-top: 0; }
   table.subform { border: none; }
   table.subform td { border: none; }
   table.subform th {
@@ -14,8 +15,24 @@
   }
   table.panel { border: 1px solid #ffc;  margin-bottom: 20px; }
   table.subform td { vertical-align: top; }
-  table.subform td.panel2 { border: 2px solid #960; background-color: #850; }
-  table.subform td.panel2 input { width: 20em;}
+  table.submit { margin-top: 20px; }
+  table.submit td  { border: 2px solid #960; background-color: #850; height: 5em; }
+  table.submit td input { margin-left: 10px; width: 30em; height: 4em; }
+  table.mask_form_meta { border: 1px solid #990; }
+  table.mask_form_meta td { width: 50%; vertical-align: top; border: none; }
+  table.mask_form { width: 50%; text-align: center; }
+  table.mask_form th { background-color: #c90; color: #000; border: 1px solid #c90; }
+  table.mask_form td { border: 1px solid #960; }
+  table.mask_form th.az { background-color: #eb0; }
+  table.mask_form th.alt { background-color: #a70; }
+  span.optional {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 90%;
+    color: #ccc;
+  }
+  table.example th { width: auto;  background-color: #999; color: #000; }
+  table.example td { width: auto;  border: 1px solid #999; }
 </style>
 
 <h1>{{ op }} Observing Location</h1>
@@ -149,6 +166,10 @@
               {% include "inc_obs_form_field.html" %}
               {% endwith %}
             </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan=4>
             <table class='panel'>
               <tr><th colspan=2>Maps</th></tr>
               {% with form.map_image as field %}
@@ -163,15 +184,111 @@
             </table>
           </td>
         </tr>
+      </table>
 
+      {{ mask_formset.management_form }}
+
+      <table class="mask_form_meta">
         <tr>
-          <td colspan=2 class="panel2"><input type="submit" value="Submit"/></td>
+          <td>
+            <h2>
+              Location Observing Mask
+              <span class="optional"> &mdash; Optional</span>
+            </h2>
+            <p>Use this to create a "mask" at a location where things like buildings, trees, etc. block part of the sky.
+              This will be factored in when finding whether objects are available.
+            </p>
+            <b>Instructions:</b>
+            <ul>
+              <li>Start at 0° Azimuth</li>
+              <li>Add the Altitude there</li>
+              <li>Pick the corresponding (az, alt) for the next point.</li>
+              <ul>
+                <li>If the two altitudes are the same, then a straight line parallel to the ground will be drawn.<li>
+                <li>If they're different, the line will be angled (not recommended)</li>
+              </ul>
+              <li>Continue around all directions</li>
+              <li>End with the last "Azimuth End" point at 360°</li>
+            </ul>
+            <b>Example:</b>
+            <table class="example">
+              <tr><th>Azi.<br>Start</th><th>Alt.<br>Start</th><th>Azi.<br>End</th><th>Alt.<br>End</th><th>Why</th></tr>
+              <tr><td>  0</td><td>  0</td><td> 50</td><td> 0</td><td>Clear to the NE</td></tr>
+              <tr><td> 50</td><td> 30</td><td> 85</td><td>30</td><td>Garage in the way</td></tr>
+              <tr><td> 85</td><td>  0</td><td>160</td><td> 0</td><td>Clear to the E/SE</td></tr>
+              <tr><td>160</td><td> 15</td><td>250</td><td>15</td><td>Neighbor's Fence</td></tr>
+              <tr><td>250</td><td>  0</td><td>360</td><td> 0</td><td>Clear to W back to N</td></tr>
+            </table>
+          </td>
+          <td>
+            <table class="mask_form">
+              <tr>
+                <th colspan=2>Start</th>
+                <th colspan=2>End</th>
+                {% if op == 'Edit' %}
+                <th></th>
+                {% endif %}
+              </tr>
+              <tr>
+                <th class="az">Azimuth</th>
+                <th class="alt">Altitude</th>
+                <th class="az">Azimuth</th>
+                <th class="alt">Altitude</th>
+                {% if op == 'Edit' %}
+                <th>Delete</th>
+                {% endif %}
+              </tr>
+              {% for item in mask_formset %}
+              <tr>
+                <td>
+                  <input 
+                    type="hidden" 
+                    name="observinglocationmask_set-{{ forloop.counter0 }}-id"
+                    {% if op == 'Edit' and item.instance.pk %}
+                    value="{{ item.instance.pk }}" 
+                    {% endif %}
+                    id="id_observinglocationmask_set-{{ forloop.counter0 }}-id"
+                  >
+                  <input type="hidden" 
+                    name="observinglocationmask_set-{{ forloop.counter0 }}-location" 
+                    {% if op == 'Edit' %}
+                    value="{{ parent_pk }}" 
+                    {% endif %}
+                    id="id_observinglocationmask_set-{{ forloop.counter0 }}-location"
+                  >
+                  {% with item.azimuth_start  as field %}{% include "inc_mask_form_field.html" %}{% endwith %}
+                </td>
+                <td>
+                  {% with item.altitude_start as field %}{% include "inc_mask_form_field.html" %}{% endwith %}
+                </td>
+                <td>
+                  {% with item.azimuth_end    as field %}{% include "inc_mask_form_field.html" %}{% endwith %}
+                </td>
+                <td>
+                  {% with item.altitude_end   as field %}{% include "inc_mask_form_field.html" %}{% endwith %}
+                </td>
+                {% if op == 'Edit' %}
+                <td>
+                  <input type="checkbox" 
+                    name="observinglocationmask_set-{{ forloop.counter0 }}-DELETE" 
+                    id="id_observinglocationmask_set-{{ forloop.counter0 }}-DELETE">
+                </td>
+                {% endif %}
+                </tr>
+              {% endfor %}
+            </table>
+          </td>
         </tr>
-        
+      </table>
+      <table class="submit">
+        <tr>
+          <td class="panel2"><input type="submit" value="Submit"/></td>
+        </tr>
       </table>
     </form>
     {% else %}
     There is no form!
     {% endif %}
+    
 </div>
 {% endblock %}

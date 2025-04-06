@@ -38,8 +38,9 @@
 			{{ object.status }}
 			<br><b>Is Default Location: </b>{{ object.is_default }}
 			<br><br>
-			<a href="{% url 'observing-location-update' object.pk %}"><button>Edit/Update</button></a>
 			<a href="/media/{{ object.pdf_form }}" target="_blank"><button>PDF Form</button></a>
+			<a href="{% url 'observing-location-update' object.pk %}"><button>Edit/Update</button></a>
+			<button onClick='popupDeleteLocation({{ object.pk }});'>⛔️ Delete</button>
 		</td>
 	</tr>
 </table>
@@ -186,5 +187,27 @@
 	</td></tr>
 </table>
 {% endif %}
+
+<script>
+    const tscreenWidth = window.screen.width;
+    const twindowWidth = 600;
+    const twindowHeight = 600;
+    const trightOffset = 100;
+    const trightPosition = tscreenWidth - twindowWidth - trightOffset;
+    const ttopOffset = 200;
+
+    function popupDeleteLocation(pk) {
+        const url = `/observing_location/delete/${pk}`;
+        newWindow = window.open(
+            url,
+            'Delete Eyepiece',
+            `height=400,  width=500, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>
 
 {% endblock content %}

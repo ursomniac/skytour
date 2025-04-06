@@ -224,10 +224,6 @@ class CalendarAddItemView(CreateView):
     model = Calendar
     template_name = 'add_calendar_item.html'
     fields = ['date', 'time', 'title', 'description', 'event_type',]
-
-    def xpost(self, request, *args, **kwargs):
-        print(request.POST)
-        return self.get(request, *args, **kwargs)
     
     def form_valid(self, form):
         context = self.get_context_data()
