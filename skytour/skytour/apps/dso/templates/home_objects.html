@@ -59,7 +59,7 @@
                             <input name="utdt" value="{{ format_utdt }}">
                         </td>
                         <td>
-                            <label form="ut_offset">UT Offset:&nbsp;</label> 
+                            <label for="ut_offset">UT Offset:&nbsp;</label> 
                             <input name="ut_offset" value="{{ ut_offset }}" size=8>
                         </td>
                     </tr>
@@ -73,6 +73,9 @@
                             <option {% if pri == '3' %}selected{% endif %}>3</option>
                             <option {% if pri == '4' %}selected{% endif %}>4</option>
                         </select>
+                        &nbsp;&nbsp;
+                        <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
+                        <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
                         </td>
                         <td>
                         <label for="imaged">Imaged:&nbsp;</label> 
@@ -136,9 +139,14 @@
     </tr>
 </table>
 <small>
+<a name="top"></a>
+<a href="#bottom">Go to Bottom</a>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
+        {% if show_thumbs %}
+        <th>Thumb</th>
+        {% endif %}
         <th>Name</th>
         {% if not hide_constellation %}<th>Con.</th>{% endif %}
         {% if not hide_type %}<th>Type</th>{% endif %}
@@ -163,6 +171,9 @@
 <tbody>
 {% for dso in dso_list %}
     <tr>
+        {% if show_thumbs %}
+        <td>{% include 'includes/dso_thumbnail.html' %}</td>
+        {% endif %}
         <td>
             <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
@@ -246,6 +257,8 @@
 </tbody>
 </table>
 </small>
+<a name="bottom"></a>
+<a href="#top">Go to Top</a>
 {% include 'includes/sortable_table.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 <br/>

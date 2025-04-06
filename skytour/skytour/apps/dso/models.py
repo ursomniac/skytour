@@ -729,6 +729,26 @@ class DSO(DSOAbstract, ObservableObject):
             out += k if k in self.mode_list else ' '
         return out
     
+    @property
+    def dso_thumbnail(self):
+        x = self.image_library.filter(use_in_carousel=1).order_by('order_in_list').first() 
+        y = self.images.first()
+        z = None
+        return x or y or z
+    
+    @property
+    def dso_thumbnail_class(self):
+        thumb = self.dso_thumbnail
+        return thumb.__class__.__name__ # Can be 'NoneType'  :-)
+    
+    @property
+    def dso_thumbnail_type(self):
+        options = {'DSOLibraryImage': 'library', 'DSOImage': 'external', 'NoneType': 'logo'}
+        x = self.dso_thumbnail_class
+        if x in options.keys():
+            return options[x]
+        return 'Unknown'
+
     def mode_viability_chart(self):
         """
         This creates the mode/viability chart on the DSODetailPage.
@@ -737,7 +757,8 @@ class DSO(DSOAbstract, ObservableObject):
             return f"No chart."
         out = '<div class="mode-chart">'
         out += '<pre>'
-        out += '<span class="mode-header">Mode  Pri  Grid</span><br>'
+        out += '<span class="mode-header">Mode  Priority    Grid</span><br>'
+        out += '<hr/>'
         for k in 'NBSMI':
             if k not in self.mode_list:
                 continue
@@ -745,7 +766,12 @@ class DSO(DSOAbstract, ObservableObject):
             v = mode.viable
             out += f'<div class="mode-line">'
             out += f'<b> {k}</b>:  &nbsp;' 
-            out += ' 0  &nbsp;' if mode.priority is None else f' {mode.priority}  &nbsp;'
+            #if mode.priority is None:
+            #    pri = '    Unknown '
+            #else:
+            #    pri = ''
+            #out += ' 0  &nbsp;' if mode.priority is None else f' {mode.priority}  &nbsp;'
+            out += mode.mode_priority_string
             for i in range(11):
                 val = 'X' if i == v else '&nbsp;'
                 val = f'&nbsp;{val}&nbsp;'
@@ -758,6 +784,7 @@ class DSO(DSOAbstract, ObservableObject):
             if mode.challenging:
                 out += '<span style="color: #ff0; font-size: 110%;">☆</span>'
             out += '</div>'
+        out += '<hr/>'
         out += '</pre></div>'
         return mark_safe(out)
     
@@ -1368,6 +1395,12 @@ class DSOObservingMode(models.Model):
     challenging = models.BooleanField(default=False)
     # Notes on observing this DSO with this mode
     notes = models.TextField(null=True, blank=True)
+
+    @property
+    def mode_priority_string(self):
+        if self.priority is None:
+            return f'    Unknown'
+        return f'{self.priority} - {self.get_priority_display():8s}'
 
     def notes_flag(self):
         if self.notes is None or len(self.notes.strip()) == 0:

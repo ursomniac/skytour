@@ -178,6 +178,7 @@ class DSOListActiveDSOListView(CookieMixin, TemplateView):
         context = super(DSOListActiveDSOListView, self).get_context_data(**kwargs)
         priority = int(self.request.GET.get('priority', 4))
         mode = self.request.GET.get('mode', context['observing_mode'])
+        context['active_lists'] = DSOList.objects.filter(active_observing_list=True)
         context['priority'] = priority
         context['mode'] = mode
         context['dso_list'] = dso_list = get_active_dsolist_objects(mode, priority)
@@ -260,6 +261,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         initial = {'name': object.name, 'description': object.description, 'active_observing_list': object.active_observing_list}
         context['edit_form'] = DSOListEditForm(initial=initial)
         context['object'] = object
+        context['hide_image'] = False
         return context
     
 class DSOCreateList(TemplateView):
@@ -444,6 +446,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['no_mask'] = no_mask
         is_scheduled  = self.request.GET.get('scheduled', 'off') == 'on'
         context['scheduled'] = is_scheduled
+        show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
+        context['show_thumbs'] = show_thumbs
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -472,12 +476,21 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             format_utdt = orig_utdt
         else:
             format_utdt = orig_utdt.strftime("%Y-%m-%d %H:%M:%S")
-
+            
         dso_list = DSO.objects.all()
+
+        if debug:
+            print("MIN DEC: ", min_dec)
+            print("MAX_DEC: ", max_dec)
+            print("# DSOS: ", dso_list.count())
+
         if min_dec is not None:
             dso_list = dso_list.filter(dec__gte=min_dec)
         if max_dec is not None:
             dso_list = dso_list.filter(dec__lte=max_dec)
+
+        if debug:
+            print("# DSOs 2: ", dso_list.count())
 
         up_dict, times = find_dsos_at_location_and_time (
             dsos = dso_list,                         # DSO List to start with - filtered by declination
@@ -488,11 +501,10 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             location = location,                     # ObservingLocation object from the cookie
             min_alt = context['min_alt'],            # Minimum altitude
             max_alt = context['max_alt'],            # Maximum altitude
-            min_dec = context['min_dec'],            # Absolute range of declination
-            max_dec = context['max_dec'],            # Absolute range of declination
             mask = not no_mask,                      # Use location mask (for trees, buildings, etc.)
             gear = gear,                             # Filter by gear choices
-            scheduled = is_scheduled                 # Only show objects on active DSOList objects
+            scheduled = is_scheduled,                # Only show objects on active DSOList objects
+            debug=debug
         )
         dsos = up_dict['dsos']
         context['calc_utdt'] = up_dict['utdt']

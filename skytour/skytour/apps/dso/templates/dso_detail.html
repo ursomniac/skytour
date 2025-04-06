@@ -51,6 +51,8 @@
 		border: 1px solid #390;
 		vertical-align: middle;
 	}
+	span.mode-header { color: #fff; font-weight: bold; }
+	div.mode-chart hr { border-color: #870; border-width: 1px; border-style: solid; }
 	.image-text {
         position: absolute;
         bottom: -30px;
@@ -79,10 +81,14 @@
 		margin: 0; /* Remove margins */
 	}
 	div.panel-type {float: right!important;  }
-	span.little-header { font-size: 10px; color: #999; margin-right: 2em; }
-	.popup-button, .popup-dso { float: right; }
-	.object-metadata { font-weight: bold; color: #aa4; }
-	div.conditions { padding: 5px; border: 1px solid #ccc; line-height: 1.4; }
+	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
+	.popup-button, .popup-dso, .popup-list-button { float: right; }
+	.object-metadata { xfont-weight: bold; color: #ccc; }
+	div.conditions { 
+		padding: 5px; 
+		border: 1px solid #ccc; 
+		line-height: 1.6; 
+	}
 	button.op { width: 12em; }
 	td.edit_images {
 		vertical-align: middle;
@@ -91,7 +97,7 @@
 	}
 	td.edit_images button { width: 20em; height: 20px; }
 	td.editing { border: 2px solid #900!important; }
-	td.editing h3 { margin-top: 8px; }
+	td.editing h3, td.obslist h3 { margin-top: 8px; }
 	td.editing button { width: 8em; margin-right: 8px;  }
 	td.indented { background-color: #666; padding-left: 20px; }
 	.rightside { float: right!important; }
@@ -147,7 +153,7 @@
 					</button>
 					<br/>
 					<a href="{% url 'session-add' %}?object_type=dso&pk={{ object.pk }}" target="_blank">
-					<button class="op">Observe</button>
+					<button class="op">Add Observation</button>
 					</a>
 				</td>
 			</tr>
@@ -256,10 +262,10 @@
 						{% endif %}
 						<br>
 						<span class="object-metadata">On SkyMap:</span>&nbsp;
-							{{ object.get_show_on_skymap_display }}
+							<b>{{ object.get_show_on_skymap_display }}</b>
 						<br>
 						<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
-							{{ object.get_show_on_simple_skymap_display }}
+							<b>{{ object.get_show_on_simple_skymap_display }}</b>
 						{% if object.is_on_active_observing_list %}
 						<br>
 						🔭 - on active observing list
@@ -268,10 +274,18 @@
 				</td>
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}
-					<br><span class="annotation">{{ object.ra_float|floatformat:3}}h {{ object.ra_deg_float|floatformat:3 }}°</span>
+					<br>
+					<span class="annotation">
+							{{ object.ra_float|floatformat:3}}h 
+							&nbsp;&nbsp;&nbsp;
+							{{ object.ra_deg_float|floatformat:3 }}°
+						</span>
 				</td>
 				<td class="coordinates">&delta; (2000): {{ object.dec_text }}
-					<br><span class="annotation">{{ object.dec_float|floatformat:3}}°</span>
+					<br>
+					<span class="annotation">
+						{{ object.dec_float|floatformat:3}}°
+					</span>
 				</td>
 			</tr>
 			<tr>
@@ -390,7 +404,6 @@
 						</span>
 					</h3>
 					{{ object.mode_viability_chart }}
-
 				</td>
 			</tr>
 			<tr>
@@ -400,10 +413,10 @@
 					<a href="/admin/dso/dso/{{ object.pk }}/change"><button>Admin</button></a>
 					<a href="{% url 'dso-edit-modes' object.pk %}"><button>Obs. Modes</button></a>
 				</td>
-				<td>
+				<td class="obslist" colspan="2">
 					<h3>
 						Active Observing Lists
-						<span class='popup-button' onClick="DSOAddPopup({{ object.pk }})">
+						<span class='popup-list-button' onClick="DSOAddPopup({{ object.pk }})">
 							<button> ✅ Add to DSO List</button>
 						</span>
 					</h3>
@@ -430,7 +443,11 @@
 	<td id="field_chart_view" width="50%">
 		<h3>Finder Chart(s):</h3>
 		<div class="finder-chart-container">
-			<div class="panel-type">Finder Chart Panel</div>
+			<div class="panel-type">
+				<span class="little-header">
+				Finder Chart Panel
+				</span>
+			</div>
 			{% for item in finder_slideshow %}
 			<div class="mySlides finderslide">
 				{% if finder_slideshow|length > 1 %}
@@ -471,7 +488,7 @@
 			<br>(No imaging view.)
 			{% endif %}
 		{% else %}
-			<h3>Imaging Chart and Full View</h3>
+			<h3>Full-Frame Images and Finder Image</h3>
 			<div class="slideshow-container">
 				<div class="panel-type">
 					<span class="little-header">Full-Sized View Panel</span>
@@ -588,7 +605,7 @@
 <table>
 <tr>
 	<td colspan="5" class="indented">
-		<h2>Uploaded Images</h2>
+		<h2>Uploaded External Images</h2>
 	</td>
 	<td class="edit_images">
 		<a href="{% url 'dso-manage-image' object.pk %}">

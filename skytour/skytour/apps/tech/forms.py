@@ -12,7 +12,10 @@ class TelescopeForm(forms.ModelForm):
             'order_in_list', 
             'active', 
             'is_default',
-            'uses_eyepiece'
+            'uses_eyepiece',
+            'include_on_finder',
+            'stellarium_telescope',
+            'stellarium_sensor'
         ]
 
 class TelescopeDeleteForm(forms.Form):

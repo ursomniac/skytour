@@ -6,7 +6,7 @@
     h1 { color: #c90; }
     th { background-color: #990; color: #000; }
     td { padding-left: 20px; }
-    td.name { width: 30%; }
+    td.name { width: 20%; }
     td.edit { text-align: center; }
     button { width: 12em; }
     button.add { width: 15em; height: 3em; }
@@ -19,6 +19,10 @@
         color: #000;
         padding: 2px 4px;
         font-size: 80%;
+    }
+    span.note {
+        font-weight: bold;
+        color: #fc9;
     }
 </style>
 <h1>Telescopes</h1>
@@ -50,6 +54,8 @@
         <th>Aperture</th>
         <th>Focal Length</th>
         <th>Uses Eyepiece</th>
+        <th>On Finder Charts</th>
+        <th>Stellarium Tel/Sensor</th>
         <th>Edit</th>
     </tr>
     {% for object in object_list %}
@@ -64,6 +70,15 @@
         <td>{{ object.aperture }} mm</td>
         <td>{{ object.focal_length }} mm</td>
         <td>{{ object.uses_eyepiece }}</td>
+        <td>{{ object.include_on_finder }}</td>
+        <td>
+            {% if object.stellarium_telescope >= 0 %}
+            Tel: {{ object.stellarium_telescope }}
+            {% endif %}
+        &nbsp; &nbsp;
+            {% if object.stellarium_sensor >= 0 %}
+            Sensor: {{ object.stellarium_sensor }}
+            {% endif %}
         <td class="edit">
             <button onClick="popupEditTelescope( {{ object.pk }} );">✏️ Edit</button>
             <button onClick='popupDeleteTelescope({{ object.pk }});'>⛔️ Delete</button>
@@ -71,15 +86,24 @@
     </tr>
     {% endfor %}
 </table>
+<p>
+    <span class="note">On Finder Charts:</span> 
+    will show either a circular eyepiece (FOV set in Settings)
+    if the telescope uses eyepices; otherwise the rectagular FOV of the sensor.
+</p>
+<p>
+    <span class="note">Stellarium Generated FOV Images:</span> 
+    will show the FOV of the sensor if the "default"
+    telescope produces images.
 </div>
 
 <script>
     const tscreenWidth = window.screen.width;
     const twindowWidth = 600;
-    const twindowHeight = 600;
+    const twindowHeight = 750;
     const trightOffset = 100;
     const trightPosition = tscreenWidth - twindowWidth - trightOffset;
-    const ttopOffset = 200;
+    const ttopOffset = 100;
 
     function popupEditTelescope(pk) {
         const url = `/tech/telescope/edit/${pk}`;

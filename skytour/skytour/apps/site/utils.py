@@ -24,7 +24,8 @@ def get_number_of_observed_objects_by_model(slug):
 def observation_table():
     out = '<table><tr><th>Object Type</th><th># Obj.</th><th># Obs.</th></tr>'
     for slug in SLUG_LIST:
-        out += f'<tr><td>{ slug.title() }</td>'
+        name = slug.title() if slug != 'dso' else 'DSO'
+        out += f'<tr><td>{ name }</td>'
         n_obj = get_number_of_observed_objects_by_model(slug)
         out += f'<td class="num">{ n_obj }</td>'
         n_obs = get_number_of_observations_by_model(slug)
@@ -67,7 +68,9 @@ def get_most_popular_observing_locations(n=None):
     sorted_list = sorted(d.items(), key=lambda item: item[1], reverse=True)
     if n is None:
         return sorted_list
-    return sorted_list[:n]
+    if n is not None:
+        return sorted_list[:n]
+    return sorted_list
 
 def get_random_dso_library_image(style='square', processing='post-processed'):
     image = DSOLibraryImage.objects.filter(

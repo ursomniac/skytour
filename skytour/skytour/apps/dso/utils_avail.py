@@ -32,12 +32,11 @@ def find_dsos_at_location_and_time (
         location = None,
         min_alt = 30.,
         max_alt = 90.,
-        min_dec = None,     # REMOVE
-        max_dec = None,     # REMOVE
         mask = True,
         gear = None,
         scheduled = False,
-        times = None
+        times = None,
+        debug = False
     ):
 
     times = [(time.perf_counter(), 'Start')] if times is None else times
@@ -57,6 +56,7 @@ def find_dsos_at_location_and_time (
     times.append((time.perf_counter(), 'Filtering DSOs'))
 
     candidate_pks = []
+
     for d in dsos: # loop on DSOs
         # Filter based on existing images
         priority = d.mode_priority_value_dict[mode]
@@ -81,11 +81,13 @@ def find_dsos_at_location_and_time (
         if scheduled and d.active_observing_list_count == 0:
             continue
         (az, alt, _) = d.alt_az(location, utdt)
-        in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask)
+        in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask, debug=debug)
         if in_window:
             candidate_pks.append(d.pk)
-        first = False
-    
+            if debug:
+                if alt < min_alt:
+                    print(f"ERROR WITH DSO {d}: alt = {alt}, in_window = {in_window}")
+
     times.append((time.perf_counter(), 'Assemble DSO List'))
 
     # Given the subset of DSOs - assemble the list
@@ -110,12 +112,12 @@ def is_available_at_location (
         az, alt,                # Object's azimuth and altitude
         min_alt=10.,            # Absolute minimum altitude (can be overridden)
         max_alt=90,             # Absolute maximum altitude (can be overridden)
-        use_mask=True
+        use_mask=True,
+        debug=False
     ):
     """
     See if an object's azimuth and altitude are above the mask set for a location.
     """
-
     def interpolate_for_altitude(m, az):
         """
         Given two mask endpoints, get the altitude for a given mask and azimuth
@@ -137,9 +139,6 @@ def is_available_at_location (
         return True 
         
     masks = location.observinglocationmask_set.all()
-    if masks.count() == 0: # Oops - no masks defined for this location!  Assume True
-        return True
-        
     # Stupid - but ... deal with bogus values
     if abs(alt) > 90. or az < 0:
         return False
@@ -155,12 +154,13 @@ def is_available_at_location (
     if not use_mask:
         return True
     
-    for mask in masks:
-        if az < mask.azimuth_start or az >= mask.azimuth_end: # not in window
-            continue
-        # We're in the zone
-        mask_alt = interpolate_for_altitude(mask, az)
-        return alt >= mask_alt
+    if masks.count() > 0:
+        for mask in masks:
+            if az < mask.azimuth_start or az >= mask.azimuth_end: # not in window
+                continue
+            # We're in the zone
+            mask_alt = interpolate_for_altitude(mask, az)
+            return alt >= mask_alt
     
     return True # default if no mask is set for this azimuth...
 

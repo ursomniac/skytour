@@ -36,7 +36,22 @@ class Telescope(models.Model):
         default = False,
         help_text = 'False for Imaging/Smart Telescopes'
     )
-
+    include_on_finder = models.BooleanField (
+        _('Include on Finder Charts'),
+        default = True,
+        help_text='Add FOV when creating finder charts'
+    )
+    stellarium_telescope = models.PositiveIntegerField (
+        _('Stellarium Telescope #'),
+        null = True, blank = True,
+        help_text = 'in Stellarium, the Telescope #'
+    )
+    stellarium_sensor = models.PositiveIntegerField (
+        _('Stellarium Sensor #'),
+        null = True, blank = True,
+        help_text = 'in Stellarium, the Sensor #'
+    )
+ 
     @classmethod
     def get_default_telescope(self):
         tel = Telescope.objects.filter(is_default=True).first()
@@ -59,7 +74,11 @@ class Telescope(models.Model):
     @property
     def dawes_limit(self):
         return get_telescope_dawes_limit(self.aperature)
-
+    
+    @property
+    def in_stellarium(self):
+        return None not in (self.stellarium_telescope, self.stellarium_sensor)
+    
     class Meta:
         ordering = ['order_in_list']
 

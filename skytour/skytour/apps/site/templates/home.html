@@ -6,7 +6,7 @@
     .random_image { max-width: 500px; }
     .obs_table { width: 500px; }
     .obs_table table { border: 0px; }
-    table.location_table { width: 550px; border: 0px; }
+    table.location_table { width: 600px; border: 0px; }
     th {
         background-color: #980;
         color: #000;
@@ -20,14 +20,23 @@
     h1 {
         color: #fc0;
         text-align: left;
-        padding-left: 30px;
+        padding-left: 10px;
     }
-    h2 {
+    h2.version {
         text-align: right;
         padding-right: 30px;
         font-size: 90%;
-        color: #999;
+        color: #fff;
     }
+    h3 { color: #ff9; }
+    span.text {
+        margin-left: 30px;      
+        padding: 5px; 5px; 
+        color: #ccc;
+        border: 1px solid #cc9; 
+        font-size: 90%;
+    }
+    span.text span.days { color: #ff9; font-size: 110%; }
     h4.dso_title { 
         max-width: 480px;
         background-color: #336;
@@ -35,9 +44,6 @@
         padding: 10px;
         display: block;
         margin-bottom: 0px;
-    }
-    h3 { 
-        color: #990;
     }
     .image-text {
         max-width: 500px;
@@ -55,59 +61,74 @@
         padding-right: 15px;
     }
     td.col { vertical-align: top; }
+    table.main td { border: none; }
+    table.main td.section { border: 1px solid #999; }
+    table.main td.section { padding: 0px 20px; }
+    a.feat-dso { color: #fff; }
+    .footer { margin: 0; }
 </style>
 <table class="header">
     <tr>
         <th><h1>Skytour</h1></th>
-        <th><h2>Version {{ version }}</h2></th>
+        <th><h2 class="version">Version: {{ version }}</h2></th>
     </tr>
 </table>
 <table class="main">
     <tr>
-        <td class="col">
+        <td class="col section">
             <h3>Observations: </h3>
             <div class="obs_table">
                 {{ observation_table }}
             </div>
-
-            <h3>Last Session: </h3>
-            {{ most_recent_session }}
-            <h4>Days Since Last Session: {{ days_since_last_session }}</h4>
-
-            <h3>Top Location(s)</h3>
+            <br>
+            <h3>Last Session: 
+                <span class="text">
+                    Days Since Last Session:
+                    <span class="days">&nbsp;&nbsp;{{ days_since_last_session }} </span>
+                </span>
+            </h3>
+            <a href="{% url 'session-latest' %}">{{ most_recent_session }}</a>
+            <br><br>
+            <h3>Top Location(s):</h3>
             <table class="location_table">
                 <tr><th>Place</th><th>Count</th></tr>
-            {% for item in  top_5_locations %}
+            {% for item in top_5_locations %}
                 <tr>
-                    <td>{{ item.0.1.placename }}</td>
+                    <td>
+                        <a href="{% url 'observing-location-detail' item.0.0 %}">
+                        {{ item.0.1.placename }}
+                        </a>
+                    </td>
                     <td class="num">{{ item.1 }}</td>
                 </tr>
             {% endfor %}
             </table>
         </td>
-        <td class="col">
-            <h3>Active DSO Observing Lists</h3>
+        <td class="col section">
+            <h3>Active DSO Observing Lists:</h3>
             <table class="dsolist_table">
                 <tr><th>Name</th><th># DSOs</th></tr>
             {% for list in active_dso_lists %}
                 <tr>
-                    <td>{{ list.name }}</td>
+                    <td>
+                        <a href="{% url 'dsolist-detail' list.pk %}">{{ list.name }}</a>
+                    </td>
                     <td class="num">{{ list.dso_count }}</td>
                 </tr>
             {% endfor %}
             </table>
         </td>
-        <td class="col">
+        <td class="col section">
             <h3>Featured DSO Image:</h3>
             {% if random_dso_image %}
             {% with random_dso_image as img %}
             <h4 class="dso_title">
-                {{ img.object }}: {{ img.object.object_type.name }}
+                <a href="{% url 'dso-detail' img.object.pk %}" class="feat-dso">
+                {{ img.object }}</a>: {{ img.object.object_type.name }}
                 in
                 {{ img.object.constellation.name }}
                 <br>
                 <small>&nbsp;&nbsp;&nbsp;{{ img.caption }}</small>
-
             </h4>
             <img class="random_image" src="{{ img.image.url }}"/>
             <div class="image-text">{{ img.caption }}</div>

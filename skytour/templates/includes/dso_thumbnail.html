@@ -1,0 +1,9 @@
+<img
+{% if dso.dso_thumbnail_type != 'logo' %}
+    src="{{ dso.dso_thumbnail.image.url }}"
+{% else %}
+    src="/media/skytour-logo.jpeg"
+{% endif %} 
+    class="thumb thumb-{{ dso.dso_thumbnail_type }}"
+    style="max-width: 80px; max-height: 80px;"
+/>

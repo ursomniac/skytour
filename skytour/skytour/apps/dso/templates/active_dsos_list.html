@@ -3,7 +3,8 @@
 {% block title %}Active DSOList DSOs: Skytour{% endblock %}
 {% block content %}
 <style>
-    h1, h2 { color: #fc9; }
+    h1, h2, h3 { color: #fc9; }
+    div.active h3 { margin: 5px 0px 0px 5px; }
     table.outer { width: auto; border: 1px solid #999; }
     table.outer td { vertical-align: top; border: 0px; }
     table.outer td.map { width: 800px; }
@@ -14,8 +15,12 @@
         height: 4em;
         vertical-align: middle; 
     }
+    td.active-list ul { list-style-type: none; margin-top: 0; }
+    td.active-list li { margin: 6px 3px; }
     table.inner td.submit button { width: 20em; margin: 0 10px; }
     span.count { color: #fc9; font-weight: bold; font-size: 120%; }
+    table.active { border: none; }
+    div.active { border: 1px solid #960;  margin-top: 20px; }
 </style>
 
 <h1>DSOs on Active DSO Lists</h1>
@@ -81,6 +86,20 @@
                     </td>
                 </tr>
             </table>
+            <div class="active">
+            <h3>Active Lists</h3>
+            <table class="active">
+                <tr><td class="active-list">
+                    <ul>
+                        {% for item in active_lists %}
+                        <li>
+                            <a href="{% url 'dsolist-detail' item.pk %}" target="_new">{{ item.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </td></tr>
+            </table>
+            </div>
         </td>
     </tr>
 </table>

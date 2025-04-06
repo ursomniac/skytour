@@ -148,6 +148,7 @@ def map_target(ax, ra, dec, projection, earth, t, symbol):
 def map_eyepiece(ax, diam=None, color=None, reversed=False, equinox=True):
     """
     the default is 1° FOV.
+    # TODO: change this to use all the telescopes with the appropriate flag set.
     """
     diam = find_site_parameter('eyepiece-fov', default=60., param_type='float')
     radius = math.radians(diam/ 60. / 2. / 2.) # if diam is not None else fov * 2.909e-4 / 2.
