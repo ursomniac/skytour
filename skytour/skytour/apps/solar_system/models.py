@@ -1,14 +1,19 @@
 import datetime as dt
+from io import StringIO
 import math
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+import pandas as pd
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
+from jsonfield import JSONField
 from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
-from .asteroids import get_asteroid_object
+from .asteroids import get_asteroid_object, lookup_asteroid_object
 from .comets import get_comet_object, get_comet_period
 from .planets import get_mean_orbital_elements
 from .vocabs import STATUS_CHOICES
@@ -269,7 +274,7 @@ class Asteroid(ObservableObject):
     """
     name = models.CharField (
         _('Name'),
-        max_length = 50
+        max_length = 50,
     )
     slug = models.SlugField (
         _('Slug')
@@ -306,21 +311,16 @@ class Asteroid(ObservableObject):
         default = False,
         help_text = 'Override magnitude limit, e.g., for Pluto'
     )
-
-    ### Magnitude
-    h = models.FloatField (
-        _('H'),
-        help_text = 'absolute magnitude'
-    )
-    g = models.FloatField (
-        _('G'),
-        help_text = 'slope parameter'
-    )
-
     est_brightest = models.FloatField (
         _('Estimated Brightest'),
         null = True, blank = True
     )
+    mpc_json = JSONField(
+        _('MPC as JSON'),
+        null=True, blank=True,
+        help_text='JSON object constructed from HyperLeda lookup'
+    )
+
     object_class = 'asteroid'
     detail_view = 'asteroid-detail'
 
@@ -328,10 +328,6 @@ class Asteroid(ObservableObject):
     def instance_id(self):
         return self.slug
     
-    @property
-    def mpc_lookup_designation(self):
-        return "({}) {}".format(self.number, self.name)
-        
     @property
     def mean_diameter(self):
         axes = self.diameter.split('x')
@@ -348,8 +344,8 @@ class Asteroid(ObservableObject):
 
     @property
     def orbital_period(self):
-        if self.mpc_object['semimajor_axis_au']:
-            a = self.mpc_object['semimajor_axis_au']
+        if self.mpc_object_dict['semimajor_axis_au']:
+            a = float(self.mpc_object_dict['semimajor_axis_au'])
             return math.sqrt(a**3)
         return None
 
@@ -370,8 +366,30 @@ class Asteroid(ObservableObject):
         return self.image_library.filter(use_in_carousel=True).count()
     
     @property
+    def mag_h(self):
+        try:
+            return float(self.mpc_object['magnitude_H'])
+        except:
+            return None
+    
+    @property
+    def mag_g(self):
+        try:
+            return float(self.mpc_object['magnitude_G'])
+        except:
+            return None
+    
+    @property
+    def mpc_lookup_designation(self):
+        return "({}) {}".format(self.number, self.name)
+        
+    @property
     def mpc_object(self):
-        return get_asteroid_object(self)
+        try:
+            return pd.read_json(StringIO(self.mpc_json), typ='series')
+        except:
+            return get_asteroid_object(self) # will return None if not in short-list
+        #return get_asteroid_object(self)
     
     @property
     def mpc_object_dict(self):
@@ -379,6 +397,24 @@ class Asteroid(ObservableObject):
     
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
+    
+    def save(self, *args, **kwargs):
+        print("SAVE: slug = ", self.slug)
+        print("SAVE MPC: ", self.mpc_json)
+        if self.slug is None or self.slug == '':
+            words = [str(self.number)] + self.name.split(' ')
+            slug = '-'.join(words)
+            self.slug = slug.lower()
+        if self.mpc_json is None:            
+            mpc = get_asteroid_object(self) # Deprecate - but faster
+            if mpc is None or mpc.empty:
+                mpc = lookup_asteroid_object(self.mpc_lookup_designation)
+            if mpc is not None and not mpc.empty:
+                j = mpc.to_json()
+                self.mpc_json = j
+        print("FINAL: slug = ", self.slug)
+        print("FINAL MPC = ", self.mpc_json)
+        super(Asteroid, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{}: {}".format(self.number, self.name)
@@ -433,32 +469,39 @@ class Comet(ObservableObject):
 
     name = models.CharField(
         _('Name'),
-        max_length = 50
+        max_length = 50,
+        help_text = 'MPC format, e.g. 1P/Halley, C/2025 F2'
     )
     status = models.PositiveIntegerField (
         _('Status'),
         choices = STATUS_CHOICES,
-        default = 1
+        default = 1,
+        help_text = 'Include in Cookie'
     )
     mag_offset = models.FloatField (
         _('Mag Offset'),
-        default = 0.
+        default = 0.,
+        help_text='Offset Mag if esp. brighter/dimmer than predicted'
     )
     light_curve_url = models.URLField (
         _('Light Curve URL'),
-        null = True, blank = True
+        null = True, blank = True,
+        help_text='Comet page at http://www.aerith.net'
     )
     light_curve_graph_url = models.URLField (
         _('Light Curve Graph URL'),
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'URL for the light curve at http://www.aerith.net'
     )
     override_limits = models.PositiveIntegerField(
         choices = YES_NO,
-        default = NO
+        default = NO,
+        help_text = 'Force adding to cookie, regardless of magnitude'
     )
-    perihelion_date = models.DateField (
+    perihelion_date = models.DateField ( # Calculated on save()
         _('Peri.'),
-        null = True, blank = True
+        null = True, blank = True,
+        help_text = 'Auto calcualted from elements'
     )
     object_class = 'comet'
     detail_view = 'comet-detail'
@@ -510,6 +553,14 @@ class Comet(ObservableObject):
     @property
     def comet_period(self):
         return get_comet_period(self.mpc_object)
+    
+    @property
+    def status_bool(self):
+        return 'Active' if self.status else 'Not Active'
+    
+    @property
+    def override_limits_bool(self):
+        return 'Yes' if self.override_limits else 'No'
 
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)

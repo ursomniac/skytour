@@ -1,5 +1,222 @@
 {% extends 'help_base.html' %}
 {% block help_page %}
-<h2>Title</h2>
+
+<h2>Starting a New Observing Session</h2>
+<p>
+    Each Observing Session ("Run") takes place on a given night at a given location.
+    
+    <ol>
+        <li>
+        Navigate to <span class="nav-item op-ses">Session   🔽</span> 
+        and then <span class="nav-item op-none"> Start New Session </span>
+        </li>
+        <li>Fill in the form.  Note that you're entering the <i>UT Date</i>
+            (not local time)!
+        </li>
+        <li>Then the new session will appear under 
+            <span class="nav-item op-none">Latest/Active Session</span>
+            in the same drop-dropdown.
+        </li>
+        <li>If you then add new observations and/or observing conditions around the same 
+            time as the Observing Date, the forms SHOULD populate any "Session" field 
+            with the correct session (you can override this if you need to).
+    </ol>
+</p>
+
+<h2>Creating an Observing List</h2>
+<p>
+    You can create observing lists to organize which objects you want to prioritize.
+
+    <ol>
+        <li>From <span class="nav-item op-dso">DSO Lists   🔽</span>
+            go to <span class="nav-item op-none">All DSO Lists</span> 
+        </li>
+        <li>There, click on <button class="button">Create New DSO List</button>
+            give it a name and description and it will be added.
+        </li>
+    </ol>
+</p>
+<p>
+    If you are running multiple telescopes, having separate lists for each can be
+    very handy.
+</p>
+
+<h3>Active Observing Lists</h3>
+<p>
+    If the observing list is marked "active", then those objects will be tagged on
+    other DSO lists (with the 🔭 icon).
+</p>
+<p>
+    You can make a DSOList "inactive" (for example if the objects that were on it
+    aren't likely to be available soon, but you want to keep the list around for
+    the future).
+</p>
+
+<h3>Adding DSOs to a DSO List</h3>
+<p>
+    On almost every table that has a list of DSOs there are buttons
+    for "Add to DSO List".  Select the list, and it'll be addded.
+</p>
+<p>
+    Likewise on every DSO Detail page, there's a section showing:
+    <ul>
+        <li>Which DSO Lists the DSO is a member of.<li>
+        <li>A link to add it to a DSO List</li>
+    </ul>
+
+<h2>@Now and @Cookie</h2>
+<p>
+These two functions display a filtered list of DSOs that are above the horizon
+for the current location:
+
+<ul>
+    <li><b>@Now</b> uses the current UT date/time</li>
+    <li><b>@Cookie</b> uses the UT date/time of the cookie</li>
+</ul>
+</p>
+<p>
+On the page, there's a form where you can customize the list:
+
+<table>
+    <tr>
+        <th>UT</th><td>Explicitly set the UT date/time (doesn't affect the cookie)</td>
+    </tr><tr>    
+        <th>UT Offset</th><td>Set an offset for the UT date/time<sup>1</sup>
+    </tr><tr>    
+        <th>Min. Priority</th><td>(default = 3-High) - set the minimum priority (for the observing mode)</td>
+    </tr><tr>
+        <th>Min/Max Dec</th><td>Set the range of allowed declinations<sup>2</sup></td>
+    </tr><tr>        
+        <th>Min/Max Alt</th><td>Set the range of allowed altitudes (default is what's set in the cookie)</td>
+    </tr><tr>    
+        <th>Imaged</th><td>Exclude objects you've already seen<sup>3</sup></td>
+    </tr><tr>            
+        <th>Gear</th><td>Select a sample of Observing Modes</td>
+    </tr><tr>            
+        <th>No Mask</th><td>If a mask has been set for your location, ignore it</td>
+    </tr><tr>            
+        <th>On Active DSO List</th><td>Only include objects already on an active DSO List</td>
+    </tr><tr>        
+        <th>Show Thumbnails</th><td>Show a small thumbnail image in the list<sup>4</sup></td>
+    </tr>
+    </table>
+<h5>Notes</h5>
+<ol>
+    <li>Helpful to "nudge" the list, e.g., "What is <i>going</i> to be up in an hour?"</li>
+    <li>Typically you don't need to adjust this, as you can also set Min/Max Altitude which
+        is usually what you do want to do.</li>
+    <li>The options are:
+        <ul><li>All - show everything</li>
+            <li>Yes - show ONLY things you've imaged</li>
+            <li>No - show ONLY things you've NEVER imaged</li>
+            <li>Redo - but DO include DSOs with the "Reimage" flag set</li>
+        </ul>
+    </li>
+    <li>The thumbnail is chosen in this order:
+        <ol>
+            <li>A library image you've taken</li>
+            <li>An uploaded external image</li>
+            <li>The Skytour logo</li>
+        </ol>
+        Note that turning thumbnails on slows down rendering of the page slightly.
+    </ol>
+
+<h2>Making Observations</h2>
+<p>
+    You can add a new observation to your session in three ways (they all
+    go to the same form):
+
+    <ol>
+        <li>Click <span class="nav-item op-ses">Add Observation: SSO/DSO</span>
+            in the Navbar.</li>
+        <li>On any object's (DSO/Planet/Comet/Asteroid) Detail Page, there
+            will be an <button class="button">Add Observation</button> button.</li>
+        <li>Likewise on the Detail page for any Session, there is also an
+            <button class="button">Add Observation</button> button.</li>
+    </ol>
+
+<h3>The Observation Form</h3>
+<p>Although it's a little complicated, for the most part there is very 
+    little you have to enter:
+
+    <table>
+        <tr><th>UT Date/UT Time</th>
+            <td>The date/time of the observation - these will be filled in
+                with the current UT date/time.</td>
+        </tr>
+        <tr><th>Object Type</th>
+            <td>This is one of:
+                <ul><li>DSO</li><li>Planet</li><li>Comet</li><li>Asteroid</li><li>Moon</li><li>Other</li></ul>
+                For Planet/Asteroid/Comet - choose from each of their respective dropdowns.
+                (For Moon you don't have to select anything.)
+                <br>
+                For DSOs, you then need to select:
+            </tr>
+        <tr><th>DSO Catalog / ID in Catalog</tH>
+            <td>Select the appropriate Catalog (e.g, "M" for Messier), and then
+                enter in the ID in that catalog (e.g, "44" for Messier 44).
+                <br>
+                The back-end IS "smart enough" to handle aliases (so either "C 6" or "NGC 6543" 
+                will both work);  DSO in Field IDs "should" work (so, NGC 5195 "should" 
+                store the observation under "M 51", though I haven't rigorously tested this).
+            </td>
+        </tr>
+        <tr><th>Session</th><td>(see above)</td></tr>
+        <tr><th>Telescope</th><td>(defaults to the "default" telescope)</td></tr>
+        <tr><th>Location</th><td>(defaults to the cookie location). 
+            This is here mostly for the situation where you "forgot" to 
+            add an observation, and only remember the next day or something.
+            <br>
+            (Typically you only observe from one location on a given night, but
+            early on, I had a weird situation where I was testing conditions at
+            several sites... so...)
+            </td>
+        </tr>
+        <tr><th>Eyepiece/Filter</th><td>For optical observing, though you can 
+            use this for a "smart" scope if they have a dual passband filter.</td>
+        </tr>
+        <tr><th>Notes</th><td>(self explanatory)</td></tr>
+    </table>
+    <i>NOTE:</i> if you get to this form from an object's Detail page the 
+    identifier fields (DSO/Planet/etc. and their dropdowns or "ID in Catalog")
+    <u><i>will already be filled out for you!</i></u>
+</p>
+<h2>Recording Observing Conditions</h2>
+<p>
+    If you have the equipment:
+    <ul>
+        <li>A thermometer for the temperature</li>
+        <li>A hygrometer for relative humidity</li>
+        <li>An anemometer for wind speed</li>
+        <li>A light meter for measuring sky brightness</li> 
+    </ul>
+    or if you're just relying on apps for the local weather conditions,
+    you can record these measurements as part of your session.
+</p>
+<p>
+    Navigate to <span class="nav-item op-ses">Conditions</span> to do this.
+</p>
+
+<h3>SQM Measurements</h3>
+<p>Skytour will generate statistics based on your measurements of 
+    sky brightness.  However, you might want to filter some of them
+    out from averages and distributions:
+
+    <ul>
+        <li><b>Use SQM in Stats</b> if set to "No" will record the 
+            measurement, but not use it in averages/stats.</li>
+        <li>Checking <b>Moon</b> flags measurements taken when the
+            Moon is up (it won't flag this automatically).</li>
+    </ul>
+</p>
+<p>
+    Skytour will estimate a fractional Bortle value (sort of) from this.
+    <br>
+    <i>NOTE:</i> you're likely to find that the actual measures are about
+    "1/2 Bortle" worse than what you'll find on apps for your location.
+    This is likely do to encroaching light pollution since the time the
+    maps were last generated.  ☹️
+</p>
+
 
 {% endblock %}

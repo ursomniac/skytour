@@ -1,7 +1,9 @@
 import datetime, pytz, time
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
@@ -17,9 +19,12 @@ from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..tech.models import Telescope
 from ..utils.timer import compile_times
+from .asteroids import lookup_asteroid_object
+from .comets import lookup_comet_by_name
 from .forms import (
     TrackerForm, AsteroidEditForm, CometEditForm,
-    PlanetObservationEditForm, AsteroidObservationEditForm, CometObservationEditForm
+    PlanetObservationEditForm, AsteroidObservationEditForm, CometObservationEditForm,
+    CometManagementForm, AsteroidManagementForm
 )
 from .helpers import compile_nearby_planet_list
 from .models import (
@@ -127,9 +132,7 @@ class PlanetDetailView(CookieMixin, DetailView):
         if obj.planet_map is not None: # Mars, Jupiter
             px, py, context['planet_map'] = get_planet_map(obj, pdict['physical'])
             context['xy'] = dict(px=px, py=py)
-        #slideshow = obj.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         slideshow = obj.image_library.order_by('order_in_list')
-        print("SLIDESHOW: ", slideshow)
         context['library_slideshow'] = slideshow
         
         context['instance'] = obj
@@ -198,6 +201,12 @@ class AsteroidListView(CookieMixin, ListView):
                 asteroid_list.append(d)
         context['asteroid_list'] = asteroid_list
         context['table_id'] = 'obs_asteroid_list'
+
+        query = self.request.GET.get('query', None)
+        if query:
+            row = lookup_asteroid_object(query)
+            context['result'] = row.to_frame().to_html()
+            context['result_object'] = row
         return context
 
 class AsteroidDetailView(CookieMixin, DetailView):
@@ -212,10 +221,8 @@ class AsteroidDetailView(CookieMixin, DetailView):
         pdict = get_asteroid_from_cookie(context['cookies'], object)
         context['asteroid'] = pdict
         context['in_cookie'] = True if pdict else False
-        #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         slideshow = object.image_library.order_by('order_in_list')
         context['library_slideshow'] = slideshow
-        #slideslow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         context['times'] = compile_times(times)
         return context
 
@@ -229,7 +236,7 @@ class CometListView(CookieMixin, ListView):
         """
         context = super(CometListView, self).get_context_data(**kwargs)
         comets = Comet.objects.filter(status=1)
-        # TODO: allow for full set of comets but this might be time consumind
+        # TODO: allow for full set of comets but this might be time consuming
         all = self.request.GET.get('all', None) is not None
         if all:
             comet_list = comets
@@ -636,15 +643,31 @@ class AsteroidEditView(UpdateView):
     model = Asteroid
     template_name = 'edit_asteroid.html'
 
-    def get_success_url(self):
-        return reverse_lazy('asteroid-detail', kwargs={'pk', self.object.slug})
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Update successful')
+        return response
+    
+    #def get_success_url(self):
+    #    referer = self.request.META.get('HTTP_REFERER')
+    #    if referer: 
+    #        return referer
+    #    return reverse_lazy('asteroid-detail', kwargs={'slug': self.object.slug})
 
 class CometEditView(UpdateView):
     form_class = CometEditForm
     model = Comet
     template_name = 'edit_comet.html'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Update successful')
+        return response
+
     def get_success_url(self):
+        referer = self.request.META.get('HTTP_REFERER')
+        if referer: 
+            return referer
         return reverse_lazy('comet-detail', kwargs={'pk': self.object.pk})
     
 class PlanetObservationEditView(UpdateView):
@@ -690,4 +713,93 @@ class CometObservationEditView(UpdateView):
         context = super(CometObservationEditView, self).get_context_data(**kwargs)
         object = self.get_object()
         context['parent'] = object.object
+        return context
+    
+class CometManageListView(ListView):
+    template_name = 'edit_comet_list.html'
+    model = Comet
+
+    def post(self, request, *args, **kwargs):
+        form = CometManagementForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            existing = Comet.objects.filter(name=d['name']).first()
+            if existing:
+                # Comet found - don't add
+                messages.error(request, "This comet is already in the Comet table.")
+            else: 
+                comet = lookup_comet_by_name(d['name'])
+                if comet is not None:
+                    obj = Comet()
+                    obj.name = d['name']
+                    obj.status = d['status']
+                    obj.mag_offset = d['mag_offset']
+                    obj.override_limts = d['override_limits']
+                    obj.light_curve_url = d['light_curve_url']
+                    obj.light_curve_graph_url = d['light_curve_graph_url']
+                    obj.save()
+                    return redirect('comet-list')
+                else:
+                    # Comet not found
+                    messages.error(request, f"Object \"{d['name']}\" not in the MPC data file. <br>Check format/spacing.")
+        # If we get here, then there are issues...
+        self.object_list = self.get_queryset().order_by('-status', 'name')
+        context = self.get_context_data()
+        context['create_form'] = form # reset form
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super(CometManageListView, self).get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset().order_by('-status', 'name')
+        context['create_form'] = CometManagementForm()
+        context['table-id'] = 'all-comet-list'
+        return context
+
+class AsteroidManageListView(ListView):
+    template_name = 'edit_asteroid_list.html'
+    model = Asteroid
+
+    def post(self, request, *args, **kwargs):
+        form = AsteroidManagementForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            existing = Asteroid.objects.filter(number=d['number']).first()
+            if existing is not None:
+                print("ERROR: object in DB")
+                messages.error(request, "This asteroid is already in the Asteroid table.")
+            else:
+                name = f"({d['number']}) {d['name']}"
+                print(f"Looking up: \'{name}\'")
+                mpc = lookup_asteroid_object(name)
+                if mpc is None:
+                    print("Did not find it.")
+                    messages.error(request, f"Asteroid \"{name}\" not in the MPC data file. <br>Check format/spacing.")
+                else:
+                    obj = Asteroid()
+                    obj.pk = d['number']
+                    obj.mpc_json = mpc.to_json()
+                    obj.number = d['number']
+                    obj.name = d['name']
+                    obj.diameter = d['diameter']
+                    obj.year_of_discovery = d['year_of_discovery']
+                    obj.image = request.FILES.get("image", None)
+                    obj.classification = d['classification']
+                    obj.description = d['description']
+                    obj.always_include = d['always_include']
+                    try:
+                        obj.save()
+                    except:
+                        print("ERROR in save()", obj)
+                        messages.success(request, f"Asteroid {name} successfully added.")
+                    return redirect('asteroid-edit-list')
+        self.object_list = self.get_queryset().order_by('number', 'name')
+        context = self.get_context_data()
+        context['create_form'] = form # reset form
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super(AsteroidManageListView, self).get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset().order_by('pk')
+        context['create_form'] = AsteroidManagementForm()
+        context['table_id'] = 'all-asteroid-list'
         return context

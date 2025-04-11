@@ -1,15 +1,17 @@
 <style>
-  table.dso-form { font-size: 12px; }
-  table.dso-form td, th { height: 40px; }
+  h1, h2, h3 { color: #fc6; }
+  table.dso-form { font-size: 12px; border: 1px solid #fc6; }
+  table.dso-form td, th { height: 40px; background-color: #444; border: 1px solid #c96; }
   table.dso-form td b { color: #fff;  margin-left: 6px; }
-  td.submit { background-color: #555; border: 1px solid #fff;  text-align: center; }
+  table.dso-form td.submit { background-color: #960; border: 1px solid #fc6;  text-align: center; }
   td.submit input { 
     width: 40em; 
     height: 30px; 
     border: 1px solid #900; 
+    font-weight: bold;
   }
-  td.addlist { background-color: #606; text-align: center;  border: 1px solid #c0c; }
-  td.addlist button { width: 20em; }
+  table.dso-form td.addlist { background-color: #930; text-align: center;  border: 1px solid #fc6; }
+  table.dso-form td.addlist button { width: 20em; }
   .helptext { color: #aa7; font-size: 85%; font-style: italic; margin-left: 2em; }
 </style>
 <form action="" method="GET">
@@ -56,26 +58,25 @@
             <input name="ra_high" 
                 {% if ra_high %} value="{{ra_high}}" {% endif %}
                 size=5>E (hours)
-              <br><span class="helptext">(Can cross 0h if E < W)
+              <br><span class="helptext">(Can cross 0h if E < W)</span>
+            </td>
+            <td>
+              <b>Min Size: </b>
+              <input name="size_min" type="number" min="0" max="999"
+                {% if size_min %} value="{{ size_min }}"{% endif %}> 
+              <br><span class="helptext">(arcmin)</span>
             </td>
         </tr>
         <td colspan=3>
             <b>DSO Type: </b>
             <select name="dso_type">
               <option value="all">----- ( All Types ) -----</option>
-              <option value="cluster">            All Clusters</option>
-              <option value="cluster--open">      &nbsp;&nbsp;Open Clusters</option>
-              <option value="cluster--globular">  &nbsp;&nbsp;Globular Clusters</option>
-              <option value="nebula">            All Nebulae</option>
-              <option value="nebula--emission">  &nbsp;&nbsp;Emission Nebulae</option>
-              <option value="nebula--reflection">&nbsp;&nbsp;Reflection Nebulae</option>
-              <option value="nebula--dark">      &nbsp;&nbsp;Dark Nebulae</option>
-              <option value="nebula--planetary"> &nbsp;&nbsp;Planetary Nebulae/Supernova Remnant</option>
-              <option value="galaxy">             All Galaxies</option>
-              <option value="galaxy--spiral">     &nbsp;&nbsp;Spiral Galaxies</option>
-              <option value="galaxy--elliptical"> &nbsp;&nbsp;Elliptical Galaxies</option>
-              <option value="galaxy--group">      &nbsp;&nbsp;Galaxy Clusters/Compact Groups</option>
-              <option value="other">              Other</option>
+              {% for item in dso_type_items %}
+              <option value="{{ item.0 }}" 
+                {% if dso_type == item.0 %}selected{% endif %}>
+                {{ item.1|safe }}
+              </option>
+              {% endfor %}
             </select>
             <br><span class="helptext">&nbsp;</span>
           </td>
@@ -124,12 +125,17 @@
                 size=5>°
             <br><span class="helptext">(Defaults to your location's latitude)</span>
           </td>
+          <td>
+            <b>Mag. Max: </b>
+            <input name="mag_max" type="number" min="-9.99" max="19.99"
+            {% if mag_max %}value="{{ mag_max }}"{% endif %}><br>&nbsp;
+          </td>
         </tr>
         <tr>
             <td colspan=5 class="submit">
-              <input type="submit" value="Filter">
+              <input type="submit" value="Filter DSOs">
             </td>
-            <td colspan=2 class="addlist">
+            <td colspan=3 class="addlist">
               <button onClick='toggleDSOListCreateForm(); return false;'>Create New DSOList</button>
             </td>
           </tr>

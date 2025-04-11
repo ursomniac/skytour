@@ -5,12 +5,22 @@
     table.edit_form { width: 900px; }
     th { height: 20px; background-color: #cc6; width: 33%; }
     td.close { background-color: #900; }
-    td.light_curve { text-align: center; }
+    td.light_curve { text-align: center; vertical-align: top; }
     td.light_curve img { max-width: 300px; }
+    td.submit button { width: 20em; height: 2.5em; }
     .helptext { font-size: 80%; color: #999; }
 </style>
 
 <h1>Edit Comet {{ object.name }} Metadata</h1>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+  <button onClick="closeAndUpdatePopup();">Close and Update</button>
+</ul>
+{% endif %}
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -20,7 +30,7 @@
             <td>{{ form.status }}
               <br><span class="helptext">Turn off once the comet isn't generally visible.</span>
             </td>
-            <td rowspan=6 class="light_curve">
+            <td rowspan=5 class="light_curve">
               {% if form.light_curve_graph_url.value %}
               <h4>Comet Light Curve</h4>
               <img src="{{ form.light_curve_graph_url.value }}">
@@ -79,10 +89,6 @@
               <span class="helptext">Turn this on to prevent filtering based on magnitude.</span>
             </td>
           </tr>
-          <tr>
-            <th><label for="id_perihelion_date">Peri.</label></th>
-            <td>{{ form.perihelion_date }}</td>
-          </tr>
         <tr>
         <td colspan=3 class="submit">
             <button type="submit" class="submit">Save Changes</button>
@@ -91,10 +97,22 @@
     <tr>
         <td colspan=3 class="close">
             <a href="{% url 'comet-detail' object.pk %}">
-            <button class="close">Close and Go Back</button>
+            <button onClick="return closePopup();">Close Window</button>
             </a>
         </td>
     </tr>
     </table>
 </form>
+
+<script>
+  function closeAndUpdatePopup() {
+    window.opener.location.reload();
+    window.close();
+  }
+  function closePopup() {
+    var me = window.self;
+    me.opener = me.self;
+    me.close();
+}
+</script>
 {% endblock content %}

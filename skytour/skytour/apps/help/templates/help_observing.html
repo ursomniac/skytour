@@ -1,0 +1,24 @@
+{% extends 'help_base.html' %}
+{% block help_page %}
+
+<h2>Starting a New Observing Session</h2>
+<p>
+    Each Observing Session ("Run") takes place on a given night at a given location.
+    
+    <ol>
+        <li>
+        Navigate to <span class="nav-item op-ses">Session   🔽</span> 
+        and then <span class="nav-item op-none"> Start New Session </span>
+        </li>
+        <li>Fill in the form.  Note that you're entering the <i>UT Date</i>
+            (not local time)!
+        </li>
+        <li>Then the new session will appear under 
+            <span class="nav-item op-none">Latest/Active Session</span>
+            in the same drop-dropdown.
+        </li>
+        <li>If you then add new observations and/or observing conditions around the same 
+            time as the Observing Date, the forms SHOULD populate any "Session" field 
+            with the correct session (you can override this if you need to).
+    </ol>
+{% endblock %}

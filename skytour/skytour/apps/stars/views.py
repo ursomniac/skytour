@@ -144,7 +144,8 @@ class ZenithMagView(FormView):
         context['center_ra'] = last
         context['center_dec'] = location.latitude
         context['utdt'] = utdt
-        tzone = pytz.timezone(context['time_zone'])
+        #tzone = pytz.timezone(context['time_zone'])
+        tzone = pytz.timezone(location.time_zone.pytz_name)
         local_time = utdt.astimezone(tzone)
         context['local_time'] = local_time.strftime("%A %b %-d, %Y %-I:%M %p %z")
         context['form'] = form

@@ -129,7 +129,7 @@ def get_object_metadata(
         except:
             mag = None # there are some edge issues...
     elif object_type == 'asteroid':
-        mag = solar_system_apparent_magnitude(r_earth_target, r_sun_target, instance.h, phase_angle, g=instance.g)
+        mag = solar_system_apparent_magnitude(r_earth_target, r_sun_target, instance.mag_h, phase_angle, g=instance.mag_g)
     elif object_type == 'comet':
         mg = row['magnitude_g']
         mk = row['magnitude_k']

@@ -16,6 +16,16 @@ def get_comet_object(comet):
         row = None
     return row
 
+def lookup_comet_by_name(name):
+    with load.open('generated_data/CometEls.txt') as f:
+        comets = mpc.load_comets_dataframe(f)
+    comets = (comets.sort_values('reference').groupby('designation', as_index=False).last().set_index('designation', drop=False))
+    try:
+        row = comets.loc[name]
+    except:
+        row = None
+    return row
+
 def get_comet_target(comet, ts, sun):
     """
     Look up a comet and return it as a target.

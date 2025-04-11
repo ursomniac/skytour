@@ -76,7 +76,7 @@ class CometEditForm(forms.ModelForm):
             'light_curve_url',
             'light_curve_graph_url',
             'override_limits',
-            'perihelion_date'
+            #'perihelion_date'
         ]
 
 class AsteroidObservationEditForm(forms.ModelForm):
@@ -93,3 +93,18 @@ class PlanetObservationEditForm(forms.ModelForm):
     class Meta:
         model = PlanetObservation
         fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+
+class CometManagementForm(forms.ModelForm):
+    class Meta:
+        model = Comet
+        fields = ['name', 'status', 'mag_offset', 'override_limits',
+                  'light_curve_url', 'light_curve_graph_url',
+                ]
+        
+class AsteroidManagementForm(forms.ModelForm):
+    class Meta:
+        model = Asteroid
+        fields = ['name', 'number',   # Needed
+                  'diameter', 'year_of_discovery', 
+                  'image', 'classification', 
+                  'description', 'always_include']

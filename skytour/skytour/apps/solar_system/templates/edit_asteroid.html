@@ -53,7 +53,10 @@
             <th><label for="id_image">Image:</label></th>
             <td>
                 <span class="sublabel">Currently:</span> 
+                {% if object.image %}
                 <a href="{{ object.image.url }}"><span class="fn">{{ object.image }}</span></a>
+                {% else %}None
+                {% endif %}
                 <br>
                 <span class="sublabel">Clear:</span> 
                 <input type="checkbox" name="image-clear" id="image-clear_id">
@@ -69,8 +72,7 @@
         </tr>
         <tr>
             <td colspan=2 class="close">
-                <a href="{% url 'comet-detail' object.pk %}">
-                    {{ object.pk }}
+                <a href="{% url 'asteroid-detail' object.slug %}">
                 <button class="close">Close and Go Back</button>
                 </a>
             </td>

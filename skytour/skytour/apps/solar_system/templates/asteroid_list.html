@@ -6,8 +6,17 @@
 {% block content %}
 <style>
     table.asteroid-list th { background-color: #996; color: #000; }
+    div.all-asteroids { height: 4em; }
+    div.all-asteroids button { height: 2.5em; width: 20em; margin-left: 5px; }
 </style>
+
 <h2>Observable Asteroids</h2>
+
+<div class="all-asteroids">
+    <a href="{% url 'asteroid-edit-list' %}">
+    <button type="button">Show All Asteroids in DB</button>
+    </a>
+</div>
 <table id="{{ table_id }}" class="asteroid-list">
     <thead>
         <tr>

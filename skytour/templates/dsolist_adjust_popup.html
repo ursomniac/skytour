@@ -41,12 +41,20 @@
         {% endif %}
         {% if result %}
         <h5>{{ result }}</h5>
-        {% endif %}
+        <div class='popup-close' style="width: 100%; background-color: #933; padding: 10px; ">
+            <button onClick="return refreshParent();">Close Window and Update</button>
+        </div>
+        {% else %}
         <div class='popup-close' style="width: 100%; background-color: #933; padding: 10px; ">
             <button onClick="return closeDSOListAdjustPopup();">Close Window</button>
         </div>
+        {% endif %}
 </body>
 <script>
+    function refreshParent() {
+        window.opener.location.reload();
+        window.close();
+    }
     function closeDSOListAdjustPopup() {
         var me = window.self;
         me.opener = me.self;

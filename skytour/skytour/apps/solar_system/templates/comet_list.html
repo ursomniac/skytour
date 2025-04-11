@@ -7,8 +7,13 @@
 {% block content %}
 <style>
     table.comet-list th { background-color: #996; color: #000; }
+    div.all-comets-link { height: 4em; }
+    div.all-comets-link button { width 15em; height: 2.5em; }
 </style>
-<h2>Observable Comets</h2>
+<h1>Observable Comets</h1>
+<div class="all-comets-link">
+    <a href="{% url 'comet-edit-list' %}"><button>See all Comets in DB</button></a>
+</div>
 <table id="{{ table_id }}" class="comet-list">
     <thead>
         <tr>

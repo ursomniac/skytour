@@ -16,6 +16,7 @@ DSO_TYPE_DICT = {
     'nebula--emission': [
         'cluster-nebulosity', 'diffuse-nebula', 'nebula--emission', 'interstellar-matter'
     ],
+    'nebula--dark': ['dark-nebula'],
     'nebula--reflection': ['reflection-nebula'],
     'nebula--planetary': ['planetary-nebula', 'supernova-remnant'],
     'galaxy': [
@@ -43,6 +44,8 @@ def get_filter_params(request):
         dec_low = request.GET.get('dec_low', None),
         ra_high = request.GET.get('ra_high', None),
         dec_high = request.GET.get('dec_high', None),
+        size_min = request.GET.get('size_min', None),
+        mag_max = request.GET.get('mag_max', None),
         redo_flag = request.GET.get('redo_flag', 'any')
     )
     return params
@@ -93,6 +96,23 @@ def filter_dsos(params, dsos):
     if params['dec_low'] and params['dec_high']:
         dsos = dsos.filter(dec__gte=params['dec_low'], dec__lte=params['dec_high'])
     
+    if params['mag_max']:
+        mag_max = float(params['mag_max'])
+        good_pks = [
+            x.pk for x in dsos 
+            if (x.find_magnitude[0] is None or x.find_magnitude[0] <= mag_max)
+        ]
+        dsos = dsos.filter(pk__in=good_pks)
+
+    if params['size_min']:
+        size_min = float(params['size_min'])
+        good_pks = [
+            x.pk for x in dsos
+            if (x.find_major_axis_size[0] is None 
+                or x.find_major_axis_size[0] >= size_min)
+        ]
+        dsos = dsos.filter(pk__in=good_pks)
+
     return dsos
 
 def update_dso_filter_context(context, params):
@@ -107,4 +127,6 @@ def update_dso_filter_context(context, params):
     context['dec_high'] = params['dec_high']
     context['dso_type'] = params['dso_type']
     context['redo_flag'] = params['redo_flag']
+    context['size_min'] = params['size_min']
+    context['mag_max'] = params['mag_max']
     return context

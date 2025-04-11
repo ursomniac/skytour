@@ -3,6 +3,7 @@ import io
 import time
 
 from dateutil.parser import isoparse
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse
@@ -84,8 +85,24 @@ class DSOListView(CookieMixin, ListView):
         return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        DSO_TYPE_LIST = [
+            ("cluster",           "All Clusters"),
+            ("cluster--open",     "&nbsp;&nbsp;Open Clusters"),
+            ("cluster--globular", "&nbsp;&nbsp;Globular Clusters"),
+            ("nebula",            "All Nebulae"),
+            ("nebula--emission",  "&nbsp;&nbsp;Emission Nebulae"),
+            ("nebula--reflection","&nbsp;&nbsp;Reflection Nebulae"),
+            ("nebula--dark",      "&nbsp;&nbsp;Dark Nebulae"),
+            ("nebula--planetary", "&nbsp;&nbsp;Planetary Nebulae/Supernova Remnant"),
+            ("galaxy",            "All Galaxies"),
+            ("galaxy--spiral",     "&nbsp;&nbsp;Spiral Galaxies"),
+            ("galaxy--elliptical", "&nbsp;&nbsp;Elliptical Galaxies"),
+            ("galaxy--group",      "&nbsp;&nbsp;Galaxy Clusters/Compact Groups"),
+            ("other",              "Other"),
+        ]
         context = super(DSOListView, self).get_context_data(**kwargs)
         context['create_form'] = DSOListCreateForm()
+        context['dso_type_items'] = DSO_TYPE_LIST
         params = get_filter_params(self.request)
         context = update_dso_filter_context(context, params)
         dso_list = filter_dsos(params, DSO.objects.all())
@@ -416,7 +433,6 @@ class DSOAdjustDSOListView(TemplateView):
             context['result'] = add_dso_to_dsolist(dso, dsolist)
         elif op == 'delete':
             context['result'] = delete_dso_from_dsolist(dso, dsolist)
-
         return context
     
 class DSOSearchView(View):

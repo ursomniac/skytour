@@ -55,7 +55,10 @@
                         {% endif %}
                     </td>
                     <td class="description operations" rowspan=2>
+                        <button onClick="popupEditComet({{ object.pk }})">Edit Metadata</button>
+                        {% comment %}
                         <a href="{% url 'comet-edit' object.pk %}"><button>Edit Metadata</button></a>
+                        {% endcomment %}
                         <br>
                         <a href="/admin/solar_system/comet/{{object.pk}}/change" target="_blank"><button>Admin</button></a>
                         <br>
@@ -139,6 +142,28 @@
         {% endwith %}
     </tr>
 </table>
+
+<script>
+    const tscreenWidth = window.screen.width;
+    const twindowWidth = 1000;
+    const twindowHeight = 650;
+    const trightOffset = 100;
+    const trightPosition = tscreenWidth - twindowWidth - trightOffset;
+    const ttopOffset = 100;
+
+    function popupEditComet(pk) {
+        const url = `/comet/edit/${pk}`;
+        newWindow = window.open(
+            url,
+            'Edit Comet',
+            `height=${twindowHeight},  width=${twindowWidth}, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>
 
 {% with instance=object admin_dir='/comet' %}
 {% include 'includes/observation_section.html' %}

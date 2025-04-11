@@ -49,13 +49,24 @@ pulled  <a href="https://www.minorplanetcenter.net/iau/MPCORB/CometEls.txt">
     from the MPC</a>.
 </p>
 <h4>Slight Bug</h4>
-    <i>This might no longer be true!</i>
+    <i>(This might no longer be an issue - it appears that Skyfield package
+        now parses the MPC `comets.txt` file properly.)</i>
     <p>
 If you download a new version of the file, you have to edit it to remove 
 commas from the file:  the Skyfield package doesn't parse this correctly.
 </p>
 <p>It's a good idea to download updated version of this file every few months, 
     especially if a newly-discovered comet might become visible.</p>
+
 <h3>Meteor Showers</h3>
 <h3>Tracking SSOs</h3>
+<p>
+    From the navbar: <span class="nav-item op-sso">Track</span> will
+    bring up a form that will "follow" the position of a Planet/Asteroid/Comet
+    over the period of time requested and create a (somewhat crude) map
+    showing the track over time.
+</p>
+<p>
+    Needless to say, it performs less well if stressed. 😎
+</p>
 {% endblock %}

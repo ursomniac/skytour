@@ -3,6 +3,7 @@
 {% block title %}{{ object.name }}: Skytour{% endblock %}
 {% block content %}
 <style>
+    h1, h2 { color: #fc3; }
     table.constellation-header td { padding: 0 10px 0 10px; }
     td.number { text-align: right; }
     img { display: block; }
@@ -12,7 +13,7 @@
     <tr>
         <td colspan=>
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
-            <p><i>{{ object.genitive }}</i></p>
+            <p><h4><i>{{ object.genitive }}</i></h4></p>
         </td>
         <td style='vertical-align: top;'>
             <h2>Atlas Plates</h2>
@@ -96,7 +97,20 @@
         {% endfor %}
     </tbody>
 </table>
-{% with table_id='constellation_stars' %}
-{% include 'includes/sortable_table.html' %}
-{% endwith %}
+<script>
+    $(document).ready(function() {
+    $('#constellation_stars').DataTable( {
+        columnDefs: [ 
+            { targets: 6, orderData: [ 6, 1 ] }, 
+            { targets: 0, orderData: [ 0, 1 ] }, 
+            { targets: 1, orderData: [ 1, 0 ] } 
+        ],
+        paging: false
+    } );
+} );
+</script>
+{# with table_id='constellation_stars' #}
+{# include 'includes/sortable_table.html' #}
+{# endwith #}
+
 {% endblock content %}

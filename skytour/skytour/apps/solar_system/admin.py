@@ -98,7 +98,7 @@ class PlanetAdmin(ObservableObjectAdmin):
 
 class AsteroidAdmin(ObservableObjectAdmin):
     model = Asteroid
-    list_display = ['number', 'name', 'diameter', 'est_brightest', 'h', 'always_include', 'n_obs', 'obs_date']
+    list_display = ['number', 'name', 'diameter', 'est_brightest', 'mag_h', 'always_include', 'n_obs', 'obs_date']
     list_display_links = ['number', 'name']
     inlines = [AsteroidLibraryImageAdmin, AsteroidObservationAdmin]
     save_on_top = True
