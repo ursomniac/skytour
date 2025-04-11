@@ -17,7 +17,7 @@
         padding: 2px 5px;
 
     }
-    h3 { color: #cc0; }
+    h3.subhead { color: #ffc; }
     h4 { color: #cc0; }
     span.edit-button { float: right; }
     span.tel { font-weight: bold; color: #fff; }
@@ -29,7 +29,7 @@
     <tr>
         <td width="30%"%>
             <h2>Observing Session: {{ object.ut_date|date:"Y-m-d" }}</h2>
-            <h3>Location: {{ object.location.address }}</h3>
+            <h3 class="subhead">Location: {{ object.location.address }}</h3>
             <ul class="no_bullets">
                 <li>{{ object.location.city }}, {{ object.location.state }}</li>
                 <li>Latitude: {{ object.location.latitude|floatformat:5 }}</li>
@@ -57,7 +57,7 @@
 </table>
 
 <h2>&nbsp;Observations</h2>
-<h3>&nbsp;# Objects: {{ object.number_objects_observed }}</h3>
+<h3 class="subhead">&nbsp;# Objects: {{ object.number_objects_observed }}</h3>
 <table class="boxed">
 {% for target in object.session_observations %}
 
@@ -65,7 +65,7 @@
 <tr class="{% cycle 'odd' 'even' %}">
     <td width="20%">
     {% if target.object_type == 'Condition' %}
-        <h3>Condition: {{ target.session_stage }}</h3>
+        <h3>Condition: {{ target.session_stage|title }}</h3>
     {% elif target.object_type == 'DSO' %}
         <h3>{{ target.object_type}}: 
             <a href="{% url target.url_path target.object.pk %}" target="_blank">

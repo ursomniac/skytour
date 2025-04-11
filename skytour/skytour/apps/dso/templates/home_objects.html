@@ -4,7 +4,9 @@
 {% block content %}
 <style>
     h1 { color: #fc0; }
-    h2 { color: #f90; }
+    h2.count { color: #fff; }
+    h3.metadata { color: #ff9; }
+    h4.metadata { color: #cc9; }
     h5 { color: #f63; margin: 3px 2px 3px 2px; font-size: 16px; }
 
     span.infield { float: right; font-size: 80%; }
@@ -34,17 +36,18 @@
         font-size: 120%;
     }
     table.top-main { border: none;  margin-bottom: 20px; }
-    table.top-main td { border: none;; }
+    table.top-main td { border: none; }
+    button.nav { margin: 5px 5px; height: 2em; width: 15em; }
 </style>
 
 <h1>Deep Sky Objects</h1>
 <table class="top-main">
     <tr>
         <td>
-<h2>{{ dso_count }} DSOs available at:</h2>
-<h3>&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
-<h4>&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
-<h4>&nbsp;&nbsp;&nbsp;{{ location }}</h4>
+<h2 class="count">{{ dso_count }} DSOs available at:</h2>
+<h3 class="metadata">&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
+<h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
+<h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ location }}</h4>
         </td>
         <td>
             <h5>Filter DSOs</h5>
@@ -112,7 +115,7 @@
                             <input name="scheduled" type="checkbox" {% if scheduled %}checked{% endif %}>
                         </td>
                         <td>
-                            <label for="gear_N">Gear:&nbsp;</label>
+                            <label for="gear_N">Obs. Modes:&nbsp;</label>
                             <span style="color: #fff;">
                             <input type="checkbox" name="gearN" value="N" {% if gearN %}checked{% endif %}>
                                 <span class="gear">Naked Eye</span>
@@ -138,9 +141,11 @@
         </td>
     </tr>
 </table>
-<small>
+
 <a name="top"></a>
-<a href="#bottom">Go to Bottom</a>
+<a href="#bottom"><button class="nav" type="button">Go to Bottom</button></a>
+
+<small>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
@@ -163,7 +168,7 @@
         <th>Priority<br>(Mode {{ observing_mode }})</th>
         {% endif %}
         <th>Img</th>
-        <th>Gear</th>
+        <th>Modes</th>
         <th>Last Obs.</th>
         <th>DSO List<br>Add/Del</th>
     </tr>
@@ -254,7 +259,8 @@
 </table>
 </small>
 <a name="bottom"></a>
-<a href="#top">Go to Top</a>
+<a href="#top"><button class="nav" type="button">Go to Top</button></a>
+
 {% include 'includes/sortable_table.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 <br/>

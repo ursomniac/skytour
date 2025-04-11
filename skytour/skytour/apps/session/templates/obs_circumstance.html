@@ -2,20 +2,33 @@
 {% load skytour_filters humanize %}
 {% block title %}Add Observing Circumstance: Skytour{% endblock %}
 {% block content %}
-
-<h1>Session Observing Circumstance</h1>
+<style>
+    table.subform { border: none; }
+    table.subform td { border: none; }
+    table.panel { border: 1px solid #ffc;}
+    table.panel td { padding-left: 10px;}
+    table.subform td.panel2 { 
+        background-color: #999; border: 2px solid #ccc; 
+        text-align: center;
+    }
+    table.subform td.panel2 input {
+        height: 2.5em; width: 20em; 
+        font-weight: bold;
+    }
+    table.subform td.return {
+        background-color: #900; border: 2px solid #c00;
+        text-align: center;
+    }
+    button.return { height: 2.5em; width: 20em; font-weight: bold; }
+</style>
+<h1>Add Session Observing Conditions</h1>
 <div class="plan_form">
     {% if form %}
     {{ form.media }}
     <form method="post">
         {% csrf_token %}
 
-        <style>
-            table.subform { border: none; }
-            table.subform td { border: none; }
-            table.panel { border: 1px solid #ffc;}
-            table.subform td.panel2 { border: 2px solid #960; }
-        </style>
+
 
         <table class="subform">
             <tr>
@@ -85,8 +98,11 @@
                 </td>
             </tr>
             <tr>
-                <td colspan=2 class="panel2">
+                <td colspan=1 class="panel2">
                     <input type="submit" value="Submit"/>
+                </td>
+                <td class="return">
+                    <a href="{% url 'session-latest' %}"><button class="return" type="button">Return to Latest Session</button></a>
                 </td>
             </tr>
         </table>
@@ -95,5 +111,5 @@
     There is no form!
     {% endif %}
 </div>
-<a href="{% url 'session-latest' %}"><button>Return to Latest Session</button></a>
+<br>
 {% endblock %}

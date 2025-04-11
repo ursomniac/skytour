@@ -3,9 +3,8 @@
 {% block title %}Observing Plan: Skytour{% endblock %}
 {% block content %}
 <style>
-h2 { color: #cc0; }
-h3 { color: #c90; }
-th { background-color: #c90; color: #000; }
+xh3 { color: #c90; }
+h4 { color: #cc6; }
 table.main, table.dsolist, table.form-pick-fields { border: none; }
 table.main td { 
     vertical-align: top; 
@@ -33,7 +32,7 @@ ol li b { color: #fc0; }
 <table class="main">
 <tr>
     <td width="40%" id="main-left">
-        <h2>Plan Observations</h2>
+        <h1>Plan Observations</h1>
         <h4>Current UT: {{ now|date:"D Y-m-d H:i" }}</h4>
         <h4>Plan UT: {{ utdt_start|date:"Y-m-d H:i" }}</h4>
         <h4>Plan Local Time: {{ local_time_str }}</h4>

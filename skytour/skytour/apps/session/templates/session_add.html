@@ -4,7 +4,6 @@
 {% block content %}
 
 <style>
-  h1, h4 { color: #ccc; }
   table.subform { border: none; }
   table.subform td { border: none;  vertical-align: top; }
   table.subform th {
@@ -13,19 +12,25 @@
     border: none;
   }
   table.panel { border: 1px solid #ffc;}
-  table.subform td.panel2 { border: 2px solid #960;  background-color: #630;}
+  table.subform td.panel2 { border: 2px solid #ccc;  background-color: #999;}
   table.subform td.goback   { 
-    border: 2px solid #960; 
-    background-color: #690; 
+    border: 2px solid #c00; 
+    background-color: #900; 
     text-align: center; 
     vertical-align: middle; 
   }
   table.subform td.goback button { width: 15em; }
-  table.subform td.panel2 input { width: 20em; height: 3em; }
+  table.subform td.panel2 input { 
+      width: 20em; height: 3em; 
+      margin-left: 3em; 
+      font-weight: bold; 
+  }
 </style>
 
 <h1>Add Observation</h1>
+{% if message %}
 <b>{{ message }}</b><br>
+{% endif %}
 
 <h2><a href="/session/add_object">New Observation</a></h2>
 

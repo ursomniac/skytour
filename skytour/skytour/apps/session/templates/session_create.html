@@ -4,7 +4,7 @@
 {% block content %}
 
 <style>
-    table.new-session { border: none; }
+    table.new-session { border: none;  width: 800px; }
     table.new-session td { 
         border: 1px solid #cc9; 
         padding: 10px;
@@ -14,6 +14,12 @@
         border: none;
         background-color: #996;
         color: #000;
+    }
+    table.new-session td.submit {
+        background-color: #999; border: none;
+    }
+    table.new-session td.submit input {
+        height: 2.5em; width: 20em; margin-left: 8.5em;
     }
 </style>
 
@@ -26,8 +32,8 @@
         {% csrf_token %}
         <table class="new-session">
             {{ form.as_table }}
+            <tr><td colspan=2 class="submit"><input type="submit" value="Submit"/></td></tr>
         </table>
-        <br><input type="submit" value="Submit"/>
     </form>
     {% else %}
     There is no form!
