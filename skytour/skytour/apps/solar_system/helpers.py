@@ -108,15 +108,26 @@ def get_visible_asteroid_positions(utdt=None, location=None, pluto=True):
 
    asteroids = Asteroid.objects.filter(Q(est_brightest__lte=cutoff) | Q(always_include=True))
 
-   with load.open('generated_data/bright_asteroids.txt') as f:
-      mps = mpc.load_mpcorb_dataframe(f)
-   mps = mps.set_index('designation', drop=False)
+   #with load.open('generated_data/bright_asteroids.txt') as f:
+   #   mps = mpc.load_mpcorb_dataframe(f)
+   #mps = mps.set_index('designation', drop=False)
 
    asteroid_list = []
    times = [(time.perf_counter(), 'Start')]
    for a in asteroids:
-      row = mps.loc[a.mpc_lookup_designation]
-      target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
+      mag = None
+      try:
+         row = a.mpc_object
+         #try:
+         #   row = mps.loc[a.mpc_lookup_designation]
+         #except:
+         #   continue
+         target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
+      except Exception as err:
+         o = a.mpc_object
+         e = o['eccentricity']
+         print(f"Error with {a}, e = {e} {type(e)}\n{err}")
+
       mag = fast_asteroid(a, target, t, earth, sun, r_earth_sun)
       if mag is not None and mag <= mag_limit or a.always_include:
          x = get_object_metadata(

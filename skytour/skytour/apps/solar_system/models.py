@@ -4,6 +4,7 @@ import math
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
+import json
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -13,7 +14,7 @@ from skyfield.api import Star
 from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
-from .asteroids import get_asteroid_object, lookup_asteroid_object
+from .asteroids import get_asteroid_object, lookup_asteroid_object, create_asteroid_dict
 from .comets import get_comet_object, get_comet_period
 from .planets import get_mean_orbital_elements
 from .vocabs import STATUS_CHOICES
@@ -387,7 +388,7 @@ class Asteroid(ObservableObject):
     def mpc_object(self):
         try:
             return pd.read_json(StringIO(self.mpc_json), typ='series')
-        except:
+        except: # Keep for now TODO: deprecate!
             return get_asteroid_object(self) # will return None if not in short-list
         #return get_asteroid_object(self)
     
@@ -399,19 +400,25 @@ class Asteroid(ObservableObject):
         return '/asteroid/{}'.format(self.slug)
     
     def save(self, *args, **kwargs):
+        mpc = None
         print("SAVE: slug = ", self.slug)
         print("SAVE MPC: ", self.mpc_json)
         if self.slug is None or self.slug == '':
             words = [str(self.number)] + self.name.split(' ')
             slug = '-'.join(words)
             self.slug = slug.lower()
+
         if self.mpc_json is None:            
-            mpc = get_asteroid_object(self) # Deprecate - but faster
+            #mpc = get_asteroid_object(self) # Deprecate - but faster
             if mpc is None or mpc.empty:
                 mpc = lookup_asteroid_object(self.mpc_lookup_designation)
             if mpc is not None and not mpc.empty:
-                j = mpc.to_json()
+                d = create_asteroid_dict(mpc)
+                print("D: ", d)
+                j = json.dumps(d)
+                print("J: ", j)
                 self.mpc_json = j
+
         print("FINAL: slug = ", self.slug)
         print("FINAL MPC = ", self.mpc_json)
         super(Asteroid, self).save(*args, **kwargs)

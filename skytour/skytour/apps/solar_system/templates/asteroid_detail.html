@@ -69,7 +69,12 @@
                     {% endif %}
                 </td>
                 <td  class="description operations" rowspan=2>
+                    {% comment %}
                     <a href="{% url 'asteroid-edit' object.pk %}"><button>Edit Metadata</button></a>
+                    {% endcomment %}
+                    <button onclick="return popupEditAsteroid({{ object.pk }});">
+                        Edit Metadata
+                    </button>
                     <br>
                     {% comment %}
                     <a href="/admin/solar_system/asteroid/{{object.pk}}/change" target="_blank"><button>   Admin   </button></a>
@@ -180,6 +185,27 @@
 
 {% include 'includes/performance_time.html' %}
 
+<script>
+    const tscreenWidth = window.screen.width;
+    const twindowWidth = 1000;
+    const twindowHeight = 750;
+    const trightOffset = 100;
+    const trightPosition = tscreenWidth - twindowWidth - trightOffset;
+    const ttopOffset = 100;
+
+    function popupEditAsteroid(pk) {
+        const url = `/asteroid/edit/${pk}`;
+        newWindow = window.open(
+            url,
+            'Edit Asteroid',
+            `height=${twindowHeight},  width=${twindowWidth}, `
+            + ` left=${trightPosition}, top=${ttopOffset}, `
+            + 'menubar=no,toolbar=no,location=no,status=no',
+        );
+        if (window.focus) { newWindow.focus() }
+        return false;
+    }
+</script>
 {% endblock content %}
 {% block extra-js %}
 {% include 'includes/realtime_script.html' %}

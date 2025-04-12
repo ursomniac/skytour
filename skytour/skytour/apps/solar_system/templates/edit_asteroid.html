@@ -2,7 +2,7 @@
 {% block title %}Skytour - Edit Asteroid Metadata{% endblock title %}
 {% block content %}
 <style>
-    table.edit_form { width: 600px; }
+    table.edit_form { width: auto; }
     th { height: 20px; background-color: #cc6; width: 50%; }
     td.close { background-color: #900; }
     .helptext { font-size: 80%; color: #999; }
@@ -12,13 +12,30 @@
         font-size: 80%;
         font-weight: bold;
     }
+    div.messages { border: 1px solid #999; }
+    ul.messages { list-style-type: none; }
 </style>
 
 <h1>Edit Asteroid {{ object.name }} Metadata</h1>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+
+
     <table class="edit_form">
+        {% if messages %}
+        <tr>
+            <td colspan=2>
+                <div class="messages">
+                    <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {% endif %}
         <tr>
             <th><label for="id_diameter">Diameter:</label></th>
             <td>{{ form.diameter }}
@@ -64,7 +81,7 @@
                 <span class="sublabel">Change:</span> 
                 <input type="file" name="image" accept="image/*" id="id_image">
             </td>
-          </tr>
+        </tr>
         <tr>
             <td colspan=2 class="submit">
                 <button type="submit" class="submit">Save Changes</button>
@@ -73,10 +90,21 @@
         <tr>
             <td colspan=2 class="close">
                 <a href="{% url 'asteroid-detail' object.slug %}">
-                <button class="close">Close and Go Back</button>
+                <button onClick="closeAndUpdatePopup();">Close and Update</button>
                 </a>
             </td>
         </tr>
     </table>
 </form>
+<script>
+function closeAndUpdatePopup() {
+    window.opener.location.reload();
+    window.close();
+  }
+  function closePopup() {
+    var me = window.self;
+    me.opener = me.self;
+    me.close();
+}
+</script>
 {% endblock content %}

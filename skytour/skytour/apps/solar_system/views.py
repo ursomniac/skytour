@@ -648,11 +648,11 @@ class AsteroidEditView(UpdateView):
         messages.success(self.request, 'Update successful')
         return response
     
-    #def get_success_url(self):
-    #    referer = self.request.META.get('HTTP_REFERER')
-    #    if referer: 
-    #        return referer
-    #    return reverse_lazy('asteroid-detail', kwargs={'slug': self.object.slug})
+    def get_success_url(self):
+        referer = self.request.META.get('HTTP_REFERER')
+        if referer: 
+            return referer
+        return reverse_lazy('asteroid-detail', kwargs={'slug': self.object.slug})
 
 class CometEditView(UpdateView):
     form_class = CometEditForm
@@ -765,14 +765,14 @@ class AsteroidManageListView(ListView):
             d = form.cleaned_data
             existing = Asteroid.objects.filter(number=d['number']).first()
             if existing is not None:
-                print("ERROR: object in DB")
+                #print("ERROR: object in DB")
                 messages.error(request, "This asteroid is already in the Asteroid table.")
             else:
                 name = f"({d['number']}) {d['name']}"
-                print(f"Looking up: \'{name}\'")
+                #print(f"Looking up: \'{name}\'")
                 mpc = lookup_asteroid_object(name)
                 if mpc is None:
-                    print("Did not find it.")
+                    #print("Did not find it.")
                     messages.error(request, f"Asteroid \"{name}\" not in the MPC data file. <br>Check format/spacing.")
                 else:
                     obj = Asteroid()
@@ -788,10 +788,12 @@ class AsteroidManageListView(ListView):
                     obj.always_include = d['always_include']
                     try:
                         obj.save()
-                    except:
-                        print("ERROR in save()", obj)
                         messages.success(request, f"Asteroid {name} successfully added.")
+                    except:
+                        #print("ERROR in save()", obj)
+                        messages.error(request, f"Error saving Asteroid {name}.")
                     return redirect('asteroid-edit-list')
+                
         self.object_list = self.get_queryset().order_by('number', 'name')
         context = self.get_context_data()
         context['create_form'] = form # reset form

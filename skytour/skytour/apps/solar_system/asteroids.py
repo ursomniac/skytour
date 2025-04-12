@@ -5,13 +5,14 @@ from skyfield.data import mpc
 
 def get_asteroid_target(asteroid, ts, sun):
    """
-   Lookup an asteroid in bright_asteroids.txt and return it as a target.
+   Get target from the asteroid.mpc_object
    """
-   with load.open('generated_data/bright_asteroids.txt') as f:
-      mps = mpc.load_mpcorb_dataframe(f)
-   mps = mps.set_index('designation', drop=False)
+   #with load.open('generated_data/bright_asteroids.txt') as f:
+   #   mps = mpc.load_mpcorb_dataframe(f)
+   #mps = mps.set_index('designation', drop=False)
    try:
-      row = mps.loc[asteroid.mpc_lookup_designation]
+      #row = mps.loc[asteroid.mpc_lookup_designation]
+      row = asteroid.mpc_object
       target = sun + mpc.mpcorb_orbit(row, ts, GM_SUN)
    except:
       return None
@@ -83,7 +84,7 @@ def create_asteroid_dict(mpc):
       designation_packed                            00102 str
       magnitude_H                                    9.47 float
       magnitude_G                                    0.15 float
-      epoch_packed                                  K2555
+      epoch_packed                                  K2555 str
       mean_anomaly_degrees                       29.93000 float
       argument_of_perihelion_degrees            147.35374 float
       longitude_of_ascending_node_degrees       210.76235 float
@@ -91,21 +92,21 @@ def create_asteroid_dict(mpc):
       eccentricity                              0.2508431 float
       mean_daily_motion_degrees                0.22687954 float
       semimajor_axis_au                         2.6623950 float
-      uncertainty                                       0
-      reference                                 MPO901162
+      uncertainty                                       0 +int
+      reference                                 MPO901162 +str
       observations                                   7133 int
       oppositions                                      66 int
       observation_period                        1870-2025 str
-      rms_residual_arcseconds                        0.60
-      coarse_perturbers                               M-v
-      precise_perturbers                              3Ek
-      computer_name                              MPCLINUX
-      hex_flags                                      0000
+      rms_residual_arcseconds                        0.60 +float
+      coarse_perturbers                               M-v +str
+      precise_perturbers                              3Ek +str
+      computer_name                              MPCLINUX +str
+      hex_flags                                      0000 +str
       designation                            (102) Miriam str
       last_observation_date                    20250119.0 float
    """
    STRING_FIELDS = [
-      'designation_packed', 'observation_period', 'designation'
+      'designation_packed', 'observation_period', 'designation', 'epoch_packed'
    ]
    FLOAT_FIELDS = [
       'magnitude_H', 'magnitude_G', 'mean_anomaly_degrees',
