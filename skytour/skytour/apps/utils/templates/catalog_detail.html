@@ -11,6 +11,7 @@
         padding: 3px;
         text-align: center;
     }
+    table.stats th { background-color: #999; }
     span.light_yellow { color: #ff6; font-weight: bold;  }
     table.flags {border: 0;}
     table.flags td {
@@ -29,6 +30,9 @@
         color: #000;
     }
     td.center { text-align: center; }
+    span.helptext { font-size: 85%; font-style: italic; color: #999; }
+    input.submit { width: 12em; height: 2.5em; }
+    label { color: #ff9; font-weight: 600; }
 </style>
 <!-- main -->
 {# header section #}
@@ -88,25 +92,42 @@
             </table>
         </td>
         <td>
+            {% if object.description %}
+            <h3>Description:</h3>
+                {{ object.description }}
+                <br>
+            {% endif %}
             <br>
             <b>Filters:</b>
             <form request="GET" action="">
-                &nbsp;&nbsp;<input name="seen" type="checkbox">Seen
-                &nbsp;&nbsp;<input name="unseen" type="checkbox">Unseen
-                &nbsp;&nbsp;<input name="important" type="checkbox">Important
-                &nbsp;&nbsp;<input name="available" type="checkbox">Available
-                &nbsp;&nbsp;<input name="imaged" type="checkbox">Imaged
-                &nbsp;&nbsp;<input name="unimaged" type="checkbox">Unimaged
-
-                &nbsp;&nbsp;<input type="submit" value="Filter">
+                &nbsp;&nbsp;
+                <label for="observed">Observed: </label>
+                &nbsp;&nbsp;<select name="observed">
+                    <option value="">-- All --</option>
+                    <option value='yes' {% if observed == 'yes' %}selected{% endif %}>Yes</option>
+                    <option value='no' {% if observed == 'no' %}selected{% endif %}>No</option>
+                </select>
+                &nbsp;&nbsp;
+                <label for="available">Dec. Avail.: </label>
+                &nbsp;<input name="available" type="checkbox" {% if available == 'on'%}checked{% endif %}>
+                &nbsp;&nbsp;
+                <label for="imaged">Imaged: </label>
+                &nbsp;&nbsp;<select name="imaged">
+                    <option value="">-- All --</option>
+                    <option value='yes' {% if imaged == 'yes' %}selected{% endif %}>Yes</option>
+                    <option value='no' {% if imaged == 'no' %}selected{% endif %}>No</option>
+                </select>
+                &nbsp;&nbsp;
+                <label for="constellation">Constellation(s): </label>
+                <input size="30" name="constellation" 
+                    {% if constellation %}value="{{ constellation }}"{% endif %}
+                >
+                <span class="helptext">(sep. abbrs with commas)</span>
+                &nbsp;&nbsp;<input type="submit" value="Filter" class="submit">
             </form>
             {% if object.notes %}
             <h3>Notes:</h3>
                 <br>{{ object.notes }}
-            {% endif %}
-            {% if object.description %}
-            <h3>Description:</h3>
-                <br>{{ object.description }}
             {% endif %}
         </td>
     </tr>
@@ -115,8 +136,8 @@
 
 {% include 'includes/paginate.html' %}
 <h3>{{ object_count }} Objects in List</h3>
-
 <table class="catalog_list" id='{{ table_id }}'>
+    <thead>
     <tr>
         <th>Object</th>
         <th>Other Catalog</th>
@@ -135,7 +156,8 @@
         <th>Last Observed</th>
         <th>
     </tr>
-    
+    </thead>
+    <tbody>
     {% for cat_object in object_list %}
     {% with cat_object.dso as thing %}
     <tr class="{% cycle 'odd' 'even' %}">
@@ -222,8 +244,22 @@
     </tr>
     {% endwith %}
     {% endfor %}
+    </tbody>
 </table>
-{% include 'includes/dsolistadjust_script.html' %}
 {% include 'includes/sortable_table.html' %}
+{% comment %}
+<script>
+    $(document).ready(function() {
+    $('#{{ table_id }}').DataTable( {
+        columnDefs: [ 
+            { targets: [ 0 ], orderData: [ 0, 1 ] }, 
+            { targets: [ 1 ], orderData: [ 1, 0 ] }, 
+        ],
+        /* paging: false */
+    } );
+} );
+</script>
+{% endcomment %}
+{% include 'includes/dsolistadjust_script.html' %}
 {% include 'includes/paginate.html' %}
 {% endblock content %}

@@ -100,19 +100,11 @@
                                 {% endfor %}
                             </select>
                             &nbsp;&nbsp;&nbsp;
-                            <label for="mask">Location Mask: </label>
-                            <input type="checkbox" name="mask" {% if mask %}checked{% endif %}>
+                            <label for="mask">Unset Location Mask: </label>
+                            <input type="checkbox" name="unmask" {% if unmask %}checked{% endif %}>
                             &nbsp;&nbsp;&nbsp;
                             <label for="simple">Simple: </label>
                             <input type="checkbox" name="simple" {% if simple %}checked{% endif %}>
-                            {% comment %}
-                            &nbsp;&nbsp;&nbsp;
-                            <select type="custom">
-                                <option value="stanard" {% if custom == 'standard'%}selected{% endif %}>Standard</option>
-                                <option value="simple" {% if custom == 'simple' %}selected{% endif %}>Simple</option>
-                                <option value="dsolist" {% if custom == 'dsolist' %}selected>Active DSO Lists{% endif %}</option>
-                            </select>
-                            {% endcomment %}
                             &nbsp;&nbsp;&nbsp;
                             <label for="utdt_now">Now: </label>
                             <input type="checkbox" name="utdt_now" {% if utdt_now %}checked{% endif %}>

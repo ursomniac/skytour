@@ -75,10 +75,13 @@
 		background: rgba(0, 0, 0, 0.3);
 		height: 35px;
 	}
-	ul.nobullet { 
+	ul.dso-list { 
 		list-style-type: none; /* Remove bullets */
 		padding: 0; /* Remove padding */
 		margin: 0; /* Remove margins */
+	}
+	ul.dso-list li {
+		line-height: 1.4;
 	}
 	div.panel-type {float: right!important;  }
 	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
@@ -95,6 +98,7 @@
 		background-color: #900;
 		text-align: center;
 	}
+	table.infield th { background-color: #009; color: #fff; }
 	td.edit_images button { width: 20em; height: 20px; }
 	td.editing { border: 2px solid #900!important; }
 	td.editing h3, td.obslist h3 { margin-top: 8px; }
@@ -421,7 +425,7 @@
 						</span>
 					</h3>
 					{% if active_dsolists.count > 0 %}
-						<ul class="nobullet">
+						<ul class="dso-list">
 							{% for ol in active_dsolists %}
 							<li>
 								<a href="{% url 'dsolist-detail' ol.pk %}" target="_blank">{{ ol.name }}</a>
@@ -533,7 +537,7 @@
 		<a name="dsos_in_field"></a>
 		{% if object.dsoinfield_set.all %}
 		<h3>DSOs in Field ({{ object.dsos_in_field_count }})</h3>
-		<table>
+		<table class='infield'>
 		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th><th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th></tr>
 		{% for fdso in object.dsoinfield_set.all %}
 		<tr>

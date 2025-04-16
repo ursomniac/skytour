@@ -1145,6 +1145,10 @@ class DSOList(models.Model):
 
     def get_absolute_url(self):
         return '/dso/list/{}'.format(self.pk)
+    
+    @property
+    def active_status(self):
+        return 'Active' if self.active_observing_list else 'Inactive'
 
     @property
     def mid_ra(self):

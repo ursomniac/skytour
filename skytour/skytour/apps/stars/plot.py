@@ -32,7 +32,7 @@ def get_skymap(
         local_time = None,
         title = None,
         hours = 0.,
-        mask=False,
+        unmask=False,
         min_alt = 20.,
     ):
     """
@@ -152,7 +152,7 @@ def get_skymap(
     times.append((time.perf_counter(), 'Comets'))
 
     # 8a. Mask
-    if mask:
+    if not unmask:
         ax = map_mask(ax, location)
         
     # 9. Put a circle for the horizon.

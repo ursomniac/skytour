@@ -108,14 +108,6 @@ class DSOListView(CookieMixin, ListView):
         dso_list = filter_dsos(params, DSO.objects.all())
         context['total_count'] = len(dso_list)
 
-        # Deal with Declination
-        if 'dec_range' in context.keys():
-            try:
-                dlo, dhi = context['dec_range']
-                context['dec_low'] = dlo
-                context['dec_high'] = dhi
-            except:
-                pass
         # Pagination
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)
@@ -202,6 +194,7 @@ class DSOListActiveDSOListView(CookieMixin, TemplateView):
         context['num_dsos'] = len(context['dso_list'])
         context['map'] = get_dso_list_map(dso_list, priority, mode)
         context['is_dsolist_page'] = True
+        context['table_id'] = 'active-dso-table'
         return context
 
 class DSOListListView(CookieMixin, ListView):

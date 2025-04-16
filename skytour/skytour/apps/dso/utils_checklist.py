@@ -32,8 +32,9 @@ DSO_TYPE_DICT = {
     'other': [ 'quasar', 'black-hole-system']
 }
 
-def get_filter_params(request):
+def get_filter_params(request, debug=True):
     params = dict(
+        search_name = request.GET.get('search_name', None),
         constellation = request.GET.get('constellation', None),
         subset = request.GET.get('subset', 'all'),
         imaged = request.GET.get('imaged', 'all'),
@@ -48,6 +49,8 @@ def get_filter_params(request):
         mag_max = request.GET.get('mag_max', None),
         redo_flag = request.GET.get('redo_flag', 'any')
     )
+    if debug:
+        print("GOT PARAMS: ", params)
     return params
 
 def filter_dsos(params, dsos):
@@ -63,7 +66,6 @@ def filter_dsos(params, dsos):
             dsos = dsos.filter(dsoobservingmode__priority__gte=use_pri, dsoobservingmode__mode=use_mode)
         else:
             dsos = dsos.filter(dsoobservingmode__mode=use_mode).distinct()
-
 
     if params['redo_flag'] != 'any':
         use = params['redo_flag'] == 'yes'
@@ -113,9 +115,16 @@ def filter_dsos(params, dsos):
         ]
         dsos = dsos.filter(pk__in=good_pks)
 
+    if params['search_name']: # do this last so less to iterate on
+        dsos = dsos.filter(
+            Q( catalog__abbreviation__iexact=params['search_name'])
+            | Q( aliases__catalog__abbreviation__iexact = params['search_name'])
+        )
+
     return dsos
 
 def update_dso_filter_context(context, params):
+    context['search_name'] = params['search_name']
     context['constellation'] = params['constellation']
     context['subset'] = params['subset']
     context['imaged'] = params['imaged']

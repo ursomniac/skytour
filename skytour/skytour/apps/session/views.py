@@ -305,9 +305,10 @@ class ObservingSessionDetailView(DetailView):
     template_name = 'session_detail.html'
 
     def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = ObservingSession.objects.all()
-        return queryset.first()
+        pk = self.kwargs.get('pk')
+        if pk is None:
+            return ObservingSession.objects.first()
+        return ObservingSession.objects.get(pk=pk)
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)

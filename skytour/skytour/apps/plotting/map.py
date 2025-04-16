@@ -868,7 +868,10 @@ def map_mask(ax, location, color='#3ff', simple=False, debug=False):
         return
             
     prev_mask = None
-    for mask in location.observinglocationmask_set.order_by('azimuth_start'):
+    mask_points = location.observinglocationmask_set.order_by('azimuth_start')
+    if mask_points.count() == 0: # abort if nothing to process
+        return ax
+    for mask in mask_points:
         if prev_mask: # connect two segments
             x0, y0 = get_xy(prev_mask.azimuth_end, prev_mask.altitude_end)
             x1, y1 = get_xy(mask.azimuth_start, mask.altitude_start)

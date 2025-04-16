@@ -1,21 +1,54 @@
 from itertools import takewhile
 
-def filter_dso_test(dso, filters):
-    if filters is None:
-        return dso
-    if 'seen' in filters and dso.observations.count() == 0:
-        return None
-    if 'important' in filters and dso.priority not in ['High', 'Highest']:
-        return None
-    if 'unseen' in filters and dso.observations.count() != 0:
-        return None
-    if 'available' in filters and dso.priority == 'None':
-        return None
-    if 'imaged' in filters and dso.num_library_images == 0:
-        return None
-    if 'unimaged' in filters and dso.num_library_images != 0:
-        return None
-    return dso
+def filter_catalog(request, dso_list, cookie):
+    observed = request.GET.get('observed', None)
+    available = request.GET.get('available', None) == 'on'
+    imaged = request.GET.get('imaged', None)
+    constr = request.GET.get('constellation', None)
+    if constr is None or constr == '':
+        con_list = None
+    else:
+        con_list = [x.lower().strip() for x in constr.split(',')]
+    # AND all the filters
+    if observed and observed != '':
+        new = []
+        for d in dso_list:
+            o = d['dso']
+            if observed == 'yes' and o.observations.count() > 0:
+                new.append(d)
+            elif observed == 'no' and o.observations.count() == 0:
+                new.append(d)
+        dso_list = new
+    if imaged and imaged != '':
+        new = []
+        for d in dso_list:
+            o = d['dso']
+            if imaged == 'yes' and o.num_library_images > 0:
+                new.append(d)
+            elif imaged == 'no' and o.num_library_images == 0:
+                new.append(d)
+        dso_list = new
+    if available:
+        try:
+            d0, d1 = cookie['dec_range']
+            new = []
+            for d in dso_list:
+                o = d['dso']
+                if o.dec >= d0 and o.dec <= d1:
+                    new.append(d)
+            dso_list = new
+        except:
+            print("Error getting dec")
+    if con_list is not None:
+        new = []
+        for d in dso_list:
+            o = d['dso']
+            if o.constellation.abbreviation.lower() in con_list:
+                new.append(d)
+        dso_list = new
+        if len(new) == 0:
+            print("CONSTELLATION FAILED")
+    return dso_list
 
 def try_int(x):
     try:

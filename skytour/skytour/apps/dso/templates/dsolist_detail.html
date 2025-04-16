@@ -4,17 +4,43 @@
 {% block content %}
 <style>
     h1 { color: #fc0; }
+    table.meta { border: 1px solid #999; max-width: 40%; }
+    table.meta td { vertical-align: top; border: none; padding: 0px 5px; }
+    table.meta td h2 { margin-top: 5px; }
+    table.meta td.nav button { height: 2.5em; width: 20em;  margin-left: 3em; }
+    span.status { color: #ff9; }
+    h2.count { color: #ff9;  margin-bottom: 1px; }
 </style>
 <h1>DSO List: {{ object.name }}</h1>
-<h2>Description</h2>
-<p> {{ object.description }} </p>
-<p>
-    <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
-    {% include 'form_dsolist_edit.html' %}
-</p>
-<p><a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a></p>
-
-<h2>{{ object.dso.count}} DSOs</h2>
+<table class="meta">
+    <tr>
+        <td>
+            <h2>Description</h2>
+            <p>
+            {% if object.description %}
+            {{ object.description }}
+            {% else %}No Description
+            {% endif %}
+            </p>
+        </td>
+        <td>
+            <h2>Status: 
+            <span class="status">{{ object.active_status }}</span>
+            </h2>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2 class="nav">
+            <h3>Management</h3>
+            <p>
+                <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
+                <a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a>
+                {% include 'form_dsolist_edit.html' %}
+            </p>
+        </td>
+    </tr>
+</table>
+<h2 class="count">{{ object.dso.count}} DSOs</h2>
 {% with object.dso.all as dso_list %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}

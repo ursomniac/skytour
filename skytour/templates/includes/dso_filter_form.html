@@ -17,10 +17,10 @@
 <form action="" method="GET">
     <table class="dso-form">
         <tr>
-            <td colspan=2><b>Name:</b>&nbsp;
-              <input size=20 name="search_name"
+            <td colspan=2><b>Catalog Abbr:</b>&nbsp;
+              <input size="20" name="search_name"
                 {% if search_name %}value="{{ search_name }}"{% endif %}>
-                <br><span class="helptext">&nbsp;</span>
+                <br><span class="helptext">(M, C, NGC, Tr, Cr, Sh2, Arp, HCG, etc.)</span>
             </td>
             <td colspan=2><b>Constellations:</b> &nbsp; 
             <input size="20" name="constellation" 
@@ -62,7 +62,7 @@
             </td>
             <td>
               <b>Min Size: </b>
-              <input name="size_min" type="number" min="0" max="999"
+              <input name="size_min" type="number"
                 {% if size_min %} value="{{ size_min }}"{% endif %}> 
               <br><span class="helptext">(arcmin)</span>
             </td>
@@ -121,13 +121,15 @@
             {% endif %}
             size=5>° to 
             <input name="dec_high" 
-                {% if dec_high %}value="{{ dec_high|floatformat:1 }}" {% endif %}
-                size=5>°
+            {% if dec_high %}
+              value="{{ dec_high|floatformat:1 }}" 
+            {% endif %}
+            size=5>°
             <br><span class="helptext">(Defaults to your location's latitude)</span>
           </td>
           <td>
             <b>Mag. Max: </b>
-            <input name="mag_max" type="number" min="-9.99" max="19.99"
+            <input name="mag_max" type="number" 
             {% if mag_max %}value="{{ mag_max }}"{% endif %}><br>&nbsp;
           </td>
         </tr>

@@ -10,6 +10,8 @@
         background-color: #996;
         color: #000;
     }
+    table.dsolist td.submit { background-color: #999; }
+    table.dsolist td.submit input { height: 2.5em ; width 20em; margin-left 3em; }
 </style>
 <div class="dso_list_form" id="dsolist-edit-form" style="display: none;">
     <h3>Edit DSO Observing List</h3>
@@ -19,8 +21,12 @@
         {% csrf_token %}
         <table class="dsolist">
             {{ edit_form.as_table }}
+            <tr>
+                <td colspan=2 class="submit">
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
         </table>
-        <br><input type="submit" value="Submit"/>
     </form>
     {% else %}
     There is no form!

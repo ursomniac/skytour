@@ -10,8 +10,9 @@ from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-from .utils import new_objects_sort
+from .utils import new_objects_sort, filter_catalog
 from ..dso.models import DSO, DSOLibraryImage, DSOInField
+from ..session.cookie import get_cookie
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
 
@@ -108,8 +109,8 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
             a) only show primary ID entries
             b) Anything that's an alias too
         """
-        #context = super(CatalogDetailView, self).get_context_data(**kwargs)
         object = self.get_object()
+        cookie = self.request.session.get('user_preferences', None)
         cat_list = Catalog.objects.order_by('slug')
         primary_dsos = DSO.objects.filter(catalog=object)
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
@@ -119,15 +120,23 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
             self.paginate_by = None
 
         all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos)
-        
+        print("ALL: ", len(all_objects_sort))
+        dso_list = filter_catalog(self.request, all_objects_sort, cookie)
+        print("FILTERED: ", len(dso_list))
         context = super(CatalogDetailView, self).get_context_data(
-            object_list=all_objects_sort, 
+            object_list=dso_list,
             **kwargs
         )
-        
+        context['filtered_object_list'] = dso_list
         context['catalog_list'] = cat_list
         context['table_id'] = f'cat_dso_{object.slug}'
-        context['object_count'] = len(all_objects_sort)
+        context['all_object_count'] = len(all_objects_sort)
+        context['object_count'] = len(dso_list)
+
+        context['constellation'] = self.request.GET.get('constellation', None)
+        context['observed'] = self.request.GET.get('observed', None)
+        context['imaged'] = self.request.GET.get('imaged', None)
+        context['available'] = self.request.GET.get('available', None)
         return context
 
 class ObjectTypeListView(ListView):
