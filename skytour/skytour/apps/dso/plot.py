@@ -13,7 +13,6 @@ from ..astro.transform import get_cartesian
 from ..plotting.map import *
 from ..site_parameter.helpers import get_ephemeris
 from ..utils.format import to_hm, to_dm
-#from ..utils.models import ConstellationBoundaries, ConstellationVertex, Constellation
 
 from .const_utils import get_boundary_lines
 from .finder import plot_dso
@@ -99,7 +98,7 @@ def create_atlas_plot(
     ):
     """
     Create an AtlasPlate image.
-    TODO V2.x: Change annontation font weight to be BOLD for high/highest priority!
+    TODO V2.x: Change annotation font weight to be BOLD for high/highest priority!
     """
     fov = fov if fov else 20.
     object = model.objects.get(plate_id=plate_id)

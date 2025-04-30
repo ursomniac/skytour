@@ -53,6 +53,18 @@ class ObservingSession(models.Model):
         om = self.moonobservation_set.all()
         sorted_list = sorted(chain(ox, od, op, oa, oc, om), key=lambda obs: obs.ut_datetime)
         return sorted_list
+    
+    @property
+    def session_by_scope_dict(self):
+        objects = self.session_observations
+        d = {}
+        for obj in objects:
+            if obj.object_type == 'Condition':
+                continue
+            if obj.telescope.name not in d.keys():
+                d[obj.telescope.name] = []
+            d[obj.telescope.name].append(obj)
+        return d
 
     @property
     def number_objects_observed(self):

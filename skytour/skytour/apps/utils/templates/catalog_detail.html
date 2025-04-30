@@ -31,7 +31,8 @@
     }
     td.center { text-align: center; }
     span.helptext { font-size: 85%; font-style: italic; color: #999; }
-    input.submit { width: 12em; height: 2.5em; }
+    table.filter td.submit { background-color: #999; }
+    input.submit { width: 12em; height: 2.5em; margin-left: 5em;  }
     label { color: #ff9; font-weight: 600; }
 </style>
 <!-- main -->
@@ -92,48 +93,65 @@
             </table>
         </td>
         <td>
-            {% if object.description %}
-            <h3>Description:</h3>
-                {{ object.description }}
-                <br>
-            {% endif %}
-            <br>
-            <b>Filters:</b>
+            <h3>Filters:</h3>
             <form request="GET" action="">
-                &nbsp;&nbsp;
-                <label for="observed">Observed: </label>
-                &nbsp;&nbsp;<select name="observed">
-                    <option value="">-- All --</option>
-                    <option value='yes' {% if observed == 'yes' %}selected{% endif %}>Yes</option>
-                    <option value='no' {% if observed == 'no' %}selected{% endif %}>No</option>
-                </select>
-                &nbsp;&nbsp;
-                <label for="available">Dec. Avail.: </label>
-                &nbsp;<input name="available" type="checkbox" {% if available == 'on'%}checked{% endif %}>
-                &nbsp;&nbsp;
-                <label for="imaged">Imaged: </label>
-                &nbsp;&nbsp;<select name="imaged">
-                    <option value="">-- All --</option>
-                    <option value='yes' {% if imaged == 'yes' %}selected{% endif %}>Yes</option>
-                    <option value='no' {% if imaged == 'no' %}selected{% endif %}>No</option>
-                </select>
-                &nbsp;&nbsp;
-                <label for="constellation">Constellation(s): </label>
-                <input size="30" name="constellation" 
-                    {% if constellation %}value="{{ constellation }}"{% endif %}
-                >
-                <span class="helptext">(sep. abbrs with commas)</span>
-                &nbsp;&nbsp;<input type="submit" value="Filter" class="submit">
+            <table class="filter">
+                <tr>
+                    <td>
+                        &nbsp;&nbsp;
+                        <label for="observed">Observed: </label>
+                        &nbsp;&nbsp;
+                        <select name="observed">
+                            <option value="">-- All --</option>
+                            <option value='yes' {% if observed == 'yes' %}selected{% endif %}>Yes</option>
+                            <option value='no' {% if observed == 'no' %}selected{% endif %}>No</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <label for="available">Dec. Avail.: </label>
+                        &nbsp;
+                        <input name="available" type="checkbox" {% if available == 'on'%}checked{% endif %}>
+                        &nbsp;&nbsp;
+                        <label for="imaged">Imaged: </label>
+                        &nbsp;&nbsp;
+                        <select name="imaged">
+                            <option value="">-- All --</option>
+                            <option value='yes' {% if imaged == 'yes' %}selected{% endif %}>Yes</option>
+                            <option value='no' {% if imaged == 'no' %}selected{% endif %}>No</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <label for="constellation">Constellation(s): </label>
+                        <input size="30" name="constellation" 
+                            {% if constellation %}value="{{ constellation }}"{% endif %}
+                        >
+                        <span class="helptext">(sep. abbrs with commas)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="submit">
+                        <input type="submit" value="Filter" class="submit">
+                    </td>
+                </tr>
+            </table>
             </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
             {% if object.notes %}
             <h3>Notes:</h3>
                 <br>{{ object.notes }}
             {% endif %}
         </td>
+        <td>
+            {% if object.description %}
+            <h3>Description:</h3>
+                {{ object.description }}
+            {% endif %}
+        </td>
     </tr>
 </table>
 
-
+<br><br>
 {% include 'includes/paginate.html' %}
 <h3>{{ object_count }} Objects in List</h3>
 <table class="catalog_list" id='{{ table_id }}'>

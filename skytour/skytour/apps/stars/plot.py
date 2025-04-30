@@ -45,7 +45,6 @@ def get_skymap(
     # Parameters that might be in the SiteParameter apps/models
     star_mag_limit = find_site_parameter('skymap-magnitude-limit-stars', default=5.5, param_type='float')
     star_mag_limit = 4.8 if simple else star_mag_limit
-    # TODO: should this be set from the limiting magnitude at the location based on its Bortle value?
     
     # Set up SkyField
     ts = load.timescale()

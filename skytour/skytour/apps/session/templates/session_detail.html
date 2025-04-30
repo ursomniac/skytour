@@ -6,8 +6,28 @@
     table.boxed td {
         border-style: 1px solid black;
         vertical-align: top !important;
+        width: 25%;
     }
     table.boxed td h1, h3, h4 { margin: 5px 3px; }
+    table.boxed td.nav { 
+        width: 15%; 
+        text-align: center;  
+        vertical-align: middle!important;
+        background-color: #666; 
+    }
+    table.boxed td.nav button { 
+        width: 15em; 
+        height: 3em;  
+        font-weight: bold;
+    }
+    table.objects td h1, h3, h4 { margin: 5px 3px; }
+    table.objects td {
+        border-style: 1px solid black;
+        vertical-align: top !important;
+    }
+    table.objects td.normal { width: 20%!important; }
+    table.objects td.narrow { width: 15%!important; }
+    table.objects td.rest { width: auto; }
     table.internal {
         border-style: none;
     }
@@ -17,6 +37,8 @@
         padding: 2px 5px;
 
     }
+    table.internal td.normal { width: 20%!important; }
+
     h3.subhead { color: #ffc; }
     h4 { color: #cc0; }
     span.edit-button { float: right; }
@@ -27,7 +49,7 @@
 {% block content %}
 <table class="boxed">
     <tr>
-        <td width="30%"%>
+        <td>
             <h2>Observing Session: {{ object.ut_date|date:"Y-m-d" }}</h2>
             <h3 class="subhead">Location: {{ object.location.address }}</h3>
             <ul class="no_bullets">
@@ -43,27 +65,58 @@
             Bortle: {{ object.bortle_avg }}
             {% endif %}
         </td>
-        <td style='width=30%; text-align: center;'>
-            <br><br><br>
-            <a href="{% url 'session-add' %}"><button>Add Observation</button></a>
-            <br><br><br>
-            <a href="{% url 'session-conditions' %}"><button>Add Conditions</button></a>
-        </td>
-        <td style="vertical-align: top;">
+        <td rowspan="4">
+            {% if object.notes %}
             <h4>Notes:</h4>
             {{ object.notes }}
+            <br>
+            {% endif %}
+            <h4>Objects by Telescope</h4>
+            {% if tel_dict.keys|length > 1 %}
+                {% for key, objlist in  tel_dict.items %}
+                    <h5>{{ key }}</h5>
+                    <ol>
+                    {% for obj in objlist %}
+                        <li>{{ obj.object }}</li>
+                    {% endfor %}
+                    </ol>
+                {% endfor %}
+            {% endif %}
+        </td>
+        <td rowspan="4">
+            <h4>Location Info:</h4>
+            {% if sqm_plot is not None %}
+            <img src="{{ sqm_plot }}">
+            {% else %}
+            (No SQM observations.)
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="nav">
+            <button onClick="window.location.reload();">Refresh Page</button>
+        </td>
+    </tr>
+    <tr>
+        <td class='nav'>
+            <a href="{% url 'session-add' %}"><button>Add Observation</button></a>
+        </td>
+    </tr>
+    <tr>
+        <td class="nav"> 
+            <a href="{% url 'session-conditions' %}"><button>Add Conditions</button></a>
         </td>
     </tr>
 </table>
 
 <h2>&nbsp;Observations</h2>
 <h3 class="subhead">&nbsp;# Objects: {{ object.number_objects_observed }}</h3>
-<table class="boxed">
+<table class="objects">
 {% for target in object.session_observations %}
 
 {% with e=target.observation_metadata %}
 <tr class="{% cycle 'odd' 'even' %}">
-    <td width="20%">
+    <td class="normal">
     {% if target.object_type == 'Condition' %}
         <h3>Condition: {{ target.session_stage|title }}</h3>
     {% elif target.object_type == 'DSO' %}
@@ -105,7 +158,7 @@
             {% endif %}
         </table>
     </td>
-    <td width="15%">
+    <td class="narrow">
         {% if target.object_type == 'DSO' %}
         <h4>Location: in {{ target.object.constellation.abbreviation }}</h4>
 
@@ -125,7 +178,7 @@
         </table>
         {% endif %}
     </td>
-    <td width="15%">
+    <td class="narrow">
         {% if target.object_type == 'Condition' %}
         <h4>Conditions:</h4>
         <table class="internal">
@@ -149,7 +202,7 @@
         </table>
     </td>
 
-    <td width="20%">
+    <td class="normal">
         {% if target.object_type != 'Condition' %}
         <h4>Position:</h4>
         <table class="internal">
@@ -169,7 +222,7 @@
         </table>
         {% endif %}
     </td>
-    <td>
+    <td class="rest">
         <span class="edit-button">
         {% with target.object_type|lower as class %}
             {% if class == 'dso' %}

@@ -69,6 +69,7 @@ def search_dso_name(words, name, debug=False):
             print(f"{idstr}: other objects found {other_objects}")
         if other_objects.count() > 0:
             return other_objects.first()
+        
     # TODO V2.x: come up with better logic for this
     # if you send one word as a name then it can get confused...
     else:

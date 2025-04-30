@@ -82,17 +82,17 @@ class CometEditForm(forms.ModelForm):
 class AsteroidObservationEditForm(forms.ModelForm):
     class Meta:
         model = AsteroidObservation
-        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime', 'notes']
 
 class CometObservationEditForm(forms.ModelForm):
     class Meta:
         model = CometObservation
-        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime', 'notes']
 
 class PlanetObservationEditForm(forms.ModelForm):
     class Meta:
         model = PlanetObservation
-        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime']
+        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime', 'notes']
 
 class CometManagementForm(forms.ModelForm):
     class Meta:

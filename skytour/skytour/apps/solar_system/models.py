@@ -390,7 +390,6 @@ class Asteroid(ObservableObject):
             return pd.read_json(StringIO(self.mpc_json), typ='series')
         except: # Keep for now TODO: deprecate!
             return get_asteroid_object(self) # will return None if not in short-list
-        #return get_asteroid_object(self)
     
     @property
     def mpc_object_dict(self):

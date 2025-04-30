@@ -39,6 +39,27 @@
         text-align: left; background-color: #333; 
         padding: 4px; font-size: 80%;
     }
+    table.nav {
+        height: 2em; 
+        background-color: #999!important;;
+        border: 1px solid #ccc;
+        margin: 5px 0;
+        vertical-align: center;
+    }
+    table.nav td { border: none; }
+    table.nav td label { color: #000; font-weight: bold; }
+    table.nav td button { 
+        float:right; 
+        width: 10em; 
+        font-weight: bold;
+        margin-right: 1em;
+    }
+    table.nav td input.submit {
+        height: 1.5em;
+        font-weight: bold;
+        width: 10em; 
+        margin-left: 20px; 
+    }
 </style>
 <!-- main -->
 {# header section #}
@@ -47,21 +68,32 @@
 <h2>Catalog: {{ catalog }}</h2>
 # Objects: {{ object_count }}
 <br># Images: {{ image_list_count }} = {{ image_percent|floatformat:1 }}%
-<br><br><br>
-
-<form action="" method="GET">
-    <select name="catalog_slug">
-        {% for this_cat in catalog_list %}
-        <option value="{{ this_cat.slug }}"{% if this_cat.slug == catalog_slug %} selected{% endif %}>{{ this_cat.name }}</option>
-        {% endfor %}
-    </select>
-    <select name="scope">
-        <option value="all">Show all Available Objects</option>
-        <option value="seen" selected>Show only Imaged Objects</option>
-    </select>
-    <input type="submit" value="Filter"/>
-</form>
+<a name="top"></a>
 <br>
+<br>
+<table class="nav"> 
+    <tr>
+        <td>
+            <form action="" method="GET">
+                <label for="catalog_slug">Catalog: </label>
+                <select name="catalog_slug">
+                    {% for this_cat in catalog_list %}
+                    <option value="{{ this_cat.slug }}"{% if this_cat.slug == catalog_slug %} selected{% endif %}>{{ this_cat.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="scope">
+                    <option value="all">Show all Available Objects</option>
+                    <option value="seen" selected>Show only Imaged Objects</option>
+                </select>
+                <input class="submit" type="submit" value="Filter"/>
+            </form>
+        </td>
+        <td class="jump">
+            <a href="#bottom"><button class="nav">Jump to Bottom</button></a>
+        </td>
+    </tr>
+</table>
 
 <table class="library_image_list" id='{{ table_id }}'>
     {% for object in object_list %}
@@ -166,6 +198,14 @@
     </td>  
     {% if forloop.counter|divisibleby:4 %}</tr>{% endif %}
     {% endfor %}
+    </tr>
+</table>
+<a name="bottom"></a>
+<table class="nav">
+    <tr>
+        <td>
+            <a href="#top"><button class="nav">Back to Top</button></a></div>
+        </td>
     </tr>
 </table>
 {% endblock content %}

@@ -22,6 +22,7 @@ from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
 from ..dso.models import DSOObservation
 from ..observe.models import ObservingLocation
+from ..observe.plot import plot_sqm_history
 from ..plotting.scatter import create_histogram
 from ..solar_system.helpers import ( 
     get_planet_positions, 
@@ -300,7 +301,7 @@ class ObservingSessionCreateView(CreateView):
     template_name = 'session_create.html'
     fields = ['ut_date', 'location', 'notes']
 
-class ObservingSessionDetailView(DetailView):
+class ObservingSessionDetailView(CookieMixin, DetailView):
     model = ObservingSession
     template_name = 'session_detail.html'
 
@@ -312,6 +313,9 @@ class ObservingSessionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)
+        location = context['location']
+        context['sqm_plot'] = plot_sqm_history(location, reversed=True)
+        context['tel_dict'] = self.get_object().session_by_scope_dict
         return context
 
 class ShowCookiesView(TemplateView):

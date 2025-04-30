@@ -69,9 +69,6 @@
                     {% endif %}
                 </td>
                 <td  class="description operations" rowspan=2>
-                    {% comment %}
-                    <a href="{% url 'asteroid-edit' object.pk %}"><button>Edit Metadata</button></a>
-                    {% endcomment %}
                     <button onclick="return popupEditAsteroid({{ object.pk }});">
                         Edit Metadata
                     </button>
