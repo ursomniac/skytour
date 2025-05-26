@@ -11,6 +11,7 @@ CometEls2.txt
 Atlases/
 
 # Things we don't want in the repo
+*/.DS_Store
 media/
 BACKUP_*
 IGNORE

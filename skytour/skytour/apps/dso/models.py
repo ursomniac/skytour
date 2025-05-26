@@ -1194,6 +1194,10 @@ class DSOList(models.Model):
     def dso_count(self):
         return self.dso.count()
     
+    @property
+    def table_key(self):
+        return f"dsolist-{self.pk}"
+    
     def __str__(self):
         return self.name
 

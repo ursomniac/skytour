@@ -25,7 +25,7 @@ def get_neighbors(
         2. 2. * sin(FOV/2*r) / FOV = pi
     """
     object_class = object.__class__
-    other_objects = object_class.objects.exclude(pk=object.pk).order_by('catalog__slug', 'id_in_catalog')
+    other_objects = object_class.objects. exclude(pk=object.pk).order_by('catalog__slug', 'id_in_catalog')
     radius = chord_length(fov, degrees=True) * fudge
     coords = []
     for other in other_objects:

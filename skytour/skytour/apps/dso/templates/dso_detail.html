@@ -560,7 +560,13 @@
 		</table>
 		{% endif %} 
 		<a name="nearby_dsos"></a>
-		<h3>Nearby DSOs ({{ object.nearby_dsos|length }})</h3>
+		<h3>
+			Nearby DSOs ({{ neighbor_list|length }})
+			{% if neighbor_list|length > 0 %}
+			&nbsp;&nbsp;&nbsp;
+			<button onClick="showNeighborTable();">Show/Hide List</button>
+			{% endif %}
+		</h3>
 			<small>
 			{% if object.nearby_dsos|length > 0 %}<table class="lite">{% endif %}
 			{% for x in object.nearby_dsos %}
@@ -587,6 +593,12 @@
 			{% endfor %}
 			{% if object.nearby_dsos|length > 0 %}</table>{% endif %}
 		</small>
+		<div id="nearby_table" style="display: none;">
+			<br><br>
+			{% with neighbor_list as dso_list %}
+			{% include 'includes/dso_table.html' %}
+			{% endwith %}
+		</div>
 	</td>
 </tr>
 </table>
@@ -653,6 +665,16 @@
 {% endblock content %}
 
 {% block extra-js %}
+<script>
+	function showNeighborTable() {
+		var div = document.getElementById("nearby_table");
+		if (div.style.display === "none") {
+			div.style.display = "block";
+		} else {
+			div.style.display = "none"
+		}
+	}
+</script>
 {% include 'includes/realtime_script.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 <script src="/media/js/bootstrap.js">

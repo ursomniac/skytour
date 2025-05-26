@@ -151,6 +151,7 @@ class ObjectImage(models.Model):
         _('Notes'),
         blank = True, null = True
     )
+    # TODO: Add caption for image
     order_in_list = models.PositiveIntegerField (
         _('Order'),
         default = 1

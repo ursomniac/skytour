@@ -37,6 +37,7 @@
     }
     table.top-main { border: none;  margin-bottom: 20px; }
     table.top-main td { border: none; }
+    td.list-name { max-width: 400px!important; }
     button.nav { margin: 5px 5px; height: 2em; width: 15em; }
 </style>
 
@@ -179,7 +180,7 @@
         {% if show_thumbs %}
         <td>{% include 'includes/dso_thumbnail.html' %}</td>
         {% endif %}
-        <td>
+        <td class="list-name">
             <a href="{% url 'dso-detail' dso.id %}" target="_blank">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
             {% if dso.dsoinfield_set.count > 0 %}
@@ -189,7 +190,6 @@
             <small>
             {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
             </small>
-
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_blank">{{ dso.constellation.slug }}</a></td>
@@ -238,9 +238,8 @@
                 {{ dso.last_observed|date:'Y-m-d' }}
                 </span>
             {% endif %}
-            {% if dso.is_on_active_observing_list %}
-            🔭
-            {% endif %}
+            {% if dso.is_on_active_observing_list %}🔭{% endif %}
+            {% if dso.reimage %}↪️{% endif %}
             </small>
         </td>
         <td class="add-del">

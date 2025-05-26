@@ -4,14 +4,16 @@
     span.infield { float: right; font-size: 80%; }
     span.nickname { font-style: italic; color: #ff9; }
     table.dso_table tbody th, 
-    table.dso_table tbody td { padding: 4px 10px 2px 10px; }
+    table.dso_table tbody td { 
+        padding: 4px 10px 2px 10px; 
+        font-size: 90%;
+    }
     table.dso_table th { 
         background-color: #996; 
         color: #000; 
         border: 1px solid #000; 
     }
 </style>
-<small>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
@@ -37,7 +39,7 @@
 {% for dso in dso_list %}
     <tr>
         <td>
-            <a href="{% url 'dso-detail' dso.id %}" target="_new">{{ dso.label_on_chart }}</a>
+            <a href="{% url 'dso-detail' dso.pk %}" target="_new">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
             {% if dso.dsoinfield_set.count > 0 %}
             <span class="infield">+{{ dso.dsoinfield_set.count }} in FOV</span>
@@ -133,7 +135,6 @@
 {% endfor %}
 </tbody>
 </table>
-</small>
 {% include 'includes/sortable_table.html' %}
 {% if load_adjust_script != False %}
 {% include 'includes/dsolistadjust_script.html' %}

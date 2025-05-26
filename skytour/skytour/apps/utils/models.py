@@ -184,6 +184,31 @@ class ObjectType(models.Model):
     class Meta:
         ordering = ['name']
 
+class FormerConstellation(models.Model):
+    """
+    Former constellations
+    """
+    name = models.CharField (
+        _('Name'),
+        max_length = 200
+    )
+    slug = models.SlugField (
+        _('Slug'),
+        max_length = 3
+    )
+    source = models.TextField (
+        _('Source'),
+        null = True, blank = True
+    )
+    year = models.PositiveIntegerField (
+        _('Year'),
+        null = True, blank = True
+    )
+
+    @property
+    def abbreviation(self):
+        return self.slug
+
 class Constellation(models.Model):
     """
     CV of the constellations.

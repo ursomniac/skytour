@@ -130,6 +130,7 @@ class DSODetailView(CookieMixin, DetailView):
         times = [(time.perf_counter(), 'Start')]
 
         object = self.get_object()
+        neighbor_list = [x for x in object.nearby_dsos if x is not None]
 
         observing_mode = context['observing_mode']
         priority_label = get_priority_label_of_observing_mode(object, observing_mode)
@@ -156,7 +157,9 @@ class DSODetailView(CookieMixin, DetailView):
         times.append((time.perf_counter(), 'Get DSO Lists'))
         context['mode_priority_label'] = priority_label
         context['mode_priority_span'] = priority_span
+        context['neighbor_list'] = neighbor_list
         context['times'] = compile_times(times)
+        
         return context
     
 class DSOListActiveView(TemplateView):

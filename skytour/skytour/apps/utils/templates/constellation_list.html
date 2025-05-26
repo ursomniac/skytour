@@ -10,6 +10,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Genitive</th>
             <th>Abbr.</th>
             <th>Atlas Plate List</th>
             <th>DSO Count</th>
@@ -22,6 +23,7 @@
     {% for obj in object_list %}
         <tr class="even">
             <td><a href="{% url 'constellation-detail' obj.slug %}">{{ obj.name }}</a></td>
+            <td>{{ obj.genitive }}</td>
             <td style="text-align: center">{{ obj.slug }}</td>
             <td><small>{{ obj.atlas_plate_list}}</small></td>
             <td class="number">

@@ -313,8 +313,9 @@ class ObservingSessionDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservingSessionDetailView, self).get_context_data(**kwargs)
-        location = context['location']
-        context['sqm_plot'] = plot_sqm_history(location, reversed=True)
+        object = self.get_object()
+        #location = context['location']
+        context['sqm_plot'] = plot_sqm_history(object.location, reversed=True)
         context['tel_dict'] = self.get_object().session_by_scope_dict
         return context
 
