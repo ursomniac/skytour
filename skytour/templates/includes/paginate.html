@@ -22,11 +22,12 @@
             <tr>
                 <td class="sides">
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}"><button>Previous Page</button></a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if qs %}&{{ qs }}{% endif %}"><button>Previous Page</button></a>
                 {% endif %}
                 </td>
                 <td class="center">
                     <form action="" method="GET">
+                    {% if hidden %}{{ hidden|safe }}{% endif %}
                     <span class="page-current">
                         <b>Page 
                             <input name="page" value="{{ page_obj.number }}" size="2">
@@ -40,7 +41,7 @@
                 </td>
                 <td class="sides">
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}"><button>Next Page</button></a>
+                    <a href="?page={{ page_obj.next_page_number }}{% if qs %}&{{ qs }}{% endif %}"><button>Next Page</button></a>
                 {% endif %}
                 </td>
                 {% if total_count %}

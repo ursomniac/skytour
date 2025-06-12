@@ -20,7 +20,7 @@
      }
      td.edit { width: 6em; text-align: center; }
 </style>
-<h3>Observations: {{ instance.observations.count }} </h3>
+<h3>Observations: {{ instance.observations.count }}</h3>
 {% if instance.observations.all|length > 0 %}
     {% if instance.object_class != 'dso' %}
     <table class="observation_table">
@@ -35,9 +35,14 @@
         {% for obs in instance.observations.all reversed %}
         {% with obs.observation_metadata as m %}
         <tr>
-            <td class="vcenter">{{ obs.ut_datetime|date:"Y-m-d H:i"}}</td>
+            <td class="vcenter">
+                <a href="{% url 'session-detail' obs.session.pk %}" target='_blank'>
+                {{ obs.ut_datetime|date:"Y-m-d H:i"}} Z
+                </a>
+            </td>
             <td>
-                {{ obs.location.placename }}<br>
+                {{ obs.location.placename }}
+                <br>
                 Telescope: {{ obs.telescope.name }}
                 <br>
                 {% if obs.telescope.id != 2 %}
@@ -83,16 +88,22 @@
                 <th>Location</th>
                 <th>Tel.</th>
                 <th>Alt.</th>
+                <th>Az.</th>
                 <th>Air</th>
                 <th>Notes</th>
                 <th>Admin</th>
             </tr>
         {% for obs in object.observations.all %}
         <tr>
-            <td width="12%">{{ obs.ut_datetime|date:"Y-m-d H:i" }}</td>
+            <td width="12%">
+                <a href="{% url 'session-detail' obs.session.pk %}" target="_blank">
+                {{ obs.ut_datetime|date:"Y-m-d H:i" }}
+                </a>
+            </td>
             <td width="10%">{{ obs.location.city }}, {{ obs.location.state.abbreviation}}</td>
-            <td width="10%">{{ obs.telescope.name }}</td>
+            <td width="12%">{{ obs.telescope.name }}</td>
             <td width="5en;">{{ obs.observation_metadata.altitude|floatformat:1 }}°</td>
+            <td width="6en;">{{ obs.observation_metadata.azimuth|floatformat:1 }}°</td>
             <td width="5en;">{{ obs.observation_metadata.sec_z|floatformat:3 }}</td>
             <td>{{ obs.notes }}</td>
             <td class="edit"><a href="{% url 'dso-observation-edit' obs.pk }"><button>Edit</button></a></td>

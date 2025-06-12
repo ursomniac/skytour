@@ -40,7 +40,80 @@ PHASE_ABBR = {
     'WANING CRESCENT': 'WnC'
 }
 
-def create_calendar_grid(start_date, location_pk = None, days_out=30, time_zone=None):
+def create_simple_calendar_grid (
+        start_date,
+        days_out = 10,
+        offset = 0,
+        format = None,
+        header = False
+    ):
+    if type(start_date) == datetime.datetime:
+        t0 = start_date
+    elif type(start_date) == tuple:
+        (year, month, day) = start_date
+        t0 = datetime.datetime(year, month, day, 0, 0)
+    else:
+        return None
+    week_number = 0
+    cells = []
+    for i in range(days_out + 1):
+        tt = t0 + datetime.timedelta(days=i)
+        wd = (tt.isoweekday()-offset) % 7 # Sun = 0, Sat = 6
+        cell_dict = dict(
+            date = tt.date(),
+            day_of_week = wd,
+            week = week_number,
+        )
+        if wd == 6:
+            week_number += 1
+        cells.append(cell_dict)
+    if wd == 6:
+        week_number -= 1
+    # Turn the list into a grid
+    grid = []
+    # Create the grid with all cells = None
+    for i in range(week_number+1):
+        grid.append([None]*7)
+    # Now fill them in
+    for cell in cells:
+        week = cell['week']
+        day = cell['day_of_week']
+        grid[week][day] = cell
+
+    if format == 'html':
+        out = '<table class="cgrid">\n'
+        if header:
+            out += '<tr>'
+            for x in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']:
+                out += f'<th>{x}</th>'
+            out += '</tr>'
+        for row in grid:
+            out += '<tr>\n'
+            for item in row:
+                out += '<td>'
+                if item:
+                    out += f"{item['date'].day:2d}"
+                out += '</td>\n'
+            out += '</tr>\n'
+        out += '</table>\n'
+        return out
+    
+    if format == 'grid':
+        out = ''
+        for row in grid:
+            for item in row:
+                out += '    ' if not item else f" {item['date'].day:2d} "
+            out += '\n'
+        return out
+
+    return grid
+
+def create_calendar_grid(
+        start_date, 
+        location_pk = None, 
+        days_out = 30, 
+        time_zone = None,
+    ):
     """
     Create a list of weeks, which itself is a list of 7 days.
     Populate each [week, day] with information.

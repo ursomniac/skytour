@@ -87,9 +87,17 @@ def lookup_dso(name):
     First, test against the shown_name field (canonical name).
     If that fails, test again the list of aliases.
     """
+    STUPID = {
+        '(greek) ρ': 213, '(greek) ω': 1337,   # FIX THIS, also Pi Pup, Chi Per
+    }
     d = DSO.objects.filter(shown_name=name).first()
     if d is None:
         d = DSO.objects.filter(aliases__shown_name=name).first()
+    if d is None:
+        if name == '(greek) ρ':
+            d = DSO.objects.get(pk=213)
+    if d is None:
+        print(f"cannot find {name}")
     return d
 
 def get_map_parameters(dso_list, mag=2.4, debug=False):

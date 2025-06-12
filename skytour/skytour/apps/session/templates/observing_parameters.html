@@ -27,13 +27,29 @@ td.field_column { text-align: right; width: 20%; }
 .field-label { font-weight: bold; color: #fff; }
 .helptext { font-style: italic; font-size: 85%; color: #ccc; }
 .warning { font-style: italic; font-size: 110%; color: #ff9; }
+table.cgrid { width: 20em; table-layout: fixed; }
+table.cgrid td { 
+  width: 1px; 
+  white-space: nowrap;  
+  text-align: right;
+  padding: 2px 4px 2px 0px;
+}
+table.cgrid th { background-color: #999; color: #000; }
 </style>
-
-<h1>Set Session Parameters</h1>
-<h2>
-  <span class="h2-label">Current UT: </span>{{ now|date:"D Y-M-d H:i" }}         
-  <button class="now-button"><a href="#" onClick="autoFill(); return true;">Set Date/Time to Now</a></button>
-</h2>
+<table>
+  <tr>
+    <td>
+      <h1>Set Session Parameters</h1>
+      <h2>
+        <span class="h2-label">Current UT: </span>{{ now|date:"D Y-M-d H:i" }}         
+        <button class="now-button"><a href="#" onClick="autoFill(); return true;">Set Date/Time to Now</a></button>
+      </h2>
+    </td>
+    <td>
+      {{ grid|safe }}
+    </td>
+  </tr>
+</table>
 
 <div class="cookie_form">
   {% if form %}

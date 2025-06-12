@@ -116,17 +116,31 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         alias_dsos = DSO.objects.filter(aliases__catalog=object)
         field_dsos = DSOInField.objects.filter(catalog=object) if object.slug != 'hickson' else []
         
+        # deal with pagination and filtering
+        params = self.request.GET.copy()
+        params.pop('page', None)
+        querystring = params.urlencode()
+        hidden = ''
+        p_obs = params.get('observed', None)
+        if p_obs:
+            hidden += f'<input type="hidden" name="observed" value="{p_obs}"/>'
+        p_img = params.get('imaged', None)
+        if p_img:
+            hidden += f'<input type="hidden" name="imaged" value="{p_img}"/>'
+        p_con = params.get('constellation', None)
+        if p_con:
+            hidden += f'<input type="hidden" name="constellation" value="{p_con}"/>'
+
         if object.slug in ['messier', 'caldwell', 'abell', 'hickson']: # Override pagination
             self.paginate_by = None
 
         all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos)
-        print("ALL: ", len(all_objects_sort))
         dso_list = filter_catalog(self.request, all_objects_sort, cookie)
-        print("FILTERED: ", len(dso_list))
         context = super(CatalogDetailView, self).get_context_data(
             object_list=dso_list,
             **kwargs
         )
+        context['hidden'] = hidden
         context['filtered_object_list'] = dso_list
         context['catalog_list'] = cat_list
         context['table_id'] = f'cat_dso_{object.slug}'
@@ -137,6 +151,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         context['observed'] = self.request.GET.get('observed', None)
         context['imaged'] = self.request.GET.get('imaged', None)
         context['available'] = self.request.GET.get('available', None)
+        context['qs'] = querystring
         return context
 
 class ObjectTypeListView(ListView):

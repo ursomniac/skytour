@@ -17,6 +17,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from ..astro.almanac import get_dark_time
+from ..astro.calendar import create_simple_calendar_grid
 from ..astro.time import get_julian_date, utc_round_up_minutes
 from ..astro.utils import get_declination_range
 from ..dso.helpers import lookup_dso
@@ -194,6 +195,9 @@ class SetSessionCookieView(FormView):
     def get_context_data(self, **kwargs):
         context = super(SetSessionCookieView, self).get_context_data(**kwargs)
         context['now'] = datetime.datetime.now(datetime.timezone.utc)
+        context['grid'] = create_simple_calendar_grid(
+            context['now'], days_out=15, 
+            format='html', header=True)
         return context
 
 @method_decorator(cache_page(0), name='dispatch')
