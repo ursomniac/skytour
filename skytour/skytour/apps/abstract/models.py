@@ -151,7 +151,9 @@ class ObjectImage(models.Model):
         _('Notes'),
         blank = True, null = True
     )
-    # TODO: Add caption for image
+    caption = models.TextField (
+        _('Caption'), null=True, blank=True
+    )
     order_in_list = models.PositiveIntegerField (
         _('Order'),
         default = 1
@@ -299,8 +301,6 @@ class ObservableObject(models.Model):
     """
     Properties for observable objects:
         1. Last Observed
-        2. Reimage flag - this is an artifact # TODO V2.x: remove 
-        3. Need to Image flag - this is an artifact  # TODO V2.x: remove 
     """
     @property
     def last_observed(self):
@@ -309,6 +309,7 @@ class ObservableObject(models.Model):
             return None
         return obs.ut_datetime
     
+    # TODO: Deprecate eventually
     @property
     def reimage_flag(self):
         if self.number_of_observations < 1:
@@ -321,6 +322,7 @@ class ObservableObject(models.Model):
             return True
         return False
     
+    # TODO: Deprecate eventually
     @property
     def need_to_image_flag(self):
         if self.number_of_observations < 1:
@@ -335,4 +337,16 @@ class ObservableObject(models.Model):
         return x
 
     class Meta:
-        abstract=True
+        abstract = True
+
+
+class WikipediaPage (models.Model):
+    override_lookup = models.CharField(
+        _('Override Lookup Text'),
+        max_length = 100,
+        null = True, blank = True,
+        help_text = 'Use to handle things like disambiguation'
+    )
+    
+    class Meta:
+        abstract = True

@@ -280,7 +280,7 @@ class LibraryCatalogView(TemplateView):
 
         # This only works when the catalog request is the primary ID for the DSO
         # So, only Messier and Caldwell.
-        raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug).exclude(priority='None')
+        raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug)#.exclude(priority='None')
         raw_dso_list = raw_dso_list.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
         for x in raw_dso_list:
             x.cat_id = f"{catalog.abbreviation} {x.cid}"

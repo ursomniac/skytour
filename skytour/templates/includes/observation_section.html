@@ -106,7 +106,11 @@
             <td width="6en;">{{ obs.observation_metadata.azimuth|floatformat:1 }}°</td>
             <td width="5en;">{{ obs.observation_metadata.sec_z|floatformat:3 }}</td>
             <td>{{ obs.notes }}</td>
-            <td class="edit"><a href="{% url 'dso-observation-edit' obs.pk }"><button>Edit</button></a></td>
+            <td class="edit">
+                <a href="{% url 'dso-observe-edit' obs.pk %}">
+                    <button>Edit</button>
+                </a>
+            </td>
         </tr>
         {% endfor %}
         </table>

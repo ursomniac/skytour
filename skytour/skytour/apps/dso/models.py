@@ -1073,6 +1073,7 @@ class DSOObservation(ObservingLog):
         on_delete = models.CASCADE,
         related_name = 'observations'
     )
+    # TODO Somehow note if an object is in the field of another DSO field
 
     # these probably should be class parameters.
     object_type = 'DSO'

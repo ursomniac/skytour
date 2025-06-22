@@ -20,6 +20,7 @@ django-taggit = "*"
 django-ajax-selects = "*"
 jsonfield = "*"
 requests = "*"
+wikipedia-api = "*"
 
 [dev-packages]
 

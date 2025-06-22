@@ -98,7 +98,7 @@ def create_atlas_plot(
     ):
     """
     Create an AtlasPlate image.
-    TODO V2.x: Change annotation font weight to be BOLD for high/highest priority!
+    IDEA V2.x: Change annotation font weight to be BOLD for high/highest priority!
     """
     fov = fov if fov else 20.
     object = model.objects.get(plate_id=plate_id)

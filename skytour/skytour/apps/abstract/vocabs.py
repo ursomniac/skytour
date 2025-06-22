@@ -16,6 +16,7 @@ IMAGE_PROCESSING_STATUS_OPTIONS = (
 
 IMAGE_ORIENTATION_CHOICES = (
     ('square', 'Square'),
+    ('mosaic', 'Mosaic'),
     ('landscape', 'Landscape'),
     ('portrait', 'Portait'),
     ('other', 'Other')

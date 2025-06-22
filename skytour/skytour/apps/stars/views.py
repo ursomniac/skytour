@@ -58,7 +58,6 @@ class SkyView(CookieMixin, TemplateView):
         context['map_time_str'] = context['local_time'].strftime('%a %b %-d, %Y %-I:%M %p %z')
         context['unmask'] = unmask
         context['simple'] = simple
-        #context['custom'] = custom
         context['hours'] = hours
         context['utdt_now'] = utdt_now
         context['min_dso_alt'] = min_dso_alt
