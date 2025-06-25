@@ -70,7 +70,7 @@ def create_pdf_view(p, utdt, object, object_type, session, cookies):
     based on the cookie settings.
     """
     location = cookies['location']
-    time_zone = pytz.timezone(cookies['time_zone']) if cookies['time_zone'] is not None else None
+    time_zone = pytz.timezone(location.time_zone.pytz_name)
 
     app = session['apparent']
     obs = session['observe']

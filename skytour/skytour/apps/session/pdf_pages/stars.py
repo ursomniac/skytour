@@ -22,7 +22,7 @@ def do_skymap(p, context):
         sun = cookie_dict['sun'],
         reversed = False,
         slew_limit = slew_limit,
-        local_time = context['local_time']
+        local_time = context['local_time_start']
     ) 
     p.drawInlineImage(skymap, 28, 150, 7.5*72, 7.5*72)
     p.setFont('Helvetica-Bold', 14)
@@ -67,8 +67,9 @@ def do_zenith(p, context):
     p.drawCentredString(PAGE_WIDTH/2, 700, 'Zenith Chart')
     p.setFont('Helvetica', 12)
     utdt_mid = context['utdt_start'] 
-    local_mid = context['local_time'] 
-    p.drawString(50, 670, f"{local_mid.strftime('%b %-d, %Y %-I:%M %p %z')}")
+    local_mid = context['local_time_start'] 
+    #p.drawString(50, 670, f"{local_mid.strftime('%b %-d, %Y %-I:%M %p %z')}")
+    p.drawString(50, 670, f"{local_mid}")
     zenith_chart, _ = get_zenith_map(
         utdt_mid,
         context['location'], 
