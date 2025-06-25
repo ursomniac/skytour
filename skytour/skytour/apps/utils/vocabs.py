@@ -9,3 +9,10 @@ CATALOG_PRECEDENCE = [
     (8, '8 = Incidental'),      # Flamsteed, Bayer
     (9, '9 = Custom')           # Ast, Ast24
 ]
+
+CATALOG_LOOKUP_CHOICES = (
+    ('abbreviation', 'Abbreviation'),
+    ('name', 'Catalog Name'),
+    ('constellation', 'By Constellation'),
+    ('custom', 'Custom')
+)

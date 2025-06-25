@@ -341,12 +341,75 @@ class ObservableObject(models.Model):
 
 
 class WikipediaPage (models.Model):
+    """
+    Can be used with DSO, DSOInField,
+    Planet, Comet, Asteroid, Constellation,
+    MeteorShower
+
+    Will use the a generated lookup name if
+        override_lookup is not set
+    Sets ambiguous/exists on lookup:
+        exists = False if no page found
+        ambiguous = True if disambiguation page found
+    Will set summary, title, URL if found on lookup;
+    """
     override_lookup = models.CharField(
         _('Override Lookup Text'),
         max_length = 100,
         null = True, blank = True,
-        help_text = 'Use to handle things like disambiguation'
+        help_text = 'Use to handle disambiguation'
     )
+    title = models.CharField(
+        _('Wikipedia Title'),
+        max_length = 100,
+        null = True, blank = True
+    )
+    exists = models.PositiveIntegerField(
+        _('Exists'),
+        choices = YES_NO,
+        null = True, blank = True,
+        help_text = 'null if not looked up; false if no page exists'
+    )
+    ambiguous = models.PositiveIntegerField (
+        _('Is Ambiguous'),
+        choices = YES_NO,
+        null = True, blank = True,
+        help_text = 'null if not looked up; true if lookup points to a disambiguation page - need to rerun w/ override text!'
+    )
+    summary = models.TextField (
+        _('Summary'),
+        null = True, blank = True
+    )
+    summary_length = models.PositiveIntegerField (
+        _('Summary Length'),
+        null = True, blank = True
+    )
+    canonical_url = models.URLField (
+        _('Canonical URL'),
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return f"{self.object}: {self.object.has_wiki}"
     
+    class Meta:
+        abstract = True
+
+
+class WikipediaPageObject(models.Model):
+
+    @property
+    def has_wiki(self):
+        if not hasattr(self, 'wiki'):
+            return 'NOINSTANCE'
+        wiki = self.wiki
+        if wiki.exists == NO:
+            return 'NOPAGEFOUND'
+        if wiki.ambiguous == YES:
+            return 'AMBIGUOUSPAGE'
+        if wiki.summary_length == 0:
+            return 'EMPTYSUMMARY'
+        return 'WIKI'
+
     class Meta:
         abstract = True

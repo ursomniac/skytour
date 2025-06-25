@@ -7,7 +7,7 @@ class ConstellationNeighborInline(admin.TabularInline):
     extra = 0
 
 class CatalogAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'name', 'abbreviation', 'number_objects', 'precedence', 'expected_complete']
+    list_display = ['pk', 'name', 'abbreviation', 'lookup_mode', 'number_objects', 'precedence', 'expected_complete']
 
 class StarCatalogAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'abbreviation', 'precedence']
@@ -26,7 +26,6 @@ class ConstellationAdmin(admin.ModelAdmin):
                 ('name', 'abbreviation', 'genitive'),
                 ('center_ra', 'center_dec', 'area'),
                 ('map', 'other_map', 'historical_image'),
-                'background',
                 'description'
             ]
         }),

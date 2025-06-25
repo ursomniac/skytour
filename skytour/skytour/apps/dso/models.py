@@ -16,6 +16,7 @@ from ..abstract.models import (
     ObservableObject,
     ObjectImage
 )
+from ..abstract.models import WikipediaPage, WikipediaPageObject
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO
 from ..astro.angdist import get_neighbors
@@ -282,11 +283,22 @@ class DSOAbstract(Coordinates):
             for item in second:
                 out.append(f"{item[0]}: {item[1]}")
             return out
+        
+    @property
+    def default_wikipedia_name(self):
+        mode = self.catalog.lookup_mode
+        if mode == 'abbreviation':
+            return f"{self.catalog.abbreviation} {self.id_in_catalog}"
+        elif mode == 'name':
+            return f"{self.catalog.name} {self.id_in_catalog}"
+        elif mode == 'constellation':
+            return self.shown_name
+        return self.shown_name
     
     class Meta:
         abstract = True
 
-class DSO(DSOAbstract, ObservableObject):
+class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
     """
     Metadata, images, etc. for each DSO
     """
@@ -872,7 +884,15 @@ class DSO(DSOAbstract, ObservableObject):
             return 'FOO'
         return self.shown_name
     
-class DSOInField(DSOAbstract, models.Model):
+class DSOWiki(WikipediaPage):
+    object = models.OneToOneField(
+        DSO, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
+class DSOInField(DSOAbstract, WikipediaPageObject, models.Model):
     """
     This model exists because there are too many cases where DSOs are near other DSOs,
     OR that adjacent DSOs have some relationship to each other.  To avoid crowding,
@@ -954,6 +974,16 @@ class DSOInField(DSOAbstract, models.Model):
 
     def __str__(self):
         return f"{self.shown_name} in the field of {self.parent_dso.shown_name}"
+
+
+class DSOInFieldWiki(WikipediaPage):
+    object = models.OneToOneField(
+        DSOInField, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
 
 class DSOAbstractAlias(models.Model):
     """

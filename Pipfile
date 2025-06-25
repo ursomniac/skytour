@@ -21,6 +21,7 @@ django-ajax-selects = "*"
 jsonfield = "*"
 requests = "*"
 wikipedia-api = "*"
+regex = "*"
 
 [dev-packages]
 

@@ -48,3 +48,8 @@ def load_asteroids():
         asteroid.name = tr(line, 176, 12, 'str')
 
         asteroid.save()
+
+def update_planet_wiki(planet=None):
+    if planet is None:
+        return None
+    

@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from colorfield.fields import ColorField
+from ..abstract.models import WikipediaPage, WikipediaPageObject
 from ..abstract.vocabs import YES_NO, NO
 from ..plotting.vocabs import MAP_SYMBOL_TYPES
-from .vocabs import CATALOG_PRECEDENCE
+from .vocabs import CATALOG_PRECEDENCE, CATALOG_LOOKUP_CHOICES
 
 class AbstractCatalog(models.Model):
     name = models.CharField (
@@ -21,6 +22,7 @@ class AbstractCatalog(models.Model):
         _('Use Abbr in List'),
         default = True
     )
+
     expected_complete = models.PositiveIntegerField ( 
         # Are all the entries in the Catalog expected to be in the DSO/DSOInField models?
         # e.g., Messier and Caldwell = Yes;  NGC and IC = No
@@ -64,6 +66,13 @@ class Catalog(AbstractCatalog):
     """
     One Catalog is Proper Name - it has an empty abbreviation.
     """
+    lookup_mode = models.CharField (
+        _('Lookup Mode'),
+        max_length = 40,
+        choices = CATALOG_LOOKUP_CHOICES,
+        default = 'abbreviation',
+        help_text = 'for lookups like Wikipedia'
+    )
 
     @property
     def dso_count(self):
@@ -205,11 +214,12 @@ class FormerConstellation(models.Model):
         null = True, blank = True
     )
 
+
     @property
     def abbreviation(self):
         return self.slug
 
-class Constellation(models.Model):
+class Constellation(WikipediaPageObject, models.Model):
     """
     CV of the constellations.
     """
@@ -289,7 +299,10 @@ class Constellation(models.Model):
     @property
     def count_dsos_with_library_images(self):
         return self.dsos_with_library_images.count()
-
+    
+    @property
+    def default_wikipedia_name(self):
+        return f"{self.name}_(constellation)"
 
     def get_absolute_url(self):
         return '/constellation/{}'.format(self.slug)
@@ -303,6 +316,16 @@ class Constellation(models.Model):
     def save(self, *args, **kwargs):
         self.slug = self.abbreviation
         super(Constellation, self).save(*args, **kwargs)
+
+
+class ConstellationWiki(WikipediaPage):
+    object = models.OneToOneField(
+        Constellation, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
 
 class ConstellationVertex(models.Model):
     """

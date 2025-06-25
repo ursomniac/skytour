@@ -11,15 +11,16 @@ from django.utils.translation import gettext as _
 from djangoyearlessdate.models import YearlessDateField
 from jsonfield import JSONField
 from skyfield.api import Star
-from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage
+from ..abstract.models import ObservingLog, ObservableObject, LibraryAbstractImage, WikipediaPage, WikipediaPageObject
 from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO
+from ..utils.text import replace_greek_letters
 from .asteroids import get_asteroid_object, lookup_asteroid_object, create_asteroid_dict
 from .comets import get_comet_object, get_comet_period
 from .planets import get_mean_orbital_elements
 from .vocabs import STATUS_CHOICES
 
-class Planet(ObservableObject):
+class Planet(ObservableObject, WikipediaPageObject):
     name = models.CharField (
         _('Name'),
         max_length = 20,
@@ -104,6 +105,10 @@ class Planet(ObservableObject):
     def bsp_file(self):
         return f"generated_data/{self.load}"
     
+    @property
+    def default_wikipedia_name(self):
+        return f"{self.name}_(planet)"
+    
     def get_absolute_url(self):
         return '/planet/{}'.format(self.slug)
 
@@ -182,6 +187,14 @@ class PlanetObservation(ObservingLog):
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
 
+class PlanetWiki(WikipediaPage):
+    object = models.OneToOneField(
+        Planet, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
 class MoonObservation(ObservingLog):
     object_type = 'Moon'
 
@@ -202,7 +215,7 @@ SHOWER_IMPORTANCE = (
     ('Minor', 'Minor'),
     ('Sporadic', 'Sporadic')
 )
-class MeteorShower(models.Model):
+class MeteorShower(WikipediaPageObject, models.Model):
 
     name = models.CharField(
         _('Name'),
@@ -268,7 +281,21 @@ class MeteorShower(models.Model):
         """
         return Star(ra_hours=self.radiant_ra, dec_degrees=self.radiant_dec)
 
-class Asteroid(ObservableObject):
+    @property
+    def default_wikipedia_name(self):
+        name = replace_greek_letters(self.name)
+        return name
+    
+class MeteorShowerWiki(WikipediaPage):
+    object = models.OneToOneField(
+        MeteorShower, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
+
+class Asteroid(ObservableObject, WikipediaPageObject):
     """
     Orbital elements are in the brightest_asteroids.txt file.
     Skyfield loads them and uses them from there.
@@ -395,6 +422,12 @@ class Asteroid(ObservableObject):
     def mpc_object_dict(self):
         return self.mpc_object.to_dict()
     
+    @property
+    def default_wikipedia_name(self):
+        if self.is_dwarf_planet:
+            return f"{self.name}_(dwarf planet)"
+        return f"{self.number} {self.name}"
+    
     def get_absolute_url(self):
         return '/asteroid/{}'.format(self.slug)
     
@@ -471,7 +504,16 @@ class AsteroidObservation(ObservingLog):
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
 
-class Comet(ObservableObject):
+class AsteroidWiki(WikipediaPage):
+    object = models.OneToOneField(
+        Asteroid, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
+
+class Comet(ObservableObject, WikipediaPageObject):
 
     name = models.CharField(
         _('Name'),
@@ -567,6 +609,10 @@ class Comet(ObservableObject):
     @property
     def override_limits_bool(self):
         return 'Yes' if self.override_limits else 'No'
+    
+    @property
+    def default_wikipedia_name(self):
+        return f"{self.name}"
 
     def get_absolute_url(self):
         return '/comet/{}'.format(self.pk)
@@ -624,6 +670,15 @@ class CometObservation(ObservingLog):
     class Meta:
         verbose_name = 'Observation'
         verbose_name_plural = 'Observations'
+
+class CometWiki(WikipediaPage):
+    object = models.OneToOneField(
+        Comet, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
 
 class PlanetMoon(models.Model):
     name = models.CharField(

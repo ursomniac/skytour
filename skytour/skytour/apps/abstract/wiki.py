@@ -1,3 +1,4 @@
+
 from ..site.utils import get_skytour_version
 import wikipediaapi
 
@@ -33,11 +34,17 @@ def test():
         '135 Hertha', # Asteroid
         'Cygnus',     # Constellation
         '10P/Tempel', # Comet
-        'Neptune'     # Planet
+        'Neptune',    # Planet
+        'NGC 9999'    # missing object
     ]
     for item in pages:
         page = get_wiki_page(item)
         x = get_page_attrs(page)
         print(f"{x['title']:20s}: {str(x['exists']):5s} {x['summary_length']:5d} chars, {str(x['ambiguous']):5s} {x['canonical_url']}")
 
-
+def test_planets():
+    names = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+    for name in names:
+        page = get_wiki_page(f"{name}_(planet)")
+        x = get_page_attrs(page)
+        print(f"{x['title']:20s}: {str(x['exists']):5s} {x['summary_length']:5d} chars, {str(x['ambiguous']):5s} {x['canonical_url']}")
