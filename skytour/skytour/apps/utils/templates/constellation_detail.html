@@ -8,12 +8,22 @@
     td.number { text-align: right; }
     img { display: block; }
     #constellation_stars th { background-color: #996; color: #000; }
+    button.op { width: 15em; height: 2em; }
 </style>
 <table class="constellation-header">
     <tr>
         <td colspan=>
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
-            <p><h4><i>{{ object.genitive }}</i></h4></p>
+            <p>
+                <h4><i>{{ object.genitive }}</i></h4>
+                {% if object.has_wiki == 'WIKI' %}
+                <button onclick="return realtimePopup('/constellation/wiki/{{ object.slug }}')" class="op">
+                    Wiki Entry
+                </button>
+                {% else %}
+                <span class="boxed">{{ object.has_wiki_text }}</span>
+                {% endif %}
+            </p>
         </td>
         <td style='vertical-align: top;'>
             <h2>Atlas Plates</h2>
@@ -108,6 +118,7 @@
         paging: false
     } );
 } );
+
 </script>
 {# with table_id='constellation_stars' #}
 {# include 'includes/sortable_table.html' #}

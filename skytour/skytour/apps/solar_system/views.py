@@ -28,7 +28,7 @@ from .forms import (
 )
 from .helpers import compile_nearby_planet_list
 from .models import (
-    Comet, Planet, Asteroid, 
+    Comet, Planet, Asteroid, MeteorShower,
     CometLibraryImage, AsteroidLibraryImage, PlanetLibraryImage,
     CometObservation, AsteroidObservation, PlanetObservation, 
 )
@@ -839,6 +839,18 @@ class CometWikiPopup(DetailView):
         context = super(CometWikiPopup, self).get_context_data(**kwargs)
         comet = self.get_object()
         text = comet.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context
+
+class MeteorShowerWikiPopup(DetailView):
+    model = MeteorShower
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MeteorShowerWikiPopup, self).get_context_data(**kwargs)
+        shower = self.get_object()
+        text = shower.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
         context['text'] = html_output
         return context

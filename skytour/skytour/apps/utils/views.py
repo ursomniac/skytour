@@ -88,6 +88,19 @@ class ConstellationDetailView(DetailView):
         context['comets'] = get_objects_from_cookie(self.request, 'comets', object.abbreviation)
 
         return context
+    
+class ConstellationWikiPopup(DetailView):
+    model = Constellation
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstellationWikiPopup, self).get_context_data(**kwargs)
+        constellation = self.get_object()
+        text = constellation.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context
+    
 
 class CatalogListView(ListView):
     model = Catalog
