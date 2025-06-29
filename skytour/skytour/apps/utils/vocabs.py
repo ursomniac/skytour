@@ -14,5 +14,6 @@ CATALOG_LOOKUP_CHOICES = (
     ('abbreviation', 'Abbreviation'),
     ('name', 'Catalog Name'),
     ('constellation', 'By Constellation'),
+    ('other', 'Other Catalog'),
     ('custom', 'Custom')
 )

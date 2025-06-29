@@ -1,6 +1,6 @@
 {% load static skytour_filters %}
 <!doctype html>
-<html lang="end">
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<title>{% block title %}RealTime: Skytour{% endblock title %}</title>
@@ -23,6 +23,12 @@
     form { padding: 18px 4px 8px 20px; }
     table.loc td { line-height: 1.2; font-size: 14px; }
     table.loc td label { color: #6f6; font-weight: 400; }
+    div.close {
+        width: 100%;
+        background-color: #900;
+        padding: 4px;
+    }
+    div.close button { width: 15em; padding: 5px 3em; }
 </style>
 {% endblock styles %}
 </head>
@@ -114,6 +120,9 @@
         </td>
     </tr>
 </table>
+<div class="close">
+    <button onClick="return closePopup();">Close Window</button>
+</div>
 
 {% endblock content %}
 {% block footer  %}
@@ -124,6 +133,14 @@
 </div>
 </footer>
 {% endblock footer  %}
-{% block extra-js %}{% endblock extra-js %}
+{% block extra-js %}
+<script>
+    function closePopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+{% endblock extra-js %}
 </body>
 </html>

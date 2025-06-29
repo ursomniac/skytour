@@ -42,7 +42,7 @@ from .geo import get_circle_center
 from .helpers import get_star_mag_limit
 from .mixins import AvailableDSOMixin
 from .models import (
-    DSO, DSOList, 
+    DSO, DSOList, DSOInField,
     AtlasPlate, 
     DSOImage, DSOLibraryImage, 
     DSOObservation, DSOObservingMode
@@ -831,3 +831,27 @@ class DSOObservingModeEditView(TemplateView):
                         item.save()
 
         return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))
+
+class DSOWikiPopup(DetailView):
+    model = DSO
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOWikiPopup, self).get_context_data(**kwargs)
+        asteroid = self.get_object()
+        text = asteroid.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context
+    
+class DSOInFieldWikiPopup(DetailView):
+    model = DSOInField
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DSOInFieldWikiPopup, self).get_context_data(**kwargs)
+        asteroid = self.get_object()
+        text = asteroid.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context

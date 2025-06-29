@@ -5,7 +5,8 @@ from .views import (
     CometEditView,
     CometObservationEditView,
     CometRealTimeView,
-    CometManageListView
+    CometManageListView,
+    CometWikiPopup
 )
 
 urlpatterns = (
@@ -14,5 +15,6 @@ urlpatterns = (
     path('edit/<int:pk>', CometEditView.as_view(), name='comet-edit'),
     path('observation/edit/<int:pk>', CometObservationEditView.as_view(), name='comet-observe-edit'),
     path('real-time/<int:pk>', CometRealTimeView.as_view(), name='comet-real-time'),
+    path('wiki/<int:pk>', CometWikiPopup.as_view(), name='comet-wiki-popup'),
     path('<int:pk>', CometDetailView.as_view(), name='comet-detail'),
 )

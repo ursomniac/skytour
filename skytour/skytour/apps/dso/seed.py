@@ -1,5 +1,7 @@
 import json
-from .models import MilkyWay
+from ..abstract.vocabs import YES, NO
+from ..abstract.wiki import get_wiki_page, get_page_attrs
+from .models import MilkyWay, DSOWiki, DSOInFieldWiki, DSO, DSOInField
 
 def clear_database_table():
     all = MilkyWay.objects.all()
@@ -42,3 +44,41 @@ def seed_milky_way_from_json():
                     pk += 1
                 segment_id += 1
     return MilkyWay.objects.count()
+
+def seed_dso_wiki(model, idlist=None, debug=False):
+    OBJECT_MODELS = {'DSO': DSO, 'DSOInField': DSOInField}
+    WIKI_MODELS = {'DSO': DSOWiki, 'DSOInField': DSOInFieldWiki}
+    if model in WIKI_MODELS.keys():
+        wiki_model = WIKI_MODELS[model]
+        obj_model = OBJECT_MODELS[model]
+    else:
+        return None
+    
+    if idlist is not None:
+        objects = obj_model.objects.filter(pk__in=idlist)
+    else:
+        objects = obj_model.objects.all()
+
+    for o in objects:
+        if o.has_wiki == 'NOINSTANCE':
+            w = wiki_model()
+            search = o.default_wikipedia_name
+        else:
+            w = o.wiki
+            search = o.default_wikipedia_name if w.override_lookup is None else w.override_lookup
+        wiki = get_wiki_page(search)
+        attr = get_page_attrs(wiki)
+        w.object_id = o.pk
+        w.exists = YES if attr['exists'] else NO
+        w.ambiguous = YES if attr['ambiguous'] else NO
+
+        if attr['exists']:
+            w.title = attr['title']
+            if not attr['ambiguous']:
+                w.summary = attr['summary']
+                w.summary_length = attr['summary_length']
+                w.canonical_url = attr['canonical_url']
+        w.save()
+
+        if debug:
+            print(f"{o.pk} = {search}: E{w.exists} A{w.ambiguous} SL:{w.summary_length} URL:{w.canonical_url}")

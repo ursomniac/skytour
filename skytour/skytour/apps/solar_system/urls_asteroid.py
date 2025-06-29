@@ -6,6 +6,7 @@ from .views import (
     AsteroidObservationEditView,
     AsteroidRealTimeView,
     AsteroidManageListView,
+    AsteroidWikiPopup
 )
 
 urlpatterns = (
@@ -14,5 +15,6 @@ urlpatterns = (
     path('edit/<int:pk>', AsteroidEditView.as_view(), name='asteroid-edit'),
     path('observation/edit/<int:pk>', AsteroidObservationEditView.as_view(), name='asteroid-observe-edit'),
     path('real-time/<slug:slug>', AsteroidRealTimeView.as_view(), name='asteroid-real-time'),
+    path('wiki/<int:pk>', AsteroidWikiPopup.as_view(), name='asteroid-wiki-popup'),
     path('<slug:slug>', AsteroidDetailView.as_view(), name='asteroid-detail'),
 )
