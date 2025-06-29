@@ -159,7 +159,15 @@
                 <table>
                     <tbody>
                     {% for shower in interesting.meteor_showers %}
-                    <tr><td>{{ shower.name }}</td></tr>
+                    <tr><td>
+                        {% if shower.has_wiki == 'WIKI' %}
+                        <a onclick="return realtimePopup('/meteor/wiki/{{ shower.pk }}')">
+                            {{ shower.name }}
+                        </a>
+                        {% else %}
+                        {{ shower.name }}
+                        {% endif %}
+                    </td></tr>
                     {% endfor %}
                     </tbody>
                 </table>

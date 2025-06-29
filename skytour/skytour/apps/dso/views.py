@@ -838,8 +838,8 @@ class DSOWikiPopup(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOWikiPopup, self).get_context_data(**kwargs)
-        asteroid = self.get_object()
-        text = asteroid.wiki.summary
+        dso = self.get_object()
+        text = dso.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
         context['text'] = html_output
         return context
@@ -850,8 +850,8 @@ class DSOInFieldWikiPopup(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOInFieldWikiPopup, self).get_context_data(**kwargs)
-        asteroid = self.get_object()
-        text = asteroid.wiki.summary
+        dsoinfield = self.get_object()
+        text = dsoinfield.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
         context['text'] = html_output
         return context

@@ -37,6 +37,7 @@ urlpatterns = [
     path('dso/', include('skytour.apps.dso.urls_dso')),
     path('help/', include('skytour.apps.help.urls')),
     path('library/', include('skytour.apps.utils.urls_library')),
+    path('meteor/', include('skytour.apps.solar_system.urls_meteor')),
     path('misc/', include('skytour.apps.misc.urls')),
     path('object_type/', include('skytour.apps.utils.urls_object_type')),
     path('observing_location/', include('skytour.apps.observe.urls')),
