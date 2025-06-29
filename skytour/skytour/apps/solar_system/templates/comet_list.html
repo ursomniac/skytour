@@ -23,6 +23,7 @@
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
+            <th>Wiki</th>
             <th># Obs.</th>
             <th>Last Obs.</th>
         </tr>
@@ -36,6 +37,7 @@
             <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
             <td>{{ comet.observe.apparent_magnitude|floatformat:2 }}</td>
+            <td>{{ comet.has_wiki }}</td>
             <td>{{ comet.n_obs }} / {{ comet.num_library_images }}</td>
             <td>{% if comet.last_observed %}{{ comet.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
