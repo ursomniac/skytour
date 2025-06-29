@@ -410,6 +410,18 @@ class WikipediaPageObject(models.Model):
         if wiki.summary_length == 0:
             return 'EMPTYSUMMARY'
         return 'WIKI'
+    
+    @property
+    def has_wiki_text(self):
+        if self.has_wiki == 'NOINSTANCE':
+            return "No Wiki Available"
+        elif self.has_wiki == 'NOPAGEFOUND':
+            return "No Wiki Page"
+        elif self.has_wiki == 'AMBIGUOUSPAGE':
+            return "Ambiguous Wiki Entry"
+        elif self.has_wiki == 'EMPTYSUMMARY':
+            return "Empty Wiki Entry"
+        return "Wiki Page"
 
     class Meta:
         abstract = True

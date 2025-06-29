@@ -30,6 +30,8 @@
         margin-top: 4px; margin-bottom: 6px; 
         color: #f96;
     }
+    span.boxed { font-size: 80%; border: 1px solid #999; padding: 1px 2px; }
+
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
@@ -55,15 +57,19 @@
                         {% endif %}
                     </td>
                     <td class="description operations" rowspan=2>
-                        <button onClick="popupEditComet({{ object.pk }})">Edit Metadata</button>
-                        {% comment %}
-                        <a href="{% url 'comet-edit' object.pk %}"><button>Edit Metadata</button></a>
-                        {% endcomment %}
+                        {% if object.has_wiki == 'WIKI' %}
+                        <button onclick="return realtimePopup('/asteroid/wiki/{{ object.pk }}')">
+                            Wiki Entry
+                        </button>
+                        {% else %}
+                        <span class="boxed">{{ object.has_wiki_text }}</span>
+                        {% endif %}
                         <br>
-                        <a href="/admin/solar_system/comet/{{object.pk}}/change" target="_blank"><button>Admin</button></a>
+                        <button onClick="popupEditComet({{ object.pk }})">Edit Metadata</button>
                         <br>
                         <a href="{% url 'sso-pdf' 'comet' object.pk %}" target="_blank"><button>PDF View</button></a>
-                        <br>
+                    </td>
+                    <td class="description operations" rowspan=2>
                         <button onclick="return realtimePopup('/comet/real-time/{{ object.pk }}')">
                             Real Time
                         </button>

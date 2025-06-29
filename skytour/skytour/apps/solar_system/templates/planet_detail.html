@@ -69,7 +69,7 @@
         background-color: #999;
         color: #000;
     }
-
+    span.boxed { font-size: 80%; border: 1px solid #999; padding: 1px 2px; }
 
 </style>
 {% endblock styles %}
@@ -101,6 +101,14 @@
                         <a href="{% url 'constellation-detail' planet.observe.constellation.abbr|upper %}">{{ planet.observe.constellation.name }}</a>
                     </td>
                     <td  class="description operations" rowspan=2>
+                        {% if object.has_wiki == 'WIKI' %}
+                        <button onclick="return realtimePopup('/planet/wiki/{{ object.pk }}')">
+                            Wiki Entry
+                        </button>
+                        {% else %}
+                        <span class="boxed">{{ object.has_wiki_text }}</span>
+                        {% endif %}
+                        <br>
                         {% if slug != 'moon' %}
                         <a href="/admin/solar_system/planet/{{object.pk}}/change" target="_blank"><button class="op">   Admin   </button></a>
                         <br>
@@ -109,6 +117,8 @@
                         <a href="{% url 'sso-pdf' 'planet' slug %}" target="_blank"><button class="op">PDF View</button></a>
                         <br>
                         {% endif %}
+                    </td>
+                    <td  class="description operations" rowspan=2>
                         <button class="op" onclick="return realtimePopup('/planet/real-time/{{ slug }}')">
                             Real Time
                         </button>

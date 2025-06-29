@@ -136,7 +136,7 @@
 						{% endif %}
 					</h2>
 				</td>
-				<td width=20% class="description" rowspan=2>
+				<td width=16% class="description" rowspan=2>
 					<a href="{% url 'object-type-detail' object.object_type.slug %}">{{ object.object_type }}</a>
 					<br>in<br>
 					<b>
@@ -145,9 +145,20 @@
 						</a>
 					</b>
 				</td>
-				<td width=20% class="description operations" rowspan=2>
+				<td width=12% class="description operations" rowspan=2>
+                    {% if object.has_wiki == 'WIKI' %}
+                    <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="op">
+                        Wiki Entry
+                    </button>
+                    {% else %}
+                    <span class="boxed">{{ object.has_wiki_text }}</span>
+                    {% endif %}
 					<a href="/media/{{ object.pdf_page }}" target="_blank"><button class="op">PDF</button></a>
 					<br>
+
+					&nbsp;
+				</td>
+				<td width=12% class="description operations" rowspan=2>
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
 					Real Time
 					</button>
@@ -538,7 +549,10 @@
 		{% if object.dsoinfield_set.all %}
 		<h3>DSOs in Field ({{ object.dsos_in_field_count }})</h3>
 		<table class='infield'>
-		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th><th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th></tr>
+		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th>
+			<th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th>
+			<th>Wiki</th>
+		</tr>
 		{% for fdso in object.dsoinfield_set.all %}
 		<tr>
 			<td>
@@ -555,6 +569,13 @@
 			<td>{{ fdso.surface_brightness|floatformat:2 }}</td>
 			<td>{{ fdso.angular_size }}</td>
 			<td>{{ fdso.find_distance.0|floatformat:1 }} {{ fdso.find_distance.1 }}</td>
+			<td>
+				{% if fdso.has_wiki == 'WIKI' %}
+				<button onclick="return realtimePopup('/dso/fieldwiki/{{ fdso.pk }}')">
+					Wiki
+				</button>
+				{% endif %}
+			</td>
 		</tr>
 		{% endfor %}
 		</table>

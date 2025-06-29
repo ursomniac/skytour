@@ -42,6 +42,7 @@
         line-height: 1.3;
         color: #ccc;
     }
+    span.boxed { font-size: 80%; border: 1px solid #999; padding: 1px 2px; }
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
@@ -68,17 +69,29 @@
                     <a href="{% url 'constellation-detail' asteroid.observe.constellation.abbr|upper %}">{{ asteroid.observe.constellation.name }}</a>
                     {% endif %}
                 </td>
-                <td  class="description operations" rowspan=2>
+                <td class="description operations" rowspan=2>
+                    {% if object.has_wiki == 'WIKI' %}
+                    <button onclick="return realtimePopup('/asteroid/wiki/{{ object.pk }}')">
+                        Wiki Entry
+                    </button>
+                    {% else %}
+                    <span class="boxed">{{ object.has_wiki_text }}</span>
+                    {% endif %}
+                    <br>
                     <button onclick="return popupEditAsteroid({{ object.pk }});">
                         Edit Metadata
                     </button>
                     <br>
-                    {% comment %}
-                    <a href="/admin/solar_system/asteroid/{{object.pk}}/change" target="_blank"><button>   Admin   </button></a>
+                    <a href="{% url 'sso-pdf' 'asteroid' object.slug %}" target="_blank">
+                        <button>
+                            PDF View
+                        </button>
+                    </a>
                     <br>
-                    {% endcomment %}
-                    <a href="{% url 'sso-pdf' 'asteroid' object.slug %}" target="_blank"><button>PDF View</button></a>
-                    <br>
+
+                </td>
+                <td  class="description operations" rowspan=2>
+
                     <button onclick="return realtimePopup('/asteroid/real-time/{{ object.slug }}')">
                         Real Time
                     </button>

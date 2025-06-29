@@ -17,7 +17,9 @@ from .views import (
     DSOManageExternalImageView,
     DSOManageLibraryImagePanelView,
     DSOObservationEditView,
-    DSOObservingModeEditView
+    DSOObservingModeEditView,
+    DSOWikiPopup,
+    DSOInFieldWikiPopup
 )
 urlpatterns = (
     path('', DSOListView.as_view(), name='dso-list'),
@@ -37,5 +39,7 @@ urlpatterns = (
     path('edit/<int:pk>', DSOEditMetadataView.as_view(), name='dso-edit-metadata'),
     path('image/edit/<int:pk>',DSOManageExternalImageView.as_view(), name='dso-manage-image'),
     path('panel/edit/<str:panel>/<int:pk>', DSOManageLibraryImagePanelView.as_view(), name='dso-manage-panel'),
+    path('wiki/<int:pk>', DSOWikiPopup.as_view(), name='dso-wiki-popup'),
+    path('fieldwiki/<int:pk>', DSOInFieldWikiPopup.as_view(), name='dsoinfield-wiki-popup'),
     path('<int:pk>', DSODetailView.as_view(), name='dso-detail'),
 )

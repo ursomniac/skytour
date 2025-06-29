@@ -195,6 +195,7 @@ class AsteroidListView(CookieMixin, ListView):
             asteroid_cookie = context['cookies']['asteroids']
             for d in asteroid_cookie:
                 a = asteroids.get(number=d['number'])
+                d['has_wiki'] = a.has_wiki
                 d['n_obs'] = a.number_of_observations
                 d['num_library_images'] = a.num_library_images
                 d['last_observed'] = a.last_observed
@@ -804,4 +805,40 @@ class AsteroidManageListView(ListView):
         context['object_list'] = self.get_queryset().order_by('pk')
         context['create_form'] = AsteroidManagementForm()
         context['table_id'] = 'all-asteroid-list'
+        return context
+
+class AsteroidWikiPopup(DetailView):
+    model = Asteroid
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AsteroidWikiPopup, self).get_context_data(**kwargs)
+        asteroid = self.get_object()
+        text = asteroid.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context
+    
+class PlanetWikiPopup(DetailView):
+    model = Planet
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PlanetWikiPopup, self).get_context_data(**kwargs)
+        planet = self.get_object()
+        text = planet.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
+        return context
+    
+class CometWikiPopup(DetailView):
+    model = Comet
+    template_name = 'wiki_content.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CometWikiPopup, self).get_context_data(**kwargs)
+        comet = self.get_object()
+        text = comet.wiki.summary
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['text'] = html_output
         return context

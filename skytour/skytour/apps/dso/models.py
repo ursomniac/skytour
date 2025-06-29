@@ -293,6 +293,8 @@ class DSOAbstract(Coordinates):
             return f"{self.catalog.name} {self.id_in_catalog}"
         elif mode == 'constellation':
             return self.shown_name
+        elif mode == 'other':
+            return self.id_in_catalog
         return self.shown_name
     
     class Meta:
@@ -1020,6 +1022,13 @@ class DSOAbstractAlias(models.Model):
         max_length = 100,
         null = True, blank = True
     )
+
+    @property 
+    def catalog_name(self):
+        if self.shown_name is not None and len(self.shown_name) > 0:
+            return self.shown_name
+        return f"{self.catalog.abbreviation} {self.id_in_catalog}"
+    
     class Meta:
         abstract = True
         verbose_name = 'Alias'
