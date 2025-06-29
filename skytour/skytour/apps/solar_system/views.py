@@ -247,6 +247,7 @@ class CometListView(CookieMixin, ListView):
             for d in comet_cookie: # get the observation history for each comet on the list
                 try:
                     comet = comets.get(pk=d['pk'])
+                    d['has_wiki'] = comet.has_wiki
                     d['n_obs'] = comet.number_of_observations
                     d['num_library_images'] = comet.num_library_images
                     d['last_observed'] = comet.last_observed
