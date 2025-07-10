@@ -740,7 +740,7 @@ class DSOManageLibraryImagePanelView(TemplateView):
         context = super(DSOManageLibraryImagePanelView, self).get_context_data(**kwargs)
         panel = self.kwargs['panel']
         pk = self.kwargs['pk']
-        dso = get_object_or_404(DSO, pk=pk)
+        context['dso'] = dso = get_object_or_404(DSO, pk=pk)
 
         image_list = dso.image_library.all()
         if panel == 'slideshow':

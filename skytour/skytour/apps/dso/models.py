@@ -297,6 +297,14 @@ class DSOAbstract(Coordinates):
             return self.id_in_catalog
         return self.shown_name
     
+    @property
+    def id_as_digits(self):
+        if self.id_in_catalog.isdigit():
+            z = self.id_in_catalog.zfill(8)
+        else:
+            z = self.id_in_catalog
+        return z
+    
     class Meta:
         abstract = True
 
@@ -1028,6 +1036,14 @@ class DSOAbstractAlias(models.Model):
         if self.shown_name is not None and len(self.shown_name) > 0:
             return self.shown_name
         return f"{self.catalog.abbreviation} {self.id_in_catalog}"
+    
+    @property
+    def id_as_digits(self):
+        if self.id_in_catalog.isdigit():
+            z = self.id_in_catalog.zfill(8)
+        else:
+            z = self.id_in_catalog
+        return z
     
     class Meta:
         abstract = True

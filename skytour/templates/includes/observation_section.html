@@ -19,6 +19,7 @@
         color: #ccc;
      }
      td.edit { width: 6em; text-align: center; }
+     td.obsdt { font-size: 90%;  width: 10em; }
 </style>
 <h3>Observations: {{ instance.observations.count }}</h3>
 {% if instance.observations.all|length > 0 %}
@@ -37,7 +38,7 @@
         <tr>
             <td class="vcenter">
                 <a href="{% url 'session-detail' obs.session.pk %}" target='_blank'>
-                {{ obs.ut_datetime|date:"Y-m-d H:i"}} Z
+                {{ obs.ut_datetime|date:"Y-m-d H:i"}}
                 </a>
             </td>
             <td>
@@ -95,7 +96,7 @@
             </tr>
         {% for obs in object.observations.all %}
         <tr>
-            <td width="12%">
+            <td class="obsdt">
                 <a href="{% url 'session-detail' obs.session.pk %}" target="_blank">
                 {{ obs.ut_datetime|date:"Y-m-d H:i" }}
                 </a>

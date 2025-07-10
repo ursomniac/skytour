@@ -117,17 +117,12 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
     paginate_by = 40 
 
     def get_context_data(self, **kwargs):
-        """
-        OK - what I want here is to either:
-            a) only show primary ID entries
-            b) Anything that's an alias too
-        """
         object = self.get_object()
         cookie = self.request.session.get('user_preferences', None)
         cat_list = Catalog.objects.order_by('slug')
-        primary_dsos = DSO.objects.filter(catalog=object)
-        alias_dsos = DSO.objects.filter(aliases__catalog=object)
-        field_dsos = DSOInField.objects.filter(catalog=object) if object.slug != 'hickson' else []
+        #primary_dsos = DSO.objects.filter(catalog=object)
+        #alias_dsos = DSO.objects.filter(aliases__catalog=object)
+        #field_dsos = DSOInField.objects.filter(catalog=object) if object.slug != 'hickson' else []
         
         # deal with pagination and filtering
         params = self.request.GET.copy()
@@ -147,8 +142,10 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         if object.slug in ['messier', 'caldwell', 'abell', 'hickson']: # Override pagination
             self.paginate_by = None
 
-        all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos)
+        all_objects_sort = assemble_catalog(object.slug, in_field=True)
         dso_list = filter_catalog(self.request, all_objects_sort, cookie)
+        #all_objects_sort = new_objects_sort(object, primary_dsos, alias_dsos, field_dsos)
+        #dso_list = filter_catalog(self.request, all_objects_sort, cookie)
         context = super(CatalogDetailView, self).get_context_data(
             object_list=dso_list,
             **kwargs
@@ -166,7 +163,7 @@ class CatalogDetailView(DetailView, MultipleObjectMixin):
         context['available'] = self.request.GET.get('available', None)
         context['qs'] = querystring
         return context
-
+    
 class ObjectTypeListView(ListView):
     """
     Generate metadata for a given Object Type.
@@ -293,7 +290,7 @@ class LibraryCatalogView(TemplateView):
 
         # This only works when the catalog request is the primary ID for the DSO
         # So, only Messier and Caldwell.
-        raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug)#.exclude(priority='None')
+        raw_dso_list = DSO.objects.filter(catalog__slug=catalog_slug)
         raw_dso_list = raw_dso_list.annotate(cid=Cast('id_in_catalog', IntegerField())).order_by('cid', 'id_in_catalog')
         for x in raw_dso_list:
             x.cat_id = f"{catalog.abbreviation} {x.cid}"

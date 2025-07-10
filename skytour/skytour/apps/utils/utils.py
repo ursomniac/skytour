@@ -59,13 +59,14 @@ def try_int(x):
             return int(foo)
         return 0
 
+# DEPRECATED - keep for now to see if we need anything from here...
 def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
-    digits = 3 if catalog.number_objects is None else len(f"{catalog.number_objects}")
     odict = {}
     all_objects_sort = []
     for o in primary_dsos:
-        k = make_id_key(o.id_in_catalog, digits=digits)
+        k = o.id_as_digits
         odict[k] = {
+            'as_digits': k,
             'in_catalog': o.id_in_catalog, 
             'primary_catalog': None, 
             'dso': o,
@@ -73,8 +74,9 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
             'field_dso': None
         }
     for o in field_dsos:
-        k = make_id_key(o.id_in_catalog, digits=digits)
+        k = o.id_as_digits
         odict[k] = {
+            'as_digits': k,
             'in_catalog': o.id_in_catalog,
             'primary_catalog': None,
             'dso': o.parent_dso,
@@ -82,9 +84,9 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
             'field_dso': o
         }
     for o in alias_dsos:
-        for a in o.aliases.all(): # Because you can have multiple entires amongst the aliases
+        for a in o.aliases.all(): # Because you can have multiple entries amongst the aliases
             if a.catalog == catalog:
-                k = make_id_key(a.id_in_catalog, digits=digits)
+                k = o.id_as_digits
                 if a.alias_in_field == 1:
                     in_field = True
                     field_dso = a.in_field_dso
@@ -92,6 +94,7 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
                     in_field = False
                     field_dso = ''
                 odict[k] = {
+                    'as_digits': k,
                     'in_catalog': a.id_in_catalog, 
                     'primary_catalog': o.shown_name, 
                     'dso': o,
@@ -101,27 +104,5 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
     for k in sorted(odict.keys()):
         all_objects_sort.append(odict[k])
     return all_objects_sort
-
-def make_id_key(x, digits=6):
-    """
-    This is a prototype --- need to sort out all the possible insanities,
-    prob. with regexes...
-    """
-    nstr = ''
-    other = ''
-    out = ''
-    ok = True
-    for z in x:
-        if z.isdigit() and ok:
-            nstr += z
-        else:
-            ok = False
-            other += z
-    if len(nstr) > 0:
-        out = f"{int(nstr):0{digits}d}"
-        out += other
-        return out
-    else:
-        return x
 
 
