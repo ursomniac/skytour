@@ -1,2 +1,2 @@
-2.1.5 - Fixed CatalogDetail page to handle pagination causes misordering of rows
+2.2. - Solved sorting Dec columns in tables;  started Meteor Shower pages
 

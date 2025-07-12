@@ -9,6 +9,7 @@
     table.comet-list th { background-color: #996; color: #000; }
     div.all-comets-link { height: 4em; }
     div.all-comets-link button { width 15em; height: 2.5em; }
+    span.hidden { display: none; }
 </style>
 <h1>Observable Comets</h1>
 <div class="all-comets-link">
@@ -33,7 +34,10 @@
         <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'comet-detail' comet.pk %}">{{ comet.name }}</a></td>
             <td>{{ comet.apparent.equ.ra|to_hms:1 }}</td>
-            <td>{{ comet.apparent.equ.dec|to_dms:0 }}</td>
+            <td>
+                <span class="hidden">{{ comet.apparent.equ.dec|sortable_angle}}</span>
+                {{ comet.apparent.equ.dec|to_dms:0 }}
+            </td>
             <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
             <td>{{ comet.observe.apparent_magnitude|floatformat:2 }}</td>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load skytour_filters %}
+
+{% block styles %}
+{% endblock styles %}
+{% block title %}Meteor Showers: Skytour{% endblock %}
+{% block content %}
+<style>
+    table.comet-list th { background-color: #996; color: #000; }
+    div.all-comets-link { height: 4em; }
+    div.all-comets-link button { width 15em; height: 2.5em; }
+    span.hidden { display: none; }
+</style>
+<h1>Meteor Showers</h1>
+
+<table id="{{ table_id }}" class="comet-list">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>RA</th>
+            <th>Dec</th>
+            <th>Peak Date</th>
+            <th>Start/End Dates</th>
+            <th>Intensity</th>
+            <th>ZHR</th>
+            <th>Wiki</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for shower in object_list %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            <td><a href="{% url 'meteor-detail' shower.pk %}">{{ shower.name }}</a></td>
+            <td>{{ shower.radiant_ra|to_hm:1 }}</td>
+            <td>
+                <span class="hidden">{{ shower.radiant_dec|sortable_float }} </span>
+                {{ shower.radiant_dec|to_dm:1 }}
+            </td>
+            <td>
+                <span class="hidden">{{ shower.peak_date|month_day_string}} </span>
+                {{ shower.peak_date|month_day }}
+            </td>
+            <td>
+                <span class="hidden">{{ shower.start_date|month_day_string }} </span>
+                {{ shower.start_date|month_day }} to {{ shower.end_date|month_day }}
+            </td>
+            <td>{{ shower.intensity }}</td>
+            <td>{{ shower.zhr }}</td>
+            <td>{{ shower.has_wiki }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+{% include 'includes/sortable_table.html' %}
+{% endblock content %}

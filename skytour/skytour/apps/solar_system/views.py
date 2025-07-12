@@ -1,4 +1,5 @@
 import datetime, pytz, time
+from operator import itemgetter
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -195,11 +196,13 @@ class AsteroidListView(CookieMixin, ListView):
             asteroid_cookie = context['cookies']['asteroids']
             for d in asteroid_cookie:
                 a = asteroids.get(number=d['number'])
+                d['cid'] = f"{d['number']:08d}"
                 d['has_wiki'] = a.has_wiki
                 d['n_obs'] = a.number_of_observations
                 d['num_library_images'] = a.num_library_images
                 d['last_observed'] = a.last_observed
                 asteroid_list.append(d)
+            asteroid_list = sorted(asteroid_list, key=itemgetter('cid'))
         context['asteroid_list'] = asteroid_list
         context['table_id'] = 'obs_asteroid_list'
 
@@ -754,7 +757,7 @@ class CometManageListView(ListView):
         context = super(CometManageListView, self).get_context_data(**kwargs)
         context['object_list'] = self.get_queryset().order_by('-status', 'name')
         context['create_form'] = CometManagementForm()
-        context['table-id'] = 'all-comet-list'
+        context['table_id'] = 'all-comet-list'
         return context
 
 class AsteroidManageListView(ListView):
@@ -842,6 +845,23 @@ class CometWikiPopup(DetailView):
         text = comet.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
         context['text'] = html_output
+        return context
+    
+class MeteorShowerListView(ListView):
+    model = MeteorShower
+    template_name = 'meteor_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(MeteorShowerListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'meteor-list'
+        return context
+
+class MeteorShowerDetailView(DetailView):
+    model = MeteorShower
+    template_name = 'meteor_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MeteorShowerDetailView, self).get_context_data(**kwargs)
         return context
 
 class MeteorShowerWikiPopup(DetailView):

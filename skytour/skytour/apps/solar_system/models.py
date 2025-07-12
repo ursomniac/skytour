@@ -266,6 +266,11 @@ class MeteorShower(WikipediaPageObject, models.Model):
         choices = SHOWER_IMPORTANCE,
         default = 'Major'
     )
+    radiant_map = models.ImageField (
+        _('Radiant Map'),
+        upload_to='meteor_map',
+        null = True, blank = True
+    )
 
     def __str__(self):
         return "{}: {} ({})".format(
@@ -286,6 +291,9 @@ class MeteorShower(WikipediaPageObject, models.Model):
         name = replace_greek_letters(self.name)
         return name
     
+    class Meta:
+        ordering = ['peak_date']
+    
 class MeteorShowerWiki(WikipediaPage):
     object = models.OneToOneField(
         MeteorShower, 
@@ -293,7 +301,6 @@ class MeteorShowerWiki(WikipediaPage):
         primary_key = True,
         related_name = 'wiki'
     )
-
 
 class Asteroid(ObservableObject, WikipediaPageObject):
     """

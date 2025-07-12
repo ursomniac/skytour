@@ -39,6 +39,7 @@
     table.top-main td { border: none; }
     td.list-name { max-width: 400px!important; }
     button.nav { margin: 5px 5px; height: 2em; width: 15em; }
+    span.hidden { display: none; }
 </style>
 
 <h1>Deep Sky Objects</h1>
@@ -199,7 +200,10 @@
         {% endif %}
         <td>{{ dso.morphological_type }}</td>
         <td>{{ dso.ra|to_hm:1 }}</td>
-        <td>{{ dso.dec|to_dm:1 }}</td>
+        <td>
+            <span class="hidden">{{ dso.dec|sortable_angle }}</span>
+            {{ dso.dec|to_dm:1 }}
+        </td>
         <td>{{ dso.altitude|floatformat:2 }}</td>
         <td>{{ dso.azimuth|floatformat:1 }}</td>
         <td>{{ dso.airmass|floatformat:3 }}</td>

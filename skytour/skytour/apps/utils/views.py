@@ -1,4 +1,3 @@
-#import itertools
 from django.core.paginator import Paginator
 from django.db.models import Count, IntegerField
 from django.db.models.functions import Cast
@@ -10,9 +9,8 @@ from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-from .utils import new_objects_sort, filter_catalog
-from ..dso.models import DSO, DSOLibraryImage, DSOInField
-from ..session.cookie import get_cookie
+from .utils import filter_catalog
+from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
 

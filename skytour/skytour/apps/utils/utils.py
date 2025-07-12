@@ -9,23 +9,21 @@ def filter_catalog(request, dso_list, cookie):
         con_list = None
     else:
         con_list = [x.lower().strip() for x in constr.split(',')]
-    # AND all the filters
+    # AND all the filters        
     if observed and observed != '':
         new = []
         for d in dso_list:
-            o = d['dso']
-            if observed == 'yes' and o.observations.count() > 0:
+            if observed == 'yes' and d.observations.count() > 0:
                 new.append(d)
-            elif observed == 'no' and o.observations.count() == 0:
+            elif observed == 'no' and d.observations.count() == 0:
                 new.append(d)
         dso_list = new
     if imaged and imaged != '':
         new = []
         for d in dso_list:
-            o = d['dso']
-            if imaged == 'yes' and o.num_library_images > 0:
+            if imaged == 'yes' and d.num_library_images > 0:
                 new.append(d)
-            elif imaged == 'no' and o.num_library_images == 0:
+            elif imaged == 'no' and d.num_library_images == 0:
                 new.append(d)
         dso_list = new
     if available:
@@ -33,8 +31,7 @@ def filter_catalog(request, dso_list, cookie):
             d0, d1 = cookie['dec_range']
             new = []
             for d in dso_list:
-                o = d['dso']
-                if o.dec >= d0 and o.dec <= d1:
+                if d.dec >= d0 and d.dec <= d1:
                     new.append(d)
             dso_list = new
         except:
@@ -42,8 +39,7 @@ def filter_catalog(request, dso_list, cookie):
     if con_list is not None:
         new = []
         for d in dso_list:
-            o = d['dso']
-            if o.constellation.abbreviation.lower() in con_list:
+            if d.constellation.abbreviation.lower() in con_list:
                 new.append(d)
         dso_list = new
         if len(new) == 0:

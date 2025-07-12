@@ -164,15 +164,6 @@ def show_property_source(code):
     }
     return d[code] if code in d.keys() else ''
 
-#@register.filter(name='mode_priority')
-#def mode_priority(d, mode='S'):
-#    pri = '?'
-#    if mode in d.keys():
-#        pri = '' if d[mode] == 'None' else d[mode]
-#        if pri == 'None':
-#            return ''
-#    return pri
-
 @register.filter(name='mode_priority_span')
 def mode_priority_span(d, mode='S'):
     VALS = {'None': 0, 'Lowest': 0, 'Low': 1, 'Medium': 2, 'High': 3, 'Highest': 4}
@@ -188,3 +179,36 @@ def mode_priority_span(d, mode='S'):
 @register.filter(name='modulo')
 def modulo(num, val):
     return num % val
+
+@register.filter(name='month_day')
+def month_day(yearless_date):
+    """
+    Given (int) month and day (but not year), return text values.
+    2025 is a "fudge year" because it doesn't have to be known.
+    """
+    t = datetime.date(2025, yearless_date.month, yearless_date.day)
+    return t.strftime("%b %d")
+
+@register.filter(name='month_day_string')
+def month_day_string(yearless_date):
+    """
+    given (int) month and (int) day return e.g,. 0802 making dates suitable
+    for sorting even if the shown values are text (so June < July, and Dec > Nov).
+    """
+    return f"{yearless_date.month:02d}{yearless_date.day:02d}"
+
+@register.filter(name='sortable_angle')
+def sortable_angle(value, offset=90):
+    """
+    This gets around the problem of sortable columns of angles being formatted in
+    way that doesn't understand it needs to sort numerically (i.e., -90° to +90°, etc.)
+    So it offsets the value by an offset such that all of the values are positive, then
+    formats that with leading zeros so that sorting on a list of values happens correctly.
+
+    In the template, just hide the calculated value (display: none).
+    """
+    try:
+        v = float(value) + offset
+        return f"A{abs(v):08.4f}"
+    except:
+        return v
