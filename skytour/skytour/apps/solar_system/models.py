@@ -272,6 +272,9 @@ class MeteorShower(WikipediaPageObject, models.Model):
         null = True, blank = True
     )
 
+    def get_absolute_url(self):
+        return '/meteor/{}'.format(self.pk)
+
     def __str__(self):
         return "{}: {} ({})".format(
             self.peak_date,  

@@ -43,6 +43,12 @@
         color: #ccc;
     }
     span.boxed { font-size: 80%; border: 1px solid #999; padding: 1px 2px; }
+    table.debug {
+        border: 1px solid #f00;
+    }
+    table.debug td {
+        border: 1px solid #ff0;
+    }
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
@@ -54,70 +60,63 @@
     <td class="lite">
         <table class="main">
             <tr>
-                <td width=65% class="object_name">
+                <td width=40% class="object_name">
                     <h1>{{ object.name }}</h1>
                 </td>
-                <td width=22% class="description classification" rowspan=2>
-
+                <td width=30% class="description classification">
+                    Peak: {{ object.peak_date }}
                 </td>
-                <td class="description operations" rowspan=2>
-                    {% if object.has_wiki == 'WIKI' %}
-                    <button onclick="return realtimePopup('/meteor/wiki/{{ object.pk }}')">
-                        Wiki Entry
-                    </button>
-                    {% else %}
-                    <span class="boxed">{{ object.has_wiki_text }}</span>
-                    {% endif %}
-                    <br>
-
-                </td>
-                <td  class="description operations" rowspan=2>
-                    {% comment %}
-                    <button onclick="return realtimePopup('/asteroid/real-time/{{ object.slug }}')">
-                        Real Time
-                    </button>
-                    <br>
-                    <button onclick="return realtimePopup('/asteroid/real-time/{{ object.slug }}?utdt_base=cookie')">
-                        Cookie
-                    </button>
-                    <br>
-                    <a href="{% url 'session-add' %}?object_type=asteroid&pk={{ object.pk }}" target="_blank">
-                        <button>Observe</button>
-                    </a>
-                    {% endcomment %}
+                <td class="description classification">
+                    Active: {{ object.start_date}} to {{ object.end_date }}
                 </td>
             </tr>
-            <tr>
-                <td class="ident">
-                    Parent Comet: {{ object.parent_object }}
-                </td>
-            </tr>
+
         </table>
 
         <table width=100% class="lite info">
             <tr>
-                <td colspan=3>
+                <td colspan=2>
                     <h2>Information:</h2>
                 </td>
-            </tr>
-            <tr>
-                <td colspan=3>
-                    <span class="coordinates">
-                        &alpha; (2000): {{ object.radiant_ra }}
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &delta; (2000): {{ object.radiant_dec }}
-                        <br><br>
-                    </span>
-                </td>
-                <td>ZHR: {{ object.zhr }}</td>
-            </tr>
-            <tr>
-                <td colspan=3>
-                    {% if object.notes %}
+                <td rowspan=3 width="35%">
+                    {% if object.radiant_map %}
+                    <img src="{{ object.radiant_map.url }}" class="constrained">
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
+                     {# if object.notes #}
                     <table class="description-table">
                         <tr><th>Notes</th></tr>
                         <tr><td>{{ object.notes|safe }}</td></tr>
                     </table>
+                    {# endif #}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="coordinates">
+                        &alpha; (2000): {{ object.radiant_ra }}h
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        &delta; (2000): {{ object.radiant_dec }}°
+                    </span>
+                        <br><br>
+                        Celestial Longitude: {{ object.longitude|floatformat:1 }}°
+                </td>
+                <td class="ident">
+                    Parent Body: {{ object.parent_body }}
+                    <br><br>
+                    ZHR: {{ object.zhr }}
+                    <br><br>
+                    Avg. Speed: {{ object.speed }} km/s
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    {% if object.has_wiki == 'WIKI' %}
+                    <h3>Wikipedia Entry</h3>
+                    {{ object.wiki.html_summary|safe }}
+                    {% else %}
+                    <span class="boxed">{{ object.has_wiki_text }}</span>
                     {% endif %}
                 </td>
             </tr>
@@ -127,10 +126,7 @@
 </table>
 <br><br>
 
-{% if object.radiant_map %}
-<br>
-    <img src="{{ object.radiant_map.url }}" class="constrained">
-{% endif %}
+
 
 
 {% include 'includes/performance_time.html' %}

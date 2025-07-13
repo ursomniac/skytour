@@ -32,7 +32,7 @@
             <td><a href="{% url 'meteor-detail' shower.pk %}">{{ shower.name }}</a></td>
             <td>{{ shower.radiant_ra|to_hm:1 }}</td>
             <td>
-                <span class="hidden">{{ shower.radiant_dec|sortable_float }} </span>
+                <span class="hidden">{{ shower.radiant_dec|sortable_angle }} </span>
                 {{ shower.radiant_dec|to_dm:1 }}
             </td>
             <td>
