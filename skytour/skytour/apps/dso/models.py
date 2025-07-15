@@ -1180,7 +1180,13 @@ class DSOList(models.Model):
         _('Description'),
         null = True, blank = True
     )
+    # TODO: V2.3 - Change this to a "through" model
+    # 1. create the new model; migrate in
+    # 2. change the underlying CRUD ops to use this instead
+    # 3. migrate existing DSOList DSO members to the new model
+    # 4. remove this field and the underlying table
     dso = models.ManyToManyField (DSO, blank=True)
+    
     tags = TaggableManager(blank=True)  # Used  TODO V2.x: come up with some use for this...
     pdf_page = models.FileField (
         _('PDF Page'),

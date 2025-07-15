@@ -477,16 +477,11 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['min_alt'] = my_min_alt
         context['max_alt'] = my_max_alt
 
-        #if context['min_alt'] is None:
-        #    context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
-        #if context['max_alt'] is None:
-        #    context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
-
         min_dec, max_dec = location.declination_range
-        if context['min_dec'] is None:
-            context['min_dec'] = min_dec
-        if context['max_dec'] is None:
-            context['max_dec'] = max_dec
+        min_dec = float(self.request.GET.get('min_dec', min_dec))
+        max_dec = float(self.request.GET.get('max_dec', max_dec))
+        context['min_dec'] = min_dec
+        context['max_dec'] = max_dec
         context['min_dec_string'] = f"{context['min_dec']:.1f}"
         context['max_dec_string'] = f"{context['max_dec']:.1f}"
 
