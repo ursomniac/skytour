@@ -79,8 +79,8 @@
                             <option {% if pri == '4' %}selected{% endif %}>4</option>
                         </select>
                         &nbsp;&nbsp;
-                        <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
-                        <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
+                        <label for="on_dso_list_all">All Pri. on DSOList:&nbsp;</label>
+                        <input type="checkbox" name="on_dso_list_all" {% if on_dso_list_all %} checked{% endif %}>
                         </td>
                         <td>
                         <label for="imaged">Imaged:&nbsp;</label> 
@@ -90,6 +90,9 @@
                             <option {% if imaged == 'Yes' %}selected{% endif %}>Yes</option>
                             <option {% if imaged == 'Redo' %}selected{% endif %}>Redo</option>
                         </select>
+                        &nbsp;&nbsp;
+                        <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
+                        <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
                         </td>
                     </tr>
                     <tr>

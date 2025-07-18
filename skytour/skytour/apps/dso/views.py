@@ -462,6 +462,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['scheduled'] = is_scheduled
         show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
         context['show_thumbs'] = show_thumbs
+        on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
+        context['dso_list_all'] = on_dso_list_all
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -519,6 +521,7 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             mask = not no_mask,                      # Use location mask (for trees, buildings, etc.)
             gear = gear,                             # Filter by gear choices
             scheduled = is_scheduled,                # Only show objects on active DSOList objects
+            on_dso_list_all = on_dso_list_all,
             debug=debug
         )
         dsos = up_dict['dsos']
