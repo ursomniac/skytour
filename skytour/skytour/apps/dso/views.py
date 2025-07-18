@@ -463,7 +463,7 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
         context['show_thumbs'] = show_thumbs
         on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
-        context['dso_list_all'] = on_dso_list_all
+        context['on_dso_list_all'] = on_dso_list_all
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
