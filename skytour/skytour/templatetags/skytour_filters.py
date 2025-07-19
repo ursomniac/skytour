@@ -212,3 +212,10 @@ def sortable_angle(value, offset=90):
         return f"A{abs(v):08.4f}"
     except:
         return v
+
+@register.filter(name='add_two')
+def add_two(value, arg):
+    try:
+        return float(value) + float(arg)
+    except:
+        return None

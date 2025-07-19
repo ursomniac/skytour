@@ -40,7 +40,12 @@
             </td>
             <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
-            <td>{{ comet.observe.apparent_magnitude|floatformat:2 }}</td>
+            <td>
+                {{ comet.observe.apparent_magnitude|floatformat:2 }}
+                {% if comet.mag_offset != 0.0 %}
+                     &nbsp; (est. {{ comet.observe.apparent_magnitude|add_two:comet.mag_offset|floatformat:2 }})
+                {% endif %}
+            </td>
             <td>{{ comet.has_wiki }}</td>
             <td>{{ comet.n_obs }} / {{ comet.num_library_images }}</td>
             <td>{% if comet.last_observed %}{{ comet.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>

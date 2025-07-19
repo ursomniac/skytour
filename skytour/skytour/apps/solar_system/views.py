@@ -250,6 +250,7 @@ class CometListView(CookieMixin, ListView):
             for d in comet_cookie: # get the observation history for each comet on the list
                 try:
                     comet = comets.get(pk=d['pk'])
+                    d['mag_offset'] = comet.mag_offset
                     d['has_wiki'] = comet.has_wiki
                     d['n_obs'] = comet.number_of_observations
                     d['num_library_images'] = comet.num_library_images
@@ -282,7 +283,7 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['est_mag'] = mag + object.mag_offset
                 break
         # TODO V2: if pdict is None then it's not in the cookie.
-        # Figure out how to add things from that
+        # Figure out how to add things from that 
         context['comet'] = pdict
         #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         slideshow = object.image_library.order_by('order_in_list')
