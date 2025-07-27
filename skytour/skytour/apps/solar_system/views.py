@@ -15,7 +15,8 @@ from ..abstract.vocabs import (
     IMAGE_ORIENTATION_CHOICES, 
     IMAGE_PROCESSING_STATUS_OPTIONS
 )
-from ..astro.time import get_datetime_from_strings
+from ..astro.almanac import get_twilight_begin_end
+from ..astro.time import get_datetime_from_strings, convert_datetime_to_local_string
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..tech.models import Telescope
@@ -69,10 +70,21 @@ class PlanetListView(CookieMixin, ListView):
             d['last_observed'] = p.last_observed
             d['obj_rise'], d['obj_set'], d['obj_transit'] = get_rise_set(d['almanac'])
             planet_list.append(d)
-
         context['planet_list'] = planet_list
+
         moon = context['cookies']['moon']
+        sun = context['cookies']['sun']
         context['moon_rise'], context['moon_set'], context['moon_transit'] = get_rise_set(moon['almanac'])
+        context['sun_rise'], context['sun_set'], context['sun_transit'] = get_rise_set(sun['almanac'], format="%I:%M %p")
+        
+        twilight = context['cookies']['user_pref']['twilight']
+        my_time_zone = pytz.timezone(context['location'].time_zone.pytz_name)
+        twilight = get_twilight_begin_end(context['utdt_start'], context['location'], time_zone=my_time_zone)
+        context['twilight'] = twilight
+        print("Twilight: ", twilight)
+        #context['twilight_begin'] = convert_datetime_to_local_string(twilight['begin'], location=context['location'])
+        #context['twilight_end'] = convert_datetime_to_local_string(twilight['end'], location=context['location'])
+        
         pdict = get_ecliptic_positions(context['utdt_start'])
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context
@@ -821,6 +833,7 @@ class AsteroidWikiPopup(DetailView):
         asteroid = self.get_object()
         text = asteroid.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = asteroid
         context['text'] = html_output
         return context
     
@@ -833,6 +846,7 @@ class PlanetWikiPopup(DetailView):
         planet = self.get_object()
         text = planet.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = planet
         context['text'] = html_output
         return context
     
@@ -845,6 +859,7 @@ class CometWikiPopup(DetailView):
         comet = self.get_object()
         text = comet.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = comet
         context['text'] = html_output
         return context
     

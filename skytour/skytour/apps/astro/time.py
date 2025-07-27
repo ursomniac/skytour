@@ -1,4 +1,5 @@
-import datetime
+import datetime, pytz
+from dateutil.parser import isoparse
 import math
 from ..utils.format import to_sex
 from .altaz import get_nutation, get_obliquity
@@ -212,3 +213,15 @@ def get_datetime_from_strings(date_str, time_str):
         return temp
     except:
         return None
+    
+def convert_datetime_to_local_string(item, location=None, format="%Y-%m-%d %I:%M %p"):
+    dt_orig = isoparse(item)
+    if location is None:
+        return dt_orig
+    local_tz = pytz.timezone(location.time_zone.pytz_label)
+    dt_local = dt_orig.astimezone(local_tz)
+    tstr = dt_local.strftime(format)
+
+    print("ORIG: ", dt_orig)
+    print("LOCAL: ", dt_local)
+    return tstr

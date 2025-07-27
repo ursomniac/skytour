@@ -8,8 +8,44 @@
     table.planet-list th {
         background-color: #996; color: #000; 
     }
+    th.hor { background-color: #c85!important; }
+    th.twi { background-color: #a63!important; }
+    table.sun-metadata td { text-align: center; }
 </style>
-<h1>Planets</h1>
+<h1>Sun</h1>
+<table class="planet-list sun-metadata">
+    <thead>
+        <tr>
+            <th class="pos">&alpha;</th>
+            <th class="pos">&delta;</th>
+            <th class="pos">Const.</th>
+
+            <th class="hor">Set</th>
+            <th class="twi">Twi. End</th>
+            <th class="twi">Twi. Begin</th>
+
+            <th class="hor">Rise</th>
+            <th>Transit</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="odd">
+            {% with obj=cookies.sun %}
+            <td>{{ obj.apparent.equ.ra_str }}</td>
+            <td>{{ obj.apparent.equ.dec_str }}</td>
+            <td>{{ obj.observe.constellation.name }}</td>
+
+            <td>{{ sun_set }}</td>
+            <td>{{ twilight.astro.start }}</td>
+            <td>{{ twilight.astro.end }}</td>
+
+            <td>{{ sun_rise }}</td>
+            <td>{{ sun_transit }}</td>
+            {% endwith %}
+            </tr>
+    </tbody>
+</table>
+<h1>Planets/Moon</h1>
 
 <table class="planet-list">
     <thead>
