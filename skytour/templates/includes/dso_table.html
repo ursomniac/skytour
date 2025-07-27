@@ -13,6 +13,7 @@
         color: #000; 
         border: 1px solid #000; 
     }
+    span.hidden { display: none; }
 </style>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
@@ -62,7 +63,10 @@
         {% endif %}
         <td>{{ dso.morphological_type }}</td>
         <td>{{ dso.ra|to_hm:1 }}</td>
-        <td>{{ dso.dec|to_dm:1 }}</td>
+        <td>
+            <span class="hidden">{{ dso.dec|sortable_angle }}</span>
+            {{ dso.dec|to_dm:1 }}
+        </td>
         <td>
             {% if dso.find_magnitude.0 %}
             {{ dso.find_magnitude.0|floatformat:2 }}

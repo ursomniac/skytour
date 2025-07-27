@@ -26,6 +26,7 @@ from ..astro.transform import get_alt_az
 from ..astro.utils import alt_get_small_sep, get_simple_position_angle, get_atlas_sep
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.utils import get_constellation
+from ..tech.models import Telescope
 from ..utils.models import Constellation, ObjectType
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
@@ -296,6 +297,14 @@ class DSOAbstract(Coordinates):
         elif mode == 'other':
             return self.id_in_catalog
         return self.shown_name
+    
+    @property
+    def id_as_digits(self):
+        if self.id_in_catalog.isdigit():
+            z = self.id_in_catalog.zfill(8)
+        else:
+            z = self.id_in_catalog
+        return z
     
     class Meta:
         abstract = True
@@ -1029,6 +1038,14 @@ class DSOAbstractAlias(models.Model):
             return self.shown_name
         return f"{self.catalog.abbreviation} {self.id_in_catalog}"
     
+    @property
+    def id_as_digits(self):
+        if self.id_in_catalog.isdigit():
+            z = self.id_in_catalog.zfill(8)
+        else:
+            z = self.id_in_catalog
+        return z
+    
     class Meta:
         abstract = True
         verbose_name = 'Alias'
@@ -1065,7 +1082,8 @@ class DSOImage(ObjectImage):
     """
     M:1 between uploaded images and a DSO.
     THESE ARE NOT GENERATED - they're uploaded from anywhere (e.g., an HST image of M 1).
-
+    BUG: this points to ObjectImage which has the upload_to directory hardwired to the 
+        SAME directory as Library images...  ARGH!
     NOTE: The purpose of this table is to provide "cool" images of things to give the user
     an idea of what they really look like.
 
@@ -1165,6 +1183,14 @@ class DSOList(models.Model):
         null = True, blank = True
     )
     dso = models.ManyToManyField (DSO, blank=True)
+
+    # TODO: V2.3 - Change this to a "through" model
+    # 1. create the new model; migrate in
+    # 2. change the underlying CRUD ops to use this instead
+    # 3. migrate existing DSOList DSO members to the new model
+    # 4. remove this field and the underlying table
+    # member = models.ManyToManyField (DSO, through='DSOListMember', blank=True)
+    
     tags = TaggableManager(blank=True)  # Used  TODO V2.x: come up with some use for this...
     pdf_page = models.FileField (
         _('PDF Page'),
@@ -1245,6 +1271,18 @@ class DSOList(models.Model):
         verbose_name = 'DSO List'
         verbose_name_plural = 'DSO Lists'
         ordering = ['-pk']
+
+x = """
+class DSOListMember(models.Model):  # through table
+    dso_list = models.ForeignKey(DSOList, on_delete=models.CASCADE)
+    dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
+    telescope = models.ForeignKey(
+        Telescope, on_delete=models.CASCADE,
+        null = True, blank = True
+    )
+    # list_priority ?
+    # notes ?
+"""
 
 class AtlasPlateAbstract(models.Model):
     """

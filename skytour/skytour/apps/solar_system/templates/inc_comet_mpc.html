@@ -19,5 +19,13 @@
     </td></tr>
     <tr><td>Perihelion: {{ obj.get_perihelion_date }}</td></tr>
     <tr><td>Perihelion Dist: {{ obj.mpc_object_dict.perihelion_distance_au }} AU</td></tr>
-    <tr><td>Period: {{ obj.comet_period|floatformat:1 }} yrs
+    <tr><td>
+        {% if obj.mpc_object_dict.eccentricity %}
+            Period: 
+            {% if obj.mpc_object_dict.eccentricity < 1.0 %}
+            {{ obj.comet_period|floatformat:1 }} yrs
+            {% else %}
+            e > 1 
+            {% endif %}
+        {% endif %}
 </table>

@@ -1,4 +1,5 @@
 import datetime, pytz, time
+from operator import itemgetter
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -14,7 +15,8 @@ from ..abstract.vocabs import (
     IMAGE_ORIENTATION_CHOICES, 
     IMAGE_PROCESSING_STATUS_OPTIONS
 )
-from ..astro.time import get_datetime_from_strings
+from ..astro.almanac import get_twilight_begin_end
+from ..astro.time import get_datetime_from_strings, convert_datetime_to_local_string
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..tech.models import Telescope
@@ -68,10 +70,21 @@ class PlanetListView(CookieMixin, ListView):
             d['last_observed'] = p.last_observed
             d['obj_rise'], d['obj_set'], d['obj_transit'] = get_rise_set(d['almanac'])
             planet_list.append(d)
-
         context['planet_list'] = planet_list
+
         moon = context['cookies']['moon']
+        sun = context['cookies']['sun']
         context['moon_rise'], context['moon_set'], context['moon_transit'] = get_rise_set(moon['almanac'])
+        context['sun_rise'], context['sun_set'], context['sun_transit'] = get_rise_set(sun['almanac'], format="%I:%M %p")
+        
+        twilight = context['cookies']['user_pref']['twilight']
+        my_time_zone = pytz.timezone(context['location'].time_zone.pytz_name)
+        twilight = get_twilight_begin_end(context['utdt_start'], context['location'], time_zone=my_time_zone)
+        context['twilight'] = twilight
+        print("Twilight: ", twilight)
+        #context['twilight_begin'] = convert_datetime_to_local_string(twilight['begin'], location=context['location'])
+        #context['twilight_end'] = convert_datetime_to_local_string(twilight['end'], location=context['location'])
+        
         pdict = get_ecliptic_positions(context['utdt_start'])
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context
@@ -195,11 +208,13 @@ class AsteroidListView(CookieMixin, ListView):
             asteroid_cookie = context['cookies']['asteroids']
             for d in asteroid_cookie:
                 a = asteroids.get(number=d['number'])
+                d['cid'] = f"{d['number']:08d}"
                 d['has_wiki'] = a.has_wiki
                 d['n_obs'] = a.number_of_observations
                 d['num_library_images'] = a.num_library_images
                 d['last_observed'] = a.last_observed
                 asteroid_list.append(d)
+            asteroid_list = sorted(asteroid_list, key=itemgetter('cid'))
         context['asteroid_list'] = asteroid_list
         context['table_id'] = 'obs_asteroid_list'
 
@@ -247,6 +262,7 @@ class CometListView(CookieMixin, ListView):
             for d in comet_cookie: # get the observation history for each comet on the list
                 try:
                     comet = comets.get(pk=d['pk'])
+                    d['mag_offset'] = comet.mag_offset
                     d['has_wiki'] = comet.has_wiki
                     d['n_obs'] = comet.number_of_observations
                     d['num_library_images'] = comet.num_library_images
@@ -279,7 +295,7 @@ class CometDetailView(CookieMixin, DetailView):
                 pdict['est_mag'] = mag + object.mag_offset
                 break
         # TODO V2: if pdict is None then it's not in the cookie.
-        # Figure out how to add things from that
+        # Figure out how to add things from that 
         context['comet'] = pdict
         #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         slideshow = object.image_library.order_by('order_in_list')
@@ -754,7 +770,7 @@ class CometManageListView(ListView):
         context = super(CometManageListView, self).get_context_data(**kwargs)
         context['object_list'] = self.get_queryset().order_by('-status', 'name')
         context['create_form'] = CometManagementForm()
-        context['table-id'] = 'all-comet-list'
+        context['table_id'] = 'all-comet-list'
         return context
 
 class AsteroidManageListView(ListView):
@@ -817,6 +833,7 @@ class AsteroidWikiPopup(DetailView):
         asteroid = self.get_object()
         text = asteroid.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = asteroid
         context['text'] = html_output
         return context
     
@@ -829,6 +846,7 @@ class PlanetWikiPopup(DetailView):
         planet = self.get_object()
         text = planet.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = planet
         context['text'] = html_output
         return context
     
@@ -841,7 +859,25 @@ class CometWikiPopup(DetailView):
         comet = self.get_object()
         text = comet.wiki.summary
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+        context['object'] = comet
         context['text'] = html_output
+        return context
+    
+class MeteorShowerListView(ListView):
+    model = MeteorShower
+    template_name = 'meteor_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(MeteorShowerListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'meteor-list'
+        return context
+
+class MeteorShowerDetailView(DetailView):
+    model = MeteorShower
+    template_name = 'meteor_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MeteorShowerDetailView, self).get_context_data(**kwargs)
         return context
 
 class MeteorShowerWikiPopup(DetailView):

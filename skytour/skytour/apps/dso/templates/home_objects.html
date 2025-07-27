@@ -39,6 +39,7 @@
     table.top-main td { border: none; }
     td.list-name { max-width: 400px!important; }
     button.nav { margin: 5px 5px; height: 2em; width: 15em; }
+    span.hidden { display: none; }
 </style>
 
 <h1>Deep Sky Objects</h1>
@@ -78,8 +79,8 @@
                             <option {% if pri == '4' %}selected{% endif %}>4</option>
                         </select>
                         &nbsp;&nbsp;
-                        <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
-                        <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
+                        <label for="on_dso_list_all">All Pri. on DSOList:&nbsp;</label>
+                        <input type="checkbox" name="on_dso_list_all" {% if on_dso_list_all %} checked{% endif %}>
                         </td>
                         <td>
                         <label for="imaged">Imaged:&nbsp;</label> 
@@ -89,6 +90,9 @@
                             <option {% if imaged == 'Yes' %}selected{% endif %}>Yes</option>
                             <option {% if imaged == 'Redo' %}selected{% endif %}>Redo</option>
                         </select>
+                        &nbsp;&nbsp;
+                        <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
+                        <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
                         </td>
                     </tr>
                     <tr>
@@ -199,7 +203,10 @@
         {% endif %}
         <td>{{ dso.morphological_type }}</td>
         <td>{{ dso.ra|to_hm:1 }}</td>
-        <td>{{ dso.dec|to_dm:1 }}</td>
+        <td>
+            <span class="hidden">{{ dso.dec|sortable_angle }}</span>
+            {{ dso.dec|to_dm:1 }}
+        </td>
         <td>{{ dso.altitude|floatformat:2 }}</td>
         <td>{{ dso.azimuth|floatformat:1 }}</td>
         <td>{{ dso.airmass|floatformat:3 }}</td>

@@ -85,7 +85,9 @@
                 </tr>
                 <tr>
                     <td class="ident">
+                        {% if object.year_of_discovery %}
                         <b>Discovered:</b> {{ object.year_of_discovery }}
+                        {% endif %}
                     </td>
                 </tr>
             </table>

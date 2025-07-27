@@ -30,12 +30,24 @@
         padding: 4px;
     }
     div.close button { width: 15em; padding: 5px 3em; }
+    button.wikipage {
+        width: 20em;
+        height: 3em;
+    }
+    button.wikipage a { color: #000; }
 </style>
 {% endblock styles %}
 </head>
 <body>
     {% block content %}
     <h2>Wikipedia Summary for {{ object }}</h2>
+    {% if object.wiki.canonical_url %}
+        <a href="{{ object.wiki.canonical_url }}" target="_blank">
+            <button class="wikipage">
+            Full Wiki Page
+            </button>
+        </a>
+    {% endif %}
     <div class="text">
         <p>
         {{ text|safe }}

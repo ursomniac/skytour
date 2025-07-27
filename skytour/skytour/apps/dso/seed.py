@@ -63,12 +63,12 @@ def seed_dso_wiki(model, idlist=None, debug=False):
         if o.has_wiki == 'NOINSTANCE':
             w = wiki_model()
             search = o.default_wikipedia_name
+            w.object_id = o.pk
         else:
             w = o.wiki
             search = o.default_wikipedia_name if w.override_lookup is None else w.override_lookup
         wiki = get_wiki_page(search)
         attr = get_page_attrs(wiki)
-        w.object_id = o.pk
         w.exists = YES if attr['exists'] else NO
         w.ambiguous = YES if attr['ambiguous'] else NO
 
@@ -82,3 +82,28 @@ def seed_dso_wiki(model, idlist=None, debug=False):
 
         if debug:
             print(f"{o.pk} = {search}: E{w.exists} A{w.ambiguous} SL:{w.summary_length} URL:{w.canonical_url}")
+
+def fix_wiki_page(model_name, pk, text, update=True):
+    model = DSO if model_name == 'DSO' else DSOInField
+    obj = model.objects.get(pk=pk)
+    if not hasattr(obj, 'wiki'):
+        print ("Need to create wiki entry - aborting")
+        return None
+    wiki = obj.wiki
+    wiki.override_lookup = text
+    wiki.save()
+
+    if update:
+        page = get_wiki_page(text)
+        attr = get_page_attrs(page)
+        wiki.exists = YES if attr['exists'] else NO
+        wiki.ambiguous = YES if attr['ambiguous'] else NO
+
+        if attr['exists']:
+            wiki.title = attr['title']
+            if not attr['ambiguous']:
+                wiki.summary = attr['summary']
+                wiki.summary_length = attr['summary_length']
+                wiki.canonical_url = attr['canonical_url']
+        wiki.save()
+    return wiki

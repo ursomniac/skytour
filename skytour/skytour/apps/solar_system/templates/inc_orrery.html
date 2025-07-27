@@ -1,17 +1,67 @@
+{% load skytour_filters humanize %}
 <style>
     table.orrery-table th { background-color: #996; color: #000; }
     table.orrery-table td { color: #999; }
     table.orrery-table td.planet { background-color: #999; color: #000; }
     span.planet-ball { float: right; }
+    td.tdtop { vertical-align: top; padding: 4px; }
+    td.tdtop h3 { margin-top: 2px; }
+    dl { margin-bottom: 20px; }
+    dt {
+        float: left;
+        clear: left; /* Ensures each dt starts on a new line */
+        margin-right: 10px; /* Adds spacing between dt and dd */
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #ffc;
+        width: 8em;
+    }
+    dd {
+        margin-left: 0; /* Removes default dd margin */
+        overflow: hidden; /* Contains floated dt within dd's parent */
+        margin-bottom: 5px;
+    }
 </style>
 <h2>Position of the Planets {{ utdt_start|date:"Y-m-d h:i" }} UT</h2>
 <table>
     <tr>
-        <td>
+        <td width=40% class="tdtop">
             <img src="{{ system_image }}"/>
             <br><small>(Constellation boundaries do not strictly align with the 30° longitudinal grid.)
         </td>
-        <td style="vertical-align: top">
+        <td class="tdtop">
+            <h3>Solar Position</h3>
+            <dl>
+                <dt>Longitude:</dt><dd>{{ cookies.sun.apparent.ecl.lon_str }}</dd>
+                <dt>Distance:</dt><dd>{{ cookies.sun.apparent.distance.au|floatformat:3 }} AU</dd>
+                <dt></dt><dd>{{ cookies.sun.apparent.distance.km|floatformat:3|intcomma }} km</dd>
+                <dt></dt><dd>{{ cookies.sun.apparent.distance.mi|floatformat:3|intcomma }} mi</dd>
+                <dt>Light Time:</dt><dd>{{ cookies.sun.apparent.distance.light_time_str }}</dd>
+                <dt>Diameter:</dt><dd>{{ cookies.sun.observe.angular_diameter_str }}</dd>
+            </dl>
+            <h3>Lunar Position</h3>
+            <dl>
+                <dt>Longitude:</dt><dd>{{ cookies.moon.apparent.ecl.lon_str }}</dd>
+                <dt>Latitude:</dt><dd>{{ cookies.moon.apparent.ecl.lat_str }}</dd>
+                <dt>Elongation:</dt><dd>{{ cookies.moon.observe.elongation|to_dm }}</dd>
+                <dt>Distance:</dt><dd>{{ cookies.moon.apparent.distance.au|floatformat:3 }} AU</dd>
+                <dt></dt><dd>&nbsp;&nbsp;=&nbsp;{{ cookies.moon.apparent.distance.km|floatformat:3|intcomma }} km</dd>
+                <dt></dt><dd>&nbsp;&nbsp;=&nbsp;{{ cookies.moon.apparent.distance.mi|floatformat:3|intcomma }} mi</dd>
+                <dt>Light Time:</dt><dd>{{ cookies.moon.apparent.distance.light_time_str }}</dd>
+                <dt>Diameter:</dt><dd>{{ cookies.moon.observe.angular_diameter_str }}</dd>
+                <br>
+                <dt>% Illuninated:</dt><dd>{{ cookies.moon.observe.fraction_illuminated|floatformat:1 }}%</dd>
+
+                <dt>Phase:</dt>
+                    <dd>
+                        {{ cookies.moon.observe.lunar_phase.phase|title }}
+                        &nbsp;=&nbsp;{{ cookies.moon.observe.lunar_phase.days_since_new_moon|floatformat:3 }} days
+                    </dd>
+                <dt>Apparent Mag.:</dt><dd>{{ cookies.moon.observe.apparent_magnitude|floatformat:2 }}</dd>
+                <dt>Constellation:</dt><dd>{{ cookies.moon.observe.constellation.name }}</dd>
+            </dl>
+        </td>
+        <td class="tdtop" width=30%>
             <h3>Heliocentric Ecliptic Positions</h3>
             <table class="orrery-table">
                 <tr><th>Planet</th><th>Long.</th><th>Dist.</th></tr>

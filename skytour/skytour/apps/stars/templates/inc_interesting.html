@@ -11,6 +11,7 @@
                 <a href="{% url url_type object.pk %}" target="_blank">{{ object.shown_name }}</a> {{ object.object_type }}
                 {% elif url_type == 'comet-detail' %}
                 {{ object.letter }}: <a href="{% url url_type object.pk %}" target="_blank">{{ object.name }}</a>
+                &nbsp; in {{ object.observe.constellation.abbr }}
                 {% else %}
                 <a href="{% url url_type object.slug %}" target="_blank">{{ object.name }}</a>
                 {% endif %}

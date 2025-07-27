@@ -81,6 +81,7 @@ class MeteorShowerAdmin(admin.ModelAdmin):
                 ('start_date', 'peak_date', 'end_date'),
                 ('radiant_ra', 'radiant_dec', 'longitude'),
                 ('speed', 'zhr', 'parent_body'),
+                'radiant_map',
                 'notes',
             ]
         }),

@@ -36,7 +36,6 @@ def get_rise_set(alist, format="%Y-%m-%d %I:%M %p"):
             otrans = tstr
     return orise, oset, otrans
 
-
 def get_object(object_type, object_id):
     model = {'asteroid': Asteroid, 'comet': Comet, 'planet': Planet}
     try:

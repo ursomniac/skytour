@@ -34,6 +34,7 @@
     table.filter td.submit { background-color: #999; }
     input.submit { width: 12em; height: 2.5em; margin-left: 5em;  }
     label { color: #ff9; font-weight: 600; }
+    span.hidden { display:none; } 
 </style>
 <!-- main -->
 {# header section #}
@@ -176,15 +177,19 @@
     </tr>
     </thead>
     <tbody>
-    {% for cat_object in object_list %}
-    {% with cat_object.dso as thing %}
+    {# for cat_object in object_list #}
+    {# with cat_object.dso as thing #}
+    {% for thing in object_list %}
     <tr class="{% cycle 'odd' 'even' %}">
         <td style="text-align: right;">
-            <a href="{% url 'dso-detail' thing.pk %}">{{ cat_object.in_catalog|safe }}
+            <!-- need this to maintain order of objects on page -->
+            <span class="hidden">{{ thing.cid|stringformat:"08d"}}</span>
+            <a href="{% url 'dso-detail' thing.pk %}">{{ thing.cid|safe }}
                 {% if object.slug == 'bayer' or object.slug == 'flamsteed' %}
                 {{ thing.constellation.abbreviation }}
                 {% endif %}
             </a>
+            {{ thing.has_wiki }}
         </td>
         <td>
             {% if cat_object.in_field %}
@@ -260,7 +265,7 @@
             {% endif %} 
         </td>
     </tr>
-    {% endwith %}
+    {# endwith #}
     {% endfor %}
     </tbody>
 </table>

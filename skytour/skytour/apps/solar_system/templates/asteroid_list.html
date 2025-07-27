@@ -8,6 +8,7 @@
     table.asteroid-list th { background-color: #996; color: #000; }
     div.all-asteroids { height: 4em; }
     div.all-asteroids button { height: 2.5em; width: 20em; margin-left: 5px; }
+    span.hidden { display: none; }
 </style>
 
 <h1>Observable Asteroids</h1>
@@ -34,9 +35,15 @@
     <tbody>
         {% for asteroid in asteroid_list %}
         <tr class="{% cycle 'odd' 'even' %}">
-            <td><a href="{% url 'asteroid-detail' asteroid.slug %}">{{ asteroid.name }}</a></td>
+            <td>
+                <span class="hidden">{{ asteroid.cid }}</span>
+                <a href="{% url 'asteroid-detail' asteroid.slug %}">{{ asteroid.name }}</a>
+            </td>
             <td>{{ asteroid.apparent.equ.ra|to_hms:1 }}</td>
-            <td>{{ asteroid.apparent.equ.dec|to_dms:0 }}</td>
+            <td>
+                <span class="hidden">{{ asteroid.apparent.equ.dec|sortable_angle }}</span>
+                {{ asteroid.apparent.equ.dec|to_dms:0 }}
+            </td>
             <td>{{ asteroid.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ asteroid.observe.constellation.name }}</td>
             <td>{{ asteroid.observe.apparent_magnitude|floatformat:2 }}</td>

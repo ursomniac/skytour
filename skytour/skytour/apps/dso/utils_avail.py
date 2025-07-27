@@ -36,6 +36,7 @@ def find_dsos_at_location_and_time (
         gear = None,
         scheduled = False,
         times = None,
+        on_dso_list_all = False,
         debug = False
     ):
 
@@ -58,11 +59,13 @@ def find_dsos_at_location_and_time (
     candidate_pks = []
 
     for d in dsos: # loop on DSOs
+        override_active = on_dso_list_all and d.active_observing_list_count > 0
         # Filter based on existing images
         priority = d.mode_priority_value_dict[mode]
-        if priority is None:
+        if priority is None and not override_active:
             continue
-        if priority < min_priority:
+        if priority < min_priority and not override_active:
+            #if on_dso_list_all and d.active_observing_list_count == 0
             continue
         # always include imaged = 'All'
         if imaged == 'Yes' and d.library_image is None:

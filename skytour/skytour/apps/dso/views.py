@@ -462,6 +462,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['scheduled'] = is_scheduled
         show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
         context['show_thumbs'] = show_thumbs
+        on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
+        context['on_dso_list_all'] = on_dso_list_all
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -477,16 +479,11 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['min_alt'] = my_min_alt
         context['max_alt'] = my_max_alt
 
-        #if context['min_alt'] is None:
-        #    context['min_alt'] = find_site_parameter('minimum-object-altitude', default=10., param_type='float')
-        #if context['max_alt'] is None:
-        #    context['max_alt'] = find_site_parameter('slew-limit', default=90., param_type='float')
-
         min_dec, max_dec = location.declination_range
-        if context['min_dec'] is None:
-            context['min_dec'] = min_dec
-        if context['max_dec'] is None:
-            context['max_dec'] = max_dec
+        min_dec = float(self.request.GET.get('min_dec', min_dec))
+        max_dec = float(self.request.GET.get('max_dec', max_dec))
+        context['min_dec'] = min_dec
+        context['max_dec'] = max_dec
         context['min_dec_string'] = f"{context['min_dec']:.1f}"
         context['max_dec_string'] = f"{context['max_dec']:.1f}"
 
@@ -524,6 +521,7 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             mask = not no_mask,                      # Use location mask (for trees, buildings, etc.)
             gear = gear,                             # Filter by gear choices
             scheduled = is_scheduled,                # Only show objects on active DSOList objects
+            on_dso_list_all = on_dso_list_all,
             debug=debug
         )
         dsos = up_dict['dsos']
@@ -740,7 +738,7 @@ class DSOManageLibraryImagePanelView(TemplateView):
         context = super(DSOManageLibraryImagePanelView, self).get_context_data(**kwargs)
         panel = self.kwargs['panel']
         pk = self.kwargs['pk']
-        dso = get_object_or_404(DSO, pk=pk)
+        context['dso'] = dso = get_object_or_404(DSO, pk=pk)
 
         image_list = dso.image_library.all()
         if panel == 'slideshow':

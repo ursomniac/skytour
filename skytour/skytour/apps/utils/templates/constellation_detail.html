@@ -100,7 +100,10 @@
             <td class="number">{{ star.hr_id }}</td>
             <td class="number">{{ star.hd_id }}</td>
             <td>{{ star.ra|to_hms:1 }}</td>
-            <td>{{ star.dec|to_dms:0 }}</td>
+            <td>
+                <span class="hidden">{{ star.dec|sortable_angle }}</span>
+                {{ star.dec|to_dms:0 }}
+            </td>
             <td>{{ star.magnitude|floatformat:2 }}</td>
             <td>{{ star.spectral_type }}</td>
         </tr>

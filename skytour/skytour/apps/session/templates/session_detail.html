@@ -50,12 +50,17 @@
 <table class="boxed">
     <tr>
         <td>
-            <h2>Observing Session: {{ object.ut_date|date:"Y-m-d" }}</h2>
+            <h2>
+                Observing Session:
+                 <br>&nbsp;&nbsp;&nbsp;
+                 {{ object.ut_date|date:"Y-m-d" }}
+            </h2>
             <h3 class="subhead">Location: {{ object.location.address }}</h3>
             <ul class="no_bullets">
                 <li>{{ object.location.city }}, {{ object.location.state }}</li>
                 <li>Latitude: {{ object.location.latitude|floatformat:5 }}</li>
                 <li>Longitude {{ object.location.longitude|floatformat:5 }}</li>
+                <li>Page: <a href="{% url 'observing-location-detail' object.location.pk %}" target="_new">{{ object.location }}</a></li>
             </ul>
             {% if object.sqm_avg %}
             SQM: {{ object.sqm_avg }} ({{ object.sqm_range }})
@@ -71,7 +76,7 @@
             {{ object.notes }}
             <br>
             {% endif %}
-            <h4>Objects by Telescope</h4>
+            <h4>Objects by Telescope:</h4>
             {% if tel_dict.keys|length > 1 %}
                 {% for key, objlist in  tel_dict.items %}
                     <h5>{{ key }}</h5>
