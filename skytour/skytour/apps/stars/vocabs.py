@@ -17,6 +17,13 @@ UNICODE = { # greek letters
     'Phi': u'\03C6', 'Chi': u'\03C7', 'Psi': u'\03C8', 'Ome': u'\03C9'
 }
 
+BAYER_INDEX = [
+    None,
+    'Alp', 'Bet', 'Gam', 'Del', 'Eps', 'Zet', 'Eta', 'The',
+    'Iot', 'Kap', 'Lam', 'Mu',  'Nu',  'Xi',  'Omi', 'Pi',
+    'Rho', 'Sig', 'Tau', 'Ups', 'Phi', 'Chi', 'Psi', 'Ome'
+]
+
 GCVS_ID = { # greek letters
     '9001': u'\u03B1', '9002': u'\u03B2', '9003': u'\u03B3', '9004': u'\u03B4',
     '9005': u'\u03B5', '9006': u'\u03B6', '9007': u'\u03B7', '9008': u'\u03B8',

@@ -208,6 +208,7 @@ class AsteroidListView(CookieMixin, ListView):
             asteroid_cookie = context['cookies']['asteroids']
             for d in asteroid_cookie:
                 a = asteroids.get(number=d['number'])
+                d['pk'] = a.pk
                 d['cid'] = f"{d['number']:08d}"
                 d['has_wiki'] = a.has_wiki
                 d['n_obs'] = a.number_of_observations

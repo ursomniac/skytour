@@ -117,7 +117,7 @@
 	}
 	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
 	button.adminb { width: 5em!important; color: #f00; }
-
+	td.field-td-wiki { text-align: center; }
 </style>
 {% endblock styles %}
 
@@ -562,10 +562,10 @@
 			<td>{{ fdso.surface_brightness|floatformat:2 }}</td>
 			<td>{{ fdso.angular_size }}</td>
 			<td>{{ fdso.find_distance.0|floatformat:1 }} {{ fdso.find_distance.1 }}</td>
-			<td>
+			<td class="field-td-wiki">
 				{% if fdso.has_wiki == 'WIKI' %}
 				<button onclick="return realtimePopup('/dso/fieldwiki/{{ fdso.pk }}')">
-					Wiki
+					<b>🅆</b>
 				</button>
 				{% endif %}
 			</td>

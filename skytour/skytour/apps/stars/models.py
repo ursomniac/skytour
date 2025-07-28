@@ -7,7 +7,7 @@ from ..abstract.models import Coordinates
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation
-from .vocabs import ENTITY, GCVS_ID, VARDES
+from .vocabs import ENTITY, GCVS_ID, VARDES, BAYER_INDEX
 
 
 # TODO V2: Come up with a plan to use this
@@ -155,6 +155,40 @@ class BrightStar(Coordinates):
         else:
             name = "HD "+str(self.hd_id)
         return mark_safe(name)
+    
+    @property
+    def name_sort_key(self):
+        """
+        Return a coded key such that:
+            1. Stars with Greek letters come first in Greek order
+            2. Stars with superscripts for a given Greek letter are ordered
+            3. Stars with a Flamsteed number and no Greek letter are next
+            4. Stars with HD numbers come last
+        """
+        out = None
+        if self.bayer:
+            p = 1
+            if self.bayer[-1].isdigit(): # there's a number
+                x = self.bayer[:-1].rstrip()
+                d = self.bayer[-1]
+                num = int(d) if d.isdigit() else 0
+            else:
+                x = self.bayer
+                num = 0
+            if x in BAYER_INDEX:
+                grk = BAYER_INDEX.index(x)
+                out = f"{p}{grk:05d}{num:03d}"
+            
+        if out is None and self.flamsteed:
+            p = 2
+            num = self.flamsteed
+            if num.isdigit():
+                out = f"{p}{int(num):08d}"
+        if out is None:
+            p = 3
+            hd = self.hd
+            out = f"{p}{out:08d}"
+        return out
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
