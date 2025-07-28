@@ -13,6 +13,7 @@ from .utils import filter_catalog
 from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
+from ..stars.utils import order_bright_stars
 
 def get_list_of_primary_library_images(qs):
     distinct_objects = qs.values('object').distinct()
@@ -78,7 +79,11 @@ class ConstellationDetailView(DetailView):
         context['dso_list'] = DSO.objects.filter(constellation=object)
         context['table_id'] = 'constellation_dso_table'
         context['hide_constellation'] = True
-        context['bright_stars'] = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
+        # BUG: This only gets stars with Bayer/Flamsteed numbers!
+        #   The model ingest data doesn't have constellations for the others
+        # TODO: Add a field to BrightStar and add in the constellations!
+        stars = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
+        context['bright_stars'] = order_bright_stars(stars)
         
         # Add solar system objects that happen to be within the constellation from the session cookie
         context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)

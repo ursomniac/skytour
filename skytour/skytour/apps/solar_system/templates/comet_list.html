@@ -9,6 +9,11 @@
     table.comet-list th { background-color: #996; color: #000; }
     div.all-comets-link { height: 4em; }
     div.all-comets-link button { width 15em; height: 2.5em; }
+    td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
+    }
+    th.wiki { white-space: nowrap; padding: 10px 4px; }
     span.hidden { display: none; }
 </style>
 <h1>Observable Comets</h1>
@@ -24,7 +29,7 @@
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
-            <th>Wiki</th>
+            <th class="wiki">🅆</th>
             <th># Obs.</th>
             <th>Last Obs.</th>
         </tr>
@@ -46,7 +51,13 @@
                      &nbsp; (est. {{ comet.observe.apparent_magnitude|add_two:comet.mag_offset|floatformat:2 }})
                 {% endif %}
             </td>
-            <td>{{ comet.has_wiki }}</td>
+            <td class="wiki">
+                {% if comet.has_wiki == 'WIKI' %}
+                <button onclick="return realtimePopup('/comet/wiki/{{ comet.pk }}')" class="wiki">
+                   <b>🅆</b>
+                </button>
+                {% endif %}
+            </td>
             <td>{{ comet.n_obs }} / {{ comet.num_library_images }}</td>
             <td>{% if comet.last_observed %}{{ comet.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>

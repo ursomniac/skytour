@@ -29,6 +29,12 @@
         background-color: #993;
         color: #000;
     }
+    td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
+    }
+    th.wiki { white-space: nowrap; padding: 10px 4px; }
+    button.wiki { width: 1en; }
     td.center { text-align: center; }
     span.helptext { font-size: 85%; font-style: italic; color: #999; }
     table.filter td.submit { background-color: #999; }
@@ -161,6 +167,7 @@
         <th>Object</th>
         <th>Other Catalog</th>
         <th>Con.</th>
+        <th class="wiki">🅆</th>
         <th>Cum.</th>
         <th>&alpha; (2000)</th>
         <th>&delta; (2000)</th>
@@ -189,7 +196,6 @@
                 {{ thing.constellation.abbreviation }}
                 {% endif %}
             </a>
-            {{ thing.has_wiki }}
         </td>
         <td>
             {% if cat_object.in_field %}
@@ -212,6 +218,13 @@
 
         </td>
         <td>{{ thing.constellation.abbreviation }}</td>
+        <td class="wiki">
+            {% if thing.has_wiki == 'WIKI' %}
+            <button onclick="return realtimePopup('/dso/wiki/{{ thing.pk }}')" class="wiki">
+                <b>🅆</b>
+            </button>
+            {% endif %}
+        </td>
         <td>{{ thing.opposition_date|date:"M d"}}
         <td>{{ thing.ra_text }}</td>
         <td>{{ thing.dec_text }}</td>
@@ -283,6 +296,7 @@
 } );
 </script>
 {% endcomment %}
+{% include 'includes/realtime_script.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 {% include 'includes/paginate.html' %}
 {% endblock content %}

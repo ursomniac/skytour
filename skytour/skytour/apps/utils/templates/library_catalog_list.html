@@ -189,7 +189,11 @@
                             {% if object.is_on_active_observing_list %}
                             🔭 &nbsp;
                             {% endif %}
-                            <a href="/admin/dso/dso/{{ object.pk }}" target="_blank"><button>Admin</button></a>
+                            {% if object.has_wiki == 'WIKI' %}
+                            <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="wiki">
+                                <b>🅆</b>
+                            </button>
+                            {% endif %}
                         </span>
                     </td>
                 </tr>
@@ -208,4 +212,5 @@
         </td>
     </tr>
 </table>
+{% include 'includes/realtime_script.html' %}
 {% endblock content %}

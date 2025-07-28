@@ -36,5 +36,8 @@ def parse_designation(str):
     else:
         return str
 
-
-
+def order_bright_stars(stars):
+    """
+    This is slow but the size of the querysets aren't large
+    """
+    return sorted(stars, key=lambda t: t.name_sort_key)

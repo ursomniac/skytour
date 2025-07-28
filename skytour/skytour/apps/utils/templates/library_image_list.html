@@ -34,9 +34,10 @@
         text-align: right; color: #0cc; font-style: italic;
         padding: 0 4px 0 4px; position: relative; float: right; margin-right: 4px;
     }
-    span.admin_line {
+    span.wiki_line {
         margin-bottom: 15px;
     }
+    button.wiki { width: 1en; }
     div.image_caption {
         text-align: left;  background-color: #000; 
         padding: 4px; font-size: 80%;
@@ -181,18 +182,20 @@
                 </td>
                 <td  width="40%" class="topalign">
                     {% if object.object_class == 'dso' %}
-                    <span class="admin_line">
-                        <a href="/admin/dso/dso/{{ object.pk }}/change" target="_blank" style="color:#000">
-                            <button>Admin</button>
-                        </a>
+                    <span class="wiki_line">
+                        {% if object.has_wiki == 'WIKI' %}
+                            <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="wiki">
+                                <b>🅆</b>
+                            </button>
+                        {% endif %}
                         {% if object.num_slideshow_images >  1 %}
-                        <span class="slides_tagline">SLIDES</span>
+                            <span class="slides_tagline">SLIDES</span>
                         {% else %}
-                        &nbsp;
+                            &nbsp;
                         {% endif %}
                         <br/>
+                        </span>
                     {% endif %}
-                    </span>
                     <br/>
                     <span class="label">Mag:</span>
                     {% if object.find_magnitude.0 %}

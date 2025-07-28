@@ -17,6 +17,12 @@
         background-color: #996;
         color: #000;
     }
+    table.dso_table tbody td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
+    }
+    table.dso_table thead th.wiki { white-space: nowrap; padding: 10px 4px; }
+    button.wiki { width: 1en; }
     table.filter_form label { color: #ff6; font-weight: bold; }
     table.filter_form { border: 1px solid #996; }
     table.filter_form td.submit { 
@@ -158,6 +164,7 @@
         <th>Thumb</th>
         {% endif %}
         <th>Name</th>
+        <th class="wiki">🅆</th>
         {% if not hide_constellation %}<th>Con.</th>{% endif %}
         {% if not hide_type %}<th>Type</th>{% endif %}
         <th>Class</th>
@@ -194,6 +201,13 @@
             <small>
             {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
             </small>
+        </td>
+        <td class="wiki">
+            {% if dso.has_wiki == 'WIKI' %}
+            <button onclick="return realtimePopup('/dso/wiki/{{ dso.pk }}')" class="wiki">
+                <b>🅆</b>
+                </button>
+            {% endif %}
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_blank">{{ dso.constellation.slug }}</a></td>
@@ -268,6 +282,7 @@
 <a href="#top"><button class="nav" type="button">Go to Top</button></a>
 
 {% include 'includes/sortable_table.html' %}
+{% include 'includes/realtime_script.html' %}
 {% include 'includes/dsolistadjust_script.html' %}
 <br/>
 {% include 'includes/performance_time.html' %}

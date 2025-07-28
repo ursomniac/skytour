@@ -9,7 +9,10 @@
     img { display: block; }
     #constellation_stars th { background-color: #996; color: #000; }
     button.op { width: 15em; height: 2em; }
+    button.op a { color: #000; text-decoration: none; }
+    span.hidden { display:none; } 
 </style>
+<a name="section-top"></a>
 <table class="constellation-header">
     <tr>
         <td colspan=>
@@ -23,6 +26,8 @@
                 {% else %}
                 <span class="boxed">{{ object.has_wiki_text }}</span>
                 {% endif %}
+                <a href="#section-dso"><button class="op">DSOs ⬇️</button></a>
+                <a href="#section-stars"><button class="op">Bright Stars ⬇️</button></a>
             </p>
         </td>
         <td style='vertical-align: top;'>
@@ -49,7 +54,7 @@
     </tr>
     <tr>
         <td colspan="3">
-            <h3>Description</h3>
+            <h2>Description</h2>
             {{ object.description|safe }}
         </td>
     </tr>
@@ -73,12 +78,18 @@
 {% endwith %}
 {% endif %}
 
+<a name="section-dso"></a>
 <h2>DSOs</h2>
+<a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
+
 {% with table_id='constellation_dso' %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}
 
+<a name="section-stars"></a>
 <h2>Bright Stars</h2>
+<a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
+
 <table id="constellation_stars">
     <thead>
         <tr>
@@ -95,7 +106,10 @@
     <tbody>
         {% for star in bright_stars %}
         <tr>
-            <td>{{ star.printable_name }}</td>
+            <td>
+                <span class="hidden">{{ star.name_sort_key }}</span>
+                {{ star.printable_name }}
+            </td>
             <td>{% if star.proper_name %}{{ star.proper_name }}{% endif %}</td>
             <td class="number">{{ star.hr_id }}</td>
             <td class="number">{{ star.hd_id }}</td>
@@ -110,6 +124,7 @@
         {% endfor %}
     </tbody>
 </table>
+
 <script>
     $(document).ready(function() {
     $('#constellation_stars').DataTable( {

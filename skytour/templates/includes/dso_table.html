@@ -3,22 +3,30 @@
     span.light-yellow { color: #ffc; font-weight: bold; }
     span.infield { float: right; font-size: 80%; }
     span.nickname { font-style: italic; color: #ff9; }
+    span.wiki { color: #9f6; }
     table.dso_table tbody th, 
     table.dso_table tbody td { 
         padding: 4px 10px 2px 10px; 
         font-size: 90%;
+    }
+    table.dso_table tbody td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
     }
     table.dso_table th { 
         background-color: #996; 
         color: #000; 
         border: 1px solid #000; 
     }
+    table.dso_table thead th.wiki { white-space: nowrap; padding: 10px 4px; }
     span.hidden { display: none; }
+    button.wiki { width: 1en; }
 </style>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
         <th>Name</th>
+        <th class="wiki">🅆</th>
         {% if not hide_constellation %}<th>Con.</th>{% endif %}
         {% if not hide_type %}<th>Type</th>{% endif %}
         <th>Class</th>
@@ -49,7 +57,13 @@
             <small>
             {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
             </small>
-
+        </td>
+        <td class="wiki">
+            {% if dso.has_wiki == 'WIKI' %}
+            <button onclick="return realtimePopup('/dso/wiki/{{ dso.pk }}')" class="wiki">
+                <b>🅆</b>
+                </button>
+            {% endif %}
         </td>
         {% if not hide_constellation %}
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>
@@ -140,6 +154,7 @@
 </tbody>
 </table>
 {% include 'includes/sortable_table.html' %}
+{% include 'includes/realtime_script.html' %}
 {% if load_adjust_script != False %}
 {% include 'includes/dsolistadjust_script.html' %}
 {% endif %}

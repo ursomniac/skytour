@@ -9,6 +9,11 @@
     div.all-asteroids { height: 4em; }
     div.all-asteroids button { height: 2.5em; width: 20em; margin-left: 5px; }
     span.hidden { display: none; }
+    td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
+    }
+    th.wiki { white-space: nowrap; padding: 10px 4px; }
 </style>
 
 <h1>Observable Asteroids</h1>
@@ -27,7 +32,7 @@
             <th>Distance</th>
             <th>Constellation</th>
             <th>Magnitude</th>
-            <th>Wiki</th>
+            <th class="wiki">🅆</th>
             <th># Obs./Images</th>
             <th>Last Observed</th>
         </tr>
@@ -47,7 +52,13 @@
             <td>{{ asteroid.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ asteroid.observe.constellation.name }}</td>
             <td>{{ asteroid.observe.apparent_magnitude|floatformat:2 }}</td>
-            <td>{{ asteroid.has_wiki }}</td>
+            <td class="wiki">
+                {% if asteroid.has_wiki == 'WIKI' %}
+                <button onclick="return realtimePopup('/asteroid/wiki/{{ asteroid.pk }}')" class="wiki">
+                   <b>🅆</b>
+                </button>
+                {% endif %}
+            </td>
             <td>{{ asteroid.n_obs }} / {{ asteroid.num_library_images }}</td>
             <td>{% if asteroid.last_observed %}{{ asteroid.last_observed|date:"Y-m-d H:i" }} UT{% endif %}</td>
         </tr>
