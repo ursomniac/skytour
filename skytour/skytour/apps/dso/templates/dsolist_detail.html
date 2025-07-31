@@ -5,9 +5,10 @@
 <style>
     h1 { color: #fc0; }
     table.meta { border: 1px solid #999; max-width: 40%; }
-    table.meta td { vertical-align: top; border: none; padding: 0px 5px; }
+    table.meta td { vertical-align: top; border: none; padding: 0px 10px; }
     table.meta td h2 { margin-top: 5px; }
     table.meta td.nav button { height: 2.5em; width: 20em;  margin-left: 3em; }
+    table.meta td.right { padding-right: 30px; }
     span.status { color: #ff9; }
     h2.count { color: #ff9;  margin-bottom: 1px; }
 </style>
@@ -23,20 +24,30 @@
             {% endif %}
             </p>
         </td>
-        <td>
+        <td class="right">
             <h2>Status: 
             <span class="status">{{ object.active_status }}</span>
             </h2>
         </td>
     </tr>
     <tr>
-        <td colspan=2 class="nav">
+        <td colspan=1 class="nav">
             <h3>Management</h3>
             <p>
                 <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
                 <a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a>
                 {% include 'form_dsolist_edit.html' %}
             </p>
+        </td>
+        <td class="right">
+            <h3>Active DSO Lists</h3>
+            <select onchange="window.location.href=this.value;">
+                {% for entry in active_lists %}
+                <option value="{% url 'dsolist-detail' entry.pk %}" {% if entry.pk == object.pk %}selected{% endif %}>
+                    {{ entry.name }}
+                </option>
+                {% endfor %}
+            </select>
         </td>
     </tr>
 </table>
