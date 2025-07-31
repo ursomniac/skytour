@@ -1,1 +1,1 @@
-2.2.7 - Added DSOList cross-references to DSOListDetail
+2.2.7.a - Fixed bug in @cookie if on list but no priority set for mode

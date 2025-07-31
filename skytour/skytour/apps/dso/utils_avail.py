@@ -64,9 +64,11 @@ def find_dsos_at_location_and_time (
         priority = d.mode_priority_value_dict[mode]
         if priority is None and not override_active:
             continue
-        if priority < min_priority and not override_active:
+        if priority and priority < min_priority and not override_active:
             #if on_dso_list_all and d.active_observing_list_count == 0
             continue
+        if priority is None and override_active:
+            pass
         # always include imaged = 'All'
         if imaged == 'Yes' and d.library_image is None:
             continue
