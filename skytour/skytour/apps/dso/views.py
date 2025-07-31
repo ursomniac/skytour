@@ -21,7 +21,8 @@ from ..abstract.utils import get_real_time_conditions
 from ..abstract.vocabs import (
     IMAGE_CROPPING_OPTIONS, 
     IMAGE_ORIENTATION_CHOICES, 
-    IMAGE_PROCESSING_STATUS_OPTIONS
+    IMAGE_PROCESSING_STATUS_OPTIONS,
+    YES
 )
 from ..astro.time import get_datetime_from_strings
 from ..session.pdf_pages.dso import do_dso_lists
@@ -190,7 +191,7 @@ class DSOListActiveDSOListView(CookieMixin, TemplateView):
         context = super(DSOListActiveDSOListView, self).get_context_data(**kwargs)
         priority = int(self.request.GET.get('priority', 4))
         mode = self.request.GET.get('mode', context['observing_mode'])
-        context['active_lists'] = DSOList.objects.filter(active_observing_list=True)
+        context['active_lists'] = DSOList.objects.filter(active_observing_list=YES)
         context['priority'] = priority
         context['mode'] = mode
         context['dso_list'] = dso_list = get_active_dsolist_objects(mode, priority)
@@ -273,6 +274,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         # Deal with Edit form
         initial = {'name': object.name, 'description': object.description, 'active_observing_list': object.active_observing_list}
         context['edit_form'] = DSOListEditForm(initial=initial)
+        context['active_lists'] = DSOList.objects.filter(active_observing_list=YES)#.exclude(pk=object.pk)
         context['object'] = object
         context['hide_image'] = False
         return context
