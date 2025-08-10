@@ -214,7 +214,7 @@ def get_datetime_from_strings(date_str, time_str):
     except:
         return None
     
-def convert_datetime_to_local_string(item, location=None, format="%Y-%m-%d %I:%M %p"):
+def convert_datetime_to_local_string(item, location=None, format="%Y-%m-%d %I:%M %p", debug=False):
     dt_orig = isoparse(item)
     if location is None:
         return dt_orig
@@ -222,6 +222,8 @@ def convert_datetime_to_local_string(item, location=None, format="%Y-%m-%d %I:%M
     dt_local = dt_orig.astimezone(local_tz)
     tstr = dt_local.strftime(format)
 
-    print("ORIG: ", dt_orig)
-    print("LOCAL: ", dt_local)
+    if debug:
+        print("ORIG: ", dt_orig)
+        print("LOCAL: ", dt_local)
+        
     return tstr

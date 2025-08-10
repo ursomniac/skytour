@@ -1,1 +1,1 @@
-2.2.7.a - Fixed bug in @cookie if on list but no priority set for mode
+2.3 - Added a management command to create star maps at a given ra/dec
