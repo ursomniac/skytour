@@ -224,6 +224,8 @@ def create_dso_finder_chart(
         path = 'media/dso_charts/',
         gear_list = ['eyepiece', 'equinox2', 'seestar50', 'seestar30'],
         include_mosaic = False,
+        constellation_lines = True,
+        constellation_boundaries = True,
         ts = None, eph = None, t = None, earth = None
     ):
     """
@@ -260,11 +262,13 @@ def create_dso_finder_chart(
     ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
     ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, reversed=reversed)
     times.append((time.perf_counter(), 'Hipparcos'))
-    ax = map_constellation_lines(ax, stars, reversed=reversed)
+    if constellation_lines:
+        ax = map_constellation_lines(ax, stars, reversed=reversed)
     times.append((time.perf_counter(), 'Constellation Lines'))
     # circular import... ugh
     lines, _ = get_boundary_lines(dso.constellation.abbreviation, 'constellation')
-    ax = new_map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False)
+    if constellation_boundaries:
+        ax = new_map_constellation_boundaries(ax, lines, earth, t, projection, reversed=False)
 
     ax = map_bright_stars(ax, earth, t, projection, points=False, annotations=True, reversed=reversed)
     times.append((time.perf_counter(), 'Bright Stars'))
