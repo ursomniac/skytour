@@ -59,15 +59,14 @@ def find_dsos_at_location_and_time (
     candidate_pks = []
 
     for d in dsos: # loop on DSOs
-        override_active = on_dso_list_all and d.active_observing_list_count > 0
+        override_active = on_dso_list_all and (d.active_observing_list_count > 0)
         # Filter based on existing images
         priority = d.mode_priority_value_dict[mode]
         if priority is None and not override_active:
             continue
-        if priority and priority < min_priority and not override_active:
-            #if on_dso_list_all and d.active_observing_list_count == 0
+        if (priority != None) and (priority < min_priority) and not override_active:
             continue
-        if priority is None and override_active:
+        if (priority is None) and override_active:
             pass
         # always include imaged = 'All'
         if imaged == 'Yes' and d.library_image is None:
@@ -77,13 +76,13 @@ def find_dsos_at_location_and_time (
                 continue
         elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
-        if gear is not None and len(d.mode_list) > 0:
+        if (gear is not None) and len(d.mode_list) > 0:
             gear_set = set(gear)
             dso_set = set(d.mode_list)
             n_overlap = len(gear_set.intersection(dso_set))
             if n_overlap < 1:
                 continue
-        if scheduled and d.active_observing_list_count == 0:
+        if scheduled and (d.active_observing_list_count == 0):
             continue
         (az, alt, _) = d.alt_az(location, utdt)
         in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask, debug=debug)

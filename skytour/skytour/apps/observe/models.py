@@ -219,7 +219,8 @@ class ObservingLocation(models.Model):
     def name_for_header(self):
         x = "{}, {} {}".format(self.street_address, self.city, self.short_region_name)
         if self.name:
-            x = "{}: ".format(self.name) + x
+            br = '<br>' if len(self.name) + len(x) > 48 else ''
+            x = "{}: ".format(self.name) + br + x
         return x
 
     @property

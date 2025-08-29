@@ -233,7 +233,7 @@
         </td>
         {% endif %}
         <td>
-            {% if dso.mode_imaging_priority %} 
+            {% if dso.mode_imaging_priority >= 0 %} 
                 <span hidden>{{ dso.mode_imaging_priority }} </span>
                 {{ dso.mode_imaging_priority_span }}
             {% endif %}
