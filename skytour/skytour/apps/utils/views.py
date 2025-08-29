@@ -197,7 +197,7 @@ class ObjectTypeDetailView(DetailView):
 
 GALAXY_TYPES = ['galaxy--barred-spiral', 'galaxy--cluster', 'galaxy--dwarf', 'galaxy--elliptical',
     'galaxy--intermediate', 'galaxy--irregular', 'galaxy--lenticular', 
-    'galaxy--spiral']
+    'galaxy--spiral', 'galaxy--unclassified', 'galaxy--compact-group']
 NEBULA_TYPES = ['cluster-nebulosity', 'dark-nebula', 'diffuse-nebula',
     'nebula--emission', 'interstellar-matter', 'planetary-nebula',
     'reflection-nebula', 'supernova-remnant']
@@ -267,6 +267,7 @@ class LibraryImageView(TemplateView):
         page_no = self.request.GET.get('page', 1)
         num_on_page = self.request.GET.get('page_size', self.paginate_by)
         p = Paginator(all_image_list, num_on_page)
+
         try:
             this_page = p.page(page_no)
         except:
@@ -309,11 +310,12 @@ class LibraryCatalogView(TemplateView):
             dso_list = raw_dso_list
         else:
             dso_list = assemble_catalog(catalog_slug, raw=raw_dso_list)
-
         imaged_dso_list =  [x  for x in dso_list if x.num_library_images > 0]
+        shown_list = dso_list if all else imaged_dso_list
+        
         context['no_alias_catalogs'] = ['caldwell', 'messier']
         context['no_number_catalogs'] = ['other', 'bayer', 'flamsteed']
-        context['object_list'] = dso_list if all else imaged_dso_list
+        context['object_list'] = shown_list
         context['object_count'] = len(dso_list)
         context['image_list_count'] = len(imaged_dso_list)
         context['image_percent'] = 0 if len(dso_list) == 0 else 100. * len(imaged_dso_list) / len(dso_list)
@@ -322,7 +324,6 @@ class LibraryCatalogView(TemplateView):
         context['catalog_list'] = catalog_list
         context['use_title'] = f"{ catalog.name } Images"
         context['constellation_list'] = assemble_constellation_list()
-
         return context
     
 class LibraryConstellationView(TemplateView):
@@ -337,6 +338,7 @@ class LibraryConstellationView(TemplateView):
         abbr = abbr if abbr is not None else self.request.GET.get('abbr', 'AND').upper()
         dso_images = DSOLibraryImage.objects.filter(object__constellation__abbreviation=abbr).order_by('-ut_datetime', 'order_in_list')
         dso_image_list = get_list_of_primary_library_images(dso_images)
+
         context['abbreviation'] = abbr
         context['image_list'] = dso_image_list
         context['constellation'] = Constellation.objects.filter(abbreviation=abbr).first()

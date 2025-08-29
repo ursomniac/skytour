@@ -1,1 +1,1 @@
-2.3 - Added a management command to create star maps at a given ra/dec
+2.3.2 - fixed bug on priority zero objects
