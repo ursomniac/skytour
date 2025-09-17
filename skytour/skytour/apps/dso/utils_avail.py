@@ -1,4 +1,5 @@
 import datetime as dt, pytz
+from ..astro.transform import get_hour_angle
 from ..observe.models import ObservingLocation
 import time
 
@@ -37,6 +38,8 @@ def find_dsos_at_location_and_time (
         scheduled = False,
         times = None,
         on_dso_list_all = False,
+        west_ha_limit = 6.,
+        incl_low_culmination = False,
         debug = False
     ):
 
@@ -76,6 +79,7 @@ def find_dsos_at_location_and_time (
                 continue
         elif imaged == 'No' and d.library_image is not None and d.reimage == False:
             continue
+        # filter by gear
         if (gear is not None) and len(d.mode_list) > 0:
             gear_set = set(gear)
             dso_set = set(d.mode_list)
@@ -84,13 +88,32 @@ def find_dsos_at_location_and_time (
                 continue
         if scheduled and (d.active_observing_list_count == 0):
             continue
+        # Is it in a good location in the sky?
+        hour_angle = get_hour_angle(utdt, location.longitude, d.ra_float)
         (az, alt, _) = d.alt_az(location, utdt)
+        # Check against location masks, etc.
         in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask, debug=debug)
-        if in_window:
-            candidate_pks.append(d.pk)
-            if debug:
-                if alt < min_alt:
-                    print(f"ERROR WITH DSO {d}: alt = {alt}, in_window = {in_window}")
+        if not in_window:
+            continue
+        # Is it below the celestial pole?
+        if not incl_low_culmination:
+            if location.latitude > 0.:   # Northern circumpolar
+                if d.dec_float > location.latitude and abs(hour_angle) > 6.0:
+                    print(f"Skipping {d} HA: {hour_angle:.2f} Dec: {d.dec_float:.2f}")
+                    continue
+            else: # Southern circumpolar
+                if d.dec_float < location.latitude and abs(hour_angle) > 6.0:
+                    print(f"Skipping {d} HA: {hour_angle:.2f} Dec: {d.dec_float:.2f}")
+                    continue
+        # Is it about to set?
+        if west_ha_limit is not None:
+            if hour_angle > west_ha_limit: # things are setting - ignore them
+                print(f"Setting: {d} HA: {hour_angle:.2f} > {west_ha_limit}")
+                continue
+        candidate_pks.append(d.pk)
+        if debug:
+            if alt < min_alt:
+                print(f"ERROR WITH DSO {d}: alt = {alt}, in_window = {in_window}")
 
     times.append((time.perf_counter(), 'Assemble DSO List'))
 

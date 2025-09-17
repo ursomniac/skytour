@@ -41,6 +41,14 @@
 
     h3.subhead { color: #ffc; }
     h4 { color: #cc0; }
+    button.dso-ext { 
+        color: #fff; 
+        background-color: #000; 
+        border: none; 
+        width: 2em;  
+        margin-bottom: 2px;
+    }
+    button.dso-ext a { text-decoration: none;  color: #fff; }
     span.edit-button { float: right; }
     span.tel { font-weight: bold; color: #fff; }
 </style>
@@ -82,7 +90,17 @@
                     <h5>{{ key }}</h5>
                     <ol>
                     {% for obj in objlist %}
-                        <li>{{ obj.object }}</li>
+                        <li>
+                            <button class="dso-ext">
+                                <a href="{{ obj.object.get_absolute_url }}" target="_blank">
+                                    {{ obj.object.object_emoji }}
+                                </a>
+                            </button>
+                            &nbsp;&nbsp;
+                            <a href="#obj-{{ obj.object.object_class}}-{{ obj.object.pk }}">
+                            {{ obj.object }}
+                            </a>
+                        </li>
                     {% endfor %}
                     </ol>
                 {% endfor %}
@@ -122,6 +140,9 @@
 {% with e=target.observation_metadata %}
 <tr class="{% cycle 'odd' 'even' %}">
     <td class="normal">
+    {% if target.object_type != 'Condition' %}
+    <a name="obj-{{ target.object.object_class }}-{{ target.object.pk }}"></a>
+    {% endif %}
     {% if target.object_type == 'Condition' %}
         <h3>Condition: {{ target.session_stage|title }}</h3>
     {% elif target.object_type == 'DSO' %}

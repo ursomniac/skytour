@@ -73,6 +73,10 @@
                             <label for="ut_offset">UT Offset:&nbsp;</label> 
                             <input name="ut_offset" value="{{ ut_offset }}" size=8>
                         </td>
+                        <td>
+                            <label for="incl_low_culmination">Incl. Low Culmination Objects:&nbsp;</label>
+                            <input type="checkbox" name="incl_low_culmination" {% if incl_low_culmination %} checked{% endif %}>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -100,6 +104,10 @@
                         <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
                         <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
                         </td>
+                        <td>
+                        <label for="west_ha_limit">W. HA Limit:&nbsp;</label>
+                        <input name="west_ha_limit" size=5 {% if west_ha_limit %}value="{{ west_ha_limit }}"{% endif %}> hours
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -116,6 +124,8 @@
                             <label for="max_alt"> Max. Alt:&nbsp;</label>
                             <input name="max_alt" size=5 {% if max_alt %}value="{{ max_alt }}"{% endif %}>
                         </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -125,7 +135,7 @@
                             <label for="scheduled">On Active DSO List:&nbsp;</label>
                             <input name="scheduled" type="checkbox" {% if scheduled %}checked{% endif %}>
                         </td>
-                        <td>
+                        <td colspan="2">
                             <label for="gear_N">Obs. Modes:&nbsp;</label>
                             <span style="color: #fff;">
                             <input type="checkbox" name="gearN" value="N" {% if gearN %}checked{% endif %}>
@@ -143,7 +153,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="submit">
+                        <td colspan="3" class="submit">
                             <input type="submit">
                         </td>
                     </tr>

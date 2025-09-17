@@ -15,7 +15,7 @@ from ..abstract.vocabs import (
     IMAGE_ORIENTATION_CHOICES, 
     IMAGE_PROCESSING_STATUS_OPTIONS
 )
-from ..astro.almanac import get_twilight_begin_end
+from ..astro.almanac import get_dark_time
 from ..astro.time import get_datetime_from_strings, convert_datetime_to_local_string
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
@@ -79,12 +79,12 @@ class PlanetListView(CookieMixin, ListView):
         
         twilight = context['cookies']['user_pref']['twilight']
         my_time_zone = pytz.timezone(context['location'].time_zone.pytz_name)
-        twilight = get_twilight_begin_end(context['utdt_start'], context['location'], time_zone=my_time_zone)
-        context['twilight'] = twilight
-        print("Twilight: ", twilight)
-        #context['twilight_begin'] = convert_datetime_to_local_string(twilight['begin'], location=context['location'])
-        #context['twilight_end'] = convert_datetime_to_local_string(twilight['end'], location=context['location'])
-        
+        twilight = get_dark_time(context['utdt_start'], context['location'], as_datetime=True)
+        context['twilight'] = dict(
+            end = twilight[0].astimezone(my_time_zone).strftime("%I:%M %p"), 
+            start = twilight[1].astimezone(my_time_zone).strftime("%I:%M %p")
+        )
+
         pdict = get_ecliptic_positions(context['utdt_start'])
         context['system_image'], context['ecl_pos'] = plot_ecliptic_positions(pdict, context['color_scheme'] == 'dark')
         return context

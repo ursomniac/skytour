@@ -57,7 +57,7 @@ class Planet(ObservableObject, WikipediaPageObject):
     )
     object_class = 'planet'
     detail_view = 'planet-detail'
-
+    object_emoji = '🪐'
     @property
     def instance_id(self):
         return self.slug
@@ -361,7 +361,7 @@ class Asteroid(ObservableObject, WikipediaPageObject):
 
     object_class = 'asteroid'
     detail_view = 'asteroid-detail'
-
+    object_emoji = '🪨'
     @property
     def instance_id(self):
         return self.slug
@@ -563,6 +563,7 @@ class Comet(ObservableObject, WikipediaPageObject):
     )
     object_class = 'comet'
     detail_view = 'comet-detail'
+    object_emoji = '☄'
     
     @property
     def instance_id(self):
