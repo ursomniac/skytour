@@ -466,6 +466,10 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['show_thumbs'] = show_thumbs
         on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
         context['on_dso_list_all'] = on_dso_list_all
+        incl_low_culmination = self.request.GET.get('incl_low_culmination', 'off') == 'on'
+        context['incl_low_culmination'] = incl_low_culmination
+        west_ha_limit = float(self.request.GET.get('west_ha_limit', find_site_parameter('western-hour-angle-limit', 6.0, 'float')))
+        context['west_ha_limit'] = west_ha_limit
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -524,6 +528,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             gear = gear,                             # Filter by gear choices
             scheduled = is_scheduled,                # Only show objects on active DSOList objects
             on_dso_list_all = on_dso_list_all,
+            west_ha_limit = west_ha_limit,
+            incl_low_culmination = incl_low_culmination,
             debug=debug
         )
         dsos = up_dict['dsos']

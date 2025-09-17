@@ -155,6 +155,8 @@ class DSOAbstract(Coordinates):
         help_text = 'Use this designation when querying SIMBAD'
     )
 
+    object_emoji = '✨'
+
     @property
     def skyfield_object(self):
         """

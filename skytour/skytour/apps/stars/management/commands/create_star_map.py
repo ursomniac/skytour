@@ -26,6 +26,7 @@ class Command(BaseCommand):
         parser.add_argument('--title', type=str, default='Skytour Starmap')
         parser.add_argument('--constellation_lines', action='store_true')
         parser.add_argument('--label_stars', action="store_true")
+        parser.add_argument('--scale', type=float, default=1.0)
         parser.add_argument('--test', action='store_true')
         # TODO: lines, boundaries, labels
     
@@ -44,6 +45,7 @@ class Command(BaseCommand):
             output_file = f"skytour-starmap-{rastr}{decstr}.png"
         constellation_lines = options['constellation_lines']
         label_stars = options['label_stars']
+        scale = options['scale']
         title = options['title']
         test = options['test']
         axes = False
@@ -54,6 +56,7 @@ class Command(BaseCommand):
             print(f"FOV: {fov:.1f}°")
             print(f"Mag. Limit: {mag_limit:.1f}")
             print(f"Path: {path}")
+            print(f"Scale: {scale}")
             print(f"Output File: {output_file}")
 
         ts = load.timescale()
@@ -71,7 +74,7 @@ class Command(BaseCommand):
         fig, ax = plt.subplots(figsize=[8,8])
         angle = np.pi - field_of_view_degrees  / 360.0 * np.pi
         limit = np.sin(angle) / (1.0 - np.cos(angle))
-        ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection)
+        ax, stars = map_hipparcos(ax, earth, t, mag_limit, projection, star_scale=scale)
         if constellation_lines:
             ax = map_constellation_lines(ax, stars)
         if label_stars:    

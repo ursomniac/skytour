@@ -8,8 +8,8 @@ from skyfield.almanac import (
         TWILIGHTS
     )
 from skyfield.api import wgs84, load
-from .time import get_0h
 from ..site_parameter.helpers import get_ephemeris
+from .time import get_0h
 
 def get_astronomical_twilight(times, events, value):
     """
@@ -23,7 +23,7 @@ def get_astronomical_twilight(times, events, value):
         at_time = None
     return at_time
 
-def get_dark_time(utdt, location, debug=False):
+def get_dark_time(utdt, location, as_datetime=False, debug=False):
     """
     Return the end/beginning of astronomical twilight
     """
@@ -48,6 +48,8 @@ def get_dark_time(utdt, location, debug=False):
             print("ERROR getting begin_at dark time!")
         else:
             print("Found begin_at dark time ", begin_at)
+    if as_datetime:
+        return end_at.utc_datetime(), begin_at.utc_datetime()
     return end_at, begin_at
 
 

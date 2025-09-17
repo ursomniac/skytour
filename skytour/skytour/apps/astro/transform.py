@@ -37,6 +37,12 @@ def get_alt_az(utdt, latitude, longitude, ra, dec, from_south=False, debug=False
 
     return azimuth, altitude, airmass
 
+def get_hour_angle(utdt, longitude, ra):
+    last = get_last(utdt, longitude)
+    ha = last - ra
+    ha = ha if ha < 12.0 else (ha - 24.)
+    return ha
+
 def get_cartesian(longitude_or_ra, latitude_or_dec, ra_dec=True, radius=180.):
     """
     Default "unit" radius is 180 degrees

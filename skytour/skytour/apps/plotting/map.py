@@ -69,7 +69,7 @@ def new_map_constellation_boundaries(ax, lines, earth, t, projection, reversed=F
         w = ax.plot(d['x'], d['y'], ls=line_type, lw=line_width, alpha=0.7, color=line_color)
     return ax
 
-def map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=0.25, reversed=False):
+def map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=0.25, star_scale = 1.0, reversed=False):
     """
     Put down sized points for stars.
     While this DOES pre-filter by mag_limit it does NOT filter
@@ -82,7 +82,7 @@ def map_hipparcos(ax, earth, t, mag_limit, projection, mag_offset=0.25, reversed
     stars['x'], stars['y'] = projection(star_positions)
     bright_stars = (stars.magnitude <= mag_limit)
     magnitude = stars['magnitude'][bright_stars]
-    marker_size = (mag_offset + mag_limit - magnitude) **2.0 
+    marker_size = star_scale * (mag_offset + mag_limit - magnitude) **2.0 
     ##### background stars
     star_color = 'w' if reversed else 'k'
     scatter = ax.scatter(
