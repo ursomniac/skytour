@@ -47,9 +47,9 @@ def get_global_items(request):
     this_month = adjust_date(now, offset=0)
     this_year = now.year
 
-    print("THIS MONTH: ", this_month)
-    print("NEXT MONTH: ", next_month)
-    print("THIS YEAR: ", this_year)
+    #print("THIS MONTH: ", this_month)
+    #print("NEXT MONTH: ", next_month)
+    #print("THIS YEAR: ", this_year)
 
     plot_reversed = False
     if 'color_scheme' in user_preferences.keys():

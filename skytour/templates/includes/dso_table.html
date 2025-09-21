@@ -25,6 +25,9 @@
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
     <tr class="table-header">
+        {% if show_thumbs %}
+        <th>Thumb</th>
+        {% endif %}
         <th>Name</th>
         <th class="wiki">🅆</th>
         {% if not hide_constellation %}<th>Con.</th>{% endif %}
@@ -47,6 +50,9 @@
 <tbody>
 {% for dso in dso_list %}
     <tr>
+        {% if show_thumbs %}
+        <td>{% include 'includes/dso_thumbnail.html' %}</td>
+        {% endif %}
         <td>
             <a href="{% url 'dso-detail' dso.pk %}" target="_new">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
