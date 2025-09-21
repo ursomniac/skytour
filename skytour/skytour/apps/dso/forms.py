@@ -43,9 +43,12 @@ class DSOMetadataForm(forms.ModelForm):
 
 class DSOObservationEditForm(forms.ModelForm):
     # TODO V2: Add delete button
+    delete_checkbox = forms.BooleanField(
+        required=False,
+    )    
     class Meta:
         model = DSOObservation
-        fields = ['session', 'telescope', 'eyepieces', 'filters', 'ut_datetime', 'notes']
+        fields = ['delete_checkbox', 'session', 'telescope', 'eyepieces', 'filters', 'ut_datetime', 'notes']
 
 class DSOObservingModeForm(forms.ModelForm):
     class Meta:

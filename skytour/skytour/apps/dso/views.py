@@ -190,6 +190,7 @@ class DSOListActiveDSOListView(CookieMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DSOListActiveDSOListView, self).get_context_data(**kwargs)
         priority = int(self.request.GET.get('priority', 4))
+        show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
         mode = self.request.GET.get('mode', context['observing_mode'])
         context['active_lists'] = DSOList.objects.filter(active_observing_list=YES)
         context['priority'] = priority
@@ -199,6 +200,7 @@ class DSOListActiveDSOListView(CookieMixin, TemplateView):
         context['map'] = get_dso_list_map(dso_list, priority, mode)
         context['is_dsolist_page'] = True
         context['table_id'] = 'active-dso-table'
+        context['show_thumbs'] = show_thumbs
         return context
 
 class DSOListListView(CookieMixin, ListView):
@@ -768,9 +770,22 @@ class DSOObservationEditView(UpdateView):
     template_name = 'dsoobservation_edit.html'
     
     def get_success_url(self):
-        object = self.object
+        #object = self.object
+        object = self.get_object()
         return reverse_lazy('session-detail', kwargs={'pk': object.session.pk})
     
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        session_pk = obj.session.pk
+        form = DSOObservationEditForm(request.POST, instance=obj)
+        if form.is_valid():
+            d = form.cleaned_data
+            if d['delete_checkbox']:
+                obj.delete()
+            else:
+                form.save()
+        return redirect(reverse_lazy('session-detail', kwargs={'pk': session_pk}))
+
     def get_context_data(self, **kwargs):
         context = super(DSOObservationEditView, self).get_context_data(**kwargs)
         object = self.get_object()
