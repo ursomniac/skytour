@@ -358,6 +358,8 @@ class TrackerView(FormView):
         fov = d['fov']
         dsos = d['show_dsos'] == '1'
         reversed = d['reversed'] == 'wob'
+        force_ra = d['force_ra'] or None
+        force_dec = d['force_dec'] or None
         x = d['start_date']
         utdt = datetime.datetime(x.year, x.month, x.day, 0, 0).replace(tzinfo=pytz.utc)
 
@@ -375,6 +377,8 @@ class TrackerView(FormView):
             return_data = True,
             dsos=dsos,
             times=times,
+            force_ra = force_ra,
+            force_dec = force_dec
         )
         context['form'] = form
         context['track_positions'] = track_positions

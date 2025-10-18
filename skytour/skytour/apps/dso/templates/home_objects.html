@@ -55,7 +55,10 @@
 <h2 class="count">{{ dso_count }} DSOs available at:</h2>
 <h3 class="metadata">&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
 <h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
-<h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ location }}</h4>
+<h4 class="metadata">&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'observing-location-detail' location.pk %}" target="_blank">
+    {{ location.concise_name }}</a>
+</h4>
         </td>
         <td>
             <h5>Filter DSOs</h5>
