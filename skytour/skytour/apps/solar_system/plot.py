@@ -365,6 +365,8 @@ def plot_track(
         reversed=True,
         return_data = True,
         times=None,
+        force_ra = None,
+        force_dec = None,
         debug=False
     ):
     """
@@ -388,8 +390,14 @@ def plot_track(
             times.append((time.perf_counter(), 'Get Comet Target'))
 
     t = ts.from_datetime(utdt)
-
-    first_projection = earth.at(t).observe(target)
+    first_projection = None
+    if force_ra is not None and force_dec is not None:
+        try:
+            first_projection = earth.at(t).observe(Star(ra_hours=force_ra, dec_degrees=force_dec))
+        except:
+            pass
+    if not first_projection:
+        first_projection = earth.at(t).observe(target)
     style = 'dark_background' if reversed else 'default'
     plt.style.use(style)
 

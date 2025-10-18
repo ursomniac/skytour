@@ -196,6 +196,10 @@ class ObservingLocation(models.Model):
         if self.name:
             x += " ({})".format(self.name)
         return x
+    
+    @property
+    def concise_name(self):
+        return f"{self.name}: {self.city}, {self.short_region_name}"
 
     @property
     def coords(self):

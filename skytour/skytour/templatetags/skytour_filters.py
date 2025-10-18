@@ -211,7 +211,15 @@ def sortable_angle(value, offset=90):
         v = float(value) + offset
         return f"A{abs(v):08.4f}"
     except:
-        return v
+        return value
+    
+@register.filter(name='sortable_float')
+def sortable_angle(value, format="05.2f"):
+    try:
+        v = float(value)
+        return f"{v:{format}}"
+    except:
+        return value
 
 @register.filter(name='add_two')
 def add_two(value, arg):

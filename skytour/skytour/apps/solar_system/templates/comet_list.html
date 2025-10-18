@@ -46,6 +46,9 @@
             <td>{{ comet.apparent.distance.au|floatformat:2 }} AU</td>
             <td>{{ comet.observe.constellation.name }}</td>
             <td>
+                <span class="hidden">
+                    {{ comet.observe.apparent_magnitude|sortable_float }}&nbsp;
+                </span>
                 {{ comet.observe.apparent_magnitude|floatformat:2 }}
                 {% if comet.mag_offset != 0.0 %}
                      &nbsp; (est. {{ comet.observe.apparent_magnitude|add_two:comet.mag_offset|floatformat:2 }})

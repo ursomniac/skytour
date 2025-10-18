@@ -38,6 +38,18 @@ class TrackerForm(forms.Form):
         choices = STATUS_CHOICES,
         label = 'Show DSOs'
     )
+    force_ra = forms.FloatField(
+        required = False,
+        initial = None,
+        label = 'Force RA',
+        help_text = "Force central RA (hours)"
+    )
+    force_dec = forms.FloatField(
+        required = False,
+        initial = None,
+        label = 'Force Dec.',
+        help_text = 'Force central Dec (degrees)'
+    )
 
     def __init__(self, asteroid_list=None, *args, **kwargs):
         super(TrackerForm, self).__init__(*args, **kwargs)
