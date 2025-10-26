@@ -3,7 +3,6 @@ import io
 import time
 
 from dateutil.parser import isoparse
-from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse
@@ -232,8 +231,6 @@ class DSOListDetailView(CookieMixin, DetailView):
         if form.is_valid():
             d = form.cleaned_data
             obj = self.get_object()
-            print("OBJ: ", obj)
-
             if d['delete_checkbox']:
                 obj.delete()
                 return redirect('dsolist-list')
@@ -876,3 +873,4 @@ class DSOInFieldWikiPopup(DetailView):
         html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
         context['text'] = html_output
         return context
+    

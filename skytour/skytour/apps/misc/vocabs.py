@@ -7,6 +7,7 @@ REFERENCE_MODEL_CHOICES = [
     ('Sun', 'Sun'),
     ('Comet', 'Comet'),
     ('Star', 'Star'),
+    ('Meteor Shower', 'MeteorShower')
 ]
 
 COUNTRY_CODE_SEED = [

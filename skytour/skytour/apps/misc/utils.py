@@ -1,5 +1,5 @@
 from skytour.apps.dso.models import DSO
-from skytour.apps.solar_system.models import Planet, Asteroid, Comet
+from skytour.apps.solar_system.models import Planet, Asteroid, Comet, MeteorShower
 
 def access_object(reftype, ref):
     if reftype == 'DSO':
@@ -12,4 +12,6 @@ def access_object(reftype, ref):
         return Asteroid.objects.filter(name=ast).first()
     elif reftype == 'Comet':
         return Comet.objects.filter(name__contains=ref).first()
+    elif reftype == 'MeteorShower':
+        return MeteorShower.filter(slug__contains=ref).first()
     return None

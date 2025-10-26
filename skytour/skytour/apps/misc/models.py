@@ -112,7 +112,7 @@ class EventType(models.Model):
         return "{}: {}".format(self.name, self.icon)
 
     class Meta:
-        ordering = ['slug']
+        ordering = ['name']
 
 class Calendar(models.Model):
     """
