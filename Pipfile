@@ -22,6 +22,7 @@ jsonfield = "*"
 requests = "*"
 wikipedia-api = "*"
 regex = "*"
+lxml = "*"
 
 [dev-packages]
 

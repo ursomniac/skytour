@@ -6,7 +6,7 @@ def setup_simbad():
     csim = Simbad()
     csim.reset_votable_fields()
     csim.add_votable_fields('dim', 'distance', 'jp11', 
-                            'ubv', 'flux(V)', 'flux(B)',
+                            'flux(V)', 'flux(B)',
                             'morphtype', 'otype'
                             )
     return csim
@@ -27,7 +27,7 @@ def simbad_make_request(name, csim):
     simobj = csim.query_object(name)
     return simobj
 
-def simbad_parse_coords(objdict):
+def simbad_parse_coords_old(objdict):
     if 'RA' not in objdict.keys() or 'DEC' not in objdict.keys():
         return None, None
     try:
@@ -44,6 +44,16 @@ def simbad_parse_coords(objdict):
         dec_s = '0' if len(dec) < 3 else dec[2]
         tdec = (sign, dec_d, dec_m, dec_s)
         return tra, tdec
+    except:
+        return None, None
+    
+def simbad_parse_coords(objdict):
+    if 'ra' not in objdict.keys() or 'dec' not in objdict.keys():
+        return None, None
+    try:
+        ra = objdict['ra'][0] / 15.
+        dec = objdict['dec'][0]
+        return ra, dec
     except:
         return None, None
 
@@ -131,26 +141,37 @@ def norm_float(x, prec=2):
 
 def process_simbad_request(id, name, debug=False):
     simbad = setup_simbad()
+    if debug:
+        print("SIMBAD: ", simbad)
     req = simbad_make_request(name, simbad)
+    if debug:
+        print("REQ: ", req)
     if req is None:
         if debug:
             print(f"{id}: Cannot find {name} in SIMBAD.")
+        print("GOT HERE: ", req)
         return None
     objdict = process_simbad_object(req)
+    if debug:
+        print("OBJDICT: ", objdict)
+        print("KEYS: ", objdict.keys())
     #if 'MAIN_ID' in objdict.keys():
     #    if type(objdict['MAIN_ID']) == tuple:
     #        if objdict['MAIN_ID'][1] is None: # nothing came back!
     #            return None
     d = {}
-    d['ra'], d['dec'] = simbad_parse_coords(objdict)
-    if d['ra'] is None and d['dec'] is None:
+    d['ra_float'], d['dec_float'] = simbad_parse_coords(objdict)
+    if debug:
+        print("D: ", d)
+    if d['ra_float'] is None and d['dec_float'] is None:
         return None
-    d['ra_float'] = convert_ra(d['ra'])
-    d['dec_float'] = convert_dec(d['dec'])
+    #d['ra_float'] = convert_ra(d['ra'])
+    #d['dec_float'] = convert_dec(d['dec'])
     d['raw_values'] = objdict
     d['values'] = normalize_simbad(objdict)
     raw_aliases = simbad.query_objectids(name)
-    grab = [a[0].decode('utf-8') for a in raw_aliases.as_array()]
+    #grab = [a[0].decode('utf-8') for a in raw_aliases.as_array().tolist()]
+    grab = [a[0] for a in raw_aliases.as_array().tolist()]
     d['aliases'] = [' '.join(x.split()) for x in grab]
     return d
     

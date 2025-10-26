@@ -22,6 +22,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Slug</th>
             <th>RA</th>
             <th>Dec</th>
             <th>Peak Date</th>
@@ -35,6 +36,7 @@
         {% for shower in object_list %}
         <tr class="{% cycle 'odd' 'even' %}">
             <td><a href="{% url 'meteor-detail' shower.pk %}">{{ shower.name }}</a></td>
+            <td>{{ shower.slug }}</td>
             <td>{{ shower.radiant_ra|to_hm:1 }}</td>
             <td>
                 <span class="hidden">{{ shower.radiant_dec|sortable_angle }} </span>

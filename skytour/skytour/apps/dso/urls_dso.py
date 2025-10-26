@@ -19,7 +19,7 @@ from .views import (
     DSOObservationEditView,
     DSOObservingModeEditView,
     DSOWikiPopup,
-    DSOInFieldWikiPopup
+    DSOInFieldWikiPopup,
 )
 urlpatterns = (
     path('', DSOListView.as_view(), name='dso-list'),

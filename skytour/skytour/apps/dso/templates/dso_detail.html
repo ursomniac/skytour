@@ -148,7 +148,7 @@
 						</a>
 					</b>
 				</td>
-				<td width=12% class="description operations" rowspan=2>
+				<td width=15% class="description operations" rowspan=2>
                     {% if object.has_wiki == 'WIKI' %}
                     <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="op">
                         Wiki Entry
@@ -156,7 +156,12 @@
                     {% else %}
                     <span class="boxed">{{ object.has_wiki_text }}</span>
                     {% endif %}
+					<br>
+					{% if object.pdf_page %}
 					<a href="/media/{{ object.pdf_page }}" target="_blank"><button class="op">PDF</button></a>
+					{% else %}
+					<span class="boxed">No PDF Page</span>
+					{% endif %}
 					<br>
 
 					&nbsp;
