@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Current Variable Star List: Skytour{% endblock %}
+{% block content %}
+<h1>Current Variable Stars</h1>
+{{ object_list }}
+<table id="bright-star">
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>R.A.</th>
+        <th>Dec.</th>
+        <th>Type</th>
+        <th>Mag.</th>
+    </tr>
+</thead>
+<tbody>
+    {% for obj in object_list %}{% with obj.gcvs as star %}
+    <tr>
+        <td><a href="{% url 'obsvar-detail' star.id_in_catalog %}">{{ star.name }}</a></td>
+        <td>{{ star.ra_text }}</td>
+        <td>{{ star.dec_text }}</td>
+        <td>{{ star.type_original }}</td>
+        <td>{{ star.magnitude_range }}</td>
+    </tr>
+    {% endwith %}{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

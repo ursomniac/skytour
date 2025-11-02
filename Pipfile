@@ -23,6 +23,7 @@ requests = "*"
 wikipedia-api = "*"
 regex = "*"
 lxml = "*"
+astroquery = "*"
 
 [dev-packages]
 

@@ -14,23 +14,23 @@ def process_steps(dso, options, debug=False):
 
     # step 1 - metadata
     for source in ['simbad', 'leda']:
-        print(f"python manage.py scrape_metadata --source {source} --model D --dso_list {dso.pk}")
+        print(f"python manage.py scrape_metadata --source {source} --model D --dso_list {dso.pk} --verbose")
         if infield.count() > 0:
-            print(f"python manage.py scrape_metadata --source {source} --model F --dso_list {fpks}")
+            print(f"python manage.py scrape_metadata --source {source} --model F --dso_list {fpks} --verbose")
 
     # step 2 - finder charts
-    print (f"python manage.py create_wide_narrow_charts --dso_list {dso.pk}")
-    print (f"python manage.py create_wide_narrow_charts --dso_list {nearby_pks}")
-    print (f"python manage.py create_dso_finder_charts --dso_list {dso.pk}")
-    print (f"python manage.py create_dso_finder_charts --dso_list {nearby_pks}")
+    print (f"python manage.py create_wide_narrow_charts --dso_list {dso.pk} -v 2")
+    print (f"python manage.py create_wide_narrow_charts --dso_list {nearby_pks} -v 2")
+    print (f"python manage.py create_dso_finder_charts --dso_list {dso.pk} -v 2")
+    print (f"python manage.py create_dso_finder_charts --dso_list {nearby_pks} -v 2")
 
     # step 3 - update atlas plates
     nn = find_neighbors(dso.ra_float, dso.dec_float)
     plate_pks = ' '.join([str(x['plate']) for x in nn])
-    print (f"python manage.py create_atlas_plate -f {plate_pks} ")
+    print (f"python manage.py create_atlas_plate -f {plate_pks} -v 2")
 
     # step 4 - misc
-    print(f"python manage.py create_dso_pdf --dso_list {dso.pk}")
+    print(f"python manage.py create_dso_pdf --dso_list {dso.pk} -v 2")
 
 class Command(BaseCommand):
     help = 'scrape Leda/Simbad for metadata and store'

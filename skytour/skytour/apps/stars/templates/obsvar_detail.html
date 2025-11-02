@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ object.name }}: Skytour{% endblock %}
+{% block styles %}
+<style>
+    table.main td {
+        vertical-align: top!important;
+    }
+    table.main td.finder_chart img { width: 100%; height:auto; }
+    span.rev_object_type { font-size:80%; font-style: italic; }
+    dl { display: grid; }
+    dt { grid-column-start: 1; }
+    dd { grid-column-start: 2; }
+</style>
+{% endblock %}
+{% block content %}
+<br>
+{{ object.name }}
+<table class="main">
+    <tr>
+        <td width="33%" class="object_name">
+            <h1>{{ object.name }}</h1>
+            <br>
+            <dl>
+                <dt>Mag. Range</dt> <dd> {{ object.mag_range }}</dd>
+            </dl>
+            <br>
+            <h2>Notes</h2>
+            <p>{{ object.notes }}</p>
+        </td>
+        <td width="33%" class="object_type">
+            Type:
+            <span class="object_type">{{ object.type_original }}</span>
+            <br>
+            <span class="rev_object_type">{{ object.type_revised }}</span>
+        </td>
+        <td width="33%" class="finder_chart">
+            <a href="{{ finder.finder_chart.url }}" target="_new">
+            <img src="{{ finder.finder_chart.url }}"/></a>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

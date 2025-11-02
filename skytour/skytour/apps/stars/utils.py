@@ -1,5 +1,5 @@
 import re
-from ..dso.models import DSOList, DSO
+
 def create_star_name(obj):
     """
     Generate a label from it's Bayer/Flamsteed designation.

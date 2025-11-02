@@ -1,13 +1,14 @@
-
+import math, re
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
+from jsonfield import JSONField
 from skyfield.api import Star
 from ..abstract.models import Coordinates
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation
-from .vocabs import ENTITY, GCVS_ID, VARDES, BAYER_INDEX
+from .vocabs import ENTITY, GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, GCVS_NO_GREEK
 
 
 # TODO V2: Come up with a plan to use this
@@ -26,9 +27,15 @@ class DoubleStar(Coordinates):
         on_delete=models.PROTECT,
         null = True, blank = True
     )
+    components = models.CharField (
+        _('Components'),
+        max_length = 20,
+        null = True, blank = True
+    )
     separation = models.FloatField(
         _('Ang. Sep'),
-        help_text = 'Arcseconds'
+        help_text = 'Arcseconds',
+        null = True, blank = True
     )
     magnitudes = models.CharField(
         _('Magnitudes'),
@@ -71,6 +78,9 @@ class DoubleStar(Coordinates):
         self.shown_name = create_shown_name(self)
         super(DoubleStar, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.pk}: ({self.constellation.abbreviation}) = {self.shown_name}"
+
 class DoubleStarAlias(models.Model):
     object = models.ForeignKey(DoubleStar, 
         on_delete=models.CASCADE,
@@ -81,6 +91,76 @@ class DoubleStarAlias(models.Model):
         _('ID'),
         max_length = 24
     )
+
+class DoubleStarElements(models.Model):
+    object = models.OneToOneField (
+        DoubleStar,
+        on_delete = models.CASCADE,
+        null = True, blank = True,
+        related_name = 'elements'
+    )
+    period = models.FloatField (
+        _('Orbital Period'),
+        help_text = 'years'
+    )
+    periastron = models.FloatField (
+        _('Periastron Passage'),
+        help_text = 'year'
+    )
+    semimajor_axis = models.FloatField (
+        _('Semi-Major Axis'),
+        help_text = 'arcsec'
+    )
+    eccentricity = models.FloatField (
+        _('Eccentricity')
+    )
+    inclination = models.FloatField (
+        _('Inclination'),
+        help_text = 'degrees'
+    )
+    ascending_node = models.FloatField (
+        _('Ascending Node'),
+        help_text = 'degrees'
+    )
+    argument = models.FloatField (
+        _('Argument of Periastron'),
+        help_text = 'degrees'
+    )
+
+    @property
+    def _p(self):
+        return self.period
+    @property
+    def _t(self):
+        return self.periastron
+    @property
+    def _a(self):
+        return self.semimajor_axis
+    @property
+    def _e(self):
+        return self.eccentricity
+    @property
+    def _i(self):
+        return self.inclination
+    @property
+    def _ir(self):
+        return math.radians(self.inclination)
+    @property
+    def _om(self):
+        return self.ascending_node
+    @property
+    def _omr(self):
+        return math.radians(self.ascending_node)
+    @property
+    def _ap(self):
+        return self.argument
+    @property
+    def _apr(self):
+        return math.radians(self.argument)
+
+
+    def __str__(self):
+        return f"{self.pk}: {self.object}"
 
 class BrightStar(Coordinates):
     """
@@ -255,7 +335,7 @@ class VariableStar(Coordinates):
     ### USE http://www.sai.msu.su/gcvs/gcvs/gcvs5/htm/ as a guide!
 
     def __str__(self):
-        return self.name
+        return f"{self.pk}: {self.name} ({self.type_original})"
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
@@ -264,14 +344,12 @@ class VariableStar(Coordinates):
         self.dec_text = self.format_dec # get from property
         super(VariableStar, self).save(*args, **kwargs)
 
-    def deconstruct_gcvs(self):
-        if self.gcvs is None:
-            return None
-        gcvs = self.gcvs
+    def deconstruct_gcvs(self, greek=True):
+        gcvs = self.id_in_catalog
         const_id = int(gcvs[:2])
         constellation = Constellation.objects.get(pk=const_id)
-        if gcvs[2] == 9:
-            id_in_const = GCVS_ID[gcvs[2:6]]
+        if gcvs[2] == '9':
+            id_in_const = GCVS_ID[gcvs[2:6]] if greek else GCVS_ID[gcvs[2:6]]
         else:
             raw = int(gcvs[2:6])
             if raw > 334:
@@ -297,9 +375,74 @@ class VariableStar(Coordinates):
         if comp is not None:
             x += f" {comp}"
         return x
+    
+    @property
+    def is_active(self):
+        return hasattr(self, 'observablevariablestar')
+    
+    @property
+    def mag_range(self):
+        return f"{self.mag_max} - {self.mag_min1}"
 
-    def decode_orig_type(self):
-        vtype = self.type_original
+    def get_all_original_types(self):
+        x = self.type_original
+        return re.split(r"[+|/]", x.replace(':','')) if x is not None else []
+
+    def get_all_revised_types(self):
+        x = self.type_revised
+        return re.split(r"[+|/]", x.replace(':','')) if x is not None else []
+
+    def info(self):
+        print(f"""
+            Name: {self.name}
+            Aliases: {self.aliases.all()}
+
+        """)
+
+class AbstractVariableStarType(models.Model):
+    code = models.CharField (
+        _('Code'),
+        max_length = 16,
+        unique = True
+    )
+    type_class = models.CharField (
+        _('Class'),
+        max_length = 100,
+        choices = VARIABLE_CLASSES
+    )
+    name = models.CharField (
+        _('Name'),
+        max_length = 100,
+        null = True, blank = True
+    )
+    short_description = models.CharField (
+        _('Short Description'),
+        max_length = 200,
+        null = True, blank = True
+    )
+    notes = models.TextField (
+        _('Text'),
+        null = True,
+        blank = True
+    )
+    prototype = models.CharField (
+        _('Prototype'),
+        max_length = 40,
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return f"{self.pk}: {self.code} = {self.name}"
+
+    class Meta:
+        abstract = True
+        ordering = ['pk']
+
+class VariableStarTypeOriginal(AbstractVariableStarType):
+    pass
+
+class VariableStarTypeRevised(AbstractVariableStarType):
+    pass
 
 class VariableStarAlias(models.Model):
 
@@ -328,6 +471,62 @@ class VariableStarAlias(models.Model):
         self.shown_name = create_shown_name(self)
         super(VariableStarAlias, self).save(*args, **kwargs)
 
+class ObservableVariableStar(models.Model):
+    gcvs = models.OneToOneField (
+        VariableStar,
+        on_delete = models.CASCADE,
+        null = True, blank = True,
+        help_text = 'link to GCVS record'
+    )
+    finder_chart = models.ImageField (
+        _('AAVSO Finder Chart'),
+        upload_to = 'aavso_finder_chart',
+        null = True, blank = True,
+        help_text = 'AAVSO Finder Chart'
+    )
+    finder_chart_mag = models.FloatField (
+        _('Finder Limiting Mag'),
+        default = 14.5
+    )
+    finder_chart_fov = models.FloatField (
+        _('Finder Char FOV'),
+        default = 60.,
+        help_text = '(arcmin)'
+    )
+    finder_json = JSONField (
+        _('Finder JSON'),
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return self.gcvs.name
+    
+class VariableStarLightCurve (models.Model):
+    parent = models.ForeignKey(
+        VariableStar,
+        on_delete = models.CASCADE,
+        null = True, blank = True
+    )
+    image_file = models.ImageField (
+        _('Image Field'),
+        upload_to = 'variable_star_light_curves',
+    )
+    order_by = models.PositiveIntegerField (
+        _('Order in List'),
+        default = 10
+    )
+    date_start = models.DateField (
+        _('Date Start'),
+        null = True, blank = True
+    )
+    date_end = models.DateField (
+        _('Date End'),
+        null = True, blank = True
+    )
+
+    def __str__(self):
+        return self.parent
+    
 class StellarObject(Coordinates):
     """
     This is for stars that don't fit into the BrightStar, DoubleStar, or VariableStar models.
@@ -344,3 +543,5 @@ class StellarObject(Coordinates):
         self.dec_text = self.format_dec # get from property
         self.name = create_star_name(self)
         super(StellarObject, self).save(*args, **kwargs)
+
+        
