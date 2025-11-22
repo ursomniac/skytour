@@ -563,9 +563,9 @@
 				{% if fdso.morphological_type %}&nbsp;({{ fdso.morphological_type }}){% endif %}
 			</td>
 			<td>{{ fdso.primary_distance|floatformat:1 }}' at {{ fdso.primary_angle|floatformat:0 }}°</td>
-			<td>{{ fdso.magnitude|floatformat:2 }}</td>
-			<td>{{ fdso.surface_brightness|floatformat:2 }}</td>
-			<td>{{ fdso.angular_size }}</td>
+			<td>{{ fdso.find_magnitude.0|floatformat:2 }}</td>
+			<td>{{ fdso.find_surface_brightness.0|floatformat:2 }}</td>
+			<td>{{ fdso.find_angular_size.0 }}</td>
 			<td>{{ fdso.find_distance.0|floatformat:1 }} {{ fdso.find_distance.1 }}</td>
 			<td class="field-td-wiki">
 				{% if fdso.has_wiki == 'WIKI' %}

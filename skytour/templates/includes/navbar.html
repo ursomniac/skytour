@@ -4,6 +4,7 @@
     td.op-sso  { background-color:  #850; }  /* SSO          */
     td.op-ses  { background-color:  #363; }  /* Session      */
     td.op-sky  { background-color:  #636; }  /* Sky          */
+    td.op-star { background-color:  #939; }  /* Stars        */
     td.op-info { background-color:  #069; }  /* Info         */
     td.op-app  { background-color:  #600; }  /* Application  */
     td.op-site { background-color:  #066; }  /* Site         */
@@ -90,7 +91,7 @@
                 <a href="{% url 'manual-list' %}">Manuals/PDFs</a>
             </div>
         </td>
-        <td class="click op-site" colspan=1>
+        <td class="click op-site" colspan=2>
             <a href="{% url 'observing-location-list' %}">Locations</a>
         </td>
         <td colspan=1 class="op-dso">
@@ -134,11 +135,17 @@
             <span onClick="myFunctionCalendar()" class="dropbtn">Calendar&nbsp;&nbsp;  🔽</span>
             <div id="myDropdownCalendar" class="dropdown-content">
                 <a href="{% url 'calendar-current' %}">This Month: {% now "M Y" %}</a>
+                {% if next_month %}
                 <a href="{% url 'calendar-month' next_month|date:'Y' next_month|date:'b' %}">
                     Next Month: {{ next_month|date:"M Y"}}</a>
+                {% endif %}
+                {% if last_month %}
                 <a href="{% url 'calendar-month' previous_month|date:'Y' previous_month|date:'b' %}">
                     Last Month: {{ previous_month|date:"M Y"}}</a>
+                {% endif %}
+                {% if this_year %}
                 <a href="{% url 'calendar-year' this_year %}">This Year: {{ this_year }}</a>
+                {% endif %}
                 <a href="{% url 'calendar-add' %}">Add Event to Calendar</a>
             </div>
         </td>
@@ -161,6 +168,7 @@
         </td>
         <td class="click op-sky"><a href="{% url 'constellation-list' %}">Constellations</a></td>
         <td colspan="1" class="op-sky"><a href="{% url 'library-image-list' %}">Image Library</a></td>
+        <td class="click op-star"><a href="{% url 'obsvar-list' %}">Var. Stars</a></td>
         <td class="click op-sso"><a href="{% url 'planet-list' %}">Planets / Moon</a></td>
         <td class="click op-sso"><a href="{% url 'asteroid-list' %}">Asteroids</a></td>
         <td class="click op-sso"><a href="{% url 'comet-list' %}">Comets</a></td>
@@ -195,7 +203,7 @@
             <span style="padding-left: 2.em; color: #ff0;"><small>{{ local_time_str }}</small></span>
             </div>
         </td>
-        <td colspan="2" class="op-set">
+        <td colspan="3" class="op-set">
             <span style="color: #fff; font-weight: bold;">Location:</span>
             <span style="color: #ff0;">{{ location.name_for_header|safe }}</span>
         </td>
@@ -224,6 +232,8 @@
                 <a onClick="openPopup('/astro/calc/sqm2bortle')">SQM to Bortle</a>
                 <a onClick="openPopup('/astro/calc/framesexposure')">Calc. Exp. Time</a>
                 <a onClick="openPopup('/astro/calc/exposureframes')">Est. Frames</a>
+                <a onClick="openPopup('/astro/calc/jd2date')">JD to Date</a>
+                <a onClick="openPopup('/astro/calc/date2jd')">Date to JD</a>
             </div>
         </td>
         <td colspan=2 class="op-ses">

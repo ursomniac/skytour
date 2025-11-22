@@ -1,4 +1,5 @@
 from itertools import takewhile
+from ..stars.models import ObservableVariableStar
 
 def filter_catalog(request, dso_list, cookie):
     observed = request.GET.get('observed', None)
@@ -101,4 +102,5 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
         all_objects_sort.append(odict[k])
     return all_objects_sort
 
-
+def get_active_variable_stars(constellation):
+    return ObservableVariableStar.objects.filter(gcvs__constellation__abbreviation=constellation.abbreviation)

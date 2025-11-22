@@ -1,6 +1,5 @@
 from .models import ConstellationWiki
-from ..abstract.wiki import get_wiki_page, get_page_attrs
-from ..abstract.vocabs import YES, NO
+from ..abstract.wiki import update_wiki_object
 from ..solar_system.wiki import update_wiki_object
 
 def update_constellation_wiki(instance):

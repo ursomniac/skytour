@@ -159,6 +159,7 @@ class ObservableVariableStarListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ObservableVariableStarListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'obsvar-list'
         return context
     
 class VariableStarDetailView(DetailView):
@@ -174,4 +175,10 @@ class VariableStarDetailView(DetailView):
         obj = context['object'] = self.get_object()
         if obj.is_active:
             context['finder'] = obj.observablevariablestar
+        incon_raw = VariableStar.objects.filter(constellation=obj.constellation)
+        incon = []
+        for v in incon_raw:
+            if v.is_active and v != obj:
+                incon.append(v)
+        context['const_others'] = incon
         return context

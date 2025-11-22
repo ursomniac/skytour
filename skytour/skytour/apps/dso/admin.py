@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.html import mark_safe
 from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \

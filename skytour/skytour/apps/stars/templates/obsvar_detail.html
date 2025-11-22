@@ -6,38 +6,124 @@
         vertical-align: top!important;
     }
     table.main td.finder_chart img { width: 100%; height:auto; }
+    table.subnav { width: 100%; table-layout: fixed; border: none; }
+    table.subnav th { border: 1px solid #c90; }
+    table.subnav th { background-color: #960; }
+    table.subnav th a { color: #ff0; }
     span.rev_object_type { font-size:80%; font-style: italic; }
+    table.comparison td { font-size: 80%; %}
     dl { display: grid; }
     dt { grid-column-start: 1; }
     dd { grid-column-start: 2; }
-</style>
+    span.notes { font-size: 90%; }
+    span.right { float: right; }
+    span.white { white-space: pre-wrap; }
+    span.others { color: #fc0; }
+    div.varlist { font-weight: normal; font-size: 80%; }
+    table.subnav th.varlist_header { background-color: #630; font-size:95%; }
+    th.varlist { text-align: left; }
+    img.mini { max-width: 100%; height: auto;  display:table; }
+</style> 
 {% endblock %}
 {% block content %}
 <br>
-{{ object.name }}
+<table class="subnav">
+    <tr>
+        <th class="varlist_header">
+            <span class="others">Active Variable Stars</span> in      
+            <a href="{% url 'constellation-detail' object.constellation.abbreviation %}">
+                {{ object.constellation.name }}
+            </a>:
+        </th>
+        <th colspan=3 class="varlist">
+            <div class="varlist">
+            {% for v in const_others %}
+            <a href="{% url 'obsvar-detail' v.id_in_catalog %}">{{ v.name }}</a>
+                {% if not forloop.last %},&nbsp;{% endif %}
+            {% endfor %}
+            </div>
+        </th>
+        <th>
+            <a href="/admin/stars/variablestar/{{ object.pk }}/change"><button>Admin</button></a>
+        </th>
+        <th><a href="{% url 'obsvar-list' %}"><button>Observable Variable Star List</button></a></th>
+    </tr>
+</table>
 <table class="main">
     <tr>
         <td width="33%" class="object_name">
             <h1>{{ object.name }}</h1>
             <br>
             <dl>
-                <dt>Mag. Range</dt> <dd> {{ object.mag_range }}</dd>
+                <dt>Type:</dt>
+                    <dd class="object_type">
+                        <B>{{ object.type_original }}</b> = 
+                        {{ object.type_original_metadata.name }}
+                        <br><br>
+                        <span class="notes">
+                        {{ object.type_original_metadata.notes }}
+                        </span>
+                        <br>
+                    </dd>
+                {% comment %}
+                <dt>Type (revised):</dt>
+                    <dd class="rev_object_type">{{ object.type_revised }}</dd>
+                {% endcomment %}
+                <dt> </dt><dd> </dd>
+                <br><br>
+                <dt>Spectral Type:</dt>
+                    <dd> {{ object.spectral_type }}</dd>
+                <dt>Mag. Range:</dt>
+                    <dd> {{ object.mag_range }}</dd>
+                <dt>Period: </dt>
+                    <dd> {{ object.period }} days</dd>
             </dl>
             <br>
             <h2>Notes</h2>
             <p>{{ object.notes }}</p>
-        </td>
-        <td width="33%" class="object_type">
-            Type:
-            <span class="object_type">{{ object.type_original }}</span>
-            <br>
-            <span class="rev_object_type">{{ object.type_revised }}</span>
+
+            {% if object.variablestarlightcurve_set.all|length > 0 %}
+                <h2> Light Curves </h2>
+                {% for c in object.variablestarlightcurve_set.all %}
+                <a href="{{ c.image_file.url }}" target="_blank">
+                    <img src="{{ c.image_file.url }}" class="mini"/>
+                </a>
+                <br>
+                <span class="caption">
+                    Date Range: {{ c.date_start }} - {{ c.date_end }}
+                </span>
+                <br/>
+                {% endfor %}
+            {% endif %}
         </td>
         <td width="33%" class="finder_chart">
+            {% if finder.finder_chart  %}
             <a href="{{ finder.finder_chart.url }}" target="_new">
             <img src="{{ finder.finder_chart.url }}"/></a>
+            {% else %}
+            (Finder Chart missing)
+            {% endif %}
+        </td>
+        <td width="33%" class="comparison_stars">
+            <h3>Comparison Stars</h3>
+            <table class="comparison">
+                <tr><th>Label</th><th>Mag</th><th>RA</th><th>Dec</th><th>ID</th></tr>
+                {% for c in finder.comparison_star_list %}
+                <tr>
+                <td>{{ c.label }}</td>
+                <td>
+                    <span class="right">{{ c.best_mag.2 }}</span>
+                    <span class="white">{{ c.best_mag.1 }}</span>
+                </td>
+                <td>{{ c.ra }}</td>
+                <td>{{ c.dec }}</td>
+                <td>{{ c.id }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </td>
     </tr>
 </table>
+
 
 {% endblock %}

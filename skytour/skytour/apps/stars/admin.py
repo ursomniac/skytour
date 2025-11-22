@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import BrightStar, DoubleStar, DoubleStarAlias, DoubleStarElements, VariableStar,\
-    VariableStarTypeOriginal, VariableStarTypeRevised
+    VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve
 
 class BrightStarAdmin(admin.ModelAdmin):
     model = BrightStar
@@ -61,12 +61,18 @@ class DoubleStarAdmin(admin.ModelAdmin):
     @admin.display(description='Con.', ordering='constellation')
     def constellation_abbreviation(self, obj):
         return obj.constellation
-    
+
+class VariableStarLightCurveAdmin(admin.TabularInline):
+    model = VariableStarLightCurve
+    extra = 0
+    fields = ['order_by', 'image_file', 'date_start', 'date_end']
+
 class VariableStarAdmin(admin.ModelAdmin):
     model = VariableStar
 
     list_display = [
         'pk',
+        'id_in_catalog',
         'name',
         'list_ra', 
         'list_dec',
@@ -76,6 +82,7 @@ class VariableStarAdmin(admin.ModelAdmin):
     list_filter = ['constellation', 'type_original']
     list_display_links = ['pk', 'name']
     search_fields = ['name']
+    inlines = [VariableStarLightCurveAdmin]
 
     @admin.display(description='Con.', ordering='constellation')
     def constellation_abbreviation(self, obj):
@@ -101,6 +108,7 @@ class VariableStarTypeRevisedAdmin(admin.ModelAdmin):
     list_display = ['pk', 'code', 'type_class', 'name', 'short_description']
     list_filter = ['type_class']
     ordering = ['pk', 'code', 'name']
+
 
 admin.site.register(BrightStar, BrightStarAdmin)
 admin.site.register(DoubleStar, DoubleStarAdmin)

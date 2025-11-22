@@ -1,6 +1,7 @@
 
-from ..site.utils import get_skytour_version
 import wikipediaapi
+from ..site.utils import get_skytour_version
+from .vocabs import YES, NO
 
 def get_user_agent():
     version = get_skytour_version()
@@ -26,6 +27,21 @@ def get_page_attrs(page):
         summary_length = len(page.summary),
         canonical_url = page.canonicalurl
     )
+
+def update_wiki_object(obj, name):
+    page = get_wiki_page(name)
+    attr = get_page_attrs(page)
+    obj.exists = YES if attr['exists'] else NO
+    obj.ambiguous = YES if attr['ambiguous'] else NO
+
+    if attr['exists']:
+        obj.title = attr['title']
+        if not attr['ambiguous']:
+            obj.summary = attr['summary']
+            obj.summary_length = attr['summary_length']
+            obj.canonical_url = attr['canonical_url']
+    obj.save()
+    return obj
 
 def test():
     pages = [

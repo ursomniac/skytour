@@ -1,0 +1,70 @@
+{% load skytour_filters %}
+<style>
+    span.light-yellow { color: #ffc; font-weight: bold; }
+    span.infield { float: right; font-size: 80%; }
+    span.nickname { font-style: italic; color: #ff9; }
+    span.wiki { color: #9f6; }
+    table.var_table tbody th, 
+    table.var_table tbody td { 
+        padding: 4px 10px 2px 10px; 
+        font-size: 90%;
+    }
+    table.var_table tbody td.wiki { 
+        white-space: nowrap; padding: 10px 4px; 
+        text-align: center;
+    }
+    table.var_table th { 
+        background-color: #996; 
+        color: #000; 
+        border: 1px solid #000; 
+    }
+    table.var_table thead th.wiki { white-space: nowrap; padding: 10px 4px; }
+    span.hidden { display: none; }
+    button.wiki { width: 1en; }
+</style>
+<table width="100%" id="{{ table_id }}" class="var_table">
+<thead>
+    <tr class="table-header">
+        <th>Name</th>
+        <th class="wiki">🅆</th>
+        <th>Type</th>
+        <th>Sp. Class</th>
+        <th>Period</th>
+        <th>R.A.</th>
+        <th>Dec.</th>
+        <th>Mag. Range</th>
+        <th># Comps</th>
+    </tr>
+</thead>
+<tbody>
+{% for var in variable_stars %}
+    {% with var.gcvs as star %}
+    <tr>
+        <td>
+            <a href="{% url 'obsvar-detail' var.gcvs.id_in_catalog %}" target="_new">{{ star.name }}</a>
+        </td>
+        <td class="wiki">
+            {% if var.has_wiki == 'WIKI' %}
+            <button onclick="return realtimePopup('/dso/wiki/{{ var.pk }}')" class="wiki">
+                <b>🅆</b>
+                </button>
+            {% endif %}
+        </td>
+        <td>{{ star.type_original }}</td>
+        <td>{{ star.spectral_type }}</td>
+        <td>{{ star.period }}</td>
+        <td>{{ star.ra_text }}</td>
+        <td>
+            <span class="hidden">{{ var.dec|sortable_angle }}</span>
+            {{ star.dec_text }}
+        </td>
+        <td>{{ star.mag_range }}</td>
+        <td>{{ var.comparison_star_list|length }}
+        {% endwith %}
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+{% include 'includes/sortable_table.html' %}
+{% include 'includes/realtime_script.html' %}
+<br/>

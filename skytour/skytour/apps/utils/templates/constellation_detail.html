@@ -8,14 +8,14 @@
     td.number { text-align: right; }
     img { display: block; }
     #constellation_stars th { background-color: #996; color: #000; }
-    button.op { width: 15em; height: 2em; }
-    button.op a { color: #000; text-decoration: none; }
+    button.op { width: 15em; height: 3em; font-weight: bold; background-color: #c60; color: #ff0; }
+    button.op a { color: #000; text-decoration: none;}
     span.hidden { display:none; } 
 </style>
 <a name="section-top"></a>
 <table class="constellation-header">
     <tr>
-        <td colspan=>
+        <td colspan=2>
             <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
             <p>
                 <h4><i>{{ object.genitive }}</i></h4>
@@ -26,8 +26,9 @@
                 {% else %}
                 <span class="boxed">{{ object.has_wiki_text }}</span>
                 {% endif %}
-                <a href="#section-dso"><button class="op">DSOs ⬇️</button></a>
-                <a href="#section-stars"><button class="op">Bright Stars ⬇️</button></a>
+                <a href="#section-active-vars"><button class="op">Active Variable Stars &nbsp;&nbsp;  ⬇️</button></a>
+                <a href="#section-dso"><button class="op">DSOs &nbsp;&nbsp; ⬇️</button></a>
+                <a href="#section-stars"><button class="op">Bright Stars &nbsp;&nbsp;  ⬇️</button></a>
             </p>
         </td>
         <td style='vertical-align: top;'>
@@ -78,6 +79,12 @@
 {% endwith %}
 {% endif %}
 
+<a name="section-active-vars">
+<h2>Active Variable Stars</h2>
+<a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
+{% with table_id='constellation_variables' %}
+{% include 'includes/var_table.html' %}
+{% endwith %}
 <a name="section-dso"></a>
 <h2>DSOs</h2>
 <a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
@@ -138,8 +145,4 @@
 } );
 
 </script>
-{# with table_id='constellation_stars' #}
-{# include 'includes/sortable_table.html' #}
-{# endwith #}
-
 {% endblock content %}

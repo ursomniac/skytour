@@ -1,6 +1,8 @@
+import datetime
 from django.utils.safestring import mark_safe
 from django.views.generic.base import TemplateView
 from ..observe.utils import get_effective_bortle
+from .time import julian_to_date, get_julian_date, jd_now
 from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm
 
 def haz(thing, zero=False):
@@ -10,6 +12,7 @@ def haz(thing, zero=False):
     if thing is None or thing.strip() == 'None' or len(thing.strip()) == 0:
         return False
     return True
+
 
 class CalcModulusView(TemplateView):
     template_name = 'calc_value.html'
@@ -147,3 +150,53 @@ class CalcAngularSizeView(TemplateView):
         if angsize is not None:
             context['result_string'] = angsize
         return context
+    
+class CalcJDToDateView(TemplateView):
+    template_name = 'calc_julian_to_date.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcJDToDateView, self).get_context_data(**kwargs)
+        jd = self.request.GET.get('jd', None)
+        context['jd'] = jd
+        if jd is not None:
+            x = float(jd)
+            tdate, dtdate = julian_to_date(x)
+            s = tdate[5] + tdate[6]/1.e6
+            context['result_string'] = f"{tdate[0]}-{tdate[1]:02d}-{tdate[2]:02d} {tdate[3]:02d}h {tdate[4]:02d}m {s:6.3f}"
+        return context
+    
+class CalcDateToJDView(TemplateView):
+    template_name = 'calc_date_to_julian.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalcDateToJDView, self).get_context_data(**kwargs)
+        ymd = self.request.GET.get('ymd', None)
+        hms = self.request.GET.get('hms', None)
+        now = self.request.GET.get('now', 'off') == 'on'
+        if now or ymd is None or ymd.strip() == '':
+            now_ts = datetime.datetime.now(datetime.timezone.utc)
+            ymd = f"{now_ts.year}-{now_ts.month:02d}-{now_ts.day:02d}"
+            ss = now_ts.second + now_ts.microsecond/1.e6
+            hms = f"{now_ts.hour:02d}:{now_ts.minute:02d}:{ss:09.6f}"
+        context['ymd'] = ymd
+        context['hms'] = hms
+
+        if ymd is not None:
+            py = ymd.split('-')
+            year = int(py[0])
+            month = int(py[1])
+            day = int(py[2])
+            dt = datetime.datetime(year, month, day).astimezone(datetime.timezone.utc)
+            if hms is not None:
+                pt = hms.split(':')
+                hour = int(pt[0])
+                minute = int(pt[1])
+                s = float(pt[2])
+                second = int(s)
+                usecond = int((s - second)*1.e6)
+                dt = datetime.datetime(year, month, day, hour, minute, second, usecond).astimezone(datetime.timezone.utc)
+            jd = get_julian_date(dt)
+            context['result_string'] = f"{jd:.8f}"
+        return context
+        
+        

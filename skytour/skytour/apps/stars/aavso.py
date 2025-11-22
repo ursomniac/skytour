@@ -6,7 +6,13 @@ def make_request(name, fov=60., maglimit=14.5, north="up", east="left"):
     root = 'https://app.aavso.org/vsp/api/chart/?'
     orient = f"&north={north}&east={east}"
     format = "&format=json"
+    # Handle disambiguation between "Mu" and 'MU' (ditto Nu)
+    if name[:3] == 'Mu ':
+        name = 'mu. ' + name[3:]
+    if name[:3] == 'Nu ':
+        name = 'nu. ' + name[3:]
     qs = f"star={name.replace(' ','+')}&fov={fov}&maglimit={maglimit}"
+
     r = requests.get(root + qs + orient + format)    
     return r
 

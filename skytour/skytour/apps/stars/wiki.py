@@ -1,12 +1,10 @@
-from .models import PlanetWiki, CometWiki, AsteroidWiki, MeteorShowerWiki
+from .models import VariableStarWiki, BrightStarWiki
 from ..abstract.wiki import update_wiki_object
 
-def update_solar_system_wiki(instance):
+def update_star_wiki(instance):
     WIKIMODEL = {
-        'Planet': PlanetWiki,
-        'Asteroid': AsteroidWiki,
-        'Comet': CometWiki,
-        'MeteorShower': MeteorShowerWiki
+        'VariableStar': VariableStarWiki,
+        'BrightStar': BrightStarWiki,
     }
     parent_model = instance._meta.model.__name__
     if parent_model not in WIKIMODEL.keys():

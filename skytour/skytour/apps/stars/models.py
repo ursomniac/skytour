@@ -4,7 +4,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from jsonfield import JSONField
 from skyfield.api import Star
-from ..abstract.models import Coordinates
+from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject
+
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation
@@ -162,7 +163,7 @@ class DoubleStarElements(models.Model):
     def __str__(self):
         return f"{self.pk}: {self.object}"
 
-class BrightStar(Coordinates):
+class BrightStar(Coordinates, WikipediaPageObject):
     """
     Bright Star Catalog data
     """
@@ -270,6 +271,11 @@ class BrightStar(Coordinates):
             out = f"{p}{out:08d}"
         return out
 
+    @property
+    def default_wikipedia_name(self):
+        # It appears that Wikipedia is indexed against HR #'s - so for now try that
+        return f"HR {self.hr_id}"
+    
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
         self.dec = self.dec_float # get from property
@@ -284,8 +290,17 @@ class BrightStar(Coordinates):
             name += " = {}".format(self.proper_name)
         return mark_safe("HR {} = {}".format(self.hr_id, name))
 
+class BrightStarWiki(WikipediaPage):
+    object = models.OneToOneField(
+        BrightStar, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
+
 # TODO V2: Come up with a plan to use this
-class VariableStar(Coordinates):
+class VariableStar(Coordinates, WikipediaPageObject):
     catalog = models.ForeignKey(StarCatalog, on_delete=models.CASCADE)
     id_in_catalog = models.CharField(
         _('GCVS ID'),
@@ -333,6 +348,8 @@ class VariableStar(Coordinates):
     # Notes
 
     ### USE http://www.sai.msu.su/gcvs/gcvs/gcvs5/htm/ as a guide!
+    def get_absolute_url(self):
+        return '/variable_star/{}'.format(self.id_in_catalog)
 
     def __str__(self):
         return f"{self.pk}: {self.name} ({self.type_original})"
@@ -366,6 +383,14 @@ class VariableStar(Coordinates):
         return(id_in_const, number, constellation.abbr_case, component)
     
     @property
+    def default_wikipedia_name(self):
+        index = self.name.split()[0]
+        if index[:2] == 'V0':
+            index = f"V{index[2:]}"
+        genitive = self.name.constellation.genitive
+        return f"{self.index}_{genitive}"
+    
+    @property
     def html_name(self):
         id_in_const, number, const, comp = self.deconstruct_gcvs()
         x = id_in_const
@@ -383,6 +408,11 @@ class VariableStar(Coordinates):
     @property
     def mag_range(self):
         return f"{self.mag_max} - {self.mag_min1}"
+    
+    @property
+    def type_original_metadata(self):
+        x = VariableStarTypeOriginal.objects.filter(code=self.type_original).first()
+        return x
 
     def get_all_original_types(self):
         x = self.type_original
@@ -471,6 +501,20 @@ class VariableStarAlias(models.Model):
         self.shown_name = create_shown_name(self)
         super(VariableStarAlias, self).save(*args, **kwargs)
 
+class VariableStarNotes(models.Model):
+    gcvs = models.OneToOneField (
+        VariableStar, 
+        on_delete = models.CASCADE,
+        null = True, blank = True
+    )
+    notes = models.TextField (
+        _('Notes'),
+        blank = True, null = True
+    )
+
+    def __str__(self):
+        return f"{self.gcvs} - Notes"
+
 class ObservableVariableStar(models.Model):
     gcvs = models.OneToOneField (
         VariableStar,
@@ -498,8 +542,56 @@ class ObservableVariableStar(models.Model):
         null = True, blank = True
     )
 
+    @property
+    def comparison_star_list(self):
+        #
+        def handle_coordinates(x, type):
+            pieces = x.split(':')
+            if pieces[0][0] != '-': # N add +
+                pieces[0] = '+' + pieces[0]
+            return f"{pieces[0]}h{pieces[1]}m{pieces[2]}s" if type == 'ra'\
+                else f"{pieces[0]}°{pieces[1]}\'{pieces[2]}\""
+        #
+        def assemble_mags(bands):
+            x = {}
+            for b in bands:
+                if b['error']:
+                    z = f"{b['mag']:6.3f} ± {b['error']:5.3f}"
+                else:
+                    z = f"{b['mag']:6.3f}"
+                x[b['band']] = (b['mag'], z)
+            return x
+        #
+        def get_best_mag(mags):
+            precedence = ['V', 'B', 'Rc', 'R', 'I', 'Ic', 'K', 'H', 'U']
+            for p in precedence:
+                if p in mags.keys():
+                    t = tuple(list(mags[p]) + [p])
+                    return t
+        #
+        clist = []
+        if not self.finder_json:
+            return None
+        cc = self.finder_json['photometry']
+        for c in cc:
+            mags = assemble_mags(c['bands']) # dict of tuples
+            best_mag = get_best_mag(mags) # tuple
+            x = dict(
+                id = c['auid'],
+                ra = handle_coordinates(c['ra'], type='ra'),
+                dec = handle_coordinates(c['dec'], type='dec'),
+                label = c['label'],     
+                mags = mags,
+                best_mag = best_mag        
+            )
+            clist.append(x)
+        return clist
+
     def __str__(self):
         return self.gcvs.name
+    
+    class Meta:
+        ordering = ['gcvs__id_in_catalog']
     
 class VariableStarLightCurve (models.Model):
     parent = models.ForeignKey(
@@ -525,7 +617,16 @@ class VariableStarLightCurve (models.Model):
     )
 
     def __str__(self):
-        return self.parent
+        return f"{self.parent}"
+    
+class VariableStarWiki(WikipediaPage):
+    object = models.OneToOneField(
+        VariableStar, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
     
 class StellarObject(Coordinates):
     """
