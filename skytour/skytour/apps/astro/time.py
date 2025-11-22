@@ -43,6 +43,63 @@ def get_julian_date(xdt, zero=False): # takes a datetime object
         jdut = (xdt.hour + xdt.minute / 60. + (xdt.second + (xdt.microsecond / 1.e6)) / 3600.) / 24.
     return jd0 + jdut
 
+def julian_to_date(jd):
+    """
+    Returns 2-tuple of:
+        a. 7-tuple YMDHMSµ
+        b. datetime object (UTC)
+    """
+    x = jd + 0.5
+    z = int(x)
+    f = x - z
+    if z < 2_299_161:
+        a = z
+    else:
+        alpha = int((z - 1_867_216.25) / 36524.25 )
+        a = z + 1 + alpha - int(alpha / 4.)
+    b = a + 1524
+    c = int((b - 122.1) / 365.25)
+    d = int(365.25 * c)
+    e = int((b - d) / 30.6001)
+    g = b - d - int(30.6001 * e) + f
+    # Month
+    zn = e - 1 if e < 14 else e - 13
+    # Year
+    zy = c - 4716 if zn > 2 else c - 4715
+    # Day
+    zd = int(g)
+    zdf = g - zd # fractional part of day
+    # Hour
+    xh = zdf * 24.
+    zh = int(xh)
+    # Minute
+    xm = (xh - zh) * 60.
+    zm = int(xm)
+    # Seconds
+    xs = (xm - zm) * 60.
+    zs = int(xs)
+    # Fractional Seconds -> Microseconds
+    us = int((xs - zs) * 1.e6)
+    return ((zy, zn, zd, zh, zm, zs, us), datetime.datetime(zy, zn, zd, zh, zm, zs, us).astimezone(datetime.timezone.utc))
+
+def dt_fractional_year(dt):
+    """
+    Take datetime
+    return fractional year
+    """
+    year = dt.year
+    is_leap = (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
+    ndays = 366 if is_leap else 365
+    start_of_year = datetime.datetime(year, 1, 1, 0, 0, 0).astimezone(datetime.timezone.utc)
+    delta_t = dt - start_of_year
+    fdays = delta_t.total_seconds() / 86400.
+    fyear = fdays / ndays
+    return year + fyear
+
+def jd_now():
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    return get_julian_date(now)
+
 def get_t_epoch(jd):
     """
     Get the JD in julian centuries

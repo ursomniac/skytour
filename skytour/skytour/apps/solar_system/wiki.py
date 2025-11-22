@@ -1,21 +1,5 @@
 from .models import PlanetWiki, CometWiki, AsteroidWiki, MeteorShowerWiki
-from ..abstract.wiki import get_wiki_page, get_page_attrs
-from ..abstract.vocabs import YES, NO
-
-def update_wiki_object(obj, name):
-    page = get_wiki_page(name)
-    attr = get_page_attrs(page)
-    obj.exists = YES if attr['exists'] else NO
-    obj.ambiguous = YES if attr['ambiguous'] else NO
-
-    if attr['exists']:
-        obj.title = attr['title']
-        if not attr['ambiguous']:
-            obj.summary = attr['summary']
-            obj.summary_length = attr['summary_length']
-            obj.canonical_url = attr['canonical_url']
-    obj.save()
-    return obj
+from ..abstract.wiki import update_wiki_object
 
 def update_solar_system_wiki(instance):
     WIKIMODEL = {

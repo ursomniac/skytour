@@ -9,7 +9,7 @@ from operator import attrgetter
 from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
-from .utils import filter_catalog
+from .utils import filter_catalog, get_active_variable_stars
 from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
@@ -84,6 +84,7 @@ class ConstellationDetailView(DetailView):
         # TODO: Add a field to BrightStar and add in the constellations!
         stars = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
         context['bright_stars'] = order_bright_stars(stars)
+        context['variable_stars'] = get_active_variable_stars(object)
         
         # Add solar system objects that happen to be within the constellation from the session cookie
         context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)

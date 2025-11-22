@@ -9,7 +9,7 @@ from ..dso.helpers import get_simple_dso_list
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..utils.timer import compile_times
-from .models import BrightStar
+from .models import BrightStar, VariableStar, ObservableVariableStar
 from .forms import ZenithMagForm
 from .plot import get_skymap, get_zenith_map
 
@@ -152,3 +152,33 @@ class ZenithMagView(FormView):
 
 class ZenithMagResult(TemplateView):
     template_name = 'zenith_view.html'
+
+class ObservableVariableStarListView(ListView):
+    model = ObservableVariableStar
+    template_name = 'obsvar_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservableVariableStarListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'obsvar-list'
+        return context
+    
+class VariableStarDetailView(DetailView):
+    model = VariableStar
+    template_name = 'obsvar_detail.html'
+
+    def get_object(self, queryset=None):
+        id_in_catalog = self.kwargs.get('id_in_catalog')
+        return VariableStar.objects.get(id_in_catalog=id_in_catalog)
+
+    def get_context_data(self, **kwargs):
+        context = super(VariableStarDetailView, self).get_context_data(**kwargs)
+        obj = context['object'] = self.get_object()
+        if obj.is_active:
+            context['finder'] = obj.observablevariablestar
+        incon_raw = VariableStar.objects.filter(constellation=obj.constellation)
+        incon = []
+        for v in incon_raw:
+            if v.is_active and v != obj:
+                incon.append(v)
+        context['const_others'] = incon
+        return context

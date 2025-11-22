@@ -1,0 +1,41 @@
+{% extends 'popup_base.html' %}
+{% load skytour_filters humanize %}
+
+{% block content %}
+<style>
+    table.form th, td.input { height: 40px; }
+    #id-custom { float: right; }
+</style>
+<h2>{{ title }}</h2>
+    <form type="GET">
+        <table class="form">
+            <tr>
+                <th><label for="jd">Julian Date<br></th>
+                <td class="input">
+                    <input name="jd" size="12" maxlength="12" {% if jd %}value="{{ jd }}"{% endif %}>&nbsp;
+                </td>
+            </tr>
+            {% if result_string %}
+            <tr>
+                <td></td>
+                <td class="result">
+                    <h4>{{ result_string }}</h4>
+                </td>
+            </tr>
+            {% endif %}
+        <tr><td colspan=2 class="submit">
+            <input class="submit" type="submit" value="Get Date">
+        </td></tr>
+        <tr><td colspan=2  class="close-popup">
+            <button onClick="closeFormPopup();">Close Popup</button>
+        </td></tr>
+        </table>
+    </form>
+<script>
+    function closeFormPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+{% endblock content %}

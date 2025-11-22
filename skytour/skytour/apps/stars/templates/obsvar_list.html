@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load skytour_filters humanize %}
+{% block title %}Current Variable Star List: Skytour{% endblock %}
+{% block styles %}
+<style>
+    span.hidden { display: none; }
+</style>
+{% endblock %}
+{% block content %}
+<h1>Current Variable Stars</h1>
+<table id="{{ table_id }}">
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>R.A.</th>
+        <th>Dec.</th>
+        <th>Type</th>
+        <th>Mag.</th>
+        <th>Period</th>
+    </tr>
+</thead>
+<tbody>
+    {% for obj in object_list %}{% with obj.gcvs as star %}
+    <tr>
+        <td>
+            <span class="hidden">{{ star.id_in_catalog }}</span>
+            <a href="{% url 'obsvar-detail' star.id_in_catalog %}" target="_blank">{{ star.name }}</a>
+        </td>
+        <td>{{ star.ra_text }}</td>
+        <td>{{ star.dec_text }}</td>
+        <td>{{ star.type_original }}</td>
+        <td>{{ star.mag_range }}</td>
+        <td>{% if star.period %}{{ star.period }}{% endif %}</td>
+    </tr>
+    {% endwith %}{% endfor %}
+</tbody>
+</table>
+
+{% include 'includes/sortable_table.html' %}
+{% include 'includes/realtime_script.html' %}
+{% endblock %}

@@ -71,12 +71,22 @@
                 <li>Page: <a href="{% url 'observing-location-detail' object.location.pk %}" target="_new">{{ object.location }}</a></li>
             </ul>
             {% if object.sqm_avg %}
-            SQM: {{ object.sqm_avg }} ({{ object.sqm_range }})
+            SQM (Session): {{ object.sqm_avg }} ({{ object.sqm_range }})
             <br>
             {% endif %}
-            {% if object.bortle_avg %}
-            Bortle: {{ object.bortle_avg }}
+            {% if object.location.mean_obs_sqm.0 %}
+                SQM (Overall Obs.): {{ object.location.mean_obs_sqm.0|floatformat:2 }}
+                {% if object.location.mean_obs_sqm.1 %}
+                    ±{{ object.location.mean_obs_sqm.1|floatformat:2 }}
+                {% endif %}
+                <br/>
             {% endif %}
+            {% if object.bortle_avg %}
+            <br>
+            Bortle (Session): {{ object.bortle_avg }}
+            <br>
+            {% endif %}
+
         </td>
         <td rowspan="4">
             {% if object.notes %}

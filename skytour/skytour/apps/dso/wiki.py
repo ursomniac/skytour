@@ -1,7 +1,5 @@
 from .models import DSOWiki, DSOInFieldWiki
-from ..abstract.wiki import get_wiki_page, get_page_attrs
-from ..abstract.vocabs import YES, NO
-from ..solar_system.wiki import update_wiki_object
+from ..abstract.wiki import update_wiki_object
 
 def update_dso_wiki(instance):
     WIKIMODEL = {

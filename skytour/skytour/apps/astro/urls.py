@@ -5,7 +5,9 @@ from .views import (
     CalcSQMToBortleView,
     CalcExposureFromFramesView,
     CalcFramesFromExposureView,
-    CalcAngularSizeView
+    CalcAngularSizeView,
+    CalcJDToDateView,
+    CalcDateToJDView
 )
 
 urlpatterns = (
@@ -14,5 +16,7 @@ urlpatterns = (
     path('calc/sqm2bortle', CalcSQMToBortleView.as_view(), name='calc-bortle'),
     path('calc/framesexposure', CalcExposureFromFramesView.as_view(), name='calc-exposure-time'),
     path('calc/exposureframes', CalcFramesFromExposureView.as_view(), name='calc-frames'),
-    path('calc/angsize', CalcAngularSizeView.as_view(), name='calc-angsize')
+    path('calc/angsize', CalcAngularSizeView.as_view(), name='calc-angsize'),
+    path('calc/jd2date', CalcJDToDateView.as_view(), name='calc-jd2date'),
+    path('calc/date2jd', CalcDateToJDView.as_view(), name='calc-date2jd')
 )

@@ -45,6 +45,15 @@ GCVS_ID = { # greek letters
     '9221': 'U', '9222': 'V', '9223': 'W', '9224': 'X', '9225': 'Y', '9226': 'Z'
 }
 
+GCVS_NO_GREEK = {
+    '9001': 'Alp', '9002': 'Bet', '9003': 'Gam', '9004': 'Del',
+    '9005': 'Eps', '9006': 'Zet', '9007': 'Eta', '9008': 'The',
+    '9009': 'Iot', '9010': 'Kap', '9011': 'Lam', '9012': 'Mu',
+    '9013': 'Nu',  '9014': 'Xi',  '9015': 'Omi', '9016': 'Pi',
+    '9017': 'Rho', '9018': 'Sig', '9019': 'Tau', '9020': 'Ups',
+    '9021': 'Phi', '9022': 'Chi', '9023': 'Psi', '9024': 'Ome',
+}
+
 CONSTELLATION_LABELS = { # centroids  (ra, dec)
     'AND': ( 0.2, 43.0),  'ANT': (10.0,-32.0),  'APS': (16.5,-74.0),  'AQL': (19.9,  4.0),
     'AQR': (22.7, -5.0),  'ARA': (17.3,-51.0),  'ARI': ( 2.2, 26.0),  'AUR': ( 5.7, 43.0),
@@ -87,3 +96,13 @@ VARDES = [None, 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'RR', 'RS', 'RT', '
 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NN', 'NO', 'NP', 'NQ', 'NR', 'NS', 'NT', 'NU', 'NV', 'NW', 'NX', # 281-300
 'NY', 'NZ', 'OO', 'OP', 'OQ', 'OR', 'OS', 'OT', 'OU', 'OV', 'OW', 'OX', 'OY', 'OZ', 'PP', 'PQ', 'PR', 'PS', 'PT', 'PU', # 301-320
 'PV', 'PW', 'PX', 'PY', 'PZ', 'QQ', 'QR', 'QS', 'QT', 'QU', 'QV', 'QW', 'QX', 'QY', 'QZ']                               # 321-334
+
+VARIABLE_CLASSES = [
+    ('erupt',       'Eruptive'),
+    ('pulse',       'Pulsating'),
+    ('rotate',      'Rotating'),
+    ('cataclysmic', 'Cataclysmic (Explosive and Novalike'),
+    ('eclipse',     'Eclipsing'),
+    ('x-ray',       'Intense X-Ray Sources'),
+    ('other',       'Other')
+]

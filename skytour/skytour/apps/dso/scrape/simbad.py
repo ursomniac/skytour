@@ -1,14 +1,12 @@
-import json
 from astroquery.simbad import Simbad
 from .utils import *
 
 def setup_simbad():
     csim = Simbad()
     csim.reset_votable_fields()
-    csim.add_votable_fields('dim', 'distance', 'jp11', 
-                            'flux(V)', 'flux(B)',
-                            'morphtype', 'otype'
-                            )
+    # Deprecations > V0.4.8
+    #csim.add_votable_fields('dim', 'distance', 'jp11', 'flux(V)', 'flux(B)', 'morphtype', 'otype')
+    csim.add_votable_fields('dim', 'mesdistance', 'flux', 'V', 'B', 'morphtype', 'otype')
     return csim
 
 def process_simbad_object(obj):
@@ -151,7 +149,11 @@ def process_simbad_request(id, name, debug=False):
             print(f"{id}: Cannot find {name} in SIMBAD.")
         print("GOT HERE: ", req)
         return None
-    objdict = process_simbad_object(req)
+    try:
+        objdict = process_simbad_object(req)
+    except:
+        print(f"ERROR - REQ: {req}")
+        return None
     if debug:
         print("OBJDICT: ", objdict)
         print("KEYS: ", objdict.keys())

@@ -1,7 +1,9 @@
 import re
 from ...utils.models import Constellation
 from ..models import VariableStar, StarCatalog
-from ..vocabs import GCVS_ID as LOOKUP_GCVS
+from ..vocabs import GCVS_ID 
+
+LOOKUP_GCVS = GCVS_ID
 
 # TODO V2.x: Move this to a ../../seed script library
 def tr(line, col, length, type):
@@ -42,12 +44,10 @@ def get_remarks():
         d[id].append(comment)
     return d
 
-def load_gcvs(debug=True):
+def load_gcvs(debug=True, save=False, idlist=None):
     """
     GCVS file format:
         Col     Fmt   Units    Label     Notes
-
-
         132-134 A3     %       M-m/D     Rising time (M-m) or eclipse duration (D)
         135     A1             u_M-m/D   uncertainty on M-m/D
         136     A1             n_M-m/D   Note for Eclipsing Variable
@@ -72,6 +72,9 @@ def load_gcvs(debug=True):
     if debug:
         print(f"{len(notes.keys())} stars have remarks.")
 
+#         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16        17        18        19        20        21        22        23
+#1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345
+#209012 |mu.   Cep *|214330.46 +584648.1 |SRC       |  3.2    |   5.4      |            |V |            |     |   730.             |     |M2Iae            |08956 HIP  |           |+0.005 -0.003|2000.0  | |Hip      |SRC       |mu.   Cep |
     for line in lines:
         # COLUMNS FORMAT UNITS   FIELD     DESCRIPTION
 
@@ -80,7 +83,20 @@ def load_gcvs(debug=True):
         # 3-6     I4             Number    Star # in constellation
         # 7       A1             Component Component ID
         gcvs_id = tr(line, 1, 7, 'str')
-        star = VariableStar.objects.filter(id_in_catalog=gcvs_id).first() or VariableStar()
+        if idlist is not None:
+            if gcvs_id not in idlist:
+                continue
+
+        star = VariableStar.objects.filter(id_in_catalog=gcvs_id).first()
+        if star:
+            #if debug:
+            #    print(f"Skipping {line[:20]}")
+            continue # skip existing
+        else:
+            star = VariableStar()
+            #if debug:
+            #    print(f"------ ADDING {line[:20]}")
+        
         star.catalog = gcvs_cat
         star.id_in_catalog = gcvs_id # will add if new
         constellation_id = tr(line, 1, 2, 'int')
@@ -94,6 +110,7 @@ def load_gcvs(debug=True):
             var_id = tr(line, 9, 5, 'str')
             if var_id[:2] == 'V0':
                 var_id.replace('V0', 'V')
+            var_id.replace('.',' ')
             lookup_var_id = var_id
             name = f"{var_id} {star.constellation.abbr_case}"
         else:
@@ -129,7 +146,12 @@ def load_gcvs(debug=True):
         # 36-39   F4.1   arcsec  DEs       J2000 Dec Arcseconds
         test_if_exists = tr(line, 21, 18, 'str')
         if test_if_exists is None:
+            #if debug:
+            #    print(f" ------------ Star {line[:20]} does not exist or is duplicate")
             continue # This star does not exist or is a duplicate.
+        if debug:
+            print(f"TRYING to add {line[:20]}")
+
         star.ra_h = tr(line, 21, 2, 'int')
         star.ra_m = tr(line, 23, 2, 'int')
         star.ra_s = tr(line, 25, 5, 'float')
@@ -199,7 +221,7 @@ def load_gcvs(debug=True):
         
         # 89-90   A2             mag_code  Photometric System for Magnitudes
         star.mag_code = tr(line, 89, 2, 'str')
-        
+
         ### PERIOD
         # 92-102  F11.5  JD      Epoch     Epoch for Maximum light; JD
         # 103     A1             q_Epoch   [:+-] Quality flag on Epoch
@@ -229,6 +251,7 @@ def load_gcvs(debug=True):
             star.period = tr(period_str, 1, len(period_str), 'float')
 
             star.period_uncertainty = unc
+
         # REFERENCES
         # 156-160 A5             Ref1      Ref to study of star
         # 162-166 A5             Ref2      Ref to chart or photograph
@@ -237,7 +260,7 @@ def load_gcvs(debug=True):
         remarks_flag = tr(line, 19, 1, 'str') == '*'
         if remarks_flag:
             if ref_lookup not in notes.keys():
-                continue # some entries have the * for notes but there aren't any...
+                pass # some entries have the * for notes but there aren't any...
             else:
                 star.notes = ''
                 for remark in notes[ref_lookup]:
@@ -245,12 +268,15 @@ def load_gcvs(debug=True):
         # 40      A1             u_DEs     position accuracy flag
         position_flag = tr(line, 40, 1, 'str') == ':'
 
-        if not debug:
+        if debug:
+            if star.name[0] not in 'ABCDEFGHJIJKLMNOPQRSTUVWXYZ':
+                print(f"Doing {star.name}")
+        if save:
             star.save()
             print(f"Saving {star}")
         else:
-            if star.name[0] not in 'ABCDEFGHJIJKLMNOPQRSTUVWXYZ':
-                print(f"Doing {star.name}")
+            print(f"Save off - not saving {star} but would.")
+
 
 def add_slug():
     # 01234567890
