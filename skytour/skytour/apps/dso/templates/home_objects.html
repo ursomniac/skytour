@@ -75,6 +75,14 @@
                         <td>
                             <label for="ut_offset">UT Offset:&nbsp;</label> 
                             <input name="ut_offset" value="{{ ut_offset }}" size=8>
+                            &nbsp;&nbsp;
+                            <label for="imaged">Imaged:&nbsp;</label> 
+                            <select name="imaged">
+                                <option {% if imaged == 'All' %}selected{% endif %}>All</option>
+                                <option {% if imaged == 'No' %}selected{% endif %}>No</option>
+                                <option {% if imaged == 'Yes' %}selected{% endif %}>Yes</option>
+                                <option {% if imaged == 'Redo' %}selected{% endif %}>Redo</option>
+                            </select>
                         </td>
                         <td>
                             <label for="incl_low_culmination">Incl. Low Culmination Objects:&nbsp;</label>
@@ -96,16 +104,11 @@
                         <input type="checkbox" name="on_dso_list_all" {% if on_dso_list_all %} checked{% endif %}>
                         </td>
                         <td>
-                        <label for="imaged">Imaged:&nbsp;</label> 
-                        <select name="imaged">
-                            <option {% if imaged == 'All' %}selected{% endif %}>All</option>
-                            <option {% if imaged == 'No' %}selected{% endif %}>No</option>
-                            <option {% if imaged == 'Yes' %}selected{% endif %}>Yes</option>
-                            <option {% if imaged == 'Redo' %}selected{% endif %}>Redo</option>
-                        </select>
-                        &nbsp;&nbsp;
                         <label for="show_thumbs">Show Thumbnails:&nbsp;</label>
                         <input type="checkbox" name="show_thumbs" {% if show_thumbs %} checked{% endif %}>
+                        &nbsp;&nbsp;
+                        <label for="show_map">Show Map:&nbsp;</label>
+                        <input type="checkbox" name="show_map" {% if show_map %} checked{% endif %}>
                         </td>
                         <td>
                         <label for="west_ha_limit">W. HA Limit:&nbsp;</label>
@@ -128,6 +131,8 @@
                             <input name="max_alt" size=5 {% if max_alt %}value="{{ max_alt }}"{% endif %}>
                         </td>
                         <td>
+                            <label for="min_dso_lunar_distance">Min. Lunar Sep.:&nbsp;</label>
+                            <input name="min_dso_lunar_distance" size=4 {% if min_dso_lunar_distance %}value="{{ min_dso_lunar_distance }}"{% endif %}>
                         </td>
                     </tr>
                     <tr>
@@ -293,6 +298,10 @@
 </small>
 <a name="bottom"></a>
 <a href="#top"><button class="nav" type="button">Go to Top</button></a>
+{% if show_map %}
+    <h2>Map</h2>
+    <img src="{{map}}">
+{% endif %}
 
 {% include 'includes/sortable_table.html' %}
 {% include 'includes/realtime_script.html' %}

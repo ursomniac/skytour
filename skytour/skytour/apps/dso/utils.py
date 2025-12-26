@@ -149,7 +149,6 @@ def get_priority_span_of_observing_mode(dso, mode):
     priority = get_priority_value_of_observing_mode(dso, mode)
     return priority_span(priority)
 
-
 def add_dso_to_dsolist(add_dso, dsolist):
     if add_dso is None:
         return "Failed: no DSO"
@@ -293,3 +292,4 @@ def deconstruct_mode_form(data, mode):
     if fields['viable'] is None or fields['priority'] is None:
         fields = None
     return fields, delete
+

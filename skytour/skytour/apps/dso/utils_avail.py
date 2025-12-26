@@ -1,5 +1,7 @@
 import datetime as dt, pytz
-from ..astro.transform import get_hour_angle
+
+from ..astro.transform import get_alt_az, get_hour_angle
+from ..astro.utils import alt_get_small_sep
 from ..observe.models import ObservingLocation
 import time
 
@@ -41,7 +43,8 @@ def find_dsos_at_location_and_time (
         west_ha_limit = 6.,
         incl_low_culmination = False,
         debug = False,
-        min_lunar_distance = None,
+        min_dso_lunar_distance = None,
+        moon = None
     ):
 
     times = [(time.perf_counter(), 'Start')] if times is None else times
@@ -92,7 +95,22 @@ def find_dsos_at_location_and_time (
         # Is it in a good location in the sky?
         hour_angle = get_hour_angle(utdt, location.longitude, d.ra_float)
         (az, alt, _) = d.alt_az(location, utdt)
-        # TODO: Is it far enough away from the Moon
+        # Is it far enough away from the Moon
+        
+        lunar_distance = None
+        if moon is not None:
+            try:
+                moon_ra = moon['apparent']['equ']['ra']
+                moon_dec = moon['apparent']['equ']['dec']
+                (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
+                #print(f"AZ: {moon_az} ALT: {moon_alt} AIR: {moon_airmass}")
+                if moon_alt is not None: # > -10.:
+                    lunar_distance = alt_get_small_sep(moon_ra, moon_dec, d.ra_float, d.dec_float, hemi=True)        
+                    if lunar_distance <= min_dso_lunar_distance:
+                        continue
+            except:
+                pass # oops...
+
         # Check against location masks, etc.
         in_window = is_available_at_location(location, az, alt, min_alt=min_alt, max_alt=max_alt, use_mask=mask, debug=debug)
         if not in_window:
