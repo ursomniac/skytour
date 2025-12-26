@@ -59,6 +59,10 @@ class AbstractCatalog(models.Model):
         choices = CATALOG_PRECEDENCE
     )
 
+    @property
+    def sortable_precedence(self):
+        return f"{self.precedence:02d}-{self.slug}"
+
     class Meta:
         abstract = True
 

@@ -146,7 +146,7 @@
         <td>
             {% if object.notes %}
             <h3>Notes:</h3>
-                <br>{{ object.notes }}
+                <br>{{ object.notes|safe }}
             {% endif %}
         </td>
         <td>

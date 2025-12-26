@@ -110,6 +110,11 @@ class CatalogListView(ListView):
     model = Catalog
     template_name = 'catalog_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(CatalogListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'catalog-list-table'
+        return context
+
 class CatalogDetailView(DetailView, MultipleObjectMixin):
     """
     Show all DSOs for a catalog.   Includes references where the catalog entry is 

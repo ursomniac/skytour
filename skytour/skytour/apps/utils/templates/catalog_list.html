@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}Catalog List: Skytour{% endblock %}
 {% block content %}
+<style>
+    .hidden { display: none; }
+</style>
 <h1>Catalog List</h1>
 <table id="{{ table_id }}">
 <thead>
     <tr class="table-header">
+        <th class="hidden"></th>
         <th width="20%">Name</th>
         <th width="10%">Abbr.</th>
         <th width="10%">Count</th>
@@ -15,7 +19,10 @@
 <tbody>
 {% for obj in object_list %}
     <tr>
-        <td><a href="{% url 'catalog-detail' obj.pk %}">{{ obj.name }}</a></td>
+        <td class="hidden">{{ obj.sortable_precedence }}</td>
+        <td>
+            <a href="{% url 'catalog-detail' obj.pk %}">{{ obj.name }}</a>
+        </td>
         <td style="text-align: center">{{ obj.abbreviation }}</td>
         <td style="text-align: right; padding-right: 10px;">
             {{ obj.dso_count }}
@@ -29,5 +36,5 @@
 </tbody>
 </table>
 
-{# include 'includes/sortable_table.html' #}
+{% include 'includes/sortable_table.html' %}
 {% endblock %}

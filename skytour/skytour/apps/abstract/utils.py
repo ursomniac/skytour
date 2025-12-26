@@ -121,7 +121,6 @@ def get_real_time_conditions(
     dt_base = request.GET.get('utdt_base', 'now')
     text_offset = request.GET.get('offset', '0.')
     offset = float(text_offset) if text_offset else 0.
-    lunar_distance = None
     if debug:
         print(f"DT BASE: {dt_base} OFFSET: {offset}")
     # Set up datetimes

@@ -11,7 +11,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import mark_safe
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView, FormView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -66,6 +66,28 @@ from .utils_checklist import (
     update_dso_filter_context
 )
 from .utils_dsolist import get_active_dsolist_objects, get_dso_list_map
+
+def plot_list_of_dsos(dso_list=None, map_scaling_factor=None):
+    #mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
+    mag = 2.4 if not map_scaling_factor else map_scaling_factor
+    center_ra, center_dec, max_dist = get_circle_center(dso_list)
+    if (max_dist is None or max_dist < 0.001)  and center_ra is not None:
+        max_dist = 5.
+    if max_dist is not None and max_dist > 0.:
+        fov = max_dist * 1.2
+        star_mag_limit = get_star_mag_limit(max_dist)
+        map = plot_dso_list(
+            center_ra, 
+            center_dec,
+            dso_list,
+            fov=fov,
+            star_mag_limit = star_mag_limit,
+            reversed = False,
+            label_size='small',
+            symbol_size=60,
+            title = f"Available DSOs"
+        )
+    return map
 
 class DSOListView(CookieMixin, ListView):
     model = DSO
@@ -246,28 +268,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         object = self.get_object()
         # Make a map
         dso_list = self.object.dso.all()
-        mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
-        center_ra, center_dec, max_dist = get_circle_center(dso_list)
-        #print(f"RA: {center_ra} DEC: {center_dec}  MD: {max_dist}")
-        if (max_dist is None or max_dist < 0.001)  and center_ra is not None:
-            max_dist = 5.
-        if max_dist is not None and max_dist > 0.:
-            fov = max_dist * 1.2
-
-            star_mag_limit = get_star_mag_limit(max_dist)
-
-            map = plot_dso_list(
-                center_ra, 
-                center_dec,
-                dso_list,
-                fov=fov,
-                star_mag_limit = star_mag_limit,
-                reversed = False,
-                label_size='small',
-                symbol_size=60,
-                title = f"DSO List: {self.object.name}"
-            )
-            context['map'] = map
+        context['map'] = plot_list_of_dsos(dso_list, map_scaling_factor=object.map_scaling_factor)
         context['table_id'] = 'dsos-on-list'
         context['is_dsolist_page'] = True
         # Deal with Edit form
@@ -463,12 +464,16 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['scheduled'] = is_scheduled
         show_thumbs = self.request.GET.get('show_thumbs', 'off') == 'on'
         context['show_thumbs'] = show_thumbs
+        show_map = self.request.GET.get('show_map', 'off') == 'on'
+        context['show_map'] = show_map
         on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
         context['on_dso_list_all'] = on_dso_list_all
         incl_low_culmination = self.request.GET.get('incl_low_culmination', 'off') == 'on'
         context['incl_low_culmination'] = incl_low_culmination
         west_ha_limit = float(self.request.GET.get('west_ha_limit', find_site_parameter('western-hour-angle-limit', 6.0, 'float')))
         context['west_ha_limit'] = west_ha_limit
+        min_dso_lunar_distance = float(self.request.GET.get('min_dso_lunar_distance', find_site_parameter('min_dso_lunar_distance', 45., 'float')))
+        context['min_dso_lunar_distance'] = min_dso_lunar_distance
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -529,9 +534,14 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             on_dso_list_all = on_dso_list_all,
             west_ha_limit = west_ha_limit,
             incl_low_culmination = incl_low_culmination,
+            min_dso_lunar_distance = min_dso_lunar_distance,
+            moon = context['cookies']['moon'],
             debug=debug
         )
         dsos = up_dict['dsos']
+        # Make a map if requested
+        if show_map:
+            context['map'] = plot_list_of_dsos(dsos)
 
         # Set context for page
         context['calc_utdt'] = up_dict['utdt']
