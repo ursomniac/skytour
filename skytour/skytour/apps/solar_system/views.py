@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
@@ -16,7 +16,7 @@ from ..abstract.vocabs import (
     IMAGE_PROCESSING_STATUS_OPTIONS
 )
 from ..astro.almanac import get_dark_time
-from ..astro.time import get_datetime_from_strings, convert_datetime_to_local_string
+from ..astro.time import get_datetime_from_strings
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
 from ..tech.models import Telescope
@@ -43,6 +43,7 @@ from .plot import (
     plot_track, 
     get_planet_map
 )
+from .position import get_object_metadata
 from .utils import (
     get_constellation, 
     get_asteroid_from_cookie, 
@@ -236,6 +237,10 @@ class AsteroidDetailView(CookieMixin, DetailView):
         times = [(time.perf_counter(), 'Start')]
         object = self.get_object()
         pdict = get_asteroid_from_cookie(context['cookies'], object)
+        if not pdict:
+            location = context['cookies']['user_pref']['location']
+            utdt = context['cookies']['user_pref']['utdt_start']
+            pdict = get_object_metadata(utdt, object.name, 'asteroid', object, location)            
         context['asteroid'] = pdict
         context['in_cookie'] = True if pdict else False
         slideshow = object.image_library.order_by('order_in_list')
@@ -284,21 +289,18 @@ class CometDetailView(CookieMixin, DetailView):
         # Track performance
         times = [(time.perf_counter(), 'Start')]
         object = self.get_object()
-        comets = context['cookies']['comets']
-        pdict = None
-        for c in comets:
-            if c['name'] == object.name:
-                pdict = c
-                pdict['n_obs'] = object.number_of_observations
-                pdict['last_observed'] = object.last_observed
-                mag = pdict['observe']['apparent_magnitude']
-                pdict['mag_offset'] = object.mag_offset
-                pdict['est_mag'] = mag + object.mag_offset
-                break
-        # TODO V2: if pdict is None then it's not in the cookie.
-        # Figure out how to add things from that 
+        pdict = get_comet_from_cookie(context['cookies'], object)
+        if not pdict:
+            location = context['cookies']['user_pref']['location']
+            utdt = context['cookies']['user_pref']['utdt_start']
+            pdict = get_object_metadata(utdt, object.name, 'comet', object, location)
+        pdict['n_obs'] = object.number_of_observations
+        pdict['last_observed'] = object.last_observed
+        mag = None if 'observe' not in pdict.keys() else pdict['observe']['apparent_magnitude']
+        pdict['mag_offset'] = object.mag_offset
+        pdict['est_mag'] = mag + object.mag_offset
+
         context['comet'] = pdict
-        #slideshow = object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
         slideshow = object.image_library.order_by('order_in_list')
         context['library_slideshow'] = slideshow
         context['times'] = compile_times(times)

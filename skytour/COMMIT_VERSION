@@ -1,1 +1,1 @@
-2.8 - Added optional map to @Now/@Cookie; added lunar distance filter
+2.8.1 - Fixed Asteroid/Comet to calculate cookie data if not active on detail view
