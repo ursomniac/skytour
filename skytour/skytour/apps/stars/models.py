@@ -4,6 +4,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from jsonfield import JSONField
 from skyfield.api import Star
+from taggit.managers import TaggableManager
+
 from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject
 
 from ..dso.utils import create_shown_name
@@ -56,6 +58,7 @@ class DoubleStar(Coordinates):
         null = True, blank = True,
         help_text = 'light years'
     )
+    tags = TaggableManager(blank=True)
 
     @property
     def alias_list(self):
@@ -205,6 +208,7 @@ class BrightStar(Coordinates, WikipediaPageObject):
     name = models.CharField(_('Name'), max_length=40, null=True, blank=True )
     proper_name = models.CharField(_('Proper Name'), max_length=100, null=True, blank=True)
     name_explanation = models.TextField(_('Name Explanation'), null=True, blank=True)
+    tags = TaggableManager(blank=True)
 
     @property
     def skyfield_object(self):
@@ -346,6 +350,7 @@ class VariableStar(Coordinates, WikipediaPageObject):
     bsc_id = models.OneToOneField(BrightStar, on_delete=models.PROTECT, null=True, blank=True)
     # Aliases - M:1 ForeignKey
     # Notes
+    tags = TaggableManager(blank=True)
 
     ### USE http://www.sai.msu.su/gcvs/gcvs/gcvs5/htm/ as a guide!
     def get_absolute_url(self):

@@ -44,6 +44,7 @@ class DoubleStarAdmin(admin.ModelAdmin):
             'fields': [
                 ('magnitudes', 'spectral_type'),
                 ('separation', 'distance'),
+                'tags',
                 'notes'
             ]
         })

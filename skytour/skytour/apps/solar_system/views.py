@@ -309,6 +309,8 @@ class CometDetailView(CookieMixin, DetailView):
 class TrackerView(FormView):
     """
     Combine planet, asteroid, and comet tracking into a single view.
+
+    TODO: allow multiple objects on the same plot
     """
     form_class = TrackerForm
     template_name = 'tracker.html'

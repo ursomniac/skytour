@@ -83,6 +83,7 @@ class DSOInFieldInline(admin.StackedInline):
                  ('angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
+                'tags',
                 ('other_parameters', 'notes'),
                 'override_metadata',
             ]
@@ -466,6 +467,7 @@ class DSOInFieldAdmin(admin.ModelAdmin):
                 ('magnitude', 'angular_size', 'major_axis_size', 'minor_axis_size'), 
                 ('surface_brightness', 'contrast_index', 'orientation_angle'),
                 ('distance', 'distance_units'),
+                'tags',
                 ('other_parameters','notes'),
                 'override_metadata',
             ]
