@@ -913,7 +913,8 @@ class DSOInField(DSOAbstract, WikipediaPageObject, models.Model):
     "DSOs in Field".
     """
     parent_dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
-
+    tags = TaggableManager(blank=True)
+    
     @property
     def label_on_chart(self):
         """
