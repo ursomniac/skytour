@@ -1,10 +1,11 @@
-from .models import VariableStarWiki, BrightStarWiki
+from .models import VariableStarWiki, BrightStarWiki, StellarObjectWiki
 from ..abstract.wiki import update_wiki_object
 
 def update_star_wiki(instance):
     WIKIMODEL = {
         'VariableStar': VariableStarWiki,
         'BrightStar': BrightStarWiki,
+        'StellarObject': StellarObjectWiki
     }
     parent_model = instance._meta.model.__name__
     if parent_model not in WIKIMODEL.keys():

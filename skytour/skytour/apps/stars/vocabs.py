@@ -8,7 +8,7 @@ ENTITY = {
     'Chi': '&chi;', 'Phi': '&phi;', 'Psi': '&psi;', 'Ome': '&omega;'
 }
 
-UNICODE = { # greek letters
+UNICODE_OOPS = { # greek letters
     'Alp': u'\03B1', 'Bet': u'\03B2', 'Gam': u'\03B3', 'Del': u'\03B4',
     'Eps': u'\03B5', 'Zet': u'\03B6', 'Eta': u'\03B7', 'The': u'\03B8',
     'Iot': u'\03B9', 'Kap': u'\03BA', 'Lam': u'\03BB', 'Mu':  u'\03BC',
@@ -16,6 +16,19 @@ UNICODE = { # greek letters
     'Rho': u'\03C1', 'Sig': u'\03C3', 'Tau': u'\03C4', 'Ups': u'\03C5',
     'Phi': u'\03C6', 'Chi': u'\03C7', 'Psi': u'\03C8', 'Ome': u'\03C9'
 }
+
+UNICODE = {
+    'Alp': '\u03B1', 'Bet': '\u03B2', 'Gam': '\u03B3', 'Del': '\u03B4',
+    'Eps': '\u03B5', 'Zet': '\u03B6', 'Eta': '\u03B7', 'The': '\u03B8',
+    'Iot': '\u03B9', 'Kap': '\u03BA', 'Lam': '\u03BB', 'Mu':  '\u03BC',
+    'Nu':  '\u03BD', 'Xi':  '\u03BE', 'Omi': '\u03BF', 'Pi':  '\u03C0',
+    'Rho': '\u03C1', 'Sig': '\u03C3', 'Tau': '\u03C4', 'Ups': '\u03C5',
+    'Phi': '\u03C6', 'Chi': '\u03C7', 'Psi': '\u03C8', 'Ome': '\u03C9'
+}
+SUPERSCRIPT_CHAR = [
+    '\u2070', '\u00B9', '\u00B2', '\u00B3', '\u2074',
+    '\u2075', '\u2076', '\u2077', '\u2078', '\u2079'
+]
 
 BAYER_INDEX = [
     None,

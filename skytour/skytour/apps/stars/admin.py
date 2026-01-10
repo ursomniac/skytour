@@ -1,10 +1,54 @@
 from django.contrib import admin
 from .models import BrightStar, DoubleStar, DoubleStarAlias, DoubleStarElements, VariableStar,\
-    VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve
+    VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve,\
+    StellarObject, BrightStarMetadata, BrightStarWiki, StellarObjectMetadata, StellarObjectWiki
+
+class BrightStarMetadataInline(admin.StackedInline):
+    model = BrightStarMetadata
+
+class BrightStarWikiInline(admin.StackedInline):
+    model = BrightStarWiki
+
+class StellarObjectMetadataInline(admin.StackedInline):
+    model = StellarObjectMetadata
+
+class StellarObjectWikiInline(admin.StackedInline):
+    model = StellarObjectWiki
 
 class BrightStarAdmin(admin.ModelAdmin):
     model = BrightStar
     list_filter = ['constellation']
+    inlines = [BrightStarMetadataInline, BrightStarWikiInline]
+
+class StellarObjectAdmin(admin.ModelAdmin):
+    model = StellarObject
+    list_filter = ['constellation']
+    list_display = ['pk', 'shown_name','name', 'ra_text', 'dec_text', 'constellation', 'magnitude', 'spectral_type']
+    # Aliases
+    inlines = [StellarObjectMetadataInline, StellarObjectWikiInline]
+
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('catalog', 'id_in_catalog', 'constellation'),
+            ]
+        }),
+        ('Coordinates', {
+            'fields': [
+                ('ra_h', 'ra_m', 'ra_s'),
+                ('dec_sign', 'dec_d', 'dec_m', 'dec_s')
+            ]
+        }),
+        ('Attributes', {
+            'fields': [
+                ('magnitude', 'spectral_type'),
+                'distance',
+                'other_parameters',
+                'notes',
+                'tags'
+            ]
+        })
+    )
 
 class DoubleStarElementsAdmin(admin.TabularInline):
     model = DoubleStarElements
@@ -113,6 +157,7 @@ class VariableStarTypeRevisedAdmin(admin.ModelAdmin):
 
 admin.site.register(BrightStar, BrightStarAdmin)
 admin.site.register(DoubleStar, DoubleStarAdmin)
+admin.site.register(StellarObject, StellarObjectAdmin)
 admin.site.register(VariableStar, VariableStarAdmin)
 admin.site.register(VariableStarTypeOriginal, VariableStarTypeOriginalAdmin)
 admin.site.register(VariableStarTypeRevised)

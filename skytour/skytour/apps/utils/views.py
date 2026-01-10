@@ -82,7 +82,7 @@ class ConstellationDetailView(DetailView):
         # BUG: This only gets stars with Bayer/Flamsteed numbers!
         #   The model ingest data doesn't have constellations for the others
         # TODO: Add a field to BrightStar and add in the constellations!
-        stars = BrightStar.objects.filter(constellation__iexact=object.abbreviation.lower()).order_by('magnitude')
+        stars = BrightStar.objects.filter(constellation__abbreviation=object.abbreviation.upper()).order_by('magnitude')
         context['bright_stars'] = order_bright_stars(stars)
         context['variable_stars'] = get_active_variable_stars(object)
         

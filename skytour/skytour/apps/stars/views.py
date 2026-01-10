@@ -1,4 +1,5 @@
 import datetime, pytz
+from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
@@ -16,6 +17,33 @@ from .plot import get_skymap, get_zenith_map
 class BrightStarListView(ListView):
     model = BrightStar
     template_name = 'bright_star_list.html'
+    paginate_by = 500
+
+        
+    def get_queryset(self):
+        # The base queryset
+        queryset = super().get_queryset().order_by('pk')
+        # Apply filtering from GET parameters
+        constellation = self.request.GET.get('constellation') or None
+        if constellation:
+            queryset = queryset.filter(constellation__abbreviation=constellation.upper())
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(BrightStarListView, self).get_context_data(**kwargs)
+        context['table_id'] = 'bright-star-table'
+        # Filters
+        print("KWARGS1: ", self.kwargs)
+        # Pagination
+        page_no = self.request.GET.get('page', 1)
+        num_on_page = self.request.GET.get('page_size', self.paginate_by)
+        context['num_on_page'] = num_on_page
+        p = Paginator(self.get_queryset(), num_on_page)
+        this_page = p.page(page_no)
+        context['page_obj'] = this_page
+        context['star_list'] = this_page.object_list # Just this page of objects.
+        context['is_paginated'] = True
+        return context
 
 @method_decorator(cache_page(30), name='dispatch')
 class SkyView(CookieMixin, TemplateView):

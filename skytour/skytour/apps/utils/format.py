@@ -91,3 +91,18 @@ def float2ang(x, format='dms', precision=2, space=''): # x in degrees
         return f"{d}°{space}{m:02d}\'{space}{s:0{precision+3}.{precision}f}\""
     return f"{x:.{precision}f}°"
 
+def tuple_ra(ra):
+    h = int(ra)
+    x = (ra - h) * 60.
+    m = int(x)
+    s = (x - m) * 60.
+    return (h, m, s)
+
+def tuple_dec(dec):
+    sign = -1 if dec < 0. else 1
+    x = abs(dec)
+    d = int(x)
+    x = (x - d) * 60.
+    m = int(x)
+    s = (x - m) * 60.
+    return (sign, d, m, s)
