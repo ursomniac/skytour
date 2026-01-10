@@ -115,10 +115,15 @@
         <tr>
             <td>
                 <span class="hidden">{{ star.name_sort_key }}</span>
+                {% if star.printable_name %}
                 {{ star.printable_name }}
+                {% endif %}
             </td>
             <td>{% if star.proper_name %}{{ star.proper_name }}{% endif %}</td>
-            <td class="number">{{ star.hr_id }}</td>
+            <td class="number">
+                <a href="{% url 'bright-star-detail' star.hr_id %}">
+                {{ star.hr_id }}</a>
+            </td>
             <td class="number">{{ star.hd_id }}</td>
             <td>{{ star.ra|to_hms:1 }}</td>
             <td>

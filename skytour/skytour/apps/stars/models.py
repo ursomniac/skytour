@@ -1,5 +1,7 @@
 import math, re
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from jsonfield import JSONField
@@ -7,11 +9,10 @@ from skyfield.api import Star
 from taggit.managers import TaggableManager
 
 from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject
-
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation
-from .vocabs import ENTITY, GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, GCVS_NO_GREEK
+from .vocabs import GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR
 
 
 # TODO V2: Come up with a plan to use this
@@ -166,6 +167,18 @@ class DoubleStarElements(models.Model):
     def __str__(self):
         return f"{self.pk}: {self.object}"
 
+class BrightStarMetadata(models.Model):
+    star = models.OneToOneField(
+        'BrightStar', 
+        on_delete = models.CASCADE,
+        primary_key = True,
+        related_name='metadata'
+    )
+    metadata = models.JSONField(
+        null=True, blank=True,
+        help_text='JSON object constructed from SIMBAD lookup'
+    )
+
 class BrightStar(Coordinates, WikipediaPageObject):
     """
     Bright Star Catalog data
@@ -173,10 +186,7 @@ class BrightStar(Coordinates, WikipediaPageObject):
     hr_id = models.PositiveIntegerField(_('HR #'))
     bayer = models.CharField(_('Bayer'), max_length=10, null=True, blank=True)
     flamsteed = models.CharField(_('Flamsteed'), max_length=10, null=True, blank=True)
-    constellation = models.CharField(_('Constellation'), 
-        max_length = 3,
-        null = True, blank = True
-    )
+    constellation = models.ForeignKey(Constellation, on_delete=models.CASCADE, null=True, blank=True)
     bd_id = models.CharField(_('BD #'), max_length=11, null = True, blank = True)
     hd_id = models.PositiveIntegerField( _('HD #') ,  null=True, blank=True)
     sao_id = models.PositiveIntegerField(_ ('SAO #'), null=True, blank=True)
@@ -213,6 +223,10 @@ class BrightStar(Coordinates, WikipediaPageObject):
     @property
     def skyfield_object(self):
         return Star(ra_hours=self.ra_float, dec_degrees=self.dec_float)
+    
+    @property
+    def hr_name(self):
+        return f"HR {self.hr_id}"
 
     @property
     def plot_label(self):
@@ -225,21 +239,22 @@ class BrightStar(Coordinates, WikipediaPageObject):
         return parse_designation(first)
 
     @property
-    def printable_name(self):
+    def printable_name(self, hd=True):
         constellation = self.constellation
+        name = None
         if self.bayer:
             if self.bayer[-1].isdigit(): # there's a number
                 grk = self.bayer[:-1].rstrip()
                 num = self.bayer[-1]
-                name = ENTITY[grk] + "<sup>{}</sup>".format(num) + " {}".format(constellation)
+                name = UNICODE[grk] + SUPERSCRIPT_CHAR[int(num)] + " {}".format(constellation.abbr_case)
             else:
-                name = ENTITY[self.bayer] + " {}".format(constellation)
+                name = UNICODE[self.bayer] + " {}".format(constellation.abbr_case)
 
         elif self.flamsteed:
-            name = "{} {}".format(self.flamsteed, constellation)
-        else:
-            name = "HD "+str(self.hd_id)
-        return mark_safe(name)
+            name = "{} {}".format(self.flamsteed, constellation.abbr_case)
+        #else:
+        #    name = "HD "+str(self.hd_id)
+        return name 
     
     @property
     def name_sort_key(self):
@@ -271,9 +286,16 @@ class BrightStar(Coordinates, WikipediaPageObject):
                 out = f"{p}{int(num):08d}"
         if out is None:
             p = 3
-            hd = self.hd
-            out = f"{p}{out:08d}"
+            hd = self.hd_id
+            out = f"{p}{hd:08d}"
         return out
+    
+    @property
+    def distance(self):
+        if not self.parallax:
+            return None
+        ly = 3.26/self.parallax
+        return ly
 
     @property
     def default_wikipedia_name(self):
@@ -289,9 +311,7 @@ class BrightStar(Coordinates, WikipediaPageObject):
         super(BrightStar, self).save(*args, **kwargs)
 
     def __str__(self):
-        name = self.printable_name
-        if self.proper_name:
-            name += " = {}".format(self.proper_name)
+        name = ' = '.join(filter(None, [self.printable_name, self.proper_name]))
         return mark_safe("HR {} = {}".format(self.hr_id, name))
 
 class BrightStarWiki(WikipediaPage):
@@ -632,8 +652,7 @@ class VariableStarWiki(WikipediaPage):
         related_name = 'wiki'
     )
 
-    
-class StellarObject(Coordinates):
+class StellarObject(Coordinates, WikipediaPageObject):
     """
     This is for stars that don't fit into the BrightStar, DoubleStar, or VariableStar models.
     """
@@ -641,13 +660,93 @@ class StellarObject(Coordinates):
     # mag, colors, notes
     constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
     catalog = models.ForeignKey (StarCatalog, on_delete=models.PROTECT)
+    id_in_catalog = models.CharField (
+        _('ID'),
+        max_length = 24
+    )
+    name = models.CharField (
+        _('Name'),
+        max_length = 180,
+        null = True, blank = True
+    )
+    magnitude = models.FloatField (
+        _('Magnitude'),
+        blank = True, null = True
+    )
+    spectral_type = models.CharField (
+        _('Spectral Type'),
+        max_length = 100
+    )
+    notes = models.TextField (
+        _('Notes'),
+        null = True, blank = True
+    )
+    other_parameters = models.TextField (
+        _('Other Params'),
+        null = True, blank = True,
+        help_text = "Age, etc., in x: y; format - see README"
+    )
+    distance = models.FloatField (
+        _('Distance'),
+        null = True, blank = True,
+        help_text = 'light years'
+    )
+    tags = TaggableManager(blank=True)
+
+    # Catalogs
+    # Aliases
+    #
+
+    @property
+    def shown_name(self):
+        return f"{self.catalog.slug} {self.id_in_catalog}"
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
         self.dec = self.dec_float # get from property
         self.ra_text = self.format_ra # get from property
         self.dec_text = self.format_dec # get from property
-        self.name = create_star_name(self)
         super(StellarObject, self).save(*args, **kwargs)
 
-        
+class StellarObjectMetadata(models.Model):
+    star = models.OneToOneField(
+        StellarObject, 
+        on_delete=models.CASCADE, 
+        primary_key=True,
+        related_name = 'metadata'
+    )
+    simbad_lookup = models.CharField(
+        max_length=20,
+        null = True, blank = True
+    )
+    metadata = models.JSONField(
+        null=True, blank=True,
+        help_text='JSON object constructed from SIMBAD lookup'
+    )
+class StellarObjectWiki(WikipediaPage):
+    object = models.OneToOneField(
+        StellarObject, 
+        on_delete=models.CASCADE,
+        primary_key = True,
+        related_name = 'wiki'
+    )
+
+@receiver(post_save, sender=BrightStar)
+def create_or_update_bright_star_metadata(sender, instance, created, **kwargs):
+    if created:
+        # Create the RelatedProfile instance only if the ParentModel instance was newly created
+        BrightStarMetadata.objects.create(parent=instance)
+        BrightStarWiki.objects.create(object=instance)
+    # Optional: add logic here to update the RelatedProfile if the ParentModel is being updated
+    # else:
+    #     instance.relatedprofile.save() 
+
+@receiver(post_save, sender=StellarObject)
+def create_or_update_stellar_object_metadata(sender, instance, created, **kwargs):
+    if created:
+        # Create the RelatedProfile instance only if the ParentModel instance was newly created
+        StellarObjectMetadata.objects.create(parent=instance)
+        StellarObjectWiki.objects.create(object=instance)
+    # Optional: add logic here to update the RelatedProfile if the ParentModel is being updated
+    # else:
+    #     instance.relatedprofile.save() 

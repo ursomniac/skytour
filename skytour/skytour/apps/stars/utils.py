@@ -5,9 +5,9 @@ def create_star_name(obj):
     Generate a label from it's Bayer/Flamsteed designation.
     """
     if obj.bayer:
-        return "{} {}".format(obj.bayer, obj.constellation)
+        return "{} {}".format(obj.bayer, obj.constellation.abbr_case)
     elif obj.flamsteed:
-        return "{} {}".format(obj.flamsteed, obj.constellation)
+        return "{} {}".format(obj.flamsteed, obj.constellation.abbr_case)
     return None
 
 GREEK = {

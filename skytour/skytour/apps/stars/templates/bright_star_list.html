@@ -1,31 +1,50 @@
 {% extends 'base.html' %}
+{% load skytour_filters %}
 {% block title %}Bright Star List: Skytour{% endblock %}
 {% block content %}
+<style>
+    span.hidden { display: none; } 
+</style>
 <h1>Bright Star Catalog</h1>
 
-<table id="bright-star">
+{% include 'includes/paginate.html' %}
+<table id="{{ table_id }}">
 <thead>
     <tr>
         <th>HR</th>
         <th>HD</th>
         <th>Name</th>
+        <th>Con.</th>
         <th>R.A.</th>
         <th>Dec.</th>
         <th>Mag.</th>
+        <th>Spect.</th>
+        <th>Dist.<br><small>(ly)</small></th>
+        <th>Admin</th>
     </tr>
 </thead>
 <tbody>
     {% for star in object_list %}
     <tr>
-        <td><a href="{% url 'star-detail' star.hr_id %}">{{ star.hr_id }}</a>a</td>
+        <td><a href="{% url 'star-detail' star.hr_id %}">{{ star.hr_id }}</a></td>
         <td>{{ star.hd_id }}</td>
-        <td>{{ star.name }}</td>
-        <td>{{ star.ra }}</td>
-        <td>{{ star.dec }}</td>
+        <td>
+            <span class="hidden">{{ star.name_sort_key }}</span>
+            {% if star.name %}{{ star.printable_name }}{% endif %}
+            {% if star.name and star.proper_name %}&nbsp;=&nbsp;{% endif %}
+            {% if star.proper_name %}{{ star.proper_name }}{% endif %}
+        </td>
+        <td>{{ star.constellation.abbr_case }}</td>
+        <td><span class="hidden">{{ star.ra }}</span>{{ star.ra_text }}</td>
+        <td><span class="hidden">{{ star.dec|sortable_angle }}</span>{{ star.dec_text }}</td>
         <td>{{ star.magnitude }}</td>
+        <td>{{ star.spectral_type }}</td>
+        <td>{% if star.distance %}{{ star.distance|floatformat:1 }}{% endif %}</td>
+        <td><a href="/admin/stars/brightstar/{{ star.pk }}/change/">Admin</a>
     </tr>
     {% endfor %}
 </tbody>
 </table>
-
+{% include 'includes/paginate.html' %}
+{% include 'includes/sortable_table.html' %}
 {% endblock %}
