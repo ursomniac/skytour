@@ -2,6 +2,8 @@ from ..session.cookie import get_cookie
 
 def get_objects_from_cookie(request, cookie_type, constellation):
     cookie = get_cookie(request, cookie_type)
+    if cookie is None:
+        return None
     objects = []
     if cookie_type == 'planets':
         for k in cookie.keys():

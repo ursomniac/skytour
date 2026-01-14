@@ -51,6 +51,7 @@ def load_bsc():
     # ads_id = models.CharField(_('ADS Designation'), max_length=5, null=True, blank=True)
         star.ads_id = tr(line, 45, 5, 'str')
     # var_id = models.CharField(_('Var. Star ID'), max_length=9, null=True, blank=True)
+        star.ads_components = tr(line, 50, 2, 'str')
         star.var_id = tr(line, 52, 9, 'str')
     # ra_h, ra_m, ra_s, dec_sign, dec_d, dec_m, dec_s in Coordinate abstract class 
         star.ra_h = tr(line, 76, 2, 'int')
@@ -150,6 +151,4 @@ def load_names():
         star.proper_name = name
         star.name_explanation = explanation
         star.save()
-        
-            
         

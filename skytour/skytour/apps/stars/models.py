@@ -12,7 +12,9 @@ from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation
-from .vocabs import GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR
+from .values import get_values
+from .vocabs import GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR,\
+    NOTE_CATEGORIES, STAR_FLAGS, FULL_ENTITY
 
 
 # TODO V2: Come up with a plan to use this
@@ -174,6 +176,8 @@ class BrightStarMetadata(models.Model):
         primary_key = True,
         related_name='metadata'
     )
+    # For MOST BSC stars this is a dict
+    # For 30 stars this will be a list of dicts...!
     metadata = models.JSONField(
         null=True, blank=True,
         help_text='JSON object constructed from SIMBAD lookup'
@@ -194,7 +198,6 @@ class BrightStar(Coordinates, WikipediaPageObject):
     double_star = models.CharField(_('Double Star Code'), max_length=1, blank=True, null=True)
     ads_id = models.CharField(_('ADS Designation'), max_length=5, null=True, blank=True)
     var_id = models.CharField(_('Var. Star ID'), max_length=9, null=True, blank=True)
-    # ra_h, ra_m, ra_s, dec_sign, dec_d, dec_m, dec_s in Coordinate abstract class 
     gal_long = models.FloatField(_('Gal. Long.'), blank=True, null=True)
     gal_lat = models.FloatField(_('Gal. Lat.'), null=True, blank=True)
     magnitude = models.FloatField(_('V Mag.'), blank=True, null=True)
@@ -213,7 +216,8 @@ class BrightStar(Coordinates, WikipediaPageObject):
     vsini = models.PositiveIntegerField(_('v sin i'), null=True, blank=True)
     d_mag = models.FloatField(_('d Mag (double)'), null=True, blank=True)
     ang_sep = models.FloatField(_('Ang. Sep.'), null=True, blank=True)
-    notes = models.BooleanField(_('Notes'), default=False)
+    note_flag = models.BooleanField(_('Notes'), default=False)
+    ads_components = models.CharField(_('Components'), max_length=2, null=True, blank=True)
 
     name = models.CharField(_('Name'), max_length=40, null=True, blank=True )
     proper_name = models.CharField(_('Proper Name'), max_length=100, null=True, blank=True)
@@ -226,7 +230,24 @@ class BrightStar(Coordinates, WikipediaPageObject):
     
     @property
     def hr_name(self):
-        return f"HR {self.hr_id}"
+        return f"HR {self.hr_id}" if self.hr_id else None
+    
+    @property
+    def hd_name(self):
+        return f"HD {self.hd_id}" if self.hd_id else None
+    
+    @property
+    def title_name(self):
+        names = (
+            self.proper_name,
+            self.printable_name,
+            self.hr_name,
+            self.hd_name
+        )
+        for n in names:
+            if n is not None and n.strip() != '':
+                return n
+        return '???' # shouldn't get here
 
     @property
     def plot_label(self):
@@ -249,9 +270,10 @@ class BrightStar(Coordinates, WikipediaPageObject):
                 name = UNICODE[grk] + SUPERSCRIPT_CHAR[int(num)] + " {}".format(constellation.abbr_case)
             else:
                 name = UNICODE[self.bayer] + " {}".format(constellation.abbr_case)
-
         elif self.flamsteed:
             name = "{} {}".format(self.flamsteed, constellation.abbr_case)
+        elif self.var_designation:
+            name = self.var_designation
         #else:
         #    name = "HD "+str(self.hd_id)
         return name 
@@ -291,16 +313,143 @@ class BrightStar(Coordinates, WikipediaPageObject):
         return out
     
     @property
-    def distance(self):
+    def var_designation(self):
+        if self.var_id is None:
+            return None
+        if self.var_id == self.name:
+            return None # already have it
+        # PROBLEM: many of these are just a number - which I THINK is the NSV
+        #   but so far I can't confirm that.
+        # SO: for now just ignore them
+        if self.var_id.isnumeric():
+            return None
+        if self.var_id[:3] == 'Var':
+            return None
+        return self.var_id    
+    
+    @property
+    def shown(self):
+        v = get_values(self)
+        return v
+    
+    @property
+    def parallax_flag_str(self):
         if not self.parallax:
             return None
-        ly = 3.26/self.parallax
-        return ly
+        return 'Dyn.' if self.parallax_flag == 'D' else 'Trig.'
+    
+    @property
+    def double_flag_str(self):
+        if self.double_star == 'A':
+            return 'Astrometric'
+        elif self.double_star == 'D':
+            return 'Disc. by occultation'
+        elif self.double_star in ['I','R','W']:
+            return None # this refer to specific catalogs
+        elif self.double_star == 'S':
+            return 'Disc. by speckle interferometry'
+        return None
+    
+    @property
+    def var_metadata(self):
+        if hasattr(self, 'variablestar'):
+            return self.variablestar
+        return None
+    
+    @property
+    def total_proper_motion(self):
+        if self.pm_ra and self.pm_dec:
+            total = math.sqrt(self.pm_ra**2 + self.pm_dec**2)
+            return total
+        return None
+    
+    @property
+    def rv_flag_str(self):
+        if self.rv_flag is None:
+            return None
+        if self.rv_flag == 'V':
+            return 'Var.'
+        elif self.rv_flag == 'V?':
+            return 'Var?'
+        elif self.rv_flag[:2] == 'SB':
+            return self.rv_flag
+        elif self.rv_flag == 'O':
+            return 'Orbit'
+        return self.rv_flag # catch-all for None or something else
+    
+    @property
+    def distance(self):
+        try:
+            return self.shown['distance']['ly']['value']
+        except:
+            return 3.26/self.parallax if self.parallax else None
+    
+    @property
+    def distance_pc(self):
+        try:
+            return self.shown['distance']['pc']['value']
+        except:
+            return 1./self.parallax if self.parallax else None
+        
+    @property
+    def flags(self):
+        ff = []
+        # TODO: Annals
+        # TODO: DoubleStar
+        # Variable Star
+        if hasattr(self, 'variablestar'):
+            ff.append('V')
+        # Wiki
+        if self.has_wiki == 'WIKI':
+            ff.append('W')
+        return ff
+    
+    @property
+    def flags_html(self):
+        flags = self.flags
+        uni = [STAR_FLAGS[x][2] for x in flags]
+        return '&nbsp;&nbsp;'.join(uni)
 
     @property
     def default_wikipedia_name(self):
         # It appears that Wikipedia is indexed against HR #'s - so for now try that
+        # TODO: for Supplement stars, this will prob. need to be HD #
         return f"HR {self.hr_id}"
+    
+    @property
+    def default_wikipedia_star_name(self):
+        x = ''
+        names = [self.name, self.var_designation]
+        name = next((item for item in names if item is not None), None)
+        if name is None:
+            return None
+        # name e.g., 'Pi 3 Ori'
+        pieces = name.split(' ')
+        id = pieces[0]
+        # issues:
+        #   Pi3 or Pi 3
+        if id in FULL_ENTITY.keys():
+            x = FULL_ENTITY[id]
+        elif id[0].isalpha() and id[-1].isnumeric():
+            if id[:-1] in FULL_ENTITY.keys():
+                x = FULL_ENTITY[id[:-1]] + id[-1]
+            else:
+                x = id # This might handle things like L2 Pup
+        else:
+            x = id
+        if len(pieces) == 3: # Pi 3 Ori
+            x += pieces[1]
+        # The last one is the constellation
+        x += '_'
+        g = self.constellation.genitive.replace('ö', 'o')
+        x += g.replace(' ','_')
+        return x
+    
+    def get_absolute_url(self):
+        """
+        Django
+        """
+        return '/stars/hr/{}'.format(self.pk)
     
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
@@ -311,8 +460,10 @@ class BrightStar(Coordinates, WikipediaPageObject):
         super(BrightStar, self).save(*args, **kwargs)
 
     def __str__(self):
-        name = ' = '.join(filter(None, [self.printable_name, self.proper_name]))
-        return mark_safe("HR {} = {}".format(self.hr_id, name))
+        hr = f'HR {self.hr_id}'
+        hd = f'HD {self.hd_id}' if self.hd_id is not None else None
+        name = ' = '.join(filter(None, [hr, hd, self.printable_name, self.var_designation, self.proper_name]))
+        return name
 
 class BrightStarWiki(WikipediaPage):
     object = models.OneToOneField(
@@ -322,6 +473,73 @@ class BrightStarWiki(WikipediaPage):
         related_name = 'wiki'
     )
 
+class BrightStarNotes(models.Model):
+    star = models.OneToOneField (
+        BrightStar, 
+        on_delete = models.CASCADE,
+        primary_key = True,
+        related_name = 'texts'
+    )
+    bsc_notes = models.JSONField (
+        _('BSC Notes'),
+        null = True, blank = True
+    )
+    description = models.TextField (
+        null = True, blank = True
+    )
+    other_parameters = models.TextField (
+        null = True, blank = True
+    )
+
+    @property 
+    def notes_as_text(self):
+        text = ''
+        if self.bsc_notes is None:
+            return None
+        for k, v in self.bsc_notes.items():
+            entry = f'{NOTE_CATEGORIES[k]}:\n'
+            entry += '\n'.join(v)
+            entry += '\n\n'
+            text += entry
+        return text
+
+    @property
+    def notes_as_html(self):
+        html = "<div class='bsc_note'>"
+        if self.bsc_notes is None:
+            return None
+        for k, v in self.bsc_notes.items():
+            entry = f"<span class='bsc_note_header'>{NOTE_CATEGORIES[k]}</span>"
+            text = '<br>'.join(v)
+            entry += f"<p class='bsc_note_entry'>{text}</p>"
+            html += entry
+        html += '</div>'
+        return html
+    
+    @property
+    def other_parameters_text(self):
+        """
+        Get/Format Additional Metadata text
+        """
+        orig = self.other_parameters
+        if orig is not None and orig.strip() != '':
+            interim = []
+            first = orig.split(';')
+            for item in first:
+                if item is None or item.strip() == '':
+                    continue
+                if ':' in item:
+                    (label, value) = item.split(':')
+                else: # this shouldn't happen but...
+                    label = item
+                    value = None
+                t = tuple((label.strip(), value.strip()))
+                interim.append(t)
+            second = sorted(interim, key=lambda x: x[0])
+            out = []
+            for item in second:
+                out.append(f"{item[0]}: {item[1]}")
+            return out
 
 # TODO V2: Come up with a plan to use this
 class VariableStar(Coordinates, WikipediaPageObject):
@@ -537,6 +755,14 @@ class VariableStarNotes(models.Model):
         blank = True, null = True
     )
 
+    @property
+    def formatted_notes(self):
+        n = self.notes
+        pattern = r'\[\d+\]'
+    # re.sub replaces all occurrences of the pattern with an empty string
+        text = re.sub(pattern, '', n)
+        return text.replace('\n', '').replace('\r', '')
+    
     def __str__(self):
         return f"{self.gcvs} - Notes"
 
@@ -735,8 +961,9 @@ class StellarObjectWiki(WikipediaPage):
 def create_or_update_bright_star_metadata(sender, instance, created, **kwargs):
     if created:
         # Create the RelatedProfile instance only if the ParentModel instance was newly created
-        BrightStarMetadata.objects.create(parent=instance)
+        BrightStarMetadata.objects.create(star=instance)
         BrightStarWiki.objects.create(object=instance)
+        BrightStarNotes.objects.create(star=instance)
     # Optional: add logic here to update the RelatedProfile if the ParentModel is being updated
     # else:
     #     instance.relatedprofile.save() 

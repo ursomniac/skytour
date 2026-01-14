@@ -19,7 +19,6 @@ class BrightStarListView(ListView):
     template_name = 'bright_star_list.html'
     paginate_by = 500
 
-        
     def get_queryset(self):
         # The base queryset
         queryset = super().get_queryset().order_by('pk')

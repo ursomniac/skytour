@@ -19,16 +19,28 @@ def is_page_ambiguous(page):
      return "Category:All disambiguation pages" in page.categories.keys()
 
 def get_page_attrs(page):
+    works = True
+    try:
+        summary = page.summary # this fails sometimes but works on rerun
+    except:
+        summary = ''
+        works = False
+    try:
+        url = page.canonicalurl
+    except:
+        url = None
+
     return dict(
         title = page.title,
         exists = does_page_exist(page),
         ambiguous = is_page_ambiguous(page),
-        summary = page.summary,
-        summary_length = len(page.summary),
-        canonical_url = page.canonicalurl
+        summary = summary,
+        summary_length = len(summary),
+        canonical_url = url,
+        works = works
     )
 
-def update_wiki_object(obj, name):
+def update_wiki_object(obj, name, save=True):
     page = get_wiki_page(name)
     attr = get_page_attrs(page)
     obj.exists = YES if attr['exists'] else NO
@@ -40,7 +52,8 @@ def update_wiki_object(obj, name):
             obj.summary = attr['summary']
             obj.summary_length = attr['summary_length']
             obj.canonical_url = attr['canonical_url']
-    obj.save()
+        if save:
+            obj.save()
     return obj
 
 def test():
