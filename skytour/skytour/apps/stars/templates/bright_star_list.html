@@ -20,13 +20,15 @@
         <th>Mag.</th>
         <th>Spect.</th>
         <th>Dist.<br><small>(ly)</small></th>
-        <th>Admin</th>
+        <th>Flags</th>
+        <th>Admin </th>
     </tr>
 </thead>
 <tbody>
     {% for star in object_list %}
+    {% with star.shown as val %}
     <tr>
-        <td><a href="{% url 'star-detail' star.hr_id %}">{{ star.hr_id }}</a></td>
+        <td><a href="{% url 'bright-star-detail' star.hr_id %}">{{ star.hr_id }}</a></td>
         <td>{{ star.hd_id }}</td>
         <td>
             <span class="hidden">{{ star.name_sort_key }}</span>
@@ -37,11 +39,13 @@
         <td>{{ star.constellation.abbr_case }}</td>
         <td><span class="hidden">{{ star.ra }}</span>{{ star.ra_text }}</td>
         <td><span class="hidden">{{ star.dec|sortable_angle }}</span>{{ star.dec_text }}</td>
-        <td>{{ star.magnitude }}</td>
-        <td>{{ star.spectral_type }}</td>
-        <td>{% if star.distance %}{{ star.distance|floatformat:1 }}{% endif %}</td>
+        <td>{{ val.magnitude.0|floatformat:3 }}</td>
+        <td>{{ val.spectral_type.0 }}</td>
+        <td>{{ val.distance.ly.shown }}</td>
+        <td>{{ star.flags_html|safe }}</td>
         <td><a href="/admin/stars/brightstar/{{ star.pk }}/change/">Admin</a>
     </tr>
+    {% endwith %}
     {% endfor %}
 </tbody>
 </table>

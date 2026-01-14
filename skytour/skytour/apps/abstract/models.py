@@ -414,7 +414,7 @@ class WikipediaPageObject(models.Model):
         if not hasattr(self, 'wiki'):
             return 'NOINSTANCE'
         wiki = self.wiki
-        if wiki.exists == NO:
+        if wiki.exists == NO or wiki.exists is None:
             return 'NOPAGEFOUND'
         if wiki.ambiguous == YES:
             return 'AMBIGUOUSPAGE'

@@ -1,21 +1,281 @@
 {% extends 'base.html' %}
-{% block title %}{{ object.name }}: Skytour{% endblock %}
+{% block title %}{{ object.title_name }}: Skytour{% endblock %}
 {% block content %}
-<H1>HR {{ object.hr_id }} {% if object.name %} = {{ object.name }}{% endif %}</H1>
-<h2>Other Catalogs</h2>
-<ul>
-    <li>HD: {{ object.hd_id }}</li>
-    <li>SAO: {{ object.sao_id }}</li>
-    <li>BD/DM: {{ object.bd_id }}</li>
-    <li>FK5: {{ object.fk5_id }}</li>
-</ul>
+<style>
+    span.bsc_note_header { font-weight: bold; font-size: 130%; color: #c90; }
+    .bsc_note p { padding-left: 10px; }
+    table.main td { vertical-align: top; padding-left: 10px; width:16.7%; font-size: 120%; }
+    table.main td h2 { font-size: 115%; margin-top: 1px; color: #e90;}
+    .header-container {
+        display: flex;
+        align-items: center; /* This vertically centers the items */
+        gap: 10px; /* Adds some space between the H2 and the text */
+    }
+    .header-container h2,
+    .header-container p { margin: 0; }
+    table.main td ul { list-style: none; margin-top: 3px; }
+    table.main td li { padding: 2px 0px 2px 0px; }
+    table.main td.title { padding-bottom: 20px; position: relative; }
+    table.main td.title h1 { margin: 10px 0px 5px 0px; }
+    .op { bottom: 10px; position: absolute; }
+    .op button { color: #000; width: 8em; height: 2em; }
+    .op button a { color: #000; text-decoration: none; font-weight: bold; }
+    .op button.admin a { color: #c00; }
+    .coord { font-size: 100%; padding: 5px; margin: 3px 0px; }
+    .constellation { font-size: 120%; margin-left: 5em; margin-top: 10px; }
+    span.subhead { font-weight: bold; color: #fc0; }
+    span.coord { color: #cc0; }
+    span.cat { font-weight: bold; color: #cf6; }
+    span.mag { display: inline-block; font-weight: bold; color: #fc0; width: 4em; text-align: left; }
+    span.var { font-weight: bold; color: #fc9; }
+    span.subvar { font-weight: 400; color: #ef0; width: 7em; 
+        text-align: left; display: inline-block; font-size: 90%; }
+    span.spect { font-size: 105%; font-weight: 600; }
+    span.vnotes { font-size: 90%; }
+    .name { font-size: 90%; }
+    span.name { font-style: italic; color: #fff; }
+    .summary p { font-size: 80%; line-height: 1.3; }
+</style>
 
-<h2>Metadata</h2>
-<ul>
-    <li>&alpha;: {{ object.ra }}</li>
-    <li>&delta;: {{ object.dec }}</li>
-    <li>V: {{ object.magnitude }}</li>
-    <li>B-V: {{ object.b_v }}   U-B: {{ object.u_b }}   R-I: {{ object.r_i }}</li>
-    <li>Spectral Type: {{ object.spectral_type }}</li>
-</ul>
+<table class="main">
+    <tr>
+        <td colspan=3 class="title">
+            <H1>HR {{ object.hr_id }} 
+                {% if object.printable_name %} = {{ object.printable_name }}{% endif %}
+                {% if object.proper_name %} = {{ object.proper_name }}{% endif %}
+                {% if object.var_designation %} = {{ object.var_designation }}{% endif %}
+            </H1>
+            {% if object.name_explanation %}
+            <div class="name">
+            <span class="name">Name Explanation: </span> {{ object.name_explanation }}
+            </div>
+            {% endif %}
+            <div class='constellation'>
+                in
+                <a href="{% url 'constellation-detail' object.constellation.abbreviation %}">
+                    <b>{{ object.constellation.name }}</b>
+                </a>
+            </div>
+            <div class="op">
+                <button class="admin">
+                    <a href="/admin/stars/brightstar/{{ object.pk }}/change">Admin</a>
+                </button>
+            </div>
+        </td>
+
+        <td colspan=2>
+            <h2>Other Catalogs</h2>
+            <ul>
+                <li><span class="cat">HD: </span>{{ object.hd_id }}</li>
+                <li><span class="cat">SAO: </span>{{ object.sao_id }}</li>
+                <li><span class="cat">BD/DM: </span>{{ object.bd_id }}</li>
+                {% if object.fk5_id %}
+                <li><span class="cat">FK5: </span>{{ object.fk5_id }}</li>
+                {% endif %}
+                <li><span class="cat">ADS: </span>{{ object.ads_id }} 
+                    {% if object.ads_components %}
+                    &nbsp;{{ object.ads_components }}
+                    {% endif %}
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <h2>Coordinates</h2>
+            <table class="lite">
+                <tr><th>Equatorial</th></tr>
+                <tr>
+                    <td>
+                    <div class="coord">
+                        <span class="coord">&alpha;:</span> {{ object.ra_text }}
+                        &nbsp;&nbsp;
+                        <span class="coord">&delta;:</span> {{ object.dec_text }}
+                    </div>
+                    </td>
+                </tr>
+                <tr><th>Galactic</th></tr>
+                <tr>
+                    <td>
+                    <div class="coord">
+                    <span class="coord"><i>l</i>:</span> {{ object.gal_long|floatformat:3}}°
+                    &nbsp;&nbsp;
+                    <span class="coord"><i>b</i>:</span> {{ object.gal_lat|floatformat:3}}°
+                    </div>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+        <td colspan=2>
+            <h2>Magnitudes and Colors</h2>
+            <ul>
+                <li><span class="mag">V: </span> 
+                    {{ object.magnitude|floatformat:2 }}</li>
+                <li><span class="mag">B &ndash; V: </span>
+                    {{ object.b_v }}</li>
+                <li><span class="mag">U &ndash; B: </span> 
+                    {{ object.u_b }}</li>
+                <li><span class="mag">R &ndash; I: </span> 
+                    {{ object.r_i }}</li>
+            </ul>
+            <h2>Spectral Type</h2>
+            <ul>
+                <li>
+                    <span class="spect">{{ object.spectral_type }}</span>
+                </li>
+            </ul>
+        </td>
+        <td colspan=2>
+            {% if object.var_metadata %}
+            {% with object.var_metadata as v %}
+            <h2>Variable Star Metadata</h2>
+            <ul>
+                <li><span class="var">Type: </span>
+                    {% with v.type_original_metadata as tom %}
+                    {{ tom.name }}
+                    {% if tom.prototype %} ({{ tom.prototype }}){% endif %}
+                    <br>
+                    <small><i>{{ tom.short_description }}</i></small>
+                    <br><br>
+                    {% endwith %}
+                </li>
+                <li>
+                    <span class="var">Magnitudes:</span>
+                    <ul>
+                    {% if v.mag_range %}
+                    <li><span class="subvar">Mag Range: </span>{{ v.mag_range }}</li>
+                    {% else %}
+                        {% if v.mag_max %}
+                        <li><span class="subvar">Mag. Max: </span>
+                            {{ v.mag_max }}
+                            {% if v.mag_max_uncertainty %} ± {{ v.mag.max_uncertainty }}{% endif %}
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                    {% if v.mag_min2 %}
+                    <li><span class="subvar">Mag. Min<sub>2</sub>: </span>
+                        {{ v.mag_min2 }}
+                        {% if v.mag_min2_amplitude %} Amp = {{ v.mag_min2_amplitude }}{% endif %}
+                        {% if v.mag_min2_limit %} Limit = {{ v.mag_min2_limit }}{% endif %}
+                    {% endif %}
+                    </ul>
+                </li>
+                <li><span class="var">Period: </span>
+                    {% if v.period %}
+                    {{ v.period }}
+                    {% if v.period_uncertainty %} ± {{ v.period_uncertainty }}{% endif %} d
+                    {% endif %}
+                </li>
+                {% if v.spectral_type %}
+                <li><span class="var">Spectral Type: </span>{{ v.spectral_type }}</li>
+                {% endif %}
+            </ul>
+            {% if v.variablestarnotes %}
+                <span class="vnotes">{{ v.variablestarnotes.formatted_notes|safe }}<span>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <div class="header-container">
+            <h2>Flags: </h2>
+            <p>{{ object.flags_html|safe }}</p>
+            </div>
+            {% if object.wiki.summary %}
+            <div class="summary">{{ object.wiki.html_summary|safe }}</div>
+            {% endif %}
+        </td>
+        <td colspan=2>
+            <h2>Distance</h2>
+            <ul>
+                <li><span class="subhead">Distance: </span>
+                    <ul>
+                        <li>{{ object.shown.distance.ly.shown }}</li>
+                        <li>{{ object.shown.distance.pc.shown }}</li>
+                    </ul>
+                </li>
+                <li><span class="subhead">Parallax: </span>
+                    {{ object.shown.parallax.0.shown }}
+                </li>
+            </ul>
+        </td>
+        <td colspan=2>
+            <h2>Proper Motion, Velocities</h2>
+            <ul>
+                <li><span class="subhead">Proper Motion: </span>
+                    {% with object.shown.proper_motion.0 as foo %}
+                    <ul>
+                    <li>&alpha;: {{ foo.ra.value }} {{ foo.ra.units }}</li>
+                    <li>&delta;: {{ foo.dec.value }} {{ foo.dec.units }}</li>
+                    <li>Total: {{ foo.total.value|floatformat:2 }} {{ foo.total.units }}</li>
+                    </ul>
+                    {% endwith %}
+                    <br>
+                </li>
+                <li><span class="subhead"> Rad. Vel: </span>
+                    {{ object.shown.radial_velocity.0.shown }} 
+                    {% if object.rv_flag_str %}{{ object.rv_flag_str }}{% endif %}
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <h2>Other Metadata</h2>
+            <ul>
+                {% if object.vsini %}
+                <li><span class="subhead"><i>v</i> sin <i>i</i>:</span> 
+                    {{ object.vsini }}
+                    {% if object.rot_flag %}&nbsp;{{ object.rot_flag }} {% endif %}
+                    km/s
+                </li>
+                {% endif %}
+            </ul>
+        </td>
+        <td colspan=2>
+            <h2>Other Parameters</h2>
+            {% for item in object.texts.other_parameters_text %}
+			<p style="padding: 3px 5px; margin: 0">{{ item }}</p>
+			{% endfor %}
+        </td>
+        <td colspan=2>
+            {% if object.ads_components or object.double_star or object.d_mag or object.ang_sep %}
+            <h2>Double Star Metadata</h2>
+            <ul>
+                {% if object.double_star %}
+                <li><span class="subhead">Flag: </span>
+                    {{ object.double_flag_str }}</li>
+                {% endif %}
+                {% if object.ads_components %}
+                <li><span class="subhead">Components: </span>
+                    {{ object.ads_components }}</li>
+                {% endif %}
+                {% if object.d_mag %}
+                <li><span class="subhead">Δ mag: </span>
+                    {{ object.d_mag|floatformat:2}}</li>
+                {% endif %}
+                {% if object.ang_sep %}
+                <li><span class="subhead">Sep: </span>
+                    {{ object.ang_sep }}&quot;</li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+    <td colspan=3>
+        <h2>BSC Notes</h2>
+        {% if object.texts.notes_as_html %}
+        {{ object.texts.notes_as_html|safe }}
+        {% endif %}
+    </td>
+    <td colspan=3>
+        <h2>Notes</h2>
+        {{ object.texts.description }}
+    </td>
+
+</table>
 {% endblock %}

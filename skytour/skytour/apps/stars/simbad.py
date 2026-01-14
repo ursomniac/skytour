@@ -165,6 +165,43 @@ def update_star_metadata(model, stars, verbose=True, delay=0.5):
         n += 1
     return n
 
+# TODO: Need to get metadata for these.   They're proably all close binaries with a single 
+#   HR number but separate entries in SIMBAD.
+# PROBABLY what I will do is make the metadata object a JSON list of dicts for these
+# and a simple dict for everything else (saves having to re-write/re-run anything).
+# Extracting metadata will have to test on the object type (list or dict) and then process
+# accordingly.    
+# RAD 2026-01-10
+PROBABLE_BINARIES = [
+     251,  394,  997, 1359, 1372, 1405, 1504, 1593, 2482, 3358, 3455, 3715,
+    4602, 4917, 4990, 5141, 5210, 5233, 5346, 5497, 5900, 6029, 6063, 6923,
+    7059, 7978, 8396, 8687, 8724, 9002
+]
+def update_problematic_stars(stars):
+    for hr in PROBABLE_BINARIES:
+        time.sleep(1)
+        ml = []
+        star = stars.filter(hr_id=hr).first()
+        if not hasattr(star, 'metadata'):
+            print(f'Cannot save metadata for {star} - skipping')
+            continue
+        for comp in ['A', 'B']:
+            name = f"HD {star.hd_id} {comp}" # Use HD for lookup not HR
+            try:
+                print(f"Attempting {star.pk}: {star}")
+                metadata = process_simbad_request(name)
+                if metadata is None:
+                    print("\t ... failed - found no metadata")
+                    break
+            except:
+                print(f"\tFailed - exception")
+                break
+            if metadata:
+                ml.append(metadata)
+        # save the list
+        star.metadata.metadata = ml
+        star.metadata.save()
+
 LIST_OF_FIELDS = """
 mesDiameter                     	table                   	Collection of stellar diameters.
 mesPM                           	table                   	Collection of proper motions.

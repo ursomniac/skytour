@@ -8,6 +8,15 @@ ENTITY = {
     'Chi': '&chi;', 'Phi': '&phi;', 'Psi': '&psi;', 'Ome': '&omega;'
 }
 
+FULL_ENTITY = {
+    'Alp': 'Alpha',   'Bet': 'Beta',    'Gam': 'Gamma',  'Del': 'Delta',
+    'Eps': 'Epsilon', 'Eta': 'Eta',     'Zet': 'Zeta',   'The': 'Theta',
+    'Iot': 'Iota',    'Kap': 'Kappa',   'Lam': 'Lambda', 'Mu':  'Mu',
+    'Nu': 'Nu',       'Omi': 'Omicron', 'Xi':  'Xi',     'Pi':  'Pi',
+    'Rho': 'Rho',     'Sig': 'Sigma',   'Tau': 'Tau',    'Ups': 'Upsilon',
+    'Chi': 'Chi',     'Phi': 'Phi',     'Psi': 'Psi',    'Ome': 'Omega'
+}
+
 UNICODE_OOPS = { # greek letters
     'Alp': u'\03B1', 'Bet': u'\03B2', 'Gam': u'\03B3', 'Del': u'\03B4',
     'Eps': u'\03B5', 'Zet': u'\03B6', 'Eta': u'\03B7', 'The': u'\03B8',
@@ -119,3 +128,47 @@ VARIABLE_CLASSES = [
     ('x-ray',       'Intense X-Ray Sources'),
     ('other',       'Other')
 ]
+
+NOTE_CATEGORIES = {
+    'C':   'Colors',
+    'D':   'Double and multiple stars',
+    'DYN': 'Dynamical parallaxes',
+    'G':   'Group membership',
+    'M':   'Miscellaneous',
+    'N':   'Star names',
+    'P':   'Polarization',
+    'R':   'Stellar radii or diameters',
+    'RV':  'Radial and/or rotational velocities',
+    'S':   'Spectra',
+    'SB':  'Spectroscopic binaries',
+    'VAR': 'Variability',
+}
+
+STAR_FLAGS = {
+    'A': ('Annals',   '🅰', '🄰'),
+    'B': ( None,      '🅱', '🄱'),
+    'C': ( None,      '🅲', '🄲'),
+    'D': ('Double',   '🅳', '🄳'),
+    'E': ( None,      '🅴', '🄴' ),
+    'F': ( None,      '🅵', '🄵' ),
+    'G': ( None,      '🅶', '🄶' ),
+    'H': ( None,      '🅷', '🄷' ),
+    'I': ( None,      '🅸', '🄸' ),
+    'J': ( None,      '🅹', '🄹' ),
+    'K': ( None,      '🅺', '🄺' ),
+    'L': ( None,      '🅻', '🄻' ),
+    'M': ( None,      '🅼', '🄼' ),
+    'N': ( None,      '🅽', '🄽' ),
+    'O': ( None,      '🅾', '🄾' ),
+    'P': ( None,      '🅿', '🄿' ),
+    'Q': ( None,      '🆀', '🅀' ),
+    'R': ( None,      '🆁', '🅁' ),
+    'S': ( None,      '🆂', '🅂' ),
+    'T': ( None,      '🆃', '🅃' ),
+    'U': ( None,      '🆄', '🅄' ),
+    'V': ('Variable', '🆅', '🅅'),
+    'W': ('Wiki',     '🆆', '🅆'),
+    'X': ( None,      '🆇', '🅇' ),
+    'Y': ( None,      '🆈', '🅈' ),
+    'Z': ( None,      '🆉', '🅉' ),
+}

@@ -1,13 +1,17 @@
 from django.contrib import admin
 from .models import BrightStar, DoubleStar, DoubleStarAlias, DoubleStarElements, VariableStar,\
     VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve,\
-    StellarObject, BrightStarMetadata, BrightStarWiki, StellarObjectMetadata, StellarObjectWiki
+    StellarObject, BrightStarMetadata, BrightStarWiki, StellarObjectMetadata, StellarObjectWiki,\
+    BrightStarNotes
 
 class BrightStarMetadataInline(admin.StackedInline):
     model = BrightStarMetadata
 
 class BrightStarWikiInline(admin.StackedInline):
     model = BrightStarWiki
+
+class BrightStarNotesInline(admin.StackedInline):
+    model = BrightStarNotes
 
 class StellarObjectMetadataInline(admin.StackedInline):
     model = StellarObjectMetadata
@@ -18,8 +22,20 @@ class StellarObjectWikiInline(admin.StackedInline):
 class BrightStarAdmin(admin.ModelAdmin):
     model = BrightStar
     list_filter = ['constellation']
-    inlines = [BrightStarMetadataInline, BrightStarWikiInline]
+    inlines = [BrightStarNotesInline, BrightStarMetadataInline, BrightStarWikiInline]
+    search_fields = ['hd_id', 'hr_id']
+    readonly_fields = ['hd_id', 'hr_id', 'sao_id', 'ra_text', 'dec_text', 'constellation']
 
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('hr_id', 'hd_id', 'sao_id'),
+                ('ra_text', 'dec_text', 'constellation'),
+                'tags'
+            ]
+        }),
+    )
+    
 class StellarObjectAdmin(admin.ModelAdmin):
     model = StellarObject
     list_filter = ['constellation']
