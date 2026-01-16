@@ -254,6 +254,18 @@ class Constellation(WikipediaPageObject, models.Model):
         upload_to = 'constellation_maps',
         null=True, blank=True
     )
+    reverse_map = models.ImageField (
+        _('Reverse Map'),
+        upload_to = 'constellation_maps',
+        null = True, blank = True,
+        help_text = 'same as map but reversed colors'
+    )
+    reverse_other_map = models.ImageField ( # This ONLY exists because of Serpens
+        _('Reverse Other Map'),
+        upload_to = 'constellation_maps',
+        null=True, blank=True,
+        help_text = 'same as map but reversed colors'
+    )
     description = models.TextField (
         _('Description'),
         null = True, blank = True,

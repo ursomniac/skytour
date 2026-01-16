@@ -187,6 +187,7 @@ class BrightStar(Coordinates, WikipediaPageObject):
     """
     Bright Star Catalog data
     """
+    # IDS
     hr_id = models.PositiveIntegerField(_('HR #'))
     bayer = models.CharField(_('Bayer'), max_length=10, null=True, blank=True)
     flamsteed = models.CharField(_('Flamsteed'), max_length=10, null=True, blank=True)
@@ -198,30 +199,44 @@ class BrightStar(Coordinates, WikipediaPageObject):
     double_star = models.CharField(_('Double Star Code'), max_length=1, blank=True, null=True)
     ads_id = models.CharField(_('ADS Designation'), max_length=5, null=True, blank=True)
     var_id = models.CharField(_('Var. Star ID'), max_length=9, null=True, blank=True)
+    # COORDS
     gal_long = models.FloatField(_('Gal. Long.'), blank=True, null=True)
     gal_lat = models.FloatField(_('Gal. Lat.'), null=True, blank=True)
+    # MAG/COLOR
     magnitude = models.FloatField(_('V Mag.'), blank=True, null=True)
     b_v = models.FloatField(_('B-V'), null=True, blank=True)
     u_b = models.FloatField(_('U-B'), null=True, blank=True)
     r_i = models.FloatField(_('R-I'), null=True, blank=True)
+    # SPECTRAL TYPE
     spectral_type = models.CharField(_('Spectral Type'), max_length=20, null=True, blank=True)
     spt_code = models.CharField(_('Sp. Type Code'), max_length=1, null=True, blank=True)
+    # PROPER MOTION
     pm_ra = models.FloatField(_('Prop. Motion RA'), null=True, blank=True)
     pm_dec = models.FloatField(_('Prop. Motion Dec.'), null=True, blank=True)
+    # PARALLAX
     parallax_flag = models.CharField(_('Parallax Flag'), max_length=1, null=True, blank=True)
     parallax = models.FloatField(_('Parallax'), null=True, blank=True)
+    # RADIAL VELOCITY
     radial_velocity = models.FloatField(_('Radial Velocity'), null=True, blank=True)
     rv_flag = models.CharField(_('RV Flag'), max_length=1, null=True, blank=True)
+    # ROTATION
     rot_flag = models.CharField(_('Rot. Vel. Flag'), max_length=2, null=True, blank=True)
     vsini = models.PositiveIntegerField(_('v sin i'), null=True, blank=True)
+    # DOUBLE STAR
     d_mag = models.FloatField(_('d Mag (double)'), null=True, blank=True)
     ang_sep = models.FloatField(_('Ang. Sep.'), null=True, blank=True)
-    note_flag = models.BooleanField(_('Notes'), default=False)
     ads_components = models.CharField(_('Components'), max_length=2, null=True, blank=True)
 
+    ### ADDED FIELDS
+    note_flag = models.BooleanField(_('Notes'), default=False)
     name = models.CharField(_('Name'), max_length=40, null=True, blank=True )
     proper_name = models.CharField(_('Proper Name'), max_length=100, null=True, blank=True)
     name_explanation = models.TextField(_('Name Explanation'), null=True, blank=True)
+    other_bayer = models.CharField(_('Other Bayer'), max_length=8, null=True, blank=True)
+    other_constellation_name = models.CharField(_('Other Constellation Name'),
+            max_length=20, null=True, blank=True,
+            help_text = 'For stars that changed constellations when the IAU set boundaries'
+    )
     tags = TaggableManager(blank=True)
 
     @property
@@ -261,19 +276,40 @@ class BrightStar(Coordinates, WikipediaPageObject):
 
     @property
     def printable_name(self, hd=True):
+
+        def fix_bayer(x):
+            pieces = x.split()
+            s = pieces[0]
+            if len(pieces) > 1 and pieces[1].isdigit():
+                z = int(pieces[1])
+                if z < 10 and z > 0:
+                    s += SUPERSCRIPT_CHAR[z]
+                else:
+                    s += pieces[1]
+            else:
+                return x
+            return s
+        
         constellation = self.constellation
         name = None
         if self.bayer:
             if self.bayer[-1].isdigit(): # there's a number
                 grk = self.bayer[:-1].rstrip()
                 num = self.bayer[-1]
-                name = UNICODE[grk] + SUPERSCRIPT_CHAR[int(num)] + " {}".format(constellation.abbr_case)
-            else:
+                if grk in UNICODE.keys():
+                    name = UNICODE[grk] + SUPERSCRIPT_CHAR[int(num)] + " {}".format(constellation.abbr_case)
+            if name is None and self.bayer in UNICODE.keys():
                 name = UNICODE[self.bayer] + " {}".format(constellation.abbr_case)
+            if name is None:
+                name = f"{fix_bayer(self.bayer)} {constellation.abbr_case}"
         elif self.flamsteed:
             name = "{} {}".format(self.flamsteed, constellation.abbr_case)
+        elif self.other_bayer:
+            name = "{} {}".format(fix_bayer(self.other_bayer), constellation.abbr_case)
         elif self.var_designation:
             name = self.var_designation
+        #elif self.other_constellation_name:
+        #    name = f"({self.other_constellation_name})"
         #else:
         #    name = "HD "+str(self.hd_id)
         return name 
@@ -630,8 +666,14 @@ class VariableStar(Coordinates, WikipediaPageObject):
         index = self.name.split()[0]
         if index[:2] == 'V0':
             index = f"V{index[2:]}"
-        genitive = self.name.constellation.genitive
+        genitive = self.constellation.genitive
         return f"{self.index}_{genitive}"
+    
+    @property
+    def printable_name(self):
+        if self.name == 'V0':
+            return 'V'+self.name[2:]
+        return self.name
     
     @property
     def html_name(self):
