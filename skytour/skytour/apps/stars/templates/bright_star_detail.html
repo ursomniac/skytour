@@ -6,6 +6,8 @@
     .bsc_note p { padding-left: 10px; }
     table.main td { vertical-align: top; padding-left: 10px; width:16.7%; font-size: 120%; }
     table.main td h2 { font-size: 115%; margin-top: 1px; color: #e90;}
+    table.noborder { border: none; }
+    table.noborder td { border: none; }
     .header-container {
         display: flex;
         align-items: center; /* This vertically centers the items */
@@ -43,7 +45,11 @@
             <H1>HR {{ object.hr_id }} 
                 {% if object.printable_name %} = {{ object.printable_name }}{% endif %}
                 {% if object.proper_name %} = {{ object.proper_name }}{% endif %}
-                {% if object.var_designation %} = {{ object.var_designation }}{% endif %}
+                {% if object.var_designation %} 
+                    {% if object.var_designation != object.printable_name %}
+                    = {{ object.var_designation }}
+                    {% endif %}
+                {% endif %}
             </H1>
             {% if object.name_explanation %}
             <div class="name">
@@ -65,19 +71,32 @@
 
         <td colspan=2>
             <h2>Other Catalogs</h2>
-            <ul>
-                <li><span class="cat">HD: </span>{{ object.hd_id }}</li>
-                <li><span class="cat">SAO: </span>{{ object.sao_id }}</li>
-                <li><span class="cat">BD/DM: </span>{{ object.bd_id }}</li>
-                {% if object.fk5_id %}
-                <li><span class="cat">FK5: </span>{{ object.fk5_id }}</li>
-                {% endif %}
-                <li><span class="cat">ADS: </span>{{ object.ads_id }} 
-                    {% if object.ads_components %}
-                    &nbsp;{{ object.ads_components }}
-                    {% endif %}
-                </li>
-            </ul>
+            <table class="noborder">
+                <tr>
+                    <td width="50%">
+                        <ul>
+                            <li><span class="cat">HD: </span>{{ object.hd_id }}</li>
+                            <li><span class="cat">SAO: </span>{{ object.sao_id }}</li>
+                            <li><span class="cat">BD/DM: </span>{{ object.bd_id }}</li>
+                            {% if object.fk5_id %}
+                            <li><span class="cat">FK5: </span>{{ object.fk5_id }}</li>
+                            {% endif %}
+                            <li><span class="cat">ADS: </span>{{ object.ads_id }} 
+                                {% if object.ads_components %}
+                                &nbsp;{{ object.ads_components }}
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </td>
+                    <td width="50%">
+                        <ul>
+                            {% if object.other_constellation_name %}
+                            <li><span class="cat">Formerly: </span>{{ object.other_constellation_name }}</li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>

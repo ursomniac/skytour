@@ -25,7 +25,9 @@ class ConstellationAdmin(admin.ModelAdmin):
             'fields': [
                 ('name', 'abbreviation', 'genitive'),
                 ('center_ra', 'center_dec', 'area'),
-                ('map', 'other_map', 'historical_image'),
+                ('map', 'reverse_map'),
+                ('other_map', 'reverse_other_map'),
+                'historical_image',
                 'description'
             ]
         }),

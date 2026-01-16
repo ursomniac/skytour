@@ -31,6 +31,9 @@
                 <a href="#section-dso"><button class="op">DSOs &nbsp;&nbsp; ⬇️</button></a>
                 <a href="#section-stars"><button class="op">Bright Stars &nbsp;&nbsp;  ⬇️</button></a>
             </p>
+            <p>
+                <a href="/admin/utils/constellation/{{ object.pk }}/change">Admin</a>
+            </p>
         </td>
         <td style='vertical-align: top;'>
             <h2>Atlas Plates</h2>
@@ -47,10 +50,15 @@
     </tr>
     <tr>
         <td style="text-align:center; vertical-align: top;" width="70%" colspan=2>
+            {% if object.reverse_map %}            
+            <img src="/media/{{ object.reverse_map }}" style="width: 100%; display: block; ">
+            {% if object.reverse_other_map %}<img src="/media/{{ object.reverse_other_map }}" style="width: 100%; display: block;">{% endif %}
+            {% else %}
             <img src="/media/{{ object.map }}" style="width: 100%; display: block; ">
             {% if object.other_map %}<img src="/media/{{ object.other_map }}" style="width: 100%; display: block;">{% endif %}
+            {% endif %}
         </td>
-        <td style="vertical-align: bottom;">
+        <td colspan=2 style="vertical-align: bottom;">
             <img src="/media/{{ object.historical_image }}" style="width: 100%; display: block;">
         </td>
     </tr>
