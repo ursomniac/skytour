@@ -2,18 +2,19 @@ import math, re
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from jsonfield import JSONField
 from skyfield.api import Star
 from taggit.managers import TaggableManager
 
-from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject
+from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject, AnnalsDeepSkyAbstract
+from ..astro.coords import equ2ecl
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
-from .utils import create_star_name, parse_designation
+from .utils import create_star_name, parse_designation, get_bright_star_sort_key,\
+    handle_formatting, handle_parameters
 from .values import get_values
-from .vocabs import GCVS_ID, VARDES, BAYER_INDEX, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR,\
+from .vocabs import GCVS_ID, VARDES, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR,\
     NOTE_CATEGORIES, STAR_FLAGS, FULL_ENTITY
 
 
@@ -304,10 +305,10 @@ class BrightStar(Coordinates, WikipediaPageObject):
                 name = f"{fix_bayer(self.bayer)} {constellation.abbr_case}"
         elif self.flamsteed:
             name = "{} {}".format(self.flamsteed, constellation.abbr_case)
-        elif self.other_bayer:
-            name = "{} {}".format(fix_bayer(self.other_bayer), constellation.abbr_case)
         elif self.var_designation:
             name = self.var_designation
+        elif self.other_bayer:
+            name = "{} {}".format(fix_bayer(self.other_bayer), constellation.abbr_case)
         #elif self.other_constellation_name:
         #    name = f"({self.other_constellation_name})"
         #else:
@@ -316,37 +317,7 @@ class BrightStar(Coordinates, WikipediaPageObject):
     
     @property
     def name_sort_key(self):
-        """
-        Return a coded key such that:
-            1. Stars with Greek letters come first in Greek order
-            2. Stars with superscripts for a given Greek letter are ordered
-            3. Stars with a Flamsteed number and no Greek letter are next
-            4. Stars with HD numbers come last
-        """
-        out = None
-        if self.bayer:
-            p = 1
-            if self.bayer[-1].isdigit(): # there's a number
-                x = self.bayer[:-1].rstrip()
-                d = self.bayer[-1]
-                num = int(d) if d.isdigit() else 0
-            else:
-                x = self.bayer
-                num = 0
-            if x in BAYER_INDEX:
-                grk = BAYER_INDEX.index(x)
-                out = f"{p}{grk:05d}{num:03d}"
-            
-        if out is None and self.flamsteed:
-            p = 2
-            num = self.flamsteed
-            if num.isdigit():
-                out = f"{p}{int(num):08d}"
-        if out is None:
-            p = 3
-            hd = self.hd_id
-            out = f"{p}{hd:08d}"
-        return out
+        return get_bright_star_sort_key(self)
     
     @property
     def var_designation(self):
@@ -393,6 +364,12 @@ class BrightStar(Coordinates, WikipediaPageObject):
         return None
     
     @property
+    def annals_metadata(self):
+        if hasattr(self, 'annals'):
+            return self.annals
+        return None
+    
+    @property
     def total_proper_motion(self):
         if self.pm_ra and self.pm_dec:
             total = math.sqrt(self.pm_ra**2 + self.pm_dec**2)
@@ -428,16 +405,42 @@ class BrightStar(Coordinates, WikipediaPageObject):
             return 1./self.parallax if self.parallax else None
         
     @property
+    def absolute_magnitude(self):
+        if self.distance_pc and self.magnitude:
+            pc = self.distance_pc
+            mag = self.magnitude
+            amag = mag - 5.*(math.log10(pc)-1.)
+            return amag
+        return None
+    
+    @property
+    def ecliptic_coordinates(self):
+        return equ2ecl(self.ra_float, self.dec_float)
+    
+    @property
+    def format_bd(self):
+        x = self.bd_id
+        if x is not None:
+            if x[-7:].isnumeric(): # when there are >9999 stars
+                x = x[:-7] + x[-7:-5] + ' ' + x[-5:]
+            if ' ' in x:
+                p = x.split()
+                return f"{p[0]}°{p[1]}"
+        return self.bd_id if self.bd_id else None
+        
+    @property
     def flags(self):
         ff = []
-        # TODO: Annals
-        # TODO: DoubleStar
-        # Variable Star
-        if hasattr(self, 'variablestar'):
-            ff.append('V')
         # Wiki
         if self.has_wiki == 'WIKI':
             ff.append('W')
+        # Variable Star
+        if hasattr(self, 'variablestar'):
+            ff.append('V')
+        # Annals
+        if hasattr(self, 'annals'):
+            ff.append('A')
+        # TODO: DoubleStar
         return ff
     
     @property
@@ -545,8 +548,8 @@ class BrightStarNotes(models.Model):
         if self.bsc_notes is None:
             return None
         for k, v in self.bsc_notes.items():
-            entry = f"<span class='bsc_note_header'>{NOTE_CATEGORIES[k]}</span>"
-            text = '<br>'.join(v)
+            entry = f"<h3 class='bsc_note_header'>{NOTE_CATEGORIES[k]}</h3>"
+            text = ' '.join(v)
             entry += f"<p class='bsc_note_entry'>{text}</p>"
             html += entry
         html += '</div>'
@@ -554,28 +557,9 @@ class BrightStarNotes(models.Model):
     
     @property
     def other_parameters_text(self):
-        """
-        Get/Format Additional Metadata text
-        """
-        orig = self.other_parameters
-        if orig is not None and orig.strip() != '':
-            interim = []
-            first = orig.split(';')
-            for item in first:
-                if item is None or item.strip() == '':
-                    continue
-                if ':' in item:
-                    (label, value) = item.split(':')
-                else: # this shouldn't happen but...
-                    label = item
-                    value = None
-                t = tuple((label.strip(), value.strip()))
-                interim.append(t)
-            second = sorted(interim, key=lambda x: x[0])
-            out = []
-            for item in second:
-                out.append(f"{item[0]}: {item[1]}")
-            return out
+        ncols = 3
+        style = 'other-param-label'
+        return handle_parameters(self.other_parameters, ncols, label_style=style)
 
 # TODO V2: Come up with a plan to use this
 class VariableStar(Coordinates, WikipediaPageObject):
@@ -626,6 +610,10 @@ class VariableStar(Coordinates, WikipediaPageObject):
     # Notes
     tags = TaggableManager(blank=True)
 
+    # TODO: for lookups of stars here that are in the Annals but NOT in the BSC
+    # e.g., this will work...
+    # zz = VariableStar.objects.filter(constellation__abbreviation='AND', bsc_id__isnull=True, annals__isnull=False)
+
     ### USE http://www.sai.msu.su/gcvs/gcvs/gcvs5/htm/ as a guide!
     def get_absolute_url(self):
         return '/variable_star/{}'.format(self.id_in_catalog)
@@ -661,6 +649,19 @@ class VariableStar(Coordinates, WikipediaPageObject):
             number = None
         return(id_in_const, number, constellation.abbr_case, component)
     
+    @property
+    def name_sort_key(self):
+        id = self.id_in_catalog
+        pri = {'90': 1, '91': 2, '92': 3}
+        des = id[2:4]
+        p = 4 if des not in pri.keys() else pri[des]
+        n = '0' if len(id) < 7 else ''
+        return f"{p:01d}{id}{n}"
+
+    @property
+    def is_observable(self):
+        return (hasattr(self, 'observablevariablestar') and self.observablevariablestar is not None)
+
     @property
     def default_wikipedia_name(self):
         index = self.name.split()[0]
@@ -928,6 +929,10 @@ class StellarObject(Coordinates, WikipediaPageObject):
     # mag, colors, notes
     constellation = models.ForeignKey (Constellation, on_delete=models.PROTECT)
     catalog = models.ForeignKey (StarCatalog, on_delete=models.PROTECT)
+    proper_name = models.CharField (
+        max_length = 40,
+        null = True, blank = True
+    )
     id_in_catalog = models.CharField (
         _('ID'),
         max_length = 24
@@ -967,7 +972,10 @@ class StellarObject(Coordinates, WikipediaPageObject):
 
     @property
     def shown_name(self):
-        return f"{self.catalog.slug} {self.id_in_catalog}"
+        return f"{self.catalog.abbreviation} {self.id_in_catalog}"
+    
+    def __str__(self):
+        return self.shown_name
 
     def save(self, *args, **kwargs):
         self.ra = self.ra_float # get from property
@@ -999,6 +1007,95 @@ class StellarObjectWiki(WikipediaPage):
         related_name = 'wiki'
     )
 
+class AnnalsDeepSkyStar(AnnalsDeepSkyAbstract):
+    bright_star = models.OneToOneField (
+        BrightStar,
+        null = True, blank = True,
+        on_delete=models.CASCADE,
+        related_name = 'annals'
+    )
+    variable_star = models.OneToOneField (
+        VariableStar,
+        null = True, blank = True,
+        on_delete = models.CASCADE,
+        related_name = 'annals'
+    )
+    double_star = models.OneToOneField (
+        DoubleStar,
+        null = True, blank = True,
+        on_delete = models.CASCADE,
+        related_name = 'annals'
+    )
+    other_star = models.OneToOneField (
+        StellarObject,
+        null = True, blank = True,
+        on_delete = models.CASCADE,
+        related_name = 'annals'
+    )
+
+    @property
+    def constellation(self):
+        if hasattr(self, 'bright_star') and self.bright_star is not None:
+            return self.bright_star.constellation
+        if hasattr(self, 'variable_star') and self.variable_star is not None:
+            return self.variable_star.constellation
+        if hasattr(self, 'double_star') and self.double_star is not None:
+            return self.double_star.constellation
+        if hasattr(self, 'other_star') and self.other_star is not None:
+            return self.other_star.constellation
+        return None
+    
+    @property
+    def flags_list(self):
+        s = []
+        if hasattr(self, 'bright_star') and self.bright_star is not None:
+            s.append('B')
+        if hasattr(self, 'variable_star') and self.variable_star is not None:
+            s.append('V')
+        if hasattr(self, 'double_star') and self.double_star is not None:
+            s.append('D')
+        if hasattr(self, 'other_star') and self.other_star is not None:
+            s.append('O')
+        if len(s) == 0:
+            return None
+        return s
+    
+    @property
+    def flags_str(self):
+        ff = self.flags_list
+        if ff is None:
+            return None
+        #s = [STAR_FLAGS[f][2] for f in ff]
+        return ", ".join(ff)
+
+    @property
+    def refs(self):    
+        s = []
+        bs = hasattr(self, 'bright_star') and self.bright_star is not None
+        vs = hasattr(self, 'variable_star') and self.variable_star is not None
+        ds = hasattr(self, 'double_star') and self.double_star is not None
+        os = hasattr(self, 'other_star') and self.other_star is not None
+        if bs:
+            x = self.bright_star
+            s.append(f"{x.printable_name} = HR {x.hr_id}")
+        if vs:
+            v = self.variable_star
+            s.append(f"{v.name}")
+        if ds:
+            d = self.double_star
+            s.append(f"{d.name}")
+        if os:
+            o = self.other_star
+            s.append(f"{o.shown_name}")
+        return ' = '.join(s)
+    
+    @property
+    def format_notes(self):
+        return handle_formatting(self.notes )
+    
+    def __str__(self):
+        return self.refs
+
 @receiver(post_save, sender=BrightStar)
 def create_or_update_bright_star_metadata(sender, instance, created, **kwargs):
     if created:
@@ -1014,8 +1111,9 @@ def create_or_update_bright_star_metadata(sender, instance, created, **kwargs):
 def create_or_update_stellar_object_metadata(sender, instance, created, **kwargs):
     if created:
         # Create the RelatedProfile instance only if the ParentModel instance was newly created
-        StellarObjectMetadata.objects.create(parent=instance)
+        StellarObjectMetadata.objects.create(star=instance)
         StellarObjectWiki.objects.create(object=instance)
     # Optional: add logic here to update the RelatedProfile if the ParentModel is being updated
     # else:
     #     instance.relatedprofile.save() 
+

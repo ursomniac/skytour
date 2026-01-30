@@ -5,7 +5,8 @@ from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
     DSOLibraryImage, \
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
-    DSOInField, DSOInFieldAlias, DSOObservingMode
+    DSOInField, DSOInFieldAlias, DSOObservingMode, \
+    AnnalsDeepSkyDSO
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -493,3 +494,4 @@ admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOObservation)
+admin.site.register(AnnalsDeepSkyDSO)

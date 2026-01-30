@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import BrightStar, DoubleStar, DoubleStarAlias, DoubleStarElements, VariableStar,\
     VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve,\
     StellarObject, BrightStarMetadata, BrightStarWiki, StellarObjectMetadata, StellarObjectWiki,\
-    BrightStarNotes
+    BrightStarNotes, AnnalsDeepSkyStar
 
 class BrightStarMetadataInline(admin.StackedInline):
     model = BrightStarMetadata
@@ -22,13 +22,15 @@ class StellarObjectWikiInline(admin.StackedInline):
 class BrightStarAdmin(admin.ModelAdmin):
     model = BrightStar
     list_filter = ['constellation']
+    list_display = ['pk', 'name', 'proper_name', 'hd_id']
     inlines = [BrightStarNotesInline, BrightStarMetadataInline, BrightStarWikiInline]
-    search_fields = ['hd_id', 'hr_id']
-    readonly_fields = ['hd_id', 'hr_id', 'sao_id', 'ra_text', 'dec_text', 'constellation']
+    search_fields = ('name', 'hd_id', 'hr_id', 'var_id')
+    readonly_fields = ['hd_id', 'hr_id', 'sao_id', 'ra_text', 'dec_text', 'constellation', 'name']
 
     fieldsets = (
         (None, {
             'fields': [
+                ('name', 'proper_name'),
                 ('hr_id', 'hd_id', 'sao_id'),
                 ('ra_text', 'dec_text', 'constellation'),
                 'tags'
@@ -40,6 +42,7 @@ class StellarObjectAdmin(admin.ModelAdmin):
     model = StellarObject
     list_filter = ['constellation']
     list_display = ['pk', 'shown_name','name', 'ra_text', 'dec_text', 'constellation', 'magnitude', 'spectral_type']
+    search_fields = ('name',)
     # Aliases
     inlines = [StellarObjectMetadataInline, StellarObjectWikiInline]
 
@@ -47,6 +50,7 @@ class StellarObjectAdmin(admin.ModelAdmin):
         (None, {
             'fields': [
                 ('catalog', 'id_in_catalog', 'constellation'),
+                'proper_name'
             ]
         }),
         ('Coordinates', {
@@ -142,7 +146,7 @@ class VariableStarAdmin(admin.ModelAdmin):
     ]
     list_filter = ['constellation', 'type_original']
     list_display_links = ['pk', 'name']
-    search_fields = ['name']
+    search_fields = ['name', 'id_in_catalog']
     inlines = [VariableStarLightCurveAdmin]
 
     @admin.display(description='Con.', ordering='constellation')
@@ -170,6 +174,24 @@ class VariableStarTypeRevisedAdmin(admin.ModelAdmin):
     list_filter = ['type_class']
     ordering = ['pk', 'code', 'name']
 
+class AnnalsDeepSkyStarAdmin(admin.ModelAdmin):
+    model = AnnalsDeepSkyStar
+    list_display = ['pk', 'volume', 'page', 'constellation', 'flags_str', 'refs']
+    autocomplete_fields = ('bright_star','variable_star', 'other_star')
+    list_select_related = True
+    fieldsets = (
+        (None, {
+            'fields': [
+                ('volume', 'page', 'other_ref'),
+                'bright_star',
+                'variable_star', 
+                'other_star',
+                'byline',
+                'notes',
+                'metadata', 
+            ]
+        }),
+    )
 
 admin.site.register(BrightStar, BrightStarAdmin)
 admin.site.register(DoubleStar, DoubleStarAdmin)
@@ -177,3 +199,4 @@ admin.site.register(StellarObject, StellarObjectAdmin)
 admin.site.register(VariableStar, VariableStarAdmin)
 admin.site.register(VariableStarTypeOriginal, VariableStarTypeOriginalAdmin)
 admin.site.register(VariableStarTypeRevised)
+admin.site.register(AnnalsDeepSkyStar, AnnalsDeepSkyStarAdmin)

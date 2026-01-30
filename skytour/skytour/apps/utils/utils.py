@@ -1,5 +1,5 @@
 from itertools import takewhile
-from ..stars.models import ObservableVariableStar
+from ..stars.models import ObservableVariableStar, VariableStar
 
 def filter_catalog(request, dso_list, cookie):
     observed = request.GET.get('observed', None)
@@ -102,5 +102,25 @@ def new_objects_sort(catalog, primary_dsos, alias_dsos, field_dsos):
         all_objects_sort.append(odict[k])
     return all_objects_sort
 
+# Need to combine these two:   
+def get_variable_stars(constellation):
+    active = VariableStar.objects.filter(
+        constellation=constellation,
+        observablevariablestar__isnull=False
+    )
+    annals = VariableStar.objects.filter(
+        constellation=constellation,
+        annals__isnull=False
+    )
+    all = active.union(annals).order_by()
+    return sorted(all, key=lambda t: t.name_sort_key)
+
 def get_active_variable_stars(constellation):
     return ObservableVariableStar.objects.filter(gcvs__constellation__abbreviation=constellation.abbreviation)
+
+def get_annals_variable_stars(constellation):
+    return VariableStar.objects.filter(
+        constellation__abbreviation=constellation.abbreviation,
+        bsc_id__isnull=True, # don't include if already down below
+        annals__isnull=False
+    ).order_by('id_in_catalog')

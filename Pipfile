@@ -24,6 +24,7 @@ wikipedia-api = "*"
 regex = "*"
 lxml = "*"
 astroquery = "*"
+django-columns = "*"
 
 [dev-packages]
 

@@ -5,6 +5,7 @@
 <style>
     h1, h2 { color: #fc3; }
     table.constellation-header td { padding: 0 10px 0 10px; }
+    td { height: 10px; }
     td.number { text-align: right; }
     img { display: block; }
     #constellation_stars th { background-color: #996; color: #000; }
@@ -27,7 +28,7 @@
                 {% else %}
                 <span class="boxed">{{ object.has_wiki_text }}</span>
                 {% endif %}
-                <a href="#section-active-vars"><button class="op">Active Variable Stars &nbsp;&nbsp;  ⬇️</button></a>
+                <a href="#section-active-vars"><button class="op">Variable Stars &nbsp;&nbsp;  ⬇️</button></a>
                 <a href="#section-dso"><button class="op">DSOs &nbsp;&nbsp; ⬇️</button></a>
                 <a href="#section-stars"><button class="op">Bright Stars &nbsp;&nbsp;  ⬇️</button></a>
             </p>
@@ -89,15 +90,24 @@
 {% endif %}
 
 <a name="section-active-vars">
-<h2>Active Variable Stars</h2>
 <a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
+
+<h2>Variable Stars</h2>
 {% with table_id='constellation_variables' %}
 {% include 'includes/var_table.html' %}
 {% endwith %}
+
+{% comment %}
+<h2>Annals Variable Stars</h2>
+{% with table_id='annals_variables' variable_stars=annals_variable_stars link=False %}
+{% include 'includes/var_table.html' %}
+{% endwith %}
+{% endcomment %}
+
+
 <a name="section-dso"></a>
 <h2>DSOs</h2>
 <a href="#section-top"><button class="op">Back to Top ⬆️</button></a>
-
 {% with table_id='constellation_dso' %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}
