@@ -34,9 +34,12 @@ def get_values(star):
     star_rv = dict(value=star.radial_velocity, units='km/s', error=None, flag=star.rv_flag_str)
     zrv = get_value(v, 'radial_velocity', star_rv) # tuple
     vv = zrv[0]
-    zrvstr = f"{vv['value']:.2f}"
-    zrvstr += '' if not vv['error'] else f" ± {vv['error']:.2f}"
-    zrvstr += f" {vv['units']}"
+    try:
+        zrvstr = f"{vv['value']:.2f}"
+        zrvstr += '' if not vv['error'] else f" ± {vv['error']:.2f}"
+        zrvstr += f" {vv['units']}"
+    except:
+        zrvstr = None
     zrv[0]['shown'] = zrvstr
     d['radial_velocity'] = zrv
 
@@ -65,23 +68,32 @@ def get_values(star):
     )
     zplx = get_value(v, 'parallax', star_plx)
     if zplx[1] == 'S':
-        splx = f"{zplx[0]['value']:.2f}"
-        splx += '' if not zplx[0]['error'] else f" ± {zplx[0]['error']:.2f}"
-        splx += f" {zplx[0]['units']}"
+        try:
+            splx = f"{zplx[0]['value']:.2f}"
+            splx += '' if not zplx[0]['error'] else f" ± {zplx[0]['error']:.2f}"
+            splx += f" {zplx[0]['units']}"
+        except:
+            splx = None
         zplx[0]['shown'] = splx
         d['parallax'] = zplx
 
         if v['distance']:
             # parsecs
             zpc = v['distance']['pc']
-            spc = f"{zpc['value']:.2f}"
-            spc += '' if not zpc['error'] else f" ± {zpc['error']:.2f}"
-            #spc += f" pc"
+            try:
+                spc = f"{zpc['value']:.2f}"
+                spc += '' if not zpc['error'] else f" ± {zpc['error']:.2f}"
+                #spc += f" pc"
+            except:
+                spc = None
             v['distance']['pc']['shown'] = spc
             # light years
             zly = v['distance']['ly']
-            sly = f"{zly['value']:.2f}"
-            sly += '' if not zly['error'] else f" ± {zly['error']:.2f}"
+            try:
+                sly = f"{zly['value']:.2f}"
+                sly += '' if not zly['error'] else f" ± {zly['error']:.2f}"
+            except:
+                sly = None
             #sly += ' ly'
             v['distance']['ly']['shown'] = sly
         else:

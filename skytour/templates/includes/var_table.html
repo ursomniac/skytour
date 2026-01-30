@@ -37,30 +37,33 @@
     </tr>
 </thead>
 <tbody>
-{% for var in variable_stars %}
-    {% with var.gcvs as star %}
+{% for star in variable_stars %}
     <tr>
         <td>
-            <a href="{% url 'obsvar-detail' var.gcvs.id_in_catalog %}" target="_new">{{ star.name }}</a>
+            <span class="hidden">{{ star.name_sort_key }}</span>
+            {% if star.is_observable %}
+            <a href="{% url 'obsvar-detail' star.id_in_catalog %}" target="_new">{{ star.name }}</a>
+            {% else %}
+            {{ star.name }}
+            {% endif %}
         </td>
         <td class="wiki">
-            {% if var.has_wiki == 'WIKI' %}
-            <button onclick="return realtimePopup('/dso/wiki/{{ var.pk }}')" class="wiki">
+            {% if star.has_wiki == 'WIKI' %}
+            <button onclick="return realtimePopup('/dso/wiki/{{ star.pk }}')" class="wiki">
                 <b>🅆</b>
                 </button>
             {% endif %}
         </td>
         <td>{{ star.type_original }}</td>
         <td>{{ star.spectral_type }}</td>
-        <td>{{ star.period }}</td>
+        <td>{% if star.period %}{{ star.period }}{% endif %}</td>
         <td>{{ star.ra_text }}</td>
         <td>
-            <span class="hidden">{{ var.dec|sortable_angle }}</span>
+            <span class="hidden">{{ star.dec|sortable_angle }}</span>
             {{ star.dec_text }}
         </td>
         <td>{{ star.mag_range }}</td>
-        <td>{{ var.comparison_star_list|length }}
-        {% endwith %}
+        <td>{{ star.observablevariablestar.comparison_star_list|length }}
     </tr>
 {% endfor %}
 </tbody>

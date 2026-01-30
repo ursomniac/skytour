@@ -14,7 +14,8 @@ from ..abstract.models import (
     LibraryAbstractImage, 
     ObservingLog, 
     ObservableObject,
-    ObjectImage
+    ObjectImage,
+    AnnalsDeepSkyAbstract
 )
 from ..abstract.models import WikipediaPage, WikipediaPageObject
 from ..abstract.utils import get_metadata
@@ -1509,3 +1510,19 @@ class DSOObservingMode(models.Model):
             default=models.Value(4),
             output_field=models.IntegerField()
         ), # yes, you need this comma...
+
+class AnnalsDeepSkyDSO(AnnalsDeepSkyAbstract):
+    dso = models.OneToOneField (
+        DSO,
+        null = True, blank = True,
+        on_delete = models.CASCADE,
+        related_name = 'annals'
+    )
+    dso_in_field = models.OneToOneField (
+        DSOInField,
+        null = True, blank = True,
+        on_delete = models.CASCADE,
+        related_name = 'annals'
+    )
+    # placeholder if I have a non-observable DSO table
+    # other_dso 

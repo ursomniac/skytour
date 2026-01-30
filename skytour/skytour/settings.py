@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'ajax_select',
     'colorfield',
+    'columns',
     'djangoyearlessdate',
     'taggit',
     

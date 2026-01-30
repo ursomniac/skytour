@@ -93,13 +93,13 @@ class Command(BaseCommand):
         ax.set_aspect(1.0)
         ax.set_title(title)
 
-        if test:
-            print(f"Saving to {path}{output_file}")
-        else:
-            try:
-                fig.savefig('{}{}'.format(path, output_file), bbox_inches='tight')
-            except:
-                fig.savefig('./test_starmap.png', bbox_inches='tight')
+        print(f"Saving to {path}{output_file}")
+        try:
+            fig.savefig('{}{}'.format(path, output_file), bbox_inches='tight')
+            out = f"{path}{output_file}"
+        except:
+            out = './test_starmap.png'
+            fig.savefig('./test_starmap.png', bbox_inches='tight')
         plt.cla()
         plt.close(fig)
-        return output_file
+        return out

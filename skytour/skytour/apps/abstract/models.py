@@ -436,3 +436,38 @@ class WikipediaPageObject(models.Model):
 
     class Meta:
         abstract = True
+
+class AnnalsDeepSkyAbstract(models.Model):
+    # Primary Reference
+    volume = models.PositiveIntegerField()
+    page = models.PositiveIntegerField()
+    # Other mentions - if desired
+    other_ref = models.CharField(
+        max_length = 200,
+        null = True, blank = True,
+        help_text = 'format: VV:PPP, VV:PPP, etc.'
+    )
+    byline = models.CharField (
+        max_length = 200,
+        null = True, blank = True
+    )
+    # For now
+    metadata = models.JSONField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    # TODO: 
+    # 1. what about things in that are in the Annals that aren't in
+    #   DSO, DSOInField, BrightStar, VariableStar, DoubleStar, StellarObject?
+    #       Note this will be a good way to seed the StellarObject table!
+    # 2. I THINK THIS MIGHT BE BETTER IF:
+    #   a.  There is an AnnalsStar model
+    #       - with metadata above
+    #       - 1:1 to BrightStar, VariableStar, DoubleStar, StellarObject
+    #       - use stellar object for any star nor in BS/VS/DS
+    #   b.  There is an AnnalsDSO model
+    #       - with metadata above
+    #       - 1:1 to DSO, DSOInField (somehow check that it's either/or)
+    #       - BUT we need a catch-all for non-DSO/DSOInField, 
+    #           i.e., the things that wouldn't ever be on an observing list
+    #           OR do we just skip those altogether (very out of scope???) 
+    class Meta:
+        abstract = True
