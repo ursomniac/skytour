@@ -3,13 +3,17 @@
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
+	table.showborder td { border: 1px solid #fcc!important; }
 	table.lite { border-style: none; }
 	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
+	table.lite td.viability { padding-left: 0px!important; padding-right: 0px!important; }
 	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; margin-top: 10px; }
 	h2 { color: #fc0; }
+	h2.info { margin: 0px; }
 	h2.nickname { font-size: 125%; margin-top: 5px; color: #ffd; }
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
-	h3 { color: #ff9; }
+	h3 { color: #ff9; margin: 4px 0px 4px 0px!important; }
+	h4 { margin: 2px 0px 2px 0px!important; }
 	td { vertical-align: top;}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
 	td.description { 
@@ -21,6 +25,7 @@
 	td.operations { text-align: right; padding: 3px 10px!important; }
 	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
 	td.dso_image { padding: 0; }
+	td.activeobs { color: #fff; font-weight: bold; text-align: right; font-size: 120%; }
 	td.coordinates { 
 		width: 40%; 
 		font-size: 150%; 
@@ -35,7 +40,7 @@
     .hvcenter { vertical-align: middle!important; text-align: center!important; }
 	.hcenter { text-align: center!important; }
 	table.short {  display:inline-block; border-style: none; }
-	table.short td, th { margin-right: 4px; font-size: 80%; }
+	table.short td, th { margin-right: 4px; font-size: 75%; }
 	table.short td.hour { margin-right: 8px; }
 	table.short th { background-color: #990; color: #000; border: none; }
 	div.no-library-image { font-size: 20px; line-height: 2.5; }
@@ -85,7 +90,7 @@
 	}
 	div.panel-type {float: right!important;  }
 	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
-	.popup-button, .popup-dso, .popup-list-button { float: right; }
+	.popup-dso, .popup-list-button { float: right; }
 	.object-metadata { xfont-weight: bold; color: #ccc; }
 	div.conditions { 
 		padding: 5px; 
@@ -104,8 +109,11 @@
 	td.editing h3, td.obslist h3 { margin-top: 8px; }
 	td.editing button { width: 8em; margin-right: 8px;  }
 	td.indented { background-color: #666; padding-left: 20px; }
+	td.byline { font-size: 110%; color: #ffc; font-style: italic; }
+	td.right { text-align: right; }
 	.rightside { float: right!important; }
 	.white { color: #fff; }
+	span.bigger { font-size: 120%; }
 	span.cat_entry {
 		color: #ccc;
 		font-style: italic;
@@ -118,6 +126,13 @@
 	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
 	button.adminb { width: 5em!important; color: #f00; }
 	td.field-td-wiki { text-align: center; }
+	.summary p { font-size: 85%; line-height: 1.3; }
+    .summary pre { 
+        font-size: 90%; line-height: 1.3; color: #ded; 
+        white-space: pre-wrap;
+        overflow-wrap: break-word; /* Legacy name word-wrap is an alias */
+    }
+	small.smallh3 { font-size: 70%; }
 </style>
 {% endblock styles %}
 
@@ -139,7 +154,7 @@
 						{% endif %}
 					</h2>
 				</td>
-				<td width=16% class="description" rowspan=2>
+				<td width=16% class="description" rowspan=1>
 					<a href="{% url 'object-type-detail' object.object_type.slug %}">{{ object.object_type }}</a>
 					<br>in<br>
 					<b>
@@ -148,7 +163,7 @@
 						</a>
 					</b>
 				</td>
-				<td width=15% class="description operations" rowspan=2>
+				<td width=15% class="description operations" rowspan=1>
                     {% if object.has_wiki == 'WIKI' %}
                     <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="op">
                         Wiki Entry
@@ -163,10 +178,9 @@
 					<span class="boxed">No PDF Page</span>
 					{% endif %}
 					<br>
-
 					&nbsp;
 				</td>
-				<td width=12% class="description operations" rowspan=2>
+				<td width=12% class="description operations" rowspan=1>
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
 					Real Time
 					</button>
@@ -180,23 +194,31 @@
 					</a>
 				</td>
 			</tr>
-			{% if object.alias_list %}
 			<tr>
-				<td class="aliases">
+				<td class="aliases" colspan=2>
+					{% if object.alias_list %}
 					{{ object.alias_list }}
+					{% endif %}
+				</td>
+				<td class="activeobs" colspan=2> 
+					{% if object.is_on_active_observing_list %}
+					🔭 - on active observing list
+					{% endif %}
 				</td>
 			</tr>
+			{% if object.has_annals %}
+			<tr><td class="byline" colspan=4>{{ object.annals.byline }}</td></tr>
 			{% endif %}
 		</table>
 	</td>
 	<td 
-			width="500px" height="600px" rowspan=2 
-			{% if library_slideshow|length < 2 %}
-			class="hvcenter"
-			{% else %}
-			class="hcenter"
-			{% endif %} {# overflow; auto #}
-			style="position:relative; max-height: 600px;"
+		width="500px" height="600px" rowspan=2 
+		{% if library_slideshow|length < 2 %}
+		class="hvcenter"
+		{% else %}
+		class="hcenter"
+		{% endif %} {# overflow; auto #}
+		style="position:relative; max-height: 600px;"
 	>
 		{% if library_slideshow|length > 0 %}
 		<h2 class="short">
@@ -235,56 +257,27 @@
 			</div>
 		{% else %}
 			<div class="no-library-image">
-			No image in library.
-			{% if object.mode_imaging_priority %}
-				<br>
-				Imaging Priority: 
-				{{ object.mode_imaging_priority_span }}
-			{% else %}
-				<br>
-				Not available for imaging.
-			{% endif %}
-
-			<div class="manage">
-				<a href="{% url 'dso-manage-panel' 'slideshow' object.pk %}">
-				<button>Manage Images</button>
-				</a>
-			</div>
+				No image in library.
+				{% if object.mode_imaging_priority %}
+					<br>
+					Imaging Priority: 
+					{{ object.mode_imaging_priority_span }}
+				{% else %}
+					<br>
+					Not available for imaging.
+				{% endif %}
+				<div class="manage">
+					<a href="{% url 'dso-manage-panel' 'slideshow' object.pk %}">
+					<button>Manage Images</button>
+					</a>
+				</div>
 			</div>
 		{% endif %}
 	</td>
 </tr>
 <tr>
 	<td id="metadata" colspan=2>
-		<table width=100% class="lite">
-			<tr>
-				<td colspan=2><h2>Information:</h2></td>
-				<td rowspan=2>
-					<br>
-					<div class="conditions">
-						<span class="object-metadata">
-							Priority ({{ observing_mode_string_short }}):
-						</span>&nbsp;
-						{% if observing_mode != 'I' %}
-						<span class="white">{{ mode_priority_label }}</span>
-						{% else %}				
-						{{ mode_priority_span }}
-						{% endif %}
-						{% if object.reimage %}
-							<span style="color:#0cc"> - REDO </span>
-						{% endif %}
-						<br>
-						<span class="object-metadata">On SkyMap:</span>&nbsp;
-							<b>{{ object.get_show_on_skymap_display }}</b>
-						<br>
-						<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
-							<b>{{ object.get_show_on_simple_skymap_display }}</b>
-						{% if object.is_on_active_observing_list %}
-						<br>
-						🔭 - on active observing list
-						{% endif %}
-					</div>
-				</td>
+		<table width=100% class="lite xshowborder">
 			<tr>
 				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}
 					<br>
@@ -300,6 +293,24 @@
 						{{ object.dec_float|floatformat:3}}°
 					</span>
 				</td>
+				<td rowspan="8" style="padding: 0;">
+					{% if other_metadata %}
+					<h3>Parameters</h3>
+					{% for item in other_metadata %}
+					<p style="padding: 3px 5px; margin: 0">{{ item }}</p>
+					{% endfor %}
+					{% endif %}
+					{% if object.has_annals %}
+            		{% with object.annals as ann %}
+					<br>
+            		<h3>Annals of the Deep Sky</h3>
+            		<h4>
+                		<span class="volpage">v. {{ ann.volume }} p. {{ ann.page }}</span>
+            		</h4>
+            		<div class="summary"><pre>{{ ann.format_notes|safe }}</pre></div>
+            		{% endwith %}
+            		{% endif %}
+				</td>	
 			</tr>
 			<tr>
 				<td>
@@ -320,12 +331,7 @@
 						<span class="source">{{ object.find_angular_size.1|show_property_source }}</span>
 						{% endif %}
 					{% endif %}
-				</td>
-				<td rowspan="4" style="padding: 0;">
-					{% for item in other_metadata %}
-					<p style="padding: 3px 5px; margin: 0">{{ item }}</p>
-					{% endfor %}
-				</td>		
+				</td>	
 			</tr>
 			<tr>
 				<td>
@@ -372,22 +378,56 @@
 				</td>
 				<td></td>
 			</tr>
+			<tr><td></td><td></td></tr>
 			<tr>
-				<td>
+				<td colspan="1">
+					<h3>On Atlas Plates</h3>
+					{% for plate in object.atlasplate_set.all %}
+					<a href="{% url 'atlas-detail' plate.slug %}" target="_blank">{{ plate.plate_id }}</a>
+					{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+				</td>
+				<td colspan="1">
+					<h3>Observing</h3>
+
+						<span class="object-metadata">
+						Priority ({{ observing_mode_string_short }}):
+						</span>&nbsp;
+						{% if observing_mode != 'I' %}
+						<span class="white">{{ mode_priority_label }}</span>
+						{% else %}		
+						<span class="bigger">
+						{{ mode_priority_span }}
+						</span>
+						{% endif %}
+
+						{% if object.reimage %}
+						<span style="color:#0cc"> &ndash; REDO </span>
+						{% endif %}	
+						<br><br>
+						<span class="object-metadata">On SkyMap:</span>&nbsp;
+						<b>{{ object.get_show_on_skymap_display }}</b>
+						<br>
+						<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
+						<b>{{ object.get_show_on_simple_skymap_display }}</b>	
+						<br>					
+			</tr>
+			<tr>
+				<td rowspan=1>
 					<h3>
 						Obs. Season: 
-						<small>
+						<small class="smallh3">
 						{% if observing_date_grid.no_grid_reason %}
 							(Max Alt: {{ max_altitude|floatformat:1 }}°)
 						{% else %}
 							(Alt = {{ observing_date_grid.alt }}°; Max Alt: {{ max_altitude|floatformat:1 }}°)
 						{% endif %}
-					</small>
+						</small>
 					</h3>
 					{% if observing_date_grid.no_grid_reason %}
 						{{ observing_date_grid.no_grid_reason }}
 					{% else %}
-						<table class="short">
+						<table class="short meridian">
 						<tr>
 							<th>Time</th><th>Start<br>Date</th><th>Meridian<br>Date<th>End<br>Date</th>
 						</tr>
@@ -402,21 +442,20 @@
 						</table>
 					{% endif %}
 				</td>
-				<td colspan="2">
-					<h3>On Atlas Plates:</h3>
-					{% for plate in object.atlasplate_set.all %}
-					<a href="{% url 'atlas-detail' plate.slug %}" target="_blank">{{ plate.plate_id }}</a>
-					{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-
-					<br>
-					<h3>
-						Observing Mode Viability:
-						<span class='popup-button'>
-							<button onclick="return realtimePopup('/help/popup/dso-observing-mode')">&#9432;</button>
-						</span>
-					</h3>
-					{{ object.mode_viability_chart }}
+				<td colspan="2" class="viability">
+					<table class="lite">
+						<tr>
+							<td>
+								<h3>Observing Mode Viability</h3>
+							</td>
+							<td class="right">
+								<button onclick="return realtimePopup('/help/popup/dso-observing-mode')">&#9432;</button>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=3>{{ object.mode_viability_chart }}</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>

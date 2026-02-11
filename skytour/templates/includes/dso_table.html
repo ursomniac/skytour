@@ -136,17 +136,17 @@
             {% endif %}
         </td>
 
-        <td style="width: 15em;">
+        <td style="width: 10em;">
             {% if is_dsolist_page != True %}
             <span onClick="DSOAddPopup({{ dso.pk }})">
                 <button> 
-                    ✅ Add to DSO List 
+                    ✅ List: Add
                 </button>
             </span>
             {% else %}
             <span onClick="DSODeletePopup({{ dso.pk }})">
                 <button>
-                    ⛔ Delete from DSO List
+                    ⛔ List: Delete
                 </button>
             </span>
             {% endif %}

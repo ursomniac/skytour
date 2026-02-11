@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from ..astro.time import utc_now
 from ..observe.models import ObservingLocation
 from ..session.models import ObservingSession
-from ..site_parameter.helpers import find_site_parameter
+from ..stars.utils import handle_formatting
 from ..tech.models import Telescope, Eyepiece, Filter
 from ..astro.transform import get_cartesian
 from .vocabs import (
@@ -469,5 +469,10 @@ class AnnalsDeepSkyAbstract(models.Model):
     #       - BUT we need a catch-all for non-DSO/DSOInField, 
     #           i.e., the things that wouldn't ever be on an observing list
     #           OR do we just skip those altogether (very out of scope???) 
+
+    @property
+    def format_notes(self):
+        return handle_formatting(self.notes)
+    
     class Meta:
         abstract = True

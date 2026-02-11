@@ -1,0 +1,34 @@
+
+Stars:
+	- Create Full Variable Star pages
+		- at least those in Annals
+	- Update for Burnham?  Others?
+	- Refactor Navbar?
+
+DSOs:
+	- Add annals support
+	- Rethink the DSO Detail page
+		- somehow deal with DSOInField wrt Annals
+	- Look into REST/AJAX calls to management scripts
+		- Set up a better "Add DSO" system
+	- Inage captions/references/credits
+		- could also apply automatically to LibraryImages (or not)
+	- Auto-generate images from Stellarium
+		- need to do this for multiple telescopes
+			- deal with naming conventions
+	- Auto-generate images from DSS
+
+
+SSOs:
+	- Jupiter - need better GHS/Moons page
+		- is there something to predict moon transits?
+		- dynamically add to Calendar?
+	- Mercury/Venus horizon track for elongations
+
+DB:
+	- set up parallel instance with "clean" DB 
+		- Is there a script that can be used to "clean" a populated DB?
+		- see if the size works
+		- figure out how to migrate that as there are more updates
+
+	

@@ -97,7 +97,6 @@ class ConstellationDetailView(DetailView):
         context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)
         context['asteroids'] = get_objects_from_cookie(self.request, 'asteroids', object.abbreviation)
         context['comets'] = get_objects_from_cookie(self.request, 'comets', object.abbreviation)
-
         return context
     
 class ConstellationWikiPopup(DetailView):

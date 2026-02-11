@@ -6,7 +6,29 @@ from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOLibraryImage, \
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
     DSOInField, DSOInFieldAlias, DSOObservingMode, \
-    AnnalsDeepSkyDSO
+    AnnalsDeepSkyDSO, AnnalsDeepSkyDSOInField
+
+class AbstractAnnalsInline(admin.StackedInline):
+    fieldsets =  (
+        (None, {
+            'fields': [
+                ('volume','page', 'other_ref'),
+                'byline',
+                'notes',
+                'metadata'
+            ]
+        }),
+    )
+    extra = 0
+    max_num = 1
+    class Meta:
+        abstract = True
+
+class DSOAnnalsInline(AbstractAnnalsInline):
+    model = AnnalsDeepSkyDSO
+
+class DSOInFieldAnnalsInline(AbstractAnnalsInline):
+    model = AnnalsDeepSkyDSOInField
 
 class ConstellationFilter(AutocompleteFilter):
     title = 'Constellation'
@@ -198,6 +220,7 @@ class DSOAdmin(ObservableObjectAdmin):
     )
     inlines = [
         DSOAliasInline, 
+        DSOAnnalsInline,
         DSOInFieldInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  
@@ -482,7 +505,7 @@ class DSOInFieldAdmin(admin.ModelAdmin):
             ]
         })
     )
-    inlines = [DSOInFieldAliasInline]
+    inlines = [DSOInFieldAliasInline, DSOInFieldAnnalsInline]
 
     @admin.display(description='From Primary')
     def distance_to_primary(self, obj):
@@ -494,4 +517,5 @@ admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOObservation)
-admin.site.register(AnnalsDeepSkyDSO)
+#admin.site.register(AnnalsDeepSkyDSO)
+#admin.site.register(AnnalsDeepSkyDSOInField)
