@@ -166,14 +166,18 @@ def show_property_source(code):
 
 @register.filter(name='mode_priority_span')
 def mode_priority_span(d, mode='S'):
-    VALS = {'None': 0, 'Lowest': 0, 'Low': 1, 'Medium': 2, 'High': 3, 'Highest': 4}
-    pri = 'None'
-    if mode in d.keys():
-        pri = d[mode]
+    print("D: ",d)
+    try:
+        VALS = {'None': 0, 'Lowest': 0, 'Low': 1, 'Medium': 2, 'High': 3, 'Highest': 4}
+        pri = 'None'
+        if mode in d.keys():
+            pri = d[mode]
 
-    color = PRIORITY_COLORS[pri]
-    val = VALS[pri]
-    out = f'<span style="color: {color}">{val} - {pri}</span>'
+        color = PRIORITY_COLORS[pri]
+        val = VALS[pri]
+        out = f'<span style="color: {color}">{val} - {pri}</span>'
+    except:
+        out = 'Unknown'
     return mark_safe(out)
 
 @register.filter(name='modulo')

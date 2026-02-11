@@ -43,7 +43,22 @@
     .header-container h2,
     .header-container p { margin: 0; }
     table.main td ul { list-style: none; margin-top: 3px; }
+    table.main td ul.tight { 
+        list-style: circle;  
+        list-style-position: outside; 
+        margin-left: -1em; 
+        margin: 0; padding 0;
+    }
     table.main td li { padding: 2px 0px 2px 0px; }
+    table.main td ul.tight li { 
+        display: list-item;
+        float: none;
+        min-height: 0;
+        padding: 0px 0px 0px 1em;
+        margin: 0px 0px 0px 0px!important;
+        line-height: 15px;
+    }
+    table.main td ul.light li:last-child { margin-bottom: 0; }
     table.main td.title { padding-bottom: 20px; position: relative; }
     table.main td.title h1 { margin: 10px 0px 5px 0px; }
     .op { bottom: 10px; position: absolute; }
@@ -75,6 +90,9 @@
         white-space: pre-wrap;
         overflow-wrap: break-word; /* Legacy name word-wrap is an alias */
     }
+    table.annals td, th {
+        font-size: 75%;
+    }
 </style>
 
 <table class="main">
@@ -103,7 +121,7 @@
             <div class="byline">
                 {% if object.annals.byline %}
                 <br>
-                <span class="byline">{{ object.annals.byline }}</span>
+                <span class="byline">{{ object.annals.byline|safe }}</span>
                 {% endif %}
             </div>
             <h3>Other Catalogs</h3>

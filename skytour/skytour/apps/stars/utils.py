@@ -118,13 +118,15 @@ def handle_formatting(n):
     SWAPS = [
         ('_sun', '<sub>&#9737;</sub> '), ('_Sun', '<sub>&#9737;</sub>' ),
         ('_Earth', '🜨'), ('_E', '🜨'),
-        ('_J', '<sub>&#9795;</sub>'), ('_Jup', '<sub>&#9795;</sub>'),
+        ('_Jup', '<sub>&#9795;</sub>'), ('_J', '<sub>&#9795;</sub>'), 
         ('^1', '<sup>1</sup>'), ('^2', '<sup>2</sup>'), ('^3', '<sup>3</sup>'),
         ('^4', '<sup>4</sup>'), ('^5', '<sup>5</sup>'), ('^6', '<sup>6</sup>'),
         ('^7', '<sup>7</sup>'), ('^8', '<sup>8</sup>'), ('^9', '<sup>9</sup>'),
         ('_0', '<sub>0</sub>'), ('_*', '<sub>*</sub>'),
-        ('vsini', '<i>v</i> sin <i>i</i>'), ('_rot', '<sub>rot</sub>'),
-        ('v_equ', '<i>v</i><sub>equ</sub>'), ('_cyc', '<sub>cyc</sub>'),
+        ('vsini', '<i>v</i> sin <i>i</i>'), ('P_rot', '<i>P</i><sub>rot</sub>'),
+        ('v_equ', '<i>v</i><sub>equ</sub>'), ('P_cyc', '<i>P</i><sub>cyc</sub>'),
+        ('v_eq', '<i>v</i><sub>equ</sub>'), ('P_orb', '<i>P</i><sub>orb</sub>'),
+        ('>~', '≳'), ('<~', '≲'),
     ]
     for x in SWAPS:
         n = n.replace(x[0], x[1])

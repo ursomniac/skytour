@@ -309,6 +309,10 @@ class DSOAbstract(Coordinates):
             z = self.id_in_catalog
         return z
     
+    @property
+    def has_annals(self):
+        return hasattr(self, 'annals')
+    
     class Meta:
         abstract = True
 
@@ -1518,7 +1522,8 @@ class AnnalsDeepSkyDSO(AnnalsDeepSkyAbstract):
         on_delete = models.CASCADE,
         related_name = 'annals'
     )
-    dso_in_field = models.OneToOneField (
+class AnnalsDeepSkyDSOInField(AnnalsDeepSkyAbstract):
+    dso = models.OneToOneField (
         DSOInField,
         null = True, blank = True,
         on_delete = models.CASCADE,
