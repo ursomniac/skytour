@@ -293,3 +293,9 @@ def deconstruct_mode_form(data, mode):
         fields = None
     return fields, delete
 
+def get_default_panel(dso):
+    x = None # default
+    x = 'other' if dso.notes else x # override
+    x = 'wiki' if dso.has_wiki else x # override again
+    x = 'annals' if dso.has_annals else x # override again (see how this works)?
+    return x

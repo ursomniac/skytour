@@ -3,29 +3,36 @@
 {% block title %}{{ object.shown_name}}: Skytour{% endblock title %}
 {% block styles %}
 <style>
-	table.showborder td { border: 1px solid #fcc!important; }
-	table.lite { border-style: none; }
-	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
-	table.lite td.viability { padding-left: 0px!important; padding-right: 0px!important; }
 	h1 { font-weight: bold; font-size: 250%; color: #fff; margin-bottom: 0px; margin-top: 10px; }
 	h2 { color: #fc0; }
 	h2.info { margin: 0px; }
 	h2.nickname { font-size: 125%; margin-top: 5px; color: #ffd; }
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	h3 { color: #ff9; margin: 4px 0px 4px 0px!important; }
-	h4 { margin: 2px 0px 2px 0px!important; }
+	h4 { margin: 2px 0px 4px 0px!important; }
+		
+	table.infield th { background-color: #009; color: #fff; }
+	table.info_box { border: 2px solid black }
+	table.infotext { border-collapse; collapse; width: 100%; }
+	table.infotext th { height: 2em; cursor: pointer; }
+	table.lite { border-style: none; }
+	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
+	table.lite td.viability { padding-left: 0px!important; padding-right: 0px!important; }
+	table.short {  display:inline-block; border-style: none; }
+	table.short td, th { margin-right: 4px; font-size: 85%; padding: 2px 5px; }
+	table.short td.hour { margin-right: 8px; }
+	table.short th { background-color: #990; color: #000; border: none; }
+	table.values { table-layout: fixed; width: 100%; border-collapse: collapse; }
+	table.values td { padding: 3px 5px 3px 5px; }
+	table.values td.colA { width: 30%; border-top: 1px solid #999; }
+	table.values td.colB { width: 40%; border-top: 1px solid #999; }
+
+	tr.bottom { height: 150px; }
+	tr.dif th { background-color: #006; }
 	td { vertical-align: top;}
-	td.object_name { vertical-align: middle; padding-left: 20px; }
-	td.description { 
-		vertical-align: middle!important; 
-		text-align: center; line-height: 1.75; 
-		color: #FFF;
-	}
-	td.description a { color: #ff0; }
-	td.operations { text-align: right; padding: 3px 10px!important; }
-	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
-	td.dso_image { padding: 0; }
 	td.activeobs { color: #fff; font-weight: bold; text-align: right; font-size: 120%; }
+	td.aliases { padding-left: 20px; padding-bottom: 20px; color: #ff0; }
+	td.byline { font-size: 110%; color: #ffc; font-style: italic; }
 	td.coordinates { 
 		width: 40%; 
 		font-size: 150%; 
@@ -33,32 +40,51 @@
 		margin-bottom: 5px; 
 		color: #fff;
 	}
-	table.info_box { border: 2px solid black }
-	tr.bottom { height: 150px; }
+	td.description { 
+		vertical-align: middle!important; 
+		text-align: center; 
+		line-height: 1.75; 
+		color: #FFF;
+	}
+	td.description a { color: #ff0; }
+	td.dso_image { padding: 0; }
+	td.edit_images { vertical-align: middle; background-color: #900; text-align: center; }
+	td.edit_images button { width: 20em; height: 20px; }
+	td.editing { border: 2px solid #900!important; }
+	td.editing h3, td.obslist h3 { margin-top: 8px; }
+	td.editing button { width: 8em; margin-right: 8px;  }
+	td.field-td-wiki { text-align: center; }
+	td.greybox { border: 1px solid #999!important; }
+	td.indented { background-color: #666; padding-left: 20px; }
+	td.right { text-align: right; }
+	td.notes {
+		height: 300px;
+		vertical-align: top;
+		padding: 3px 0px 3px 5px!important;
+	}
+	td.object_name { vertical-align: middle; padding-left: 20px; }
+	td.operations { text-align: right; padding: 3px 10px!important; }
+	th.tab-header { width: 25%; }
+	th.tab-header a { 
+		color: black; text-decoration: none; display: flex; 
+		font-size: 110%; align-items: center; justify-content: center;
+		height: 100%; line-height: 2em; 
+	}
+	th.tab-header.active { background-color: #cc6; }
+	th.tab-header:hover { background-color: #cc9; }
+
+	button.adminb { width: 5em!important; color: #f00; }
+	button.op { width: 12em; }
+
     img.constrained { max-width: 500px; }
 	img.library_image { display: block; }
+
+	.cell-content-wrapper { height: 300px; overflow-y: auto; display: block; }
+	.content-div { display: none; }
+	.conditions { padding: 5px; border: 1px solid #ccc; line-height: 1.6; }
     .hvcenter { vertical-align: middle!important; text-align: center!important; }
 	.hcenter { text-align: center!important; }
-	table.short {  display:inline-block; border-style: none; }
-	table.short td, th { margin-right: 4px; font-size: 75%; }
-	table.short td.hour { margin-right: 8px; }
-	table.short th { background-color: #990; color: #000; border: none; }
-	div.no-library-image { font-size: 20px; line-height: 2.5; }
-	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
-	tr.dif th { background-color: #006; }
-	span.annotation { padding-left: 10px; font-size: 50%; font-style: italic; color: #ff6; }
-    span.source { 
-		padding: 0px 5px 0px 5px; 
-		margin-left: 10px;
-		background-color: #393; 
-		color: #000;
-		font-size: 65%; 
-		border: 1px solid #390;
-		vertical-align: middle;
-	}
-	span.mode-header { color: #fff; font-weight: bold; }
-	div.mode-chart hr { border-color: #870; border-width: 1px; border-style: solid; }
-	.image-text {
+		.image-text {
         position: absolute;
         bottom: -30px;
         width: 100%;
@@ -70,6 +96,13 @@
         background: rgba(0, 0, 0, 0.3);
         height: 35px;
     }
+	.mode-chart hr { border-color: #870; border-width: 1px; border-style: solid; }
+	.no-library-image { font-size: 20px; line-height: 2.5; }
+	.object-metadata { xfont-weight: bold; color: #ccc; }
+	.panel-type {float: right!important;  }
+	.popup-dso, .popup-list-button { float: right; }
+	.radec { margin-top: 5px; }
+	.rightside { float: right!important; }
 	.slide-header {
 		width: 100%;
 		padding-left: 10px;
@@ -79,7 +112,35 @@
 		color: rgb(204, 204, 204);
 		background: rgba(0, 0, 0, 0.3);
 		height: 35px;
+	}	
+	.summary p { font-size: 90%; line-height: 1.4; }
+    .summary pre { 
+		margin: 0;
+		padding: 3px; 
+        font-size: 95%; line-height: 1.3; color: #ded; 
+        white-space: pre-wrap;
+        overflow-wrap: break-word; /* Legacy name word-wrap is an alias */
+    }
+	.white { color: #fff; }
+
+	span.annotation { padding-left: 10px; padding-top: 4px; font-size: 60%; font-style: italic; color: #ff6; }
+	span.bigger { font-size: 160%; }
+	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
+	span.cat_entry { color: #ccc; font-style: italic; }
+	span.cat_entry_text { color: #fff; font-weight: bold; font-style: normal; }
+	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
+	span.mode-header { color: #fff; font-weight: bold; }
+	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
+    span.source { 
+		padding: 0px 5px 0px 5px; 
+		margin-left: 10px;
+		background-color: #393; 
+		color: #000;
+		font-size: 65%; 
+		border: 1px solid #390;
+		vertical-align: middle;
 	}
+
 	ul.dso-list { 
 		list-style-type: none; /* Remove bullets */
 		padding: 0; /* Remove padding */
@@ -88,51 +149,12 @@
 	ul.dso-list li {
 		line-height: 1.4;
 	}
-	div.panel-type {float: right!important;  }
-	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
-	.popup-dso, .popup-list-button { float: right; }
-	.object-metadata { xfont-weight: bold; color: #ccc; }
-	div.conditions { 
-		padding: 5px; 
-		border: 1px solid #ccc; 
-		line-height: 1.6; 
-	}
-	button.op { width: 12em; }
-	td.edit_images {
-		vertical-align: middle;
-		background-color: #900;
-		text-align: center;
-	}
-	table.infield th { background-color: #009; color: #fff; }
-	td.edit_images button { width: 20em; height: 20px; }
-	td.editing { border: 2px solid #900!important; }
-	td.editing h3, td.obslist h3 { margin-top: 8px; }
-	td.editing button { width: 8em; margin-right: 8px;  }
-	td.indented { background-color: #666; padding-left: 20px; }
-	td.byline { font-size: 110%; color: #ffc; font-style: italic; }
-	td.right { text-align: right; }
-	.rightside { float: right!important; }
-	.white { color: #fff; }
-	span.bigger { font-size: 120%; }
-	span.cat_entry {
-		color: #ccc;
-		font-style: italic;
-	}
-	span.cat_entry_text {
-		color: #fff;
-		font-weight: bold;
-		font-style: normal;
-	}
-	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
-	button.adminb { width: 5em!important; color: #f00; }
-	td.field-td-wiki { text-align: center; }
-	.summary p { font-size: 85%; line-height: 1.3; }
-    .summary pre { 
-        font-size: 90%; line-height: 1.3; color: #ded; 
-        white-space: pre-wrap;
-        overflow-wrap: break-word; /* Legacy name word-wrap is an alias */
-    }
 	small.smallh3 { font-size: 70%; }
+
+	#annals { display: block; }
+	#wiki {}
+	#notes {}
+
 </style>
 {% endblock styles %}
 
@@ -146,7 +168,7 @@
 		<a name="top"></a>
 		<table width="100%" class="lite" bgcolor="{{ object.object_type.bgcolor}}" width=100%>
 			<tr>
-				<td width=60% class="object_name">
+				<td width=70% class="object_name">
 					<h1>{{ object.label_on_chart }}</h1>
 					<h2 class="nickname">
 						{% if object.nickname %}
@@ -154,7 +176,7 @@
 						{% endif %}
 					</h2>
 				</td>
-				<td width=16% class="description" rowspan=1>
+				<td width=20% class="description" rowspan=1>
 					<a href="{% url 'object-type-detail' object.object_type.slug %}">{{ object.object_type }}</a>
 					<br>in<br>
 					<b>
@@ -163,24 +185,7 @@
 						</a>
 					</b>
 				</td>
-				<td width=15% class="description operations" rowspan=1>
-                    {% if object.has_wiki == 'WIKI' %}
-                    <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="op">
-                        Wiki Entry
-                    </button>
-                    {% else %}
-                    <span class="boxed">{{ object.has_wiki_text }}</span>
-                    {% endif %}
-					<br>
-					{% if object.pdf_page %}
-					<a href="/media/{{ object.pdf_page }}" target="_blank"><button class="op">PDF</button></a>
-					{% else %}
-					<span class="boxed">No PDF Page</span>
-					{% endif %}
-					<br>
-					&nbsp;
-				</td>
-				<td width=12% class="description operations" rowspan=1>
+				<td width=10% class="description operations" rowspan=1>
 					<button onclick="return realtimePopup('/dso/real-time/{{ object.pk }}')" class="op">
 					Real Time
 					</button>
@@ -277,39 +282,91 @@
 </tr>
 <tr>
 	<td id="metadata" colspan=2>
-		<table width=100% class="lite xshowborder">
+		<table width=100% class="lite values xshowborder">
 			<tr>
-				<td class="coordinates">&alpha; (2000): {{ object.ra_text }}
-					<br>
+				<td class="coordinates colA">
+					<div class="radec">&alpha; (2000): {{ object.ra_text }}</div>
 					<span class="annotation">
 							{{ object.ra_float|floatformat:3}}h 
 							&nbsp;&nbsp;&nbsp;
 							{{ object.ra_deg_float|floatformat:3 }}°
 						</span>
 				</td>
-				<td class="coordinates">&delta; (2000): {{ object.dec_text }}
-					<br>
+				<td class="coordinates colA">
+					<div class="radec">&delta; (2000): {{ object.dec_text }}</div>
 					<span class="annotation">
 						{{ object.dec_float|floatformat:3}}°
 					</span>
 				</td>
-				<td rowspan="8" style="padding: 0;">
-					{% if other_metadata %}
-					<h3>Parameters</h3>
-					{% for item in other_metadata %}
-					<p style="padding: 3px 5px; margin: 0">{{ item }}</p>
-					{% endfor %}
-					{% endif %}
-					{% if object.has_annals %}
-            		{% with object.annals as ann %}
-					<br>
-            		<h3>Annals of the Deep Sky</h3>
-            		<h4>
-                		<span class="volpage">v. {{ ann.volume }} p. {{ ann.page }}</span>
-            		</h4>
-            		<div class="summary"><pre>{{ ann.format_notes|safe }}</pre></div>
-            		{% endwith %}
-            		{% endif %}
+				<td rowspan="7" class="notes greybox colB">
+					<!-- nav -->
+					<table class="infotext">
+						<tr>
+							<th id="th1" 
+									class="tab-header {% if default_panel == 'annals' %}active{% endif %}" 
+									onClick="showDiv('annals', this)">
+								{% if object.has_annals %}
+								<a href="javascript:void(0)">Annals</a>
+								{% endif %}
+							</th>
+							<th id="th2" 
+									class="tab-header {% if default_panel == 'wiki' %}active{% endif %}" 
+									onClick="showDiv('wiki', this)">
+								{% if object.has_wiki %}
+								<a href="#" onClick="showDiv('wiki')">Wiki</a>
+								{% endif %}
+							</th>
+							<th id="th3" 
+									class="tab-header {% if default_panel == 'other' %}active{% endif %}" 
+									onClick="showDiv('other', this)">
+								{% if object.notes %}
+								<a href="#" onClick="showDiv('other')">Notes</a>
+								{% endif %}
+							</th>
+							<th id="th4" class="tab-header">
+								{% if object.pdf_page %}
+								<a href="/media/{{ object.pdf_page }}" target="_blank">PDF</a>
+								{% endif %}
+							</th>
+						</tr>
+						<tr>
+							<td colspan=4>
+							<div class="cell-content-wrapper">
+								<div id="annals" class="content-div"
+									style="display: {% if default_panel == 'annals' %}block{% else %}none{% endif %};">
+									
+									{% if object.has_annals %}
+									{% with object.annals as ann %}
+									<h3>Annals of the Deep Sky</h3>
+									<h4><span class="volpage">v. {{ ann.volume }} p. {{ ann.page }}</span></h4>
+									<div class="summary">
+										<pre>{{ ann.format_notes|safe }}</pre>
+									</div>
+									{% endwith %}
+									{% endif %}
+								</div>
+								<div id="wiki" class="content-div"
+									style="display: {% if default_panel == 'wiki' %}block{% else %}none{% endif %};">
+
+									<h3>Wikipedia Summary</h3>
+									<div class="text">
+										<div class="summary"><p>{{ wiki_text|safe }}</p></div>
+									</div>
+									{% if object.wiki.canonical_url %}
+        							<a href="{{ object.wiki.canonical_url }}" target="_blank">
+            							<button class="wikipage">Full Wiki Page</button></a>
+    								{% endif %}
+								</div>
+								<div id="other" class="content-div"
+									style="display: {% if default_panel == 'other' %}block{% else %}none{% endif %};">
+
+									<h3>Notes</h3>
+									{{ object.notes|linebreaks }}
+								</div>
+							</div>
+							</td>
+						</tr>
+					</table>
 				</td>	
 			</tr>
 			<tr>
@@ -381,39 +438,48 @@
 			<tr><td></td><td></td></tr>
 			<tr>
 				<td colspan="1">
+					<h3>Observing</h3>
+					<span class="object-metadata">
+					Priority ({{ observing_mode_string_short }}):
+					</span>&nbsp;
+					{% if observing_mode != 'I' %}
+					<span class="white">{{ mode_priority_label }}</span>
+					{% else %}		
+					<span class="bigger">
+					{{ mode_priority_span }}
+					</span>
+					{% endif %}
+					{% if object.reimage %}
+					<span style="color:#0cc"> &ndash; REDO </span>
+					{% endif %}	
+					{% comment %}
+					<br><br>
+					<span class="object-metadata">On SkyMap:</span>&nbsp;
+					<b>{{ object.get_show_on_skymap_display }}</b>
+					<br>
+					<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
+					<b>{{ object.get_show_on_simple_skymap_display }}</b>	
+					<br>	
+					{% endcomment %}
+					<br>	<br>
 					<h3>On Atlas Plates</h3>
 					{% for plate in object.atlasplate_set.all %}
 					<a href="{% url 'atlas-detail' plate.slug %}" target="_blank">{{ plate.plate_id }}</a>
 					{% if not forloop.last %}, {% endif %}
 					{% endfor %}
-				</td>
+					<br><br>
+				</td>	
 				<td colspan="1">
-					<h3>Observing</h3>
-
-						<span class="object-metadata">
-						Priority ({{ observing_mode_string_short }}):
-						</span>&nbsp;
-						{% if observing_mode != 'I' %}
-						<span class="white">{{ mode_priority_label }}</span>
-						{% else %}		
-						<span class="bigger">
-						{{ mode_priority_span }}
-						</span>
-						{% endif %}
-
-						{% if object.reimage %}
-						<span style="color:#0cc"> &ndash; REDO </span>
-						{% endif %}	
-						<br><br>
-						<span class="object-metadata">On SkyMap:</span>&nbsp;
-						<b>{{ object.get_show_on_skymap_display }}</b>
-						<br>
-						<span class="object-metadata">On Simple SkyMap:</span>&nbsp;
-						<b>{{ object.get_show_on_simple_skymap_display }}</b>	
-						<br>					
+					{% if other_metadata %}
+						<h3>Parameters</h3>
+						{% for item in other_metadata %}
+						<p style="padding: 3px 5px; margin: 0">{{ item|safe }}</p>
+						{% endfor %}
+					{% endif %}
+				</td>		
 			</tr>
 			<tr>
-				<td rowspan=1>
+				<td rowspan=1 class="greybox">
 					<h3>
 						Obs. Season: 
 						<small class="smallh3">
@@ -442,7 +508,7 @@
 						</table>
 					{% endif %}
 				</td>
-				<td colspan="2" class="viability">
+				<td colspan="2" class="viability greybox">
 					<table class="lite">
 						<tr>
 							<td>
@@ -453,7 +519,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan=3>{{ object.mode_viability_chart }}</td>
+							<td colspan=2>{{ object.mode_viability_chart }}</td>
 						</tr>
 					</table>
 				</td>
@@ -465,7 +531,7 @@
 					<a href="/admin/dso/dso/{{ object.pk }}/change"><button class="adminb">Admin</button></a>
 					<a href="{% url 'dso-edit-modes' object.pk %}"><button>Obs. Modes</button></a>
 				</td>
-				<td class="obslist" colspan="2">
+				<td class="obslist greybox" colspan="2">
 					<h3>
 						Active Observing Lists
 						<span class='popup-list-button' onClick="DSOAddPopup({{ object.pk }})">
@@ -581,10 +647,10 @@
 
 <table>
 <tr>
-	<td>
+	<td class="greybox">
 		<a name="dsos_in_field"></a>
 		{% if object.dsoinfield_set.all %}
-		<h3>DSOs in Field ({{ object.dsos_in_field_count }})</h3>
+		<h3>DSOs in Field: {{ object.dsos_in_field_count }}</h3>
 		<table class='infield'>
 		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th>
 			<th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th>
@@ -619,7 +685,7 @@
 		{% endif %} 
 		<a name="nearby_dsos"></a>
 		<h3>
-			Nearby DSOs ({{ neighbor_list|length }})
+			Nearby DSOs: {{ neighbor_list|length }}
 			{% if neighbor_list|length > 0 %}
 			&nbsp;&nbsp;&nbsp;
 			<button onClick="showNeighborTable();">Show/Hide List</button>
@@ -660,15 +726,9 @@
 	</td>
 </tr>
 </table>
-
 <table>
 <tr class="bottom">
-	<td id="object_notes" valign="top" width=30% rowspan=2>
-		<a name="notes"></a>
-		<h3>Notes</h3>
-		{{ object.notes|linebreaks }}
-	</td>
-	<td>
+	<td class="greybox">
 		{% with instance=object admin_dir='dso/dso'%}
 		{% include 'includes/observation_section.html' %}
 		{% endwith %}
@@ -731,6 +791,16 @@
 		} else {
 			div.style.display = "none"
 		}
+	}
+	function showDiv(divId, clickedTh) {
+		event.preventDefault();
+		document.querySelectorAll('.content-div').forEach(p => { p.style.display = 'none'; });
+		document.querySelectorAll('.tab-header').forEach(th => th.classList.remove('active'));
+		const activePanel = document.getElementById(divId);
+		if (activePanel) {
+			activePanel.style.display = 'block';
+		}
+		clickedTh.classList.add('active');
 	}
 </script>
 {% include 'includes/realtime_script.html' %}

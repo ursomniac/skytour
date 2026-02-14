@@ -57,7 +57,8 @@ from .utils import (
     add_dso_to_dsolist,
     delete_dso_from_dsolist,
     construct_mode_form, 
-    deconstruct_mode_form
+    deconstruct_mode_form,
+    get_default_panel
 )
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
 from .utils_checklist import (
@@ -66,6 +67,7 @@ from .utils_checklist import (
     update_dso_filter_context
 )
 from .utils_dsolist import get_active_dsolist_objects, get_dso_list_map
+from .wiki import format_wiki_text
 
 def plot_list_of_dsos(dso_list=None, map_scaling_factor=None):
     #mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
@@ -162,6 +164,10 @@ class DSODetailView(CookieMixin, DetailView):
 
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
+
+        # Handle the notes - this is silly but in-template the logic is cumbersome
+        context['default_panel'] = get_default_panel(object)
+        
         context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
         context['max_altitude'] = get_max_altitude(object, location=location)
         context['observing_date_grid'] = make_observing_date_grid(object)
@@ -181,7 +187,8 @@ class DSODetailView(CookieMixin, DetailView):
         context['mode_priority_span'] = priority_span
         context['neighbor_list'] = neighbor_list
         context['times'] = compile_times(times)
-        
+        if self.object.has_wiki:
+            context['wiki_text'] = format_wiki_text(self.object.wiki)
         return context
     
 class DSOListActiveView(TemplateView):
@@ -867,9 +874,7 @@ class DSOWikiPopup(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DSOWikiPopup, self).get_context_data(**kwargs)
         dso = self.get_object()
-        text = dso.wiki.summary
-        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
-        context['text'] = html_output
+        context['text'] = format_wiki_text(dso.wiki)
         return context
     
 class DSOInFieldWikiPopup(DetailView):
@@ -879,8 +884,6 @@ class DSOInFieldWikiPopup(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DSOInFieldWikiPopup, self).get_context_data(**kwargs)
         dsoinfield = self.get_object()
-        text = dsoinfield.wiki.summary
-        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
-        context['text'] = html_output
+        context['text'] = format_wiki_text(dsoinfield.wiki)
         return context
     

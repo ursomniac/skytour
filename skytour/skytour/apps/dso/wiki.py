@@ -20,3 +20,7 @@ def update_dso_wiki(instance):
     wiki = update_wiki_object(wiki, instance.default_wikipedia_name)
     return wiki
 
+def format_wiki_text(instance):
+    text = instance.summary
+    html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+    return html_output
