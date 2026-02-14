@@ -3,6 +3,7 @@
     span.light-yellow { color: #ffc; font-weight: bold; }
     span.infield { float: right; font-size: 80%; }
     span.nickname { font-style: italic; color: #ff9; }
+    span.bigger { font-size: 120%; }
     span.wiki { color: #9f6; }
     table.dso_table tbody th, 
     table.dso_table tbody td { 
@@ -62,6 +63,9 @@
             <br>
             <small>
             {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
+            {% if dso.has_annals %}
+            <span class="infield bigger">🄰</span>
+            {% endif %}
             </small>
         </td>
         <td class="wiki">
