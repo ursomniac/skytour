@@ -7,7 +7,8 @@ from .views import (
     CalcFramesFromExposureView,
     CalcAngularSizeView,
     CalcJDToDateView,
-    CalcDateToJDView
+    CalcDateToJDView,
+    CalcRedshiftToDistanceView
 )
 
 urlpatterns = (
@@ -18,5 +19,6 @@ urlpatterns = (
     path('calc/exposureframes', CalcFramesFromExposureView.as_view(), name='calc-frames'),
     path('calc/angsize', CalcAngularSizeView.as_view(), name='calc-angsize'),
     path('calc/jd2date', CalcJDToDateView.as_view(), name='calc-jd2date'),
-    path('calc/date2jd', CalcDateToJDView.as_view(), name='calc-date2jd')
+    path('calc/date2jd', CalcDateToJDView.as_view(), name='calc-date2jd'),
+    path('calc/redshift', CalcRedshiftToDistanceView.as_view(), name = 'calc-redshift'),
 )

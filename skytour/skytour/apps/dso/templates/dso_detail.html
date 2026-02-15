@@ -140,7 +140,21 @@
 		border: 1px solid #390;
 		vertical-align: middle;
 	}
-
+    ul.tight, ol.tight { 
+		margin: 6px 0px 0px -1em;
+		list-style-position: outside; 
+		padding 0; 
+		line-height: 0.3;
+	}
+    ul.tight { list-style: circle; }
+    ul.tight li, ol.tight li { 
+        display: list-item;
+        float: none;
+        min-height: 0;
+        padding: 0px 0px 0px 1em;
+        margin: 0px 0px 0px 0px!important;
+        line-height: 15px;
+    }
 	ul.dso-list { 
 		list-style-type: none; /* Remove bullets */
 		padding: 0; /* Remove padding */
@@ -312,7 +326,7 @@
 							<th id="th2" 
 									class="tab-header {% if default_panel == 'wiki' %}active{% endif %}" 
 									onClick="showDiv('wiki', this)">
-								{% if object.has_wiki %}
+								{% if object.has_wiki == 'WIKI' %}
 								<a href="#" onClick="showDiv('wiki')">Wiki</a>
 								{% endif %}
 							</th>

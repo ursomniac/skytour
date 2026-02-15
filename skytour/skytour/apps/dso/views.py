@@ -187,7 +187,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['mode_priority_span'] = priority_span
         context['neighbor_list'] = neighbor_list
         context['times'] = compile_times(times)
-        if self.object.has_wiki:
+        if self.object.has_wiki == 'WIKI':
             context['wiki_text'] = format_wiki_text(self.object.wiki)
         return context
     

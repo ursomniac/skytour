@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from django.views.generic.base import TemplateView
 from ..observe.utils import get_effective_bortle
 from .time import julian_to_date, get_julian_date, jd_now
-from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm
+from .utils import get_distance_from_modulus, get_size_from_logd25, sqs_to_sqm, cz_to_distance
 
 def haz(thing, zero=False):
     """
@@ -29,6 +29,26 @@ class CalcModulusView(TemplateView):
             if haz(value):
                 result = get_distance_from_modulus(float(value))
                 context['result_string'] = f"{result:.2f} Mly"
+        return context
+    
+class CalcRedshiftToDistanceView(TemplateView):
+    template_name = 'calc_redshift.html'
+
+    def get_context_data(self, **kwargs):
+        def floatme(x):
+            if x is None:
+                return None
+            return float(x) if x.replace('.','',1).replace('-','',1).isdigit() else None
+        context = super(CalcRedshiftToDistanceView, self).get_context_data()
+        redshift = self.request.GET.get('redshift', None) # STRING
+        cz = floatme(redshift)
+        distance_units = self.request.GET.get('distance_units', 'Mly')
+        all = self.request.GET.get('all', 'off') == 'on'
+        if cz is not None:
+            result = cz_to_distance(cz, distance_units, all=all, html=True)
+            context['results'] = result
+            context['redshift'] = redshift
+            context['all'] = 'checked' if all else ''
         return context
     
 class CalcSQSToSQMView(TemplateView):

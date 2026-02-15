@@ -1,0 +1,49 @@
+{% extends 'popup_base.html' %}
+{% load skytour_filters humanize %}
+
+{% block content %}
+<style>
+    table.form th, td.input { height: 30px; }
+    table.cz th, td { height: 15px; }
+    table.cz th { background-color: #666; color: #cc0; }
+    #id-custom { float: right; }
+</style>
+<h2>Calculate Distance from Redshift</h2>
+    <form type="GET">
+        <table class="form">
+            <tr>
+                <th><label for="redshift">Redshift<br></th>
+                <td class="input">
+                    <input name="redshift" size="8" maxlength="8" {% if redshift %}value="{{ redshift }}"{% endif %}>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <th label for="all">Show All Calcs<br/></th>
+                <td class="input">
+                    <input name="all" type="checkbox" {{all}}>
+                    <small>Best for cz > 0.1</small>
+                </td>
+            </tr>
+            {% if results %}
+            <tr>
+                <td class="result" colspan=2>
+                    {{ results|safe }}
+                </td>
+            </tr>
+            {% endif %}
+        <tr><td colspan=2 class="submit">
+            <input class="submit" type="submit" value="Calculate Distance">
+        </td></tr>
+        <tr><td colspan=2  class="close-popup">
+            <button onClick="closeFormPopup();">Close Popup</button>
+        </td></tr>
+        </table>
+    </form>
+<script>
+    function closeFormPopup() {
+        var me = window.self;
+        me.opener = me.self;
+        me.close();
+    }
+</script>
+{% endblock content %}

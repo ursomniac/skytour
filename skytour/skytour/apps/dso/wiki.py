@@ -22,5 +22,8 @@ def update_dso_wiki(instance):
 
 def format_wiki_text(instance):
     text = instance.summary
-    html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+    try:
+        html_output = "".join(f"<p>{line.strip()}</p>\n" for line in text.strip().splitlines())
+    except:
+        return text
     return html_output
