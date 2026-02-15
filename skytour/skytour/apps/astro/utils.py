@@ -1,4 +1,5 @@
 import math
+from astropy.cosmology import Planck18 as cosmo
 from ..site_parameter.helpers import find_site_parameter
 
 def get_limiting_magnitude(bortle):
@@ -181,3 +182,65 @@ def get_declination_range(location, min_altitude=None):
         return min_dec, max_dec
     except:
         return None, None
+    
+def cz_to_distance(z, units='Mly', h0=70.0, c=2.99792e5, all=False, html=False, prec=3):
+    def handle(x, units, unit='Mpc', simple=False):
+        q = {}
+        if simple:
+            q[unit] = x
+            if unit == 'Mpc' and units == 'Mly':
+                q['Mly'] = x * 3.26
+            return q
+        try:
+            v = float(x.value)
+            u = str(x.unit)
+            q[u] = v
+            if u == 'Mpc' and units == 'Mly':
+                q['Mly'] = v * 3.26
+            return q
+        except:
+            return None
+    d = {}
+    if z is None:
+        return (None, None)
+    d['simple'] = dict(
+        values = handle(c * z / h0, units, 'Mpc', simple=True), 
+        label = 'Simple'
+    )
+
+    if all:
+        # this gets really complicated really quickly
+
+        d['comoving']      = dict(
+            values = handle(cosmo.comoving_distance(z), units),           # distance between objects today
+            label = 'CoMoving'
+        )
+        d['luminosity']    = dict(
+           values = handle(cosmo.luminosity_distance(z), units),          # for brightness/magnitude calculations
+            label = 'Luminosity'
+        )
+        d['angular']       = dict(
+            values = handle(cosmo.angular_diameter_distance(z), units),    # for physical size calculations 
+            label = 'Angular Diameter'
+        )
+        d['lookback_time'] = dict(
+            values = handle(cosmo.lookback_time(z), units),
+            label = 'Lookback Time'
+        )
+    if html:
+        out = '<table class="cz">'
+        for k in d.keys():
+            v = d[k]
+            out += f"<tr><th>{v['label']}</th>"
+            dv = v['values']
+            dvks = list(dv.keys())
+            if units in dvks: 
+                out += f"<td>{dv[units]:.{prec}f} {units}</td>"
+            else:
+                z = dvks[0]
+                out += f"<td>{dv[z]:.{prec}f} {z}</td>"
+            out += '</tr>'
+        out += '</table>'
+        return out
+    return d
+            
