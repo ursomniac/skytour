@@ -6,6 +6,7 @@
     h1, h2 { color: #fc3; }
     table.constellation-header td { padding: 0 10px 0 10px; }
     td { height: 10px; }
+    td.top { vertical-align: top; }
     td.number { text-align: right; }
     img { display: block; }
     #constellation_stars th { background-color: #996; color: #000; }
@@ -36,13 +37,22 @@
                 <a href="/admin/utils/constellation/{{ object.pk }}/change">Admin</a>
             </p>
         </td>
-        <td style='vertical-align: top;'>
+        <td class="top">
+            <h2>Constellations</h2>
+            <select id="constellation-selector">
+                <option value="">---- Select Constellation ----</option>
+            {% for c in constellations %}
+                <option value="{% url 'constellation-detail' c.slug %}">{{ c.name }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        <td class="top">
             <h2>Atlas Plates</h2>
             {% for p in object.atlasplate_set.all %}
             <a href="{% url 'atlas-detail' p.plate_id %}">{{ p.plate_id }}</a>{% if not forloop.last %},{% endif %}
             {% endfor %}
         </td>
-        <td style='vertical-align: top;'>
+        <td class="top">
             <h2>Bordering Constellations</h2>
             {% for c in object.neighbors.all %}
            <a href="{% url 'constellation-detail' c.slug %}"> <button>{{ c.name }}</button></a>
@@ -50,7 +60,7 @@
         </td>
     </tr>
     <tr>
-        <td style="text-align:center; vertical-align: top;" width="70%" colspan=2>
+        <td style="text-align:center; vertical-align: top;" width="70%" colspan=3>
             {% if object.reverse_map %}            
             <img src="/media/{{ object.reverse_map }}" style="width: 100%; display: block; ">
             {% if object.reverse_other_map %}<img src="/media/{{ object.reverse_other_map }}" style="width: 100%; display: block;">{% endif %}
@@ -64,7 +74,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="3">
+        <td colspan="4">
             <h2>Description</h2>
             {{ object.description|safe }}
         </td>
@@ -161,7 +171,7 @@
 </table>
 
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $('#constellation_stars').DataTable( {
         columnDefs: [ 
             { targets: 6, orderData: [ 6, 1 ] }, 
@@ -171,6 +181,11 @@
         paging: false
     } );
 } );
-
+document.getElementById('constellation-selector').addEventListener('change', function() {
+    var url = this.value;
+    if (url) {
+        window.location.href = url;
+    }
+});
 </script>
 {% endblock content %}

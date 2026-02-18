@@ -119,6 +119,7 @@ def handle_formatting(n):
         ('_sun', '<sub>&#9737;</sub> '), ('_Sun', '<sub>&#9737;</sub>' ),
         ('_Earth', '🜨'), ('_E', '🜨'),
         ('_Jup', '<sub>&#9795;</sub>'), ('_J', '<sub>&#9795;</sub>'), 
+        ('_gal', '<sub>gal</sub>'),
         ('^1', '<sup>1</sup>'), ('^2', '<sup>2</sup>'), ('^3', '<sup>3</sup>'),
         ('^4', '<sup>4</sup>'), ('^5', '<sup>5</sup>'), ('^6', '<sup>6</sup>'),
         ('^7', '<sup>7</sup>'), ('^8', '<sup>8</sup>'), ('^9', '<sup>9</sup>'),

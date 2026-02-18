@@ -92,7 +92,7 @@ class ConstellationDetailView(DetailView):
         #context['annals_variable_stars'] = get_annals_variable_stars(object)
         # TODO: Add 'other_stars', 'double_stars',  to the star list
         # 
-        
+        context['constellations'] = Constellation.objects.order_by('name')
         # Add solar system objects that happen to be within the constellation from the session cookie
         context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)
         context['asteroids'] = get_objects_from_cookie(self.request, 'asteroids', object.abbreviation)
