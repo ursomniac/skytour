@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from jsonfield import JSONField
 from skyfield.api import Star
 from taggit.managers import TaggableManager
-from .utils import create_shown_name, priority_color, priority_symbol, priority_span
+from .utils import create_shown_name, priority_color, priority_symbol, priority_span, dso_name_sort_key
 from .vocabs import DISTANCE_UNIT_CHOICES
 from ..abstract.models import (
     Coordinates, 
@@ -22,12 +22,14 @@ from ..abstract.utils import get_metadata
 from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO
 from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
+from ..astro.coords import equ2ecl, equ2gal
 from ..astro.culmination import get_opposition_date
 from ..astro.transform import get_alt_az
 from ..astro.utils import alt_get_small_sep, get_simple_position_angle, get_atlas_sep
 from ..site_parameter.helpers import find_site_parameter
 from ..solar_system.utils import get_constellation
-from ..tech.models import Telescope
+from ..stars.utils import handle_formatting
+from ..utils.format import to_dms_string
 from ..utils.models import Constellation, ObjectType
 from .observing import get_max_altitude
 from .utils import get_hyperleda_value, get_simbad_value
@@ -280,8 +282,8 @@ class DSOAbstract(Coordinates):
                 else: # this shouldn't happen but...
                     label = item
                     value = None
-                t = tuple((label.strip(), value.strip()))
-                interim.append(t)
+                t = tuple((label.strip(), handle_formatting(value.strip())))
+                interim.append(t) 
             second = sorted(interim, key=lambda x: x[0])
             out = []
             for item in second:
@@ -310,8 +312,32 @@ class DSOAbstract(Coordinates):
         return z
     
     @property
+    def sort_key(self):
+        return dso_name_sort_key(self)
+    
+    @property
     def has_annals(self):
         return hasattr(self, 'annals')
+    
+    @property
+    def ecliptic_coordinates(self):
+        l, b =  equ2ecl(self.ra_float, self.dec_float)
+        return dict(
+            longitude=l, latitude=b, 
+            lstr=f"{l:07.3f}", bstr=f"{b:+06.3f}",
+            langle = to_dms_string(l, space=' '),
+            bangle = to_dms_string(b, space=' ', deg_digits=2, precision=2)
+        )
+    
+    @property
+    def galactic_coordinates(self):
+        l, b = equ2gal(self.ra_float, self.dec_float)
+        return dict(
+            longitude=l, latitude=b, 
+            lstr=f"{l:07.3f}", bstr=f"{b:+06.3f}",
+            langle = to_dms_string(l, space=' '),
+            bangle = to_dms_string(b, space=' ', deg_digits=2, precision=2)
+        )
     
     class Meta:
         abstract = True

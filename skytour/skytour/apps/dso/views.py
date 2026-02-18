@@ -446,6 +446,7 @@ class DSOSearchView(View):
     """
     def get(self, request):
         query = request.GET.get('query', None).lower()
+        # if query starts with '=' use same page
         words, name = find_cat_id_in_string(query)
         target = search_dso_name(words, name)
         if target is not None:

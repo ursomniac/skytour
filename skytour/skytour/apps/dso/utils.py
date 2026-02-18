@@ -1,3 +1,4 @@
+import re
 from ..site_parameter.helpers import find_site_parameter
 from .vocabs import (
     PRIORITY_VALUES, MODE_VIABILITY_CHOICES, MODE_PRIORITY_CHOICES,
@@ -299,3 +300,53 @@ def get_default_panel(dso):
     x = 'wiki' if dso.has_wiki else x # override again
     x = 'annals' if dso.has_annals else x # override again (see how this works)?
     return x
+
+def dso_name_sort_key(dso, debug=False):
+    numlet = r'(^\d+)([a-zA-Z]+)$'
+    suffix = '___'
+
+    # 1. Get the first part
+    if dso.map_label is not None:
+        xx = dso.map_label.split(' ')
+        cslug = xx[0][:8].lower().ljust(8, '_')
+        oid = '' if len(xx) == 1 else '_'.join(xx[1:])
+        if debug:
+            print(f"1. Map Label: {cslug} + {oid}")
+    elif dso.catalog.slug != 'other':
+        cslug = dso.catalog.abbreviation.lower().ljust(8, '_') # ngc_____
+        oid = dso.id_in_catalog
+        if debug:
+            print(f"1. Cat normal: {cslug} + {oid}")
+    else:
+        xx = dso.id_in_catalog.split(' ')
+        cslug = xx[0][:8].lower().ljust(8, '_')
+        oid = '_'.join(xx[1:])
+        if debug:
+            print(f"1. Other: {cslug} + {oid}")
+
+    # 2. Get the second part
+    if oid.isdigit():
+        oslug = oid.zfill(12)
+        if debug:
+            print(f"2. Digit: {oslug}")
+    elif dso.catalog.abbreviation.lower() == 'pk':
+        pattern = r'\d+\.?\d*|[^\d.]+'
+        parts = re.findall(pattern, oid) # ['35', '+', '6.4']
+        p0 = parts[0].zfill(7)
+        p1 = parts[1]
+        p2 = parts[2].zfill(4)
+        oslug = p0+p1+p2
+        if debug:
+            print(f"2. PK: {oslug}")
+    elif bool(re.match(numlet, oid)): # eg 123A or 123AB
+        match = re.match(numlet, oid)
+        (num, suf) = match.groups()
+        oslug = num.zfill(12)
+        suffix = suf.lower().ljust(3, '_')
+        if debug:
+            print(f"2. Compound: {oslug}")
+    else: # something very complicated
+        oslug = oid.lower().ljust(12, '_')
+        if debug:
+            print(f"2. other {oslug}")
+    return '-'.join([cslug, oslug, suffix])

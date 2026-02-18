@@ -91,6 +91,14 @@ def float2ang(x, format='dms', precision=2, space=''): # x in degrees
         return f"{d}°{space}{m:02d}\'{space}{s:0{precision+3}.{precision}f}\""
     return f"{x:.{precision}f}°"
 
+def to_dms_string(x, plus='+', precision=3, space='', deg_digits=3):
+    sign = plus if x > 0. else '-'
+    d = int(abs(x))
+    xm = (x-d) * 60.
+    m = int(xm)
+    s = (xm - m) * 60.
+    return f"{sign}{d:0{deg_digits}d}°{space}{m:02d}\'{space}{s:0{precision+3}.{precision}f}\""
+
 def tuple_ra(ra):
     h = int(ra)
     x = (ra - h) * 60.

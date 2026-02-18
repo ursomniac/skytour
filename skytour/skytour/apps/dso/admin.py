@@ -510,12 +510,32 @@ class DSOInFieldAdmin(admin.ModelAdmin):
     @admin.display(description='From Primary')
     def distance_to_primary(self, obj):
         return f"{obj.primary_distance:5.1f}\' at {obj.primary_angle:5.1f}°"
+    
+class AnnalsDeepSkyDSOAdmin(admin.ModelAdmin):
+    model = AnnalsDeepSkyDSO
+    list_display = ['pk', 'dso', 'dso_constellation', 'volume', 'page', 'byline']
+    list_filter = ['volume', 'dso__constellation']
+    readonly_fields = ['dso_constellation']
 
+    @admin.display(description='Con.', ordering='dso__constellation')
+    def dso_constellation(self, obj):
+        return obj.dso.constellation.abbreviation
+
+class AnnalsDeepSkyDSOInFieldAdmin(admin.ModelAdmin):
+    model = AnnalsDeepSkyDSOInField
+    list_display = ['pk', 'dso', 'dso_constellation', 'volume', 'page', 'byline']
+    list_filter = ['volume', 'dso__constellation']
+    readonly_fields = ['dso_constellation']
+
+    @admin.display(description='Con.', ordering='dso__constellation')
+    def dso_constellation(self, obj):
+        return obj.dso.constellation.abbreviation
+    
 admin.site.register(DSO, DSOAdmin)
 admin.site.register(DSOList, DSOListAdmin)
 admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOObservation)
-#admin.site.register(AnnalsDeepSkyDSO)
-#admin.site.register(AnnalsDeepSkyDSOInField)
+admin.site.register(AnnalsDeepSkyDSO, AnnalsDeepSkyDSOAdmin)
+admin.site.register(AnnalsDeepSkyDSOInField, AnnalsDeepSkyDSOInFieldAdmin)

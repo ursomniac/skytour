@@ -474,5 +474,8 @@ class AnnalsDeepSkyAbstract(models.Model):
     def format_notes(self):
         return handle_formatting(self.notes)
     
+    def __str__(self):
+        return f"Vol. {self.volume}, {self.page}: {self.dso}"
+    
     class Meta:
         abstract = True

@@ -55,6 +55,7 @@
         <td>{% include 'includes/dso_thumbnail.html' %}</td>
         {% endif %}
         <td>
+            <span class="hidden">{{ dso.sort_key }}</span>
             <a href="{% url 'dso-detail' dso.pk %}" target="_new">{{ dso.label_on_chart }}</a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
             {% if dso.dsoinfield_set.count > 0 %}
