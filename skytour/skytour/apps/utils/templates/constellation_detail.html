@@ -14,12 +14,16 @@
     button.op a { color: #000; text-decoration: none;}
     span.hidden { display:none; } 
     span.flags { font-size: 120%; color: #9ff;}
+    span.trans { font-size: 80%; font-style: italic; color: #cc0; font-weight: normal; }
 </style>
 <a name="section-top"></a>
 <table class="constellation-header">
     <tr>
         <td colspan=2>
-            <h1>{{ object.abbreviation }}: {{ object.name }}</h1>
+            <h1>
+                {{ object.abbreviation }}: {{ object.name }}
+                <span class="trans">&mdash; {{ object.translation }}</span>
+            </h1>
             <p>
                 <h4><i>{{ object.genitive }}</i></h4>
                 {% if object.has_wiki == 'WIKI' %}

@@ -244,6 +244,11 @@ class Constellation(WikipediaPageObject, models.Model):
         _('Genitive'),
         max_length = 80
     )
+    translation = models.CharField (
+        _('Translation'),
+        max_length = 80,
+        null = True, blank = True
+    )
     map = models.ImageField (
         _('Map'),
         upload_to = 'constellation_maps',

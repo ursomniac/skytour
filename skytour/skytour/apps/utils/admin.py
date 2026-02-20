@@ -23,7 +23,8 @@ class ConstellationAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': [
-                ('name', 'abbreviation', 'genitive'),
+                ('name', 'abbreviation'), 
+                ('genitive', 'translation'),
                 ('center_ra', 'center_dec', 'area'),
                 ('map', 'reverse_map'),
                 ('other_map', 'reverse_other_map'),
