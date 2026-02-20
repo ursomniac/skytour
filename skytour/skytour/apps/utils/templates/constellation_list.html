@@ -9,14 +9,15 @@
 <table id="{{ table_id }}">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Genitive</th>
-            <th>Abbr.</th>
-            <th>Atlas Plate List</th>
-            <th>DSO Count</th>
-            <th>DSO In Field</th>
-            <th>DSO Total</th>
-            <th>DSO Imaged</th>
+            <th width="11%">Name</th>
+            <th width="13%">Genitive</th>
+            <th width="4%">Abbr.</th>
+            <th width="14%">Meaning</th>
+            <th width="45%">Atlas Plate List</th>
+            <th width="2%">DSO <small>Count</small></th>
+            <th width="2%">DSO <small>Field</small></th>
+            <th width="2%">DSO <small>Total</small></th>
+            <th width="6%">DSO <small>Imaged</small></th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,7 @@
             <td><a href="{% url 'constellation-detail' obj.slug %}">{{ obj.name }}</a></td>
             <td>{{ obj.genitive }}</td>
             <td style="text-align: center">{{ obj.slug }}</td>
+            <td>{{ obj.translation }}</td>
             <td><small>{{ obj.atlas_plate_list}}</small></td>
             <td class="number">
                 {{ obj.dso_count }}
@@ -38,7 +40,7 @@
             <td>
                 {% if obj.count_dsos_with_library_images > 0 %}
                 <a href="{% url 'library-by-constellation' obj.abbreviation %}">
-                    <button>Image Gallery ({{ obj.count_dsos_with_library_images }} DSOs)</button>
+                    <button>{{ obj.count_dsos_with_library_images }} DSOs</button>
                 </a>
                 {% endif %}
             </td>

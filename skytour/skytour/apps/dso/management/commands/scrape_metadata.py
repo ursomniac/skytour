@@ -33,13 +33,8 @@ class Command(BaseCommand):
         source = options['source']
         code = options['model']
         if verbose:
-            print("Options:")
-            print(f"\tDebug: ", debug)
-            print(f"\tSource: ", source)
-            print(f"\tModel: ", options['model'])
-            print(f"\tFind: ", options['find'])
-            print(f"\tDSO List: ", options['dso_list'])
-
+            print("Options: ",f"\tDebug: ", debug, f"\tSource: ", source)
+            print(f"\tModel: ", options['model'], f"\tFind: ", options['find'], f"\tDSO List: ", options['dso_list'])
         mymodel = DSO if code == 'D' else DSOInField
         if options['dso_list'] and len(options['dso_list']) > 0:
             objlist = mymodel.objects.filter(pk__in=options['dso_list'])
