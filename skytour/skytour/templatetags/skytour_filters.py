@@ -1,6 +1,8 @@
 import datetime
 from django import template
 from django.utils.html import mark_safe
+from django.template.defaultfilters import linebreaks
+import re
 from skytour.apps.dso.vocabs import PRIORITY_COLORS
 register = template.Library()
 
@@ -166,7 +168,6 @@ def show_property_source(code):
 
 @register.filter(name='mode_priority_span')
 def mode_priority_span(d, mode='S'):
-    print("D: ",d)
     try:
         VALS = {'None': 0, 'Lowest': 0, 'Low': 1, 'Medium': 2, 'High': 3, 'Highest': 4}
         pri = 'None'
@@ -231,3 +232,37 @@ def add_two(value, arg):
         return float(value) + float(arg)
     except:
         return None
+
+
+@register.filter(name='smart_linebreaks')
+def smart_linebreaks(value):
+    """
+    Apply Django's `linebreaks` to text except for any HTML <table> blocks.
+    This preserves tables (and their internal markup) while converting
+    plain-text newlines outside tables into <p>/<br> where appropriate.
+
+    Strategy:
+    - Split the text by top-level <table>...</table> blocks (non-greedy).
+    - For non-table segments, run `linebreaks`.
+    - Rejoin and mark safe.
+    """
+    try:
+        if value is None:
+            return ''
+        s = str(value)
+        # Pattern captures table blocks (non-greedy) including attributes.
+        pattern = re.compile(r'(<\s*table\b.*?>.*?<\s*/\s*table\s*>)', re.IGNORECASE | re.DOTALL)
+        parts = pattern.split(s)
+        out_parts = []
+        for part in parts:
+            if not part:
+                continue
+            if pattern.match(part):
+                # It's a table block — keep as-is
+                out_parts.append(part)
+            else:
+                # For non-table parts, apply linebreaks to preserve newlines
+                out_parts.append(linebreaks(part))
+        return mark_safe(''.join(out_parts))
+    except Exception:
+        return mark_safe(s)

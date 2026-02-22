@@ -103,8 +103,7 @@ class ObservingLocation(models.Model):
     bortle = models.PositiveIntegerField (
         _('Bortle')
     )
-
-    # 
+     
     ### SITE FIELDS
     parking = models.CharField (
         _('Parking Available'),
@@ -158,6 +157,8 @@ class ObservingLocation(models.Model):
         return mark_safe(u'<img src="%s" width=500>' % self.earth_image.url)
     def bortle_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.bortle_image.url)
+    def azimuthal_map_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.azimuthal_map.url)  
 
     @classmethod
     def get_default_location(cls):

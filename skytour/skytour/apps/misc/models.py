@@ -191,24 +191,29 @@ class Website(models.Model):
         ordering = ['name']
 
 class Glossary(models.Model):
-    name = models.CharField (
+    name = models.CharField(
         _('Name/Topic'),
-        max_length = 100,
+        max_length=100,
     )
-    slug = models.SlugField (
+    slug = models.SlugField(
         _('Slug'),
-        unique = True
+        unique=True
     )
-    description = models.TextField (
-        _('Description'),
-        null = True, blank = True
+    description = models.TextField(
+        _('HTML Content'),
+        help_text='Main content, allows HTML formatting.'
     )
-    link = models.URLField (
+    table_html = models.TextField(
+        _('Optional Table (HTML)'),
+        null=True, blank=True,
+        help_text='Optional table in HTML.'
+    )
+    link = models.URLField(
         _('Link'),
-        null = True, blank = True,
-        help_text = 'External link for more information'
+        null=True, blank=True,
+        help_text='External link for more information'
     )
-    
+
     def __str__(self):
         return self.name
 
@@ -216,6 +221,34 @@ class Glossary(models.Model):
         ordering = ['slug']
         verbose_name = 'Glossary Entry'
         verbose_name_plural = 'Glossary Entries'
+
+class GlossaryImage(models.Model):
+    title = models.CharField(
+        _('Title'),
+        max_length=100,
+        null=True, blank=True
+    )
+    glossary = models.ForeignKey(
+        Glossary,
+        on_delete=models.CASCADE,
+        related_name='images',
+    )
+    image = models.ImageField(
+        _('Image'),
+        upload_to='glossary_images/',
+        null=True, blank=True
+    )
+    caption = models.CharField(
+        _('Caption'),
+        max_length=255,
+        null=True, blank=True
+    )
+    order_by = models.PositiveIntegerField(
+        _('Order By'),
+        default=0,
+    )
+    def __str__(self):
+        return self.title or self.caption
 
 class PDFManual(models.Model):
     title = models.CharField(
@@ -230,5 +263,6 @@ class PDFManual(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.pdf_file})"
+    
     class Meta:
         ordering = ['slug']
