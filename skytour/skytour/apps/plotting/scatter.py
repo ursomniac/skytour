@@ -25,12 +25,13 @@ def create_plot(
         reversed = False,
         xrange = None,
         yrange = None,
+        figsize = (6.4,4.8),
         other_lines = None
 	):
     """
     Given data, make a scatter plot.
     """
-    fig = Figure()
+    fig = Figure(figsize=figsize)
 
     if subplot: # NOTE: Isn't this a bug?
         panel = fig.add_subplot(subplot[0], subplot[1], subplot[2])

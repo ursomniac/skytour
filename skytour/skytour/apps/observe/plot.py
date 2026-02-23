@@ -1,5 +1,4 @@
 import numpy as np
-import datetime, pytz
 from ..plotting.scatter import create_plot
 
 """
@@ -191,6 +190,7 @@ def plot_sqm_history(loc, reversed=False):
             title=f"SQM Measures: {loc}",
             xtitle='Date',
             ytitle='SQM (mag/arcsec^2)',
+            figsize=(9,4.5),
             reversed=reversed
         )
         return image
