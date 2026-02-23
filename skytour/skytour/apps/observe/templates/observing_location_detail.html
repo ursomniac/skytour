@@ -2,12 +2,17 @@
 
 {% block styles %}
 <style>
-	td { padding: 10px; vertical-align: top; border: 0px; }
+	table.main { border-collapse: collapse; height: 1px; }
+	table.main tr { height: 1px; }
+	table.main tr:last-child { height: auto; }
+	table.main td { padding: 10px; vertical-align: top!important; border: 0px; }
 	td.description { padding-top: 20px; line-height: 1.4; }
+	td.start { position: relative; }
 	.map_image { width: 100%; }
 	.location_image { width: 100%; }
-	h1 { margin: 0;}
-	h4 { color: #c90; margin: 3px 0px 5px 0px; }
+	h1 { margin: 0; color: #ccc; }
+	h2 { color: #cc9; }
+	h4 { color: #cc6; margin: 3px 0px 5px 0px; }
 	table.inner th { background-color: #444; color: #fff; border: 0px; text-align: left; }
 	table.inner th.header, table.maps th, table.images th { 
 		background-color: #222; color: #ff9; border: 0px; padding-left: 3px; 
@@ -18,17 +23,17 @@
 		border: 0px; 
 		background-color: #000; 
 	}
-	table.main td { width: 50%; }
 	table.session-table th {text-align: center; background-color: #555; }
 	button { height: 2em; }
+	.bottom { position: absolute; bottom: 5px; left: 5px; width: 100%; }
 </style>
 {% endblock styles %}
 
 {% block title %}Location: {{ object.street_address}} {{ object.city }}: Skytour{% endblock %}
 {% block content %}
-<table width="100%">
+<table width="100%" class="main">
 	<tr>
-		<td width="25%" bgcolor="{{ object.status_color }}">
+		<td width="25%" bgcolor="{{ object.status_color }}" class="start">
 			<h1>
 				{% if object.name %}
 				{{ object.name }}: 
@@ -36,27 +41,47 @@
 				{{ object.street_address }}
 			</h1>
 			<h2>{{ object.city }}, {{ object.state }}</h2>
+			<table class="inner">
+				<tr><th colspan=2 class="header">Sessions</th></tr>
+				<tr><th># Sessions:</th><td>{{ object.number_of_sessions }}</td></tr>
+				{% if object.number_of_sessions > 0 %}
+				<tr><th>Last Session:</th><td>{{ object.last_session|date:"Y-M-d" }}</td></tr>
+				<tr><th># Days:</th><td>{{ object.days_since_last_session }}</td></tr>
+				{% endif %}
+			</table>
 			<br>
+			<div class="xbottom">
+				<h4>Operations:</h4>
 			<a href="/media/{{ object.pdf_form }}" target="_blank"><button>PDF Form</button></a>
 			<a href="{% url 'observing-location-update' object.pk %}"><button>Edit/Update</button></a>
 			<button onClick='popupDeleteLocation({{ object.pk }});'>⛔️ Delete</button>
+			</div>
 		</td>
 		<td width="25%">
 			<table class="inner">
 				<tr><th colspan=2 class="header">Metadata</th></tr>
-				<tr><th>Distance:</th><td>{{ object.travel_distance }} mi</td></tr>
-				<tr><th>Travel Time:</th><td>{{ object.travel_time }} min</td></tr>
 				<tr><th>Status:</th><td>{{ object.status }}</td></tr>
 				<tr><th>Is Default Location:</th><td>{{ object.is_default }}</td></tr>
 			</table>
-			<br><br>
+			<br>
+			<table class="inner">
+				<tr><th colspan=2 class="header">Geographic Metadata</th></tr>
+				<tr><th>Latitude:</th><td class="coordinates">{{ object.latitude }}</td></tr>
+				<tr><th>Longitude:</th><td class="coordinates">{{ object.longitude }}</td></tr>
+				<tr><th>Elevation:</th><td>{{ object.elevation }}</td></tr>
+				<tr><th>Distance:</th><td>{{ object.travel_distance }} mi</td></tr>
+				<tr><th>Travel Time:</th><td>{{ object.travel_time }} min</td></tr>
+			</table>
+			<br>
 		</td>
-		<td width="50%" rowspan=3>
+		<td width="50%" rowspan="4">
 			<table class="inner">
 				<tr><th class="header">Azimuthal Sky Brightness</th></tr>
 				<tr><td>
 					{% if object.azimuthal_map %}
-					<img src="{{ object.azimuthal_map.url }}" class="map_image"></td></tr>
+					<a href="{{ object.azimuthal_map.url }}" target="_blank">
+					<img src="{{ object.azimuthal_map.url }}" class="map_image"></a>
+				</td></tr>
 					{% else %}
 					(No Azimuthal Brightness Map)
 					{% endif %}
@@ -92,17 +117,27 @@
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan=2>
 			<table class="inner">
 				<tr><th colspan=2 class="header">Sky Brightness Metadata</th></tr>
-				<tr><th>Bortle:</th><td>{{ object.effective_bortle|floatformat:2 }}</td></tr>
+				<tr><th>Bortle:</th>
+					<td>
+						{{ object.effective_bortle|floatformat:2 }}
+						&nbsp; (
+							Obs.: {{ object.mean_obs_bortle.0|floatformat:2 }}
+							{% if object.mean_obs_bortle.1 %}
+								± {{ object.mean_obs_bortle.1|floatformat:2 }}
+							{% endif %}
+						)
+					</td>
+				</tr>
 				<tr><th>SQM:</th><td>
 					{{ object.sqm }}
 					{% if object.mean_obs_sqm.0 %}
 					&nbsp; (
 						Obs.: {{ object.mean_obs_sqm.0|floatformat:2 }}
 						{% if object.mean_obs_sqm.1 %}
-							±{{ object.mean_obs_sqm.1|floatformat:2 }}
+							± {{ object.mean_obs_sqm.1|floatformat:2 }}
 						{% endif %}
 					)
 					{% endif %}
@@ -112,12 +147,7 @@
 			</table>
 		</td>
 		<td>
-			<table class="inner">
-				<tr><th colspan=2 class="header">Geographic Metadata</th></tr>
-				<tr><th>Latitude:</th><td class="coordinates">{{ object.latitude }}</td></tr>
-				<tr><th>Longitude:</th><td class="coordinates">{{ object.longitude }}</td></tr>
-				<tr><th>Elevation:</th><td>{{ object.elevation }}</td></tr>
-			</table>
+
 		</td>
 	</tr>
 	<tr>
@@ -170,6 +200,7 @@
 			</table>
 		</td>
 	</tr>
+	<tr><td></td><td></td></tr>
 </table>
 
 <table class="maps">

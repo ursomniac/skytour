@@ -1,4 +1,4 @@
-import pytz
+import pytz, datetime
 from django.db import models
 from django.urls import reverse
 from django.utils.html import mark_safe
@@ -259,6 +259,14 @@ class ObservingLocation(models.Model):
         x = self.observingsession_set.order_by('-ut_date').first()
         if x:
             return x.ut_date
+        return None
+    
+    @property
+    def days_since_last_session(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        then = self.last_session
+        if then:
+            return (now.date() - then).days
         return None
 
     @property
