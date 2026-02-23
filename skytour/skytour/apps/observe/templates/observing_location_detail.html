@@ -8,6 +8,7 @@
 	table.main td { padding: 10px; vertical-align: top!important; border: 0px; }
 	td.description { padding-top: 20px; line-height: 1.4; }
 	td.start { position: relative; }
+	td.units { background-color: #333!important; }
 	.map_image { width: 100%; }
 	.location_image { width: 100%; }
 	h1 { margin: 0; color: #ccc; }
@@ -33,7 +34,7 @@
 {% block content %}
 <table width="100%" class="main">
 	<tr>
-		<td width="25%" bgcolor="{{ object.status_color }}" class="start">
+		<td width="30%" bgcolor="{{ object.status_color }}" class="start">
 			<h1>
 				{% if object.name %}
 				{{ object.name }}: 
@@ -57,7 +58,7 @@
 			<button onClick='popupDeleteLocation({{ object.pk }});'>⛔️ Delete</button>
 			</div>
 		</td>
-		<td width="25%">
+		<td width="30%">
 			<table class="inner">
 				<tr><th colspan=2 class="header">Metadata</th></tr>
 				<tr><th>Status:</th><td>{{ object.status }}</td></tr>
@@ -74,7 +75,7 @@
 			</table>
 			<br>
 		</td>
-		<td width="50%" rowspan="4">
+		<td width="40%" rowspan="4">
 			<table class="inner">
 				<tr><th class="header">Azimuthal Sky Brightness</th></tr>
 				<tr><td>
@@ -119,9 +120,12 @@
 	<tr>
 		<td colspan=2>
 			<table class="inner">
-				<tr><th colspan=2 class="header">Sky Brightness Metadata</th></tr>
+				<tr>
+					<th colspan=2 class="header">Sky Brightness Metadata</th>
+					<th class="header">Units</th>
+				</tr>
 				<tr><th>Bortle:</th>
-					<td>
+					<td width="50%;">
 						{{ object.effective_bortle|floatformat:2 }}
 						&nbsp; (
 							Obs.: {{ object.mean_obs_bortle.0|floatformat:2 }}
@@ -130,8 +134,11 @@
 							{% endif %}
 						)
 					</td>
+					<td class='units'></td>
 				</tr>
-				<tr><th>SQM:</th><td>
+				<tr>
+					<th>SQM: </th>
+					<td>
 					{{ object.sqm }}
 					{% if object.mean_obs_sqm.0 %}
 					&nbsp; (
@@ -141,9 +148,31 @@
 						{% endif %}
 					)
 					{% endif %}
-				</td></tr>
-				<tr><th>Brightness:</th><td>{{ object.brightness }}</td></tr>
-				<tr><th>Limiting Mag.:</th><td>{{ object.limiting_magnitude }}</td></tr>
+					</td>
+					<td class="units">mag/arcsec<sup>2</sup></td>
+				</tr>
+				<tr>
+					<th>
+					Brightness: 
+					</th>
+					<td>{{ object.brightness }}</td>
+					<td class="units">mcd/m<sup>2</sup></td>
+				</tr>
+				<tr>
+					<th>Artif. Brightness:</th>
+					<td>{{ object.artificial_brightness }}</td>
+					<td class="units">µcd/m<sup>2</sup></td>
+				</tr>
+				<tr>
+					<th>Ratio:
+						</th>
+					<td>{{ object.ratio }}</td>
+					<td class="units">artif. to nat. brightness</td>
+				</tr>
+				<tr>
+					<th>Limiting Mag.:</th><td>{{ object.limiting_magnitude }}</td>
+					<td class="units"></td>
+				</tr>
 			</table>
 		</td>
 		<td>
@@ -164,7 +193,7 @@
 					</td>
 				</tr>
 			</table>
-			<br><br>
+			<br>
 			<table class="inner">
 				<tr><th class="header" colspan=2>Site Metadata</th></tr>
 				<tr>
