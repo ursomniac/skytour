@@ -125,26 +125,26 @@ def get_relation_to_planet(delta, angsep, diam):
     return t
 
 def get_asteroid_from_cookie(cookie, object):
-    return next((a for a in cookie['asteroids'] if a.get('name') == object.full_name), None)
-    #for a in cookie['asteroids']:
-    #    if a['name'] == object.full_name:
-    #        return a
-    #return None
+    #return next((a for a in cookie['asteroids'] if a.get('name') == object.full_name), None)
+    for a in cookie['asteroids']:
+        if a['name'] == object.full_name:
+            return a
+    return None
 
 def get_comet_from_cookie(cookie, object):
-    return next((c for c in cookie['comets'] if c.get('pk') == object.pk), None)
-    #for c in cookie['comets']:
-    #    if c['pk'] == object.pk:
-    #        return c
-    #return None
+    #return next((c for c in cookie['comets'] if c.get('pk') == object.pk), None)
+    for c in cookie['comets']:
+        if c['pk'] == object.pk:
+            return c
+    return None
 
 def get_planet_from_cookie(cookie, object):
-    return next((p for p in cookie['planets'] if p.get('slug') == object.slug))
-    #planet_cookies = cookie['planets']
-    #for k in planet_cookies.keys():
-    #    if planet_cookies[k]['slug'] == object.slug:
-    #        return planet_cookies[k]
-    #return None
+    #return next((p for p in cookie['planets'] if p.get('slug') == object.slug))
+    planet_cookies = cookie['planets']
+    for k in planet_cookies.keys():
+        if planet_cookies[k]['slug'] == object.slug:
+            return planet_cookies[k]
+    return None
 
 def get_position_from_cookie(cookie):
     try:

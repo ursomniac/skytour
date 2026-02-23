@@ -6,21 +6,29 @@
 	td.description { padding-top: 20px; line-height: 1.4; }
 	.map_image { width: 100%; }
 	.location_image { width: 100%; }
-
-	h4 { color: #fff; }
-	table.inner th { background-color: #333; color: #fff; border: 0px; text-align: left; }
-	table.inner th.header, table.maps th, table.images th { background-color: #cc3; color: #000; border: 0px; }
-	table.inner td { padding: 4px; vertical-align: top; border: 0px; }
+	h1 { margin: 0;}
+	h4 { color: #c90; margin: 3px 0px 5px 0px; }
+	table.inner th { background-color: #444; color: #fff; border: 0px; text-align: left; }
+	table.inner th.header, table.maps th, table.images th { 
+		background-color: #222; color: #ff9; border: 0px; padding-left: 3px; 
+	}
+	table.inner td { 
+		padding: 4px 0px 4px 8px; 
+		vertical-align: top; 
+		border: 0px; 
+		background-color: #000; 
+	}
 	table.main td { width: 50%; }
 	table.session-table th {text-align: center; background-color: #555; }
+	button { height: 2em; }
 </style>
 {% endblock styles %}
+
 {% block title %}Location: {{ object.street_address}} {{ object.city }}: Skytour{% endblock %}
 {% block content %}
-
-<table width="100%" bgcolor="{{ object.status_color }}">
+<table width="100%">
 	<tr>
-		<td width=66% class="object_name">
+		<td width="25%" bgcolor="{{ object.status_color }}">
 			<h1>
 				{% if object.name %}
 				{{ object.name }}: 
@@ -28,96 +36,35 @@
 				{{ object.street_address }}
 			</h1>
 			<h2>{{ object.city }}, {{ object.state }}</h2>
-		</td>
-		<td width=33% class="description">
-			<b>Distance: </b>
-			{{ object.travel_distance }} mi
-			<br><b>Travel Time: </b>
-			{{ object.travel_time }} min
-			<br><b>Status: </b>
-			{{ object.status }}
-			<br><b>Is Default Location: </b>{{ object.is_default }}
-			<br><br>
+			<br>
 			<a href="/media/{{ object.pdf_form }}" target="_blank"><button>PDF Form</button></a>
 			<a href="{% url 'observing-location-update' object.pk %}"><button>Edit/Update</button></a>
 			<button onClick='popupDeleteLocation({{ object.pk }});'>⛔️ Delete</button>
 		</td>
-	</tr>
-</table>
-<br>
-<table class="main">
-	<tr>
-		<td>
+		<td width="25%">
 			<table class="inner">
-				<tr><th colspan=2 class="header">Geographic Metadata</th></tr>
-				<tr><th>Latitude:</th><td class="coordinates">{{ object.latitude }}</td></tr>
-				<tr><th>Longitude:</th><td class="coordinates">{{ object.longitude }}</td></tr>
-				<tr><th>Elevation:</th><td>{{ object.elevation }}</td></tr>
+				<tr><th colspan=2 class="header">Metadata</th></tr>
+				<tr><th>Distance:</th><td>{{ object.travel_distance }} mi</td></tr>
+				<tr><th>Travel Time:</th><td>{{ object.travel_time }} min</td></tr>
+				<tr><th>Status:</th><td>{{ object.status }}</td></tr>
+				<tr><th>Is Default Location:</th><td>{{ object.is_default }}</td></tr>
 			</table>
 			<br><br>
-			<table class="inner">
-				<tr><th class="header">Site Metadata</th></tr>
-				<tr><td>
-					<h4>Description:</h4>
-						{% if object.description %}
-						{{ object.description }}
-						{% else %}
-						<br/><br/>
-						{% endif %}
-				</td></tr>
-				<tr><td>
-					<h4>Parking:</h4>
-						{{ object.parking }}
-				</td></tr>
-				<tr><td>
-					<h4>Is Level:</h4>
-						{{ object.is_flat }}
-				</td></tr>
-				<tr class="bottom"><td>
-					<h4>Light Sources</h4>
-						{% if object.light_sources %}
-						{{ object.light_sources }}
-						{% endif %}
-				</td>
-				<tr><td>
-					<h4>Horizon:</h4>
-						{% if object.horizon_blockage %}
-						<p>Notes:<br/>{{ object.horizon_blockage }}<br/></p>
-						{% endif %}
-				</td></tr>
-			</table>
-			<table class="inner">
-				<tr><th colspan=2 class="header">Sky Brightness Metadata</th></tr>
-				<tr><th>Bortle:</th><td>{{ object.effective_bortle|floatformat:2 }}</td></tr>
-				<tr><th>SQM:</th><td>
-					{{ object.sqm }}
-					{% if object.mean_obs_sqm.0 %}
-					&nbsp; (
-						Obs.: {{ object.mean_obs_sqm.0|floatformat:2 }}
-						{% if object.mean_obs_sqm.1 %}
-							±{{ object.mean_obs_sqm.1|floatformat:2 }}
-						{% endif %}
-					)
-					{% endif %}
-				</td></tr>
-				<tr><th>Brightness:</th><td>{{ object.brightness }}</td></tr>
-				<tr><th>Limiting Mag.:</th><td>{{ object.limiting_magnitude }}</td></tr>
-			</table>
 		</td>
-		<td>
+		<td width="50%" rowspan=3>
 			<table class="inner">
-				<tr><th class="header">SQM Measures Plot</th></tr>
-				<tr>
-					<td>
-					{% if sqm_plot is not None %}
-					<img src="{{ sqm_plot }}">
+				<tr><th class="header">Azimuthal Sky Brightness</th></tr>
+				<tr><td>
+					{% if object.azimuthal_map %}
+					<img src="{{ object.azimuthal_map.url }}" class="map_image"></td></tr>
 					{% else %}
-					(No SQM observations.)
+					(No Azimuthal Brightness Map)
 					{% endif %}
 					</td>
 				</tr>
 			</table>
 			{% if object.observingsession_set.all|length > 0 %}
+			<br><br>
 			<table class="inner session-table">
 				<tr><th class="header" colspan=5>Observing Sessions</th></tr>
 				<tr>
@@ -142,6 +89,85 @@
 				{% endfor %}
 			</table>
 			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table class="inner">
+				<tr><th colspan=2 class="header">Sky Brightness Metadata</th></tr>
+				<tr><th>Bortle:</th><td>{{ object.effective_bortle|floatformat:2 }}</td></tr>
+				<tr><th>SQM:</th><td>
+					{{ object.sqm }}
+					{% if object.mean_obs_sqm.0 %}
+					&nbsp; (
+						Obs.: {{ object.mean_obs_sqm.0|floatformat:2 }}
+						{% if object.mean_obs_sqm.1 %}
+							±{{ object.mean_obs_sqm.1|floatformat:2 }}
+						{% endif %}
+					)
+					{% endif %}
+				</td></tr>
+				<tr><th>Brightness:</th><td>{{ object.brightness }}</td></tr>
+				<tr><th>Limiting Mag.:</th><td>{{ object.limiting_magnitude }}</td></tr>
+			</table>
+		</td>
+		<td>
+			<table class="inner">
+				<tr><th colspan=2 class="header">Geographic Metadata</th></tr>
+				<tr><th>Latitude:</th><td class="coordinates">{{ object.latitude }}</td></tr>
+				<tr><th>Longitude:</th><td class="coordinates">{{ object.longitude }}</td></tr>
+				<tr><th>Elevation:</th><td>{{ object.elevation }}</td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2>
+			<table class="inner">
+				<tr><th class="header">SQM Measures Plot</th></tr>
+				<tr>
+					<td>
+					{% if sqm_plot is not None %}
+					<img src="{{ sqm_plot }}">
+					{% else %}
+					(No SQM observations.)
+					{% endif %}
+					</td>
+				</tr>
+			</table>
+			<br><br>
+			<table class="inner">
+				<tr><th class="header" colspan=2>Site Metadata</th></tr>
+				<tr>
+					<td width="50%">
+					<h4>Description:</h4>
+						{% if object.description %}
+						{{ object.description }}
+						{% else %}
+						<br/><br/>
+						{% endif %}
+					</td>
+					<td width="50%">
+					<h4>Is Level:</h4>
+						{{ object.is_flat }}
+					</td>
+				</tr>
+				<tr><td>
+					<h4>Parking:</h4>
+						{{ object.parking }}
+				</td>
+				<td>
+					<h4>Light Sources</h4>
+						{% if object.light_sources %}
+						{{ object.light_sources }}
+						{% endif %}
+				</td>
+				<tr><td colspan=2>
+					<h4>Horizon:</h4>
+						{% if object.horizon_blockage %}
+						<p>Notes:<br/>{{ object.horizon_blockage }}<br/></p>
+						{% endif %}
+				</td></tr>
+			</table>
 		</td>
 	</tr>
 </table>

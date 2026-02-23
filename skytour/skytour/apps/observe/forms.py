@@ -20,6 +20,7 @@ class NewObservingLocationForm(forms.ModelForm):
             'travel_distance',
             'travel_time',
             'sqm',
+            'sqm_date',
             'brightness',
             'artificial_brightness',
             'ratio',
@@ -32,6 +33,7 @@ class NewObservingLocationForm(forms.ModelForm):
             'map_image',
             'earth_image',
             'bortle_image',
+            'azimuthal_map',
         ]
 
 class ObservingLocationMaskForm(forms.ModelForm):

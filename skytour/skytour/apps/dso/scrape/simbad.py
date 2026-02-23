@@ -163,8 +163,6 @@ def process_simbad_request(id, name, debug=False):
     #            return None
     d = {}
     d['ra_float'], d['dec_float'] = simbad_parse_coords(objdict)
-    if debug:
-        print("D: ", d)
     if d['ra_float'] is None and d['dec_float'] is None:
         return None
     #d['ra_float'] = convert_ra(d['ra'])

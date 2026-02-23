@@ -202,9 +202,9 @@
                 <tr>
                     <td>
                         <div class="coord">
-                            <span class="coord"><i>l</i>:</span> {{ object.ecliptic_coordinates.0|floatformat:3}}°
+                            <span class="coord"><i>&lambda;</i>:</span> {{ object.ecliptic_coordinates.0|floatformat:3}}°
                             &nbsp;&nbsp;
-                            <span class="coord"><i>b</i>:</span> 
+                            <span class="coord"><i>&beta;</i>:</span> 
                             {% if object.ecliptic_coordinates.1 >= 0.0 %}+{% endif %}{{ object.ecliptic_coordinates.1|floatformat:3}}°
                         </div>
                     </td>

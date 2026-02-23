@@ -822,11 +822,6 @@ class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
             v = mode.viable
             out += f'<div class="mode-line">'
             out += f'<b> {k}</b>:  &nbsp;' 
-            #if mode.priority is None:
-            #    pri = '    Unknown '
-            #else:
-            #    pri = ''
-            #out += ' 0  &nbsp;' if mode.priority is None else f' {mode.priority}  &nbsp;'
             out += mode.mode_priority_string
             for i in range(11):
                 val = 'X' if i == v else '&nbsp;'

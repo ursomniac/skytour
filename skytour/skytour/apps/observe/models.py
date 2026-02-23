@@ -85,6 +85,10 @@ class ObservingLocation(models.Model):
         null = True, blank = True,
         help_text = 'mag/arcsec^2'
     )
+    sqm_date = models.PositiveBigIntegerField (
+        _('Year'),
+        null = True, blank = True
+    )
     brightness = models.FloatField (
         _('Brightness'),
         null = True, blank = True,
@@ -103,8 +107,6 @@ class ObservingLocation(models.Model):
     bortle = models.PositiveIntegerField (
         _('Bortle')
     )
-
-    # 
     ### SITE FIELDS
     parking = models.CharField (
         _('Parking Available'),
@@ -145,6 +147,11 @@ class ObservingLocation(models.Model):
         null = True, blank = True,
         upload_to = 'bortle_maps/'
     )
+    azimuthal_map = models.ImageField (
+        _('Azimuthal Map'),
+        null = True, blank = True,
+        upload_to = 'azimuthal_maps/'
+    )
     #
     ### FORM
     pdf_form = models.FileField ( 
@@ -158,6 +165,8 @@ class ObservingLocation(models.Model):
         return mark_safe(u'<img src="%s" width=500>' % self.earth_image.url)
     def bortle_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.bortle_image.url)
+    def azimuthal_map_tag(self):
+        return mark_safe(u'<img src="%s" width=500>' % self.azimuthal_map.url)  
 
     @classmethod
     def get_default_location(cls):
@@ -289,7 +298,6 @@ class ObservingLocation(models.Model):
 
     def get_absolute_url(self):
         return reverse('observing-location-detail', kwargs={'pk': self.pk})
-        #return '/observing_location/{}'.format(self.pk)
 
     def __str__(self):
         if self.name:

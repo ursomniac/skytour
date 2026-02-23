@@ -18,10 +18,12 @@
 	table.lite { border-style: none; }
 	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
 	table.lite td.viability { padding-left: 0px!important; padding-right: 0px!important; }
+	table.meridian td{ line-height: 0.9; }
 	table.short {  display:inline-block; border-style: none; }
 	table.short td, th { margin-right: 4px; font-size: 85%; padding: 2px 5px; }
 	table.short td.hour { margin-right: 8px; }
 	table.short th { background-color: #990; color: #000; border: none; }
+	table.smaller td { font-size: 85%; padding: 2px 5px; line-height: 0.9; }
 	table.values { table-layout: fixed; width: 100%; border-collapse: collapse; }
 	table.values td { padding: 3px 5px 3px 5px; }
 	table.values td.colA { width: 30%; border-top: 1px solid #999; }
@@ -98,8 +100,11 @@
     }
 	.mode-chart hr { border-color: #870; border-width: 1px; border-style: solid; }
 	.no-library-image { font-size: 20px; line-height: 2.5; }
-	.object-metadata { xfont-weight: bold; color: #ccc; }
+	.object-metadata { color: #ccc; }
 	.obsnotes { line-height: 1.3; }
+	.obsnotes table { font-size: 85%; border-collapse: collapse; width: 90%; }
+	.obsnotes table td { border: 1px solid #666; }
+	.obsnotes table td:first-child { white-space: nowrap; }
 	.panel-type {float: right!important;  }
 	.popup-dso, .popup-list-button { float: right; }
 	.radec { margin-top: 5px; }
@@ -155,9 +160,11 @@
         float: none;
         min-height: 0;
         padding: 0px 0px 0px 1em;
-        margin: 0px 0px 0px 0px!important;
-        line-height: 15px;
+        margin: 0px 0px 0px -4px!important;
+        line-height: 16px;
+		font-size: 95%;
     }
+	ul.tight li { text-indent: -10px; }
 	ul.dso-list { 
 		list-style-type: none; /* Remove bullets */
 		padding: 0; /* Remove padding */
@@ -176,7 +183,6 @@
 {% endblock styles %}
 
 {% block content %}
-<br>
 <table>
 <!-- main -->
 {# header section #}
@@ -229,7 +235,7 @@
 				</td>
 			</tr>
 			{% if object.has_annals %}
-			<tr><td class="byline" colspan=4>{{ object.annals.byline }}</td></tr>
+			<tr><td class="byline" colspan=4>{{ object.annals.byline|safe }}</td></tr>
 			{% endif %}
 		</table>
 	</td>
@@ -363,7 +369,6 @@
 							<div class="cell-content-wrapper">
 								<div id="annals" class="content-div"
 									style="display: {% if default_panel == 'annals' %}block{% else %}none{% endif %};">
-									
 									{% if object.has_annals %}
 									{% with object.annals as ann %}
 									<h3>Annals of the Deep Sky</h3>
@@ -376,21 +381,22 @@
 								</div>
 								<div id="wiki" class="content-div"
 									style="display: {% if default_panel == 'wiki' %}block{% else %}none{% endif %};">
-
-									<h3>Wikipedia Summary</h3>
-									<div class="text">
-										<div class="summary"><p>{{ wiki_text|safe }}</p></div>
+									<div style="display: flex; align-items: center; justify-content: space-between;">
+										<h3 style="margin-bottom: 0;">Wikipedia Summary</h3>
+										{% if object.wiki.canonical_url %}
+											<a href="{{ object.wiki.canonical_url }}" target="_blank">
+												<button class="wikipage">Full Wiki Page</button>
+											</a>
+										{% endif %}
 									</div>
-									{% if object.wiki.canonical_url %}
-        							<a href="{{ object.wiki.canonical_url }}" target="_blank">
-            							<button class="wikipage">Full Wiki Page</button></a>
-    								{% endif %}
+									<div class="text">
+										<div class="summary">{{ wiki_text|safe }}</div>
+									</div>
 								</div>
 								<div id="other" class="content-div"
 									style="display: {% if default_panel == 'other' %}block{% else %}none{% endif %};">
-
 									<h3>Observing Notes</h3>
-									<div class="obsnotes">{{ object.notes|linebreaks }}</div>
+									<div class="obsnotes">{{ object.notes|smart_linebreaks }}</div>
 								</div>
 							</div>
 							</td>
@@ -674,11 +680,11 @@
 </tr>
 </table>
 
+{% if object.dsoinfield_set.all %}
 <table>
 <tr>
 	<td class="greybox">
 		<a name="dsos_in_field"></a>
-		{% if object.dsoinfield_set.all %}
 		<h3>DSOs in Field: {{ object.dsos_in_field_count }}</h3>
 		<table class='infield'>
 		<tr class='dif'><th>Name</th><th>Const.</th><th>Type</th><th>Location</th>
@@ -711,8 +717,13 @@
 		</tr>
 		{% endfor %}
 		</table>
-		<br><br>
-		{% endif %} 
+	</td>
+</tr>
+</table>
+{% endif %}
+<table> 
+<tr>
+	<td class="greybox">
 		<a name="nearby_dsos"></a>
 		<h3>
 			Nearby DSOs: {{ neighbor_list|length }}
@@ -756,6 +767,7 @@
 	</td>
 </tr>
 </table>
+
 <table>
 <tr class="bottom">
 	<td class="greybox">

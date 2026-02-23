@@ -130,6 +130,10 @@
                 {% include "inc_obs_form_field.html" %}
                 {% endwith %}
 
+                {% with form.sqm_date as field %}
+                {% include "inc_obs_form_field.html" %}
+                {% endwith %}
+
                 {% with form.brightness as field %}
                 {% include "inc_obs_form_field.html" %}
                 {% endwith %}
@@ -179,6 +183,9 @@
               {% include "inc_obs_form_field.html" %}
               {% endwith %}
               {% with form.bortle_image as field %}
+              {% include "inc_obs_form_field.html" %}
+              {% endwith %}
+              {% with form.azimuthal_map as field %}
               {% include "inc_obs_form_field.html" %}
               {% endwith %}
             </table>

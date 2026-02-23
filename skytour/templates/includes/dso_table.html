@@ -80,11 +80,7 @@
         <td><a href="{% url 'constellation-detail' dso.constellation.slug %}" target="_new">{{ dso.constellation.slug }}</a></td>
         {% endif %}
         {% if not hide_type %}
-            <td>
-                <!--a href="{% url 'object-type-detail' dso.object_type.slug %}" target="_new"-->
-                    {{ dso.object_type.short_name }}
-                <!--/a-->
-            </td>
+            <td>{{ dso.object_type.short_name }}</td>
         {% endif %}
         <td>{{ dso.morphological_type }}</td>
         <td>{{ dso.ra|to_hm:1 }}</td>
