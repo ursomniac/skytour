@@ -29,7 +29,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
         'latitude', 'longitude', 'bortle', 'sqm', 'brightness',
         'n_sessions', 'last_session'
     ]
-    readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag', 'n_sessions', 'last_session']
+    readonly_fields = ['map_tag', 'earth_tag', 'bortle_tag', 'azimuthal_map_tag', 'n_sessions', 'last_session']
     search_fields = ['name', 'city']
     list_filter = ['status', 'state']
     save_on_top = True
@@ -50,9 +50,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
         }),
         ('Sky Brightness', {
             'fields': [
-                #('bortle', 'sqm', 'sqm_date'),
-                ('bortle', 'sqm',),
-
+                ('bortle', 'sqm', 'sqm_date'),
                 ('brightness', 'artificial_brightness', 'ratio'),
             ]
         }),
@@ -61,7 +59,7 @@ class ObservingLocationAdmin(admin.ModelAdmin):
                 ('map_image', 'map_tag'),
                 ('earth_image', 'earth_tag'),
                 ('bortle_image', 'bortle_tag'),
-                #('azimuthal_map', 'azimuthal_map_tag')
+                ('azimuthal_map', 'azimuthal_map_tag')
             ]
         }),
         ('Site Issues', {
