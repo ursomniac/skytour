@@ -15,7 +15,7 @@ from .forms import (
     ObservingLocationDeleteForm
 )
 from .models import ObservingLocation
-from .plot import make_location_plot, plot_sqm_history, plot_expect_vs_observed_sqm
+from .plot import make_location_plot, plot_sqm_history, plot_expect_vs_observed_sqm, plot_location_mask
 
 class ObservingLocationListView(CookieMixin, ListView):
     model = ObservingLocation
@@ -55,6 +55,7 @@ class ObservingLocationDetailView(CookieMixin, DetailView):
         location = self.get_object()
         reversed = context['color_scheme'] == 'dark'
         context['sqm_plot'] = plot_sqm_history(location, reversed=reversed)
+        context['location_mask'] = plot_location_mask(location)
         return context
     
 class ObservingLocationAddView(CreateView):

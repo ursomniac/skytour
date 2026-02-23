@@ -1,6 +1,7 @@
 from dateutil.parser import isoparse
 import datetime as dt
 from .apps.observe.models import ObservingLocation
+from .apps.site.utils import get_skytour_version
 from .apps.session.utils import get_observing_mode_string
 
 def adjust_date(mydate, offset=0):
@@ -16,6 +17,7 @@ def adjust_date(mydate, offset=0):
     return mydate.replace(month=this_month, year=this_year)
 
 def get_global_items(request):
+    version = get_skytour_version()
     user_preferences = request.session.get('user_preferences', None)
     if not user_preferences:
         return dict()
@@ -52,6 +54,7 @@ def get_global_items(request):
         plot_reversed = user_preferences.get('color_scheme', 'default') == 'dark'
 
     return dict(
+        version=version,
         user_preferences=user_preferences,
         location=location,
         utdt_str = utdt_str,

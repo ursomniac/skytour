@@ -2,10 +2,19 @@
 
 {% block styles %}
 <style>
+	table.dual { 
+		border: none; margin:0; padding:0; border-spacing: 0!important; border-collapse: collapse; 
+		width: 100%; display: block;
+	}
+	table.dual td, th { vertical-align: top; }
+	table.dual td.sitemap { margin:0!important; padding:0!important; }
 	table.main { border-collapse: collapse; height: 1px; }
 	table.main tr { height: 1px; }
 	table.main tr:last-child { height: auto; }
 	table.main td { padding: 10px; vertical-align: top!important; border: 0px; }
+	table.main td.haz_maps { padding: 0!important; line-height: 0; vertical-align:top; }
+	table.mask { width: 100%; }
+	table.mask td, th { padding: 3px 0px 3px 4px; }
 	td.description { padding-top: 20px; line-height: 1.4; }
 	td.start { position: relative; }
 	td.units { background-color: #333!important; }
@@ -76,21 +85,52 @@
 			<br>
 		</td>
 		<td width="40%" rowspan="4">
-			<table class="inner">
-				<tr><th class="header">Azimuthal Sky Brightness</th></tr>
-				<tr><td>
-					{% if object.azimuthal_map %}
-					<a href="{{ object.azimuthal_map.url }}" target="_blank">
-					<img src="{{ object.azimuthal_map.url }}" class="map_image"></a>
-				</td></tr>
-					{% else %}
-					(No Azimuthal Brightness Map)
-					{% endif %}
+			<table class="dual">
+				<tr>
+					<td width="48.1%!important" class="sitemap">
+						<table class="inner">
+							<tr><th class="header">Location Mask</th></tr>
+							<tr><td>
+								<img src="{{ location_mask }}" style="max-width:100%; height:auto"/>
+							</td></tr>
+						</table>
+					</td>
+					<td width="51.9%!important" class="sitemap">
+						<table class="inner">
+							<tr><th class="header">Azimuthal Sky Brightness</th></tr>
+							<tr><td>
+								{% if object.azimuthal_map %}
+								<a href="{{ object.azimuthal_map.url }}" target="_blank">
+								<img src="{{ object.azimuthal_map.url }}" class="map_image"></a>
+							</td></tr>
+								{% else %}
+								(No Azimuthal Brightness Map)
+								{% endif %}
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2>
+						<button onClick="showMaskTable();">Show/Hide Mask Table</button>
+						<br>
+						{% if object.observinglocationmask_set.all|length > 0 %}
+						<table class="mask inner" id="mask-table" style="display: none;">
+							<tr><th colspan=4 class="header">Location Mask</th></tr>
+							<tr><th>Az. Start</th><th>Alt. Start</th><th>Az. End</th><th>Alt. End</th></tr>
+							{% for row in object.observinglocationmask_set.all %}
+							<tr><td>{{ row.azimuth_start }}</td><td>{{ row.altitude_start }}</td>
+								<td>{{ row.azimuth_end }}</td><td>{{ row.altitude_end }}</td>
+							</tr>
+							{% endfor %}
+						</table>
+						{% endif %}
 					</td>
 				</tr>
 			</table>
 			{% if object.observingsession_set.all|length > 0 %}
-			<br><br>
+			<br>
 			<table class="inner session-table">
 				<tr><th class="header" colspan=5>Observing Sessions</th></tr>
 				<tr>
@@ -174,9 +214,6 @@
 					<td class="units"></td>
 				</tr>
 			</table>
-		</td>
-		<td>
-
 		</td>
 	</tr>
 	<tr>
@@ -294,6 +331,14 @@
         if (window.focus) { newWindow.focus() }
         return false;
     }
+	function showMaskTable() {
+		var div = document.getElementById("mask-table");
+		if (div.style.display === "none") {
+			div.style.display = "block";
+		} else {
+			div.style.display = "none"
+		}
+	}
 </script>
 
 {% endblock content %}

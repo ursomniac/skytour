@@ -1,1 +1,1 @@
-2.11.2 - More ObservingLocationDetail changes - cleaned up SQM time series plot
+2.11.3 - Added location mask to OBservingLocationDetail page and hidden table of alt/az endpoints

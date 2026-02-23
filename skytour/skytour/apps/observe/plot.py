@@ -1,4 +1,9 @@
+import base64
+import io
 import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from ..plotting.map import map_mask
 from ..plotting.scatter import create_plot
 
 """
@@ -195,3 +200,51 @@ def plot_sqm_history(loc, reversed=False):
         )
         return image
     return None
+
+def plot_location_mask(loc, reversed=True, slew_limit=80):
+    style = 'dark_background' if reversed else 'default'
+    plt.style.use(style)
+    fig, ax = plt.subplots(figsize=[4.5,4.5], layout=None)
+    ax.set_position([0,0,1,1])
+    ax.axis('off')
+    ax.margins(0)
+
+    ax = map_mask(ax, loc)
+    # 9. Put a circle for the horizon.
+    horizon = plt.Circle((0,0), 1., color='#f00', fill=False)
+    ax.add_patch(horizon)
+    # 20° Altitude ring
+    sky_limit = plt.Circle((0,0), 70/90., color='#999', fill=False, ls='--')
+    ax.add_patch(sky_limit)
+    # 45° Altitude ring
+    mid_sky = plt.Circle((0,0), 45./90., color="#999", fill=False, ls='--')
+    ax.add_patch(mid_sky)
+    # Slew limit ring
+    slew_limit_circle = plt.Circle((0,0), (90.-slew_limit)/90., color='#999', fill=False, ls='--')
+    ax.add_patch(slew_limit_circle)
+    
+    # Set the display
+    fov = 180.
+    angle = np.pi - fov / 360. * np.pi
+    limit = np.sin(angle) / (1.0 - np.cos(angle))
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    #plt.tight_layout(pad=2.0)
+
+    # Render and close
+    # Convert to a PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+
+    # Encode PNG to Base64 string
+    pngImageB64String = 'data:image/png;base64,'
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    # Close the plot
+    #plt.tight_layout()
+    plt.cla()
+    plt.close(fig)
+
+    return pngImageB64String
