@@ -201,7 +201,7 @@ def plot_sqm_history(loc, reversed=False):
         return image
     return None
 
-def plot_location_mask(loc, reversed=True, slew_limit=80):
+def plot_location_mask(loc, reversed=True):
     style = 'dark_background' if reversed else 'default'
     plt.style.use(style)
     fig, ax = plt.subplots(figsize=[4.5,4.5], layout=None)
@@ -211,18 +211,34 @@ def plot_location_mask(loc, reversed=True, slew_limit=80):
 
     ax = map_mask(ax, loc)
     # 9. Put a circle for the horizon.
-    horizon = plt.Circle((0,0), 1., color='#f00', fill=False)
-    ax.add_patch(horizon)
+    ax.add_patch(plt.Circle((0,0), 1., color='#f00', fill=False))
     # 20° Altitude ring
-    sky_limit = plt.Circle((0,0), 70/90., color='#999', fill=False, ls='--')
-    ax.add_patch(sky_limit)
-    # 45° Altitude ring
-    mid_sky = plt.Circle((0,0), 45./90., color="#999", fill=False, ls='--')
-    ax.add_patch(mid_sky)
+    ax.add_patch(plt.Circle((0,0), 70/90., color='#999', fill=False, ls='--'))
+    # 40° Altitude ring
+    ax.add_patch(plt.Circle((0,0), 50./90., color="#999", fill=False, ls='--'))
+    # 60° Altitude ring
+    ax.add_patch(plt.Circle((0,0), 30./90., color="#999", fill=False, ls='--'))
     # Slew limit ring
-    slew_limit_circle = plt.Circle((0,0), (90.-slew_limit)/90., color='#999', fill=False, ls='--')
-    ax.add_patch(slew_limit_circle)
-    
+    slew_limit = 80 
+    rslew = (90. - slew_limit) / 90.
+    ax.add_patch(plt.Circle((0,0), rslew, color='#999', fill=False))
+    # lines
+    ax.plot([0,0], [-1,-1*rslew], color='#666', linewidth=1)    # bottom
+    ax.plot([0,0], [1, rslew], color='#666', linewidth=1)       # top
+    ax.plot([-1,-1*rslew],[0,0], color='#666', linewidth=1)     # left
+    ax.plot([1, rslew],[0,0], color='#666', linewidth=1)        # right
+    # diagonal lines
+    z = 0.7071
+    ax.plot([z/3.,z],   [z/3.,z], color='#666', linewidth=1)
+    ax.plot([-z/3.,-z], [-z/3.,-z], color='#666', linewidth=1)
+    ax.plot([-z/3.,-z], [z/3.,z], color='#666', linewidth=1)
+    ax.plot([z/3.,z],   [-z/3.,-z], color='#666', linewidth=1)
+    # Labels
+    ax.annotate('N', xycoords='data', xy=[0,  1.1], xytext=[0,  1.1], fontsize=12, annotation_clip = False, clip_on=False, color='r', ha='center', va='center')
+    ax.annotate('S', xycoords='data', xy=[0, -1.1], xytext=[0, -1.1], fontsize=12, annotation_clip = False, clip_on=False, color='r', ha='center', va='center')
+    ax.annotate('E', xycoords='data', xy=[-1.1, 0], xytext=[-1.1, 0], fontsize=12, annotation_clip = False, clip_on=False, color='r', ha='center', va='center')
+    ax.annotate('W', xycoords='data', xy=[ 1.1, 0], xytext=[ 1.1, 0], fontsize=12, annotation_clip = False, clip_on=False, color='r', ha='center', va='center')
+
     # Set the display
     fov = 180.
     angle = np.pi - fov / 360. * np.pi
@@ -231,7 +247,7 @@ def plot_location_mask(loc, reversed=True, slew_limit=80):
     ax.set_ylim(-limit, limit)
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
-    #plt.tight_layout(pad=2.0)
+    plt.tight_layout(pad=-3)
 
     # Render and close
     # Convert to a PNG image
