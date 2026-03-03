@@ -281,6 +281,7 @@ def create_dso_finder_chart(
         ax = plot_dso(ax, object_x, object_y, dso, reversed=reversed)
 
     this_dso_color = '#ffc' if reversed else 'k'
+    # BUG: do we really want this to be the case?  e.g., Maffei 1 and Maffei 2...
     my_label = dso.label_on_chart if chart_type == 'wide' else dso.shown_name
     plt.annotate(
         my_label, (object_x, object_y), 

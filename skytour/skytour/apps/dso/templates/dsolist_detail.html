@@ -4,16 +4,34 @@
 {% block content %}
 <style>
     h1 { color: #fc0; }
-    table.meta { border: 1px solid #999; max-width: 40%; }
+    table.update { border: 1px solid #990; }
+    table.meta { border: 1px solid #999; max-width: 100%; }
     table.meta td { vertical-align: top; border: none; padding: 0px 10px; }
     table.meta td h2 { margin-top: 5px; }
-    table.meta td.nav button { height: 2.5em; width: 20em;  margin-left: 3em; }
-    table.meta td.right { padding-right: 30px; }
+    table.meta td button { height: 2.5em; width: 20em;  margin-left: 0em; }
+    table.meta td.right { padding-right: 10px; }
+    table.meta td.nav { width: 40%; border: 1px solid #990; }
     span.status { color: #ff9; }
     h2.count { color: #ff9;  margin-bottom: 1px; }
+    select.dsolists {
+        width: 20em; height: 3em;
+    }
+    input[type="checkbox"] { width: 20px; height: 20px; }
+    input.update { left-margin: 0; height: 2em; width: 15em; }
 </style>
-<h1>DSO List: {{ object.name }}</h1>
 <table class="meta">
+    <tr>
+        <td colspan=2>
+            <h1>DSO List: {{ object.name }}</h1>
+        </td>
+        <td colspan=1 rowspan=2 class="nav">
+            <!-- h2>Management</h2-->
+            <p>
+                <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
+                {% include 'form_dsolist_edit.html' %}
+            </p>
+        </td>
+    </tr>
     <tr>
         <td>
             <h2>Description</h2>
@@ -23,25 +41,27 @@
             {% else %}No Description
             {% endif %}
             </p>
+            <br><br><br>
+            <a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a>
+            <br><br><br>
+            <form href="" method=GET>
+                <table class="update">
+                    <tr>
+                        <th>Show Thumbs</th>
+                        <td><input name="show_thumbs" type="checkbox" {% if show_thumbs %}checked{% endif %}/></td>
+                        <td><input class="update" type="submit" value="Reload Page"></td>
+                    </tr>
+                </table>
+            </form>
+            <br>
         </td>
         <td class="right">
             <h2>Status: 
             <span class="status">{{ object.active_status }}</span>
             </h2>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=1 class="nav">
-            <h3>Management</h3>
-            <p>
-                <button onClick='toggleDSOListEditForm();'>Edit/Delete DSOList</button>
-                <a href="{% url 'dsolist-pdf' object.pk %}" target="_blank"><button>PDF Page</button></a>
-                {% include 'form_dsolist_edit.html' %}
-            </p>
-        </td>
-        <td class="right">
-            <h3>Active DSO Lists</h3>
-            <select onchange="window.location.href=this.value;">
+            <br>
+            <h2>Active DSO Lists</h2>
+            <select class="dsolists" onchange="window.location.href=this.value;">
                 {% for entry in active_lists %}
                 <option value="{% url 'dsolist-detail' entry.pk %}" {% if entry.pk == object.pk %}selected{% endif %}>
                     {{ entry.name }}

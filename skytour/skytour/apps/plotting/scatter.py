@@ -1,5 +1,6 @@
 import io
 import base64
+import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
@@ -93,13 +94,15 @@ def create_histogram(
         xtitle='X Axis', 
         ytitle='Y Axis',
         binedges = True,
-        reversed = True
+        reversed = True,
     ):
 
     if binedges: 
         bin_centers = (x[:-1] + x[1:]) / 2
+        widths = np.diff(x)
     else:
         bin_centers = x[1:]
+        widths = 1.0
 
     fig = Figure()
     if reversed:
@@ -111,7 +114,7 @@ def create_histogram(
     panel.set_title(title)
     panel.set_xlabel(xtitle)
     panel.set_ylabel(ytitle)
-    panel.bar(bin_centers, y, align='center')
+    panel.bar(bin_centers, y, width=widths, align='center')
     
     # Convert to a PNG image
     pngImage = io.BytesIO()

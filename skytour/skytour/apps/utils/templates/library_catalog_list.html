@@ -190,6 +190,9 @@
                             {% if object.is_on_active_observing_list %}
                             🔭 &nbsp;
                             {% endif %}
+                            {% if object.has_annals %}
+                            <b>🄰</b>
+                            {% endif %}
                             {% if object.has_wiki == 'WIKI' %}
                             <button onclick="return realtimePopup('/dso/wiki/{{ object.pk }}')" class="wiki">
                                 <b>🅆</b>
