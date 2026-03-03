@@ -272,6 +272,7 @@ class DSOListDetailView(CookieMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DSOListDetailView, self).get_context_data(**kwargs)
+        thumbs = self.request.GET.get('show_thumbs') == 'on'
         object = self.get_object()
         # Make a map
         dso_list = self.object.dso.all()
@@ -284,6 +285,7 @@ class DSOListDetailView(CookieMixin, DetailView):
         context['active_lists'] = DSOList.objects.filter(active_observing_list=YES)#.exclude(pk=object.pk)
         context['object'] = object
         context['hide_image'] = False
+        context['show_thumbs'] = thumbs
         return context
     
 class DSOCreateList(TemplateView):

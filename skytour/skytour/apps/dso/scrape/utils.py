@@ -20,3 +20,13 @@ def convert_dec(t):
         return d
     except:
         return None
+    
+def get_ocl(dso):
+    if dso.simbad and type(dso.simbad) == dict and 'aliases' in dso.simbad.keys():
+        m = [s for s in dso.simbad['aliases'] if s.startswith('OCl')]
+        if len(m) == 1:
+            return m[0]
+        elif len(m) > 1:
+            mm = [x for x in m if '.0' not in x]
+            return mm[0]    
+    return None

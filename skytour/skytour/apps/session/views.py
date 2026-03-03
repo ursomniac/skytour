@@ -489,11 +489,11 @@ class ObservingCircumstancesView(CookieMixin, ListView):
         df['dsqm'] = df['lsqm'] - df['sqm']
 
         # Histogram of SQM - ignore NaN values
-        sqm_bins = np.linspace(20.0, 22.0, num=21)
+        sqm_bins = np.linspace(18.0, 22.0, num=81)
         sqm_y, sqm_x = np.histogram(df['sqm'][~np.isnan(df['sqm'])], bins=sqm_bins)
         ytotal = int(np.sum(sqm_y))
         sqm_py = sqm_y.copy()
-        sqm_py = sqm_py / (ytotal + 0.)
+        sqm_py = 100.* sqm_py / (ytotal + 0.)
 
         plot_reversed = True
         #if 'color_scheme' in context.keys():
