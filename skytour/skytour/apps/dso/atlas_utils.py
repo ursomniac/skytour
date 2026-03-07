@@ -87,8 +87,24 @@ def find_neighbors(my_ra, my_dec, limit=20.):
             neighbors.append(p)
     return neighbors
 
+def find_neighbors_from_qs(qs):
+    neighbors = []
+    for plate in qs: # AtlasPlate object
+        p = dict(
+            plate=plate.pk,
+            obj = plate,
+            sep = 0.,
+            pa = 0.,
+            ra = plate.center_ra,
+            dec = plate.center_dec,
+            xdist = 0.
+        )
+        neighbors.append(p)
+    return neighbors
+
 def assemble_neighbors(plist):
     """
+    plist is a list of dicts!
     Given a list of neighboring plates, assemble them into a 2-d list,
     where the row is above/along/below the center plate, and within each row,
     the plates are arranged East to West.
