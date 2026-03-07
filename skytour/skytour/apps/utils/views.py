@@ -10,6 +10,7 @@ from .assemble import assemble_catalog
 from .helpers import get_objects_from_cookie
 from .models import Constellation, Catalog, ObjectType
 from .utils import filter_catalog, get_active_variable_stars, get_annals_variable_stars, get_variable_stars
+from ..dso.atlas_utils import find_neighbors_from_qs, assemble_neighbors
 from ..dso.models import DSO, DSOLibraryImage
 from ..solar_system.models import AsteroidLibraryImage, CometLibraryImage, PlanetLibraryImage
 from ..stars.models import BrightStar
@@ -97,6 +98,8 @@ class ConstellationDetailView(DetailView):
         context['planets'] = get_objects_from_cookie(self.request, 'planets', object.abbreviation)
         context['asteroids'] = get_objects_from_cookie(self.request, 'asteroids', object.abbreviation)
         context['comets'] = get_objects_from_cookie(self.request, 'comets', object.abbreviation)
+        # Atlas plates
+        context['neighbors'] = assemble_neighbors(find_neighbors_from_qs(object.atlasplate_set.all()))
         return context
     
 class ConstellationWikiPopup(DetailView):
