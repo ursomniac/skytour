@@ -117,11 +117,10 @@ def get_meeus_phase_angle(sun_earth, earth_obj, sun_obj):
     return math.degrees(math.acos(cos_i))
 
 def get_relation_to_planet(delta, angsep, diam):
-    if delta < 0.: # in front of
+    if delta < 0.: # in front of, well, closer to Earth
         t =  ('Transit', 'T') if angsep < diam/2. else ('Front', 'F')
     else:
         t = ('Occulted', 'O') if angsep < diam/2. else ('Behind', 'B')
-    #print(f'DEL: {delta} SEP: {angsep}, DIAM: {diam} T: {t}')
     return t
 
 def get_asteroid_from_cookie(cookie, object):

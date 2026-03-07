@@ -270,13 +270,54 @@
                     <td>
                         <div class="p-params">
                             <h2>Other Parameters</h2>
+                            <ul>
                             {% for item in object.texts.other_parameters_text %}
-                            <div class="param-column-item">
-                                {{ item|safe }}
-                            </div>
+                            <!--div class="param-column-item">{{ item|safe }}</div-->
+                            <li>{{ item|safe }}</li>
                             {% empty %}
                             (No other parameters)
                             {% endfor %}
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="p-vel">
+                            <h2>Space Motion</h2>
+                            <ul>
+                                <li><span class="subhead">Proper Motion: </span>
+                                    {% with object.shown.proper_motion.0 as foo %}
+                                    <ul>
+                                    <li>&alpha;: {{ foo.ra.value }} {{ foo.ra.units }}</li>
+                                    <li>&delta;: {{ foo.dec.value }} {{ foo.dec.units }}</li>
+                                    <li>Total: {{ foo.total.value|floatformat:2 }} {{ foo.total.units }}</li>
+                                    </ul>
+                                    {% endwith %}
+                                    <br>
+                                </li>
+                                <li><span class="subhead"> Radial Velocity: </span>
+                                    <ul>
+                                        <li>{{ object.shown.radial_velocity.0.shown }} 
+                                            {% if object.rv_flag_str %}{{ object.rv_flag_str }}{% endif %}
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="p-meta">
+                            <h2>Other Metadata</h2>
+                            <ul>
+                                {% if object.vsini %}
+                                <li><span class="subhead"><i>v</i> sin <i>i</i>:</span> 
+                                    {{ object.vsini }}
+                                    {% if object.rot_flag %}&nbsp;{{ object.rot_flag }} {% endif %}
+                                    km/s
+                                </li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </td>
                     <td>
@@ -362,47 +403,6 @@
                         </div>
                     </td>
                     <td>
-                        <div class="p-vel">
-                            <h2>Space Motion</h2>
-                            <ul>
-                                <li><span class="subhead">Proper Motion: </span>
-                                    {% with object.shown.proper_motion.0 as foo %}
-                                    <ul>
-                                    <li>&alpha;: {{ foo.ra.value }} {{ foo.ra.units }}</li>
-                                    <li>&delta;: {{ foo.dec.value }} {{ foo.dec.units }}</li>
-                                    <li>Total: {{ foo.total.value|floatformat:2 }} {{ foo.total.units }}</li>
-                                    </ul>
-                                    {% endwith %}
-                                    <br>
-                                </li>
-                                <li><span class="subhead"> Radial Velocity: </span>
-                                    <ul>
-                                        <li>{{ object.shown.radial_velocity.0.shown }} 
-                                            {% if object.rv_flag_str %}{{ object.rv_flag_str }}{% endif %}
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="p-meta">
-                            <h2>Other Metadata</h2>
-                            <ul>
-                                {% if object.vsini %}
-                                <li><span class="subhead"><i>v</i> sin <i>i</i>:</span> 
-                                    {{ object.vsini }}
-                                    {% if object.rot_flag %}&nbsp;{{ object.rot_flag }} {% endif %}
-                                    km/s
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
                         <div class="p-double">
                             {% if object.ads_components or object.double_star or object.d_mag or object.ang_sep %}
                             <h2>Double Star Metadata</h2>
@@ -462,7 +462,12 @@
                             style="display: {% if default_panel == 'annals' %}block{% else %}none{% endif %};">
                             {% if object.has_annals %}
                             {% with object.annals as ann %}
-                            <h2>Annals of the Deep Sky</h2>
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <h2 style="margin-bottom: 0;">Annals of the Deep Sky</h2>
+                                <a href="/admin/stars/annalsdeepskystar/{{ ann.pk }}/change/" target="_blank">
+                                    <button class="admin">Admin</button>
+                                </a>
+                            </div>
                             <h4><span class="volpage">v. {{ ann.volume }} p. {{ ann.page }}</span></h4>
                             <div class="summary">
                                 <pre>{{ ann.format_notes|safe }}</pre>
