@@ -3,7 +3,6 @@
 <style>
     td { border: 0; padding: 0 1em; vertical-align: top !important; }
     body { line-height: 1.2; }
-    img.constrained { width: 100%; max-width: 500px; }
     td.hvcenter { vertical-align: middle!important; text-align: center!important; }
 
     h1 { margin-top: 8px; margin-bottom: 2px; }
@@ -30,8 +29,9 @@
         margin-top: 4px; margin-bottom: 6px; 
         color: #f96;
     }
+    td.maps { width: 50%; max-width: 50%; padding: 5px; vertical-align: top; }
+    td.maps img {  width: 100%; height: auto; display: block; }
     span.boxed { font-size: 80%; border: 1px solid #999; padding: 1px 2px; }
-
 </style>
 {% endblock styles %}
 {% block title %}{{ object.name }}: Skytour{% endblock %}
@@ -125,22 +125,30 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                    <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/wide')">
-                        Wide Area Map (10°)
-                    </button>
-                    </td>
-                    <td>
+                    <td colspan=2>
+                        <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/wide')">
+                            Wide Area Map (10°)
+                        </button>
+                        &nbsp;&nbsp;&nbsp;
                         <button onclick="return realtimePopup('/solar_system/sso_map/comet/{{ object.pk }}/narrow')">
                         Narrow Area Map (4°)
                         </button>
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
-                    <td colspan=2>
+                    <td class="maps">
+                        <h3>Light curve</h3>
                         <a href="{{ object.light_curve_graph_url }}" target="_blank">
                             <img src="{{ object.light_curve_graph_url }}" class="constrained">
                             </a>
+                    </td>
+                    <td class="maps">
+                        <h3>Track (30d)</h3>
+                        <a href="#" onclick="openBase64InNewTab('{{ track_image }}'); return false;">
+                            <img src="{{ track_image }}">
+                        </a>
                     </td>
                 </tr>
             </table>
@@ -171,6 +179,27 @@
         if (window.focus) { newWindow.focus() }
         return false;
     }
+
+function openBase64InNewTab(base64Data, mimeType = 'image/png') {
+    // 1. Convert Base64 to raw binary data held in a string
+    const byteCharacters = atob(base64Data.split(',')[1] || base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    
+    // 2. Create a typed array from the binary data
+    const byteArray = new Uint8Array(byteNumbers);
+    
+    // 3. Create a Blob and a local Object URL
+    const blob = new Blob([byteArray], { type: mimeType });
+    const fileURL = URL.createObjectURL(blob);
+    
+    // 4. Open in new tab
+    window.open(fileURL, '_blank');
+}
+
 </script>
 
 {% with instance=object admin_dir='/comet' %}

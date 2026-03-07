@@ -289,16 +289,34 @@ class CometDetailView(CookieMixin, DetailView):
         # Track performance
         times = [(time.perf_counter(), 'Start')]
         object = self.get_object()
+        utdt = context['cookies']['user_pref']['utdt_start']
         pdict = get_comet_from_cookie(context['cookies'], object)
         if not pdict:
             location = context['cookies']['user_pref']['location']
-            utdt = context['cookies']['user_pref']['utdt_start']
             pdict = get_object_metadata(utdt, object.name, 'comet', object, location)
         pdict['n_obs'] = object.number_of_observations
         pdict['last_observed'] = object.last_observed
         mag = None if 'observe' not in pdict.keys() else pdict['observe']['apparent_magnitude']
         pdict['mag_offset'] = object.mag_offset
         pdict['est_mag'] = mag + object.mag_offset
+
+        context['track_image'], starting_position, track_positions, times = plot_track(
+            utdt,
+            object_type='comet',
+            object=object, 
+            offset_before = 0,
+            offset_after = 30,
+            step_days = 2,
+            step_label = 5,
+            mag_limit = 6,
+            fov = None,
+            reversed = True,
+            return_data = True,
+            dsos = True,
+            times=times,
+            force_ra = None,
+            force_dec = None
+        )
 
         context['comet'] = pdict
         slideshow = object.image_library.order_by('order_in_list')

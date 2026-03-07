@@ -128,6 +128,12 @@ class BrightStarDetailView(DetailView):
     model = BrightStar
     template_name = 'bright_star_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(BrightStarDetailView, self).get_context_data(**kwargs)
+        obj = self.get_object()
+        context['default_panel'] = obj.default_notes_panel
+        return context
+
 class ZenithMagView(FormView):
     form_class = ZenithMagForm
     template_name = 'zenith_view.html'
