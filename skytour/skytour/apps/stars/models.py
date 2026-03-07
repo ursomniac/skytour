@@ -565,7 +565,7 @@ class BrightStarNotes(models.Model):
     
     @property
     def other_parameters_text(self):
-        ncols = 3
+        ncols = 1
         style = 'other-param-label'
         return handle_parameters(self.other_parameters, ncols, label_style=style)
 
