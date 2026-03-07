@@ -12,7 +12,7 @@ from ..astro.coords import equ2ecl
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation, get_bright_star_sort_key,\
-    handle_formatting, handle_parameters
+    handle_formatting, handle_parameters, get_default_notes_panel
 from .values import get_values
 from .vocabs import GCVS_ID, VARDES, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR,\
     NOTE_CATEGORIES, STAR_FLAGS, FULL_ENTITY
@@ -364,10 +364,18 @@ class BrightStar(Coordinates, WikipediaPageObject):
         return None
     
     @property
+    def has_annals(self):
+        return hasattr(self, 'annals')
+    
+    @property
     def annals_metadata(self):
         if hasattr(self, 'annals'):
             return self.annals
         return None
+    
+    @property
+    def default_notes_panel(self):
+        return get_default_notes_panel(self)
     
     @property
     def total_proper_motion(self):

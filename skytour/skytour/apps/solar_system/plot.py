@@ -481,8 +481,30 @@ def plot_track(
     ax = map_equ(ax, earth, t, projection, 'ecl', reversed=reversed)
     ax = map_equ(ax, earth, t, projection, 'gal', reversed=reversed)
 
+    if fov:
+        angle = np.pi - fov / 360.0 * np.pi
+        limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
+        avg_x = (min_x + max_x) / 2.
+        avg_y = (min_y + max_y) / 2.
+        ax.set_xlim(avg_x-limit, avg_x+limit)
+        ax.set_ylim(avg_y-limit, avg_y+limit)
+    else:
+        dx = max_x - min_x
+        dy = max_y - min_y
+        limit = max(dx, dy) * 0.25
+        #dd = (max_x - min_x) * 0.25
+        ax.set_xlim(min_x-limit, max_x+limit)
+        ax.set_ylim(min_y-limit, max_y+limit)
+
+        if debug:
+            print(f"X: {max_x} to {min_x}")
+            print(f"Y: {max_y} to {min_y}")
+            print(f"DX: {dx}  DY: {dy}")
+            print(f"Limit: {limit}")
+
     # Add stars from Hipparcos, constellation lines (from Stellarium),
     #   and Bayer/Flamsteed designations from the BSC
+    # TODO: create a function taking the object type and the value of limit to estimate the mag_limit
     if not mag_limit:
         if object_type == 'planet' and object.slug not in ['uranus', 'neptune']:
             mag_limit = 6.0
@@ -500,19 +522,6 @@ def plot_track(
         ax, _ = map_dsos(ax, earth, t, projection, product='finder')
         if times is not None:
             times.append((time.perf_counter(), 'Plotting DSOs'))
-
-    if fov:
-        angle = np.pi - fov / 360.0 * np.pi
-        limit = 2. * np.sin(angle) / (1.0 - np.cos(angle))
-        avg_x = (min_x + max_x) / 2.
-        avg_y = (min_y + max_y) / 2.
-        ax.set_xlim(avg_x-limit, avg_x+limit)
-        ax.set_ylim(avg_y-limit, avg_y+limit)
-    else:
-        dx = (max_x - min_x) * 0.25
-        ax.set_xlim(min_x-dx, max_x+dx)
-        ax.set_ylim(min_y-dx, max_y+dx)
-
 
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)

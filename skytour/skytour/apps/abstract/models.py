@@ -393,12 +393,16 @@ class WikipediaPage (models.Model):
     @property
     def html_summary(self):
         summary = self.summary
-        ss = summary.split('\n')
-        html = ''
-        for s in ss:
-            frag = '<p>\n\t'+ s + '\n</p>\n'
-            html += frag
-        return html
+        try:
+            ss = summary.split('\n')
+            html = ''
+            for s in ss:
+                frag = '<p>\n\t'+ s + '\n</p>\n'
+                html += frag
+            return html
+        except:
+            pass
+        return None
 
     def __str__(self):
         return f"{self.object}: {self.object.has_wiki}"

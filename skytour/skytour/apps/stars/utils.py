@@ -114,6 +114,13 @@ def get_bright_star_sort_key(star):
         out = f"{p}{hd:08d}"
     return out
 
+def get_default_notes_panel(s):
+    x = None # default
+    x = 'bsc' if s.texts.notes_as_html else x # override
+    x = 'wiki' if s.has_wiki == 'WIKI' else x # override again
+    x = 'annals' if s.has_annals else x # override again (see how this works)?
+    return x
+
 def handle_formatting(n):
     SWAPS = [
         ('_sun', '<sub>&#9737;</sub> '), ('_Sun', '<sub>&#9737;</sub>' ),
