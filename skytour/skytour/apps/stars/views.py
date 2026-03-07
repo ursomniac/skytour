@@ -44,7 +44,7 @@ class BrightStarListView(ListView):
         context['is_paginated'] = True
         return context
 
-@method_decorator(cache_page(30), name='dispatch')
+#@method_decorator(cache_page(30), name='dispatch')
 class SkyView(CookieMixin, TemplateView):
     template_name = 'skyview.html'
 

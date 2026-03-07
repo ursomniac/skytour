@@ -3,13 +3,32 @@
 {% block title %}Skymap: Skytour{% endblock %}
 {% block content %}
 <style>
-    td.subnav_ut {
-        background: #303;
+    table.main { table-layout: fixed; width: 100%; border: 0; }
+    table.main td { border: 0; }
+    table.main td#map      { width: 55%!important; min-width: 0; vertical-align: top; margin: 0; padding: 0;}
+    table.main td#metadata { width: 25%; vertical-align: top; }
+    table.main td#metadata h1 { margin-top: 0px!important; padding-top:0!important; }
+    table.main td#objnav   { width: 20%; }
+    table.mapstuff { table-layout: fixed; width: 100%; border: 0; }
+    /* The Image */
+    table.mapstuff img {
+        display: block;
+        width: 100%;    /* Force it to match the TD width */
+        height: auto;   /* Keep aspect ratio */
+        max-width: 100%; 
     }
-    td.subnav_ut input.submit { width: 15em; }
-    td.side {
-        width: 20%;
+    table.md tr td:first-child {
+        font-weight: bold;
     }
+    table.reload { border: 1px solid #cc0; padding: 0 4px 0 0; }
+    table.reload td { border: 1px solid: #990; }
+    table.reload td.subnav-header { font-weight: bold; font-size: 110%; }
+    td.subform-submit {
+        background: #c60;
+        border: 1px solid #c90!important;
+    }
+    td.subform-submit input { width: 25em; height: 2em; padding: 3px 0; }
+
     .accordion {
         background-color: #333;
         color: #999;
@@ -37,146 +56,154 @@
         overflow: hidden;
       }
 </style>
+
 <div class="skymap">
-<table class="lite splash">
-    <tr>
-        <td style="vertical-align: top;">
-            <h1 style="padding-top: 0">SkyMap</h1> 
-        </td>
-        <td>
-            <table class="lite">
-            <tr><td>Date:</td><td>{{ shown_datetime|date:"Y-m-d H:i" }} UT</td></tr>
-            <tr><td>Local Time:</td><td>{{ map_time_str }}</td></tr>
-            <tr><td>Sid. Time:</td><td>{{ sidereal_time|to_hms }}</td></tr>
-            </table>
-        </td>
-        <td>
-            <table class="lite">
-            <tr><td>Location:</td>
-                <td> 
-                    <a href="{% url 'observing-location-detail' location.pk %}" target="_new">{{ location }}</a></td>
-            </tr>
-            <tr><td>
-                Latitude:</td><td>{{ location.latitude|to_dms }}
-                    &nbsp;&nbsp;&nbsp;
-                Longitude: {{ location.longitude|to_dms }}
-            </td></tr>
-            <tr><td>Elevation:</td><td>{{ location.elevation }} m ({{ location.elevation_feet|floatformat:0 }} ft)</td></tr>
-            </table>
-        </td>
-        <td>
-            <table class="lite">
-            <tr><td>SQM:</td><td>{{ location.sqm|floatformat:2 }} <small>mag/arcsec<sup>2</sup></small></td></tr>
-            <tr><td>Bortle:</td><td>Class {{ location.bortle }} ({{ location.effective_bortle|floatformat:2 }})</td></tr>
-            {% if location.mean_obs_bortle.0 %}
-                <tr><td>
-                Obs:</td><td>{{ location.mean_obs_bortle.0|floatformat:2 }} 
-                    {% if location.mean_obs_bortle.1 %}
-                    ± {{ location.mean_obs_bortle.1|floatformat:2 }}
-                    {% endif %}
-                </td></tr>
-            {% endif %}
-            <tr><td>Lim. Mag:</td><td>{{ location.limiting_magnitude }}</td></tr>
-            </table>
-        </td>
-    </tr>
-</table>
-
-
-<table>
-    <tr>
-        <td class="tight">
-            <div class="subnav_ut">
-            <table>
-                <tr>
-                    <td class="subnav_ut">
-                        <b><span style="color: #ff0;">Reload: &nbsp;</span>
-
-                        <form method="GET" style="display:inline-block;">
-                            &nbsp;&nbsp;&nbsp;
-                            <label for="hours">Offset: </label>
-                            <select name="hours">
-                                {% for z in offset_list %}
-                                <option value="{{ z }}" {% if z == hours %}selected{% endif %}>
-                                    {{ z|floatformat:1 }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                            &nbsp;&nbsp;&nbsp;
-                            <label for="mask">Unset Location Mask: </label>
-                            <input type="checkbox" name="unmask" {% if unmask %}checked{% endif %}>
-                            &nbsp;&nbsp;&nbsp;
-                            <label for="simple">Simple: </label>
-                            <input type="checkbox" name="simple" {% if simple %}checked{% endif %}>
-                            &nbsp;&nbsp;&nbsp;
-                            <label for="utdt_now">Now: </label>
-                            <input type="checkbox" name="utdt_now" {% if utdt_now %}checked{% endif %}>
-                            &nbsp;&nbsp;&nbsp;
-                            <label for="min_dso_alt">Min DSO Alt: </label>
-                            <input name="min_dso_alt" size=3 {% if min_dso_alt %}value="{{ min_dso_alt }}"{% endif %}>
-                            &nbsp;&nbsp;&nbsp;
-                            <input class="submit" type="submit">
-                        </form>
-                    </td>
-                </tr>
-            </table>
-            <img src="{{ skymap }}">
-        </td>
-        <td class="side">
-
-            <button class="accordion">Moon and Planets</button>
-            {% if interesting.planets|length > 0 or show_moon %}
-            {% with object_list=interesting.planets url_type='planet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            {% else %}
-            (No visible planets or Moon)
-            {% endif %}
-
-            <button class="accordion">DSOs</button>
-            <div class="panel">
-            {% with object_list=interesting.dsos url_type='dso-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            </div>
-
-
-            {% if interesting.asteroids|length > 0 %}
-            <button class="accordion">Asteroids</button>
-            <div class="panel">
-            {% with object_list=interesting.asteroids url_type='asteroid-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            </div>
-            {% endif %}
-            
-
-            {% if interesting.comets|length > 0 %}
-            <button class="accordion">Comets</button>
-            <div class="panel">
-            {% with object_list=interesting.comets url_type='comet-detail' %}{% include 'inc_interesting.html' %}{% endwith %}
-            </div>
-            {% endif %}
-
-            {% if interesting.meteor_showers|length > 0 %}
-            <button class="accordion">Meteor Showers</button>
-            <div class="panel">
-                <br><br>
-                <table>
-                    <tbody>
-                    {% for shower in interesting.meteor_showers %}
-                    <tr><td>
-                        {% if shower.has_wiki == 'WIKI' %}
-                        <a onclick="return realtimePopup('/meteor/wiki/{{ shower.pk }}')">
-                            {{ shower.name }}
-                        </a>
-                        {% else %}
-                        {{ shower.name }}
-                        {% endif %}
-                    </td></tr>
-                    {% endfor %}
-                    </tbody>
+    <table class="main">
+        <tr>
+            <td id="map" rowspan=2>
+                <table class="mapstuff">
+                    <tr>
+                        <td id="mapimage">
+                            <a href="#" onclick="openBase64InNewTab('{{ skymap }}'); return false;">
+                            <img src="{{ skymap }}">
+                            </a>
+                        </td>
+                    </tr>
                 </table>
-            </div>
-            {% endif %}
-        </td>
-    </tr>
-</table>
+            </td>
+            <td id="metadata">
+                <h1 style="padding-top: 0">SkyMap</h1> 
+                <form method="GET" style="xdisplay:inline-block;">
+                    <table class="reload">
+                        <tr>
+                            <td colspan=2 class="subnav-header>">
+                                <b>Update Map</b>
+                            </td>
+                        </tr>
+                        <tr><th>Offset</th>
+                            <td>
+                                <select name="hours">
+                                    {% for z in offset_list %}
+                                    <option value="{{ z }}" {% if z == hours %}selected{% endif %}>
+                                    {{ z|floatformat:1 }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                hours
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Now</th>
+                            <td><input type="checkbox" name="utdt_now" {% if utdt_now %}checked{% endif %}></td>
+                        </tr>
+                        <tr>
+                            <th>Unset Mask</th>
+                            <td><input type="checkbox" name="unmask" {% if unmask %}checked{% endif %}></td>
+                        </tr>
+                        <tr>
+                            <th>Simple</th>
+                            <td><input type="checkbox" name="simple" {% if simple %}checked{% endif %}></td>
+                        </tr>
+                        <tr>
+                            <th>Min. DSO Alt:</th>
+                            <td><input name="min_dso_alt" size=3 {% if min_dso_alt %}value="{{ min_dso_alt }}"{% endif %}>&nbsp;°</td>
+                        </tr>
+                        <tr>
+                            <td colspan=2 class="subform-submit">
+                                <input class="submit" type="submit">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+                <h2>Metadata</h2>
+                <h3>Times</h3>
+                <table class="lite md" id="md-times">
+                    <tr><td>Date:</td><td>{{ shown_datetime|date:"Y-m-d H:i" }} UT</td></tr>
+                    <tr><td>Local Time:</td><td>{{ map_time_str }}</td></tr>
+                    <tr><td>Sid. Time:</td><td>{{ sidereal_time|to_hms }}</td></tr>
+                </table>
+                <h3>Location</h3>
+                <table class="lite md" id="md-location">
+                    <tr><td>Location:</td>
+                        <td> 
+                            <a href="{% url 'observing-location-detail' location.pk %}" target="_new">
+                                {{ location.concise_name }} ({{ location.status }})
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Latitude:</td><td>{{ location.latitude|to_dms }}</td>
+                    </tr>
+                        <td>Longitude:</td><td>{{ location.longitude|to_dms }}</td>
+                    </tr>
+                    <tr>
+                        <td>Elevation:</td>
+                        <td>{{ location.elevation }} m ({{ location.elevation_feet|floatformat:0 }} ft)</td>
+                    </tr>
+                </table>
+            </td>          
+            <td id="objnav" class="side">
+                <button class="accordion">Moon and Planets</button>
+                {% if interesting.planets|length > 0 or show_moon %}
+                    {% with object_list=interesting.planets url_type='planet-detail' %}
+                        {% include 'inc_interesting.html' %}
+                    {% endwith %}
+                {% else %}
+                    (No visible planets or Moon)
+                {% endif %}
+
+                <button class="accordion">DSOs</button>
+                <div class="panel">
+                    {% with object_list=interesting.dsos url_type='dso-detail' %}
+                    {% include 'inc_interesting.html' %}
+                    {% endwith %}
+                </div>
+
+                {% if interesting.asteroids|length > 0 %}
+                <button class="accordion">Asteroids</button>
+                <div class="panel">
+                    {% with object_list=interesting.asteroids url_type='asteroid-detail' %}
+                    {% include 'inc_interesting.html' %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+                
+                {% if interesting.comets|length > 0 %}
+                <button class="accordion">Comets</button>
+                <div class="panel">
+                    {% with object_list=interesting.comets url_type='comet-detail' %}
+                    {% include 'inc_interesting.html' %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+
+                {% if interesting.meteor_showers|length > 0 %}
+                <button class="accordion">Meteor Showers</button>
+                <div class="panel">
+                    <br><br>
+                    <table>
+                        <tbody>
+                        {% for shower in interesting.meteor_showers %}
+                        <tr><td>
+                            {% if shower.has_wiki == 'WIKI' %}
+                            <a onclick="return realtimePopup('/meteor/wiki/{{ shower.pk }}')">
+                                {{ shower.name }}
+                            </a>
+                            {% else %}
+                            {{ shower.name }}
+                            {% endif %}
+                        </td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
 </div>
+
 {% include 'includes/performance_time.html' %}
 {% endblock content %}
 
@@ -199,6 +226,26 @@ for (i = 0; i < acc.length; i++) {
       panel.style.display = "block";
     }
   });
+}
+
+function openBase64InNewTab(base64Data, mimeType = 'image/png') {
+    // 1. Convert Base64 to raw binary data held in a string
+    const byteCharacters = atob(base64Data.split(',')[1] || base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    
+    // 2. Create a typed array from the binary data
+    const byteArray = new Uint8Array(byteNumbers);
+    
+    // 3. Create a Blob and a local Object URL
+    const blob = new Blob([byteArray], { type: mimeType });
+    const fileURL = URL.createObjectURL(blob);
+    
+    // 4. Open in new tab
+    window.open(fileURL, '_blank');
 }
 </script>
 {% endblock %}
