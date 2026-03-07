@@ -2,46 +2,90 @@
 {% load skytour_filters humanize %}
 {% block title %}Atlas Plate {{ object.plate_id }}: Skytour{% endblock %}
 {% block content %}
-<table>
+<style>
+    h1 { margin: 0; }
+    table.main td { vertical-align: top; border: none; }
+    table.neighbors { border: 1px solid #990; }
+    table.noborder { border: none; }
+    table.rendition td { text-align: center; }
+    table.rendition td img { display:block; width:100%; height:auto; }
+    table.rendition td img.selected { border: 1px solid #c00!important; }
+    button.admin { color: #F00; width: 4em; }
+    .thumb {
+        cursor: pointer;
+        border: 1px solid transparent; 
+        transition: border 0.2s ease;
+        margin: 5px;
+    }
+    .selected-thumb { border: 1px solid #c00 !important; }
+
+</style>
+<table class="main">
+    <tr>
+        <td rowspan=3>
+            <div class="main-container">
+                <img id="main-display" src="{{ selected_atlas_plate.image.url }}" alt="Main View">
+            </div>
+        </td>
+        <td colspan=2>
+            <h1>Atlas - Plate {{ object.plate_id }}</h1>
+        </td>
+    </tr>
     <tr>
         <td>
-            <a href="{{ selected_atlas_plate.image.url }}" target="_new_atlas">
-            <img src="{{ selected_atlas_plate.image.url }}">
-            </a>
-        </td>
-        <td style="vertical-align: top;">
-            <h1>Atlas - Plate {{ object.plate_id }}</h1>
             <h2>Details</h2>
             <b>Center RA/Dec:</b> {{ object.center_ra|floatformat:2 }}h  {{ object.center_dec }}°
-            <br><br><b>Constellations</b> 
+            <br><br><b>Constellations:</b> 
+            <br><br>
             {% for con in object.constellation.all %}
             <a href="{% url 'constellation-detail' con.abbreviation %}" target="_blank">{{ con.abbreviation }}</a>
             {% if not forloop.last %}, {% endif %}
             {% endfor %}
-            <br><br/><b>Tags:  </b>{{ object.tags.all|join:", " }}
-            <br><br/><a href="/admin/dso/atlasplate/{{ object.pk }}/change/"><button>Admin</button></a>
-            <br><br>
+            <br><br/>
+            <b>Tags:  </b>{{ object.tags.all|join:", " }}
+            <br><br/>
+            <a href="/admin/dso/atlasplate/{{ object.pk }}/change/">
+                <button class="admin">Admin</button>
+            </a>
+        </td>
+        <td>
             <h2>Neighboring Atlas Plates</h2>
-            <table>
-            {% for r in assembled_neighbors %}
-            <tr>
-                <td style='text-align: center;'>
-                    &nbsp;
-                    {% for p in r %}
-                    <a href="{% url 'atlas-detail' p.obj.plate_id %}">{{ p.obj.plate_id }}</a>&nbsp;
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-            </table>
-            <h3>Other Renditions</h3>
-            <table>
+            <table class="neighbors">
+                {% for r in assembled_neighbors %}
                 <tr>
-                {% for plate in other_atlas_plates %}
-                    <td width="30%">
-                        <a href="{{ plate.image.url }}" target="_new_atlas">
-                        <img src="{{ plate.image.url }}" style="display:block; width:100%; height:auto;">
+                    <td style='text-align: center;'>
+                        &nbsp;
+                        {% for p in r %}
+                        <a href="{% url 'atlas-detail' p.obj.plate_id %}">{{ p.obj.plate_id }}</a>&nbsp;
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <h3>Renditions</h3>
+            <table class="noborder rendition">
+                <tr>
+                    <td width="25%">
+                        <img src="{{ selected_atlas_plate.image.url }}" onclick="swapImage(this.src)" alt="Thumb 1" class="thumb selected-thumb">
+
+                        <br><span class="caption">{{ selected_atlas_plate.caption }}</span>
+                        <br>
+                        <a href="{{ selected_atlas_plate.image.url }}" target="_new_atlas">
+                            <button>Enlarge</button>
                         </a>
+                    </td>
+                {% for plate in other_atlas_plates %}
+                    <td width="25%">
+                        <img src="{{ plate.image.url }}" onclick="swapImage(this.src)" alt="{{ plate.caption }}" class="thumb">
+                        <br><span class="caption">{{ plate.caption }}</span>
+                        <br>
+                        <a href="{{ plate.image.url }}" target="_new_atlas">
+                            <button>Enlarge</button>
+                        </a>       
                     </td>
                 {% empty %}
                 <td>There are no other atlas plates?</td>
@@ -57,5 +101,26 @@
 {% with object.dso.all as dso_list %}
 {% include 'includes/dso_table.html' %}
 {% endwith %}
+{% endblock %}
 
+{% block extra-js %}
+<script>
+  window.addEventListener('load', function() {
+    const mainImg = document.getElementById('main-display');
+    const thumbs = document.querySelectorAll('.thumb');
+
+    thumbs.forEach(function(t) {
+      t.addEventListener('click', function() {
+        // 1. Swap the image
+        mainImg.src = this.src;
+
+        // 2. Remove the border from ALL thumbnails
+        thumbs.forEach(el => el.classList.remove('selected-thumb'));
+
+        // 3. Add the border to the CLICKED thumbnail
+        this.classList.add('selected-thumb');
+      });
+    });
+  });
+</script>
 {% endblock %}

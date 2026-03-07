@@ -1440,6 +1440,11 @@ class AtlasPlateVersionAbstract(models.Model):
 
     def plate_tag(self):
         return mark_safe(u'<img src="%s" width=500>' % self.image.url)
+    
+    def caption(self):
+        x = 'Shapes' if self.shapes else 'Symbols'
+        y = 'Reversed' if self.reversed else 'Printable'
+        return f"{x}, {y}"
 
     def __str__(self):
         return f"{self.plate.plate_id}: shapes={self.shapes} reversed={self.reversed}"
