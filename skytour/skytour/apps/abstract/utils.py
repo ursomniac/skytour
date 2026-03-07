@@ -6,8 +6,6 @@ from ..astro.time import get_last, get_julian_date
 from ..solar_system.position import get_object_metadata
 from ..astro.transform import get_alt_az
 from ..astro.utils import alt_get_small_sep
-from ..misc.models import TimeZone
-from ..site_parameter.helpers import find_site_parameter
 from ..observe.models import ObservingLocation
 
 def rectify_ha(xha):
@@ -137,7 +135,6 @@ def get_real_time_conditions(
         offset_cookie_time = context['utdt_start'] + dt.timedelta(hours=offset)
         local_time = offset_cookie_time.astimezone(pytz.timezone(time_zone))
     else:
-        #time_zone = ObservingLocation.get_default_location().time_zone
         local_time = utdt.astimezone(pytz.timezone(time_zone))
 
     # STUPID BUG IN DJANGO - AFAICT the |date template tag ALWAYS goes back to the
@@ -162,7 +159,8 @@ def get_real_time_conditions(
         if is_moon:
             lunar_distance = 0.
         else:
-            moon = context['cookies']['moon']
+            # V2.12 - we're running this every time because unless you're at the exact time of the cookie it's not accurate
+            moon = get_object_metadata(utdt, 'Moon', 'moon', location=location)
             moon_ra = moon['apparent']['equ']['ra']
             moon_dec = moon['apparent']['equ']['dec']
             (moon_az, moon_alt, moon_airmass) = get_alt_az(utdt, location.latitude, location.longitude, moon_ra, moon_dec)
@@ -191,6 +189,19 @@ def get_real_time_conditions(
         apparent_magnitude = target.magnitude
         surface_brightness = target.surface_brightness
         max_alt = target.max_altitude(location=location)
+        best_airmass = 1./math.cos(math.radians(90. - max_alt)) if max_alt > 0. else None
+
+    elif object_type == 'brightstar':
+        ra = target.ra_float
+        dec = target.dec_float
+        distance = target.distance
+        distance_units = 'ly'
+        constellation = target.constellation.abbreviation
+        angular_diameter = None
+        angular_diameter_units = None
+        apparent_magnitude = target.magnitude
+        surface_brightness = None
+        max_alt = target.max_altitude
         best_airmass = 1./math.cos(math.radians(90. - max_alt)) if max_alt > 0. else None
 
     else:

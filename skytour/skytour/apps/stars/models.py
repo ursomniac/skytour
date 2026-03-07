@@ -9,6 +9,7 @@ from taggit.managers import TaggableManager
 
 from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject, AnnalsDeepSkyAbstract
 from ..astro.coords import equ2ecl
+from ..dso.observing import get_max_altitude
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation, get_bright_star_sort_key,\
@@ -265,6 +266,10 @@ class BrightStar(Coordinates, WikipediaPageObject):
                 return n
         return '???' # shouldn't get here
 
+    @property
+    def max_altitude(self):
+        return get_max_altitude(self)
+    
     @property
     def plot_label(self):
         if not self.name:
