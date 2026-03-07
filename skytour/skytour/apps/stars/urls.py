@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     BrightStarDetailView, 
     BrightStarListView, 
+    BrightStarRealTimeView,
     SkyView,
     ZenithMagView,
     ZenithMagResult
@@ -13,4 +14,6 @@ urlpatterns = (
     path('zenith/result', ZenithMagResult.as_view(), name='zenith-result'),
     path('hr/', BrightStarListView.as_view(), name='bright-star-listing'),
     path('hr/<int:pk>', BrightStarDetailView.as_view(), name='bright-star-detail'),
+    path('real-time/<int:pk>', BrightStarRealTimeView.as_view(), name='dso-real-time'),
+
 )

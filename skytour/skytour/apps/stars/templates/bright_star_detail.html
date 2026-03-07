@@ -57,6 +57,10 @@
     .op button a:link { color: #000!important;}
     .op button.admin a { color: #c00!important; }
 
+    button.op2 { color: #000; width: 15em; height: 2em; font-weight: bold; }
+    button.op2 a { color: #000; text-decoration: none; font-weight: bold; }
+    button.op2 a:link { color: #000!important;}
+
     .coord { font-size: 100%; padding: 3px; line-height: 1.6; }
     .constellation { font-size: 120%; margin-left: 3em; margin-top: 10px; }
     ul.cats { padding-left: 0px; }
@@ -183,7 +187,18 @@
                         </table>
                     </td>
                 </tr>
-
+                <tr>
+                    <td colspan=2>
+                        <button onclick="return realtimePopup('/stars/real-time/{{ object.pk }}')" class="op2">
+                        Real Time
+                        </button>
+                        &nbsp;&nbsp;
+                        &nbsp;&nbsp;
+                        <button onclick="return realtimePopup('/stars/real-time/{{ object.pk }}?utdt_base=cookie')" class="op2">
+                        Cookie
+                        </button>
+                    </td>
+                </tr>
                 <tr>
                     <td class="cats">
                         <h3>Other Catalogs</h3>
@@ -518,4 +533,5 @@
 		clickedTh.classList.add('active');
 	}
 </script>
+{% include 'includes/realtime_script.html' %}
 {% endblock %}

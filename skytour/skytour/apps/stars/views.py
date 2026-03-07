@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from ..abstract.utils import get_real_time_conditions 
 from ..dso.helpers import get_simple_dso_list
 from ..session.cookie import deal_with_cookie
 from ..session.mixins import CookieMixin
@@ -215,3 +216,19 @@ class VariableStarDetailView(DetailView):
                 incon.append(v)
         context['const_others'] = incon
         return context
+    
+class BrightStarRealTimeView(CookieMixin, DetailView):
+    """
+    Get Observing Metadata in RealTime
+    """
+    model = BrightStar
+    template_name = 'real_time_popup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BrightStarRealTimeView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context['object_type'] = 'DSO'
+        context['object'] = object
+        context = get_real_time_conditions(object, self.request, context)
+        return context
+        
