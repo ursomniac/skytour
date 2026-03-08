@@ -3,7 +3,7 @@ from admin_auto_filters.filters import AutocompleteFilter
 from ..abstract.admin import AbstractObservation, ObservableObjectAdmin, TagModelAdmin
 from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOList, AtlasPlate, AtlasPlateVersion, AtlasPlateConstellationAnnotation, \
-    DSOLibraryImage, \
+    DSOLibraryImage, DSOWiki,\
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
     DSOInField, DSOInFieldAlias, DSOObservingMode, \
     AnnalsDeepSkyDSO, AnnalsDeepSkyDSOInField
@@ -26,6 +26,9 @@ class AbstractAnnalsInline(admin.StackedInline):
 
 class DSOAnnalsInline(AbstractAnnalsInline):
     model = AnnalsDeepSkyDSO
+
+class DSOWikiInline(admin.StackedInline):
+    model = DSOWiki
 
 class DSOInFieldAnnalsInline(AbstractAnnalsInline):
     model = AnnalsDeepSkyDSOInField
@@ -221,6 +224,7 @@ class DSOAdmin(ObservableObjectAdmin):
     inlines = [
         DSOAliasInline, 
         DSOAnnalsInline,
+        DSOWikiInline,
         DSOInFieldInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  

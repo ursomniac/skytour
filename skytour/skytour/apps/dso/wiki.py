@@ -1,7 +1,7 @@
 from .models import DSOWiki, DSOInFieldWiki
 from ..abstract.wiki import update_wiki_object
 
-def update_dso_wiki(instance):
+def update_dso_wiki(instance, debug=False):
     WIKIMODEL = {
         'DSO': DSOWiki,
         'DSOInField': DSOInFieldWiki,
@@ -17,7 +17,8 @@ def update_dso_wiki(instance):
         wiki = wiki_model() # Create new instance
         wiki.object = instance
         wiki.override_lookup = None
-    wiki = update_wiki_object(wiki, instance.default_wikipedia_name)
+    lookup = wiki.override_lookup or instance.default_wikipedia_name
+    wiki = update_wiki_object(wiki, lookup, debug=debug)
     return wiki
 
 def format_wiki_text(instance):
