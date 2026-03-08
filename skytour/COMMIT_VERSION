@@ -1,1 +1,1 @@
-2.12 - Added RealTime/Cookie popup for BrightStar.  Fixed @now lunar position
+2.12.1 - added mgt command to update DSO Wikis;  fixed bug where the override name wasn't being used.

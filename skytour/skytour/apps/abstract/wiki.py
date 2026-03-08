@@ -40,9 +40,12 @@ def get_page_attrs(page):
         works = works
     )
 
-def update_wiki_object(obj, name, save=True):
+def update_wiki_object(obj, name, save=True, debug=False):
     page = get_wiki_page(name)
     attr = get_page_attrs(page)
+    if debug:
+        print("PAGE: ", page)
+        print("ATTR: ", attr)
     obj.exists = YES if attr['exists'] else NO
     obj.ambiguous = YES if attr['ambiguous'] else NO
 
