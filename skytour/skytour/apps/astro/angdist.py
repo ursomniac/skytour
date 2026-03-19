@@ -14,7 +14,8 @@ def get_neighbors(
         object, 
         fov=8., 
         fudge=120,
-        grid = True
+        grid = True,
+        raw=False
     ):
     """
     For some reason the KDTree distances are 90 "off" for a FOV of 8°.
@@ -36,12 +37,18 @@ def get_neighbors(
     neighbor_list = tree.query_ball_point([center], radius)
     neighbor_objects = []
     for idx in neighbor_list[[0][0]]:
-        neighbor_objects.append(other_objects[idx])
+        if other_objects[idx] is not None:
+            neighbor_objects.append(other_objects[idx])
     
-    if grid:
-        return grid_and_transpose_list(neighbor_objects)
-    else:
+    if raw:
         return neighbor_objects
+    
+    # V2.13 - reorder on sort_key (property)
+    ordered_list = sorted(neighbor_objects, key=lambda x: x.sort_key)
+    if grid:
+        return grid_and_transpose_list(ordered_list)
+    else:
+        return ordered_list
 
 def get_small_ang_sep(ra1, dec1, ra2, dec2, degrees=True):
     xx = math.cos(math.radians((dec1 + dec2) / 2.))

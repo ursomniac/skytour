@@ -14,4 +14,4 @@ class CookieMixin(object):
         complete = test_all_cookies(cookies)
         if not complete:
             return redirect('/session/cookie')
-        return super(CookieMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)

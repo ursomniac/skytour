@@ -124,7 +124,7 @@ def get_default_notes_panel(s):
 def handle_formatting(n):
     SWAPS = [
         ('_sun', '<sub>&#9737;</sub> '), ('_Sun', '<sub>&#9737;</sub>' ),
-        ('_Earth', '🜨'), ('_E', '🜨'),
+        ('_Earth', '🜨'), ('_E', '🜨'), ('_earth', '🜨'),
         ('_Jup', '<sub>&#9795;</sub>'), ('_J', '<sub>&#9795;</sub>'), 
         ('_gal', '<sub>gal</sub>'),
         ('^1', '<sup>1</sup>'), ('^2', '<sup>2</sup>'), ('^3', '<sup>3</sup>'),

@@ -8,6 +8,8 @@ from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOInField, DSOInFieldAlias, DSOObservingMode, \
     AnnalsDeepSkyDSO, AnnalsDeepSkyDSOInField
 
+MAX_DSO_IN_FIELD = 15
+
 class AbstractAnnalsInline(admin.StackedInline):
     fieldsets =  (
         (None, {
@@ -166,14 +168,15 @@ class DSOAdmin(ObservableObjectAdmin):
         'dsoinfield_table',
         'img_pri',
         'num_dsos_in_field',
-        'metadata'
+        'metadata',
+        'inhibit_dso_in_field'
     ]
     list_filter = [ConstellationFilter, 'priority', 'show_on_skymap', 'object_type', 'ra_h', 'catalog' ]
     search_fields = ['nickname', 'shown_name', 'aliases__shown_name']
     fieldsets = (
         (None, {
             'fields': [
-                ('catalog', 'id_in_catalog'),
+                ('catalog', 'id_in_catalog', 'inhibit_dso_in_field'),
                 ('constellation', 'show_on_skymap'),
                 ('nickname', 'atlas_plate_list'),
                 ('object_type', 'morphological_type'),
@@ -221,6 +224,7 @@ class DSOAdmin(ObservableObjectAdmin):
             ]
         })
     )
+
     inlines = [
         DSOAliasInline, 
         DSOAnnalsInline,
@@ -243,6 +247,12 @@ class DSOAdmin(ObservableObjectAdmin):
     def list_dec(self, obj):
         return obj.format_dec
     list_dec.short_description = 'Dec.'
+
+    def inhibit_dso_in_field(self, obj):
+        n = obj.dsoinfield_set.count()
+        if n > MAX_DSO_IN_FIELD:
+            return f'DSO In Field Inline Inhibited {n} > {MAX_DSO_IN_FIELD}'
+        return 'False'
 
     @admin.display(description='Con.', ordering='constellation')
     def constellation_abbreviation(self, obj):
@@ -281,6 +291,17 @@ class DSOAdmin(ObservableObjectAdmin):
             form.base_fields[field].widget.can_change_related = False
             form.base_fields[field].widget.can_delete_related = False
         return form
+    
+    def get_inline_instances(self, request, obj=None):
+        # 1. Get the full list of initialized inline instances
+        inline_instances = super().get_inline_instances(request, obj)
+        
+        # 2. If editing an existing object, check the count for Y
+        if obj and obj.dsoinfield_set.count() > 15:  # This might be a good cutoff
+            # 3. Return all inlines EXCEPT YInline
+            return [i for i in inline_instances if not isinstance(i, DSOInFieldInline)]
+            
+        return inline_instances
     
     @admin.action(description="Add to REDO image")
     def turn_on_redo(modeladmin, request, queryset):

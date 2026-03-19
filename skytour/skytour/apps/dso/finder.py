@@ -21,7 +21,7 @@ from .const_utils import get_boundary_lines
 ### These are used to create a secondary axis on the plot.
 def r2d(a): # a is a numpy.array
     return a * (180.*2) / math.pi
-def d2r(a): # a us a numpy.array
+def d2r(a): # a is a numpy.array
     return a * math.pi / (180.*2)
 
 def plot_other_dsos(
@@ -31,15 +31,11 @@ def plot_other_dsos(
     other_dsos = {'x': [], 'y': [], 'label': [], 'marker': []}
 
     if fov_type == 'wide':
-        #default_size = 1.0 if in_field else 5.0
-        #min_size = 1.0 if in_field else 8.0
         default_size = 8.0
         min_size = 8.0
     else:
         default_size = 1.0
         min_size = 1.0
-
-    #print(f"Other DSOs: {fov_type} plot DS: {default_size} MIN: {min_size}")
 
     max_size = 30
     for other in other_dso_records:
@@ -50,6 +46,10 @@ def plot_other_dsos(
         other_dsos['y'].append(y)
         other_dsos['label'].append(other.label_on_chart)
         other_dsos['marker'].append(other.object_type.marker_type)
+        # Kludge for nebulae:
+        if other.object_type.map_symbol_type in ['square', 'gray-square', 'two-squares']: 
+            if min_size < 2.0:
+                min_size = 2.0
         ax = plot_dso(ax, x, y, other, alpha=0.6, 
             default_size=default_size, max_size=max_size, min_size=min_size,
             reversed=reversed
@@ -97,6 +97,12 @@ def plot_dso(ax, x, y, dso,
     amajor = dso.major_axis_size if dso.major_axis_size is not None else default_size
     amajor = amajor if amajor != 0 else default_size
     aminor = amajor if dso.minor_axis_size is None or dso.minor_axis_size == 0 else dso.minor_axis_size
+    
+    # Kludge for nebulae:
+    if dso.object_type.map_symbol_type in ['square', 'gray-square', 'two-squares']: 
+        if min_size < 2.0:
+            min_size = 2.0
+
     if debug:
         print(f"DSO: {dso} {dso.major_axis_size} x {dso.minor_axis_size} D: {default_size} 0: {min_size}")
 
@@ -147,14 +153,13 @@ def plot_dso(ax, x, y, dso,
 
     elif ft in ['open-circle', 'gray-circle', 'circle-plus']: # clusters
         color = '#999' if ft == 'gray-circle' else '#ff0'
+        color = '#4fd' if 'young' in dso.object_type.slug.lower() else color # exception for YPCs
         radius = umajor / 2.  # Why?  I don't know but the circles are always to large
         c1 = patches.Circle((x, y), radius, fill=True, color=color, alpha=alpha)
         r_color = '#fff' if reversed else '#000'
         c2 = patches.Circle((x, y), radius, fill=False, color=r_color)
         if ft == 'circle-plus':
             cp_color = '#ccc' if reversed else '#000'
-            #ax.vlines(x, y-amajor/2, y+amajor/2, color=cp_color)
-            #ax.hlines(y, x-amajor/2, x+amajor/2, color=cp_color)
             ax.vlines(x, y-radius, y+radius, color=cp_color)
             ax.hlines(y, x-radius, x+radius, color=cp_color)
         ax.add_patch(c1)
@@ -177,6 +182,7 @@ def plot_dso(ax, x, y, dso,
             r1 = patches.Rectangle((x + dx, y + dy ), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha/2.)
             r2 = patches.Rectangle((x + dx, y + dy ), umajor, uminor, fill=False, color=color, angle=angle)
             ax.add_patch(r1)
+            ax.add_patch(r2)
         else:
             color = '#6f6' if ft == 'circle-square' else '#999'
             r1 = patches.Rectangle((x + dx, y + dy), umajor, uminor, fill=True, color=color, angle=angle, alpha=alpha)

@@ -413,7 +413,7 @@ class DSORealTimeView(CookieMixin, DetailView):
         context['object'] = object
         context = get_real_time_conditions(object, self.request, context)
         return context
-        
+ 
 class DSOAdjustDSOListView(TemplateView):
     template_name = 'dsolist_adjust_popup.html'
 
@@ -595,7 +595,8 @@ class DSOManageExternalImageView(TemplateView):
                 # Image - can be None if the file isn't changing!
                 image_value = request.FILES.get(f"form-{n}-image", None)
                 # Order in list
-                order_value = int(request.POST.get(f"form-{n}-order", 0))
+                ov = request.POST.get(f"form-{n}-order", None)
+                order_value = 0 if not ov.isdigit() else int(ov)
                 # The PK if this is an UPDATE
                 pk_value = request.POST.get(f"form-{n}-pk", None)
                 # Delete

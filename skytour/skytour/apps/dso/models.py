@@ -282,7 +282,7 @@ class DSOAbstract(Coordinates):
                 else: # this shouldn't happen but...
                     label = item
                     value = None
-                t = tuple((label.strip(), handle_formatting(value.strip())))
+                t = tuple((handle_formatting(label.strip()), handle_formatting(value.strip())))
                 interim.append(t) 
             second = sorted(interim, key=lambda x: x[0])
             out = []
@@ -561,6 +561,10 @@ class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
         Used in the DSODetail view
         """
         return self.mode_priority_value_dict['I']
+    
+    @property 
+    def available_for_imaging(self):
+        return self.mode_imaging_priority is not None
 
     @property
     def mode_imaging_priority_color(self):
@@ -1300,18 +1304,6 @@ class DSOList(models.Model):
         verbose_name = 'DSO List'
         verbose_name_plural = 'DSO Lists'
         ordering = ['-pk']
-
-x = """
-class DSOListMember(models.Model):  # through table
-    dso_list = models.ForeignKey(DSOList, on_delete=models.CASCADE)
-    dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
-    telescope = models.ForeignKey(
-        Telescope, on_delete=models.CASCADE,
-        null = True, blank = True
-    )
-    # list_priority ?
-    # notes ?
-"""
 
 class AtlasPlateAbstract(models.Model):
     """
