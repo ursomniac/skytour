@@ -83,7 +83,6 @@ def run_dso(
         )
     else:
         finder_wide = None
-        #print("skipped?")
 
     if which in ['both', 'narrow']:
         path = base_dir + 'dso_finder_narrow/' if not save_local else ''
@@ -153,4 +152,4 @@ def run_set(start=0, length=100, dso_list=[], save=True, all=False, which='both'
             save_local=save_local,
             ts=ts, t=t, eph=eph, earth=earth
         )
-        print("\t... Done")
+        #print("\t... Done")

@@ -373,7 +373,7 @@ class TrackerView(FormView):
             return context
 
         offset_before = 0
-        offset_after = (d['end_date'] - d['start_date']).days
+        offset_after = abs((d['end_date'] - d['start_date']).days)
         step_days = d['date_step'] or 1
         step_labels = d['label_step'] or 5
         mag_limit = d['mag_limit'] or 8.

@@ -8,7 +8,7 @@ MAP_SYMBOL_TYPES = [
     ('square', 'Open Square'),                          # Emission Nebulae
     ('gray-square', 'Gray Square'),                     # Dark Nebulae
     ('circle-gray-square', 'Circle in Gray Square'),    # cluster w/ nebulosity
-    ('circle-plus', 'Circle Plus'),                     # globular clusters
+    ('circle-plus', 'Circle Plus'),                     # globular clusters, YPCs
     ('two-circles', 'Double Circle'),                   # planetary nebula
     ('two-squares', 'Two Squares')                      # compact groups
 ]

@@ -18,8 +18,12 @@ def process_steps(dso, options, update=False, debug=False):
         print(f"python manage.py scrape_metadata --source {source} --model D --dso_list {dso.pk} --verbose")
         if infield.count() > 0:
             print(f"python manage.py scrape_metadata --source {source} --model F --dso_list {fpks} --verbose")
+    
     # step 1.5 - Wiki
-    print(f"python manage.py update_dso_wiki --dso_list {dso.pk} -v 2")
+    print(f"python manage.py update_dso_wiki --model D --dso_list {dso.pk} --verbose")
+    if infield.count() > 0:
+            print(f"python manage.py update_dso_wiki --model F --dso_list {fpks} --verbose")
+
     # step 2 - finder charts
     # TODO: simplify this for --update since we only need to update the narrow charts, not the wide
     print (f"python manage.py create_wide_narrow_charts --dso_list {dso.pk} -v 2")

@@ -307,6 +307,7 @@ def dso_name_sort_key(dso, debug=False):
 
     # 1. Get the first part
     if dso.map_label is not None:
+        # BUG: NGC 4567/8 ends up here...
         xx = dso.map_label.split(' ')
         cslug = xx[0][:8].lower().ljust(8, '_')
         oid = '' if len(xx) == 1 else '_'.join(xx[1:])

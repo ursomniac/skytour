@@ -18,8 +18,8 @@
 	table.lite { border-style: none; }
 	table.lite td { border-style: none; padding-left: 10px; padding-right: 30px; }
 	table.lite td.viability { padding-left: 0px!important; padding-right: 0px!important; }
-	table.meridian td{ line-height: 0.9; }
-	table.short {  display:inline-block; border-style: none; }
+	table.meridian td { line-height: 0.9; }
+	table.short {  xdisplay:inline-block; border-style: none; width: 90%; }
 	table.short td, th { margin-right: 4px; font-size: 85%; padding: 2px 5px; }
 	table.short td.hour { margin-right: 8px; }
 	table.short th { background-color: #990; color: #000; border: none; }
@@ -65,6 +65,7 @@
 		padding: 3px 0px 3px 5px!important;
 	}
 	td.object_name { vertical-align: middle; padding-left: 20px; }
+	td.oid { font-weight: bold; color: #ffc; }
 	td.operations { text-align: right; padding: 3px 10px!important; }
 	th.tab-header { width: 25%; }
 	th.tab-header a { 
@@ -128,6 +129,9 @@
         white-space: pre-wrap;
         overflow-wrap: break-word; /* Legacy name word-wrap is an alias */
     }
+	.summary table { font-size: 85%; border-collapse: collapse; width: 90%; }
+	.summary table td { border: 1px solid #666; }
+	.summary table td:first-child { white-space: nowrap; }
 	.white { color: #fff; }
 
 	span.annotation { padding-left: 10px; padding-top: 4px; font-size: 60%; font-style: italic; color: #ff6; }
@@ -287,7 +291,7 @@
 		{% else %}
 			<div class="no-library-image">
 				No image in library.
-				{% if object.mode_imaging_priority %}
+				{% if object.available_for_imaging %}
 					<br>
 					Imaging Priority: 
 					{{ object.mode_imaging_priority_span }}
@@ -382,6 +386,7 @@
 								</div>
 								<div id="wiki" class="content-div"
 									style="display: {% if default_panel == 'wiki' %}block{% else %}none{% endif %};">
+									{% if wiki_text %}
 									<div style="display: flex; align-items: center; justify-content: space-between;">
 										<h3 style="margin-bottom: 0;">Wikipedia Summary</h3>
 										{% if object.wiki.canonical_url %}
@@ -393,6 +398,7 @@
 									<div class="text">
 										<div class="summary">{{ wiki_text|safe }}</div>
 									</div>
+									{% endif %}
 								</div>
 								<div id="other" class="content-div"
 									style="display: {% if default_panel == 'other' %}block{% else %}none{% endif %};">
