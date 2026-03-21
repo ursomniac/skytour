@@ -11,14 +11,28 @@ from skyfield.api import wgs84, load
 from ..site_parameter.helpers import get_ephemeris
 from .time import get_0h
 
-def get_astronomical_twilight(times, events, value):
+def get_astronomical_twilight(times, events, value, last=False, debug=False):
     """
     value = 0 for end of astronomical twilight
     value = 1 for the beginning of astronomical twilight (first occurrence)
+    IS that wrong?  Looks like it should be the LAST occurrence
     """
+    
     try:
-        zindex = events.tolist().index(value)
+        if last:
+            ee = events.tolist()
+            zindex = len(ee) - 1 - ee[::-1].index(1)
+        else:
+            zindex = events.tolist().index(value)
         at_time = times[zindex]
+        if debug:
+            print(f"Events: {events}")
+            for event in events:
+                print(f"\t{event}")
+            print(f"Times: {times}")
+            for time in times:
+                print(f"\t{time}")
+            print(f"Value: {value}")
     except:
         at_time = None
     return at_time
@@ -34,11 +48,15 @@ def get_dark_time(utdt, location, as_datetime=False, debug=False):
     if debug:
         print(f"TS: {ts}  F: {f}")
     today = get_0h(utdt)
-    end_at, begin_at = get_almanac_times(today, ts, f)
+    end_at, begin_at = get_almanac_times(today, ts, f, debug=debug)
     if end_at is None:
-        end_at, _ = get_almanac_times(get_0h(utdt - datetime.timedelta(days=-1)), ts, f)
+        if debug:
+            print("end_at is still None - subtracting 1 day")
+        end_at, _ = get_almanac_times(get_0h(utdt - datetime.timedelta(days=-1)), ts, f, debug=debug)
     if begin_at is None:
-        _, begin_at = get_almanac_times(get_0h(utdt + datetime.timedelta(days=1)), ts, f)
+        if debug:
+            print("begin_at is still None, offseting one day")
+        _, begin_at = get_almanac_times(get_0h(utdt + datetime.timedelta(days=1)), ts, f, debug=debug)
     if debug:
         if end_at is None:
             print("ERROR Getting end_at dark time!")
@@ -53,17 +71,29 @@ def get_dark_time(utdt, location, as_datetime=False, debug=False):
     return end_at, begin_at
 
 
-def get_almanac_times(today, ts, f):
+def get_almanac_times(today, ts, f, debug=False):
     """
     Get the beginning and end of Astronomical Twilight for a date
     """
     t0 = ts.from_datetime(today)
     t1 = ts.from_datetime(today + datetime.timedelta(days=1))
     t2 = ts.from_datetime(today + datetime.timedelta(days=2))
+    if debug:
+        print(f"T0: {t0}\nT1: {t1}\nT2: {t2}")
     times, events = find_discrete(t0, t1, f)
-    end_at = get_astronomical_twilight(times, events, 0)
+    end_at = get_astronomical_twilight(times, events, 0, debug=debug)
+    if debug:
+        print("events between t0 and t1")
+        print(times)
+        print(events)
+        print(end_at)
     times, events = find_discrete(t1, t2, f)
-    begin_at = get_astronomical_twilight(times, events, 1)
+    begin_at = get_astronomical_twilight(times, events, 1, last=True, debug=debug)
+    if debug:
+        print("events between t1 and t2")
+        print(times)
+        print(events)
+        print(begin_at)
     return end_at, begin_at
 
 def get_events(t, y, events=None, transit=False, serialize=False, time_zone=None):
