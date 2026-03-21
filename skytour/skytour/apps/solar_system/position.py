@@ -12,6 +12,7 @@ from .comets import get_comet_target, get_comet_magnitude
 from .jupiter import get_jupiter_physical_ephem
 from .mars import get_mars_physical_ephem
 from .moon import simple_lunar_phase, equ_lunar_phase_angle
+from .saturn import get_iapetus_magnitude
 from .serializer import serialize_astrometric
 from .utils import (
     get_angular_size,
@@ -30,6 +31,7 @@ def get_object_metadata(
         object_type,        # moon|planet|asteroid|comet
         instance=None,      # model object instance
         location=None,      # ObservingLocation instance
+        debug=True
     ):
     ts = load.timescale()
     t = ts.utc(utdt)
@@ -187,7 +189,7 @@ def get_object_metadata(
                 ang_sep = get_small_ang_sep(ra, dec, mdict['apparent']['equ']['ra'], mdict['apparent']['equ']['dec'], degrees=True )
                 mdict['planet_separation'] = ang_sep
                 mdict['planet_sep_str'] = get_angular_size_string(mdict['planet_separation'])
-                try: # TODO: Add additional code for Iapetus (somehow)
+                try:
                     moon_instance = instance.planetmoon_set.get(name=moon)
                 except:
                     moon_instance = None
@@ -197,15 +199,19 @@ def get_object_metadata(
                     earth_dist = obs.radec()[2].au.item()
                     sun_dist = moon_sun.radec()[2].au.item()
                     #m = moon_instance.h + 5 * math.log10(earth_dist * sun_dist) - moon_instance.g
-                    if instance.name != 'Jupiter':
+
+                    if instance.name == 'Saturn' and moon == 'Iapetus': # V2.15
+                        m = get_iapetus_magnitude(utdt)
+                    elif instance.name == 'Jupiter' and moon in ['Io', 'Europa', 'Ganymede', 'Callisto']:
+                        m = galilean_magnitude(moon, moon_instance.h, phase_angle, earth_dist, sun_dist)
+                    else:
                         m = solar_system_apparent_magnitude (
                             earth_dist, sun_dist, 
                             moon_instance.h,
                             None, #phase_angle, # use the planet
                             g = 0.
                         )
-                    else:
-                        m = galilean_magnitude(moon, moon_instance.h, phase_angle, earth_dist, sun_dist)
+
                     mdict['sun_distance'] = sun_dist
                     mdict['earth_distance'] = earth_dist
                     mdict['au_to_planet'] = earth_dist - r_earth_target
