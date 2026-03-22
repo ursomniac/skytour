@@ -134,6 +134,7 @@ def handle_formatting(n):
         ('vsini', '<i>v</i> sin <i>i</i>'), ('P_rot', '<i>P</i><sub>rot</sub>'),
         ('v_equ', '<i>v</i><sub>equ</sub>'), ('P_cyc', '<i>P</i><sub>cyc</sub>'),
         ('v_eq', '<i>v</i><sub>equ</sub>'), ('P_orb', '<i>P</i><sub>orb</sub>'),
+        ('v_rot', '<i>v</i><sub>rot</sub>'),
         ('>~', '≳'), ('<~', '≲'),
     ]
     for x in SWAPS:
