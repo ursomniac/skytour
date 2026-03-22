@@ -46,19 +46,30 @@
         margin: 5px 0;
         vertical-align: center;
     }
-    table.nav td { border: none; }
+    table.nav td { border: none; height: 3em; }
     table.nav td label { color: #000; font-weight: bold; }
     table.nav td button { 
         float:right; 
         width: 10em; 
+        height: 2em;
         font-weight: bold;
         margin-right: 1em;
     }
+    table.nav td select { 
+        height: 2em;
+        width: 20em;
+        margin: 0em 2em;
+    }
     table.nav td input.submit {
-        height: 1.5em;
+        height: 2em;
         font-weight: bold;
-        width: 10em; 
+        width: 12em; 
         margin-left: 20px; 
+    }
+    table.nav td.subnav label { 
+        font-size: 130%;
+        font-weight: bold;
+        margin-left: 1em;
     }
 </style>
 <!-- main -->
@@ -73,7 +84,7 @@
 <br>
 <table class="nav"> 
     <tr>
-        <td>
+        <td class="subnav">
             <form action="" method="GET">
                 <label for="catalog_slug">Catalog: </label>
                 <select name="catalog_slug">

@@ -17,7 +17,7 @@
     </tr>
 </thead>
 <tbody>
-{% for obj in object_list %}
+{% for obj in cat_list %}
     <tr>
         <td class="hidden">{{ obj.sortable_precedence }}</td>
         <td>
@@ -36,5 +36,24 @@
 </tbody>
 </table>
 
-{% include 'includes/sortable_table.html' %}
+{# include 'includes/sortable_table.html' #}
+<script>
+    $(document).ready(function() {
+    $('#{{ table_id }}').DataTable( {
+        "order": [], // <--- ADD THIS LINE to stop the initial auto-sort
+        columnDefs: [ {
+            targets: [ 0 ],
+            orderData: [ 0, 1 ]
+        }, {
+            targets: [ 1 ],
+            orderData: [ 1, 0 ]
+        }, {
+            targets: [ 4 ],
+            orderData: [ 4, 0 ]
+        } ],
+        paging: false
+    } );
+} );
+</script>
+
 {% endblock %}

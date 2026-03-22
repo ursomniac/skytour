@@ -1,8 +1,33 @@
 {% extends 'base.html' %}
 {% load skytour_filters humanize %}
-{% block title %}Observing Plan: Skytour{% endblock %}
+{% block title %}Observed DSOs: Skytour{% endblock %}
 {% block content %}
-    <h1>Observed Deep Sky Objects</h1>
+<style>
+    table.noborder { border: none; }
+    table.noborder td { border: none; }
+    td.subnav label: { font-weight: bold; font-size: 110%; color: #ffc; margin-right: 5px; }
+    select: { width: 10em; height 2.5 em; }
+</style>
+    <table class="main noborder">
+        <tr>
+            <td>
+                <h1>Observed Deep Sky Objects</h1>
+            </td>
+            <td class="subnav">
+                {% comment %}
+                <form action="" method="GET">
+                    <label for="order_by">Ordering:</label>
+                    <select name="order_by">
+                        {% for item in orderings %}
+                        <option value="{{ item.1 }}" {% if item.1 ==  order_by  %}selected{% endif %}>{{ item.0 }}</option>
+                        {% endfor %}
+                    </select>
+                    <input value="Update List" type="submit">
+                </form>
+                {% endcomment %}
+            </td>
+        </tr>
+    </table>
     {% with table_id=dso_table %}
         {% include 'includes/paginate.html' %}
         {% include 'includes/dso_table.html' %}
