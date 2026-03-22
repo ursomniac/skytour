@@ -120,8 +120,12 @@ class CatalogListView(ListView):
     model = Catalog
     template_name = 'catalog_list.html'
 
+    def get_queryset(self):
+        return Catalog.objects.order_by('name')
+
     def get_context_data(self, **kwargs):
         context = super(CatalogListView, self).get_context_data(**kwargs)
+        context['cat_list'] = Catalog.objects.order_by('name')
         context['table_id'] = 'catalog-list-table'
         return context
 

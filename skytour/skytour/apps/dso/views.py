@@ -4,7 +4,7 @@ import time
 
 from dateutil.parser import isoparse
 from django.core.paginator import Paginator
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -381,12 +381,38 @@ class DSOObservationLogView(CookieMixin, ListView):
     model = DSO
     template_name = 'dsoobservation_list.html'
     paginate_by = 50
+    ORDERINGS = [
+        ('Catalog', 'catalog'),
+        ('Constellation', 'constellation'),
+        ('Latest Obs.', 'latest'),
+        ('# Observations', 'n_observations'),
+        ('Object Type', 'object_type'),
+        ('Right Ascension', 'ra'),
+    ]
 
     def get_context_data(self, **kwargs):
         context = super(DSOObservationLogView, self).get_context_data(**kwargs)
-        context['dso_list'] = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0).order_by('-nobs')
+        context['orderings'] = self.ORDERINGS
+        order_by = self.request.GET.get('order_by', 'latest')
+        dsos_raw = DSO.objects.annotate(nobs=Count('observations')).filter(nobs__gt=0)
+        if order_by == 'catalog':
+            dsos = sorted(dsos_raw, key=lambda instance: instance.sort_key)
+        elif order_by == 'constellation':
+            dsos = dsos_raw.order_by('constellation__abbreviation')
+        elif order_by == 'latest':
+            dsos = dsos_raw.annotate(
+                    latest_obs=Max('observations__ut_datetime')
+                ).order_by('-latest_obs')
+        elif order_by == 'object_type':
+            dsos = dsos_raw.order_by('object_type__slug')
+        elif order_by == 'ra':
+            dsos = dsos.order_by('ra_float')
+        else:
+            dsos = dsos_raw.order_by('-nobs')
+        context['dso_list'] = dsos
         context['dso_table'] = 'dsos-observed'
         context['total_count'] = context['dso_list'].count()
+        context['order_by'] = order_by
         
         # Pagination
         page_no = self.request.GET.get('page', 1)

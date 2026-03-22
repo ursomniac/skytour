@@ -434,6 +434,16 @@ class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
         return ', '.join(aliases)
 
     @property
+    def meta_alias_list(self):
+        a1 = []
+        a2 = []
+        if self.metadata and 'aliases' in self.metadata.keys():
+            a1 = self.metadata['aliases']
+        if self.simbad and 'aliases' in self.simbad.keys():
+            a2 = self.simbad['aliases'] or []
+        return sorted(list(set(a1 + a2)))
+
+    @property
     def opposition_date(self):
         """
         Return Opposition Date based on RA
@@ -1303,7 +1313,7 @@ class DSOList(models.Model):
     class Meta:
         verbose_name = 'DSO List'
         verbose_name_plural = 'DSO Lists'
-        ordering = ['-pk']
+        ordering = ['-active_observing_list', '-pk']
 
 class AtlasPlateAbstract(models.Model):
     """
