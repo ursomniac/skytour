@@ -30,6 +30,17 @@
     table.main td h5 { margin-left: 10px; font-size: 110%; }
     table.noborder { border: none; }
     table.noborder td { border: none; }
+    table.squash { table-layout: fixed; width: 100%; border: 1px solid #FF9; }
+    table.squash th, table.squash td { 
+        text-align: left;
+        width: auto; 
+        min-width: 5%;     
+        overflow: hidden; /* Prevent cell expansion */
+        text-overflow: ellipsis; /* Optional: adds ... to long text */
+        white-space: nowrap; /* 3. Force single line (prevents wrapping) */
+    }
+    table.squash th { font-size: 100%; font-weight: bold; text-align: center; }
+    table.squash th.wider20 { width: 20%; }
 
     table.main td ul { list-style: none; margin-top: 3px; }
     table.main td ul.tight { 
@@ -75,6 +86,7 @@
         text-align: left; display: inline-block; font-size: 90%; }
     span.spect { font-size: 105%; font-weight: 600; }
     span.vnotes { font-size: 90%; }
+    span.white { color: #fff; }
     .name { font-size: 100%; margin-top: 4px; }
     span.name { font-style: italic; color: #fff; }
     .summary p { font-size: 100%; line-height: 1.3; }
@@ -109,6 +121,23 @@
 	table.infotext th { height: 2em; cursor: pointer; }
 	th.tab-header.active { background-color: #cc6; }
 	th.tab-header:hover { background-color: #cc9; }
+        ul.tight, ol.tight { 
+		margin: 6px 0px 0px -1em;
+		list-style-position: outside; 
+		padding 0; 
+		line-height: 0.3;
+	}
+    ul.tight { list-style: circle; }
+    ul.tight li, ol.tight li { 
+        display: list-item;
+        float: none;
+        min-height: 0;
+        padding: 0px 0px 0px 1em;
+        margin: 0px 0px 0px -4px!important;
+        line-height: 16px;
+		font-size: 95%;
+    }
+	ul.tight li { text-indent: -10px; }
     .w40 { width: 40%; }
     .cell-content-wrapper { height: 600px; overflow-y: auto; display: block; }
     .content-div { display: none; }
@@ -469,9 +498,16 @@
                         <a href="#" onClick="showDiv('bsc')">BSC Notes</a>
                         {% endif %}
                     </th>
+                    <th id="th4"
+                            class="tab-header {% if default_panel == 'aliases' %}active{% endif %}" 
+                            onClick="showDiv('aliases', this)">
+                        {% if object.meta_alias_list.0 %}
+                         <a href="#" onClick="showDiv('bsc')">Aliases</a>
+                        {% endif %}
+                    </th>
                 </tr>
                 <tr>
-                    <td colspan=3>
+                    <td colspan=4>
                     <div class="cell-content-wrapper">
                         <div id="annals" class="content-div"
                             style="display: {% if default_panel == 'annals' %}block{% else %}none{% endif %};">
@@ -511,6 +547,23 @@
                             style="display: {% if default_panel == 'bsc' %}block{% else %}none{% endif %};">
                             <h2>BSC Notes</h2>
                             <div class="obsnotes">{{ object.texts.notes_as_html|safe }}</div>
+                        </div>
+                        <div id="aliases" class="content-div"
+                            style="display: {% if default_panel == 'aliases' %}block{% else %}none{% endif %};">
+                            <h2>Aliases</h2>
+                            <div class="alias_list">
+                                {% for alist in object.meta_alias_list %}
+                                {% if object.meta_alias_list|length > 1 %}
+                                <h3>Component {{ forloop.counter }}</h3>
+                                {% endif %}
+                                <ul class="simple">
+                                    {% for a in alist %}
+                                    <li>{{ a }}
+                                    {% endfor %}
+                                </ul>
+                                {% if not forloop.last %}<hr>{% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
 					</td>
 				</tr>

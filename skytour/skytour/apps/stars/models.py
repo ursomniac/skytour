@@ -497,6 +497,26 @@ class BrightStar(Coordinates, WikipediaPageObject):
         x += g.replace(' ','_')
         return x
     
+    @property
+    def meta_alias_list(self):
+        if self.metadata is None:
+            return None
+        if not hasattr(self.metadata, 'metadata'):
+            return None
+        m = self.metadata.metadata
+        if type(m) == dict:
+            if 'aliases' not in m.keys():
+                return None
+            return [sorted(list(set(m['aliases'])))]
+        # list
+        elif type(m) == list:
+            out = []
+            for comp in m:
+                if 'aliases' not in comp.keys():
+                    continue
+                out += [sorted(list(set(comp['aliases'])))]
+            return out
+    
     def get_absolute_url(self):
         """
         Django
@@ -1108,6 +1128,9 @@ class AnnalsDeepSkyStar(AnnalsDeepSkyAbstract):
     
     def __str__(self):
         return self.refs
+
+    class Meta:
+        ordering = ['-volume', '-page']
 
 @receiver(post_save, sender=BrightStar)
 def create_or_update_bright_star_metadata(sender, instance, created, **kwargs):

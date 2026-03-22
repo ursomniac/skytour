@@ -34,6 +34,10 @@ def get_skymap(
         hours = 0.,
         unmask=False,
         min_alt = 20.,
+        moon_dist = 45.,
+        moon_limit_color = "#ff6666",
+        moon_limit_width = 0.85,
+        moon_limit_linestyle = (0, (10, 5))
     ):
     """
     Create a full map of the sky for a given UTDT and location.
@@ -111,6 +115,13 @@ def get_skymap(
     # 3. Moon
         ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
         times.append((time.perf_counter(), 'Moon'))
+        # Add moon circle
+        if moon_dist is not None and moon_dist != 0.:
+            moon_ra = moon['apparent']['equ']['ra']
+            moon_dec = moon['apparent']['equ']['dec']
+            x, y = projection(earth.at(t).observe(Star(ra_hours=moon_ra, dec_degrees=moon_dec)))
+            ax = add_cartesian_circle(ax, x, y, r_deg=moon_dist, 
+                color=moon_limit_color, linestyle=moon_limit_linestyle, linewidth=moon_limit_width)
 
     # 4. Planets
     ax, interesting['planets'] = map_planets(ax, None, planets, earth, t, projection, center=(center_ra, center_dec))
@@ -157,8 +168,8 @@ def get_skymap(
     # 9. Put a circle for the horizon.
     horizon = plt.Circle((0,0), 1., color='b', fill=False)
     ax.add_patch(horizon)
-    # 20. ring
     if not simple:
+        # 20° ring
         sky_limit = plt.Circle((0,0), 70/90., color='#660', fill=False, ls='--')
         ax.add_patch(sky_limit)
         # 45° ring

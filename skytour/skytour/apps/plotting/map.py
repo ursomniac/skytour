@@ -910,3 +910,25 @@ def map_mask(ax, location, color='#3ff', simple=False, debug=False):
         print(n, "Adding Last Point: ", mask)
     
     return ax
+
+def add_cartesian_circle(ax, x, y, r_deg=45, num_points=200, **kwargs):
+    """
+    Adds a circle to a Cartesian plot with limits -1 to 1.
+    
+    Args:
+        ax: Standard matplotlib axes.
+        x, y: Moon center in normalized Cartesian (-1 to 1).
+        r_deg: Radius in degrees (scaled 90 deg = 1.0 unit).
+    """
+    # 1. Scale radius to match your -1 to 1 coordinate system
+    # If 90 degrees = 1.0 radial unit:
+    r_unit = r_deg / 90.0
+
+    # 2. Generate circle points in Cartesian space
+    t = np.linspace(0, 2 * np.pi, num_points)
+    circle_x = x + r_unit * np.cos(t)
+    circle_y = y + r_unit * np.sin(t)
+
+    # 3. Plot directly to the Cartesian axis
+    ax.plot(circle_x, circle_y, **kwargs)
+    return ax

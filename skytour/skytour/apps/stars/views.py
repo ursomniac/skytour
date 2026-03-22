@@ -56,6 +56,7 @@ class SkyView(CookieMixin, TemplateView):
         unmask = bool(self.request.GET.get('unmask', False))
         utdt_now = bool(self.request.GET.get('utdt_now', False))
         min_dso_alt_form = self.request.GET.get('min_dso_alt', None)
+        min_lunar_distance = self.request.GET.get('min_lunar_distance', 45.)
 
         # Handle lowest altitude DSO limit
         if min_dso_alt_form:
@@ -89,6 +90,7 @@ class SkyView(CookieMixin, TemplateView):
         context['hours'] = hours
         context['utdt_now'] = utdt_now
         context['min_dso_alt'] = min_dso_alt
+        context['min_lunar_distance'] = min_lunar_distance
         title = f"Skymap: {context['map_time_str']} - {location.name_for_header}"
 
         if simple:
@@ -115,7 +117,8 @@ class SkyView(CookieMixin, TemplateView):
             title=title,
             simple=simple,
             unmask=unmask,
-            min_alt = min_dso_alt
+            min_alt = min_dso_alt,
+            moon_dist = min_lunar_distance
         )
         context['offset_list'] = [z * 0.5 - 5. for z in range(21)]
         context['skymap'] = map

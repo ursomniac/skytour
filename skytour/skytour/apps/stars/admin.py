@@ -12,6 +12,7 @@ class BrightStarWikiInline(admin.StackedInline):
 
 class BrightStarNotesInline(admin.StackedInline):
     model = BrightStarNotes
+    fieldsets = ((None, {'fields': ['other_parameters','description','bsc_notes'] }),)
 
 class StellarObjectMetadataInline(admin.StackedInline):
     model = StellarObjectMetadata
