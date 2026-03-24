@@ -56,7 +56,7 @@ class SkyView(CookieMixin, TemplateView):
         unmask = bool(self.request.GET.get('unmask', False))
         utdt_now = bool(self.request.GET.get('utdt_now', False))
         min_dso_alt_form = self.request.GET.get('min_dso_alt', None)
-        min_lunar_distance = self.request.GET.get('min_lunar_distance', 45.)
+        min_lunar_distance = float(self.request.GET.get('min_lunar_distance', 45.))
 
         # Handle lowest altitude DSO limit
         if min_dso_alt_form:

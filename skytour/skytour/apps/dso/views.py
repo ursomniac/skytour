@@ -589,7 +589,6 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['location'] = up_dict['location']
         context['times'] = compile_times(times)
 
-
         return context
 
 class DSOEditMetadataView(UpdateView):
@@ -625,6 +624,8 @@ class DSOManageExternalImageView(TemplateView):
                 order_value = 0 if not ov.isdigit() else int(ov)
                 # The PK if this is an UPDATE
                 pk_value = request.POST.get(f"form-{n}-pk", None)
+                # Caption
+                image_caption = request.POST.get(f"form-{n}-caption", None)
                 # Delete
                 delete_value = request.POST.get(f"form-{n}-delete", 'off') == 'on'
 
@@ -642,15 +643,18 @@ class DSOManageExternalImageView(TemplateView):
                         img_object.delete()
                         continue
                 else:  # This is a CREATE operation
+                    if image_value is None:
+                        continue # nothing to save!
                     img_object = DSOImage()
                     img_object.object_id = dso.pk # set the parent DSO
-
                 # just in case that didn't go well and we didn't catch it
                 if img_object is None: 
                     continue
 
                 # Fill in the instance fields
+                # These can change even if there's no new image to upload!
                 img_object.order_in_list = order_value
+                img_object.caption = image_caption
                 if image_value is not None:
                     img_object.image = image_value
                 
@@ -658,7 +662,7 @@ class DSOManageExternalImageView(TemplateView):
                 try:
                     img_object.save()
                 except:
-                    print("DSOImage Management - somwthing went wrong!")
+                    print("DSOImage Management - something went wrong!")
 
         # Go back to the parent DSO Detail page
         return HttpResponseRedirect(reverse('dso-detail', kwargs={'pk': dso.pk}))

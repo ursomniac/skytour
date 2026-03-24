@@ -9,11 +9,12 @@ from taggit.managers import TaggableManager
 
 from ..abstract.models import Coordinates, WikipediaPage, WikipediaPageObject, AnnalsDeepSkyAbstract
 from ..astro.coords import equ2ecl
+from ..astro.stars import get_galactic_uvw
 from ..dso.observing import get_max_altitude
 from ..dso.utils import create_shown_name
 from ..utils.models import Constellation, StarCatalog
 from .utils import create_star_name, parse_designation, get_bright_star_sort_key,\
-    handle_formatting, handle_parameters, get_default_notes_panel
+    handle_formatting, handle_parameters, get_default_notes_panel, get_bsc_uvw_params
 from .values import get_values
 from .vocabs import GCVS_ID, VARDES, VARIABLE_CLASSES, UNICODE, SUPERSCRIPT_CHAR,\
     NOTE_CATEGORIES, STAR_FLAGS, FULL_ENTITY
@@ -516,6 +517,14 @@ class BrightStar(Coordinates, WikipediaPageObject):
                     continue
                 out += [sorted(list(set(comp['aliases'])))]
             return out
+        
+    @property
+    def uvw(self):
+        t = get_bsc_uvw_params(self)
+        if t is not None:
+            uvw = get_galactic_uvw(t[0], t[1], t[4], t[2], t[3], t[5])
+            return {'u': uvw[0], 'v': uvw[1], 'w': uvw[2]}
+        return None
     
     def get_absolute_url(self):
         """

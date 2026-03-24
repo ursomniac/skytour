@@ -183,3 +183,59 @@ def handle_parameters(orig, cols=1, blank='', label_style=None):
     if cols > 1 and out is not None and len(out) > 0:
         out = gridify(out, cols, blank=blank)
     return out
+
+def get_bsc_uvw_params(star, debug=True):
+    d = {}
+    try:
+        v = star.metadata.metadata['values']
+        if type(v) == list:
+            v = v[0]
+    except:
+        v = None
+
+    ra = star.ra_float * 15.
+    dec = star.dec_float
+    if debug:
+        print(f"\tRA: {ra}\n\tDec: {dec}")
+    # PM
+    try:
+        ra_pm = v['proper_motion']['ra']['value']
+        dec_pm = v['proper_motion']['dec']['value']
+        if debug:
+            print(f"\tPM RA: {ra_pm} Simbad\n\tPM Dec: {dec_pm}")
+    except Exception:
+        try:
+            ra_pm = star.pm_ra / 100.
+            dec_pm = star.pm_dec / 100.
+            if debug:
+                print(f"\tPM RA: {ra_pm} BSC\n\tPM Dec: {dec_pm}")
+        except:
+            return None
+    # Distance
+    try:
+        distance = v['distance']['pc']['value']
+        if debug:
+            print(f"\tDist: {distance} SIMBAD")
+    except Exception:
+        try:
+            distance = d.distance_pc
+            if debug:
+                print(f"\tDist: {distance} BSC")
+        except:
+            return None
+    # RV
+    try:
+        rv = v['radial_velocity']['value']
+        if debug:
+            print(f"\tRV: {rv} SIMBAD")
+    except Exception:
+        try:
+            rv = star.radial_velocity
+            print(f"\tRV: {rv} BSC")
+        except:
+            return None
+        
+    if any(x is None for x in [ra, dec, ra_pm, dec_pm, distance, rv]):
+        return None
+    return (ra, dec, ra_pm, dec_pm, distance, rv)
+
