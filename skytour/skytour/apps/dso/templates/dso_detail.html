@@ -10,7 +10,10 @@
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	h3 { color: #ff9; margin: 4px 0px 4px 0px!important; }
 	h4 { margin: 2px 0px 4px 0px!important; }
-		
+	
+	table.characteristics { width: auto; }
+	table.characteristics th { text-align: left; padding-left: 1em!important;  width:auto; background-color: #ca8; }
+	table.characteristics td { width: auto; }
 	table.infield th { background-color: #009; color: #fff; }
 	table.info_box { border: 2px solid black }
 	table.infotext { xborder-collapse; collapse; width: 100%; }
@@ -52,7 +55,7 @@
 		color: #FFF;
 	}
 	td.description a { color: #ff0; }
-	td.dso_image { padding: 0; }
+	td.dso_image { padding: 0; background-color: #191919; }
 	td.edit_images { vertical-align: middle; background-color: #900; text-align: center; }
 	td.edit_images button { width: 20em; height: 20px; }
 	td.editing { border: 2px solid #900!important; }
@@ -102,6 +105,7 @@
         background: rgba(0, 0, 0, 0.3);
         height: 35px;
     }
+	.img_caption { margin: 1em 1em 1em 0.5em; }
 	.mode-chart hr { border-color: #870; border-width: 1px; border-style: solid; }
 	.no-library-image { font-size: 20px; line-height: 2.5; }
 	.object-metadata { color: #ccc; }
@@ -142,6 +146,7 @@
 	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
 	span.cat_entry { color: #ccc; font-style: italic; }
 	span.cat_entry_text { color: #fff; font-weight: bold; font-style: normal; }
+	span.img_caption { font-style: italic; font-size: 110%; }
 	span.little-header { font-size: 11px; color: #ccc; margin-right: 2em; }
 	span.mode-header { color: #fff; font-weight: bold; }
 	span.nickname { font-size: 80%; font-style: italic; color: #ff6; }
@@ -831,9 +836,21 @@
 		<tr class="bottom">
 		{% endif %}
 			<td class="dso_image" colspan=2 style="width:33%">
+				{% if image.image %}
 				<a href="{{ image.image.url}}" target="_blank">
 					<img src="{{ image.image.url }}" width=100%>
 				</a>
+				{% else %}
+				NO FILE?
+				{% endif %}
+				<br>
+				<div class="img_caption">
+					<span class="img_caption">
+						{% if image.caption %}
+						{{ image.caption }}
+						{% endif %}
+					</span>
+				</div>
 			</td>
 		{% if forloop.counter|divisibleby:3 %}
 		</tr>

@@ -6,12 +6,12 @@
     img.image_in_list { max-width: 300px; }
     table.image_form th { height: 20px; }
     table.image_form td.submit { 
-        height: 30px; 
+        height: 3em; 
         text-align: center;
     }
     th.add-new { background-color: #960; }
     span.fn { font-size: 10px; }
-    button.submit { width: 20em; }
+    button.submit { width: 20em; height: 2.5em; }
     table.subtable td { width: 300px; }
     td.order { text-align: center;}
 </style>
@@ -33,32 +33,38 @@
                 <table class="subtable">
                     <tr>
                         <td colspan=2>
-                        <b>Currently:</b> 
-                        <span class="fn">{{ item.image }}</span>
+                            <b>Currently:</b> 
+                            <span class="fn">{{ item.image }}</span>
                         </td>
                     </tr>
                     <tr>
                         <td colspan=2>
-                        <b>Change:</b>
-                        <input 
-                            type="file" 
-                            name="form-{{ nimg }}-image" 
-                            accept="image/*" id="id-{{ nimg }}-image"
-                        />
+                            <b>Change:</b>
+                            <input 
+                                type="file" 
+                                name="form-{{ nimg }}-image" 
+                                accept="image/*" id="id-{{ nimg }}-image"
+                            />
                         </td>
                     </tr>
                         <td rowspan=2>
-                        <img src="{{ item.image.url }}" class="image_in_list" />
+                            <img src="{{ item.image.url }}" class="image_in_list" />
                         </td>
                         <td class="order">
-                        <b>Order in List:</b>&nbsp;&nbsp;
-                        <input size=3 name="form-{{ nimg }}-order" value="{{ item.order_in_list }}">
+                            <b>Order in List:</b>&nbsp;&nbsp;
+                            <input size=3 name="form-{{ nimg }}-order" value="{{ item.order_in_list }}">
                         </td>
                     </tr>
                     <tr>
                         <td class="order">
-                        <b>Delete:</b>
-                        <input type="checkbox" name="form-{{ nimg }}-delete"/>
+                            <b>Delete:</b>
+                            <input type="checkbox" name="form-{{ nimg }}-delete"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                            <b>Caption:</b>&nbsp;&nbsp;
+                            <input name="form-{{ nimg }}-caption" size=60 {% if item.caption %}value="{{ item.caption }}"{% endif %}>
                         </td>
                     </tr>
                 </table>
@@ -84,6 +90,13 @@
             <b>Order in List:</b>
             <input name='form-new-order' size=3>
             <br><br>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;&nbsp;&nbsp;
+            Caption: 
+            <input name="form-new-caption" size=60>
         </td>
     </tr>
     {% endif %}

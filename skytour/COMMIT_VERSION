@@ -1,1 +1,1 @@
-2.16.2 - Added lunar distance marker on SkyView;  added Aliases for stars
+2.16.3 - filter on Annals Stars; tried UVW (failed, code doesn't work); fixed bug in DSO External Image, added captions

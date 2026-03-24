@@ -138,6 +138,16 @@ class Coordinates(models.Model):
     class Meta:
         abstract = True
 
+class StarAbstract(Coordinates):
+    # gives ra/dec
+    # UVW: need
+    #   ra, dec       [degrees]
+    #   distance      [pc]
+    #   PM (ra, dec)  [mas/yr]
+    #   RV            [km/s]
+    class Meta:
+        abstract = True
+
 
 class ObjectImage(models.Model):
     """

@@ -1,8 +1,48 @@
 from django.contrib import admin
+from django.db.models import Q
 from .models import BrightStar, DoubleStar, DoubleStarAlias, DoubleStarElements, VariableStar,\
     VariableStarTypeOriginal, VariableStarTypeRevised, ObservableVariableStar, VariableStarLightCurve,\
     StellarObject, BrightStarMetadata, BrightStarWiki, StellarObjectMetadata, StellarObjectWiki,\
     BrightStarNotes, AnnalsDeepSkyStar
+
+class AnnalsConstellationFilter(admin.SimpleListFilter):
+    title = 'constellation'
+    parameter_name = 'constellation'
+
+    def lookups(self, request, model_admin):
+        """
+        Gathers unique property values from the current database records.
+        """
+        # Get all objects and extract the property value
+        # Note: This executes the property for every row
+        qs = model_admin.get_queryset(request)
+        values = {obj.constellation.abbreviation for obj in qs if obj.constellation}
+        
+        # Return sorted list of (value, display_name) tuples
+        return sorted([(v, v) for v in values])
+
+    def squeryset(self, request, queryset):
+        """
+        Filters the queryset by the selected string.
+        """
+        if not self.value():
+            return queryset
+            
+        # Optimization: Map the string back to the underlying DB logic
+        # Replace 'field_used_in_property' with your actual model field
+        return queryset.filter(bright_star__constellation__abbreviation=self.value())
+    
+    def queryset(self, request, queryset):
+        choice = self.value()
+        if choice:
+            # Check all three possible paths to the constellation abbreviation
+            return queryset.filter(
+                Q(bright_star__constellation__abbreviation=choice) |
+                Q(double_star__constellation__abbreviation=choice) |
+                Q(other_star__constellation__abbreviation=choice)  |
+                Q(variable_star__constellation__abbreviation=choice)
+            ).distinct() # Use distinct() to avoid duplicates if a star is in multiple categories
+        return queryset
 
 class BrightStarMetadataInline(admin.StackedInline):
     model = BrightStarMetadata
@@ -193,6 +233,9 @@ class AnnalsDeepSkyStarAdmin(admin.ModelAdmin):
             ]
         }),
     )
+    list_filter = [AnnalsConstellationFilter, 'volume']
+
+
 
 admin.site.register(BrightStar, BrightStarAdmin)
 admin.site.register(DoubleStar, DoubleStarAdmin)
