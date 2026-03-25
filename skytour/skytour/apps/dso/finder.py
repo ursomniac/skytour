@@ -450,12 +450,17 @@ def create_dso_finder_chart(
     times.append((time.perf_counter(), 'Returning Image'))
     return pngImageB64String, times
 
-def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9, 
+def plot_dso_list(center_ra, center_dec, dso_list, 
+        fov=20, 
+        mag_limit=9, 
         reversed=True,  # white on black or black on white
         title='DSO List',
         star_mag_limit = 11,
         symbol_size=40,
         label_size='xx-small',
+        show_moon=False,
+        min_lunar_distance = 45.,
+        moon = None
     ):
     ts = load.timescale()
     t = ts.from_datetime(datetime.datetime.now(pytz.timezone('UTC')))
@@ -494,8 +499,22 @@ def plot_dso_list(center_ra, center_dec, dso_list, fov=20, mag_limit=9,
     ax.yaxis.set_visible(False)
     secax = ax.secondary_xaxis('bottom', functions=(r2d, d2r))
     secax.set_xlabel('Degrees')
-    secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
+    #secay = ax.secondary_yaxis('left', functions=(r2d, d2r))
     plt.tight_layout(pad=2.0)
+
+    if show_moon and moon:
+    # 3. Moon
+        ax = map_single_object(ax, 'Moon', moon, earth, t, projection, color='red')
+        moon_limit_color = "#ff6666"
+        moon_limit_width = 0.85
+        moon_limit_linestyle = (0, (10, 5))
+        # Add moon circle
+        if min_lunar_distance is not None and min_lunar_distance != 0.:
+            moon_ra = moon['apparent']['equ']['ra']
+            moon_dec = moon['apparent']['equ']['dec']
+            x, y = projection(earth.at(t).observe(Star(ra_hours=moon_ra, dec_degrees=moon_dec)))
+            ax = add_cartesian_circle(ax, x, y, r_deg=min_lunar_distance, 
+                color=moon_limit_color, linestyle=moon_limit_linestyle, linewidth=moon_limit_width)
 
     ax.set_title(title)
     # Convert to a PNG image

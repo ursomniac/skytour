@@ -133,6 +133,8 @@
                         <td>
                             <label for="min_dso_lunar_distance">Min. Lunar Sep.:&nbsp;</label>
                             <input name="min_dso_lunar_distance" size=4 {% if min_dso_lunar_distance %}value="{{ min_dso_lunar_distance }}"{% endif %}>
+                            <label for="show_moon">Show Moon:&nbsp;</label>
+                            <input name="show_moon" type="checkbox" {% if show_moon %}checked{% endif %}>
                         </td>
                     </tr>
                     <tr>
