@@ -61,6 +61,7 @@ class DSOImageAdmin(admin.StackedInline):
             'fields': [
                 'order_in_list',
                 ('image', 'object_image_tag'),
+                'caption',
                 'notes'
             ]
         }),

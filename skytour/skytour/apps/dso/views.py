@@ -27,6 +27,7 @@ from ..astro.time import get_datetime_from_strings
 from ..session.pdf_pages.dso import do_dso_lists
 from ..session.mixins import CookieMixin
 from ..site_parameter.helpers import find_site_parameter
+from ..solar_system.position import get_object_metadata
 from ..tech.models import Telescope
 from ..utils.timer import compile_times
 
@@ -60,7 +61,7 @@ from .utils import (
     deconstruct_mode_form,
     get_default_panel
 )
-from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time
+from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time, parse_utdt
 from .utils_checklist import (
     filter_dsos, 
     get_filter_params, 
@@ -69,7 +70,13 @@ from .utils_checklist import (
 from .utils_dsolist import get_active_dsolist_objects, get_dso_list_map
 from .wiki import format_wiki_text
 
-def plot_list_of_dsos(dso_list=None, map_scaling_factor=None):
+def plot_list_of_dsos(
+        dso_list=None, 
+        show_moon=False, 
+        moon = None,
+        min_lunar_distance=45., 
+        map_scaling_factor=None
+    ):
     #mag =  2.4 if not object.map_scaling_factor else object.map_scaling_factor
     mag = 2.4 if not map_scaling_factor else map_scaling_factor
     center_ra, center_dec, max_dist = get_circle_center(dso_list)
@@ -87,6 +94,9 @@ def plot_list_of_dsos(dso_list=None, map_scaling_factor=None):
             reversed = False,
             label_size='small',
             symbol_size=60,
+            moon = moon,
+            show_moon = show_moon,
+            min_lunar_distance = min_lunar_distance,
             title = f"Available DSOs"
         )
     return map
@@ -502,6 +512,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['show_thumbs'] = show_thumbs
         show_map = self.request.GET.get('show_map', 'off') == 'on'
         context['show_map'] = show_map
+        show_moon = self.request.GET.get('show_moon', 'off') == 'on'
+        context['show_moon'] = show_moon
         on_dso_list_all = self.request.GET.get('on_dso_list_all', 'off') == 'on'
         context['on_dso_list_all'] = on_dso_list_all
         incl_low_culmination = self.request.GET.get('incl_low_culmination', 'off') == 'on'
@@ -545,7 +557,18 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             format_utdt = orig_utdt
         else:
             format_utdt = orig_utdt.strftime("%Y-%m-%d %H:%M:%S")
-            
+
+        # Deal with Moon
+        if show_moon:
+            if not context['is_now']:
+                moon = context['cookies']['moon']
+            else:
+                utdt = dt.datetime.now(dt.timezone.utc)
+                utdt += dt.timedelta(hours=context['ut_offset'])
+                moon = get_object_metadata(utdt, 'Moon', 'moon', location=location)
+        else:
+            moon = None
+
         # START with all DSOs.
         dso_list = DSO.objects.all()
 
@@ -571,13 +594,19 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             west_ha_limit = west_ha_limit,
             incl_low_culmination = incl_low_culmination,
             min_dso_lunar_distance = min_dso_lunar_distance,
-            moon = context['cookies']['moon'],
+            moon = moon,
             debug=debug
         )
         dsos = up_dict['dsos']
         # Make a map if requested
+
         if show_map:
-            context['map'] = plot_list_of_dsos(dsos)
+            context['map'] = plot_list_of_dsos(
+                dsos, 
+                moon=moon, 
+                show_moon=show_moon, 
+                min_lunar_distance=min_dso_lunar_distance
+            )
 
         # Set context for page
         context['calc_utdt'] = up_dict['utdt']
