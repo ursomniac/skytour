@@ -95,8 +95,8 @@ def find_dsos_at_location_and_time (
         # Is it in a good location in the sky?
         hour_angle = get_hour_angle(utdt, location.longitude, d.ra_float)
         (az, alt, _) = d.alt_az(location, utdt)
+
         # Is it far enough away from the Moon
-        
         lunar_distance = None
         if moon is not None:
             try:
