@@ -522,6 +522,8 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
         context['west_ha_limit'] = west_ha_limit
         min_dso_lunar_distance = float(self.request.GET.get('min_dso_lunar_distance', find_site_parameter('min_dso_lunar_distance', 45., 'float')))
         context['min_dso_lunar_distance'] = min_dso_lunar_distance
+        filter_moon_dsos = self.request.GET.get('filter_moon_dsos', 'off') == 'on'
+        context['filter_moon_dsos'] = filter_moon_dsos
         gear = assemble_gear_list(self.request)        
         location = context['cookies']['user_pref']['location']
 
@@ -594,7 +596,7 @@ class AvailableDSOObjectsView(CookieMixin, AvailableDSOMixin, TemplateView):
             west_ha_limit = west_ha_limit,
             incl_low_culmination = incl_low_culmination,
             min_dso_lunar_distance = min_dso_lunar_distance,
-            moon = moon,
+            moon = moon if filter_moon_dsos else None,
             debug=debug
         )
         dsos = up_dict['dsos']
