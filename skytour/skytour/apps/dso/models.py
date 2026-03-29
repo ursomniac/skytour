@@ -819,6 +819,12 @@ class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
             return options[x]
         return 'Unknown'
 
+    @property
+    def name_on_list(self):
+        label = create_shown_name(self, use_con=False)
+        label += '+' if self.dsoinfield_set.count() > 0 else ''
+        return label
+
     def mode_viability_chart(self):
         """
         This creates the mode/viability chart on the DSODetailPage.

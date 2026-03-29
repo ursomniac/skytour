@@ -2,7 +2,14 @@
 <table>
     <tbody>
         {% if show_moon and url_type == 'planet-detail' %}
-        <tr><td><a href="{% url 'moon-detail' %}" target="_blank">Moon</a></td></tr>
+        <tr>
+            <td>
+                <a href="{% url 'moon-detail' %}" target="_blank">Moon</a>
+                {% if moon_constellation %}
+                &nbsp; in {{ moon_constellation }}
+                {% endif %}
+            </td>
+        </tr>
         {% endif %}
         {% for object in object_list %}
         <tr>
@@ -10,10 +17,17 @@
                 {% if url_type == 'dso-detail' %}
                 <a href="{% url url_type object.pk %}" target="_blank">{{ object.shown_name }}</a> {{ object.object_type }}
                 {% elif url_type == 'comet-detail' %}
-                {{ object.letter }}: <a href="{% url url_type object.pk %}" target="_blank">{{ object.name }}</a>
-                &nbsp; in {{ object.observe.constellation.abbr }}
+                {{ object.letter }}: 
+                <a href="{% url url_type object.pk %}" target="_blank">{{ object.name }}</a>
+                {% elif url_type == 'asteroid-detail' %}
+                <a href="{% url url_type object.slug %}" target="_blank">{{ object.name }}</a>
                 {% else %}
                 <a href="{% url url_type object.slug %}" target="_blank">{{ object.name }}</a>
+                {% endif %}
+                {% if url_type != 'dso-detail' %}
+                &nbsp; in {{ object.observe.constellation.abbr|upper }}
+                {% else %}
+                &nbsp; in {{ object.constellation }}
                 {% endif %}
             </td>
         </tr>

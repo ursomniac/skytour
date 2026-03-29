@@ -56,7 +56,10 @@
         {% endif %}
         <td>
             <span class="hidden">{{ dso.sort_key }}</span>
-            <a href="{% url 'dso-detail' dso.pk %}" target="_new">{{ dso.label_on_chart }}</a>
+            <a href="{% url 'dso-detail' dso.pk %}" target="_new">
+                {# dso.label_on_chart #}
+                {{ dso.name_on_list }}
+            </a>
             {% if dso.nickname %} - <span class="nickname">{{ dso.nickname }}</span>{% endif %}
             {% if dso.dsoinfield_set.count > 0 %}
             <span class="infield">+{{ dso.dsoinfield_set.count }} in FOV</span>
