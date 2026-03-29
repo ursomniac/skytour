@@ -229,8 +229,8 @@ class DSOAdmin(ObservableObjectAdmin):
     inlines = [
         DSOAliasInline, 
         DSOAnnalsInline,
-        DSOWikiInline,
         DSOInFieldInline,
+        DSOWikiInline,
         DSOLibraryImageAdmin, 
         DSOImageAdmin,  
         DSOObservationAdmin,

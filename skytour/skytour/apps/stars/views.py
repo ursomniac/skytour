@@ -79,8 +79,8 @@ class SkyView(CookieMixin, TemplateView):
         sun = context['cookies']['sun']
         moon = context['cookies']['moon']
 
-        # TODO V2.x: figure out if moon is on the plot
         context['show_moon'] =  moon is not None 
+        context['moon_constellation'] = None if moon is None else moon['observe']['constellation']['abbr'].upper()
         
         context['shown_datetime'] = utdt + datetime.timedelta(hours=hours)
         context['local_time'] = context['shown_datetime'].astimezone(pytz.timezone(pytz_tz))
