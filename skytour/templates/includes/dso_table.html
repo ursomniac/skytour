@@ -67,9 +67,12 @@
             <br>
             <small>
             {% if dso.alias_list %}{{ dso.alias_list }}{% else %}&nbsp;{% endif %}
-            {% if dso.has_annals %}
-            <span class="infield bigger">🄰</span>
-            {% endif %}
+            <span class="infield bigger">
+                {% if dso.has_annals %}🄰{% endif %}
+                {% for s in dso.dsoobservingnotes_set.all %}
+                {{ s.source.show_symbol }}
+                {% endfor %}
+            </span>            
             </small>
         </td>
         <td class="wiki">

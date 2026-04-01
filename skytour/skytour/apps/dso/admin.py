@@ -6,7 +6,7 @@ from .models import DSO, DSOImage, DSOAlias, DSOObservation, \
     DSOLibraryImage, DSOWiki,\
     AtlasPlateSpecial, AtlasPlateSpecialVersion, \
     DSOInField, DSOInFieldAlias, DSOObservingMode, \
-    AnnalsDeepSkyDSO, AnnalsDeepSkyDSOInField
+    AnnalsDeepSkyDSO, AnnalsDeepSkyDSOInField, DSOObservingNotesSource, DSOObservingNotes
 
 MAX_DSO_IN_FIELD = 15
 
@@ -47,6 +47,18 @@ class DSOObservingModeInline(admin.StackedInline):
             'fields': [
                 ('mode','viable', 'priority'),
                 ('interesting', 'challenging'),
+                'notes'
+            ]
+        }),
+    )
+
+class DSOObservingNotesInline(admin.StackedInline):
+    model = DSOObservingNotes
+    extra = 0
+    fieldsets = (
+        (None,  {
+            'fields': [
+                ('source', 'volume', 'page'),
                 'notes'
             ]
         }),
@@ -93,7 +105,6 @@ class DSOInFieldAliasInline(admin.TabularInline):
     model = DSOInFieldAlias
     extra = 0
     fields = ['catalog', 'id_in_catalog', 'alias_in_field', 'in_field_dso']
-
 
 class DSOObservationAdmin(AbstractObservation):
     model = DSOObservation
@@ -229,6 +240,7 @@ class DSOAdmin(ObservableObjectAdmin):
     inlines = [
         DSOAliasInline, 
         DSOAnnalsInline,
+        DSOObservingNotesInline,
         DSOInFieldInline,
         DSOWikiInline,
         DSOLibraryImageAdmin, 
@@ -563,5 +575,6 @@ admin.site.register(DSOInField, DSOInFieldAdmin)
 admin.site.register(AtlasPlate, AtlasPlateAdmin)
 admin.site.register(AtlasPlateSpecial, AtlasPlateSpecialAdmin)
 admin.site.register(DSOObservation)
+admin.site.register(DSOObservingNotesSource)
 admin.site.register(AnnalsDeepSkyDSO, AnnalsDeepSkyDSOAdmin)
 admin.site.register(AnnalsDeepSkyDSOInField, AnnalsDeepSkyDSOInFieldAdmin)

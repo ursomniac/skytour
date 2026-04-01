@@ -19,7 +19,7 @@ from ..abstract.models import (
 )
 from ..abstract.models import WikipediaPage, WikipediaPageObject
 from ..abstract.utils import get_metadata
-from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO
+from ..abstract.vocabs import YES, NO, YES_NO as INT_YES_NO, SYMBOLS
 from ..astro.angdist import get_neighbors
 from ..astro.astro import get_delta_hour_for_altitude
 from ..astro.coords import equ2ecl, equ2gal
@@ -800,6 +800,10 @@ class DSO(DSOAbstract, ObservableObject, WikipediaPageObject):
         return out
     
     @property
+    def has_observing_notes(self):
+        return self.notes.strip not in [None,''] or self.dsoobservingnotes_set.count() > 0
+    
+    @property
     def dso_thumbnail(self):
         x = self.image_library.filter(use_in_carousel=1).order_by('order_in_list').first() 
         y = self.images.first()
@@ -1103,6 +1107,54 @@ class DSOAbstractAlias(models.Model):
 
     def __str__(self):
         return self.shown_name
+    
+class DSOObservingNotesSource(models.Model):
+    name = models.CharField(
+        _('Name'),
+        max_length = 100
+    )
+    slug = models.SlugField()
+    description = models.TextField(
+        null = True, blank = True
+    )
+    symbol = models.CharField(
+        _('Symbol'),
+        max_length = 4,
+        default = ' '
+    )
+    @property
+    def show_symbol(self):
+        if self.symbol in SYMBOLS.keys():
+            return SYMBOLS[self.symbol]
+        return '?'
+    
+    def __str__(self):
+        return self.name
+    
+class DSOObservingNotes(models.Model):
+    source = models.ForeignKey(
+        DSOObservingNotesSource,
+        on_delete = models.CASCADE,
+    )
+    volume = models.CharField (
+        _('Volume'),
+        max_length = 5,
+        null = True, blank = True
+    )
+    page = models.CharField (
+        _('Page'),
+        max_length = 5,
+        null = True, blank = True,
+    )
+    dso = models.ForeignKey(
+        DSO,
+        on_delete = models.CASCADE
+    )
+    notes = models.TextField(
+        blank = True, null = True
+    )
+    def __str__(self):
+        return f"{self.dso.pk}: {self.dso} - {self.source}"
     
 class DSOAlias(DSOAbstractAlias):
     object = models.ForeignKey(DSO, 

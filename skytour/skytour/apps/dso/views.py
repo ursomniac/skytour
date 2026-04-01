@@ -59,7 +59,8 @@ from .utils import (
     delete_dso_from_dsolist,
     construct_mode_form, 
     deconstruct_mode_form,
-    get_default_panel
+    get_default_panel,
+    organize_observing_notes
 )
 from .utils_avail import assemble_gear_list, find_dsos_at_location_and_time, parse_utdt
 from .utils_checklist import (
@@ -196,6 +197,7 @@ class DSODetailView(CookieMixin, DetailView):
         context['mode_priority_label'] = priority_label
         context['mode_priority_span'] = priority_span
         context['neighbor_list'] = neighbor_list
+        context['observing_notes'] = organize_observing_notes(self.object)
         context['times'] = compile_times(times)
         if self.object.has_wiki == 'WIKI':
             context['wiki_text'] = format_wiki_text(self.object.wiki)
