@@ -296,8 +296,8 @@ def deconstruct_mode_form(data, mode):
 
 def get_default_panel(dso):
     x = None # default
-    x = 'other' if dso.notes else x # override
-    x = 'wiki' if dso.has_wiki else x # override again
+    x = 'other' if (dso.notes.strip not in [None, ''] or dso.dsoobservingnotes_set.count() > 0) else x # override
+    x = 'wiki' if dso.has_wiki == 'WIKI' else x # override again
     x = 'annals' if dso.has_annals else x # override again (see how this works)?
     return x
 
@@ -306,7 +306,8 @@ def dso_name_sort_key(dso, debug=False):
     suffix = '___'
 
     # 1. Get the first part
-    if dso.map_label is not None:
+    # 1.1. Deal with / names
+    if dso.map_label is not None and '/' not in dso.map_label:
         # BUG: NGC 4567/8 ends up here...
         xx = dso.map_label.split(' ')
         cslug = xx[0][:8].lower().ljust(8, '_')
@@ -351,3 +352,30 @@ def dso_name_sort_key(dso, debug=False):
         if debug:
             print(f"2. other {oslug}")
     return '-'.join([cslug, oslug, suffix])
+
+def organize_observing_notes(dso, html=True):
+    notes = dso.dsoobservingnotes_set.all()
+    c = notes.count()
+    if c < 1:
+        return None
+    out = ''
+    first = True
+    for n in notes:
+        # source
+        if not first or (dso.notes.strip() not in [None, '']):
+            out += '<hr>\n' if html else ''
+        out += f"<h3>{ n.source }</h3>" if html else f"{ n.source }\n"
+        # volume and page
+        out += f'<h4><span class="volpage">' if html else ''
+        out += f"v. { n.volume }, " if n.volume else ''
+        out += f"p. { n.page }"  if n.page else ''
+        out += "</span></h4>\n" if html else '\n'
+        # text
+        if html:
+            result = re.sub(r'^\[([^\]]+)\]', r'<span class=aperture>\1</span>:', n.notes, flags=re.MULTILINE)
+        else:
+            result = n.notes
+        out += result
+        out += '\n' if not html else ''
+        first = False
+    return out

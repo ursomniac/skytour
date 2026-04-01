@@ -1,0 +1,328 @@
+[
+    {
+        "name": "4295806720",
+        "solution_id": 1636148068921376768,
+        "designation": "Gaia DR3 4295806720",
+        "source_id": 4295806720,
+        "random_index": 545300884,
+        "ref_epoch": {
+            "value": 2016.0,
+            "units": "yr"
+        },
+        "ra": {
+            "value": 44.99615537864534,
+            "units": "deg"
+        },
+        "ra_error": {
+            "value": 0.10161826759576797,
+            "units": "mas"
+        },
+        "dec": {
+            "value": 0.005615226341865997,
+            "units": "deg"
+        },
+        "dec_error": {
+            "value": 0.1013338714838028,
+            "units": "mas"
+        },
+        "parallax": {
+            "value": 0.3543305595550248,
+            "units": "mas"
+        },
+        "parallax_error": {
+            "value": 0.12266381084918976,
+            "units": "mas"
+        },
+        "parallax_over_error": 2.888631582260132,
+        "pm": {
+            "value": 12.616484642028809,
+            "units": "mas / yr"
+        },
+        "pmra": {
+            "value": 11.93835156938502,
+            "units": "mas / yr"
+        },
+        "pmra_error": {
+            "value": 0.13794228434562683,
+            "units": "mas / yr"
+        },
+        "pmdec": {
+            "value": -4.0806193394130865,
+            "units": "mas / yr"
+        },
+        "pmdec_error": {
+            "value": 0.13316982984542847,
+            "units": "mas / yr"
+        },
+        "ra_dec_corr": 0.12293493002653122,
+        "ra_parallax_corr": 0.13202813267707825,
+        "ra_pmra_corr": -0.08891026675701141,
+        "ra_pmdec_corr": 0.022551458328962326,
+        "dec_parallax_corr": -0.3653421103954315,
+        "dec_pmra_corr": -0.03690376877784729,
+        "dec_pmdec_corr": -0.24483804404735565,
+        "parallax_pmra_corr": 0.06301233172416687,
+        "parallax_pmdec_corr": 0.1357085406780243,
+        "pmra_pmdec_corr": 0.33433669805526733,
+        "astrometric_n_obs_al": 184,
+        "astrometric_n_obs_ac": 0,
+        "astrometric_n_good_obs_al": 183,
+        "astrometric_n_bad_obs_al": 1,
+        "astrometric_gof_al": 2.672048807144165,
+        "astrometric_chi2_al": 242.20697021484375,
+        "astrometric_excess_noise": {
+            "value": 0.3806192874908447,
+            "units": "mas"
+        },
+        "astrometric_excess_noise_sig": 2.076507806777954,
+        "astrometric_params_solved": 31,
+        "astrometric_primary_flag": false,
+        "nu_eff_used_in_astrometry": {
+            "value": 1.5089387893676758,
+            "units": "1 / um"
+        },
+        "pseudocolour": null,
+        "pseudocolour_error": null,
+        "ra_pseudocolour_corr": null,
+        "dec_pseudocolour_corr": null,
+        "parallax_pseudocolour_corr": null,
+        "pmra_pseudocolour_corr": null,
+        "pmdec_pseudocolour_corr": null,
+        "astrometric_matched_transits": 22,
+        "visibility_periods_used": 16,
+        "astrometric_sigma5d_max": {
+            "value": 0.21780180931091309,
+            "units": "mas"
+        },
+        "matched_transits": 22,
+        "new_matched_transits": 9,
+        "matched_transits_removed": 0,
+        "ipd_gof_harmonic_amplitude": 0.017597319558262825,
+        "ipd_gof_harmonic_phase": {
+            "value": 90.23934173583984,
+            "units": "deg"
+        },
+        "ipd_frac_multi_peak": 0,
+        "ipd_frac_odd_win": 0,
+        "ruwe": 1.1429516077041626,
+        "scan_direction_strength_k1": 0.3079511821269989,
+        "scan_direction_strength_k2": 0.19765861332416534,
+        "scan_direction_strength_k3": 0.43010106682777405,
+        "scan_direction_strength_k4": 0.8420776128768921,
+        "scan_direction_mean_k1": {
+            "value": -87.7547836303711,
+            "units": "deg"
+        },
+        "scan_direction_mean_k2": {
+            "value": -30.694549560546875,
+            "units": "deg"
+        },
+        "scan_direction_mean_k3": {
+            "value": -46.201908111572266,
+            "units": "deg"
+        },
+        "scan_direction_mean_k4": {
+            "value": 30.17435646057129,
+            "units": "deg"
+        },
+        "duplicated_source": false,
+        "phot_g_n_obs": 182,
+        "phot_g_mean_flux": {
+            "value": 1653.39471645947,
+            "units": "electron / s"
+        },
+        "phot_g_mean_flux_error": {
+            "value": 2.0757641792297363,
+            "units": "electron / s"
+        },
+        "phot_g_mean_flux_over_error": 796.5233764648438,
+        "phot_g_mean_mag": {
+            "value": 17.64142608642578,
+            "units": "mag"
+        },
+        "phot_bp_n_obs": 18,
+        "phot_bp_mean_flux": {
+            "value": 800.4295459066461,
+            "units": "electron / s"
+        },
+        "phot_bp_mean_flux_error": {
+            "value": 12.601408958435059,
+            "units": "electron / s"
+        },
+        "phot_bp_mean_flux_over_error": 63.51905059814453,
+        "phot_bp_mean_mag": {
+            "value": 18.08023452758789,
+            "units": "mag"
+        },
+        "phot_rp_n_obs": 20,
+        "phot_rp_mean_flux": {
+            "value": 1187.588003883822,
+            "units": "electron / s"
+        },
+        "phot_rp_mean_flux_error": {
+            "value": 15.823831558227539,
+            "units": "electron / s"
+        },
+        "phot_rp_mean_flux_over_error": 75.05059814453125,
+        "phot_rp_mean_mag": {
+            "value": 17.06123161315918,
+            "units": "mag"
+        },
+        "phot_bp_rp_excess_factor": 1.2023853063583374,
+        "phot_bp_n_contaminated_transits": 0,
+        "phot_bp_n_blended_transits": 0,
+        "phot_rp_n_contaminated_transits": 0,
+        "phot_rp_n_blended_transits": 2,
+        "phot_proc_mode": 0,
+        "bp_rp": {
+            "value": 1.019002914428711,
+            "units": "mag"
+        },
+        "bp_g": {
+            "value": 0.4388084411621094,
+            "units": "mag"
+        },
+        "g_rp": {
+            "value": 0.5801944732666016,
+            "units": "mag"
+        },
+        "radial_velocity": null,
+        "radial_velocity_error": null,
+        "rv_method_used": null,
+        "rv_nb_transits": null,
+        "rv_nb_deblended_transits": null,
+        "rv_visibility_periods_used": null,
+        "rv_expected_sig_to_noise": null,
+        "rv_renormalised_gof": null,
+        "rv_chisq_pvalue": null,
+        "rv_time_duration": null,
+        "rv_amplitude_robust": null,
+        "rv_template_teff": null,
+        "rv_template_logg": null,
+        "rv_template_fe_h": null,
+        "rv_atm_param_origin": null,
+        "vbroad": null,
+        "vbroad_error": null,
+        "vbroad_nb_transits": null,
+        "grvs_mag": null,
+        "grvs_mag_error": null,
+        "grvs_mag_nb_transits": null,
+        "rvs_spec_sig_to_noise": null,
+        "phot_variable_flag": "NOT_AVAILABLE",
+        "l": {
+            "value": 176.95107618038946,
+            "units": "deg"
+        },
+        "b": {
+            "value": -48.901520870941965,
+            "units": "deg"
+        },
+        "ecl_lon": {
+            "value": 42.53372584780011,
+            "units": "deg"
+        },
+        "ecl_lat": {
+            "value": -16.32957416215404,
+            "units": "deg"
+        },
+        "in_qso_candidates": false,
+        "in_galaxy_candidates": false,
+        "non_single_star": 0,
+        "has_xp_continuous": true,
+        "has_xp_sampled": false,
+        "has_rvs": false,
+        "has_epoch_photometry": false,
+        "has_epoch_rv": false,
+        "has_mcmc_gspphot": true,
+        "has_mcmc_msc": true,
+        "in_andromeda_survey": false,
+        "classprob_dsc_combmod_quasar": 3.0354892210926465e-11,
+        "classprob_dsc_combmod_galaxy": 7.045791359204523e-13,
+        "classprob_dsc_combmod_star": 0.9999876022338867,
+        "teff_gspphot": {
+            "value": 5052.97607421875,
+            "units": "K"
+        },
+        "teff_gspphot_lower": {
+            "value": 5040.658203125,
+            "units": "K"
+        },
+        "teff_gspphot_upper": {
+            "value": 5066.62841796875,
+            "units": "K"
+        },
+        "logg_gspphot": {
+            "value": 4.779300212860107,
+            "units": "log(cm.s**-2)"
+        },
+        "logg_gspphot_lower": {
+            "value": 4.761300086975098,
+            "units": "log(cm.s**-2)"
+        },
+        "logg_gspphot_upper": {
+            "value": 4.792399883270264,
+            "units": "log(cm.s**-2)"
+        },
+        "mh_gspphot": {
+            "value": -1.4592000246047974,
+            "units": "dex"
+        },
+        "mh_gspphot_lower": {
+            "value": -1.573199987411499,
+            "units": "dex"
+        },
+        "mh_gspphot_upper": {
+            "value": -1.3438999652862549,
+            "units": "dex"
+        },
+        "distance_gspphot": {
+            "value": 1497.0546875,
+            "units": "pc"
+        },
+        "distance_gspphot_lower": {
+            "value": 1466.734619140625,
+            "units": "pc"
+        },
+        "distance_gspphot_upper": {
+            "value": 1536.132080078125,
+            "units": "pc"
+        },
+        "azero_gspphot": {
+            "value": 0.006399999838322401,
+            "units": "mag"
+        },
+        "azero_gspphot_lower": {
+            "value": 0.0015999999595806003,
+            "units": "mag"
+        },
+        "azero_gspphot_upper": {
+            "value": 0.01759999990463257,
+            "units": "mag"
+        },
+        "ag_gspphot": {
+            "value": 0.005200000014156103,
+            "units": "mag"
+        },
+        "ag_gspphot_lower": {
+            "value": 0.0013000000035390258,
+            "units": "mag"
+        },
+        "ag_gspphot_upper": {
+            "value": 0.014299999922513962,
+            "units": "mag"
+        },
+        "ebpminrp_gspphot": {
+            "value": 0.00279999990016222,
+            "units": "mag"
+        },
+        "ebpminrp_gspphot_lower": {
+            "value": 0.000699999975040555,
+            "units": "mag"
+        },
+        "ebpminrp_gspphot_upper": {
+            "value": 0.007799999788403511,
+            "units": "mag"
+        },
+        "libname_gspphot": "MARCS"
+    }
+]

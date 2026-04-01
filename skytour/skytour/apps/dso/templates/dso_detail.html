@@ -10,7 +10,14 @@
 	h2.short {  margin-top: 0.4em; margin-bottom: 0.5em; }
 	h3 { color: #ff9; margin: 4px 0px 4px 0px!important; }
 	h4 { margin: 2px 0px 4px 0px!important; }
-	
+	h5 { 
+		color: #ec0; font-size: 100%; font-weight: bold; 
+	    display: inline-block; /* Wraps closely around text */
+    	border: 1px solid #990; /* Adds the box border */
+    	padding: 3px 5px;     /* Space between text and border */
+    	border-radius: 5px;    /* Optional: rounded corners */
+    	margin: 0px;        /* Optional: spacing around the box */
+	}
 	table.characteristics { width: auto; }
 	table.characteristics th { text-align: left; padding-left: 1em!important;  width:auto; background-color: #ca8; }
 	table.characteristics td { width: auto; }
@@ -142,6 +149,7 @@
 	.white { color: #fff; }
 
 	span.annotation { padding-left: 10px; padding-top: 4px; font-size: 60%; font-style: italic; color: #ff6; }
+	span.aperture { font-weight: bold; color: #eee; }
 	span.bigger { font-size: 160%; }
 	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
 	span.cat_entry { color: #ccc; font-style: italic; }
@@ -375,7 +383,7 @@
 							<th id="th3" 
 									class="tab-header {% if default_panel == 'other' %}active{% endif %}" 
 									onClick="showDiv('other', this)">
-								{% if object.notes %}
+								{% if object.has_observing_notes %}
 								<a href="#" onClick="showDiv('other')">Obs. Notes</a>
 								{% endif %}
 							</th>
@@ -425,8 +433,14 @@
 								</div>
 								<div id="other" class="content-div"
 									style="display: {% if default_panel == 'other' %}block{% else %}none{% endif %};">
-									<h3>Observing Notes</h3>
-									<div class="obsnotes">{{ object.notes|smart_linebreaks }}</div>
+									{% if object.notes or observing_notes %}
+										<h3>Observing Notes</h3>
+										<div class="obsnotes">{{ object.notes|smart_linebreaks }}</div>
+										{% if observing_notes %}
+										<div class="obsnotes">{{ observing_notes|smart_linebreaks }}</div>
+										{% endif %}
+									{% endif %}
+
 								</div>
 								<div id="aliases" class="content-div"
 								 	style="display: {% if default_panel == 'aliases' %}block{% else %}none{% endif %};">
