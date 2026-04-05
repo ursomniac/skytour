@@ -149,7 +149,7 @@
 	.white { color: #fff; }
 
 	span.annotation { padding-left: 10px; padding-top: 4px; font-size: 60%; font-style: italic; color: #ff6; }
-	span.aperture { font-weight: bold; color: #eee; }
+	span.aperture { font-weight: bold; color: #ffe; border: 1px solid #cca; padding: 0 2px; }
 	span.bigger { font-size: 160%; }
 	span.boxed { font-size: 80%; border: 1px solid #fff; padding: 1px 4px; }
 	span.cat_entry { color: #ccc; font-style: italic; }
@@ -746,7 +746,7 @@
 			<th>Mag.</th><th>Surf. Br.</th><th>Size</th><th>Dist.</th>
 			<th>Wiki</th>
 		</tr>
-		{% for fdso in object.dsoinfield_set.all %}
+		{% for fdso in infield %}
 		<tr>
 			<td>
 				{{ fdso.name_plus_alias }}
