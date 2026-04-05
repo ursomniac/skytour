@@ -964,6 +964,7 @@ class DSOInField(DSOAbstract, WikipediaPageObject, models.Model):
     """
     parent_dso = models.ForeignKey(DSO, on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
+    object_class = 'dsoinfield'
     
     @property
     def label_on_chart(self):

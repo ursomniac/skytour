@@ -175,29 +175,28 @@ class DSODetailView(CookieMixin, DetailView):
 
         location = context['location']
         local_dt = isoparse(context['local_time_start'])
-
-        # Handle the notes - this is silly but in-template the logic is cumbersome
-        context['default_panel'] = get_default_panel(object)
         
-        context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
-        context['max_altitude'] = get_max_altitude(object, location=location)
-        context['observing_date_grid'] = make_observing_date_grid(object)
-        times.append((time.perf_counter(), 'Get alt/grid'))
-
-        context['image_list'] = self.object.images.order_by('order_in_list')
-        context['other_library_images'] = self.object.image_library.all() # [1:]
-        context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
-        context['map_slideshow'] = self.object.map_image_list
-        context['finder_slideshow'] = self.object.finder_image_list
-        context['other_metadata'] = self.object.other_metadata_text
-        context['other_parameters'] = self.object.other_parameters
-        times.append((time.perf_counter(), 'Get other metadata'))
         context['active_dsolists'] = self.object.dsolist_set.filter(active_observing_list=True)
+        # Handle the notes - this is silly but in-template the logic is cumbersome
         times.append((time.perf_counter(), 'Get DSO Lists'))
+        context['default_panel'] = get_default_panel(object)
+        context['finder_slideshow'] = self.object.finder_image_list
+        context['image_list'] = self.object.images.order_by('order_in_list')
+        context['infield'] = sorted(object.dsoinfield_set.all(), key=lambda child: child.sort_key)
+        context['library_slideshow'] = self.object.image_library.filter(use_in_carousel=1).order_by('order_in_list')
+        context['local_dt_str'] = local_dt.strftime("%Ih%Mm %p")
+        context['map_slideshow'] = self.object.map_image_list
+        context['max_altitude'] = get_max_altitude(object, location=location)
         context['mode_priority_label'] = priority_label
         context['mode_priority_span'] = priority_span
         context['neighbor_list'] = neighbor_list
+        context['observing_date_grid'] = make_observing_date_grid(object)
+        times.append((time.perf_counter(), 'Get alt/grid'))
         context['observing_notes'] = organize_observing_notes(self.object)
+        context['other_library_images'] = self.object.image_library.all() # [1:]
+        context['other_metadata'] = self.object.other_metadata_text
+        context['other_parameters'] = self.object.other_parameters
+        times.append((time.perf_counter(), 'Get other metadata'))
         context['times'] = compile_times(times)
         if self.object.has_wiki == 'WIKI':
             context['wiki_text'] = format_wiki_text(self.object.wiki)

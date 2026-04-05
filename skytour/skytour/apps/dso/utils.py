@@ -304,12 +304,13 @@ def get_default_panel(dso):
 def dso_name_sort_key(dso, debug=False):
     numlet = r'(^\d+)([a-zA-Z]+)$'
     suffix = '___'
+    map_label = None if dso.object_class != 'dso' else dso.map_label
 
     # 1. Get the first part
     # 1.1. Deal with / names
-    if dso.map_label is not None and '/' not in dso.map_label:
+    if map_label is not None and '/' not in map_label:
         # BUG: NGC 4567/8 ends up here...
-        xx = dso.map_label.split(' ')
+        xx = map_label.split(' ')
         cslug = xx[0][:8].lower().ljust(8, '_')
         oid = '' if len(xx) == 1 else '_'.join(xx[1:])
         if debug:

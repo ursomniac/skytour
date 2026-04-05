@@ -1,5 +1,9 @@
 {% load static skytour_filters %}
 <style>
+    h6 { 
+        color: rgb(204, 51, 51); font-size: 14px; margin: 0px;
+        border: 1px solid #c30; padding: 2px 4px;
+    }
     td.op-dso  { background-color:  #336; }  /* DSO          */
     td.op-sso  { background-color:  #850; }  /* SSO          */
     td.op-ses  { background-color:  #363; }  /* Session      */
@@ -226,15 +230,18 @@
         <td class="click op-app">
             <span onClick="myFunctionCalculator()" class="dropbtn">Calculators&nbsp;&nbsp;  🔽</span>
             <div id="myDropdownCalculator" class="dropdown-content">
-                <a onClick="openPopup('/astro/calc/modulus')">Modulus to Distance</a>
-                <a onClick="openPopup('/astro/calc/angsize')">Calc. Angular Size</a>
-                <a onClick="openPopup('/astro/calc/sqs2sqm')">SQS to SQM</a>
-                <a onClick="openPopup('/astro/calc/sqm2bortle')">SQM to Bortle</a>
+                <h6>Observing</h6>
                 <a onClick="openPopup('/astro/calc/framesexposure')">Calc. Exp. Time</a>
                 <a onClick="openPopup('/astro/calc/exposureframes')">Est. Frames</a>
-                <a onClick="openPopup('/astro/calc/redshift')">Redshift to Distance</a>
+                <h6>Astro</h6>
+                <a onClick="openPopup('/astro/calc/sqs2sqm')">SQS to SQM</a>
+                <a onClick="openPopup('/astro/calc/sqm2bortle')">SQM to Bortle</a>
                 <a onClick="openPopup('/astro/calc/jd2date')">JD to Date</a>
                 <a onClick="openPopup('/astro/calc/date2jd')">Date to JD</a>
+                <h6>Galaxy Metadata</h6>
+                <a onClick="openPopup('/astro/calc/angsize')">Calc. Angular Size</a>
+                <a onClick="openPopup('/astro/calc/modulus')">Modulus to Distance</a>
+                <a onClick="openPopup('/astro/calc/redshift')">Redshift to Distance</a>
             </div>
         </td>
         <td colspan=2 class="op-ses">
