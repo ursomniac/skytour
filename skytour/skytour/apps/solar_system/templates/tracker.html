@@ -3,6 +3,7 @@
 {% block title %}Tracker: Skytour{% endblock %}
 {% block content %}
 <style>
+    h2.notop { margin-top: 0; }
     table { border: none; }
     table.form-table { 
         border: none;
@@ -11,27 +12,43 @@
         border: none!important;
     }
     table.form-table td {
+        font-size: 90%;
         vertical-align: top;
         border: none!important;
     }
     table.tracker-form td { xborder: none; vertical-align: top;}
-    td { border: 1px solid #999; }
+    td { border: 1px solid #999; vertical-align: top; }
     table.track-positions th {
         background-color: #996;
         color: #000;
+        padding: 2px 1px;
+        font-size: 90%;
     }
     table.track-positions td {
-        border: none;
+        border: none; font-size: 90%;
     }
     td.submit { 
-        height: 4em;  ; 
+        height: 3em;  ; 
         background-color: #999;
         vertical-align: middle!important;
     }
     td.submit input { 
-        width: 20em; height: 3em; 
+        width: 20em; height: 2.5em; 
         margin-left: 5em; 
     }
+    td.forced-width {
+        width: 40% !important; /* Force width */
+        max-width: 40% !important; /* Prevent expansion */
+        overflow: hidden; /* Hide overflow if necessary */
+        word-wrap: break-word; /* Handle text if necessary */
+    }
+
+    td.forced-width img {
+        max-width: 100%; /* Image cannot be wider than TD */
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Remove bottom whitespace */
+    }
+
     .helptext { 
         font-style: italic;
         font-size: 85%;
@@ -41,7 +58,7 @@
 <h1>Tracker</h1>
 <table class="tracker-form">
     <tr>
-        <td width="50%">
+        <td width="25%">
             {% if form %}
             <form method="post">
                 {% csrf_token %}
@@ -71,36 +88,40 @@
             </ul>
             {% endif %}
         </td>
-        <td style="vertical-align: top">
+        <td class="forced-width">
             {% if track_image %}
             <img src="{{ track_image }}">
             {% endif %}
         </td>
-    </tr>
-</table>
-{% if track_positions|length > 0 %}
-<h2>Track Positions</h2>
-<table class="track-positions">
-<tr>
-    <th>Date</th>
-    <th>R.A.</th>
-    <th>Dec.</th>
-    <th>Constellation</th>
-    <th>Distance</th>
-    <th>Mag.</th>
-</tr>
-{% for pos in track_positions %}
-    <tr>
-        <td>{{ pos.utdt.date }}</td>
-        <td>{{ pos.ra|to_hms }}</td>
-        <td>{{ pos.dec|to_dms }}</td>
-        <td>{{ pos.constellation.abbr }}</td>
-        <td>{{ pos.distance|floatformat:2 }} AU</td>
-        <td>{{ pos.mag|floatformat:2 }}</td>
-    </tr>
-{% endfor %}
-</table>
+        <td>
+            {% if track_positions|length > 0 %}
+            <h2 class="notop">Track Positions</h2>
+            <table class="track-positions">
+                <tr>
+                    <th>Date</th>
+                    <th>RA</th>
+                    <th>Dec.</th>
+                    <th>Con.</th>
+                    <th>Dist.</th>
+                    <th>Mag.</th>
+                </tr>
+            {% for pos in track_positions %}
+                <tr>
+                    <td>{{ pos.utdt.date|date:"Y-m-d" }}</td>
+                    <td>{{ pos.ra|to_hm }}</td>
+                    <td>{{ pos.dec|to_dm }}</td>
+                    <td>{{ pos.constellation.abbr }}</td>
+                    <td>{{ pos.distance|floatformat:2 }} AU</td>
+                    <td>{{ pos.mag|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
+            </table>
 {% endif %}
+
+        </td>
+    </tr>
+</table>
+
 
 <hr/>
 <small>

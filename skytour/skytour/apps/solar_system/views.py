@@ -400,7 +400,8 @@ class TrackerView(FormView):
             dsos=dsos,
             times=times,
             force_ra = force_ra,
-            force_dec = force_dec
+            force_dec = force_dec,
+            same_size = True
         )
         context['form'] = form
         context['track_positions'] = track_positions
