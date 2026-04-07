@@ -22,7 +22,7 @@ class TrackerForm(forms.Form):
     )
     fov = forms.FloatField(
         required=False,
-        help_text = 'FOV of the map, defaults to the size of the tracking arc.'
+        help_text = 'Defaults to the size of the tracking arc.'
     )
     mag_limit = forms.FloatField(
         required=False,

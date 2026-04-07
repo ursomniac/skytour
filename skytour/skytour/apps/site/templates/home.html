@@ -117,6 +117,20 @@
                 </tr>
             {% endfor %}
             </table>
+
+            <h3>DSO Stats</h3>
+            <table class="inner">
+                <tr>
+                    <th>Type</th>
+                    <th>DSO</th>
+                    <th>Infield</th>
+                    <th>Total</th>
+                </tr>
+                {% for line in dso_stats %}
+                <tr>{% for item in line %}<td>{{ item }}</td>{% endfor %}</tr>
+                {% endfor %}
+            </table>
+            <br><br>
         </td>
         <td class="col section">
             <h3>Featured DSO Image:</h3>

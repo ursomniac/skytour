@@ -1,7 +1,7 @@
 
 import datetime
 from django.utils.safestring import mark_safe
-from ..dso.models import DSO, DSOList, DSOObservation, DSOLibraryImage
+from ..dso.models import DSO, DSOList, DSOObservation, DSOLibraryImage, DSOInField
 from ..session.models import ObservingSession
 from ..solar_system.models import (
     Asteroid, AsteroidObservation,
@@ -104,3 +104,28 @@ def get_skytour_version():
 def get_active_dso_lists():
     lists = DSOList.objects.filter(active_observing_list=1)
     return lists
+
+def get_dso_stats():
+    dd = DSO.objects.all()
+    ff = DSOInField.objects.all()
+    d = {
+        'dso_count': {'Total': dd.count(), },
+        'dsoinfield_count': {'Total': ff.count(), },
+        'all': {'Total': dd.count() + ff.count() }
+    }
+    # get by type:
+    ot = {
+        'Cluster': [6, 10, 11, 18, 26],
+        'Nebula': [5, 8, 9, 12, 16, 17, 19],
+        'Galaxy': [2, 3, 4, 7, 13, 14, 20, 21, 23, 24, 25],
+        'PN/Star': [1, 22]
+    }
+    for k in ot.keys():
+        d['dso_count'][k] = nkd = dd.filter(object_type__pk__in=ot[k]).count()
+        d['dsoinfield_count'][k] = nkf = ff.filter(object_type__pk__in=ot[k]).count()
+        d['all'][k] = nkd + nkf
+    # UGH - make a 2d list
+    out = []
+    for x in ['Cluster', 'Nebula', 'Galaxy', 'PN/Star', 'Total']:
+        out.append([ x, d['dso_count'][x], d['dsoinfield_count'][x], d['all'][x] ])
+    return out

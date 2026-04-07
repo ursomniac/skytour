@@ -367,6 +367,7 @@ def plot_track(
         times=None,
         force_ra = None,
         force_dec = None,
+        same_size = False,
         debug=False
     ):
     """
@@ -493,8 +494,15 @@ def plot_track(
         dy = max_y - min_y
         limit = max(dx, dy) * 0.25
         #dd = (max_x - min_x) * 0.25
-        ax.set_xlim(min_x-limit, max_x+limit)
-        ax.set_ylim(min_y-limit, max_y+limit)
+        if not same_size:
+            ax.set_xlim(min_x-limit, max_x+limit)
+            ax.set_ylim(min_y-limit, max_y+limit)
+        else:
+            cx = (min_x + max_x) / 2.
+            cy = (min_y + max_y) / 2.
+            h = max(dx, dy)
+            ax.set_xlim(cx - h/2. - limit, cx + h/2. + limit)
+            ax.set_ylim(cy - h/2. - limit, cy + h/2. + limit)
 
         if debug:
             print(f"X: {max_x} to {min_x}")
