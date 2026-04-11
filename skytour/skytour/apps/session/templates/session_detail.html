@@ -59,16 +59,20 @@
     <tr>
         <td>
             <h2>
-                Observing Session:
+                Observing Session: #{{ object.session_number }}
                  <br>&nbsp;&nbsp;&nbsp;
                  {{ object.ut_date|date:"Y-m-d" }}
             </h2>
-            <h3 class="subhead">Location: {{ object.location.address }}</h3>
+            <h3 class="subhead">
+                Location: 
+                (Session #{{ object.location_session_number }}) 
+            </h3>
             <ul class="no_bullets">
                 <li>{{ object.location.city }}, {{ object.location.state }}</li>
                 <li>Latitude: {{ object.location.latitude|floatformat:5 }}</li>
                 <li>Longitude {{ object.location.longitude|floatformat:5 }}</li>
-                <li>Page: <a href="{% url 'observing-location-detail' object.location.pk %}" target="_new">{{ object.location }}</a></li>
+                <li>Page: {{ object.location.pk }} = <a href="{% url 'observing-location-detail' object.location.pk %}" target="_new">{{ object.location.short_name }}</a></li>
+                <li>Status: {{ object.location.status }}
             </ul>
             {% if object.sqm_avg %}
             SQM (Session): {{ object.sqm_avg }} ({{ object.sqm_range }})

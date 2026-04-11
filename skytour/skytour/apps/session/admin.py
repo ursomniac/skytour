@@ -18,7 +18,7 @@ class ObservingCircumstancesInline(admin.StackedInline):
 
 class ObservingSessionAdmin(admin.ModelAdmin):
     model = ObservingSession
-    list_display = ['ut_date', 'location']
+    list_display = ['pk', 'ut_date', 'location']
     fieldsets = (
         (None, {
             'fields': [

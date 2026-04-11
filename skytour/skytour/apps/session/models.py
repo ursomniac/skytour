@@ -179,7 +179,17 @@ class ObservingSession(models.Model):
                 return f'{see_min} to {see_max}'
         except:
             return None
-
+        
+    @property
+    def session_number(self):
+        c = ObservingSession.objects.filter(ut_date__lte=self.ut_date).count()
+        return c
+    
+    @property
+    def location_session_number(self):
+        c = ObservingSession.objects.filter(location=self.location, ut_date__lte=self.ut_date).count()
+        return c
+    
     def __str__(self):
         return f"{self.ut_date}: {self.location}"
 

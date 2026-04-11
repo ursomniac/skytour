@@ -46,19 +46,20 @@
     td.list-name { max-width: 400px!important; }
     button.nav { margin: 5px 5px; height: 2em; width: 15em; }
     span.hidden { display: none; }
+    span.right { float: right; }
 </style>
 
-<h1>Deep Sky Objects</h1>
 <table class="top-main">
     <tr>
         <td>
-<h2 class="count">{{ dso_count }} DSOs available at:</h2>
-<h3 class="metadata">&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
-<h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
-<h4 class="metadata">&nbsp;&nbsp;&nbsp;
-    <a href="{% url 'observing-location-detail' location.pk %}" target="_blank">
-    {{ location.concise_name }}</a>
-</h4>
+            <h1>Deep Sky Objects</h1>
+            <h2 class="count">{{ dso_count }} DSOs available at:</h2>
+            <h3 class="metadata">&nbsp;&nbsp;&nbsp;{{ local_time }}</h3>
+            <h4 class="metadata">&nbsp;&nbsp;&nbsp;{{ calc_utdt|date:"Y-M-d H:i:s" }} UT</h4>
+            <h4 class="metadata">&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'observing-location-detail' location.pk %}" target="_blank">
+                {{ location.concise_name }}</a>
+            </h4>
         </td>
         <td>
             <h5>Filter DSOs</h5>
@@ -167,6 +168,9 @@
                     <tr>
                         <td colspan="3" class="submit">
                             <input type="submit">
+                            <span class="right">
+                            <a href="#bottom"><button class="nav" type="button">Go to Bottom</button></a>
+                            </span>
                         </td>
                     </tr>
                 </table>
@@ -176,8 +180,6 @@
 </table>
 
 <a name="top"></a>
-<a href="#bottom"><button class="nav" type="button">Go to Bottom</button></a>
-
 <small>
 <table width="100%" id="{{ table_id }}" class="dso_table">
 <thead>
