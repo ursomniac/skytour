@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load skytour_filters %}
 {% block styles %}
 <style>
 	table.dual { 
@@ -110,8 +110,15 @@
 			<br>
 			<table class="inner">
 				<tr><th colspan=2 class="header">Geographic Metadata</th></tr>
-				<tr><th>Latitude:</th><td class="coordinates">{{ object.latitude }}</td></tr>
-				<tr><th>Longitude:</th><td class="coordinates">{{ object.longitude }}</td></tr>
+				<tr><th>Latitude:</th><td class="coordinates">
+					{{ object.latitude }}
+					{{ object.latitude|to_dm }}
+				</td></tr>
+				<tr><th>Longitude:</th>
+					<td class="coordinates">
+						{{ object.longitude }}
+						{{ object.longitude|to_dms }}
+					</td></tr>
 				<tr><th>Elevation:</th><td>{{ object.elevation }} m  = {{ object.elevation_feet|floatformat:1 }} ft</td></tr>
 				<tr><th>Distance:</th><td>{{ object.travel_distance }} mi</td></tr>
 				<tr><th>Travel Time:</th><td>{{ object.travel_time }} min</td></tr>

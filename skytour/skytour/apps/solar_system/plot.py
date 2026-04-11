@@ -527,7 +527,7 @@ def plot_track(
     
     # Add DSOs
     if dsos:
-        ax, _ = map_dsos(ax, earth, t, projection, product='finder')
+        ax, _ = map_dsos(ax, earth, t, projection, product='finder', reversed=reversed)
         if times is not None:
             times.append((time.perf_counter(), 'Plotting DSOs'))
 
