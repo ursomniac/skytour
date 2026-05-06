@@ -25,11 +25,18 @@
       margin-left: 3em; 
       font-weight: bold; 
   }
+  span.obsadd {
+    font-weight: bold;
+    font-size: 110%;
+    color: #c93;
+    padding: 5px;
+    border: 1px solid #cc0;
+  }
 </style>
 
 <h1>Add Observation</h1>
 {% if message %}
-<b>{{ message }}</b><br>
+<span class="obsadd">{{ message }}</span><br>
 {% endif %}
 
 <h2><a href="/session/add_object">New Observation</a></h2>

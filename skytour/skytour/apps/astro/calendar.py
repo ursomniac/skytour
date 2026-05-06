@@ -1,4 +1,5 @@
 import datetime
+from zoneinfo import ZoneInfo
 from skyfield import api
 from .almanac import get_sun_rise_set, get_moon_rise_set, get_twilight_begin_end
 from .time import get_julian_date
@@ -123,7 +124,8 @@ def create_calendar_grid(
         t0 = start_date
     elif type(start_date) == tuple:
         (year, month, day) = start_date
-        t0 = datetime.datetime(year, month, day, 0, 0)
+        t0 = datetime.datetime(year, month, day, 0, 0, tzinfo=datetime.timezone.utc)
+        time_zone = datetime.timezone.utc
     else:
         return None
 
@@ -194,3 +196,76 @@ def create_calendar_grid(
         
     return grid
 
+def create_calendar_list(start_date, location_pk = 1, days_out = 30, time_zone = None):
+    location_pk = 1 if location_pk is None else location_pk
+    location = ObservingLocation.objects.get(pk=location_pk) 
+    time_zone_label = location.time_zone.pytz_label if time_zone is None else time_zone
+    tz = ZoneInfo(time_zone_label)
+    # start_date is tuple(year, month, day)
+    t0 = datetime.datetime(start_date[0], start_date[1], start_date[2], 0, 0, tzinfo=tz)
+    t1 = t0 + datetime.timedelta(days=days_out)
+    out = []
+
+    # Set up rise/set, AT start/end
+    ts = api.load.timescale()
+    eph = api.load(get_ephemeris())
+    loc = api.wgs84.latlon(location.latitude, location.longitude)
+
+    for i in range(days_out + 1):
+        tt = t0 + datetime.timedelta(days=i)
+        dstr = tt.strftime("%Y-%m-%d")
+
+        # sunrise, sunset
+        sunrise, sunset = get_sun_rise_set(tt, loc, ts, eph, time_zone=tz)
+        ssstr = sunset['local_str'] if sunset else 'N/A'
+        srstr = sunrise['local_str'] if sunrise else 'N/A'
+        # AT start, end
+        twilight = get_twilight_begin_end(tt, location, time_zone=tz)
+        atsstr = twilight['astro']['start'] if twilight['astro']['start'] else 'N/A'
+        atestr = twilight['astro']['end'] if twilight['astro']['end'] else 'N/A'
+        # moonrise, moonset
+        moonrise, moonset = get_moon_rise_set(tt, location, eph, time_zone=tz)
+        msstr = moonset['local_str'] if moonset else 'N/A'
+        mrstr = moonrise['local_str'] if moonrise else 'N/A'
+
+        l = [dstr, ssstr, srstr, atsstr, atestr, mrstr, msstr]
+        out.append(' | '.join(l))
+    return out
+
+def create_astro_event_list(start_date, days_out = 30, location_pk = 1, time_zone = ZoneInfo('UTC')):
+    # start_date is tuple(year, month, day)
+    t0 = datetime.datetime(start_date[0], start_date[1], start_date[2], 0, 0, tzinfo=time_zone)
+    t1 = t0 + datetime.timedelta(days=days_out)
+    events = Calendar.objects.filter(date__range=[t0.date(), t1.date()]).order_by('date')
+    out = []
+    for e in events:
+        dstr = e.date.strftime("%Y-%m-%d")
+        if e.time == datetime.time(0, 0): # this is a bug in the model...
+            hms = '--:--'
+        else:
+            hms = e.time.strftime("%H:%M") if e.time else '--:--'
+        icon = e.event_type.icon if e.event_type else ''
+        out.append(f"{dstr} | {hms} | {icon} {e.title}")
+    return out, events
+
+def create_calendar_files(start_date, end_date, which = 'almanac'):
+    # start_date and end_date are tuples (year, month, day)
+    t0 = datetime.date(start_date[0], start_date[1], start_date[2])
+    t1 = datetime.date(end_date[0], end_date[1], end_date[2])
+    days_out = (t1 - t0).days
+
+    if which == 'almanac':
+        l = create_calendar_list(start_date, days_out=days_out)
+        fn = "calendar_almanac.txt"
+    elif which == 'events':
+        l, ee = create_astro_event_list(start_date, days_out=days_out)
+        fn = "calendar_events.txt"
+    else:
+        print("Unknown calendar type")
+        fn = None
+        l = None
+    
+    if fn and l:
+        with open(fn, 'w') as f:
+            for line in l:
+                f.write(line + '\n')
